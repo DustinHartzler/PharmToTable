@@ -75,7 +75,11 @@ var sbioEmbeds = new Vue({
                         this.isFacebookActivated = true;
                         this.installerStatus = 'success'
                     }
-                    this.facebookInstallBtnText = data.data.msg;
+                    if ( typeof data.data === 'object') {
+                        this.facebookInstallBtnText = data.data.msg;
+                    } else {
+                        this.facebookInstallBtnText = data.data;
+                    }
                     setTimeout(function() {
                         this.installerStatus = null;
                     }.bind(this), 3000);

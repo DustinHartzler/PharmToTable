@@ -126,6 +126,31 @@ class SB_Instagram_Data_Encryption {
 	}
 
 	/**
+	 * Uses a raw value and attempts to decrypt it
+	 *
+	 * @since 6.0.8
+	 *
+	 * @param $value
+	 * @return bool|string
+	 */
+	public function maybe_decrypt( $value ) {
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+		if ( strpos( $value, '{' ) === 0 ) {
+			return $value;
+		}
+
+		$decrypted = $this->decrypt( $value );
+
+		if ( ! $decrypted ) {
+			return $value;
+		}
+
+		return $decrypted;
+	}
+
+	/**
 	 * Gets the default encryption key to use.
 	 *
 	 * @since 2.9.4/5.12.4

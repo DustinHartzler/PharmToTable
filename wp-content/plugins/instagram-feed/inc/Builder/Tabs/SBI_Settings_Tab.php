@@ -31,11 +31,7 @@ class SBI_Settings_Tab{
 			],
 			'settings_filters_moderation' => [
 				'heading' 	=> __( 'Filters and Moderation', 'instagram-feed' ),
-				'description' 	=> __( 'Visually moderate your feed or hide specific posts with Instagram Feed Pro.', 'instagram-feed' ),
 				'icon' 		=> 'filter',
-				'separator'	=> 'none',
-				'proLabel'		=> true,
-				'checkExtensionPopup' => 'filtermoderation',
 				'controls'	=> self::get_settings_filters_moderation_controls()
 			],
 			'settings_sort' => [
@@ -71,6 +67,39 @@ class SBI_Settings_Tab{
 	*/
 	static function get_settings_filters_moderation_controls(){
 		return [
+			[
+				'type' 				=> 'heading',
+				'strongHeading'		=> 'true',
+				'heading' 			=> __( 'Show specific types of posts', 'instagram-feed' )
+			],
+			[
+				'type' 				=> 'checkbox',
+				'id' 				=> 'reelsposts',
+				'label' 			=> __( 'Reels', 'instagram-feed' ),
+				'reverse'			=> 'true',
+				'stacked'			=> 'true',
+				'checkViewDisabled' 		=> 'moderationMode',
+				'ajaxAction'		=> 'feedFlyPreview',
+				'options'			=> [
+					'enabled'	=> true,
+					'disabled'	=> false
+				]
+			],
+			[
+				'type' 				=> 'separator',
+				'top' 				=> 20,
+				'bottom' 			=> 20
+			],
+
+			[
+				'type' 				=> 'heading',
+				'heading' 			=> __( 'Advanced', 'instagram-feed' ),
+				'proLabel'		=> true,
+				'description' 	=> __( 'Visually moderate your feed or hide specific posts with Instagram Feed Pro.', 'instagram-feed' ),
+				'checkExtensionPopup' => 'filtermoderation',
+				'checkExtensionPopupLearnMore' 	=> 'filtermoderation'
+			],
+
 			[
 				'type' 				=> 'customview',
 				'viewId'			=> 'moderationmode',

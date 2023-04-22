@@ -826,7 +826,7 @@ if(!sbi_js_exists) {
           num = typeof $self.attr('data-num') !== 'undefined' && $self.attr('data-num') !== '' ? parseInt($self.attr('data-num')) : 1,
           nummobile = typeof $self.attr('data-nummobile') !== 'undefined' && $self.attr('data-nummobile') !== '' ? parseInt($self.attr('data-nummobile')) : num;
 
-        if ($(window).width() < 480) {
+        if ($(window).width() < 480 || window.sbi_preview_device === 'mobile') {
           if (nummobile < $self.find('.sbi_item').length) {
             $self.find('.sbi_item').slice(nummobile - $self.find('.sbi_item').length).addClass('sbi_num_diff_hide');
           }

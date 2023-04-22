@@ -1009,8 +1009,9 @@ class SB_Instagram_Posts_Manager {
 			if ( $errors['connection']['error_id'] === 190 ) {
 				$error_message .=  '<strong>' .  __( 'Action Required Within 7 Days', 'instagram-feed' ) . '</strong><br>';
 				$error_message .= __( 'An account admin has deauthorized the Smash Balloon app used to power the Instagram Feed plugin.', 'instagram-feed' );
-				$error_message .= ' ' . sprintf( __( 'If the Instagram account is not reconnected within 7 days then all Instagram data will be automatically deleted on your website for this account (ID: %s) due to Facebook data privacy rules.', 'instagram-feed' ), $accounts_revoked );
-				$error_message .= __( '<br><br>To prevent the automated data deletion for the account, please reconnect your account within 7 days.', 'instagram-feed' );
+				$error_message .= ' ' . sprintf( __( 'If the Instagram source is not reconnected within 7 days then all Instagram data will be automatically deleted on your website for this account (ID: %s) due to Facebook data privacy rules.', 'instagram-feed' ), $accounts_revoked );
+				$error_message .= __( '<br><br>To prevent the automated data deletion for the source, please reconnect your source within 7 days.', 'instagram-feed' );
+				$error_message .= '<br><br><a href="https://smashballoon.com/doc/action-required-within-7-days/?instagram&utm_campaign=instagram-free&utm_source=permissionerror&utm_medium=notice&utm_content=More Information" target="_blank" rel="noopener">' . __( 'More Information', 'instagram-feed' ) . '</a>';
 			} else {
 				$error_message_array = $errors['connection']['error_message'];
 				$error_message      .= '<strong>' . $error_message_array['error_message'] . '</strong><br>';

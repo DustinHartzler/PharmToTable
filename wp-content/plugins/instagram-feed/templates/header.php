@@ -36,6 +36,9 @@ $avatar_svg_data_attributes  = SB_Instagram_Display_Elements::get_avatar_svg_dat
 
 
 $header_padding             = (int) $settings['imagepadding'] > 0 ? 'padding: ' . (int) $settings['imagepadding'] . esc_attr( $settings['imagepaddingunit'] ) . ';' : '';
+$header_padding            .= isset( $settings['headeroutside'] ) && $settings['headeroutside'] 
+	&& ! empty( $settings['colorpalette'] ) && $settings['colorpalette'] === 'custom' 
+	? '' : 'padding-bottom: 0;';
 $header_margin              = (int) $settings['imagepadding'] < 10 ? ' margin-bottom: 10px;' : '';
 $header_text_color_style    = SB_Instagram_Display_Elements::get_header_text_color_styles( $settings ); // style="color: #517fa4;" already escaped
 $header_classes             = SB_Instagram_Display_Elements::get_header_class( $settings, $avatar );
@@ -47,7 +50,7 @@ $header_link                = SB_Instagram_Display_Elements::get_header_link( $s
 $header_link_title          = SB_Instagram_Display_Elements::get_header_link_title( $settings, $username );
 
 ?>
-<div<?php echo $header_classes; ?> style="<?php echo $header_padding . $header_margin; ?>padding-bottom: 0;"<?php echo $header_atts; ?>>
+<div<?php echo $header_classes; ?> style="<?php echo $header_padding . $header_margin; ?>" <?php echo $header_atts; ?>>
 	<a<?php echo $header_link ?> target="_blank" rel="nofollow noopener" <?php echo $header_link_title ?> class="sbi_header_link">
 		<div<?php echo $header_text_class; ?>>
 			<?php if ( SB_Instagram_Display_Elements::should_show_header_section( 'image-top', $settings ) ) : ?>

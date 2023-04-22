@@ -268,6 +268,13 @@ class Platform_Data {
 	 * @return void
 	 */
 	public function handle_unused_feed_usage() {
+		//Security Checks
+		check_ajax_referer( 'sbi_nonce', 'sbi_nonce' );
+
+		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+			wp_send_json_error();
+		}
+
 		global $sb_instagram_posts_manager;
 
 		$sb_instagram_posts_manager->remove_error('unused_feed');
@@ -309,9 +316,10 @@ class Platform_Data {
 		$title         = __( 'There has been a problem with your Instagram Feed.', 'instagram-feed' );
 		$bold          = __( 'Action Required Within 7 Days', 'instagram-feed' );
 		$site_url      = sprintf( '<a href="%s">%s<a/>', esc_url( home_url() ), __( 'your website', 'instagram-feed' ) );
-		$details       = '<p>' . sprintf( __( 'An account admin has deauthorized the Smash Balloon app used to power the Instagram Feed plugin on %s. If the Instagram account is not reconnected within 7 days then all Instagram data will be automatically deleted on your website  due to Facebook data privacy rules.', 'instagram-feed' ), $site_url ) . '</p>';
+		$details       = '<p>' . sprintf( __( 'An account admin has deauthorized the Smash Balloon app used to power the Instagram Feed plugin on %s. If the Instagram source is not reconnected within 7 days then all Instagram data will be automatically deleted on your website  due to Facebook data privacy rules.', 'instagram-feed' ), $site_url ) . '</p>';
 		$settings_page = sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html__( 'Settings Page', 'instagram-feed' ) );
-		$details       .= '<p>' . sprintf( __( 'To prevent the automated deletion of data for the account, please reconnect your account on the plugin %s within 7 days.', 'instagram-feed' ), $settings_page ). '</p>';
+		$details       .= '<p>' . sprintf( __( 'To prevent the automated deletion of data for the account, please reconnect your source for the plugin %s within 7 days.', 'instagram-feed' ), $settings_page ). '</p>';
+		$details       .= '<p><a href="https://smashballoon.com/doc/action-required-within-7-days/?instagram&utm_campaign=instagram-free&utm_source=permissionerror&utm_medium=email&utm_content=More Information" target="_blank" rel="noopener">' . __( 'More Information', 'instagram-feed' ) . '</a></p>';
 
 		Email_Notification::send( $title, $bold, $details );
 	}

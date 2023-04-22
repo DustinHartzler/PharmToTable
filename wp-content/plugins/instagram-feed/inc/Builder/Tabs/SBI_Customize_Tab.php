@@ -434,7 +434,7 @@ class SBI_Customize_Tab{
 	 * @return array
 	*/
 	static function get_customize_colorscheme_controls(){
-		$feed_id = isset($_GET['feed_id']) ? $_GET['feed_id'] : '';
+		$feed_id            = isset( $_GET['feed_id'] ) ? sanitize_key( $_GET['feed_id'] ) : '';
 		$color_scheme_array = [
 			[
 				'type' 		=> 'toggleset',

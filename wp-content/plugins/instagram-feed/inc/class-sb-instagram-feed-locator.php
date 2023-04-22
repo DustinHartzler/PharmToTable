@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class SB_Instagram_Feed_Locator {
+	const COLUMN_NAMES = array( 'feed_id', 'post_id', 'html_location', 'shortcode_atts', 'last_update' );
 
 	private $feed_details;
 
@@ -237,10 +238,7 @@ class SB_Instagram_Feed_Locator {
 		global $wpdb;
 		$feed_locator_table_name = $wpdb->prefix . SBI_INSTAGRAM_FEED_LOCATOR;
 
-		$group_by = '';
-		if ( isset( $args['group_by'] ) ) {
-			$group_by = 'GROUP BY ' . esc_sql( $args['group_by'] );
-		}
+		$group_by = isset( $args['group_by'] ) ? self::sanitize_group_by( $args['group_by'] ) : '';
 
 		$location_string = 'content';
 		if ( isset( $args['html_location'] ) ) {
@@ -308,10 +306,7 @@ class SB_Instagram_Feed_Locator {
 		global $wpdb;
 		$feed_locator_table_name = $wpdb->prefix . SBI_INSTAGRAM_FEED_LOCATOR;
 
-		$group_by = '';
-		if ( isset( $args['group_by'] ) ) {
-			$group_by = 'GROUP BY ' . esc_sql( $args['group_by'] );
-		}
+		$group_by = isset( $args['group_by'] ) ? self::sanitize_group_by( $args['group_by'] ) : '';
 
 		$location_string = 'content';
 		if ( isset( $args['html_location'] ) ) {
@@ -668,7 +663,7 @@ class SB_Instagram_Feed_Locator {
 
 		foreach ( $locations as $key => $location ) {
 			$in       = implode( "', '", $location['html_locations'] );
-			$group_by = isset( $location['group_by'] ) ? 'GROUP BY ' . $location['group_by'] : '';
+			$group_by = isset( $location['group_by'] ) ? self::sanitize_group_by( $location['group_by'] ) : '';
 			$results  = $wpdb->get_results(
 				"
 			SELECT *
@@ -691,5 +686,13 @@ class SB_Instagram_Feed_Locator {
 		}
 
 		return $locations;
+	}
+
+	public static function sanitize_group_by( $group_by ) {
+		if ( in_array( $group_by, self::COLUMN_NAMES, true ) ) {
+			return 'GROUP BY ' . $group_by;
+		}
+
+		return '';
 	}
 }

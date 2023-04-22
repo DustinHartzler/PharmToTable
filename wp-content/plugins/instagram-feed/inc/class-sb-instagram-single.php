@@ -212,7 +212,7 @@ class SB_Instagram_Single {
 			$stored_option = json_decode( $this->encryption->decrypt( $stored_option ), true );
 		}
 		$new           = array( $this->permalink_id => $this->post );
-		$stored_option = array_merge( $new, $stored_option );
+		$stored_option = array_merge( $new, (array) $stored_option );
 		// only latest 400 posts
 		$stored_option = array_slice( $stored_option, 0, 400 );
 

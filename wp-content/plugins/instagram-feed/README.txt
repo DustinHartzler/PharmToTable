@@ -1,9 +1,10 @@
 === Smash Balloon Social Photo Feed ===
-Contributors: smashballoon, craig-at-smash-balloon
+Contributors: smashballoon, craig-at-smash-balloon, am, smub
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 4.1
-Tested up to: 6.0
-Stable tag: 6.0.6
+Tested up to: 6.2
+Stable tag: 6.1.3
+Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,6 +13,8 @@ Formerly "Instagram Feed". Display clean, customizable, and responsive Instagram
 == Description ==
 
 Display Instagram posts from your Instagram accounts, either in the same single feed or in multiple different ones.
+
+https://www.youtube.com/watch?v=517rApIqzbw
 
 = Features =
 * **New:** Now automatically powers your **Instagram oEmbeds**
@@ -331,6 +334,39 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Plus more customization options added all the time!
 
 == Changelog ==
+= 6.1.3 =
+* Fix: Fixed a PHP Warning: strtotime(): Epoch doesn’t fit in a PHP integer.
+* Fix: Header bio was not updating when the bio for the connected Instagram account was updated.
+* Fix: Fixed a few text items not being translatable.
+
+= 6.1.2 =
+* Fix: When enabling Facebook oEmbeds from the oEmbed page, an Instagram icon would appear when the Custom Facebook Feed plugin was being activated.
+* Fix: Fixed a CSS parsing error.
+
+= 6.1.1 =
+* Fix: When using the customizer to enable the setting for the header "show outside scrollable area" and adding a background color, the preview would not show the same result as the actual feed.
+* Fix: Disabling the JavaScript image loading on the "Advanced" settings tab would cause the customizer preview to look distorted.
+* Fix: When customizing a feed, the load more button would become active when switching the device preview.
+* Fix: Fixed a PHP warning that would occur when bulk deleting feeds.
+
+= 6.1 =
+* New: Added the ability to filter "Reels" posts in feeds. When customizing a feed and using the moderation settings you can now choose to show or hide Instagram "Reels" posts.
+* New: Add a header image and bio text for personal sources. Go to the settings page and click on the gear icon to add this to an existing source.
+* New: Added support for Instagram "Reels" oEmbeds. Use WordPress' embed block to create rich oEmbed links in blog posts and pages.
+* Tweak: Vue.js code is now loaded from a local file shipped with the plugin rather than an external CDN for use with the customizer in the admin area.
+
+= 6.0.8 =
+* Tweak: Added a workaround to retrieve missing images if none were returned by Instagram for a post.
+* Fix: Custom colors assigned to the Follow button would not apply when using a custom color palette.
+* Fix: Added additional plugin hardening.
+* Fix: A fatal error would occur with older versions of PHP and WordPress in some circumstances.
+
+= 6.0.7 =
+* Fix: Removed legacy "disable mobile" setting support as it was causing confusion for users updating from 2.x where changes to feed columns would not have an effect.
+* Fix: Removed the reference in the feed CSS file to an image file that didn't exist.in the feed CSS file.
+* Fix: All sources would be removed when the grace period to address app permission issues ended. Now only the single source will be removed.
+* Fix: The number of posts would be inaccurate in the feed preview when using the customizer for mobile devices.
+
 = 6.0.6 =
 * Tweak: Added a warning notice to allow a grace period before Instagram data is permanently deleted from your site after deauthorizing the Smash Balloon Instagram app. Due to Instagram requirements, any Instagram data on your site must be deleted within a reasonable time after the app has been deauthorized. The new warning notice provides a 7 day grace period to allow you time to reauthorize the app if you don't want the data to be deleted.
 * Tweak: Reconnecting an account now results in deleting the original connection in the database and adding a new one. This will prevent issues with some caching systems like Redis.

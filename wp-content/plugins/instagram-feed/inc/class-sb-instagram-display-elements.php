@@ -36,6 +36,7 @@ class SB_Instagram_Display_Elements {
 				$classes .= ' sbi_new sbi_no_js sbi_no_resraise sbi_js_load_disabled';
 			}
 		} else {
+			$classes .= isset( $settings['disable_js_image_loading'] ) && $settings['disable_js_image_loading'] ? ' sbi_no_js_customizer' : '';
 			$classes .= ' sbi_new ';
 		}
 
@@ -386,7 +387,7 @@ class SB_Instagram_Display_Elements {
 	public static function get_follow_styles( $settings ) {
 		$styles = '';
 
-		if ( ( empty( $settings['colorpalette'] ) || $settings['colorpalette'] === 'inherit' ) && ( ! empty( $settings['followcolor'] ) || ! empty( $settings['followtextcolor'] ) ) ) {
+		if ( ! self::doing_custom_palettes_for_button( $settings ) && ( ! empty( $settings['followcolor'] ) || ! empty( $settings['followtextcolor'] ) ) ) {
 			$styles = ' style="';
 			if ( ! empty( $settings['followcolor'] ) ) {
 				$styles .= 'background: rgb(' . esc_attr( sbi_hextorgb( $settings['followcolor'] ) ) . ');';
@@ -397,6 +398,17 @@ class SB_Instagram_Display_Elements {
 			$styles .= '"';
 		}
 		return $styles;
+	}
+
+	public static function doing_custom_palettes_for_button( $settings ) {
+		if ( ( empty( $settings['colorpalette'] ) || $settings['colorpalette'] === 'inherit' ) ) {
+			return false;
+		}
+		if ( $settings['colorpalette'] === 'custom' && ! empty( $settings['custombuttoncolor2'] ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static function get_follow_hover_color( $settings ) {
@@ -502,7 +514,7 @@ class SB_Instagram_Display_Elements {
 		$palette_class                 = self::get_palette_class( $settings );
 
 		if ( $customizer ) {
-			return ' :class="\'sbi \' + ' . $mobilecols_class . ' + \' \' + ' . $tabletcols_class . ' + \' sbi_col_\' + ' . $cols_setting . ' + \' \' + ' . $palette_class . ' + \' \' + ' . $additional_customizer_classes . '" ';
+			return ' :class="\'sbi \' + ' . esc_attr( $mobilecols_class ) . ' + \' \' + ' . esc_attr( $tabletcols_class ) . ' + \' sbi_col_\' + ' . esc_attr( $cols_setting ) . ' + \' \' + ' . esc_attr( $palette_class ) . ' + \' \' + ' . esc_attr( $additional_customizer_classes ) . '" ';
 		} else {
 			$classes = 'sbi' . esc_attr( $mobilecols_class ) . esc_attr( $tabletcols_class ) . ' sbi_col_' . esc_attr( $cols_setting ) . esc_attr( $additional_classes ) . esc_attr( $palette_class );
 			$classes = ' class="' . $classes . '"';

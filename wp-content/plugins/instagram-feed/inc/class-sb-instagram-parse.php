@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-class SB_Instagram_Parse
-{
+class SB_Instagram_Parse {
+
 	/**
 	 * @param $post array
 	 *
@@ -35,7 +35,7 @@ class SB_Instagram_Parse
 	 * @since 2.0/5.0
 	 */
 	public static function get_account_type( $post ) {
-		if (isset( $post['media_type'] ) ) {
+		if ( isset( $post['media_type'] ) ) {
 			return 'business';
 		} else {
 			return 'personal';
@@ -53,10 +53,10 @@ class SB_Instagram_Parse
 		$timestamp = 0;
 		if ( isset( $post['created_time'] ) ) {
 			$timestamp = $post['created_time'];
-		} else if ( isset( $post['timestamp'] ) ) {
+		} elseif ( isset( $post['timestamp'] ) ) {
 			// some date formatting functions have trouble with the "T", "+", and extra zeroes added by Instagram
-			$remove_plus = trim( str_replace( array('T', '+', ' 0000' ), ' ', $post['timestamp'] ) );
-			$timestamp = strtotime( $remove_plus );
+			$remove_plus = trim( str_replace( array( 'T', '+', ' 0000' ), ' ', $post['timestamp'] ) );
+			$timestamp   = strtotime( $remove_plus );
 		}
 
 		return $timestamp;
@@ -74,7 +74,7 @@ class SB_Instagram_Parse
 			return $post['type'];
 		}
 
-		return strtolower( str_replace( '_ALBUM','', $post['media_type'] ) );
+		return strtolower( str_replace( '_ALBUM', '', $post['media_type'] ) );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class SB_Instagram_Parse
 	}
 
 	/**
-	 * @param array $post
+	 * @param array  $post
 	 * @param string $resolution
 	 *
 	 * @return string
@@ -102,20 +102,20 @@ class SB_Instagram_Parse
 	 */
 	public static function get_media_url( $post, $resolution = 'lightbox' ) {
 		$account_type = isset( $post['images'] ) ? 'personal' : 'business';
-		$media_type = isset( $post['media_type'] ) ? $post['media_type'] : 'none';
+		$media_type   = isset( $post['media_type'] ) ? $post['media_type'] : 'none';
 
 		if ( $account_type === 'personal' ) {
 			return $post['images']['standard_resolution']['url'];
 		} else {
 			if ( $media_type === 'CAROUSEL_ALBUM'
-			     || $media_type === 'VIDEO'
-			     || $media_type === 'OEMBED' ) {
+				 || $media_type === 'VIDEO'
+				 || $media_type === 'OEMBED' ) {
 				if ( isset( $post['thumbnail_url'] ) ) {
 					return $post['thumbnail_url'];
 				} elseif ( $media_type === 'CAROUSEL_ALBUM' && isset( $post['media_url'] ) ) {
 					return $post['media_url'];
 				} elseif ( isset( $post['children'] ) ) {
-					$i = 0;
+					$i         = 0;
 					$full_size = '';
 					foreach ( $post['children']['data'] as $carousel_item ) {
 						if ( $carousel_item['media_type'] === 'IMAGE' && empty( $full_size ) ) {
@@ -127,9 +127,9 @@ class SB_Instagram_Parse
 								$full_size = $carousel_item['thumbnail_url'];
 							} else {
 								$media = trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
-								//attempt to get
-								$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $carousel_item ) );
-								$single = new SB_Instagram_Single( $permalink );
+								// attempt to get
+								$permalink = self::fix_permalink( self::get_permalink( $carousel_item ) );
+								$single    = new SB_Instagram_Single( $permalink );
 								$single->init();
 								$carousel_item_post = $single->get_post();
 
@@ -149,9 +149,9 @@ class SB_Instagram_Parse
 					if ( ! class_exists( 'SB_Instagram_Single' ) ) {
 						return trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
 					}
-					//attempt to get
-					$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $post ) );
-					$single = new SB_Instagram_Single( $permalink );
+					// attempt to get
+					$permalink = self::fix_permalink( self::get_permalink( $post ) );
+					$single    = new SB_Instagram_Single( $permalink );
 					$single->init();
 					$post = $single->get_post();
 
@@ -166,6 +166,17 @@ class SB_Instagram_Parse
 			} else {
 				if ( isset( $post['media_url'] ) ) {
 					return $post['media_url'];
+				}
+
+				$permalink = self::fix_permalink( self::get_permalink( $post ) );
+				$single    = new SB_Instagram_Single( $permalink );
+				$single->init();
+				$maybe_post = $single->get_post();
+
+				if ( isset( $maybe_post['media_url'] ) ) {
+					return $maybe_post['media_url'];
+				} elseif ( isset( $maybe_post['thumbnail_url'] ) ) {
+					return $maybe_post['thumbnail_url'];
 				}
 
 				return trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
@@ -189,9 +200,9 @@ class SB_Instagram_Parse
 	 * @since 2.1.3/5.2.3 added 'd' element as a default backup from the API
 	 */
 	public static function get_media_src_set( $post, $resized_images = array() ) {
-		$full_size = SB_Instagram_Parse::get_media_url( $post );
-		$media_urls = array(
-			'd' => SB_Instagram_Parse::get_media_url( $post ),
+		$full_size    = self::get_media_url( $post );
+		$media_urls   = array(
+			'd'   => self::get_media_url( $post ),
 			'150' => '',
 			'320' => '',
 			'640' => ''
@@ -203,7 +214,7 @@ class SB_Instagram_Parse
 			$media_urls['320'] = $post['images']['low_resolution']['url'];
 			$media_urls['640'] = $post['images']['standard_resolution']['url'];
 		} else {
-			$post_id = SB_Instagram_Parse::get_post_id( $post );
+			$post_id = self::get_post_id( $post );
 
 			$media_urls['640'] = $full_size;
 			$media_urls['150'] = $full_size;
@@ -211,9 +222,9 @@ class SB_Instagram_Parse
 
 			// use resized images if exists
 			if ( isset( $resized_images[ $post_id ]['id'] )
-			     && $resized_images[ $post_id ]['id'] !== 'pending'
-			     && $resized_images[ $post_id ]['id'] !== 'video'
-			     && $resized_images[ $post_id ]['id'] !== 'error' ) {
+				 && $resized_images[ $post_id ]['id'] !== 'pending'
+				 && $resized_images[ $post_id ]['id'] !== 'video'
+				 && $resized_images[ $post_id ]['id'] !== 'error' ) {
 				if ( isset( $resized_images[ $post_id ]['sizes']['full'] ) ) {
 					$media_urls['640'] = sbi_get_resized_uploads_url() . $resized_images[ $post_id ]['id'] . 'full.jpg';
 				}
@@ -221,7 +232,6 @@ class SB_Instagram_Parse
 					$media_urls['320'] = sbi_get_resized_uploads_url() . $resized_images[ $post_id ]['id'] . 'low.jpg';
 				}
 			}
-
 		}
 
 		return $media_urls;
@@ -246,10 +256,10 @@ class SB_Instagram_Parse
 			$caption = $post['caption']['text'];
 		}
 
-		$video_title = SB_Instagram_Parse::get_video_title( $post );
+		$video_title = self::get_video_title( $post );
 
 		if ( ! empty( $video_title ) ) {
-			$caption = $video_title .'. ' . $caption;
+			$caption = $video_title . '. ' . $caption;
 		}
 
 		return $caption;
@@ -326,7 +336,7 @@ class SB_Instagram_Parse
 		} elseif ( isset( $header_data['data']['full_name'] ) ) {
 			return $header_data['data']['full_name'];
 		}
-		return SB_Instagram_Parse::get_username( $header_data );
+		return self::get_username( $header_data );
 	}
 
 	/**
@@ -341,16 +351,16 @@ class SB_Instagram_Parse
 	 */
 	public static function get_bio( $header_data, $settings = array() ) {
 		$customizer = $settings['customizer'];
-		if( $customizer ){
+		if ( $customizer ) {
 			return '{{$parent.getHeaderBio()}}';
-		}else{
+		} else {
 			if ( ! empty( $settings['custombio'] ) ) {
 				return $settings['custombio'];
 			} elseif ( isset( $header_data['data']['bio'] ) ) {
 				return $header_data['data']['bio'];
-			} elseif ( isset( $header_data['bio'] ) ){
+			} elseif ( isset( $header_data['bio'] ) ) {
 				return $header_data['bio'];
-			} elseif ( isset( $header_data['biography'] ) ){
+			} elseif ( isset( $header_data['biography'] ) ) {
 				return $header_data['biography'];
 			}
 			return '';
@@ -370,8 +380,8 @@ class SB_Instagram_Parse
 	public static function fix_permalink( $permalink ) {
 		if ( substr_count( $permalink, '/' ) > 5 ) {
 			$permalink_array = explode( '/', $permalink );
-			$perm_id = $permalink_array[ count( $permalink_array ) - 2 ];
-			$permalink = 'https://www.instagram.com/p/' . $perm_id . '/';
+			$perm_id         = $permalink_array[ count( $permalink_array ) - 2 ];
+			$permalink       = 'https://www.instagram.com/p/' . $perm_id . '/';
 		}
 		return $permalink;
 
@@ -408,10 +418,17 @@ class SB_Instagram_Parse
 			return strtolower( $post['media_product_type'] );
 		}
 
+		// get media_type and permalink and search for reel in permalink.
+		$media_type = self::get_media_type( $post );
+		$permalink  = self::get_permalink( $post );
+		if ( $media_type === 'video' && strpos( $permalink, 'https://www.instagram.com/reel/' ) !== false ) {
+			return 'reels';
+		}
+
 		return 'feed';
 	}
 
-		/**
+	/**
 	 * Get the avatar URL from the API response
 	 *
 	 * @param array $account_info

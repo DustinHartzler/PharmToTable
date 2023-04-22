@@ -198,6 +198,10 @@ class SB_Instagram_Connected_Account {
 					$sb_instagram_posts_manager->add_error( 'image_editor', $message );
 				}
 
+				if ( ! empty( $temp_file ) ) {
+					@unlink( $temp_file );
+				}
+
 			}
 		}
 		return false;

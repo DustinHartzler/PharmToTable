@@ -2808,7 +2808,83 @@
     align-items: center;
 }
 
+/*Personal Account Popup*/
+.sbi-personal-account-ctn .sbi-source-account-box{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.sbi-pers-account-icon{
+	width: 64px;
+	height: 64px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 7px solid #bfe8ff;
+	border-radius: 50%;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), 0px 4px 5px rgba(0, 0, 0, 0.05);
+}
+.sbi-pers-account-icon svg{
+	float: left;
+}
 
+.sbi-personal-account-ctn .sbi-fb-personal-step1 .sbi-fb-source-top {
+    padding: 27px 54px 27px;
+    text-align: center;
+}
+.sbi-fb-personal-step2 .sbi-fb-source-btn{
+	margin-right: 0px !important;
+}
+.sbi-personal-account-ctn button{
+	font-weight: 600;
+}
+.sbi-fb-personal-form{
+	text-align: left;
+	padding-top: 25px;
+	padding-bottom: 20px;
+}
+.sbi-fb-personal-step2 > *{
+	padding-left: 19px;
+	padding-right: 19px;
+}
+.sbi-fb-personal-upload-btn{
+	margin-top: 12px;
+}
+.sbi-fb-personal-upload-btn button span{
+	padding: 0 5px;
+}
+.sbi-fb-personal-upload-btn button svg{
+	float: left;
+}
+.sbi-fb-personal-upload-btn input[type="file"]{
+	display: none;
+}
+.sbi-fb-personal-upload-btn > *{
+	display: inline-flex;
+	margin-right: 7px!important;
+}
+
+
+.sbi-fb-personal-textarea{
+	margin-top: 16px;
+}
+.sbi-fb-personal-textarea > *{
+	width: 100%;
+	float: left;
+}
+.sbi-fb-personal-textarea label{
+	font-size: 14px;
+	color: #434960;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+.sbi-fb-personal-textarea textarea{
+	height: 77px;
+	border: 1px solid #D0D1D7;
+	border-radius: 1px;
+	padding: 8px 2px 2px 12px;
+	outline: none;
+}
 
 /*** 7.0 Settings CTA ***/
 .sbi-settings-cta {
@@ -2875,7 +2951,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    max-width: 196px;
+    max-width: 505px;
     margin-top: 10px;
     box-sizing: border-box;
 	margin-right: 10px;

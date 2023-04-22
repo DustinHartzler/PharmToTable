@@ -520,7 +520,7 @@ class SBI_Feed_Saver {
 				'background' => '',
 				'imageres' => 'auto',
 				'media' => 'all',
-				'videotypes' => 'regular,igtv',
+				'videotypes' => 'regular,igtv,reels',
 				'showcaption' => true,
 				'captionlength' => '',
 				'captioncolor' => '',
@@ -615,6 +615,7 @@ class SBI_Feed_Saver {
 				'photosposts'	=> true,
 				'videosposts'	=> true,
 				'igtvposts'	=> true,
+				'reelsposts' => true,
 
 				'shoppablefeed' => false,
 				'shoppablelist' => '{}',

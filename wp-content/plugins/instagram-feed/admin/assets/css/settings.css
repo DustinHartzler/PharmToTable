@@ -1336,6 +1336,22 @@
 #sbi-settings .sbi-fb-source-step1 .sbi-fb-source-top h3 {
     margin-bottom: 40px;
 }
+.sbi-fb-srcs-personal-btn{
+    height: 40px;
+    width: 100%;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #E2F5FF;
+    cursor: pointer;
+    color: #0068A0;
+    font-weight: 600;
+}
+.sbi-fb-srcs-personal-btn svg{
+    float: left;
+    margin-right: 10px;
+}
 
 /*
 Sources Instance Popup

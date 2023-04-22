@@ -203,8 +203,8 @@
                     </div>
                     <div class="sb-srcs-item" v-for="(source, sourceIndex) in sourcesList" :class="{expanded: expandedFeedID == sourceIndex + 1, 'sb-account-has-error' : source.error !== ''}">
                         <div class="sbi-fb-srcs-item-ins">
-                            <div class="sb-srcs-item-avatar" v-if="returnAccountAvatar(source)">
-                                <img :src="returnAccountAvatar(source)">
+                            <div class="sb-srcs-item-avatar" v-if="returnAccountAvatar(source) != false">
+                                <img :key="sourceIndex" :src="returnAccountAvatar(source)" :alt="escapeHTML(source.username)">
                             </div>
                             <div class="sb-srcs-item-inf">
                                 <div class="sb-srcs-item-name">{{source.username}}</div>
@@ -232,6 +232,11 @@
                                 <span>{{source.account_id}}</span>
                                 <div class="sbi-fb-srcs-info-icon" v-html="svgIcons['copy2']" @click.prevent.default="copyToClipBoard(source.account_id)"></div>
                             </div>
+                        </div>
+
+                        <div class="sbi-fb-srcs-personal-btn" v-if="expandedFeedID == sourceIndex + 1 && source.account_type == 'basic'" @click.prevent.default="openPersonalAccount( source )">
+                            <div v-html="svgIcons['addRoundIcon']"></div>
+                            <span v-html="source?.header_data?.biography || source?.local_avatar_url ? genericText.updateAccountInfo : genericText.addAccountInfo"></span>
                         </div>
                     </div>
 
@@ -291,7 +296,7 @@
             <div class="sb-form-field">
                 <div class="d-flex mb-15">
                     <select name="" id="sbi-feeds-list" class="sbi-select" v-model="exportFeed" ref="export_feed">
-                        <option value="none" selected disabled>Select Feed</option>
+                        <option value="none" selected disabled><?php _e('Select Feed', 'instagram-feed'); ?></option>
                         <option v-for="feed in feeds" :value="feed.id">{{ feed.name }}</option>
                     </select>
                     <button type="button" class="sbi-btn sb-btn-lg export-btn" @click="exportFeedSettings" :disabled="exportFeed === 'none'">

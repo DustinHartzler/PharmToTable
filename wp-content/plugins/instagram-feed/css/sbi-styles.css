@@ -306,14 +306,15 @@
   float: left;
   display: block;
   /*width: 100%;*/
-  min-width: 100%\9;
+  min-width: 100%;
   text-decoration: none;
   transition: color 0.5s ease;
 }
 .sb_instagram_header.sbi_header_outside{
-  float: unset;
+  float: none;
   margin-left: auto !important;
   margin-right: auto !important;
+  display: flex;
 }
 .sbi_no_avatar .sbi_header_img{
   background: #333;
@@ -502,7 +503,6 @@
 }
 #sb_instagram .sb_instagram_header .sbi_header_img_hover i {
   overflow: hidden;
-  background: url('../img/small-logo.png') no-repeat 0 0;
 }
 #sb_instagram .sb_instagram_header .sbi_header_img_hover,
 .sb_instagram_header .sbi_header_img_hover{
@@ -850,7 +850,8 @@
 #sb_instagram.sbi_no_js .sbi_load_btn{
   display: none;
 }
-#sb_instagram #sbi_images .sbi_js_load_disabled .sbi_imgLiquid_ready.sbi_photo {
+#sb_instagram #sbi_images .sbi_js_load_disabled .sbi_imgLiquid_ready.sbi_photo,
+#sb_instagram #sbi_images .sbi_no_js_customizer .sbi_imgLiquid_ready.sbi_photo{
   padding-bottom: 0 !important;
 }
 #sb_instagram #sbi_mod_error .sb_frontend_btn {

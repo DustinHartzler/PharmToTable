@@ -26,6 +26,7 @@ class SBI_Feed_Saver_Manager {
 		add_action( 'wp_ajax_sbi_feed_saver_manager_retrieve_comments', array( 'InstagramFeed\Builder\SBI_Feed_Saver_Manager', 'retrieve_comments' ) );
 		add_action( 'wp_ajax_sbi_feed_saver_manager_clear_comments_cache', array( 'InstagramFeed\Builder\SBI_Feed_Saver_Manager', 'clear_comments_cache' ) );
 		add_action( 'wp_ajax_sbi_feed_saver_manager_delete_source', array( 'InstagramFeed\Builder\SBI_Feed_Saver_Manager', 'delete_source' ) );
+		add_action( 'wp_ajax_sbi_update_personal_account', array( 'InstagramFeed\Builder\SBI_Feed_Saver_Manager', 'sbi_update_personal_account' ) );
 
 		//Detect Leaving the Page
 		add_action( 'wp_ajax_sbi_feed_saver_manager_recache_feed', array( 'InstagramFeed\Builder\SBI_Feed_Saver_Manager', 'recache_feed' ) );
@@ -205,7 +206,12 @@ class SBI_Feed_Saver_Manager {
 		}
 
 		if ( ! empty( $_POST['source_id'] ) ) {
-			SBI_Db::delete_source_query( $_POST['source_id'] );
+			if ( isset( $_POST['username'] ) && ! empty( $_POST['username'] ) ) {
+				$username = sanitize_text_field( $_POST['username'] );
+				\SB_Instagram_Connected_Account::delete_local_avatar( $username );
+			}
+			$source_id = absint( $_POST['source_id'] );
+			SBI_Db::delete_source_query( $source_id );
 		}
 	}
 
@@ -764,6 +770,41 @@ class SBI_Feed_Saver_Manager {
 		}
 
 		return $save_data;
+	}
+
+	/**
+	 * Update Personal Account Info
+	 * Setting Avatar + Bio
+	 *
+	 * @return json
+	 *
+	 * @since 6.0.8
+	 */
+	public static function sbi_update_personal_account(){
+
+		check_ajax_referer( 'sbi-admin' , 'nonce');
+		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+			wp_send_json_error();
+		}
+
+		if( isset( $_FILES['avatar']['tmp_name'] ) && isset( $_POST['username'] ) ) {
+			$account_avatar = sanitize_text_field( $_FILES['avatar']['tmp_name'] );
+			$username = sanitize_text_field( $_POST['username'] );
+			$created = \SB_Instagram_Connected_Account::create_local_avatar( $username, $account_avatar );
+			\SB_Instagram_Connected_Account::update_local_avatar_status( $username, $created );
+		}
+
+		if( isset( $_POST['bio'] ) && isset( $_POST['id'] ) ){
+			$account_bio = sanitize_text_field( stripslashes( $_POST['bio'] ) );
+			$id     = sanitize_text_field( wp_unslash( $_POST['id'] ) );
+			SBI_Source::update_personal_account_bio( $id, $account_bio );
+		}
+		$response = array(
+			'success' => true,
+			'sourcesList' => SBI_Feed_Builder::get_source_list()
+		);
+		echo sbi_json_encode( $response );
+		wp_die();
 	}
 
 }

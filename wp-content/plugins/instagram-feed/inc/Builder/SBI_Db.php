@@ -55,15 +55,13 @@ class SBI_Db {
 			$i = 0;
 			foreach ( $results as $result ) {
 				if ( (int) $result['used_in'] > 0 ) {
-					$account_id = sanitize_key( $result['account_id'] );
-					$sql        = "SELECT *
+					$results[ $i ]['instances'] = $wpdb->get_results( $wpdb->prepare(
+						"SELECT *
 						FROM $feeds_table_name
-						WHERE settings LIKE CONCAT('%', $account_id, '%')
+						WHERE settings LIKE CONCAT('%', %s, '%')
 						GROUP BY id
 						LIMIT 100;
-						";
-
-					$results[ $i ]['instances'] = $wpdb->get_results( $sql, ARRAY_A );
+						", $result['account_id'] ), ARRAY_A );
 				}
 				$i++;
 			}
@@ -323,7 +321,7 @@ class SBI_Db {
 			$data['expires'] = $to_insert['expires'];
 			$format[]        = '%s';
 		} else {
-			$data['expires'] = '2100-12-30 00:00:00';
+			$data['expires'] = '2037-12-30 00:00:00';
 			$format[]        = '%s';
 		}
 		$data['last_updated'] = gmdate( 'Y-m-d H:i:s' );
@@ -536,14 +534,10 @@ class SBI_Db {
 		$feed_caches_table_name = $wpdb->prefix . 'sbi_feed_caches';
 		$feed_ids_array         = implode( ',', array_map( 'absint', $feed_ids_array ) );
 		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM $feeds_table_name WHERE id IN ($feed_ids_array)"
-			)
+			"DELETE FROM $feeds_table_name WHERE id IN ($feed_ids_array)"
 		);
 		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM $feed_caches_table_name WHERE feed_id IN ($feed_ids_array)"
-			)
+			"DELETE FROM $feed_caches_table_name WHERE feed_id IN ($feed_ids_array)"
 		);
 
 		echo sbi_json_encode( SBI_Feed_Builder::get_feed_list() );
@@ -945,5 +939,22 @@ class SBI_Db {
 		$wp_roles->remove_cap( 'administrator', 'manage_instagram_feed_options' );
 		wp_clear_scheduled_hook( 'sbi_feed_update' );
 		wp_clear_scheduled_hook( 'sbi_usage_tracking_cron' );
+	}
+
+	/**
+	 * Query to Get Single source
+	 *
+	 * @param array $source_id
+	 *
+	 * @since 6.0.8
+	 */
+	public static function get_source_by_account_id( $source_id ) {
+		global $wpdb;
+		$sources_table_name = $wpdb->prefix . 'sbi_sources';
+		$sql = $wpdb->prepare(
+				"SELECT * FROM $sources_table_name WHERE account_id = %s; ",
+				$source_id
+			);
+		return $wpdb->get_row( $sql, ARRAY_A );
 	}
 }

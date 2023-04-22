@@ -134,7 +134,7 @@
             </div>
             <div class="sbi-export-right">
                 <select name="" id="sbi-feeds-list" class="sbi-select" v-model="exportFeed" ref="export_feed">
-                    <option value="none" selected disabled>Select Feed</option>
+                    <option value="none" selected disabled><?php _e('Select Feed', 'instagram-feed'); ?></option>
                     <option v-for="feed in feeds" :value="feed.id">{{ feed.name }}</option>
                 </select>
                 <button type="button" class="sbi-btn sb-btn-grey" @click="exportFeedSettings" :disabled="exportFeed === 'none'">

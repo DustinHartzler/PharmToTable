@@ -80,6 +80,7 @@
     include_once SBI_BUILDER_DIR . 'templates/sections/popup/onboarding-popup.php';
     include_once SBI_BUILDER_DIR . 'templates/sections/popup/onboarding-customizer-popup.php';
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/install-plugin-popup.php';
+	include_once SBI_BUILDER_DIR . 'templates/sections/popup/personal-account-popup.php';
 ?>
 <div class="sb-notification-ctn" :data-active="notificationElement.shown" :data-type="notificationElement.type">
 	<div class="sb-notification-icon" v-html="svgIcons[notificationElement.type+'Notification']"></div>
@@ -96,7 +97,12 @@
 	</div>
 </div>
 
-
+<sb-personal-account-component
+:generic-text="genericText"
+:svg-icons="svgIcons"
+ref="personalAccountRef"
+>
+</sb-personal-account-component>
 
 <sb-confirm-dialog-component
 :dialog-box.sync="dialogBox"

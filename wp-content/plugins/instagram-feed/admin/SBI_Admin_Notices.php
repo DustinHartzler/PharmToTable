@@ -158,6 +158,7 @@ class SBI_Admin_Notices
         // Check the API
         $sbi_api_params = array(
             'edd_action'=> 'check_license',
+            'nocache'    => '1',
             'license'   => $sbi_license,
             'item_name' => urlencode( SBI_PLUGIN_NAME ) // the name of our product in EDD
         );

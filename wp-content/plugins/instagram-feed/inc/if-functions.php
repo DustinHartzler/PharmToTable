@@ -1359,7 +1359,7 @@ function sb_instagram_custom_css() {
 
 	if( !empty($sb_instagram_custom_css) ){
 		echo "\r\n";
-		echo stripslashes($sb_instagram_custom_css);
+		echo wp_strip_all_tags( stripslashes( $sb_instagram_custom_css ) );
 	}
 
 	if( current_user_can( 'edit_posts' ) ){

@@ -93,7 +93,7 @@ class SBI_Global_Settings {
 				update_option( 'sbi_license_key', $sbi_license_key );
 			}
 		} else {
-			$license_key = trim( get_option( 'sbi_license_key' ) );
+			$license_key = sanitize_key( trim( get_option( 'sbi_license_key', '' ) ) );
 
 			if ( empty( $sbi_license_key ) && ! empty( $license_key ) ) {
 				$sbi_license_data = $this->get_license_data( $license_key, 'deactivate_license', SBI_PLUGIN_NAME );
@@ -226,7 +226,7 @@ class SBI_Global_Settings {
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
 		}
-		$license_key = trim( get_option( 'sbi_license_key' ) );
+		$license_key = sanitize_key( trim( get_option( 'sbi_license_key', '' ) ) );
 		$sbi_license_data = $this->get_license_data( $license_key, 'deactivate_license', SBI_PLUGIN_NAME );
 		// update the license data
 		if( !empty( $sbi_license_data ) ) {
@@ -258,7 +258,7 @@ class SBI_Global_Settings {
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
 		}
-		$license_key = get_option( 'sbi_license_key' );
+		$license_key = sanitize_key( get_option( 'sbi_license_key', '' ) );
 		$sbi_api_params = array(
 			'edd_action'=> 'check_license',
 			'license'   => $license_key,
@@ -302,7 +302,7 @@ class SBI_Global_Settings {
 			wp_send_json_error();
 		}
 		// Do the form validation
-		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( $_POST['license_key'] ) : '';
+		$license_key = isset( $_POST['license_key'] ) ? sanitize_key( $_POST['license_key'] ) : '';
 		$item_name = isset( $_POST['item_name'] ) ? sanitize_text_field( $_POST['item_name'] ) : '';
 		$option_name = isset( $_POST['option_name'] ) ? sanitize_text_field( $_POST['option_name'] ) : '';
 		if ( empty( $license_key ) || empty( $item_name ) ) {
@@ -666,11 +666,11 @@ class SBI_Global_Settings {
 
 		$license_key = null;
 		if ( get_option('sbi_license_key') ) {
-			$license_key = get_option('sbi_license_key');
+			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
 
 		$upgrade_url 	= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', $license_key);
-		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, $sbi_download_id);
+		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, sanitize_key( $sbi_download_id ) );
 		$learn_more_url = 'https://smashballoon.com/doc/my-license-key-wont-activate/?utm_campaign=instagram-free&utm_source=settings&utm_medium=license&utm_content=learn-more';
 
 		// Check if the license key reached max site installations
@@ -775,7 +775,7 @@ class SBI_Global_Settings {
 			);
 		}
 		$licenseErrorMsg = null;
-		$license_key = trim( get_option( 'sbi_license_key' ) );
+		$license_key = sanitize_key( trim( get_option( 'sbi_license_key', '' ) ) );
 		if ( $license_key ) {
 			$license_last_check = get_option( 'sbi_license_last_check_timestamp' );
 			$date = time() - (DAY_IN_SECONDS * 90);
@@ -813,7 +813,7 @@ class SBI_Global_Settings {
 
 		$license_key = null;
 		if ( get_option('sbi_license_key') ) {
-			$license_key = get_option('sbi_license_key');
+			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
 
 		$has_license_error = false;
@@ -1104,7 +1104,7 @@ class SBI_Global_Settings {
 	public static function get_links_with_utm() {
 		$license_key = null;
 		if ( get_option('sbi_license_key') ) {
-			$license_key = get_option('sbi_license_key');
+			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
 		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=balloon&utm_medium=all-access', $license_key);
 
@@ -1146,7 +1146,7 @@ class SBI_Global_Settings {
 				'cronAmPm'			=> $sbi_cache_cron_am_pm,
 				'gdpr'				=> $sbi_settings['gdpr'],
 				'gdprPlugin'		=> $active_gdpr_plugin,
-				'customCSS'			=> isset( $sbi_settings['sb_instagram_custom_css'] ) ? stripslashes( $sbi_settings['sb_instagram_custom_css'] ) : '',
+				'customCSS'			=> isset( $sbi_settings['sb_instagram_custom_css'] ) ? wp_strip_all_tags( stripslashes( $sbi_settings['sb_instagram_custom_css'] ) ) : '',
 				'customJS'			=> isset( $sbi_settings['sb_instagram_custom_js'] ) ? stripslashes( $sbi_settings['sb_instagram_custom_js'] ) : '',
 			),
 			'advanced' => array(

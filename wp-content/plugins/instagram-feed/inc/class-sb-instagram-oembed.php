@@ -112,7 +112,7 @@ class SB_Instagram_Oembed
 	public static function oembed_providers( $providers ) {
 		$oembed_url = SB_Instagram_Oembed::oembed_url();
 		if ( $oembed_url ) {
-			$providers['#https?://(www\.)?instagr(\.am|am\.com)/(p|tv)/.*#i'] = array( $oembed_url, true );
+			$providers['#https?://(www\.)?instagr(\.am|am\.com)/(p|tv|reel)/.*#i'] = array( $oembed_url, true );
 			// for WP 4.9
 			$providers['#https?://(www\.)?instagr(\.am|am\.com)/p/.*#i'] = array( $oembed_url, true );
 		}
@@ -164,7 +164,7 @@ class SB_Instagram_Oembed
 	 * @since 2.5/5.8
 	 */
 	public static function oembed_result( $html, $url, $args ) {
-		if ( preg_match( '#https?://(www\.)?instagr(\.am|am\.com)/(p|tv)/.*#i', $url ) === 1 ) {
+		if ( preg_match( '#https?://(www\.)?instagr(\.am|am\.com)/(p|tv|reel)/.*#i', $url ) === 1 ) {
 			if ( strpos( $html, 'class="instagram-media"' ) !== false ) {
 				$html = '<div class="sbi-embed-wrap">' . str_replace( 'class="instagram-media"', 'class="instagram-media sbi-embed"', $html ) . '</div>';
 			}
@@ -186,7 +186,7 @@ class SB_Instagram_Oembed
 	 * @since 2.5/5.8
 	 */
 	public static function oembed_ttl( $ttl, $url, $attr, $post_ID ) {
-		if ( preg_match( '#https?://(www\.)?instagr(\.am|am\.com)/(p|tv)/.*#i', $url ) === 1 ) {
+		if ( preg_match( '#https?://(www\.)?instagr(\.am|am\.com)/(p|tv|reel)/.*#i', $url ) === 1 ) {
 			$ttl = 30 * YEAR_IN_SECONDS;
 		}
 

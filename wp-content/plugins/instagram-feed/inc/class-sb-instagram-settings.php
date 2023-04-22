@@ -323,6 +323,32 @@ class SB_Instagram_Settings {
 	 * @return mixed
 	 */
 	public function filter_for_builder( $settings, $atts ) {
+
+		if ( ! isset( $atts['media'] ) ) {
+			if( isset( $settings['reelsposts'] ) ) {
+				$include_reels = $settings['reelsposts'] !== 'false' && ! empty( $settings['reelsposts'] ) ? true : false;
+			} else {
+				$include_reels = $settings['media'] === 'all' ? true : false;
+				$settings['reelsposts'] = $include_reels ? true : false;
+			}
+
+			$settings['media'] = $include_reels ? 'all' : array( 'photos', 'videos' );
+		} else {
+			$include_reels = $settings['media'] === 'all' && strpos( $settings['videotypes'], 'reels' ) !== false;
+		}
+
+		if ( ! isset( $atts['videotypes'] ) ) {
+
+			$video_types = array();
+			if ( $include_reels ) {
+				$video_types[] = 'reels';
+				$video_types[] = 'regular';
+			} else {
+				$video_types[] = 'regular';
+			}
+			$settings['videotypes'] = implode( ',', $video_types );
+		}
+
 		if ( isset( $atts['ajaxtheme'] ) ) {
 			$settings['ajaxtheme'] = $atts['ajaxtheme'] === 'true';
 		} else {
@@ -1324,6 +1350,13 @@ class SB_Instagram_Settings {
 
 		$settings['sb_instagram_cache_time']      = isset( $db['sb_instagram_cache_time'] ) ? $db['sb_instagram_cache_time'] : 1;
 		$settings['sb_instagram_cache_time_unit'] = isset( $db['sb_instagram_cache_time_unit'] ) ? $db['sb_instagram_cache_time_unit'] : 'hours';
+
+		// use our new colsmobile and colstablet instead of disable mobile if from the DB setting
+		if ( ! empty( $settings['disablemobile'] ) ) {
+			$settings['colstablet']    = $settings['cols'];
+			$settings['colsmobile']    = $settings['cols'];
+			$settings['disablemobile'] = false;
+		}
 
 		return $settings;
 	}

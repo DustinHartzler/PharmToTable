@@ -337,8 +337,6 @@ class SB_Instagram_Data_Manager {
 		delete_option( 'sbi_single_cache' );
 
 		\InstagramFeed\Builder\SBI_Db::clear_sbi_feed_caches();
-		\InstagramFeed\Builder\SBI_Db::clear_sbi_sources();
-
 	}
 
 	/**

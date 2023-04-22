@@ -100,12 +100,12 @@ class SBI_Support {
 		);
 
 		wp_enqueue_script(
-			'vue-main',
-			'https://cdn.jsdelivr.net/npm/vue@2.6.12',
-			null,
-			'2.6.12',
-			true
-		);
+            'sb-vue',
+            SBI_PLUGIN_URL . 'js/vue.min.js',
+            null,
+            '2.6.12',
+            true
+        );
 
 		wp_enqueue_script(
 			'support-app',
@@ -396,7 +396,7 @@ class SBI_Support {
 		$output .= isset( $sbi_settings['gdpr'] ) ? $sbi_settings['gdpr'] : ' Not setup';
 		$output .= '</br>';
 		$output .= 'Custom CSS: ';
-		$output .= isset( $sbi_settings['sb_instagram_custom_css'] ) && ! empty( $sbi_settings['sb_instagram_custom_css'] ) ? $sbi_settings['sb_instagram_custom_css'] : 'Empty';
+		$output .= isset( $sbi_settings['sb_instagram_custom_css'] ) && ! empty( $sbi_settings['sb_instagram_custom_css'] ) ? wp_strip_all_tags( $sbi_settings['sb_instagram_custom_css'] ) : 'Empty';
 		$output .= '</br>';
 		$output .= 'Custom JS: ';
 		$output .= isset( $sbi_settings['sb_instagram_custom_js'] ) && ! empty( $sbi_settings['sb_instagram_custom_js'] ) ? $sbi_settings['sb_instagram_custom_js'] : 'Empty';
