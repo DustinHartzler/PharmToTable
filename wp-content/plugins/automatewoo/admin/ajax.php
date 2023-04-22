@@ -282,7 +282,7 @@ class Admin_Ajax {
 	/**
 	 * Search for sensei courses and echo JSON.
 	 *
-	 * @since x.x.x
+	 * @since 5.6.10
 	 */
 	public static function json_search_sensei_courses() {
 		if ( ! current_user_can( 'manage_sensei' ) ) {
@@ -296,7 +296,7 @@ class Admin_Ajax {
 	/**
 	 * Search for sensei lessons and echo JSON.
 	 *
-	 * @since x.x.x
+	 * @since 5.6.10
 	 */
 	public static function json_search_sensei_lessons() {
 		if ( ! current_user_can( 'manage_sensei' ) ) {
@@ -310,7 +310,7 @@ class Admin_Ajax {
 	/**
 	 * Search for sensei quizzes and echo JSON.
 	 *
-	 * @since x.x.x
+	 * @since 5.6.10
 	 */
 	public static function json_search_sensei_quizzes() {
 		if ( ! current_user_can( 'manage_sensei' ) ) {
@@ -324,7 +324,7 @@ class Admin_Ajax {
 	/**
 	 * Search for sensei questions and echo JSON.
 	 *
-	 * @since x.x.x
+	 * @since 5.6.10
 	 */
 	public static function json_search_sensei_questions() {
 		if ( ! current_user_can( 'manage_sensei' ) ) {
@@ -338,7 +338,7 @@ class Admin_Ajax {
 	/**
 	 * Search for sensei groups and echo JSON.
 	 *
-	 * @since x.x.x
+	 * @since 5.6.10
 	 */
 	public static function json_search_sensei_groups() {
 		if ( ! current_user_can( 'manage_sensei' ) ) {
@@ -702,7 +702,7 @@ class Admin_Ajax {
 	/**
 	 * Respond dynamic field options for a given trigger field.
 	 *
-	 * @since x.x.x
+	 * @since 5.6.6
 	 */
 	static function update_dynamic_trigger_options_select() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {

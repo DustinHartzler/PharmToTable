@@ -10,7 +10,7 @@ use AutomateWoo\Admin\Analytics\Rest_API\Upstream\Generic_Query;
  * REST API Conversions Report stats controller class.
  *
  * @extends Log_Stats_Controller
- * @since x.x.x
+ * @since 5.6.9
  */
 class Controller extends Log_Stats_Controller {
 

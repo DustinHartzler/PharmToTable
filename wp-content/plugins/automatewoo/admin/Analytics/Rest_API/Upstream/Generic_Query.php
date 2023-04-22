@@ -24,7 +24,7 @@ use WC_Data_Store;
  * Workflow runs specific Woo Report Query.
  *
  * @see Automattic\WooCommerce\Admin\API\Reports\Query
- * @since x.x.x
+ * @since 5.6.9
  */
 class Generic_Query extends WooReportsQuery {
 	/**

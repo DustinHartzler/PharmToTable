@@ -23,7 +23,7 @@ use WP_Error;
  * https://github.com/woocommerce/automatewoo/issues/1238
  *
  * @extends Reports_Data_Store
- * @version x.x.x
+ * @version 5.6.8
  */
 abstract class Generic_Stats_Store extends Reports_Data_Store {
 	/**

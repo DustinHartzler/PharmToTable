@@ -18,6 +18,32 @@ class Clean {
 		return sanitize_text_field( $string );
 	}
 
+	/**
+	 * Sanitize the ORDER parameter allowing only ASC or DESC.
+	 *
+	 * @param string $order The order parameter provided on the input.
+	 * @return string ASC or DESC. DESC by default.
+	 */
+	static function order( $order ) {
+		return strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
+	}
+
+	/**
+	 * Sanitize the ORDER BY parameter allowing only valid column names.
+	 *
+	 * @param string $order_by The column attempted to set as order by
+	 * @param array $valid_columns Valid column names available to set as order by
+	 *
+	 * @return string The sanitized column name. Or empty string if invalid column name.
+	 */
+	static function order_by( $order_by, $valid_columns ) {
+
+		if ( in_array( $order_by, $valid_columns ) ) {
+			return $order_by;
+		}
+
+		return '';
+	}
 
 	/**
 	 * @param $email
@@ -187,5 +213,5 @@ class Clean {
 		}
 		return $data;
 	}
-	
+
 }

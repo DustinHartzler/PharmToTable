@@ -12,7 +12,7 @@ use AutomateWoo\Admin\Analytics\Rest_API\Upstream\Generic_Stats_Store;
 /**
  * Base class for log-related REST API reports stats data stores.
  *
- * @version x.x.x
+ * @version 5.6.8
  */
 abstract class Log_Stats_Store extends Generic_Stats_Store {
 

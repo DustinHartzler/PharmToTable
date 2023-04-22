@@ -220,7 +220,7 @@ final class JSON_Search {
 	 * @param string $term      The search term.
 	 * @param string $post_type The post type to search for
 	 *
-	 * @since x.x.x
+	 * @since 5.6.10
 	 */
 	public static function sensei_data( $term, $post_type ) {
 		if ( empty( $term ) ) {

@@ -16,7 +16,7 @@ use WP_Error;
 /**
  * REST API AW Unsubscribers report stats data store
  *
- * @version x.x.x
+ * @version 5.6.8
  */
 class Data_Store extends Generic_Stats_Store {
 	/**

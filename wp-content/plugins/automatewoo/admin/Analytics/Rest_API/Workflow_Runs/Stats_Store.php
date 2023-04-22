@@ -16,7 +16,7 @@ use WP_Error;
 /**
  * REST API AW workflow runs reports stats data store
  *
- * @version x.x.x
+ * @version 5.6.3
  */
 class Data_Store extends Log_Stats_Store {
 

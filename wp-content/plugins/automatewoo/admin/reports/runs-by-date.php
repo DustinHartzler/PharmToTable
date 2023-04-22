@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * @class Report_Runs_By_Date
  *
- * @deprecated since x.x.x Migrated to Analytics.
+ * @deprecated since 5.6.3 Migrated to Analytics.
  * @see AutomateWoo\Admin\Analytics
  * @see AutomateWoo\Admin\Analytics\Rest_API\Workflow_Runs
  */

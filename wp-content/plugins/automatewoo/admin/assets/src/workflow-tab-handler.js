@@ -49,6 +49,7 @@ const loadTabHandler = ( defaultTabName, tabs ) => {
 	};
 
 	const getTabContent = ( tab ) => {
+		maybeHideWelcomeNotice();
 		if ( tab.name === 'presets' ) {
 			return <PresetsTab />;
 		}
@@ -96,6 +97,25 @@ const loadTabHandler = ( defaultTabName, tabs ) => {
 		// Hack: Unmount and rerender tabs because we can't programmatically change the current tab
 		unmountComponentAtNode( tabsRootEl );
 		renderPageTabs( tabName );
+	};
+
+	/**
+	 * Hide WelcomeNotice when we are in Presets tab.
+	 */
+	const maybeHideWelcomeNotice = () => {
+		const welcomeNotice = document.querySelector(
+			'.automatewoo-welcome-notice'
+		);
+
+		if ( ! welcomeNotice ) {
+			return;
+		}
+
+		if ( getHash() === 'presets' ) {
+			welcomeNotice.style.display = 'none';
+		} else {
+			welcomeNotice.style.display = 'block';
+		}
 	};
 
 	// Init

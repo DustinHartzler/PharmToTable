@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * @class Report_Email_Tracking
  *
- * @deprecated since x.x.x Migrated to Analytics.
+ * @deprecated since 5.6.8 Migrated to Analytics.
  * @see AutomateWoo\Admin\Analytics
  * @see AutomateWoo\Admin\Analytics\Rest_API\Email_Tracking
  */

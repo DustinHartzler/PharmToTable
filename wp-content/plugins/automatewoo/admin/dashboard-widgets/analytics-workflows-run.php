@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Dashboard_Widget_Analytics_Workflows_Run class.
  *
- * @since x.x.x
+ * @since 5.7.0
  */
 class Dashboard_Widget_Analytics_Workflows_Run extends Dashboard_Widget_Analytics {
 

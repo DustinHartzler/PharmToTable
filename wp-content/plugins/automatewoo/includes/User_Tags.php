@@ -370,6 +370,8 @@ class User_Tags {
 				 <?php self::wp_dropdown_user_tags(); ?>
           </select>
 
+			<?php wp_nonce_field( 'automatewoo-change-user-tags' ); ?>
+
 			<?php if ( class_exists( 'Members_Plugin' ) ): // fix for members v2.0 ?>
 				<?php submit_button( esc_html__( 'Change', 'automatewoo' ), 'secondary', 'automatewoo-change-user-tags', false ) ?>
 			<?php endif; ?>
@@ -404,8 +406,14 @@ class User_Tags {
 
 		global $pagenow;
 
+		$valid_nonce = false;
+
 		if ( $pagenow != 'users.php' || empty( $_GET['users'] ) || ! current_user_can( 'edit_users' ) ) {
 			return;
+		}
+
+		if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'automatewoo-change-user-tags') ) {
+			$valid_nonce = true;
 		}
 
 		if ( empty( $_GET['changeit'] ) && empty( $_GET['automatewoo-change-user-tags'] ) ) {
@@ -414,13 +422,13 @@ class User_Tags {
 
 		$users = array_map( 'absint', $_GET['users'] );
 
-		if ( ! empty( $_GET['add_user_tag'] ) ) {
+		if ( ! empty( $_GET['add_user_tag'] ) && $valid_nonce ) {
 			foreach ( $users as $user_id ) {
 				wp_add_object_terms( $user_id, absint( $_GET['add_user_tag'] ), 'user_tag' );
 			}
 		}
 
-		if ( ! empty( $_GET['remove_user_tag'] ) ) {
+		if ( ! empty( $_GET['remove_user_tag'] ) && $valid_nonce ) {
 			foreach ( $users as $user_id ) {
 				wp_remove_object_terms( $user_id, absint( $_GET['remove_user_tag'] ), 'user_tag' );
 			}

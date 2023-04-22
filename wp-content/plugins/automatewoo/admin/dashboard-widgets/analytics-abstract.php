@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Dashboard_Widget_Analytics class.
  *
- * @since x.x.x
+ * @since 5.7.0
  */
 abstract class Dashboard_Widget_Analytics extends Dashboard_Widget {
 

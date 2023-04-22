@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Dashboard_Widget_Analytics_Conversions class.
  *
- * @since x.x.x
+ * @since 5.7.0
  */
 class Dashboard_Widget_Analytics_Conversions extends Dashboard_Widget_Analytics {
 

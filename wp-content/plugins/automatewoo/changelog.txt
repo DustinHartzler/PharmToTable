@@ -1,5 +1,10 @@
 *** AutomateWoo Changelog ***
 
+2023-04-18 - version 5.7.2
+* Tweak - Improve Security.
+* Tweak - Remove Welcome Notice when a workflow is created.
+* Tweak - Security improvements.
+
 2023-04-04 - version 5.7.1
 * Dev - Add PHP Code coverage report as GitHub action.
 * Fix - Missed import references.

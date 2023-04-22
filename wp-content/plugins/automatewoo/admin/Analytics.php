@@ -6,7 +6,7 @@ namespace AutomateWoo\Admin;
  * AutomateWoo Analytics.
  * Formerly AutomateWoo > Reports.
  *
- * @since    x.x.x
+ * @since 5.6.1
  */
 class Analytics {
 

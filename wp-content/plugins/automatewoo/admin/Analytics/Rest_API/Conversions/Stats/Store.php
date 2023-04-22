@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * REST API AW Conversions report stats data store
  *
- * @since x.x.x
+ * @since 5.6.9
  */
 class Store extends Generic_Stats_Store {
 

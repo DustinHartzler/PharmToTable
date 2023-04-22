@@ -18,7 +18,7 @@ use WP_Error;
 /**
  * REST API AW Email & SMS Tracking reports stats data store
  *
- * @version x.x.x
+ * @version 5.6.8
  */
 class Data_Store extends Log_Stats_Store {
 

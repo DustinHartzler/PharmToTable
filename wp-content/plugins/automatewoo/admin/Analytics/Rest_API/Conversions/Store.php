@@ -15,7 +15,7 @@ use Automattic\WooCommerce\Admin\API\Reports\TimeInterval;
 /**
  * Datastore for the Conversions List.
  *
- * @since x.x.x
+ * @since 5.7.0
  */
 class Store extends ReportsDataStore implements DataStoreInterface {
 

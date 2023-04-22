@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * @class Report_Conversions
  *
- * @deprecated since x.x.x Migrated to Analytics.
+ * @deprecated since 5.6.9 Migrated to Analytics.
  * @see AutomateWoo\Admin\Analytics
  * @see AutomateWoo\Admin\Analytics\Rest_API\Conversions\Stats
  */

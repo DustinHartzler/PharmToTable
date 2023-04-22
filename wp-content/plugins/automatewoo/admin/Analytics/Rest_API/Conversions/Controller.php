@@ -11,7 +11,7 @@ use Automattic\WooCommerce\Admin\API\Reports\ParameterException;
 /**
  * REST API Conversions Report list controller class.
  *
- * @since x.x.x
+ * @since 5.7.0
  */
 class Controller extends Generic_Controller {
 

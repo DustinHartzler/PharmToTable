@@ -8,7 +8,7 @@ use AutomateWoo\Admin\Analytics;
  * AutomateWoo Analytics.
  * Formerly AutomateWoo > Reports.
  *
- * @since    x.x.x
+ * @since 5.6.3
  */
 class Rest_API {
 

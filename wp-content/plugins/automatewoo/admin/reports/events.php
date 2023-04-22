@@ -119,7 +119,7 @@ class Report_Events extends Admin_List_Table {
 		$query->set_calc_found_rows( true );
 		$query->set_limit( $per_page );
 		$query->set_page( $current_page );
-		$query->set_ordering( $this->get_param_orderby(), $this->get_param_order() );
+		$query->set_ordering( $this->get_param_orderby( array_keys( $this->get_sortable_columns() ) ), $this->get_param_order() );
 
 		$this->items = $query->get_results();
 		$this->max_items = $query->found_rows;
