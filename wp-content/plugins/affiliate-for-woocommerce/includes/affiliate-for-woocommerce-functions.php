@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.5.1
+ * @version     1.5.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -314,7 +314,7 @@ function afwc_is_plugin_active( $plugin = '' ) {
  * @param  string  $thousand_separator The thousand separator.
  * @return string  The formatted name
  */
-function afwc_format_price( $price, $decimals = null, $decimal_separator = null, $thousand_separator = null ) {
+function afwc_format_price( $price = 0, $decimals = null, $decimal_separator = null, $thousand_separator = null ) {
 	if ( is_null( $decimals ) ) {
 		$decimals = afwc_get_price_decimals();
 	}

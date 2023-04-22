@@ -2,14 +2,14 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Affiliate For WooCommerce 6.6.1\n"
+"Project-Id-Version: Affiliate For WooCommerce 6.8.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/affiliate-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-07T07:34:56+00:00\n"
+"POT-Creation-Date: 2023-04-21T13:32:11+05:30\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: affiliate-for-woocommerce\n"
@@ -563,211 +563,226 @@ msgstr ""
 msgid "Default commission plan: %s"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:157
+#: includes/admin/class-afwc-admin-settings.php:155
+msgctxt "Admin setting description"
+msgid "Include affiliate referral details in the WooCommerce New order email (if enabled)"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:159
 msgctxt "Plugin setting tab name"
 msgid "Affiliate For WooCommerce Settings"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:158
+#: includes/admin/class-afwc-admin-settings.php:160
 msgctxt "setting tab description"
 msgid "Use these options to configure the way plugin works."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:163
+#: includes/admin/class-afwc-admin-settings.php:165
 msgid "Registration form"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:170
+#: includes/admin/class-afwc-admin-settings.php:172
 msgid "Approval method"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:171
+#: includes/admin/class-afwc-admin-settings.php:173
 msgid "Automatically approve all submissions via Affiliate Registration Form - no manual review needed."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:175
+#: includes/admin/class-afwc-admin-settings.php:177
 msgid "Disabling this will require you to review and approve affiliates yourself. They won't become affiliates until you approve."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:179
+#: includes/admin/class-afwc-admin-settings.php:181
 msgid "Affiliate users roles"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:180
+#: includes/admin/class-afwc-admin-settings.php:182
 msgid "Users with these roles automatically become affiliates."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:189
+#: includes/admin/class-afwc-admin-settings.php:191
 msgid "Referral commission"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:196
+#: includes/admin/class-afwc-admin-settings.php:198
 msgid "Excluded products"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:197
+#: includes/admin/class-afwc-admin-settings.php:199
 msgid "All products are eligible for affiliate commission by default. If you want to exclude some, list them here."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:206
+#: includes/admin/class-afwc-admin-settings.php:208
 msgid "Affiliate tags"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:213
+#: includes/admin/class-afwc-admin-settings.php:215
 msgid "Tracking param name"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:217
+#: includes/admin/class-afwc-admin-settings.php:219
 msgid "Leaving this blank will use default value ref"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:221
+#: includes/admin/class-afwc-admin-settings.php:223
 msgid "Personalize affiliate identifier"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:222
+#: includes/admin/class-afwc-admin-settings.php:224
 msgid "Allow affiliates to use something other than {user_id} as referral identifier."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:226
+#: includes/admin/class-afwc-admin-settings.php:228
 msgid "Good idea to keep this on. This allows \"friendly\" looking links - because people can use their brand name instead of {user_id}."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:230
+#: includes/admin/class-afwc-admin-settings.php:232
 msgctxt "setting name"
 msgid "Pretty affiliate links"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:231
+#: includes/admin/class-afwc-admin-settings.php:233
 msgctxt "setting description"
 msgid "Automatically convert default affiliate referral links to beautiful links."
 msgstr ""
 
 #. translators: %1$s: Pretty affiliate link %2$s: Default affiliate link
-#: includes/admin/class-afwc-admin-settings.php:236
+#: includes/admin/class-afwc-admin-settings.php:238
 msgctxt "setting description tip"
 msgid "When enabled, the affiliate links will look like <strong>%1$s</strong> instead of %2$s"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:240
+#: includes/admin/class-afwc-admin-settings.php:242
 msgid "Coupons for referral"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:241
+#: includes/admin/class-afwc-admin-settings.php:243
 msgid "Use coupons for referral - along with affiliated links"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:245
+#: includes/admin/class-afwc-admin-settings.php:247
 msgid "Use the <code>Assign to affiliate</code> option while creating a coupon to link the coupon with an affiliate. Whenever that coupon is used, specified affiliate will be credited for the sale."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:249
+#: includes/admin/class-afwc-admin-settings.php:251
 msgid "Cookie duration (in days)"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:250
+#: includes/admin/class-afwc-admin-settings.php:252
 msgid "Use 0 for \"session only\" referrals. Use 36500 for 100 year / lifetime referrals. If someone makes a purchase within these many days of their first referred visit, affiliate will be credited for the sale."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:261
+#: includes/admin/class-afwc-admin-settings.php:263
 msgctxt "Admin setting name to credit first or last affiliate during referral"
 msgid "Credit first/last affiliate"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:265
+#: includes/admin/class-afwc-admin-settings.php:267
 msgctxt "Admin setting first option to credit affiliate"
 msgid "First - Credit the first affiliate who referred the customer."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:266
+#: includes/admin/class-afwc-admin-settings.php:268
 msgctxt "Admin setting last option to credit affiliate"
 msgid "Last - Credit the last/latest affiliate who referred the customer."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:271
+#: includes/admin/class-afwc-admin-settings.php:273
 msgctxt "Admin setting name for lifetime commissions"
 msgid "Lifetime commissions"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:272
+#: includes/admin/class-afwc-admin-settings.php:274
 msgctxt "Admin setting description for lifetime commissions"
 msgid "Allow affiliates to receive lifetime commissions"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:276
+#: includes/admin/class-afwc-admin-settings.php:278
 msgctxt "Admin setting description tooltip for lifetime commissions"
 msgid "Affiliates will receive commissions for every sale made by the same customer linked to this affiliate - without using referral link or coupon."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:279
+#: includes/admin/class-afwc-admin-settings.php:281
 msgctxt "Admin setting name for lifetime commissions excludes"
 msgid "Lifetime commissions exclude affiliates"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:280
+#: includes/admin/class-afwc-admin-settings.php:282
 msgctxt "Admin setting description for affiliates to exclude for lifetime commissions"
 msgid "Exclude the affiliates either by individual affiliates or affiliate tags to not give them lifetime commissions."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:284
+#: includes/admin/class-afwc-admin-settings.php:286
 msgctxt "Admin setting placeholder for lifetime commissions excludes"
 msgid "Search by affiliates or affiliate tags"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:289
+#: includes/admin/class-afwc-admin-settings.php:291
 msgctxt "Admin setting name"
 msgid "Affiliate self-refer"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:290
+#: includes/admin/class-afwc-admin-settings.php:292
 msgctxt "Admin setting description"
 msgid "Allow affiliates to earn commissions on their own orders"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:291
+#: includes/admin/class-afwc-admin-settings.php:293
 msgctxt "Admin setting description tip"
 msgid "Disabling this will not record a commission if an affiliate uses their own referral link/coupons during orders"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:298
+#: includes/admin/class-afwc-admin-settings.php:300
 msgid "Affiliate manager email"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:299
+#: includes/admin/class-afwc-admin-settings.php:301
 msgid "Affiliates will see a link to contact you in their dashboard - and the link will point to this email address. Leave this field blank to hide the contact link."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:302
+#: includes/admin/class-afwc-admin-settings.php:304
 msgid "Enter email address"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:329
+#: includes/admin/class-afwc-admin-settings.php:309
+msgctxt "Admin setting name"
+msgid "Send referral details to admin"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:311
+msgctxt "Admin setting description tip"
+msgid "Disabling this will not include affiliate referral details in the email to admin"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:340
 msgctxt "setting name"
 msgid "PayPal email address"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:330
+#: includes/admin/class-afwc-admin-settings.php:341
 msgctxt "setting description"
 msgid "Allow affiliates to enter their PayPal email address from their My Account > Affiliates > Profile for PayPal payouts"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:331
+#: includes/admin/class-afwc-admin-settings.php:342
 msgctxt "setting description tip"
 msgid "Disabling this will not show PayPal email address in My Account > Affiliates > Profile & WordPress Admin > Users > User profile."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:338
+#: includes/admin/class-afwc-admin-settings.php:349
 msgid "Payout via PayPal"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:399
-#: includes/admin/class-afwc-admin-settings.php:512
+#: includes/admin/class-afwc-admin-settings.php:410
+#: includes/admin/class-afwc-admin-settings.php:523
 msgctxt "The group name for lifetime commission affiliates excluded list"
 msgid "Affiliates"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:407
-#: includes/admin/class-afwc-admin-settings.php:514
+#: includes/admin/class-afwc-admin-settings.php:418
+#: includes/admin/class-afwc-admin-settings.php:525
 msgctxt "The group name for lifetime commission affiliate tags excluded list"
 msgid "Affiliate Tags"
 msgstr ""
@@ -989,100 +1004,100 @@ msgstr ""
 msgid "Join our affiliate program"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:221
-#: includes/class-affiliate-for-woocommerce.php:223
+#: includes/class-affiliate-for-woocommerce.php:230
+#: includes/class-affiliate-for-woocommerce.php:232
 msgid "Affiliate Tags"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:222
+#: includes/class-affiliate-for-woocommerce.php:231
 #: includes/commission_rules/rules/class-afwc-affiliate-tag-commission.php:46
 msgid "Affiliate Tag"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:224
+#: includes/class-affiliate-for-woocommerce.php:233
 msgid "Search Affiliate Tag"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:225
+#: includes/class-affiliate-for-woocommerce.php:234
 msgid "Popular Affiliate Tags"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:226
+#: includes/class-affiliate-for-woocommerce.php:235
 msgid "All Affiliate Tags"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:227
+#: includes/class-affiliate-for-woocommerce.php:236
 msgid "Edit Affiliate Tag"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:228
+#: includes/class-affiliate-for-woocommerce.php:237
 msgid "Update Affiliate Tag"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:229
+#: includes/class-affiliate-for-woocommerce.php:238
 msgid "Add New Affiliate Tag"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:230
+#: includes/class-affiliate-for-woocommerce.php:239
 msgid "New Affiliate Tag Name"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:231
+#: includes/class-affiliate-for-woocommerce.php:240
 msgid "No Affiliate Tags found"
 msgstr ""
 
 #. translators: A small arrow
-#: includes/class-affiliate-for-woocommerce.php:356
+#: includes/class-affiliate-for-woocommerce.php:366
 msgid "Affiliates Dashboard"
 msgstr ""
 
 #. translators: A small arrow
-#: includes/class-affiliate-for-woocommerce.php:356
+#: includes/class-affiliate-for-woocommerce.php:366
 #: assets/js/admin.js:1
 msgid "Affiliates"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:365
+#: includes/class-affiliate-for-woocommerce.php:375
 msgid "Getting Started"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:367
+#: includes/class-affiliate-for-woocommerce.php:377
 msgid "Affiliate Form Settings"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1370
+#: includes/class-affiliate-for-woocommerce.php:1380
 msgid "Email"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1376
+#: includes/class-affiliate-for-woocommerce.php:1386
 msgid "First Name"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1383
+#: includes/class-affiliate-for-woocommerce.php:1393
 msgid "Last Name"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1390
+#: includes/class-affiliate-for-woocommerce.php:1400
 msgid "Phone Number / Skype ID / Best method to talk to you"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1396
+#: includes/class-affiliate-for-woocommerce.php:1406
 msgid "Website"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1402
+#: includes/class-affiliate-for-woocommerce.php:1412
 msgid "Password"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1409
+#: includes/class-affiliate-for-woocommerce.php:1419
 msgid "Confirm Password"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1416
+#: includes/class-affiliate-for-woocommerce.php:1426
 msgid "Tell us more about yourself and why you'd like to partner with us (please include your social media handles, experience promoting others, tell us about your audience etc)"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1422
+#: includes/class-affiliate-for-woocommerce.php:1432
 msgid "I accept all the terms of this program"
 msgstr ""
 
@@ -1715,47 +1730,47 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:227
+#: includes/frontend/class-afwc-registration-form.php:229
 msgctxt "affiliate registration message"
 msgid "You are successfully registered."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:235
+#: includes/frontend/class-afwc-registration-form.php:237
 msgctxt "label for registration contact field"
 msgid "Way to contact"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:236
+#: includes/frontend/class-afwc-registration-form.php:238
 msgctxt "label for registration description field"
 msgid "About affiliate"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:260
+#: includes/frontend/class-afwc-registration-form.php:262
 msgctxt "affiliate registration message"
 msgid "Something went wrong."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:331
+#: includes/frontend/class-afwc-registration-form.php:333
 msgid "Settings saved successfully."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:335
+#: includes/frontend/class-afwc-registration-form.php:337
 msgid "Something went wrong. Please try again after some time."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:372
+#: includes/frontend/class-afwc-registration-form.php:374
 msgid "Affiliate registration form settings"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:375
+#: includes/frontend/class-afwc-registration-form.php:377
 msgid "Show"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:376
+#: includes/frontend/class-afwc-registration-form.php:378
 msgid "Label"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:398
+#: includes/frontend/class-afwc-registration-form.php:400
 #: assets/js/admin.js:1
 msgid "Save"
 msgstr ""
@@ -1962,14 +1977,29 @@ msgctxt "Coupon meta name for assigning a coupon to an affiliate during export"
 msgid "Assign to affiliate"
 msgstr ""
 
-#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:104
+#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:106
 msgctxt "recurring commission setting title"
 msgid "Issue recurring commission?"
 msgstr ""
 
-#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:105
+#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:107
 msgctxt "recurring commission setting description"
-msgid "Enable this to give affiliate commissions for subscription recurring orders also"
+msgid "Enable this to give affiliate commissions for subscription recurring/renewal orders"
+msgstr ""
+
+#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:108
+msgctxt "recurring commission setting description tip"
+msgid "Disabling this will issue commission only to subscription's parent/first order."
+msgstr ""
+
+#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:201
+msgctxt "Admin setting description"
+msgid "Include affiliate referral details in the WooCommerce New order, WooCommerce Subscriptions Switched emails (if enabled)"
+msgstr ""
+
+#: includes/integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php:201
+msgctxt "Admin setting description"
+msgid "Include affiliate referral details in the WooCommerce New order, WooCommerce Subscriptions New Renewal Order & Subscription Switched emails (if enabled)"
 msgstr ""
 
 #. translators: Link to go back
@@ -2253,6 +2283,36 @@ msgstr ""
 #: templates/afwc-welcome-affiliate-email.php:53
 #: templates/plain/afwc-welcome-affiliate-email.php:46
 msgid "The most important thing I have learned working with our partners is that the best way to succeed is quickly to start active promotions. If you postpone, you will not see results. If you take quick action, you may as well become one of our superstar partners! Looking forward to working closely with you."
+msgstr ""
+
+#: templates/emails/afwc-admin-new-referral.php:18
+#: templates/emails/plain/afwc-admin-new-referral.php:15
+msgctxt "Affiliate section title"
+msgid "Affiliate information"
+msgstr ""
+
+#: templates/emails/afwc-admin-new-referral.php:23
+#: templates/emails/plain/afwc-admin-new-referral.php:17
+msgctxt "Affiliate name"
+msgid "Affiliate"
+msgstr ""
+
+#: templates/emails/afwc-admin-new-referral.php:30
+#: templates/emails/plain/afwc-admin-new-referral.php:20
+msgctxt "Campaign name and id"
+msgid "Campaign"
+msgstr ""
+
+#: templates/emails/afwc-admin-new-referral.php:37
+#: templates/emails/plain/afwc-admin-new-referral.php:23
+msgctxt "Commission earned amount"
+msgid "Commission earned"
+msgstr ""
+
+#: templates/emails/afwc-admin-new-referral.php:41
+#: templates/emails/plain/afwc-admin-new-referral.php:25
+msgctxt "Commission conversion medium"
+msgid "Conversion medium"
 msgstr ""
 
 #: templates/my-account/affiliate-profile.php:26

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.9.0
+ * @version     1.9.2
  */
 
 // Exit if accessed directly.
@@ -48,6 +48,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			$this->constants();
 			add_action( 'init', array( $this, 'init_afwc' ) );
+			add_action( 'woocommerce_init', array( $this, 'init_afwc_on_wc' ) );
 			$this->includes();
 			// save affiliate form initial fields.
 			$this->save_afwc_reg_form_settings();
@@ -76,7 +77,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 * @param array  $arguments     Array of arguments passed while calling $function_name.
 		 * @return mixed Result of function call.
 		 */
-		public function __call( $function_name, $arguments = array() ) {
+		public function __call( $function_name = '', $arguments = array() ) {
 
 			if ( ! is_callable( 'SA_WC_Compatibility_3_9', $function_name ) ) {
 				return;
@@ -115,9 +116,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 			if ( ! defined( 'AFWC_PLUGIN_DIR_PATH' ) ) {
 				define( 'AFWC_PLUGIN_DIR_PATH', plugin_dir_path( AFWC_PLUGIN_FILE ) );
-			}
-			if ( ! defined( 'AFWC_CURRENCY' ) ) {
-				define( 'AFWC_CURRENCY', get_woocommerce_currency_symbol() );
 			}
 			if ( ! defined( 'AFWC_COOKIE_TIMEOUT_BASE' ) ) {
 				define( 'AFWC_COOKIE_TIMEOUT_BASE', 86400 );
@@ -170,16 +168,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				define( 'AFWC_SQL_COLLATION', 'utf32_general_ci' );
 			}
 
-			// Check if WC HPOS is enabled.
-			if ( ! defined( 'AFWC_IS_HPOS_ENABLED' ) ) {
-				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && is_callable( array( '\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) ) {
-					$enabled = Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
-					define( 'AFWC_IS_HPOS_ENABLED', $enabled );
-				} else {
-					define( 'AFWC_IS_HPOS_ENABLED', false );
-				}
-			}
-
 		}
 
 		/**
@@ -189,6 +177,27 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			$this->load_plugin_textdomain();
 			$this->register_user_tags_taxonomy();
 			$this->set_payout_method();
+		}
+
+		/**
+		 * Init Affiliate for WooCommerce constants when WooCommerce Initializes.
+		 */
+		public function init_afwc_on_wc() {
+
+			// Constant for store currency symbol.
+			if ( ! defined( 'AFWC_CURRENCY' ) ) {
+				define( 'AFWC_CURRENCY', get_woocommerce_currency_symbol() );
+			}
+
+			// Check if WC HPOS is enabled.
+			if ( ! defined( 'AFWC_IS_HPOS_ENABLED' ) ) {
+				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && is_callable( array( '\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) ) {
+					define( 'AFWC_IS_HPOS_ENABLED', Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() );
+				} else {
+					define( 'AFWC_IS_HPOS_ENABLED', false );
+				}
+			}
+
 		}
 
 		/**
@@ -282,6 +291,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				include_once 'admin/class-afwc-admin-link-unlink-in-order.php';
 				include_once 'admin/class-afwc-multi-tier.php';
 			}
+			include_once 'admin/class-afwc-admin-new-referral-email.php';
 
 			include_once 'class-afwc-db-background-process.php';
 
@@ -637,7 +647,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 *
 		 * @credit: WooCommerce Subscriptions
 		 */
-		public static function insert_setting_after( &$settings, $insert_after_setting_id, $new_setting, $insert_type = 'single_setting' ) {
+		public static function insert_setting_after( &$settings = array(), $insert_after_setting_id = '', $new_setting = array(), $insert_type = 'single_setting' ) {
 			if ( ! is_array( $settings ) ) {
 				return;
 			}

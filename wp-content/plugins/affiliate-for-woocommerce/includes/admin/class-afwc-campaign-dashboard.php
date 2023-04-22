@@ -3,7 +3,7 @@
  * Main class for Campaigns Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.1.3
+ * @version     1.1.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -167,13 +167,13 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		 *
 		 * @param array $params fetch campaign dashboard data params.
 		 */
-		public function fetch_dashboard_data( $params ) {
+		public function fetch_dashboard_data( $params = array() ) {
 
-			if ( empty( $_POST['security'] ) ) { // phpcs:ignore
+			$security = ( ! empty( $_POST['security'] ) ) ? wc_clean( wp_unslash( $_POST['security'] ) ) : ''; // phpcs:ignore
+
+			if ( empty( $security ) ) {
 				return;
 			}
-
-			$security = wc_clean( wp_unslash( $_POST['security'] ) ); // phpcs:ignore 
 
 			if ( ( wp_verify_nonce( $security, 'afwc-admin-campaign-dashboard-data' ) && current_user_can( 'manage_woocommerce' ) ) || wp_verify_nonce( $security, 'afwc-fetch-campaign' ) ) {
 

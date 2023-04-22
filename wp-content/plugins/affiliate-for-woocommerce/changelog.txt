@@ -1,5 +1,20 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2023-04-21 - version 6.8.0
+* New: WooCommerce 7.6.0 compatible
+* Fix: Hidden fields in the registration form throwing console error for logged-in users [User]
+* Fix: Error: Call to undefined function get_woocommerce_currency_symbol() during plugin update in some cases
+* Update: Notification colors and icons [Admin]
+* Update: POT file
+
+2023-04-15 - version 6.7.0
+* New: Affiliate referral details in WooCommerce New order email
+* New: Affiliate referral details in WooCommerce Subscriptions New Renewal Order and Subscription Switched emails
+* New: Description tip for WooCommerce Subscriptions Issue recurring commission? setting
+* Fix: PHP Deprecated: Required parameter follows optional parameter [PHP 8.0+]
+* Update: Code improvements for campaigns security nonce
+* Update: POT file
+
 2023-04-07 - version 6.6.1
 * Update: Show/hide Lifetime commission exclude affiliates setting when enabling Lifetime commissions setting
 * Update: Add confirmation alert when linking same affiliate as lifetime customer [Admin]

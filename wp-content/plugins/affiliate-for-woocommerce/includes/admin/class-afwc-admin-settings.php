@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.4.1
+ * @version     1.4.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -151,6 +151,8 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 				/* translators: Link to the plan back link */
 				$plan_backlink_desc = sprintf( esc_html__( 'Default commission plan: %s', 'affiliate-for-woocommerce' ), '<strong><a target="_blank" href="' . esc_url( $plan_dashboard_link ) . '">' . esc_attr( $default_plan_name ) . '</a></strong>' );
 			}
+
+			$referral_in_admin_email_description = apply_filters( 'afwc_add_referral_in_admin_emails_setting_description', _x( 'Include affiliate referral details in the WooCommerce New order email (if enabled)', 'Admin setting description', 'affiliate-for-woocommerce' ), array( 'source' => $this ) );
 
 			$afwc_admin_settings = array(
 				array(
@@ -302,6 +304,15 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 					'placeholder' => __( 'Enter email address', 'affiliate-for-woocommerce' ),
 					'autoload'    => false,
 					'desc_tip'    => false,
+				),
+				array(
+					'name'     => _x( 'Send referral details to admin', 'Admin setting name', 'affiliate-for-woocommerce' ),
+					'desc'     => $referral_in_admin_email_description,
+					'desc_tip' => _x( 'Disabling this will not include affiliate referral details in the email to admin', 'Admin setting description tip', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_add_referral_in_admin_emails',
+					'type'     => 'checkbox',
+					'default'  => 'no',
+					'autoload' => false,
 				),
 				// phpcs:disable
 				// array(

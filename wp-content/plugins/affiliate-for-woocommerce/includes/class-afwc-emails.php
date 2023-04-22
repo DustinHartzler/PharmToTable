@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       2.3.0
- * @version     1.1.1
+ * @version     1.1.2
  */
 
 // Exit if accessed directly.
@@ -45,13 +45,13 @@ if ( ! class_exists( 'AFWC_Emails' ) ) {
 		 */
 		public function __construct() {
 
-			// Filter to register Affiliates email classes.
+			// Filter to register email classes from this plugin.
 			add_filter( 'woocommerce_email_classes', array( $this, 'register_email_classes' ) );
 
 		}
 
 		/**
-		 * Register Affiliates email classes to WooCommerce's emails class list
+		 * Register email classes from this plugin to WooCommerce's emails class list.
 		 *
 		 * @param array $email_classes available email classes list.
 		 * @return array $email_classes modified email classes list

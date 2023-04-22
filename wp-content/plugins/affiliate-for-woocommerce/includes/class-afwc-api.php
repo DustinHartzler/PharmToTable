@@ -2,9 +2,9 @@
 /**
  * Main class for Affiliate For WooCommerce Referral
  *
- * @package     affiliate-for-woocommerce/includes/
- * @since       1.10.0
- * @version     1.9.0
+ * @package  affiliate-for-woocommerce/includes/
+ * @since    1.10.0
+ * @version  1.9.1
  */
 
 // Exit if accessed directly.
@@ -78,7 +78,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @param string  $source The source of hit.
 		 * @param mixed   $params extra params to override default params.
 		 */
-		public function track_visitor( $affiliate_id, $visitor_id = 0, $source = 'link', $params = array() ) {
+		public function track_visitor( $affiliate_id = 0, $visitor_id = 0, $source = 'link', $params = array() ) {
 			global $wpdb;
 
 			if ( 0 !== $affiliate_id ) {
@@ -239,7 +239,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @param integer $amount amount to be add/remove for commision.
 		 * @param mixed   $params extra params to override default params.
 		 */
-		private function track_commission( $affiliate_id, $amount, $params = array() ) {
+		private function track_commission( $affiliate_id = 0, $amount = 0, $params = array() ) {
 			global $wpdb;
 
 			$now = gmdate( 'Y-m-d H:i:s' );
@@ -497,7 +497,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @param  integer $order_id order id.
 		 * @param  object  $order The Order object.
 		 */
-		public function track_multi_tier_commissions( $affiliate_id = 0, $plan_id_detail_map = array(), $order_id = 0, $order ) {
+		public function track_multi_tier_commissions( $affiliate_id = 0, $plan_id_detail_map = array(), $order_id = 0, $order = null ) {
 			// fetch details for multi-tier.
 			$afwc         = Affiliate_For_WooCommerce::get_instance();
 			$parent_chain = $afwc->afwc_get_parents_for_commissions( $affiliate_id );
@@ -912,11 +912,12 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		/**
 		 * Function to get affiliate data based on order_id.
 		 *
-		 * @param int $order_id The Order ID.
+		 * @param int    $order_id The Order ID.
+		 * @param string $data     Whether to get all or selected records.
 		 *
 		 * @return array Return The array of affiliate id and status of the linked affiliate.
 		 */
-		public function get_affiliate_by_order( $order_id = 0 ) {
+		public function get_affiliate_by_order( $order_id = 0, $data = '' ) {
 
 			if ( empty( $order_id ) ) {
 				return array();
@@ -924,15 +925,27 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			global $wpdb;
 
-			$affiliate_details = $wpdb->get_row( // phpcs:ignore
-				$wpdb->prepare(
-					"SELECT affiliate_id, status
-						FROM {$wpdb->prefix}afwc_referrals
-						WHERE post_id = %d AND reference = ''",
-					$order_id
-				),
-				'ARRAY_A'
-			);
+			if ( empty( $data ) ) {
+				$affiliate_details = $wpdb->get_row( // phpcs:ignore
+					$wpdb->prepare(
+						"SELECT affiliate_id, status
+							FROM {$wpdb->prefix}afwc_referrals
+							WHERE post_id = %d AND reference = ''",
+						$order_id
+					),
+					'ARRAY_A'
+				);
+			} elseif ( 'all' === $data ) {
+				$affiliate_details = $wpdb->get_row( // phpcs:ignore
+					$wpdb->prepare(
+						"SELECT *
+							FROM {$wpdb->prefix}afwc_referrals
+							WHERE post_id = %d AND reference = ''",
+						$order_id
+					),
+					'ARRAY_A'
+				);
+			}
 
 			return ! empty( $affiliate_details ) ? $affiliate_details : array();
 		}

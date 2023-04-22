@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
  * @since       1.8.0
- * @version     1.4.1
+ * @version     1.4.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -171,8 +171,9 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 				$readonly = ! empty( $affiliate_registration->readonly_fields ) && is_array( $affiliate_registration->readonly_fields ) && in_array( $field_key, $affiliate_registration->readonly_fields, true ) ? 'readonly' : '';
 				$value    = ! empty( $field['value'] ) ? $field['value'] : '';
 				if ( ! empty( $affiliate_registration->hide_fields ) && is_array( $affiliate_registration->hide_fields ) && in_array( $field_key, $affiliate_registration->hide_fields, true ) ) {
-					$class   .= ' afwc_hide_form_field';
-					$required = '';
+					$class        .= ' afwc_hide_form_field';
+					$required      = '';
+					$field['type'] = 'hidden';
 				}
 			}
 
@@ -183,6 +184,7 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 				case 'password':
 				case 'tel':
 				case 'checkbox':
+				case 'hidden':
 					$field_html = sprintf( '<input type="%1$s" id="%2$s" name="%2$s" %3$s class="afwc_reg_form_field" %4$s value="%5$s"/>', $field['type'], $id, $required, $readonly, $value );
 					break;
 				case 'textarea':

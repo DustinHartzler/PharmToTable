@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.1.1
- * @version     1.3.0
+ * @version     1.3.1
  */
 
 // Exit if accessed directly.
@@ -154,7 +154,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		 * @param int    $order_id The Order ID.
 		 * @param object $order    The Order Object.
 		 */
-		public function link_unlink_affiliate_in_order( $order_id = 0, $order ) {
+		public function link_unlink_affiliate_in_order( $order_id = 0, $order = null ) {
 
 			if ( empty( $_POST['woocommerce_meta_nonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) { // phpcs:ignore
 				return;

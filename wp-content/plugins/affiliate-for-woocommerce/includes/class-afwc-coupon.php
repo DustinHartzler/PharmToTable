@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.7.0
- * @version     1.1.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -89,7 +89,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		 * @param int    $coupon_id The Coupon ID.
 		 * @param object $coupon The Coupon Object.
 		 */
-		public function affiliate_restriction( $coupon_id = 0, $coupon ) {
+		public function affiliate_restriction( $coupon_id = 0, $coupon = null ) {
 
 			if ( empty( $coupon_id ) ) {
 				return;
@@ -155,7 +155,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		 * @param int    $coupon_id The coupon's ID.
 		 * @param object $coupon    The coupon's object.
 		 */
-		public function save_affiliate_coupon_fields( $coupon_id = 0, $coupon ) {
+		public function save_affiliate_coupon_fields( $coupon_id = 0, $coupon = null ) {
 			// Verify the nonce.
 			if ( empty( $_POST['woocommerce_meta_nonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) { // phpcs:ignore
 				return;
@@ -258,7 +258,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		 * @param string $coupon_code The coupon code.
 		 * @return array
 		 */
-		public function get_coupon_params( $coupon_code ) {
+		public function get_coupon_params( $coupon_code = '' ) {
 			if ( empty( $coupon_code ) ) {
 				return;
 			}

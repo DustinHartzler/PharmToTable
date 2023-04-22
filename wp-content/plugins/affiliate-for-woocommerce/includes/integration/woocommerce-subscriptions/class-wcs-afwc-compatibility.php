@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce-subscriptions/
  * @since       6.1.0
- * @version     1.2.0
+ * @version     1.2.1
  */
 
 // Exit if accessed directly.
@@ -33,6 +33,8 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 			add_filter( 'afwc_admin_settings', array( $this, 'add_settings' ) );
 			add_filter( 'afwc_endpoint_account_settings_after_key', array( $this, 'endpoint_account_settings_after_key' ), 10, 2 );
 			add_filter( 'afwc_id_for_order', array( $this, 'get_affiliate_id_for_subscription_order' ), 9, 2 );
+			add_filter( 'afwc_add_referral_in_admin_emails_setting_description', array( $this, 'referral_in_admin_emails_setting_description' ), 10, 1 );
+			add_filter( 'afwc_allowed_emails_for_referral_details', array( $this, 'allowed_subscription_email' ), 10, 2 );
 		}
 
 		/**
@@ -102,7 +104,8 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 			$wc_subscriptions_options = array(
 				array(
 					'name'          => _x( 'Issue recurring commission?', 'recurring commission setting title', 'affiliate-for-woocommerce' ),
-					'desc'          => _x( 'Enable this to give affiliate commissions for subscription recurring orders also', 'recurring commission setting description', 'affiliate-for-woocommerce' ),
+					'desc'          => _x( 'Enable this to give affiliate commissions for subscription recurring/renewal orders', 'recurring commission setting description', 'affiliate-for-woocommerce' ),
+					'desc_tip'      => _x( 'Disabling this will issue commission only to subscription\'s parent/first order.', 'recurring commission setting description tip', 'affiliate-for-woocommerce' ),
 					'id'            => 'is_recurring_commission',
 					'type'          => 'checkbox',
 					'default'       => 'no',
@@ -115,6 +118,15 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 
 			return $settings;
 
+		}
+
+		/**
+		 * Function to check if recurring commission setting is enabled.
+		 *
+		 * @return string Return yes if enabled, otherwise no.
+		 */
+		public function afwc_is_recurring_commission() {
+			return get_option( 'is_recurring_commission', 'no' );
 		}
 
 		/**
@@ -137,7 +149,6 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 		 * @return int Return the affiliate ID from the parent subscription if the order type is switch or renewal otherwise default.
 		 */
 		public function get_affiliate_id_for_subscription_order( $affiliate_id = 0, $args = array() ) {
-
 			if ( empty( $args ) || empty( $args['order_id'] ) ) {
 				return $affiliate_id;
 			}
@@ -152,7 +163,7 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 
 			if ( wcs_order_contains_renewal( $order_id ) ) {
 				// Don't assign affiliate to the recurring commission order if recurring commission is disabled.
-				if ( 'no' === get_option( 'is_recurring_commission', 'no' ) ) {
+				if ( 'no' === $this->afwc_is_recurring_commission() ) {
 					return 0;
 				}
 			}
@@ -174,6 +185,44 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 
 			return $affiliate_id;
 		}
+
+		/**
+		 * Return updated setting description.
+		 *
+		 * @param string $description The setting description.
+		 *
+		 * @return string The updated setting description.
+		 */
+		public function referral_in_admin_emails_setting_description( $description = '' ) {
+			if ( empty( $description ) ) {
+				return '';
+			}
+
+			$description = 'no' === $this->afwc_is_recurring_commission() ? _x( 'Include affiliate referral details in the WooCommerce New order, WooCommerce Subscriptions Switched emails (if enabled)', 'Admin setting description', 'affiliate-for-woocommerce' ) : _x( 'Include affiliate referral details in the WooCommerce New order, WooCommerce Subscriptions New Renewal Order & Subscription Switched emails (if enabled)', 'Admin setting description', 'affiliate-for-woocommerce' );
+
+			return $description;
+		}
+
+		/**
+		 * Return new renewal order email key if recurring commission is enabled.
+		 *
+		 * @param array $emails The allowed emails.
+		 * @param array $args   The arguments.
+		 *
+		 * @return array The allowed emails.
+		 */
+		public function allowed_subscription_email( $emails = array(), $args = array() ) {
+			if ( 'no' === $this->afwc_is_recurring_commission() ) {
+				return $emails;
+			}
+
+			if ( is_array( $emails ) ) {
+				array_push( $emails, 'new_renewal_order', 'new_switch_order' );
+			}
+
+			return $emails;
+		}
+
 	}
 
 }
