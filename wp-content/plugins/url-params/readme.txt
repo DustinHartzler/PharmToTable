@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: jeremyshapiro
 Tags: url, query string, url parameters, urlparam, url params, url param, query, jeremy shapiro, infusion, infusionsoft, keap, purl
-Requires at least: 2.0.2
-Tested up to: 5.9
-Stable tag: 2.3
+Requires at least: 3.0
+Tested up to: 6.2
+Stable tag: 2.5
 
 Short Code to grab any URL parameter from the Query String and display it or display conditional content.
 
@@ -45,8 +45,14 @@ To help protect your site against [Reflected Cross Site Scripting](http://en.wik
 
 Starting in the [WordPress 4.2.3 security auto-update](https://make.wordpress.org/core/2015/07/23/changes-to-the-shortcode-api/), you can no longer include shortcodes in HTML attributes. Previous to this WordPress update, you could set a field value like this: `<input type="text" name="firstname" value="[urlparam param='FirstName']">`. Now you have to set it like this: `<input type="text" name="firstname" [urlparam attr="value" param='FirstName']>` or  `[urlparam htmltag="input" type="text" name="firstname" attr="value" param="FirstName" /]`. If you are still using this shortcode the old way, unfortunately, WordPress simply won't process the shortcode and will return the full shortcode text unprocessed.
 
+To prevent unprivileged users (like Contributors) from using this shortcode to have privileged users (like Admins) accidentally execute arbitrary javascript via HTML attributes (like `onclick`, `onmouseover`, etc), html tags and attributes are sanitized.
+
+If you do need have a need to set certain sanitized tags or attributes, at your own risk, you can manually allow these from the URL Params options page under Settings.
+
 == Changelog ==
 
+* 2.5: Released 4/20/2023 Security update to sanitize keys, attributes, and output tags. Added options page for custom tags and attributes. Special thanks to the Security Research team @ Automattic for the responsible disclosure and testing!
+* 2.4: Released 3/1/2023. Security update to patch against setting javascript event attributes (like `onclick`, `onmouseover`, etc)
 * 2.3: Released 1/21/2022. Bumped Tested Version to WordPress 5.8.3
 * 2.2: Released 6/27/2019. Bumped Tested Version to WordPress 5.2.2
 * 2.1: Released 8/19/2015. Patched to make backwards compatible with PHP <5.3 where anonymous functions aren't yet supported.
