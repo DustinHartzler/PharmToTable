@@ -82,16 +82,16 @@ class SenseiLMS_Plugin_Updater {
 	 */
 	public function get_plugin_info( $res, $action, $args ) {
 		if ( 'plugin_information' !== $action ) {
-			return false;
+			return $res;
 		}
 		if ( $this->plugin_slug !== $args->slug ) {
-			return false;
+			return $res;
 		}
 
 		$remote = $this->request_info();
 		if ( is_wp_error( $remote ) ) {
 			// Early return in case request to SenseiLMS.com failed.
-			return false;
+			return $res;
 		}
 
 		$res                = new stdClass();

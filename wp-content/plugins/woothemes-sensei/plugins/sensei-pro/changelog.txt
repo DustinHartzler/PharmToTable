@@ -1,5 +1,9 @@
 # Sensei Pro Changelog
 
+## 1.13.1 - 2023-04-19
+### Fixed
+- Fix early returns to keep the original filtered value to prevent issues with other filters.
+
 ## 1.13.0 - 2023-04-03
 ### Fixed
 - Fix type error caused by some third-party integrations
