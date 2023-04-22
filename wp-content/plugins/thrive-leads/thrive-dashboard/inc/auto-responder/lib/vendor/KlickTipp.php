@@ -316,8 +316,12 @@ class Thrive_Dash_Api_KlickTipp {
 	 */
 	public function tagByEmail( $email, $tags = array() ) {
 
-		if ( empty( $tags ) || ! is_array( $tags ) ) {
+		if ( empty( $tags ) ) {
 			return false;
+		}
+
+		if ( ! is_array( $tags ) ) {
+			$tags = [ $tags ];
 		}
 
 		$data = array(

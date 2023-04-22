@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'post-list/class-tcb-post-list-sub-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-cloud-template-element-abstract.php';
+require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-lead-generation-element.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-symbol-element-abstract.php';
 
 /**
@@ -24,7 +25,7 @@ class TCB_Elements {
 	 *
 	 * @var TCB_Element_Abstract[]
 	 */
-	private $_instances = array();
+	private $_instances = [];
 
 	public $pinned_category = 'Pinned';
 
@@ -70,9 +71,9 @@ class TCB_Elements {
 			}
 
 			/* if the item is a file, include it */
-			if ( is_file( $item_path ) ) {
+			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
 				$element = str_replace( array( 'class-tcb-', '-element.php' ), '', $item );
-				$element = self::capitalize_class_name( $element );
+				$element = static::capitalize_class_name( $element );
 
 				$class = 'TCB_' . $element . '_Element';
 
@@ -161,7 +162,7 @@ class TCB_Elements {
 	 */
 	public function get_external_widgets() {
 		global $wp_widget_factory;
-		$widgets = array();
+		$widgets = [];
 		/* these widgets are added by wordpress - we do not add these because the functionality already exists in TVE/TTB elements */
 		$blacklisted_widgets = array(
 			'pages',
@@ -249,17 +250,17 @@ class TCB_Elements {
 	public function get_for_front() {
 		$elements = $this->get();
 
-		$all = array();
+		$all = [];
 
 		$pinned_elements = get_user_option( 'tcb_pinned_elements' );
 		if ( empty( $pinned_elements ) ) {
-			$pinned_elements = array();
+			$pinned_elements = [];
 		}
 
 		$order = $this->categories_order();
 
 		foreach ( $order as $category ) {
-			$all[ $category ] = array();
+			$all[ $category ] = [];
 		}
 
 		foreach ( $elements as $element ) {
@@ -283,7 +284,7 @@ class TCB_Elements {
 	public function get_promoted() {
 		$elements = $this->get();
 
-		$promoted = array();
+		$promoted = [];
 
 		foreach ( $elements as $element ) {
 			/* also check if the element is hidden ( there are cases where we don't want to display elements in the Symbols Dashboard, TU, TQB, etc */
@@ -361,7 +362,7 @@ class TCB_Elements {
 			 */
 			$file = apply_filters( 'tcb_menu_path_' . $component, $menu_folder . $component . '.php' );
 
-			if ( ! is_file( $file ) ) {
+			if ( empty( $file ) || ! is_file( $file ) ) {
 				continue;
 			}
 			include $file;
@@ -450,7 +451,7 @@ class TCB_Elements {
 	 * @throws Exception
 	 */
 	public function localize() {
-		$elements = array();
+		$elements = [];
 
 		foreach ( $this->get() as $key => $element ) {
 			$elements[ $key ] = $element->config();
@@ -472,18 +473,17 @@ class TCB_Elements {
 	 * @return array
 	 */
 	public function user_templates_category() {
-		$templates_category = get_option( 'tve_user_templates_categories', array() );
-		$return             = array();
+		$categories = [];
 
-		foreach ( $templates_category as $category ) {
-			$obj        = new stdClass();
-			$obj->id    = $category['id'];
-			$obj->text  = $category['name'];
-			$obj->value = $category['name'];
-			$return[]   = $obj;
+		foreach ( TCB\UserTemplates\Category::get_all() as $category ) {
+			$categories[] = (object) [
+				'id'    => $category['id'],
+				'text'  => $category['name'],
+				'value' => $category['name'],
+			];
 		}
 
-		return $return;
+		return $categories;
 	}
 
 	/**
@@ -519,7 +519,7 @@ class TCB_Elements {
 		/**
 		 * Internal TCB elements
 		 */
-		$class_name = 'TCB_' . self::capitalize_class_name( $element_type ) . '_Element';
+		$class_name = 'TCB_' . static::capitalize_class_name( $element_type ) . '_Element';
 		if ( ! class_exists( $class_name ) ) {
 			$file = plugin_dir_path( __FILE__ ) . 'elements/class-tcb-' . str_replace( '_', '-', $element_type ) . '-element.php';
 			if ( file_exists( $file ) ) {
@@ -535,7 +535,7 @@ class TCB_Elements {
 			/**
 			 * Try out also possible external class instances
 			 */
-			$external_instances = apply_filters( 'tcb_element_instances', array(), $element_type );
+			$external_instances = apply_filters( 'tcb_element_instances', [], $element_type );
 			if ( isset( $external_instances[ $element_type ] ) ) {
 				$instance = $external_instances[ $element_type ];
 			}

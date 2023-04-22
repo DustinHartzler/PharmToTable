@@ -144,7 +144,7 @@ class Thrive_Dash_Api_Sendfox {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function addSubscriber( $list_id, $args ) {
+	public function add_subscriber( $list_id, $args ) {
 
 		return $this->_request( '/contacts', 'post', array_merge( array( 'lists' => array( $list_id ) ), $args ) );
 	}

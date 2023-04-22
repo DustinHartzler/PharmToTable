@@ -9,7 +9,11 @@
 class TL_Product extends TVE_Dash_Product_Abstract {
 	protected $tag = 'tl';
 
+	protected $slug = 'thrive-leads';
+
 	protected $title = 'Thrive Leads';
+
+	protected $version = TVE_LEADS_VERSION;
 
 	protected $productIds = array();
 

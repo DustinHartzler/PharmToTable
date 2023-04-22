@@ -405,7 +405,7 @@ class Thrive_Dash_Api_Awsses {
 		if ( is_wp_error( $rest ) ) {
 			throw new Thrive_Dash_Api_Awsses_Exception( $rest->get_error_message() );
 		} elseif ( $rest['response']['code'] !== 200 ) {
-			throw new Thrive_Dash_Api_Awsses_Exception( $response->Error->Message );
+			throw new Thrive_Dash_Api_Awsses_Exception( $response );
 		}
 
 		return true;

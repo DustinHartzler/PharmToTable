@@ -49,7 +49,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			$args,
 			array(
 				'route'       => 'getAll',
-				'tar_version' => TVE_VERSION,
+				'tar_version' => defined( 'TCB_CLOUD_DEBUG' ) && TCB_CLOUD_DEBUG ? '10' : TVE_VERSION,
 				'type'        => $type,
 				'ct'          => md5( time() ),
 			)
@@ -239,6 +239,12 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 		);
 
 		add_filter( 'safe_style_css', array( $this, 'add_extra_allowed_style_css' ) );
+
+		/*
+		 * This filter causes serious issues on some of our header / footer templates, for which the html
+		 * is a bit more than WordPress can handle - especially in cases where we have html code inside element attributes
+		 */
+		remove_filter('content_save_pre', 'wp_filter_post_kses');
 
 		if ( ! $post ) {
 			$post_id = wp_insert_post( $data );

@@ -6,6 +6,8 @@
  * Time: 10:15
  */
 
+use TCB\inc\helpers\FormSettings;
+
 /**
  * should handle all AJAX requests coming from BackboneJS
  *
@@ -51,12 +53,18 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 	 * @return array|object
 	 */
 	public function handle() {
+
+		if ( wp_verify_nonce( $this->param( 'security' ), TL_NONCE_KEY ) === false ) {
+			$this->error( __( 'This page has expired. Please reload and try again', 'thrive-leads' ), 403 );
+		}
+
 		/**
 		 * Checking if the user still has the right to use the product
 		 */
 		if ( ! TL_Product::has_access() ) {
 			$this->error( __( 'You do not have this capability', 'thrive-leads' ) );
 		}
+
 		$route = $this->param( 'route' );
 
 		$route      = preg_replace( '#([^a-zA-Z0-9-])#', '', $route );
@@ -130,10 +138,9 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 
 				$shortcode->content_locking = get_post_meta( $id, 'tve_content_locking', true );
 				$shortcode->content_locking = $shortcode->content_locking == '' ? 0 : intval( $shortcode->content_locking );
-				$shortcode->shortcode_code  = ( $shortcode->content_locking == 1 ) ? '[thrive_lead_lock id=\'' . $_GET['ID'] . '\']Hidden Content[/thrive_lead_lock]' : '[thrive_leads id=\'' . $_GET['ID'] . '\']';
+				$shortcode->shortcode_code  = ( $shortcode->content_locking == 1 ) ? '[thrive_lead_lock id=\'' . $id . '\']Hidden Content[/thrive_lead_lock]' : '[thrive_leads id=\'' . $id . '\']';
 
 				return $shortcode;
-				break;
 		}
 	}
 
@@ -158,7 +165,7 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 			case 'DELETE':
 				return tve_leads_delete_post( $this->param( 'ID', 0 ) );
 			case 'GET':
-				$two_step_lightbox = tve_leads_get_form_type( $_GET['ID'], array(
+				$two_step_lightbox = tve_leads_get_form_type( $this->param( 'ID', 0 ), array(
 					'completed_tests' => true,
 				) );
 				if ( ! $two_step_lightbox ) {
@@ -176,7 +183,6 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 				$two_step_lightbox->content_locking        = 0;
 
 				return $two_step_lightbox;
-				break;
 		}
 	}
 
@@ -205,16 +211,16 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 							return update_option( 'tve_api_delivery_service', $connection );
 						case 'test_service':
 							$connection = $this->param( 'test_connection', array() );
-							$api        = Thrive_List_Manager::connectionInstance( $connection );
-							$test       = $api->testConnection();
+							$api        = Thrive_List_Manager::connection_instance( $connection );
+							$test       = $api->test_connection();
 							if ( $test === true ) {
 								$class = "updated";
 
-								return "<div class='" . $class . "'><p>" . __( 'Connection was made successfully', 'thrive-leads' ) . "</p></div>";
+								return esc_html( "<div class='" . $class . "'><p>" . __( 'Connection was made successfully', 'thrive-leads' ) . "</p></div>" );
 							} else {
 								$class = "error";
 
-								return "<div class='" . $class . "'><p>" . $test . "</p></div>";
+								return esc_html( "<div class='" . $class . "'><p>" . $test . "</p></div>" );
 							}
 					}
 				}
@@ -389,6 +395,9 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 			case 'PATCH':
 				return tve_leads_save_form_type( $model );
 			case 'DELETE':
+
+				do_action( 'tve_leads_delete_post', (int) $this->param( 'ID', 0 ) );
+
 				return tve_leads_save_form_type( array(
 					'ID'          => $this->param( 'ID', 0 ),
 					'post_status' => 'trash',
@@ -520,6 +529,17 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 					$copy_of             = __( 'Copy of', 'thrive-leads' );
 					$model['post_title'] = ( strpos( $model['post_title'], $copy_of ) === false ? $copy_of . ' ' : '' ) . $model['post_title'];
 
+					/* We need to save the form settings from the clone */
+					if ( method_exists(  FormSettings::class,'save_form_settings_from_duplicated_content' ) ) {
+						$model['content'] = FormSettings::save_form_settings_from_duplicated_content( $model['content'], $model['post_parent'] );
+					}
+
+					/* We also need to save settings from child states */
+					if ( ! empty( $model['form_child_states'] ) && method_exists( FormSettings::class,'save_form_settings_from_duplicated_content' ) ) {
+						foreach ( $model['form_child_states'] as $key => $state ) {
+							$model['form_child_states'][ $key ]['content'] =  FormSettings::save_form_settings_from_duplicated_content( $state['content'], $state['post_parent'] );
+						}
+					}
 				} else {
 					if ( empty( $model['key'] ) ) {
 						unset( $model['display_frequency'] );
@@ -904,14 +924,14 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 
 	public function addAssetAPIAction() {
 		$connection      = $this->param( 'api', array() );
-		$api             = Thrive_List_Manager::connectionInstance( $connection );
+		$api             = Thrive_List_Manager::connection_instance( $connection );
 		$connection_type = get_option( 'tve_api_delivery_service', false );
 
 		if ( $connection_type == false ) {
 			update_option( 'tve_api_delivery_service', $connection );
 		}
 
-		$connect = $api->readCredentials();
+		$connect = $api->read_credentials();
 
 		return $connect;
 

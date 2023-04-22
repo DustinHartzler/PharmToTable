@@ -23,7 +23,7 @@ class Form_Wrapper extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Form wrapper', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Form wrapper', 'thrive-dash' );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Form_Wrapper extends \TCB_Element_Abstract {
 				'config' => array(
 					'HorizontalPosition' => array(
 						'config'  => array(
-							'name'    => __( 'Horizontal position', TVE_DASH_TRANSLATE_DOMAIN ),
+							'name'    => __( 'Horizontal position', 'thrive-dash' ),
 							'buttons' => array(
 								array(
 									'icon'    => 'a_left',
@@ -69,7 +69,7 @@ class Form_Wrapper extends \TCB_Element_Abstract {
 					),
 					'VerticalPosition'   => array(
 						'config'  => array(
-							'name'    => __( 'Vertical position', TVE_DASH_TRANSLATE_DOMAIN ),
+							'name'    => __( 'Vertical position', 'thrive-dash' ),
 							'buttons' => array(
 								array(
 									'icon'    => 'top',
@@ -91,7 +91,7 @@ class Form_Wrapper extends \TCB_Element_Abstract {
 					'FullHeight'         => array(
 						'config'  => array(
 							'name'    => '',
-							'label'   => __( 'Stretch content to full height', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'   => __( 'Stretch content to full height', 'thrive-dash' ),
 							'default' => true,
 						),
 						'extends' => 'Switch',

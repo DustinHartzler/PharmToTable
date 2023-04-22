@@ -4,6 +4,13 @@
  * Class TaxonomyTermsTab
  */
 class Thrive_Leads_Taxonomy_Terms_Tab extends Thrive_Leads_Tab implements Thrive_Leads_Tab_Interface {
+	/**
+	 * Stores a cache of post terms
+	 *
+	 * @var array
+	 */
+	public static $post_terms_cache = [];
+
 	public function __construct() {
 
 	}
@@ -66,6 +73,7 @@ class Thrive_Leads_Taxonomy_Terms_Tab extends Thrive_Leads_Tab implements Thrive
 
 	/**
 	 * For this case the filters are the taxonomies
+	 *
 	 * @return array of Filter elements
 	 */
 	public function getFilters() {
@@ -137,13 +145,7 @@ class Thrive_Leads_Taxonomy_Terms_Tab extends Thrive_Leads_Tab implements Thrive
 
 	public function isPostAllowed( $post ) {
 		//get all taxonomy terms for all taxonomies the $post has
-		$taxonomies = get_taxonomies( array( 'public' => true ) );
-		$post_terms = array();
-		foreach ( $taxonomies as $taxonomy ) {
-			foreach ( wp_get_post_terms( $post->ID, $taxonomy ) as $term ) {
-				$post_terms[] = $term;
-			}
-		}
+		$post_terms = static::get_post_terms( $post );
 
 		//check if any of the posts taxonomy terms is checked
 		$this->hanger = 'show_group_options';
@@ -157,14 +159,7 @@ class Thrive_Leads_Taxonomy_Terms_Tab extends Thrive_Leads_Tab implements Thrive
 	}
 
 	public function isPostDenied( $post ) {
-		//get all taxonomy terms for all taxonomies the $post has
-		$taxonomies = get_taxonomies( array( 'public' => true ) );
-		$post_terms = array();
-		foreach ( $taxonomies as $taxonomy ) {
-			foreach ( wp_get_post_terms( $post->ID, $taxonomy ) as $term ) {
-				$post_terms[] = $term;
-			}
-		}
+		$post_terms = static::get_post_terms( $post );
 
 		//check if any of the posts taxonomy terms is checked
 		$this->hanger = 'hide_group_options';
@@ -175,6 +170,22 @@ class Thrive_Leads_Taxonomy_Terms_Tab extends Thrive_Leads_Tab implements Thrive
 		}
 
 		return false;
+	}
+
+	/**
+	 * get all taxonomy terms for all taxonomies the $post has
+	 *
+	 * @param $post
+	 *
+	 * @return WP_Term[]
+	 */
+	public static function get_post_terms( $post ) {
+		if ( ! array_key_exists( $post->ID, static::$post_terms_cache ) ) {
+			$taxonomies                            = get_taxonomies( array( 'public' => true ) );
+			static::$post_terms_cache[ $post->ID ] = wp_get_post_terms( $post->ID, $taxonomies );
+		}
+
+		return static::$post_terms_cache[ $post->ID ];
 	}
 
 }

@@ -1,4 +1,4 @@
-<h2 class="tvd-card-title"><?php echo esc_html( $this->getTitle() ); ?></h2>
+<h2 class="tvd-card-title"><?php echo esc_html( $this->get_title() ); ?></h2>
 <?php
 /** @var $this Thrive_Dash_List_Connection_Mailster */
 ?>
@@ -7,7 +7,7 @@
 		<p><?php echo esc_html__( 'Click the button below to enable Mailster integration.', 'thrive-dash' ); ?></p>
 	</div>
 	<form>
-		<input type="hidden" name="api" value="<?php echo esc_attr( $this->getKey() ); ?>">
+		<input type="hidden" name="api" value="<?php echo esc_attr( $this->get_key() ); ?>">
 		<?php $this->display_video_link(); ?>
 	</form>
 	<div class="tvd-card-action">

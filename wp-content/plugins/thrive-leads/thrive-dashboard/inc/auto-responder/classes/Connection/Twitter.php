@@ -15,13 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Abstract {
 
 	protected $_key = 'twitter';
-	private $url = 'https://api.twitter.com/1.1/';
+	private   $url  = 'https://api.twitter.com/1.1/';
 
 	/**
 	 * Thrive_Dash_List_Connection_Twitter constructor.
 	 */
 	public function __construct() {
-		$this->setCredentials( Thrive_Dash_List_Manager::credentials( $this->_key ) );
+		$this->set_credentials( Thrive_Dash_List_Manager::credentials( $this->_key ) );
 	}
 
 	/**
@@ -29,14 +29,14 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'social';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Twitter';
 	}
 
@@ -45,8 +45,8 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'twitter' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'twitter' );
 	}
 
 	/**
@@ -56,27 +56,27 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$access_token = ! empty( $_POST['access_token'] ) ? sanitize_text_field( $_POST['access_token'] ) : '';
 		$token_secret = ! empty( $_POST['token_secret'] ) ? sanitize_text_field( $_POST['token_secret'] ) : '';
 		$api_key      = ! empty( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
 		$api_secret   = ! empty( $_POST['api_secret'] ) ? sanitize_text_field( $_POST['api_secret'] ) : '';
 
 		if ( empty( $access_token ) || empty( $token_secret ) || empty( $api_key ) || empty( $api_secret ) ) {
-			return $this->error( __( 'All fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'All fields are required', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( array(
+		$this->set_credentials( array(
 			'access_token' => $access_token,
 			'token_secret' => $token_secret,
 			'api_key'      => $api_key,
 			'api_secret'   => $api_secret,
 		) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Incorrect credentials.', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Incorrect credentials.', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -84,7 +84,7 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 		 */
 		$this->save();
 
-		return $this->success( __( 'Twitter connected successfully!', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Twitter connected successfully!', 'thrive-dash' ) );
 	}
 
 	/**
@@ -92,11 +92,11 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		$call = $this->url . 'account/verify_credentials.json';
 
 		/** @var Thrive_Dash_Api_Twitter $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		$call     = $api->buildOauth( $call, 'GET' )->performRequest();
 		$response = json_decode( $call, true );
@@ -114,7 +114,7 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	public function get_comment( $id ) {
 
 		/** @var Thrive_Dash_Api_Twitter $api */
-		$api  = $this->getApi();
+		$api  = $this->get_api();
 		$call = $this->url . 'statuses/show.json';
 
 		$response = json_decode( $api->setGetfield( '?id=' . $id )->buildOauth( $call, 'GET' )->performRequest(), true );
@@ -131,7 +131,7 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 				'picture'     => $user_picture,
 			);
 		} else {
-			$comment = __( 'An error occured while getting the comment. Please verify your Twitter connection!', TVE_DASH_TRANSLATE_DOMAIN );
+			$comment = __( 'An error occured while getting the comment. Please verify your Twitter connection!', 'thrive-dash' );
 		}
 
 		return $comment;
@@ -140,17 +140,17 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	/**
 	 * @return string
 	 */
-	public function customSuccessMessage() {
+	public function custom_success_message() {
 		return ' ';
 	}
 
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 	}
 
 	/**
 	 * @return Thrive_Dash_Api_Twitter
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 
 		$params = array(
 			'oauth_access_token'        => $this->param( 'access_token' ),
@@ -162,6 +162,6 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 		return new Thrive_Dash_Api_Twitter( $params );
 	}
 
-	protected function _getLists() {
+	protected function _get_lists() {
 	}
 }

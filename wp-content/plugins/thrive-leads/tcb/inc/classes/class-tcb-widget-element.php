@@ -146,6 +146,16 @@ class TCB_Widget_Element extends TCB_Element_Abstract {
 			'layout'           => array(
 				'disabled_controls' => array(),
 			),
+			'borders'          => array(
+				'config' => array(
+					'Borders' => array(
+						'important' => true,
+					),
+					'Corners' => array(
+						'important' => true,
+					),
+				),
+			),
 		);
 	}
 }

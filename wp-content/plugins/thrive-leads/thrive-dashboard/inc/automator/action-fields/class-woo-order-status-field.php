@@ -2,6 +2,9 @@
 
 namespace TVE\Dashboard\Automator;
 
+use Thrive\Automator\Items\Action_Field;
+use function wc_get_order_statuses;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -9,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Woo_Order_Status_Field
  */
-class Woo_Order_Status_Field extends \Thrive\Automator\Items\Action_Field {
+class Woo_Order_Status_Field extends Action_Field {
 	/**
 	 * Field name
 	 */
@@ -21,21 +24,22 @@ class Woo_Order_Status_Field extends \Thrive\Automator\Items\Action_Field {
 	 * Field description
 	 */
 	public static function get_description() {
-		return 'Select a status to set on the order';
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return '';
+		return __( 'Select a status to set on the order', 'thrive-dash' );
 	}
 
 	/**
 	 * $$value will be replaced by field value
 	 * $$length will be replaced by value length
 	 *
-	 * @var string
+	 *
+	 * @return string
 	 */
 	public static function get_preview_template() {
 		return 'Status: $$value';
@@ -44,11 +48,11 @@ class Woo_Order_Status_Field extends \Thrive\Automator\Items\Action_Field {
 	/**
 	 * For multiple option inputs, name of the callback function called through ajax to get the options
 	 */
-	public static function get_options_callback() {
+	public static function get_options_callback( $action_id, $action_data ) {
 		$statuses = array();
 
-		foreach ( \wc_get_order_statuses() as $key => $status ) {
-			$statuses[ $key ] =array(
+		foreach ( wc_get_order_statuses() as $key => $status ) {
+			$statuses[ $key ] = array(
 				'label' => $status,
 				'id'    => $key,
 			);

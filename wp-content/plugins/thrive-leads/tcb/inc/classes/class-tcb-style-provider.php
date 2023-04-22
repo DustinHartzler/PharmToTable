@@ -14,33 +14,49 @@ class TCB_Style_Provider {
 	 */
 	protected function defaults() {
 		$defaults = array(
-			'link'       => array(
+			'link'           => array(
 				/* needs to be quite specific. some 3rd party themes are really specific */
 				/* also need to make the selector from _typography.scss */
 				'selector'    => ':not(.inc) .thrv_text_element a:not(.tcb-button-link), :not(.inc) .tcb-styled-list a, :not(.inc) .tcb-numbered-list a, .tve-input-option-text a',
 				'lp_selector' => '#tcb_landing_page .thrv_text_element a:not(.tcb-button-link), #tcb_landing_page .tcb-styled-list a, #tcb_landing_page .tcb-numbered-list a, #tcb_landing_page .tve-input-option-text a',
 			),
-			'p'          => array(
+			'p_link'         => array(
+				'selector'    => ':not(.inc) .thrv_text_element p a:not(.tcb-button-link):not(.thrv-typography-link-text)',
+				'lp_selector' => '#tcb_landing_page .thrv_text_element p a:not(.tcb-button-link)',
+			),
+			'heading_link'   => array(
+				'selector'    => ':not(#tve) :not(.inc) .thrv_text_element h1 a:not(.tcb-button-link), :not(#tve) :not(.inc) .thrv_text_element h2 a:not(.tcb-button-link), :not(#tve) :not(.inc) .thrv_text_element h3 a:not(.tcb-button-link), :not(#tve) :not(.inc) .thrv_text_element h4 a:not(.tcb-button-link), :not(#tve) :not(.inc) .thrv_text_element h5 a:not(.tcb-button-link), :not(#tve) :not(.inc) .thrv_text_element h6 a:not(.tcb-button-link)',
+				'lp_selector' => ':not(.inc) #tcb_landing_page h1 a:not(.tcb-button-link), :not(.inc) #tcb_landing_page h2 a:not(.tcb-button-link), :not(.inc) #tcb_landing_page h3 a:not(.tcb-button-link), :not(.inc) #tcb_landing_page h4 a:not(.tcb-button-link), :not(.inc) #tcb_landing_page h5 a:not(.tcb-button-link), :not(.inc) #tcb_landing_page h6 a:not(.tcb-button-link)',
+			),
+			'li_link'        => array(
+				'selector'    => ':not(.inc) .tcb-styled-list a, :not(.inc) .tcb-numbered-list a',
+				'lp_selector' => '#tcb_landing_page .tcb-styled-list a, :not(.inc) .tcb-numbered-list a',
+			),
+			'plaintext_link' => array(
+				'selector'    => ':not(.inc) .tcb-plain-text a:not(.tcb-button-link)',
+				'lp_selector' => '#tcb_landing_page .tve_lp .tcb-plain-text a:not(.tcb-button-link)',
+			),
+			'p'              => array(
 				'selector'    => '.tcb-style-wrap p',
 				'lp_selector' => '#tcb_landing_page p',
 			),
-			'ul'         => array(
+			'ul'             => array(
 				'selector'    => '.tcb-style-wrap ul:not([class*="menu"]), .tcb-style-wrap ol',
 				'lp_selector' => '#tcb_landing_page ul:not([class*="menu"]), #tcb_landing_page ol',
 			),
-			'li'         => array(
+			'li'             => array(
 				'selector'    => '.tcb-style-wrap li:not([class*="menu"])',
 				'lp_selector' => '#tcb_landing_page li:not([class*="menu"])',
 			),
-			'pre'        => array(
+			'pre'            => array(
 				'selector'    => '.tcb-style-wrap pre',
 				'lp_selector' => '#tcb_landing_page pre',
 			),
-			'blockquote' => array(
+			'blockquote'     => array(
 				'selector'    => '.tcb-style-wrap blockquote',
 				'lp_selector' => '#tcb_landing_page blockquote',
 			),
-			'plaintext'  => array(
+			'plaintext'      => array(
 				'selector'    => '.tcb-plain-text',
 				'lp_selector' => '.tve_lp .tcb-plain-text',
 			),
@@ -53,7 +69,10 @@ class TCB_Style_Provider {
 			);
 		}
 
-		return $defaults;
+		/**
+		 * When the Typography is inherited from TTB, we need to update the selectors and make them stronger
+		 */
+		return apply_filters( 'tcb_typography_inherit', $defaults );
 	}
 
 	/**
@@ -116,6 +135,19 @@ class TCB_Style_Provider {
 		/* li gets the same styles as <p> at first, but it's stylable individually in some places */
 		if ( empty( $styles['li'] ) ) {
 			$styles['li'] = isset( $styles['p'] ) ? $styles['p'] : array();
+		}
+
+		/* For the new links we need to set the styles previously added on the Link element */
+		if ( empty( $styles['p_link'] ) ) {
+			$styles['p_link'] = isset( $styles['link'] ) ? $styles['link'] : array();
+		}
+
+		if ( empty( $styles['li_link'] ) ) {
+			$styles['li_link'] = isset( $styles['link'] ) ? $styles['link'] : array();
+		}
+
+		if ( empty( $styles['plaintext_link'] ) ) {
+			$styles['plaintext_link'] = isset( $styles['link'] ) ? $styles['link'] : array();
 		}
 
 		return $styles;

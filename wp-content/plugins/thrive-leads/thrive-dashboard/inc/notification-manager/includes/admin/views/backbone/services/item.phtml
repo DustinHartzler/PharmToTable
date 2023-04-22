@@ -3,7 +3,7 @@
 		<div class="tvd-row tvd-collapse">
 			<div class="tvd-col tvd-s3">
 				<div class="tvd-vertical-align">
-					<img src="<?php echo TVE_DASH_URL . '/inc/auto-responder/views/images/' ?><#= item.get('key') #>_small.jpg">
+					<img alt="<?php echo __( 'Autoresponder logo', 'thrive-dash' ) ?>" src="<?php echo TVE_DASH_URL . '/inc/auto-responder/views/images/' ?><#= item.get('key') #>_small.jpg">
 					<strong class="tvd-capitalize">
 						<#= item.get('title') #>
 					</strong>
@@ -31,8 +31,8 @@
 			<div class="tvd-col tvd-s4">
 		        <span class="tvd-vertical-align">
 		            <span class="tvd-icon-exchange tvd-text-gray"></span>
-		            <a class="tvd-underline tvd-nm-connection-test" data-key="<#= item.get('key') #>" title="<?php echo __( 'Test connection', TVE_DASH_TRANSLATE_DOMAIN ) ?>" href="javascript:void(0)">
-			            <?php echo __( 'Test connection', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+		            <a class="tvd-underline tvd-nm-connection-test" data-key="<#= item.get('key') #>" title="<?php echo __( 'Test connection', 'thrive-dash' ) ?>" href="javascript:void(0)">
+			            <?php echo __( 'Test connection', 'thrive-dash' ) ?>
 		            </a>
 		        </span>
 			</div>

@@ -20,40 +20,40 @@ $captcha_available = ! empty( $captcha_api['site_key'] );
 			<?php echo $captcha_available ? '' : ' disabled'; ?>
 		>
 		<label for="tve-captcha">
-			<?php			echo esc_html__( 'Add Captcha to Prevent Spam Signups', TVE_DASH_TRANSLATE_DOMAIN );
+			<?php			echo esc_html__( 'Add Captcha to Prevent Spam Signups', 'thrive-dash' );
 			if ( ! $captcha_available ) {
-				echo '(<a href="' . esc_url(admin_url( 'admin.php?page=tve_dash_api_connect' )) . '">' . esc_html__( 'Requires integration with Google ReCaptcha', TVE_DASH_TRANSLATE_DOMAIN ) . ')</a>';
+				echo '(<a href="' . esc_url(admin_url( 'admin.php?page=tve_dash_api_connect' )) . '">' . esc_html__( 'Requires integration with Google ReCaptcha', 'thrive-dash' ) . ')</a>';
 			}
 			?>
 		</label>
 	</div>
 	<div class="tve_captcha_options" style="display:none;">
-		<label><?php echo esc_html__( 'Theme', TVE_DASH_TRANSLATE_DOMAIN ); ?>:</label>
+		<label><?php echo esc_html__( 'Theme', 'thrive-dash' ); ?>:</label>
 
 		<div class="tve_lightbox_select_holder tve_captcha_option">
 			<select class="tve_captcha_theme tve_change" data-option="captcha_theme" data-ctrl="function:auto_responder.captcha_option_changed">
-				<option value="light"><?php echo esc_html__( 'Light', TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
-				<option value="dark"><?php echo esc_html__( 'Dark', TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
+				<option value="light"><?php echo esc_html__( 'Light', 'thrive-dash' ); ?></option>
+				<option value="dark"><?php echo esc_html__( 'Dark', 'thrive-dash' ); ?></option>
 			</select>
 		</div>
 
 
-		<label><?php echo esc_html__( 'Type', TVE_DASH_TRANSLATE_DOMAIN ); ?>:</label>
+		<label><?php echo esc_html__( 'Type', 'thrive-dash' ); ?>:</label>
 
 		<div class="tve_lightbox_select_holder tve_captcha_option">
 			<select class="tve_captcha_type tve_change" data-option="captcha_type" data-ctrl="function:auto_responder.captcha_option_changed">
-				<option value="image"><?php echo esc_html__( 'Image', TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
-				<option value="audio"><?php echo esc_html__( 'Audio', TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
+				<option value="image"><?php echo esc_html__( 'Image', 'thrive-dash' ); ?></option>
+				<option value="audio"><?php echo esc_html__( 'Audio', 'thrive-dash' ); ?></option>
 			</select>
 		</div>
 
 
-		<label><?php echo esc_html__( 'Size', TVE_DASH_TRANSLATE_DOMAIN ); ?>:</label>
+		<label><?php echo esc_html__( 'Size', 'thrive-dash' ); ?>:</label>
 
 		<div class="tve_lightbox_select_holder tve_captcha_option">
 			<select class="tve_captcha_size tve_change" data-option="captcha_size" data-ctrl="function:auto_responder.captcha_option_changed">
-				<option value="normal"><?php echo esc_html__( 'Normal', TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
-				<option value="compact"><?php echo esc_html__( 'Compact', TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
+				<option value="normal"><?php echo esc_html__( 'Normal', 'thrive-dash' ); ?></option>
+				<option value="compact"><?php echo esc_html__( 'Compact', 'thrive-dash' ); ?></option>
 			</select>
 		</div>
 

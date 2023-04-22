@@ -67,23 +67,18 @@ class TCB_Pricing_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	}
 
 	/**
-	 * Return the element HTML
-	 *
-	 * @return null|string
-	 */
-	protected function html() {
-		return tcb_template( 'elements/' . $this->tag() . '.php', $this, true );
-	}
-
-	/**
 	 * Components that apply only to this
 	 *
 	 * @return array
 	 */
 	public function own_components() {
-		$pricing_table = array(
+		return array(
 			'pricing_table' => array(
 				'config' => array(
+					'PricingPalette' => array(
+						'config'  => array(),
+						'extends' => 'PalettesV2',
+					),
 					'PriceInstances' => array(
 						'config' => array(
 							'sortable' => true,
@@ -109,8 +104,6 @@ class TCB_Pricing_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 				),
 			),
 		);
-
-		return $pricing_table;
 	}
 
 	/**

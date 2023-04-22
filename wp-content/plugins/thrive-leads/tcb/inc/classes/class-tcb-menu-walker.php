@@ -235,6 +235,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	/**
 	 *
 	 * Checks if an element has been unlocked from group editing ( is edited separately )
+	 * If item ID can't be retrieved, it is assumed to be linked
 	 * Spec can be any of the self::UNLINKED_* constants
 	 *
 	 * @param WP_Post|string $item
@@ -245,7 +246,15 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 *
 	 */
 	public function is_out_of_group_editing( $item, $spec ) {
-		$item_id = is_numeric( $item ) ? $item : $item->ID;
+
+		if ( is_numeric( $item ) ) {
+			$item_id = $item;
+		} elseif ( ! empty( $item->ID ) ) {
+			$item_id = $item->ID;
+		} else {
+			return false;
+		}
+
 		if ( $this->positional_selectors && $spec === self::UNLINKED_LI && isset( $item->_tcb_pos_selector ) ) {
 			return $this->get_config( "unlinked/{$item->_tcb_pos_selector}" );
 		}
@@ -515,7 +524,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 				$mega_description = json_decode( base64_decode( $mega_description ), true );
 				$mega_description = isset( $mega_description[ $item->ID ] ) ? $mega_description[ $item->ID ] : '';
 
-				$item_output .= ! empty( $mega_description ) ? sprintf( self::$mega_description_template, $mega_description ) : '';
+				$item_output .= ! empty( $mega_description ) ? sprintf( static::$mega_description_template, $mega_description ) : '';
 			}
 		}
 
@@ -646,7 +655,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		}
 
 		$menu_type        = $this->get_menu_type();
-		$template         = 'mega' === $menu_type && 1 === $depth ? self::$mega_image_template : self::$menu_item_image_template;
+		$template         = 'mega' === $menu_type && 1 === $depth ? static::$mega_image_template : static::$menu_item_image_template;
 		$containter_class = 'mega' === $menu_type && 1 === $depth ? 'tcb-mm-image' : 'tcb-menu-item-image';
 
 		$template = empty( $image['placeholder'] ) ? $template : $this->get_image_placeholder();

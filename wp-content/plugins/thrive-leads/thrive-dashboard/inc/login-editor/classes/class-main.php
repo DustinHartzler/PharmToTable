@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class Main
+ *
  * @package TVD\Login_Editor
  */
 class Main {
@@ -55,7 +56,7 @@ class Main {
 			$item_path = $path . '/' . $item;
 
 			/* if the item is a file, include it */
-			if ( is_file( $item_path ) ) {
+			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
 				$element = include $item_path;
 
 				if ( ! empty( $element ) ) {
@@ -67,6 +68,7 @@ class Main {
 
 	/**
 	 * Check if architect is active
+	 *
 	 * @return bool
 	 */
 	public static function is_architect_active() {
@@ -75,14 +77,16 @@ class Main {
 
 	/**
 	 * call my by my name
+	 *
 	 * @return string|void
 	 */
 	public static function title() {
-		return __( 'WordPress Login Screen Branding', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'WordPress Login Screen Branding', 'thrive-dash' );
 	}
 
 	/**
 	 * Check if we're on a edit page for the login screen
+	 *
 	 * @return bool
 	 */
 	public static function is_edit_screen() {
@@ -125,6 +129,7 @@ class Main {
 
 	/**
 	 * Check if we've enabled login screen design
+	 *
 	 * @return bool
 	 */
 	public static function is_login_design_enabled() {

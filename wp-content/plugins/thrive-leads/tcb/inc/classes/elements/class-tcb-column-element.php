@@ -62,7 +62,7 @@ class TCB_Column_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		return array(
-			'column'           => array(
+			'column'              => array(
 				'config' => array(
 					'VerticalPosition' => array(
 						'config'  => array(
@@ -121,9 +121,9 @@ class TCB_Column_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'layout'           => array(
+			'responsive'          => array( 'hidden' => true ),
+			'styles-templates'    => array( 'hidden' => true ),
+			'layout'              => array(
 				'disabled_controls' => array(
 					'.tve-advanced-controls',
 					'Width',
@@ -132,13 +132,14 @@ class TCB_Column_Element extends TCB_Element_Abstract {
 					'Display',
 				),
 			),
-			'borders'          => array(
+			'borders'             => array(
 				'config' => array(
 					'Borders' => array(
 						'important' => true,
 					),
 				),
 			),
+			'conditional-display' => [ 'hidden' => false ],
 		);
 	}
 

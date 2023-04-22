@@ -31,9 +31,15 @@ class TVE_Leads_Blocks {
 	public static function hooks() {
 		global $wp_version;
 
-		add_filter( version_compare( $wp_version, '5.7.9', '>' ) ? 'block_categories_all' : 'block_categories', array( __CLASS__, 'register_block_category' ), 10, 2 );
+		add_filter( version_compare( $wp_version, '5.7.9', '>' ) ? 'block_categories_all' : 'block_categories', array(
+			__CLASS__,
+			'register_block_category'
+		), 10, 2 );
 
-		add_filter( "rest_prepare_" . TVE_LEADS_POST_SHORTCODE_TYPE, array( __CLASS__, 'rest_prepare_shortcode' ), 10, 2 );
+		add_filter( "rest_prepare_" . TVE_LEADS_POST_SHORTCODE_TYPE, array(
+			__CLASS__,
+			'rest_prepare_shortcode'
+		), 10, 2 );
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
@@ -72,7 +78,11 @@ class TVE_Leads_Blocks {
 	}
 
 	public static function render_block( $attributes ) {
-		if ( isset( $attributes['selectedBlock'] ) && ! is_admin() ) {
+		/**
+		 * Prevent showing the block if there is conversion already set
+		 *
+		 */
+		if ( isset( $attributes['selectedBlock'] ) && ! is_admin() && ( ! tve_leads_check_conversion_cookie( $attributes['selectedBlock'] ) || tve_leads_has_already_subscribed_state( $attributes['selectedBlock'] ) ) ) {
 
 			$data = array(
 				'id' => $attributes['selectedBlock'],

@@ -16,20 +16,20 @@ class Thrive_Dash_Api_MailerLite_Groups extends Thrive_Dash_Api_MailerLite_ApiAb
 	/**
 	 * Get subscribers from group
 	 *
-	 * @param  int $groupId
-	 * @param  string $type
-	 * @param  array $params
+	 * @param int    $group_id
+	 * @param string $type
+	 * @param array  $params
 	 *
 	 * @return [type]
 	 */
-	public function getSubscribers( $groupId, $type = null, $params = array() ) {
-		$endpoint = $this->endpoint . '/' . $groupId . '/subscribers';
+	public function getSubscribers( $group_id, $type = null, $params = array() ) {
+		$endpoint = $this->endpoint . '/' . $group_id . '/subscribers';
 
 		if ( $type !== null ) {
 			$endpoint .= '/' . $type;
 		}
 
-		$response = $this->restClient->get( $endpoint, $params );
+		$response = $this->rest_client->get( $endpoint, $params );
 
 		return $response['body'];
 	}
@@ -37,32 +37,30 @@ class Thrive_Dash_Api_MailerLite_Groups extends Thrive_Dash_Api_MailerLite_ApiAb
 	/**
 	 * Add single subscriber to group
 	 *
-	 * @param int $groupId
-	 * @param array $subscriberData
+	 * @param int   $group_id
+	 * @param array $subscriber_data
 	 * @param array $params
 	 *
 	 * @return [type]
 	 */
-	public function addSubscriber( $groupId, $subscriberData = array(), $params = array() ) {
-		$endpoint = $this->endpoint . '/' . $groupId . '/subscribers';
+	public function add_subscriber( $group_id, $subscriber_data = array(), $params = array() ) {
+		$endpoint = $this->endpoint . '/' . $group_id . '/subscribers';
 
-		$response = $this->restClient->post( $endpoint, $subscriberData );
-
-		return $response;
+		return $this->rest_client->post( $endpoint, $subscriber_data );
 	}
 
 	/**
 	 * Remove subscriber from group
 	 *
-	 * @param  int $groupId
-	 * @param  int $subscriberId
+	 * @param int $group_id
+	 * @param int $subscriber_id
 	 *
 	 * @return [type]
 	 */
-	public function removeSubscriber( $groupId, $subscriberId ) {
-		$endpoint = $this->endpoint . '/' . $groupId . '/subscribers/' . $subscriberId;
+	public function removeSubscriber( $group_id, $subscriber_id ) {
+		$endpoint = $this->endpoint . '/' . $group_id . '/subscribers/' . $subscriber_id;
 
-		$response = $this->restClient->delete( $endpoint );
+		$response = $this->rest_client->delete( $endpoint );
 
 		return $response['body'];
 	}
@@ -70,15 +68,15 @@ class Thrive_Dash_Api_MailerLite_Groups extends Thrive_Dash_Api_MailerLite_ApiAb
 	/**
 	 * Batch add subscribers to group
 	 *
-	 * @param  int $groupId
-	 * @param  array $subscribers
+	 * @param int   $group_id
+	 * @param array $subscribers
 	 *
 	 * @return [type]
 	 */
-	public function importSubscribers( $groupId, $subscribers ) {
-		$endpoint = $this->endpoint . '/' . $groupId . '/subscribers/import';
+	public function importSubscribers( $group_id, $subscribers ) {
+		$endpoint = $this->endpoint . '/' . $group_id . '/subscribers/import';
 
-		$response = $this->restClient->post( $endpoint, array ( 'subscribers' => $subscribers ) );
+		$response = $this->rest_client->post( $endpoint, array( 'subscribers' => $subscribers ) );
 
 		return $response['body'];
 	}

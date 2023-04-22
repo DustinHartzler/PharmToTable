@@ -33,7 +33,8 @@ class Thrive_Leads_Display_Settings_Manager {
 	public function get_popup_data() {
 		$this->load_dependencies();
 
-		$group = $_GET['group'];
+		$group = floatval( $_GET['group'] );
+
 
 		try {
 			$hangers = $this->initHangers( $group );
@@ -58,7 +59,7 @@ class Thrive_Leads_Display_Settings_Manager {
 	public function load_template() {
 		$this->load_dependencies();
 
-		$templates = new Thrive_Leads_Saved_Options();
+		$templates   = new Thrive_Leads_Saved_Options();
 		$template_id = $_REQUEST['template_id'];
 		if ( strpos( $template_id, 'TL-' ) === 0 ) {
 			$template_id = str_replace( 'TL-', '', $template_id );

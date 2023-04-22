@@ -69,7 +69,7 @@ class TCB_Login_Element_Handler {
 	 */
 	public function action_login( $data, $json_output = true ) {
 		$args['user_login']    = isset( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '';
-		$args['user_password'] = isset( $data['password'] ) ? sanitize_text_field( $data['password'] ) : '';
+		$args['user_password'] = isset( $data['password'] ) ? $data['password'] : '';
 		$args['remember']      = ! empty( $data['remember_me'] );
 
 		/**

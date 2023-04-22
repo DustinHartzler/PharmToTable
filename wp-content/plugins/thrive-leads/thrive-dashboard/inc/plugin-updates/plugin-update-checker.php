@@ -30,21 +30,25 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 	class TVE_PluginUpdateChecker_1_3_2 {
 		protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
-		public $metadataUrl = ''; //The URL of the plugin's metadata file.
+		public $metadataUrl        = ''; //The URL of the plugin's metadata file.
 		public $pluginAbsolutePath = ''; //Full path of the main plugin file.
-		public $pluginFile = '';  //Plugin filename relative to the plugins directory. Many WP APIs use this to identify plugins.
-		public $slug = '';        //Plugin slug.
-		public $checkPeriod = 12; //How often to check for updates (in hours).
-		public $optionName = '';  //Where to store the update info.
+		public $pluginFile         = '';  //Plugin filename relative to the plugins directory. Many WP APIs use this to identify plugins.
+		public $slug               = '';        //Plugin slug.
+		public $checkPeriod        = 12; //How often to check for updates (in hours).
+		public $optionName         = '';  //Where to store the update info.
 
 		public $debugMode = false; //Set to TRUE to enable error reporting. Errors are raised using trigger_error()
 		//and should be logged to the standard PHP error log.
 
-		private $cronHook = null;
-		private $debugBarPlugin = null;
+		private $cronHook               = null;
+		private $debugBarPlugin         = null;
 		private $cachedInstalledVersion = null;
-		private $php_version = 0;
-		private $required_php_version = '5.3.0';
+		private $php_version            = 0;
+		private $site_url               = null;
+		private $channel                = null;
+		private $ttw_id                 = 0;
+		private $required_php_version   = '5.3.0';
+		private $wp_version             = '';
 
 		protected $api_slug = '';
 
@@ -67,6 +71,10 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 			$this->debugMode          = defined( 'WP_DEBUG' ) && WP_DEBUG;
 			$this->api_slug           = $api_slug;
 			$this->php_version        = PHP_VERSION;
+			$this->site_url           = home_url();
+			$this->channel            = tvd_get_update_channel();
+			$this->ttw_id             = class_exists( 'TD_TTW_Connection', false ) && TD_TTW_Connection::get_instance()->is_connected() ? TD_TTW_Connection::get_instance()->ttw_id : 0;
+			$this->wp_version         = get_bloginfo( 'version' );
 
 			//If no slug is specified, use the name of the main plugin file as the slug.
 			//For example, 'my-cool-plugin/cool-plugin.php' becomes 'cool-plugin'.
@@ -163,7 +171,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		public function php_version_notice() {
 			$plugin_data = get_plugin_data( $this->pluginAbsolutePath, false, false );
 
-			$message = __( $plugin_data['Name'] . ' requires PHP version ' . $this->required_php_version . '. Your current version is ' . $this->php_version . '. Please contact your hosting provider and ask them to update your PHP.', TVE_DASH_TRANSLATE_DOMAIN );
+			$message = __( $plugin_data['Name'] . ' requires PHP version ' . $this->required_php_version . '. Your current version is ' . $this->php_version . '. Please contact your hosting provider and ask them to update your PHP.', 'thrive-dash' );
 
 			echo wp_kses_post( sprintf( '<div class="error"><p>%s</p></div>', $message ) );
 		}
@@ -238,6 +246,10 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 			$options['body']                       = $queryArgs;
 			$options['body']['api_slug']           = $this->api_slug;
 			$options['body']['client_php_version'] = $this->php_version;
+			$options['body']['channel']            = $this->channel;
+			$options['body']['client_site_url']    = $this->site_url;
+			$options['body']['ttw_id']             = (string) $this->ttw_id;
+			$options['body']['wp_version']         = (string) $this->wp_version;
 			$url                                   = add_query_arg( array( 'p' => $this->calc_hash( $options['body'] ) ), $url );
 
 			$result = wp_remote_post(
@@ -531,7 +543,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 					global $wp_version;
 
 					if ( ! empty( $update->requires ) && version_compare( $wp_version, $update->requires, '<' ) ) {
-						$update->upgrade_notice = self::get_wp_version_error_message();
+						$update->upgrade_notice = static::get_wp_version_error_message();
 					}
 
 					$plugin_data = get_plugin_data( $this->pluginAbsolutePath );
@@ -541,16 +553,24 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 					 */
 					if ( class_exists( 'TD_TTW_Messages_Manager', false ) ) {
 
-						if ( true !== TD_TTW_Update_Manager::can_see_updates() ) {
+						$update_message  = TD_TTW_Messages_Manager::get_update_message( $state, $plugin_data );
+						$can_see_updates = TD_TTW_Update_Manager::can_see_updates();
+						if ( null === $update_message || ( ! $can_see_updates && strpos( $update_message, 'thrv-deny-updates' ) !== false ) ) {
 							return null;
 						}
 
-						$update->upgrade_notice .= TD_TTW_Messages_Manager::get_update_message( $state, $plugin_data );
+						$update->upgrade_notice .= $update_message;
 					}
 
 					if ( ! empty( $update->upgrade_notice ) ) {
-						remove_action( 'in_plugin_update_message-' . $this->pluginFile, array( $this, 'upgrade_notice' ), 10 );
-						add_action( 'in_plugin_update_message-' . $this->pluginFile, array( $this, 'upgrade_notice' ), 10, 2 );
+						remove_action( 'in_plugin_update_message-' . $this->pluginFile, array(
+							$this,
+							'upgrade_notice',
+						), 10 );
+						add_action( 'in_plugin_update_message-' . $this->pluginFile, array(
+							$this,
+							'upgrade_notice',
+						), 10, 2 );
 					}
 
 					return $update;
@@ -618,7 +638,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		 * Check for updates when the user clicks the "Check for updates" link.
 		 *
 		 * @return void
-		 * @see self::addCheckForUpdatesLink()
+		 * @see static::addCheckForUpdatesLink()
 		 *
 		 */
 		public function handleManualCheck() {
@@ -644,7 +664,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		/**
 		 * Display the results of a manual update check.
 		 *
-		 * @see self::handleManualCheck()
+		 * @see static::handleManualCheck()
 		 *
 		 * You can change the result message by using the "puc_manual_check_message-$slug" filter.
 		 */
@@ -786,6 +806,9 @@ if ( ! class_exists( 'TVE_PluginInfo_1_3', false ) ) {
 
 		public $requires;
 		public $tested;
+
+		public $icons;
+		public $channel;
 		public $upgrade_notice;
 
 		public $rating;
@@ -912,6 +935,8 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 		public $upgrade_notice;
 		public $tested;
 		public $icons;
+		public $requires;
+
 		private static $fields
 			= array(
 				'id',
@@ -939,7 +964,7 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 			//the parts that we care about.
 			$pluginInfo = TVE_PluginInfo_1_3::fromJson( $json, $triggerErrors );
 			if ( $pluginInfo != null ) {
-				return self::fromPluginInfo( $pluginInfo );
+				return static::fromPluginInfo( $pluginInfo );
 			} else {
 				return null;
 			}
@@ -954,7 +979,7 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 		 * @return TVE_PluginUpdate
 		 */
 		public static function fromPluginInfo( $info ) {
-			return self::fromObject( $info );
+			return static::fromObject( $info );
 		}
 
 		/**
@@ -967,7 +992,7 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 		 */
 		public static function fromObject( $object ) {
 			$update = new self();
-			foreach ( self::$fields as $field ) {
+			foreach ( static::$fields as $field ) {
 				if ( isset( $object->$field ) ) {
 					$update->$field = $object->$field;
 				}
@@ -986,7 +1011,7 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 		 */
 		public function toStdClass() {
 			$object = new StdClass();
-			foreach ( self::$fields as $field ) {
+			foreach ( static::$fields as $field ) {
 				$object->$field = isset( $this->$field ) ? $this->$field : '';
 			}
 
@@ -1045,7 +1070,7 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 	 */
 	class TVE_PucFactory {
 		protected static $classVersions = array();
-		protected static $sorted = false;
+		protected static $sorted        = false;
 
 		/**
 		 * Create a new instance of PluginUpdateChecker.
@@ -1061,7 +1086,7 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 		 *
 		 */
 		public static function buildUpdateChecker( $metadataUrl, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '' ) {
-			$class = self::getLatestClassVersion( 'PluginUpdateChecker' );
+			$class = static::getLatestClassVersion( 'PluginUpdateChecker' );
 
 			return new $class( $metadataUrl, $pluginFile, $slug, $checkPeriod, $optionName );
 		}
@@ -1074,12 +1099,12 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 		 * @return string|null
 		 */
 		public static function getLatestClassVersion( $class ) {
-			if ( ! self::$sorted ) {
-				self::sortVersions();
+			if ( ! static::$sorted ) {
+				static::sortVersions();
 			}
 
-			if ( isset( self::$classVersions[ $class ] ) ) {
-				return reset( self::$classVersions[ $class ] );
+			if ( isset( static::$classVersions[ $class ] ) ) {
+				return reset( static::$classVersions[ $class ] );
 			} else {
 				return null;
 			}
@@ -1089,11 +1114,11 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 		 * Sort available class versions in descending order (i.e. newest first).
 		 */
 		protected static function sortVersions() {
-			foreach ( self::$classVersions as $class => $versions ) {
+			foreach ( static::$classVersions as $class => $versions ) {
 				uksort( $versions, array( __CLASS__, 'compareVersions' ) );
-				self::$classVersions[ $class ] = $versions;
+				static::$classVersions[ $class ] = $versions;
 			}
-			self::$sorted = true;
+			static::$sorted = true;
 		}
 
 		protected static function compareVersions( $a, $b ) {
@@ -1110,11 +1135,11 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 		 * @param string $version        Version number, e.g. '1.2'.
 		 */
 		public static function addVersion( $generalClass, $versionedClass, $version ) {
-			if ( ! isset( self::$classVersions[ $generalClass ] ) ) {
-				self::$classVersions[ $generalClass ] = array();
+			if ( ! isset( static::$classVersions[ $generalClass ] ) ) {
+				static::$classVersions[ $generalClass ] = array();
 			}
-			self::$classVersions[ $generalClass ][ $version ] = $versionedClass;
-			self::$sorted                                     = false;
+			static::$classVersions[ $generalClass ][ $version ] = $versionedClass;
+			static::$sorted                                     = false;
 		}
 	}
 }

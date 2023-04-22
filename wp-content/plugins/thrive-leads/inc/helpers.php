@@ -498,7 +498,11 @@ function tve_leads_shortcode_render( $attributes = array() ) {
 		return '';
 	}
 
-	if ( is_feed() ) {
+	if (
+		is_feed() ||
+		doing_action( 'wpseo_head' ) || /* SUPP-13169 - don't load shortcodes in head while yoast changes meta tags */
+		( ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'editpost' ) /* SUPP-14391 - yoast conflict - do not render during post save */
+	) {
 		return '';
 	}
 	// $attributes must be always array and from the parameter it can come with the empty string.
@@ -1088,7 +1092,7 @@ function tve_leads_position_nice_name( $variation ) {
 function tve_leads_animation_nice_name( $variation ) {
 	$animation = TVE_Leads_Animation_Abstract::factory( $variation['display_animation'] );
 
-	return $animation == null ? $variation['display_animation'] : $animation->get_title();
+	return $animation == null ? $variation['display_animation'] : $animation->get_translatable_title();
 }
 
 /**
@@ -2215,7 +2219,7 @@ function tve_leads_asset_delivery_setup_valid() {
 	$connection     = get_option( 'tve_api_delivery_service', false );
 	$email_body     = get_option( 'tve_leads_asset_mail_subject', false );
 	$email_subject  = get_option( 'tve_leads_asset_mail_body', false );
-	$connected_apis = Thrive_List_Manager::getAvailableAPIsByType( true, array( 'email' ) );
+	$connected_apis = Thrive_List_Manager::get_available_apis( true, [ 'include_types' => [ 'email' ] ] );
 
 	return ! empty( $connection ) && ! empty( $email_body ) && ! empty( $email_subject ) && ! empty( $connected_apis );
 }
@@ -2320,6 +2324,10 @@ function tve_leads_format_date( $date_string, $format = null ) {
  */
 function tve_leads_get_form_placeholder( $type, $control_variation = null ) {
 
+	$o_type = $type;
+	if ( $type === 'before_widget' ) {
+		$type = 'widget';
+	}
 	if ( empty( $GLOBALS['tve_lead_forms'][ $type ]['form_type'] ) && $control_variation === null ) {
 		$placeholder = sprintf( '<span style="display:none" class="tl-placeholder-f-type-%s"></span>', $type );
 	} else {
@@ -2354,8 +2362,8 @@ function tve_leads_get_form_placeholder( $type, $control_variation = null ) {
 			$form_style = 'display:none';
 		}
 
-		switch ( $type ) {
-			case 'widget':
+		switch ( $o_type ) {
+			case 'before_widget':
 				$placeholder = sprintf( '<div style="%s" class="tl-widget-container %s">%s', $form_style, $form_class, $placeholder_content );
 				break;
 

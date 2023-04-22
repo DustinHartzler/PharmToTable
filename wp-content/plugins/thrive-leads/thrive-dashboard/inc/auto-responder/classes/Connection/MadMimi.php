@@ -9,25 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Laura
- * Date: 09.09.2015
- * Time: 15:15
- */
 class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'MadMimi';
 	}
 
@@ -36,8 +31,8 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'madmimi' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'madmimi' );
 	}
 
 	/**
@@ -47,20 +42,20 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$key      = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		$username = ! empty( $_POST['connection']['username'] ) ? sanitize_text_field( $_POST['connection']['username'] ) : '';
 
 		if ( empty( $key ) || empty( $username ) ) {
-			return $this->error( __( 'Username and API Key are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Username and API Key are required', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( array( 'key' => $key, 'username' => $username ) );
+		$this->set_credentials( array( 'key' => $key, 'username' => $username ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to MadMimi using the provided data', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to MadMimi using the provided data', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -68,7 +63,7 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 		 */
 		$this->save();
 
-		return $this->success( __( 'MadMimi connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'MadMimi connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -76,9 +71,9 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_MadMimi $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 		/**
 		 * just try getting the list of the promotions as a connection test
 		 */
@@ -96,7 +91,7 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_MadMimi( $this->param( 'key' ), $this->param( 'username' ) );
 	}
 
@@ -105,16 +100,16 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		/** @var Thrive_Dash_Api_MadMimi $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 		try {
 			$lists        = array();
 			$audienceList = $api->getAudienceLists();
 			foreach ( $audienceList as $key => $item ) {
 				$lists [] = array(
 					'id'   => $item['name'],
-					'name' => $item['name']
+					'name' => $item['name'],
 				);
 			}
 
@@ -134,9 +129,9 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		/** @var Thrive_Dash_Api_MadMimi $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		try {
 			$api->registerToAudienceList( $list_identifier, $arguments['name'], $arguments['email'] );
@@ -151,13 +146,10 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 
 	/**
 	 * Return the connection email merge tag
+	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '(email)';
-	}
-
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
 	}
 }

@@ -16,7 +16,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 
 		return 'Zoho';
 	}
@@ -26,29 +26,29 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
+	public function output_setup_form() {
 
-		$this->_directFormHtml( 'zoho' );
+		$this->output_controls_html( 'zoho' );
 	}
 
 	/**
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 * @throws Exception
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'Could not connect to Zoho using provided credentials.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Could not connect to Zoho using provided credentials.', 'thrive-dash' ) );
 		}
 
 		$this->_save();
 		$this->saveOauthCredentials();
 
-		return $this->success( __( 'Zozo connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Zozo connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 		/**
 		 * @var $api Thrive_Dash_Api_Zoho
 		 */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		$this->_credentials = array_merge( $this->_credentials, $api->getOauth()->getTokens() );
 
@@ -82,9 +82,9 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	/**
 	 * @return bool|string
 	 */
-	public function testConnection() {
+	public function test_connection() {
 
-		return is_array( $this->_getLists() );
+		return is_array( $this->_get_lists() );
 	}
 
 	/**
@@ -95,15 +95,15 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return bool|mixed|string
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 		try {
 			/**
 			 * @var $api Thrive_Dash_Api_Zoho
 			 */
-			$api = $this->getApi();
+			$api = $this->get_api();
 
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 
 			$contact_info = array(
 				'Contact Email' => $arguments['email'],
@@ -122,7 +122,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 				'contactinfo' => json_encode( $contact_info ),
 			);
 
-			$api->addSubscriber( $args );
+			$api->add_subscriber( $args );
 
 			return true;
 		} catch ( Exception $e ) {
@@ -134,9 +134,9 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 * @return mixed|Thrive_Dash_Api_Zoho
 	 * @throws Exception
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 
-		return new Thrive_Dash_Api_Zoho( $this->getCredentials() );
+		return new Thrive_Dash_Api_Zoho( $this->get_credentials() );
 	}
 
 	/**
@@ -144,7 +144,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		$lists = array();
 
 		try {
@@ -152,7 +152,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 			/**
 			 * @var $api Thrive_Dash_Api_Zoho
 			 */
-			$api    = $this->getApi();
+			$api    = $this->get_api();
 			$result = $api->getLists();
 
 			if ( isset( $result['status'] ) && 'error' === $result['status'] ) {
@@ -188,7 +188,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 */
 	public function get_api_custom_fields( $params, $force = false, $get_all = false ) {
 
-		$cached_data = $this->_get_cached_custom_fields();
+		$cached_data = $this->get_cached_custom_fields();
 		if ( false === $force && ! empty( $cached_data ) ) {
 			return $cached_data;
 		}
@@ -197,7 +197,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 
 		try {
 			/** @var Thrive_Dash_Api_Zoho $api */
-			$api           = $this->getApi();
+			$api           = $this->get_api();
 			$custom_fields = $api->getCustomFields();
 
 			if ( empty( $custom_fields['response']['fieldnames']['fieldname'] ) ) {
@@ -269,7 +269,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 			$name         = strpos( $id['type'], 'mapping_' ) !== false ? $id['type'] . '_' . $key : $key;
 			$cf_form_name = str_replace( '[]', '', $name );
 
-			$result[ $field[0]['name'] ] = $this->processField( $args[ $cf_form_name ] );
+			$result[ $field[0]['name'] ] = $this->process_field( $args[ $cf_form_name ] );
 		}
 
 		return $result;
@@ -292,7 +292,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 
 		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
-		$mapped_fields = $this->getMappedFieldsIDs();
+		$mapped_fields = $this->get_mapped_field_ids();
 
 		foreach ( $mapped_fields as $mapped_field_name ) {
 
@@ -327,14 +327,14 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return int
 	 */
-	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+	public function add_custom_fields( $email, $custom_fields = array(), $extra = array() ) {
 
 		try {
 			/** @var Thrive_Dash_Api_Zoho $api */
-			$api     = $this->getApi();
+			$api     = $this->get_api();
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 
-			list( $first_name, $last_name ) = $this->_getNameParts( ! empty( $extra['name'] ) ? $extra['name'] : '' );
+			list( $first_name, $last_name ) = $this->get_name_parts( ! empty( $extra['name'] ) ? $extra['name'] : '' );
 
 			$cf = array(
 				'Contact Email' => $email,
@@ -344,10 +344,10 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 
 			$args = array(
 				'listkey'     => $list_id,
-				'contactinfo' => json_encode( array_merge( $cf, $this->_prepareCustomFieldsForApi( $custom_fields ) ) ),
+				'contactinfo' => json_encode( array_merge( $cf, $this->prepare_custom_fields_for_api( $custom_fields ) ) ),
 			);
 
-			$api->addSubscriber( $args );
+			$api->add_subscriber( $args );
 		} catch ( Exception $e ) {
 			return false;
 		}
@@ -360,7 +360,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return array
 	 */
-	public function getAvailableCustomFields( $list_id = null ) {
+	public function get_available_custom_fields( $list_id = null ) {
 
 		return $this->get_api_custom_fields( null, true );
 	}
@@ -373,7 +373,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return array
 	 */
-	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+	public function prepare_custom_fields_for_api( $custom_fields = array(), $list_identifier = null ) {
 
 		$prepared_fields = array();
 		$api_fields      = $this->get_api_custom_fields( null, true );
@@ -391,10 +391,6 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 		}
 
 		return $prepared_fields;
-	}
-
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
 	}
 
 }

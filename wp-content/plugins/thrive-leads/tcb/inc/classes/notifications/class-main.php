@@ -48,7 +48,7 @@ class Main {
 			$item_path = $path . '/' . $item;
 
 			/* if the item is a file, include it */
-			if ( is_file( $item_path ) ) {
+			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
 				$element = include $item_path;
 				if ( ! empty( $element ) ) {
 					static::$elements[ $element->tag() ] = $element;
@@ -67,7 +67,9 @@ class Main {
 	 * @return bool
 	 */
 	public static function is_edit_screen() {
-		return isset( $_GET[ Main::EDIT_FLAG ] ) || Post_Type::is_notification();
+		$is_edit_screen = isset( $_GET[ Main::EDIT_FLAG ] ) || Post_Type::is_notification();
+
+		return apply_filters( 'tcb_is_notifications_edit_screen', $is_edit_screen );
 	}
 
 	/**
@@ -137,7 +139,7 @@ class Main {
 
 		$post_content = do_shortcode( $post_content );
 
-		$css = static::get_notification_meta_style();
+		$css = static::get_notification_meta_style( true, $is_preview );
 
 		return $css . $post_content;
 	}
@@ -156,7 +158,7 @@ class Main {
 			$type = '-' . $type;
 		}
 
-		include __DIR__ . '/views/notification-default' . $type . '-content.php';
+		include TVE_TCB_ROOT_PATH . 'inc/views/notifications/notification-default' . $type . '-content.php';
 
 		return ob_get_clean();
 	}
@@ -195,13 +197,15 @@ class Main {
 	/**
 	 * Get the styling of the notification
 	 */
-	public static function get_notification_meta_style( $return = true ) {
+	public static function get_notification_meta_style( $return = true, $is_preview = false ) {
 		$post_id = Post_Type::instance()->get_id();
 		$css     = '';
 		if ( get_the_ID() !== $post_id ) {
 			$lightspeed_css = \TCB\Lightspeed\Css::get_instance( $post_id );
 
-			$css .= $lightspeed_css->get_optimized_styles();
+			if ( $is_preview || $lightspeed_css->should_load_optimized_styles() ) {
+				$css .= $lightspeed_css->get_optimized_styles();
+			}
 
 			$css .= sprintf( '<style type="text/css" id="tve_notification_styles">%s</style>', get_post_meta( $post_id, 'tve_custom_css', true ) );
 		}

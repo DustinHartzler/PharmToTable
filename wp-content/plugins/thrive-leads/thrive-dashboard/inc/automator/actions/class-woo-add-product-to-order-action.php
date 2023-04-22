@@ -2,6 +2,10 @@
 
 namespace TVE\Dashboard\Automator;
 
+use Thrive\Automator\Items\Action;
+use function wc_get_order;
+use function wc_get_product;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -9,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Woo_Add_Product_To_Order
  */
-class Woo_Add_Product_To_Order extends \Thrive\Automator\Items\Action {
+class Woo_Add_Product_To_Order extends Action {
 
 	private $products;
 
@@ -54,8 +58,8 @@ class Woo_Add_Product_To_Order extends \Thrive\Automator\Items\Action {
 	 *
 	 * @return string
 	 */
-	public static function get_app_name() {
-		return 'WooCommerce';
+	public static function get_app_id() {
+		return Woo_App::get_id();
 	}
 
 	/**
@@ -80,29 +84,28 @@ class Woo_Add_Product_To_Order extends \Thrive\Automator\Items\Action {
 		if ( ! empty( $data['extra_data'] ) ) {
 			$data = $data['extra_data'];
 		}
-
-		$this->products = $data['products']['value'];
+		$this->products = $data['woo_products']['value'];
 	}
 
 	public function do_action( $data ) {
-
-		if ( empty( $data['woo_order_data'] ) ) {
+		global $automation_data;
+		$order_data = $automation_data->get( 'woo_order_data' );
+		if ( empty( $order_data ) ) {
 			return false;
 		}
 
-		$order = \wc_get_order( $data['woo_order_data']->get_value( 'order_id' ) );
+		$order = wc_get_order( $order_data->get_value( Woo_Order_Id::get_id() ) );
 
 		if ( empty( $order ) ) {
 			return false;
 		}
 		foreach ( $this->products as $product_id ) {
-			$product = \wc_get_product( $product_id );
+			$product = wc_get_product( $product_id );
 
 			if ( $product ) {
 				$order->add_product( $product );
 			}
 		}
-
 	}
 
 }

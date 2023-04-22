@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="tcb-modal-save-container">
 		<div class="tcb-preview-container">
 			<div class="tcb-preview-image lazy-loading">
-				<img class="tve-lazy-img" src="" data-loading-src="<?php echo esc_url( tve_editor_css() . '/images/loading-spinner-large.gif' ); ?>" alt="">
+				<img class="tve-lazy-img" src="" data-loading-src="<?php echo esc_url( tve_editor_css( 'images/loading-spinner-large.gif' ) ); ?>" alt="">
 			</div>
 		</div>
 
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tvd-input-field">
 				<label class="tcb-save-as-label tcb-input-name"><?php echo esc_html__( 'Template Name', 'thrive-cb' ); ?></label>
 				<input class="keydown tvd-active content-title" type="text" name="title" data-source="search" data-fn="filter">
-				<img class="tve-lazy-img tcb-input-loader" src="<?php echo esc_url( tve_editor_css() . '/images/loading-spinner-large.gif' ); ?>" alt="">
+				<img class="tve-lazy-img tcb-input-loader" src="<?php echo esc_url( tve_editor_css( 'images/loading-spinner-large.gif' ) ); ?>" alt="">
 				<label class="tvd-active tcb-ct-symbol-message"></label>
 			</div>
 

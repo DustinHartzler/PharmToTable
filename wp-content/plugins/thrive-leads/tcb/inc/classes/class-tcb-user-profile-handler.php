@@ -271,7 +271,7 @@ class TCB_User_Profile_Handler {
 	 * @return array
 	 */
 	public static function content_allowed_shortcodes_filter( $shortcodes ) {
-		if ( is_editor_page() ) {
+		if ( is_editor_page_raw( true ) ) {
 			$shortcodes[] = static::SHORTCODE;
 		}
 

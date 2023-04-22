@@ -12,19 +12,22 @@
 					<?php tcb_icon( 'plus-square-regular', false, 'sidebar', 'active' ); ?>
 				</a>
 			<?php endif; ?>
-			<?php
-			/* this is not connected yet
-			<a href="javascript:void(0)" class="sidebar-item">
-				<?php tcb_icon( 'book-heart-light' ); ?>
-				<?php tcb_icon( 'book-heart-regular', false, 'sidebar', 'active' ); ?>
-			</a> */
-			?>
+
 			<a href="javascript:void(0)" class="mouseenter mouseleave style-panel sidebar-item tcb-sidebar-icon-<?php echo esc_attr( tcb_editor()->get_sidebar_icon_availability( 'central-style' ) ); ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-toggle="central_style_panel" data-tooltip="<?php echo esc_attr__( 'Central Style Panel', 'thrive-cb' ); ?>" data-position="left" data-tooltip-type="central-style-panel">
 				<?php tcb_icon( 'central-style-panel' ); ?>
 				<?php tcb_icon( 'central-style-panel', false, 'sidebar', 'active' ); ?>
 			</a>
+
 			<a href="javascript:void(0)"
-			   class="mouseenter open-templates mouseleave sidebar-item click tcb-sidebar-icon-<?php echo esc_attr( tcb_editor()->get_sidebar_icon_availability( 'cloud-templates' ) ); ?>"
+			   class="mouseenter mouseleave click sidebar-item tcb-sidebar-icon-tooltip tcb-sidebar-icon-unavailable"
+			   data-fn="toggleTooltip"
+			   data-tooltip-type="conditional-display"
+			   data-toggle="conditional-display">
+				<?php tcb_icon( 'control-switch' ); ?>
+			</a>
+
+			<a href="javascript:void(0)"
+			   class="mouseenter mouseleave click sidebar-item tcb-sidebar-icon-<?php echo esc_attr( tcb_editor()->get_sidebar_icon_availability( 'cloud-templates' ) ); ?>"
 			   data-fn-mouseenter="toggleTooltip"
 			   data-fn-mouseleave="toggleTooltip"
 			   data-tooltip-type="cloud-templates"
@@ -40,12 +43,14 @@
 					<?php tcb_icon( 'cog-regular', false, 'sidebar', 'active' ); ?>
 				</a>
 			<?php endif; ?>
+
 			<?php if ( ! function_exists( 'thrive_ab' ) ) : ?>
 				<a id="thrive-ab-create-test" data-position="left"
 				   class="mouseenter mouseleave sidebar-item tcb-sidebar-icon-<?php echo esc_attr( tcb_editor()->get_sidebar_icon_availability( 'ab-test' ) ); ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-tooltip-type="ab-test">
 					<?php tcb_icon( 'test' ); ?>
 				</a>
 			<?php endif ?>
+
 			<?php do_action( 'tcb_sidebar_extra_links' ); ?>
 		</div>
 
@@ -73,6 +78,7 @@
 		<div id="tve-promoted-elements"><?php tcb_template( 'elements/-list-promoted' ); ?></div>
 		<div id="tve-elements" class="scrollbar"><?php tcb_template( 'elements/-sidebar-list' ); ?></div>
 	</div>
+
 	<div class="drawer central_style_panel" data-drawer="central_style_panel">
 		<div class="header fill" id="el-search">
 			<span class="text s-normal"><?php echo esc_html__( 'Style Editor', 'thrive-cb' ); ?></span>
@@ -82,6 +88,7 @@
 		</div>
 		<?php tcb_template( 'central-style-panel', tcb_editor()->get_template_styles_data() ); ?>
 	</div>
+
 	<div class="drawer hide-scroll settings" data-drawer="settings">
 		<div class="header" id="settings-search">
 			<a href="javascript:void(0)" class="s-normal back-link">
@@ -100,6 +107,18 @@
 		<div class="scroll-content"><?php tcb_template( 'settings' ); ?></div>
 	</div>
 
+	<div class="drawer" data-drawer="conditional-display">
+		<div class="header">
+			<span class="text">
+				<?php echo esc_attr__( 'Conditioned content', 'thrive-cb' ); ?>
+			</span>
+			<div class="s-links s-normal">
+				<a href="javascript:void(0)" class="s-icon click close" data-fn="hide_drawers"><?php tcb_icon( 'times-regular' ); ?></a>
+			</div>
+		</div>
+		<ul class="conditional-display-hierarchy"></ul>
+	</div>
+
 	<div class="tve-custom-code-wrapper full-width" style="display: none">
 		<textarea id="tve-custom-css-code"></textarea>
 		<div class="tve-css-buttons-wrapper">
@@ -107,6 +126,7 @@
 			<div class="code-close"><?php tcb_icon( 'close2' ); ?></div>
 		</div>
 	</div>
+
 	<div class="tve-editor-html-wrapper full-width" style="display: none">
 		<textarea id="tve-custom-html-code"></textarea>
 		<div class="tve-code-buttons-wrapper">

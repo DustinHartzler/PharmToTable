@@ -5,6 +5,7 @@
  *
  * @package thrive-dashboard
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -36,7 +37,7 @@ function tve_dash_section() {
 function tve_dash_license_manager_section() {
 	$products = tve_dash_get_products( false );
 
-	$returnUrl = esc_url( empty( $_REQUEST['return'] ) ? '' : sanitize_text_field( $_REQUEST['return'] ) );
+	$return_url = esc_url( empty( $_REQUEST['return'] ) ? '' : sanitize_text_field( $_REQUEST['return'] ) );
 
 	/**
 	 * Filter products to only active once
@@ -44,7 +45,7 @@ function tve_dash_license_manager_section() {
 	 * @var $product TVE_Dash_Product_Abstract
 	 */
 	foreach ( $products as $key => $product ) {
-		if ( ! $product->isActivated() ) {
+		if ( ! $product->is_activated() ) {
 			unset( $products[ $key ] );
 		}
 	}
@@ -67,7 +68,7 @@ function tve_dash_get_general_settings() {
 			'data-success' => 'The App ID provided is valid',
 			'data-error'   => 'The App ID provided is invalid',
 			'label'        => 'Facebook App ID',
-			'description'  => __( 'Facebook ID that will be used in our apps.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description'  => __( 'Facebook ID that will be used in our apps.', 'thrive-dash' ),
 			'value'        => get_option( 'tve_social_fb_app_id', '' ),
 			'type'         => 'text',
 			'multiple'     => false,
@@ -79,7 +80,7 @@ function tve_dash_get_general_settings() {
 			'data-success' => '',
 			'data-error'   => 'This field can not be empty',
 			'label'        => 'Facebook Admins',
-			'description'  => __( 'Admins that will moderate the comments', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description'  => __( 'Admins that will moderate the comments', 'thrive-dash' ),
 			'value'        => get_option( 'tve_comments_facebook_admins', '' ),
 			'type'         => 'text',
 			'multiple'     => true,
@@ -91,7 +92,7 @@ function tve_dash_get_general_settings() {
 			'data-success' => '',
 			'data-error'   => 'This field can not be empty',
 			'label'        => 'Disqus forum name',
-			'description'  => __( 'Your forum name is part of the address that you login to "http://xxxxxxxx.disqus.com" - the xxxxxxx is your shortname.  For example, with this URL: https://hairfreelife.disqus.com/ the shortname is "hairfreelife', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description'  => __( 'Your forum name is part of the address that you login to "http://xxxxxxxx.disqus.com" - the xxxxxxx is your shortname.  For example, with this URL: https://hairfreelife.disqus.com/ the shortname is "hairfreelife', 'thrive-dash' ),
 			'value'        => get_option( 'tve_comments_disqus_shortname', '' ),
 			'type'         => 'text',
 			'multiple'     => false,
@@ -101,7 +102,7 @@ function tve_dash_get_general_settings() {
 			'id'          => 'tve_google_fonts_disable_api_call',
 			'value'       => get_option( 'tve_google_fonts_disable_api_call', '' ),
 			'type'        => 'checkbox',
-			'description' => __( 'Disable all Google Fonts loaded by Thrive on your website.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description' => __( 'Disable all Google Fonts loaded by Thrive on your website.', 'thrive-dash' ),
 			'multiple'    => false,
 		),
 		array(
@@ -109,14 +110,13 @@ function tve_dash_get_general_settings() {
 			'id'          => 'tve_allow_video_src',
 			'value'       => tve_dash_allow_video_src(),
 			'type'        => 'checkbox',
-			'description' => __( 'Load videos for compatibility with lazy-loading and GDPR compliance plugins.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description' => __( 'Load videos for compatibility with lazy-loading and GDPR compliance plugins.', 'thrive-dash' ),
 			'multiple'    => false,
 			'link'        => '//help.thrivethemes.com/en/articles/4777320-how-to-load-videos-in-order-for-them-to-be-compatible-with-lazy-loading-and-gdpr-compliance-plugins',
 		),
 	);
-	$settings = apply_filters( 'tve_dash_general_settings_filter', $settings );
 
-	return $settings;
+	return apply_filters( 'tve_dash_general_settings_filter', $settings );
 }
 
 /**
@@ -125,6 +125,7 @@ function tve_dash_get_general_settings() {
  * @includes general_settings.phtml template
  */
 function tve_dash_general_settings_section() {
+	tve_dash_enqueue();
 	$affiliate_links = tve_dash_get_affiliate_links();
 	$settings        = tve_dash_get_general_settings();
 	/* text, radio, checkbox, password */
@@ -162,13 +163,6 @@ function tve_dash_enqueue_script( $handle, $src = '', $deps = array(), $ver = fa
 }
 
 /**
- * Display Access manager page
- */
-function tve_dash_access_manager_main_page() {
-	TVD_AM::instance()->display_page();
-}
-
-/**
  * Wrapper over the wp enqueue_style function
  * It will add the version
  *
@@ -199,10 +193,10 @@ function tve_dash_get_products( $check_rights = true ) {
 
 	foreach ( apply_filters( 'tve_dash_installed_products', array() ) as $_product ) {
 		/** @var $_product TVE_Dash_Product_Abstract */
-		if ( $check_rights && ! $_product->has_access() && $_product->getType() !== 'theme' ) {
+		if ( $check_rights && ! $_product->has_access() && $_product->get_type() !== 'theme' ) {
 			continue;
 		}
-		$return[ $_product->getTag() ] = $_product;
+		$return[ $_product->get_tag() ] = $_product;
 	}
 
 	return $return;
@@ -230,45 +224,45 @@ function tve_dash_get_features() {
 	$thrive_features = array(
 		'access_manager'   => array(
 			'icon'        => 'tvd-users',
-			'title'       => __( 'User Access Manager', TVE_DASH_TRANSLATE_DOMAIN ),
-			'description' => __( 'Access Permissions for Thrive Products', TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'       => __( 'User Access Manager', 'thrive-dash' ),
+			'description' => __( 'Access Permissions for Thrive Products', 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', 'tve_dash_access_manager', admin_url( 'admin.php' ) ),
-			'btn_text'    => __( "Manage Access", TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( "Manage Access", 'thrive-dash' ),
 		),
 		'api_connections'  => array(
 			'icon'        => 'tvd-icon-exchange',
-			'title'       => __( "API Connections", TVE_DASH_TRANSLATE_DOMAIN ),
-			'description' => __( "Connect to your email marketing system, reCaptcha, email delivery services & more.", TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'       => __( "API Connections", 'thrive-dash' ),
+			'description' => __( "Connect to your email marketing system, reCaptcha, email delivery services & more.", 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', 'tve_dash_api_connect', admin_url( 'admin.php' ) ),
-			'btn_text'    => __( "Manage Connections", TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( "Manage Connections", 'thrive-dash' ),
 		),
 		'font_manager'     => array(
 			'icon'        => 'tvd-icon-font',
-			'title'       => __( "Custom Fonts", TVE_DASH_TRANSLATE_DOMAIN ),
-			'description' => __( "Add & edit Google Fonts and other custom fonts to use in your Thrive products.", TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'       => __( "Custom Fonts", 'thrive-dash' ),
+			'description' => __( "Add & edit Google Fonts and other custom fonts to use in your Thrive products.", 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', 'tve_dash_font_manager', admin_url( 'admin.php' ) ),
-			'btn_text'    => __( "Manage Fonts", TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( "Manage Fonts", 'thrive-dash' ),
 		),
 		'icon_manager'     => array(
 			'icon'        => 'tvd-icon-rocket',
-			'title'       => __( "Retina Icons", TVE_DASH_TRANSLATE_DOMAIN ),
-			'description' => __( "Add & edit fully scalable icons with our font icon manager.", TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'       => __( "Retina Icons", 'thrive-dash' ),
+			'description' => __( "Add & edit fully scalable icons with our font icon manager.", 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', 'tve_dash_icon_manager', admin_url( 'admin.php' ) ),
-			'btn_text'    => __( "Manage Icons", TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( "Manage Icons", 'thrive-dash' ),
 		),
 		'general_settings' => array(
 			'icon'        => 'tvd-icon-cogs',
-			'title'       => __( "General Settings", TVE_DASH_TRANSLATE_DOMAIN ),
-			'description' => __( "Shared settings between multiple themes and plugins.", TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'       => __( "General Settings", 'thrive-dash' ),
+			'description' => __( "Shared settings between multiple themes and plugins.", 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', 'tve_dash_general_settings_section', admin_url( 'admin.php' ) ),
-			'btn_text'    => __( "Manage Settings", TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( "Manage Settings", 'thrive-dash' ),
 		),
 		'script_manager'   => array(
 			'icon'        => 'tvd-nm-icon-code',
-			'title'       => __( 'Analytics & Scripts', TVE_DASH_TRANSLATE_DOMAIN ),
-			'description' => __( 'Add & edit scripts on your website.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'       => __( 'Analytics & Scripts', 'thrive-dash' ),
+			'description' => __( 'Add & edit scripts on your website.', 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', 'tve_dash_script_manager', admin_url( 'admin.php' ) ),
-			'btn_text'    => __( 'Manage Scripts', TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( 'Manage Scripts', 'thrive-dash' ),
 		),
 	);
 
@@ -284,15 +278,17 @@ function tve_dash_get_features() {
 	$thrive_features = apply_filters( 'tve_dash_filter_features', $thrive_features );
 
 	/**
+	 * always available
+	 */
+	$enabled['general_settings'] = true;
+	/**
 	 * Thrive dashboard admin feature is only enabled for super admins
 	 */
 	if ( is_super_admin() ) {
 		$enabled['access_manager'] = true;
 	}
 
-	$thrive_features = array_intersect_key( $thrive_features, array_filter( $enabled ) );
-
-	return $thrive_features;
+	return array_intersect_key( $thrive_features, array_filter( $enabled ) );
 }
 
 /**
@@ -323,19 +319,19 @@ function tve_dash_check_default_cap() {
 /**
  * SPL loader
  *
- * @param $className
+ * @param $class_name
  *
  * @return bool
  */
-function tve_dash_autoloader( $className ) {
+function tve_dash_autoloader( $class_name ) {
 	$namespace = 'TVE_Dash_';
-	if ( strpos( $className, $namespace ) !== 0 ) {
+	if ( strpos( $class_name, $namespace ) !== 0 ) {
 		return false;
 	}
 
 	$basedir = rtrim( dirname( dirname( __FILE__ ) ), '/\\' ) . '/classes/';
 
-	return tve_dash_autoload( $basedir, str_replace( $namespace, '', $className ) );
+	return tve_dash_autoload( $basedir, str_replace( $namespace, '', $class_name ) );
 }
 
 /**
@@ -478,14 +474,14 @@ function tve_dash_get_error_log_entries( $order_by = 'date', $order = 'DESC', $p
 
 	$models = $wpdb->get_results( $wpdb->prepare( $sql, $params ) );
 
-	$available_apis = Thrive_Dash_List_Manager::getAvailableAPIs( false, array() );
+	$available_apis = Thrive_Dash_List_Manager::get_available_apis();
 
 	foreach ( $models as $key => $entry ) {
 		$unserialized_data                   = thrive_safe_unserialize( $entry->api_data );
 		$models[ $key ]->fields_html         = tve_dash_build_column_api_data( $unserialized_data );
 		$models[ $key ]->api_data            = json_encode( $unserialized_data );
-		$models[ $key ]->connection_explicit = empty( $available_apis[ $entry->connection ] ) ? $entry->connection : $available_apis[ $entry->connection ]->getTitle();
-		$models[ $key ]->connection_type     = empty( $available_apis[ $entry->connection ] ) ? $entry->connection : $available_apis[ $entry->connection ]->getType();
+		$models[ $key ]->connection_explicit = empty( $available_apis[ $entry->connection ] ) ? $entry->connection : $available_apis[ $entry->connection ]->get_title();
+		$models[ $key ]->connection_type     = empty( $available_apis[ $entry->connection ] ) ? $entry->connection : $available_apis[ $entry->connection ]->get_type();
 	}
 
 	$data['models'] = $models;
@@ -500,7 +496,7 @@ function tve_dash_build_column_api_data( $data ) {
 	if ( ! empty( $data['email'] ) ) {
 		$info .= sprintf(
 			'<strong>%s</strong>: %s<br/>',
-			__( 'Email', TVE_DASH_TRANSLATE_DOMAIN ),
+			__( 'Email', 'thrive-dash' ),
 			sanitize_email( $data['email'] )
 		);
 	}
@@ -508,7 +504,7 @@ function tve_dash_build_column_api_data( $data ) {
 	if ( ! empty( $data['email_address'] ) ) {
 		$info .= sprintf(
 			'<strong>%s</strong>: %s<br/>',
-			__( 'Email', TVE_DASH_TRANSLATE_DOMAIN ),
+			__( 'Email', 'thrive-dash' ),
 			sanitize_email( $data['email_address'] )
 		);
 	}
@@ -516,7 +512,7 @@ function tve_dash_build_column_api_data( $data ) {
 	if ( ! empty( $data['status'] ) ) {
 		$info .= sprintf(
 			'<strong>%s</strong>: %s<br/>',
-			__( 'Status', TVE_DASH_TRANSLATE_DOMAIN ),
+			__( 'Status', 'thrive-dash' ),
 			esc_html( $data['status'] )
 		);
 	}
@@ -524,7 +520,7 @@ function tve_dash_build_column_api_data( $data ) {
 	// Needs a refactor due to multiple custom fields APIs implementation
 	// Mailchimp custom fields err message
 	if ( ! empty( $data['merge_fields'] ) ) {
-		$info .= '<strong><u>' . __( 'Custom fields', TVE_DASH_TRANSLATE_DOMAIN ) . ':</u></strong><br/>';
+		$info .= '<strong><u>' . __( 'Custom fields', 'thrive-dash' ) . ':</u></strong><br/>';
 		foreach ( (object) $data['merge_fields'] as $field_name => $field_value ) {
 			$info .= sprintf( '<strong>%s</strong>: %s', esc_html( $field_name ), esc_html( $field_value ) );
 		}
@@ -533,7 +529,7 @@ function tve_dash_build_column_api_data( $data ) {
 
 	// GetResponse custom fields err message
 	if ( ! empty( $data['customFieldValues'] ) ) {
-		$info .= '<strong><u>' . __( 'Custom fields', TVE_DASH_TRANSLATE_DOMAIN ) . ':</u></strong><br/>';
+		$info .= '<strong><u>' . __( 'Custom fields', 'thrive-dash' ) . ':</u></strong><br/>';
 		foreach ( $data['customFieldValues'] as $field_value ) {
 			$field_id         = ! empty( $field_value['customFieldId'] ) ? $field_value['customFieldId'] : '';
 			$field_mapped_val = ! empty( $field_value['value'][0] ) ? $field_value['value'][0] : '';
@@ -545,7 +541,7 @@ function tve_dash_build_column_api_data( $data ) {
 	// Infusionsoft custom fields err message
 	if ( ! empty( $data['infusion_custom_fields'] ) && is_array( $data['infusion_custom_fields'] ) ) {
 
-		$info .= '<strong><u>' . __( 'Custom fields', TVE_DASH_TRANSLATE_DOMAIN ) . ':</u></strong><br/>';
+		$info .= '<strong><u>' . __( 'Custom fields', 'thrive-dash' ) . ':</u></strong><br/>';
 		foreach ( $data['infusion_custom_fields'] as $field_name => $field_value ) {
 			if ( ! is_string( $field_name ) || ! is_string( $field_value ) ) {
 				continue;
@@ -558,7 +554,7 @@ function tve_dash_build_column_api_data( $data ) {
 	if ( ! empty( $data['name'] ) ) {
 		$info .= sprintf(
 			'<strong>%s</strong>: %s<br/>',
-			__( 'Name', TVE_DASH_TRANSLATE_DOMAIN ),
+			__( 'Name', 'thrive-dash' ),
 			esc_html( $data['name'] )
 		);
 	}
@@ -566,7 +562,7 @@ function tve_dash_build_column_api_data( $data ) {
 	if ( ! empty( $data['phone'] ) ) {
 		$info .= sprintf(
 			'<strong>%s</strong>: %s<br/>',
-			__( 'Phone', TVE_DASH_TRANSLATE_DOMAIN ),
+			__( 'Phone', 'thrive-dash' ),
 			esc_html( $data['phone'] )
 		);
 	}
@@ -812,10 +808,11 @@ function tve_dash_get_ip() {
  */
 function tve_current_user_data( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
-		$current_user = wp_get_current_user();
-	} else {
-		$current_user = get_user_by( 'id', $user_id );
+		$user_id = tve_get_current_user_id();
 	}
+
+	$current_user = get_user_by( 'id', $user_id );
+
 	$user_data = array();
 
 	if ( ! empty( $current_user ) && ! empty( $current_user->data ) && ! empty( $current_user->data->ID ) ) {
@@ -838,6 +835,21 @@ function tve_current_user_data( $user_id = 0 ) {
 	}
 
 	return $user_data;
+}
+
+/**
+ * Wrapper over get current user ID. Used to apply a filter over it
+ *
+ * @return mixed|null
+ */
+function tve_get_current_user_id() {
+	/**
+	 * Hooks into current user functionality and overrides it.
+	 * Used in ThriveApprentice - certification generation
+	 *
+	 * @param int $user_id
+	 */
+	return apply_filters( 'tve_get_current_user_id', get_current_user_id() );
 }
 
 /**
@@ -995,7 +1007,11 @@ function tvd_get_post_type_label( $post_type = '' ) {
 	$post_type_label = ucfirst( $post_type );
 
 	if ( $post_type_object !== null ) {
-		$post_type_label = empty( $post_type_object->labels->singular_name ) ? $post_type_object->label : $post_type_object->labels->singular_name;
+		$prefix = '';
+		if ( ! empty( $post_type_object->labels->singular_name ) && $post_type === 'product' && $post_type_object->labels->singular_name === __( 'Product', 'woocommerce' ) ) {
+			$prefix = 'WooCommerce ';
+		}
+		$post_type_label = $prefix . ( empty( $post_type_object->labels->singular_name ) ? $post_type_object->label : $post_type_object->labels->singular_name );
 	}
 
 	return $post_type_label;
@@ -1069,6 +1085,28 @@ function tvd_get_acf_user_external_fields( $user_role = false ) {
 }
 
 /**
+ * Try and find a menu id to return
+ *
+ * @return mixed|string
+ */
+function tve_get_default_menu() {
+	$menus = get_terms( 'nav_menu', [ 'hide_empty' => false ] );
+
+	if ( empty( $menus ) ) {
+		$menu_id = 'custom';
+	} else {
+		usort( $menus, static function ( $m1, $m2 ) {
+			return $m2->count - $m1->count;
+		} );
+
+		$menu_id = $menus[0]->term_id;
+	}
+
+	return $menu_id;
+}
+
+
+/**
  * Get webhook route url
  *
  * @param string|bool $user_role
@@ -1079,6 +1117,41 @@ function tvd_get_webhook_route_url( $endpoint ) {
 	$rest_controller = new TD_REST_Controller();
 
 	return get_rest_url() . $rest_controller->get_namespace() . $rest_controller->get_webhook_base() . '/' . $endpoint;
+}
+
+function tvd_get_google_api_client_id() {
+	$connection = Thrive_Dash_List_Manager::connection_instance( 'google' );
+
+	return $connection ? $connection->param( 'client_id' ) : '';
+}
+
+function tvd_get_google_api_key() {
+	$connection = Thrive_Dash_List_Manager::connection_instance( 'google' );
+
+	return $connection ? $connection->param( 'api_key' ) : '';
+}
+
+function tvd_get_facebook_app_id() {
+	$connection = Thrive_Dash_List_Manager::connection_instance( 'facebook' );
+
+	return $connection ? $connection->param( 'app_id' ) : '';
+}
+
+/**
+ * Checks if we are during a theme/plugin update
+ *
+ * @return bool
+ */
+function tvd_is_during_update() {
+	$during_update = false;
+
+	global $hook_suffix;
+
+	if ( defined( 'IFRAME_REQUEST' ) || $hook_suffix === 'update.php' ) {
+		$during_update = true;
+	}
+
+	return $during_update;
 }
 
 /**
@@ -1106,4 +1179,168 @@ function thrive_safe_unserialize( $data ) {
 	}
 
 	return unserialize( $data );
+}
+
+/**
+ * Returns the update channel
+ * beta/stable
+ *
+ * @return string
+ */
+function tvd_get_update_channel() {
+	return get_option( 'tve_update_option', 'stable' );
+}
+
+/**
+ * Returns the service API endpoint needed to run certain tasks.
+ * Used in certificate generation for ThriveApprentice
+ *
+ * @return string
+ */
+function tvd_get_service_endpoint() {
+	$endpoint = 'https://service-api.thrivethemes.com';
+	if ( defined( 'TVE_SERVICE_API_LOCAL' ) ) {
+		$endpoint = TVE_SERVICE_API_LOCAL;
+	}
+
+	return $endpoint;
+}
+
+/**
+ * Return current screen id
+ *
+ * @param $key
+ *
+ * @return string
+ */
+function tve_get_current_screen_key( $key = 'id' ) {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+	return $screen === null || empty( $screen->$key ) ? '' : $screen->$key;
+}
+
+/**
+ * Returns true if the update channel is beta
+ *
+ * @return bool
+ */
+function tvd_update_is_using_beta_channel() {
+	return tvd_get_update_channel() === 'beta';
+}
+
+/**
+ * Returns true if the update channel is stable
+ *
+ * @return bool
+ */
+function tvd_update_is_using_stable_channel() {
+	return tvd_get_update_channel() === 'stable';
+}
+
+/**
+ *
+ * Replacement for WordPress's set_transient.
+ * There are cases when set_transient() will simply fail if an external cache plugin declares the global $_wp_using_ext_object_cache
+ * ( e.g. using memcached ) BUT the memcached server is not reachable.
+ * In this case both set_transient() and get_transient() will not work.
+ * Use this only if you really want the transient functionality to work regardless of caching plugins.
+ * To be used in critical circumstances, e.g. storing licensing data - as it will add the option with autoload = 'yes', so don't use to store huge amounts of data!
+ *
+ * @param string $transient  Transient name
+ * @param mixed  $value      Transient value
+ * @param int    $expiration Optional. Time until expiration in seconds. Default null (no expiration).
+ *
+ * @return bool True if the value was set, false otherwise.
+ */
+function thrive_set_transient( $transient, $value, $expiration = null ) {
+
+	/**
+	 * Filter the expiration value
+	 *
+	 * @param int $expiration expiration time, in seconds
+	 */
+	$expiration = (int) apply_filters( "thrive_transient_expiration_{$transient}", (int) $expiration );
+
+	/**
+	 * Filter the transient value
+	 *
+	 * @param mixed $value
+	 */
+	$value = apply_filters( "thrive_transient_value_{$transient}", $value );
+
+	$option_name = "_thrive_tr_{$transient}";
+
+	if ( $expiration !== 0 ) {
+		$expiration = time() + $expiration;
+	}
+
+	$data = get_option( $option_name );
+	if ( false === $data ) {
+		// does not exist. add it
+		$result = add_option( $option_name, [
+			'value' => $value,
+			'exp'   => $expiration,
+		] );
+	} else {
+		// transient found, update it
+		$data['value'] = $value;
+		$data['exp']   = $expiration;
+		$result        = update_option( $option_name, $data );
+	}
+
+	return $result;
+}
+
+/**
+ * To be used in conjunction with `thrive_set_transient`
+ *
+ * @param string $transient
+ *
+ * @return bool
+ * @see thrive_set_transient()
+ *
+ */
+function thrive_delete_transient( $transient ) {
+	return delete_option( "_thrive_tr_{$transient}" );
+}
+
+/**
+ * Replacement for WordPress's get_transient()
+ * There are cases when get_transient() will simply fail if an external cache plugin declares
+ * the global $_wp_using_ext_object_cache ( e.g. using memcached ) BUT the memcached server is not reachable.
+ * In this case both set_transient() and get_transient() will not work.
+ *
+ * @param string $transient Transient name
+ *
+ * @return mixed transient value, or false if transient is not set or is expired
+ */
+function thrive_get_transient( $transient ) {
+	$data = get_option( "_thrive_tr_{$transient}" );
+
+	$value = is_array( $data ) && isset( $data['value'], $data['exp'] ) ? $data['value'] : false;
+
+	/* if data has the correct format, then check expiration - if not zero and in the past, return false */
+	if ( $value !== false && $data['exp'] && $data['exp'] < time() ) {
+		$value = false;
+	}
+
+	return $value;
+}
+
+/**
+ * Delete any possible support user
+ *
+ * @return void
+ */
+function tve_dash_delete_support_user() {
+	foreach ( get_users( [ 'meta_key' => '_thrive_support_user', 'meta_value' => 1 ] ) as $user ) {
+		wp_delete_user( $user->ID );
+	}
+	/**
+	 * Make sure the previously saved user is also deleted in case nothing is found by meta query
+	 */
+	$user = get_user_by( 'email', 'support@thrivethemes.com' );
+	if ( isset( $user->ID ) && $user->ID ) {
+		wp_delete_user( $user->ID );
+	}
 }

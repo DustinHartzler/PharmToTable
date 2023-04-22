@@ -28,6 +28,8 @@ class Main {
 
 	const OPTIMIZE_FLAG = 'tcb-lightspeed-optimize';
 
+	const ADVANCED_OPTIMIZE_FLAG = 'tcb-advanced-optimize';
+
 	public static function init() {
 		static::includes();
 
@@ -45,6 +47,9 @@ class Main {
 		require_once __DIR__ . '/class-css.php';
 		require_once __DIR__ . '/class-js.php';
 		require_once __DIR__ . '/class-js-module.php';
+		require_once __DIR__ . '/class-gutenberg.php';
+		require_once __DIR__ . '/class-woocommerce.php';
+		require_once __DIR__ . '/class-emoji.php';
 	}
 
 	public static function is_enabled() {
@@ -53,6 +58,10 @@ class Main {
 
 	public static function is_optimizing() {
 		return isset( $_GET[ static::OPTIMIZE_FLAG ] );
+	}
+
+	public static function is_advanced_optimizing() {
+		return isset( $_GET[ static::ADVANCED_OPTIMIZE_FLAG ] );
 	}
 
 	/**
@@ -97,7 +106,6 @@ class Main {
 	 * @return mixed|void
 	 */
 	public static function requires_architect_assets( $post_id ) {
-
 
 		$is_lp    = tve_post_is_landing_page( $post_id );
 		$meta_key = $is_lp ? "tve_custom_css_$is_lp" : 'tve_custom_css';
@@ -154,6 +162,37 @@ class Main {
 	}
 
 	/**
+	 * Handles all the saved data used for optimize
+	 *
+	 * @param        $post_id
+	 * @param        $data
+	 * @param string $key
+	 */
+	public static function handle_optimize_saves( $post_id, $data, $key = '' ) {
+		static::save_assets_to_preload( $post_id, isset( $data['assets_to_preload'] ) ? $data['assets_to_preload'] : '' );
+
+		Css::get_instance( $post_id )->save_optimized_css( 'base' . $key, isset( $data['optimized_styles'] ) ? $data['optimized_styles'] : '' );
+
+		Js::get_instance( $post_id, $key )->save_js_modules( isset( $data['js_modules'] ) ? $data['js_modules'] : [] );
+
+		static::optimized_advanced_assets( $post_id, $data, $key );
+	}
+
+	/**
+	 * Handles the save of advanced assets, for now Woocommerce and Gutenberg
+	 *
+	 * @param $post_id
+	 * @param $data
+	 */
+	public static function optimized_advanced_assets( $post_id, $data, $key = '' ) {
+		if ( \TCB\Integrations\WooCommerce\Main::active() ) {
+			Js::get_instance( $post_id, '_woo' . $key )->save_js_modules( isset( $data['woo_modules'] ) ? $data['woo_modules'] : [] );
+		}
+
+		update_post_meta( $post_id, Gutenberg::HAS_GUTENBERG, isset( $data['gutenberg_modules'] ) ? $data['gutenberg_modules'] : [] );
+	}
+
+	/**
 	 * @param $id
 	 */
 	public static function preload_assets( $id ) {
@@ -184,6 +223,17 @@ class Main {
 	}
 
 	/**
+	 * Function called to make sure the lightspeed optimization is active when a plugin is activated
+	 */
+	public static function first_time_enable_lightspeed() {
+		$lightspeed = get_option( '_tve_enable_lightspeed' );
+		if ( $lightspeed === false ) {
+			update_option( '_tve_enable_lightspeed', 1 );
+		}
+	}
+
+
+	/**
 	 * @param $url
 	 * @param $type
 	 *
@@ -194,12 +244,11 @@ class Main {
 	}
 
 	/**
-	 * Return all posts that have architect content saved
+	 * Get the excluded post types
 	 *
-	 * @return array
+	 * @return mixed|void
 	 */
-	public static function get_architect_posts_for_optimization() {
-
+	public static function get_excluded_post_types() {
 		/**
 		 * Filter posts we don't want to optimize
 		 *
@@ -207,7 +256,8 @@ class Main {
 		 *
 		 * @return array
 		 */
-		$excluded_post_types = apply_filters( 'tcb_lightspeed_excluded_post_types', [
+		return apply_filters( 'tcb_lightspeed_excluded_post_types', [
+			'attachment',
 			\TVD\Login_Editor\Post_Type::NAME,
 			'product_variation',
 			//TODO: this is just temporary
@@ -216,7 +266,19 @@ class Main {
 			'tvo_capture',
 			'tvo_display',
 			'tcb_content_template',
+			'shortcodesultimate', /* 'Shortcodes Ultimate' plugin */
+			'tm_global_cp', /* 'Extra Checkout Options for WooCommerce TM Extra Product Options' plugin */
 		] );
+	}
+
+	/**
+	 * Return all posts that have architect content saved
+	 *
+	 * @return array
+	 */
+	public static function get_architect_posts_for_optimization() {
+
+		$excluded_post_types = static::get_excluded_post_types();
 
 		$all_post_types = array_filter( array_values( get_post_types() ), static function ( $post_type ) use ( $excluded_post_types ) {
 			return ! in_array( $post_type, $excluded_post_types, true );
@@ -248,24 +310,116 @@ class Main {
 			$post = get_post( $post_id );
 
 			if ( empty( $groups[ $post->post_type ] ) ) {
-				$post_type_object = get_post_type_object( $post->post_type );
-
-				$groups[ $post->post_type ] = [
-					'type'  => $post->post_type,
-					'label' => $post_type_object === null ? $post->post_type : $post_type_object->label,
-					'items' => [],
-				];
+				$groups[ $post->post_type ] = static::prepare_post_type( $post->post_type );
 			}
 
 			$groups[ $post->post_type ]['items'][] = [
-				'id'      => $post->ID,
-				'name'    => $post->post_title,
-				'version' => (int) $post->{Main::OPTIMIZATION_VERSION_META},
-				'url'     => get_permalink( $post->ID ),
+				'id'        => $post->ID,
+				'name'      => $post->post_title,
+				'optimized' => (int) $post->{static::OPTIMIZATION_VERSION_META} === static::LIGHTSPEED_VERSION ? 1 : 0,
+				'url'       => get_permalink( $post->ID ),
 			];
 		}
 
 		return $groups;
 	}
+
+	/**
+	 * This content includes everything but LPs
+	 *
+	 * @return array|void
+	 */
+	public static function get_content_for_optimization( $request ) {
+
+		$excluded_post_types   = static::get_excluded_post_types();
+		$excluded_post_types[] = 'tve_landing_page';
+
+		$all_post_types = array_filter( array_values( get_post_types() ), static function ( $post_type ) use ( $excluded_post_types ) {
+			return ! in_array( $post_type, $excluded_post_types, true );
+		} );
+
+		$posts = get_posts( [
+			'posts_per_page'         => - 1,
+			'post_type'              => $all_post_types,
+			'fields'                 => 'ids',
+			/* exclude blog page */
+			'post__not_in'           => [ get_option( 'page_for_posts' ) ],
+			'update_post_meta_cache' => false,
+			'meta_query'             => [
+				[
+					'key'     => 'tve_custom_css',
+					'compare' => 'EXISTS',
+				],
+			],
+		] );
+
+		$groups = static::get_advanced_groups( $posts );
+
+		return array_merge( $groups, apply_filters( 'tve_lightspeed_items_to_optimize', $groups, $request ) );
+	}
+
+	public static function get_lp_for_optimize() {
+		$posts = get_posts( [
+			'posts_per_page'         => - 1,
+			'post_type'              => 'page',
+			'fields'                 => 'ids',
+			/* exclude blog page */
+			'post__not_in'           => [ get_option( 'page_for_posts' ) ],
+			'update_post_meta_cache' => false,
+			'meta_query'             => [
+				[
+					'key'     => 'tve_landing_page',
+					'compare' => 'EXISTS',
+				],
+			],
+		] );
+
+		return static::get_advanced_groups( $posts );
+	}
+
+	/**
+	 * Get the advanced(that have woo or gutenberg) groups to be optimized
+	 *
+	 * @param $posts
+	 *
+	 * @return array
+	 */
+	public static function get_advanced_groups( $posts ) {
+		$groups = [];
+
+		foreach ( $posts as $post_id ) {
+			$post = get_post( $post_id );
+
+			if ( empty( $groups[ $post->post_type ] ) ) {
+				$groups[ $post->post_type ] = static::prepare_post_type( $post->post_type );
+			}
+
+			$item = [
+				'id'                  => $post->ID,
+				'name'                => $post->post_title,
+				'gutenberg_optimized' => metadata_exists( 'post', $post->ID, Gutenberg::HAS_GUTENBERG ),
+				'url'                 => get_permalink( $post->ID ),
+			];
+
+			if ( \TCB\Integrations\WooCommerce\Main::active() ) {
+				$item['woo_optimized'] = metadata_exists( 'post', $post->ID, Woocommerce::WOO_MODULE_META_NAME );
+			}
+
+			$groups[ $post->post_type ]['items'][] = $item;
+		}
+
+		return $groups;
+	}
+
+	public static function prepare_post_type( $post_type ) {
+		$post_type_object = get_post_type_object( $post_type );
+
+		return [
+			'type'  => $post_type,
+			'label' => $post_type_object === null ? $post_type : $post_type_object->label,
+			'items' => [],
+		];
+	}
+
 }
 

@@ -28,7 +28,7 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.thrv_text_element a, .tcb-styled-list a, .tcb-numbered-list a, .tve-input-option-text a';
+		return '.thrv_text_element a, .tcb-styled-list a, .tcb-numbered-list a, .tve-input-option-text a, .thrv-typography-link';
 	}
 
 	/**

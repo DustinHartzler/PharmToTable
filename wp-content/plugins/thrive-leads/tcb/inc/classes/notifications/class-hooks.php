@@ -43,14 +43,14 @@ class Hooks {
 	 * Enqueue scripts in the main frame
 	 */
 	public static function main_frame_enqueue() {
-		tve_dash_enqueue_script( 'tve-notifications-main', tve_editor_js() . '/notifications-main.min.js', [ 'jquery' ] );
+		tve_dash_enqueue_script( 'tve-notifications-main', tve_editor_js( '/notifications-main.min.js' ), [ 'jquery' ] );
 	}
 
 	/**
 	 * Used to localize the elements (wrapper and message)
 	 */
 	public static function enqueue_scripts() {
-		tve_dash_enqueue_script( 'tve-notifications-main', tve_editor_js() . '/notifications-main.min.js', [ 'jquery' ] );
+		static::main_frame_enqueue();
 
 		$elements = [];
 		foreach ( Main::$elements as $element ) {
@@ -66,7 +66,7 @@ class Hooks {
 	 * Include the notification controls component
 	 */
 	public static function tcb_output_components() {
-		$path  = dirname( __DIR__ ) . '/notifications/views/components/';
+		$path  = TVE_TCB_ROOT_PATH . 'inc/views/notifications/components/';
 		$files = array_diff( scandir( $path ), [ '.', '..' ] );
 
 		foreach ( $files as $file ) {
@@ -79,7 +79,7 @@ class Hooks {
 	 */
 	public static function editor_enqueue() {
 		if ( Main::is_edit_screen() ) {
-			tve_dash_enqueue_script( 'tve-notifications-editor', tve_editor_js() . '/notifications-editor.min.js', [ 'jquery' ] );
+			tve_dash_enqueue_script( 'tve-notifications-editor', tve_editor_js( '/notifications-editor.min.js' ), [ 'jquery' ] );
 		}
 	}
 
@@ -118,8 +118,7 @@ class Hooks {
 	 * Only load global variables in the Global Elements tab inside the Dashboard
 	 */
 	public static function add_global_variables() {
-		$screen = get_current_screen();
-		if ( $screen !== null && $screen->id === 'admin_page_tcb_admin_dashboard' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tcb_admin_dashboard' ) {
 			tve_load_global_variables();
 		}
 	}

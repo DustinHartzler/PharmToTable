@@ -16,13 +16,14 @@ module.exports = {
 	 * @returns {*}
 	 */
 	'tcb_filter_html_before_save': ( $content ) => {
-		if ( $content.find( '.notifications-content-wrapper' ).attr( 'data-timer' ) < 0 ) {
-			$content.find( '.notifications-content-wrapper' ).attr( 'data-timer', 3000 );
+		const $notificationWrapper = $content.find( TVE.identifier( 'notification' ) );
+
+		if ( $notificationWrapper.attr( 'data-timer' ) < 0 ) {
+			$notificationWrapper.attr( 'data-timer', 3000 );
 		}
+
 		$content.find( '.notification-edit-mode' ).removeClass( 'notification-edit-mode' );
-		$content.find( '.tve_no_icons' ).each( ( index, element ) => {
-			jQuery( element ).removeClass( 'tve_no_drag tve_no_icons' );
-		} );
+		$content.find( '.tve_no_icons' ).removeClass( 'tve_no_drag tve_no_icons' );
 
 		return $content;
 	},
@@ -33,14 +34,17 @@ module.exports = {
 	 * @returns {*}
 	 */
 	'tcb_save_post_data_after': ( data ) => {
-		jQuery.ajax( {
-			url: ajaxurl,
-			type: 'post',
-			data: {
-				action: 'notification_update_template',
-				post_id: data.post_id,
-			}
-		} );
+		if ( TVE.CONST.post.post_type === 'tve_notifications' ) {
+			TVE.$.ajax( {
+				url: ajaxurl,
+				type: 'post',
+				data: {
+					action: 'notification_update_template',
+					post_id: data.post_id,
+				}
+			} );
+		}
+
 		return data;
 	},
 
@@ -67,7 +71,7 @@ module.exports = {
 
 	/* Insert new elements inside the corresponding notification */
 	'tve.insert.near.target': ( $target ) => {
-		if ( $target.is( '.notifications-content-wrapper' ) ) {
+		if ( $target.is( TVE.identifier( 'notification' ) ) ) {
 			$target = $target.find( `.notifications-content.notification-${$target.attr( 'data-state' )}` );
 		}
 
@@ -81,11 +85,57 @@ module.exports = {
 
 	/* Add prefix in order to successfully override the default style */
 	'tcb_head_css_prefix': ( prefix, element ) => {
-		if ( ! element.is( '.notifications-content,.thrv-notification_message,.notifications-content-wrapper' ) ) {
-			const state = TVE.FLAGS.notification_state || TVE.inner_$( '.notifications-content-wrapper' ).attr( 'data-state' );
+		/* Check if element is part of the notification & is not one of the following components */
+		if ( element.parents( '.notifications-content-wrapper' ).length > 0 && ! element.is( '.notifications-content,.thrv-notification_message,.notifications-content-wrapper' ) ) {
+			const state = TVE.FLAGS.notification_state || TVE.inner_$( TVE.identifier( 'notification' ) ).attr( 'data-state' );
 			prefix = `.notification-${state} `;
 		}
 
 		return prefix;
+	},
+
+	/**
+	 * Add the local default notification template to the list of cloud templates
+	 *
+	 * @param data
+	 * @returns {*}
+	 */
+	'tcb.cloud_templates.notification': data => {
+		const defaultNotificationTemplate = {
+			/* set the ID as negative to mark this as a local template */
+			id: '-1',
+			name: 'Default Notifications',
+			local: true,
+			thumb: `${TVE.CONST.plugin_url}editor/css/images/notification_template_default.jpg`,
+			thumb_size: {w: 655, h: 326},
+			v: 1
+		};
+
+		data.unshift( defaultNotificationTemplate );
+
+		return data;
+	},
+	/**
+	 * Instead of rendering the default notification template from the cloud, render it from localize
+	 *
+	 * @param tpl
+	 * @param id
+	 * @returns {{v: number, head_css: string, name: string, custom_css: string, id: number, type: string, content: *}|boolean}
+	 */
+	'tcb.cloud_template.notification': ( tpl, id ) => {
+		/* local templates have negative IDs */
+		if ( id < 0 ) {
+			return {
+				content: `${TVE.tpl( 'elements/notification' )()}`,
+				custom_css: '',
+				head_css: '',
+				id: '-1',
+				name: 'Default Notifications',
+				type: 'notification',
+				v: 1
+			};
+		}
+
+		return false;
 	},
 };

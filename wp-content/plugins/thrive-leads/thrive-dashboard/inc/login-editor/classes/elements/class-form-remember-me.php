@@ -23,7 +23,7 @@ class Form_Remember_Me extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Remember Me', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Remember Me', 'thrive-dash' );
 	}
 
 	/**

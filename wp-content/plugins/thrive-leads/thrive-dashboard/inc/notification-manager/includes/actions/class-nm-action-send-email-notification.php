@@ -37,7 +37,7 @@ class TD_NM_Action_Send_Email_Notification extends TD_NM_Action_Abstract {
 				'date'          => date( 'Y-m-d H:i:s' ),
 				'error_message' => sanitize_textarea_field( $e->getMessage() ),
 				'api_data'      => serialize( tve_sanitize_data_recursive( $prepared_data ) ),
-				'connection'    => $connection->getKey(),
+				'connection'    => $connection->get_key(),
 				'list_id'       => 'asset',
 			);
 
@@ -125,7 +125,7 @@ class TD_NM_Action_Send_Email_Notification extends TD_NM_Action_Abstract {
 			return false;
 		}
 
-		return Thrive_Dash_List_Manager::connectionInstance( $connection );
+		return Thrive_Dash_List_Manager::connection_instance( $connection );
 	}
 
 	/**
@@ -264,7 +264,7 @@ class TD_NM_Action_Send_Email_Notification extends TD_NM_Action_Abstract {
 			),
 			'quiz_user'     => array(
 				'Quiz Result'  => $user['points'],
-				'Email'        => ! empty( $user['email'] ) ? $user['email'] : __( 'unknown', TVE_DASH_TRANSLATE_DOMAIN ),
+				'Email'        => ! empty( $user['email'] ) ? $user['email'] : __( 'unknown', 'thrive-dash' ),
 				'Date started' => $user['date_started'],
 			),
 			'original_data' => $data,

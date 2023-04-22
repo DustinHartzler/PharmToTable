@@ -18,6 +18,8 @@ defined( 'TCB_SHORTCODE_CLASS' ) || define( 'TCB_SHORTCODE_CLASS', 'tcb-shortcod
 /* class that applies ONLY to the post-list shortcodes */
 defined( 'TCB_DO_NOT_RENDER_POST_LIST' ) || define( 'TCB_DO_NOT_RENDER_POST_LIST', 'do-not-render-post-list' );
 
+defined( 'TCB_RENDERING_SYMBOL' ) || define( 'TCB_RENDERING_SYMBOL', 'tcb-symbol-render' );
+
 defined( 'TCB_POST_WRAPPER_CLASS' ) || define( 'TCB_POST_WRAPPER_CLASS', 'post-wrapper' );
 defined( 'TCB_POST_LIST_LOCALIZE' ) || define( 'TCB_POST_LIST_LOCALIZE', 'tcb_post_list_localize' );
 
@@ -50,13 +52,13 @@ class TCB_Post_List {
 	 * @param array  $attr
 	 * @param string $article
 	 */
-	public function __construct( $attr = array(), $article = '' ) {
+	public function __construct( $attr = [], $article = '' ) {
 		$this->attr = array_merge( static::default_args(), $attr );
 
 		$this->attr['element-name'] = $this->is_featured() ? __( 'Featured Content List', 'thrive-cb' ) : __( 'Post List', 'thrive-cb' );
 
-		$this->article_attr = self::post_shortcode_data( $attr );
-		$this->article      = unescape_invalid_shortcodes( $article );
+		$this->article_attr = static::post_shortcode_data( $attr );
+		$this->article      = unescape_invalid_shortcodes( $article ?: '' );
 
 		$this->css = empty( $attr['css'] ) ? substr( uniqid( 'tve-u-', true ), 0, 17 ) : $attr['css'];
 
@@ -71,8 +73,10 @@ class TCB_Post_List {
 	}
 
 	private function hooks() {
-		add_filter( 'post_class', array( $this, 'article_class' ) );
-		add_filter( 'tcb_post_attributes', array( $this, 'tcb_post_attributes' ), 10, 2 );
+		add_filter( 'post_class', [ $this, 'article_class' ] );
+		add_filter( 'tcb_post_attributes', [ $this, 'tcb_post_attributes' ], 10, 2 );
+		/* Add the dynamic filters in the query vars for Blog List templates / cases where
+		    the dynamic filters were not already declared */
 	}
 
 	/**
@@ -100,7 +104,7 @@ class TCB_Post_List {
 			$this->attr['total_sticky_count'] = $sticky_query->found_posts;
 		} else {
 			/*there are no sticky posts*/
-			$sticky_posts                     = array();
+			$sticky_posts                     = [];
 			$this->attr['total_sticky_count'] = 0;
 		}
 
@@ -124,7 +128,17 @@ class TCB_Post_List {
 			$post_query['offset'] = 0;
 		}
 
+		$post_query = TCB_Post_List_Filter::filter( $post_query );
+
 		$query = new WP_Query( $post_query );
+
+		if ( ! empty( $post_query['dynamic_filter'] ) ) {
+			$this->attr['dynamic_filter'] = json_encode( $post_query['dynamic_filter'] );
+
+			unset( $post_query['dynamic_filter'] );
+		} else {
+			unset( $this->attr['dynamic_filter'] );
+		}
 
 		if ( $number_of_sticky_posts === $posts_per_page ) {
 			//do nothing
@@ -160,14 +174,13 @@ class TCB_Post_List {
 
 			/* hide everything inside */
 			$class .= ' empty-list';
-
-			/* text to display for no posts */
-			$this->attr['no_posts_text'] = isset( $this->query['no_posts_text'] ) ? $this->query['no_posts_text'] : '';
 		} else {
 			foreach ( $all_posts as $post ) {
 				$content .= $this->article_content();
 			}
 		}
+		/* text to display for no posts */
+		$this->attr['no_posts_text'] = isset( $this->query['no_posts_text'] ) ? $this->query['no_posts_text'] : '';
 
 		$post = $current_post;
 
@@ -190,6 +203,8 @@ class TCB_Post_List {
 			}
 		}
 
+		$content = static::prepare_carousel( $content,  $this->attr );
+
 		/* render the shared styles just before the post list wrapper */
 		$content = $shared_styles . TCB_Post_List_Shortcodes::before_wrap(
 				array(
@@ -209,7 +224,7 @@ class TCB_Post_List {
 	 *
 	 * @return array
 	 */
-	public static function post_shortcode_data( $attr = array() ) {
+	public static function post_shortcode_data( $attr = [] ) {
 		$data = [];
 
 		if ( empty( $attr ) || ! is_array( $attr ) ) {
@@ -237,9 +252,9 @@ class TCB_Post_List {
 	 *
 	 * @return string
 	 */
-	public function class_attr( $attr = array() ) {
+	public function class_attr( $attr = [] ) {
 		/* tve-content-list identifies lists with dynamic content */
-		$classes = array( TCB_POST_LIST_CLASS, 'tve-content-list' );
+		$classes = [ TCB_POST_LIST_CLASS, 'tve-content-list' ];
 
 		if ( $this->in_editor_render ) {
 			$classes[] = 'tcb-compact-element';
@@ -267,21 +282,18 @@ class TCB_Post_List {
 
 		$post_id = get_the_ID();
 
-		if ( $this->in_editor_render ) {
-			/* in edit mode, add the post id to each article */
-			$article_attr['data-id'] = $post_id;
-		}
+		$article_attr['data-id'] = $post_id;
 
 		$content = empty( $this->article ) ? tcb_template( 'elements/post-list-article.php', null, true ) : $this->article;
 
 		if ( static::has_read_more( $content ) ) {
-			add_filter( 'the_content_more_link', array( 'TCB_Post_List_Content', 'the_content_more_link_filter' ) );
+			add_filter( 'the_content_more_link', [ 'TCB_Post_List_Content', 'the_content_more_link_filter' ] );
 		}
 
 		$content = TCB_Post_List_Shortcodes::do_shortcode( $content );
 
 		if ( static::has_read_more( $content ) ) {
-			remove_filter( 'the_content_more_link', array( 'TCB_Post_List_Content', 'the_content_more_link_filter' ) );
+			remove_filter( 'the_content_more_link', [ 'TCB_Post_List_Content', 'the_content_more_link_filter' ] );
 		}
 
 		/* only in preview + front, add a div containing a link that covers the article */
@@ -292,7 +304,7 @@ class TCB_Post_List {
 			 * Add an anchor inside the article cover so the post has link options on right click
 			 * The <a> needs text for SEO reasons, but the text needs to be hidden ( this is done from CSS )
 			 */
-			$article_link = TCB_Utils::wrap_content( get_the_title(), 'a', '', 'tcb-article-cover-link', array( 'href' => $permalink ) );
+			$article_link = TCB_Utils::wrap_content( get_the_title(), 'a', '', 'tcb-article-cover-link', [ 'href' => $permalink ] );
 
 			$article_cover = TCB_Utils::wrap_content( $article_link, 'div', '', 'tve-article-cover' );
 
@@ -304,7 +316,7 @@ class TCB_Post_List {
 			'tag'     => 'article',
 			'id'      => 'post-' . $post_id,
 			'class'   => static::post_class(),
-			'attr'    => $article_attr + array( 'data-selector' => '.' . TCB_POST_WRAPPER_CLASS ),
+			'attr'    => $article_attr + [ 'data-selector' => '.' . TCB_POST_WRAPPER_CLASS ],
 		), $this->article_attr );
 	}
 
@@ -330,7 +342,7 @@ class TCB_Post_List {
 		$id = get_the_ID();
 
 		if ( empty( $id ) ) {
-			$post = array();
+			$post = [];
 		} else {
 			$date_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 
@@ -343,32 +355,32 @@ class TCB_Post_List {
 				'tcb_post_modified_date'    => get_the_modified_date( $date_format ),
 				'tcb_post_title'            => TCB_Post_List_Shortcodes::the_title(),
 				'tcb_post_comments_number'  => TCB_Post_List_Shortcodes::comments_number(),
-				'tcb_post_featured_image'   => TCB_Post_List_Shortcodes::post_thumbnail( array(
+				'tcb_post_featured_image'   => TCB_Post_List_Shortcodes::post_thumbnail( [
 					'type-url' => 'post_url',
 					'size'     => 'full',
 					'title'    => 'post_title',
-				) ),
+				] ),
 				'featured_image_sizes_data' => TCB_Post_List_Featured_Image::get_sizes( $id ),
 				'tcb_post_author_picture'   => TCB_Post_List_Shortcodes::author_picture(),
 				'tcb_post_author_bio'       => TCB_Post_List_Shortcodes::author_bio(),
 				'tcb_post_author_name'      => do_shortcode( '[tcb_post_author_name link=1]' ),
-				'tcb_post_content'          => TCB_Post_List_Shortcodes::the_content( array(
+				'tcb_post_content'          => TCB_Post_List_Shortcodes::the_content( [
 					'size'      => 'content',
 					'read_more' => '',
-				) ),
+				] ),
 				'tcb_post_type'             => get_post_type(),
 				'className'                 => static::post_class(),
 				'ID'                        => $id,
 				'order'                     => empty( $order ) ? $id : $order,
-				'tcb_post_excerpt'          => TCB_Post_List_Shortcodes::the_content( array(
+				'tcb_post_excerpt'          => TCB_Post_List_Shortcodes::the_content( [
 					'size'      => 'excerpt',
 					'read_more' => '',
-				) ),
-				'tcb_post_words'            => TCB_Post_List_Shortcodes::the_content( array(
+				] ),
+				'tcb_post_words'            => TCB_Post_List_Shortcodes::the_content( [
 					'size'      => 'words',
 					'read_more' => '',
 					'words'     => 500,
-				) ),
+				] ),
 				'author_picture'            => TCB_Post_List_Author_Image::author_avatar(),
 				'tcb_post_author_role'      => TCB_Post_List_Shortcodes::author_role(),
 				'tcb_post_the_permalink'    => get_permalink( $id ),
@@ -380,7 +392,7 @@ class TCB_Post_List {
 			);
 
 			$custom_fields      = static::get_post_custom_fields( $id );
-			$custom_field_types = array( 'data', 'link', 'image', 'number', 'countdown', 'audio', 'video', 'color' );
+			$custom_field_types = [ 'data', 'link', 'image', 'number', 'countdown', 'audio', 'video', 'color' ];
 
 			foreach ( $custom_field_types as $field ) {
 				$post[ 'tcb_post_custom_fields_' . $field ] = $custom_fields[ $field ];
@@ -430,7 +442,7 @@ class TCB_Post_List {
 	 *
 	 * @return array
 	 */
-	public function article_class( $post_class = array() ) {
+	public function article_class( $post_class = [] ) {
 		$post_class[] = TCB_POST_WRAPPER_CLASS;
 		$post_class[] = THRIVE_WRAPPER_CLASS;
 		$post_class[] = 'thrive-animated-item';
@@ -447,27 +459,31 @@ class TCB_Post_List {
 			foreach ( $GLOBALS[ TCB_POST_LIST_LOCALIZE ] as $post_list ) {
 // phpcs:disable
 				echo TCB_Utils::wrap_content(
-					str_replace( array( '[', ']' ), array( '{({', '})}' ), $post_list['content'] ),
+					str_replace( [ '[', ']' ], array( '{({', '})}' ), $post_list['content'] ),
 					'script',
 					'',
 					'tcb-post-list-template',
-					array(
+					[
 						'type'            => 'text/template',
 						'data-identifier' => $post_list['template'],
-					)
+					]
 				);
 				//phpcs:enable
 			}
 
-			/* remove the post content before localizing the posts */
-			$posts_localize = array_map(
-				function ( $item ) {
-					unset( $item['content'] );
+			$posts_localize = [];
 
-					return $item;
-				}, $GLOBALS[ TCB_POST_LIST_LOCALIZE ] );
+			if ( ! empty( $GLOBALS[ TCB_POST_LIST_LOCALIZE ] ) ) {
+				/* remove the post content before localizing the posts */
+				$posts_localize = array_map(
+					function ( $item ) {
+						unset( $item['content'] );
 
-			echo TCB_Utils::wrap_content( "var tcb_post_lists=JSON.parse('" . addslashes( json_encode( $posts_localize ) ) . "');", 'script', '', '', array( 'type' => 'text/javascript' ) ); // phpcs:ignore
+						return $item;
+					}, $GLOBALS[ TCB_POST_LIST_LOCALIZE ] );
+			}
+
+			echo TCB_Utils::wrap_content( "var tcb_current_post_lists=JSON.parse('" . addslashes( json_encode( $posts_localize ) ) . "'); var tcb_post_lists=tcb_post_lists?[...tcb_post_lists,...tcb_current_post_lists]:tcb_current_post_lists;", 'script', '', '', [ 'type' => 'text/javascript' ] ); // phpcs:ignore
 		}
 	}
 
@@ -478,13 +494,13 @@ class TCB_Post_List {
 	 *
 	 * @return array
 	 */
-	public static function prepare_wp_query_args( $args = array() ) {
+	public static function prepare_wp_query_args( $args = [] ) {
 		if ( ! is_array( $args ) ) {
 			$args = (array) $args;
 		}
 
 		/* allow only our query params to be used */
-		$query_args = array_intersect_key( $args, array(
+		$query_args = array_intersect_key( $args, [
 			'post_type'            => '',
 			's'                    => '',
 			'year'                 => '',
@@ -505,10 +521,12 @@ class TCB_Post_List {
 			'author_name'          => '',
 			'category_name'        => '',
 			'exclude_current_post' => '',
-		) );
+			'dynamic_filter'       => '',
+			'post__not_in'         => '',
+		] );
 
 		/* nothing for now */
-		$defaults = array();
+		$defaults = [];
 
 		$args = array_merge( $defaults, $args );
 
@@ -525,12 +543,12 @@ class TCB_Post_List {
 			if ( ! empty( $queried_object->data->ID ) ) {
 
 				/* get posts from the same author we're on */
-				$query_args['author__in'] = array( $queried_object->data->ID );
+				$query_args['author__in'] = [ $queried_object->data->ID ];
 
 			} elseif ( ! empty( $queried_object->ID ) ) {
 
 				/* on singular page we get the terms that the user asked and we get posts based on that */
-				$query_args['tax_query'] = array( 'relation' => 'OR' );
+				$query_args['tax_query'] = [ 'relation' => 'OR' ];
 				/* get posts that have at least one taxonomy term as the post we're on */
 
 				if ( ! empty( $args['related'] ) && is_array( $args['related'] ) ) {
@@ -547,11 +565,11 @@ class TCB_Post_List {
 								$format = get_post_format( $queried_object->ID );
 
 								if ( $format ) {
-									$query_args['tax_query'][] = array(
+									$query_args['tax_query'][] = [
 										'taxonomy' => 'post_format',
 										'field'    => 'slug',
-										'terms'    => array( 'post-format-' . $format ),
-									);
+										'terms'    => [ 'post-format-' . $format ],
+									];
 								} else {
 									/*
 									 * If the post format is not set, the post is actually a standard post.
@@ -561,25 +579,25 @@ class TCB_Post_List {
 									$post_formats = TCB_Utils::get_supported_post_formats();
 
 									if ( ! empty( $post_formats ) ) {
-										$terms = array();
+										$terms = [];
 
 										foreach ( $post_formats as $post_format ) {
 											$terms[] = 'post-format-' . $post_format;
 										}
 
-										$query_args['tax_query'][] = array(
+										$query_args['tax_query'][] = [
 											'taxonomy' => 'post_format',
 											'field'    => 'slug',
 											'terms'    => $terms,
 											'operator' => 'NOT IN',
-										);
+										];
 									}
 								}
 								break;
 
 							default:
-								$post_terms = wp_get_post_terms( $queried_object->ID, $taxonomy, array( 'fields' => 'ids' ) );
-								if ( ! empty( $post_terms ) ) {
+								$post_terms = wp_get_post_terms( $queried_object->ID, $taxonomy, [ 'fields' => 'ids' ] );
+								if ( ! empty( $post_terms ) && ! is_wp_error( $post_terms ) ) {
 									$query_args['tax_query'][] = array(
 										'taxonomy' => $taxonomy,
 										'field'    => 'term_id',
@@ -598,13 +616,13 @@ class TCB_Post_List {
 
 				/* on taxonomy page: tag, category... we display posts from the same taxonomy. */
 				/* get posts based on the taxonomy we're on */
-				$query_args['tax_query'] = array(
-					array(
+				$query_args['tax_query'] = [
+					[
 						'taxonomy' => $queried_object->taxonomy,
 						'field'    => 'id',
 						'terms'    => $queried_object->term_id,
-					),
-				);
+					],
+				];
 
 				$taxonomy                = get_taxonomy( $queried_object->taxonomy );
 				$query_args['post_type'] = $taxonomy->object_type;
@@ -613,13 +631,13 @@ class TCB_Post_List {
 			/* if we have a custom query, we check the rules and display posts based on that */
 		} elseif ( isset( $args['rules'] ) && is_array( $args['rules'] ) ) {
 
-			$query_args['tax_query']      = array();
-			$query_args['author__in']     = array();
-			$query_args['author__not_in'] = array();
-			$query_args['post__in']       = array();
+			$query_args['tax_query']      = [];
+			$query_args['author__in']     = [];
+			$query_args['author__not_in'] = [];
+			$query_args['post__in']       = [];
 
 			/* we always want to exclude sticky posts */
-			$query_args['post__not_in'] = get_option( 'sticky_posts', array() );
+			$query_args['post__not_in'] = array_merge( get_option( 'sticky_posts', [] ), isset( $query_args['post__not_in'] ) ? $query_args['post__not_in'] : [] );
 
 			foreach ( $args['rules'] as $rule ) {
 
@@ -651,7 +669,7 @@ class TCB_Post_List {
 		}
 
 		/* inherit was added just so it will work with attachments also  */
-		$query_args['post_status'] = array( 'publish', 'inherit' );
+		$query_args['post_status'] = [ 'publish', 'inherit' ];
 
 		/* the human mind will read much easier indexes that start from 1 and not from 0 */
 		if ( isset( $query_args['offset'] ) && $query_args['offset'] > 0 ) {
@@ -698,18 +716,18 @@ class TCB_Post_List {
 	 *
 	 * @return array
 	 */
-	public static function prepare_wp_query_args_sticky( $args = array() ) {
+	public static function prepare_wp_query_args_sticky( $args = [] ) {
 		if ( ! is_array( $args ) ) {
 			$args = (array) $args;
 		}
 
 		/* allow only our query params to be used */
-		$query_args = array_intersect_key( $args, array(
+		$query_args = array_intersect_key( $args, [
 			'post_type'      => '',
 			'offset'         => '',
 			'posts_per_page' => '',
 			'paged'          => '',
-		) );
+		] );
 
 		/* check if we're in a rest request or not */
 		$is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST;
@@ -722,9 +740,9 @@ class TCB_Post_List {
 
 		if ( isset( $args['rules'] ) && is_array( $args['rules'] ) ) {
 
-			$query_args['tax_query']  = array();
-			$query_args['author__in'] = array();
-			$query_args['post__in']   = array();
+			$query_args['tax_query']  = [];
+			$query_args['author__in'] = [];
+			$query_args['post__in']   = [];
 
 			if ( ! empty( $args['sticky'] ) ) {
 				/*if sticky posts exist, build the $quety_args based on the sticky rules */
@@ -750,7 +768,7 @@ class TCB_Post_List {
 		}
 
 		/* inherit was added just so it will work with attachments also  */
-		$query_args['post_status'] = array( 'publish', 'inherit' );
+		$query_args['post_status'] = [ 'publish', 'inherit' ];
 
 		/* the human mind will read much easier indexes that start from 1 and not from 0 */
 		if ( isset( $query_args['offset'] ) && $query_args['offset'] > 0 ) {
@@ -800,6 +818,7 @@ class TCB_Post_List {
 			'tcb-elem-type'      => 'post_list',
 			'pagination-type'    => 'none',
 			'pages_near_current' => '2',
+			'dynamic_filter'     => str_replace( '"', '\'', json_encode( static::get_default_filters() ) ),
 		);
 	}
 
@@ -811,16 +830,31 @@ class TCB_Post_List {
 	public static function get_default_query() {
 		return array(
 			'filter'               => 'custom',
-			'related'              => array(),
+			'related'              => [],
 			'post_type'            => 'post',
 			'orderby'              => 'date',
 			'order'                => 'DESC',
 			'posts_per_page'       => '6',
 			'offset'               => '1',
 			'no_posts_text'        => 'There are no posts to display.',
-			'exclude_current_post' => array( '1' ),
-			'rules'                => array(),
+			'exclude_current_post' => [ '1' ],
+			'rules'                => [],
+			'dynamic_filter'       => static::get_default_filters(),
 		);
+	}
+
+	/**
+	 * Get the default filters for the Post List, used with Post List Filter element
+	 *
+	 * @return string[]
+	 */
+	public static function get_default_filters() {
+		return [
+			'category' => 'category',
+			'tag'      => 'tag',
+			'author'   => 'author',
+			'search'   => 'search',
+		];
 	}
 
 	/**
@@ -923,11 +957,14 @@ class TCB_Post_List {
 		/* replace newlines and tabs */
 		$decoded_string = preg_replace( '/[\r\n]+/', ' ', $decoded_string );
 
+		$query = json_decode( $decoded_string, true );
+
 		$this->query = array_merge(
 		/* default values for query */
-			array( 'paged' => 1 ),
-			json_decode( $decoded_string, true )
+			[ 'paged' => 1 ],
+			is_array( $query ) ? $query : []
 		);
+
 		/* this will be localized for each page */
 		unset( $this->query['queried_object'] );
 
@@ -939,7 +976,7 @@ class TCB_Post_List {
 				/* If we find a pair of Post List and Featured List we add the posts from Featured List as excluded posts from Post List */
 				if ( $post_list['identifier'] === $feature_list_identifier ) {
 					if ( ! isset( $this->query['rules'] ) ) {
-						$this->query['rules'] = array();
+						$this->query['rules'] = [];
 					}
 
 					$post_types = isset( $this->query['post_type'] ) ? $this->query['post_type'] : 'post';
@@ -947,18 +984,18 @@ class TCB_Post_List {
 					/* when there's more than one post type, add a rule for each post type */
 					if ( is_array( $post_types ) ) {
 						foreach ( $post_types as $post_type ) {
-							$this->query['rules'][] = array(
+							$this->query['rules'][] = [
 								'taxonomy' => $post_type,
 								'terms'    => $post_list['posts'],
 								'operator' => 'NOT IN',
-							);
+							];
 						}
 					} else {
-						$this->query['rules'][] = array(
+						$this->query['rules'][] = [
 							'taxonomy' => $post_types,
 							'terms'    => $post_list['posts'],
 							'operator' => 'NOT IN',
-						);
+						];
 					}
 				}
 			}
@@ -1019,7 +1056,7 @@ class TCB_Post_List {
 		} );
 
 		$acf_data = tcb_custom_fields_api()->get_all_external_postlist_fields( $id );
-		$result   = array( 'data' => array(), 'link' => array() );
+		$result   = [ 'data' => [], 'link' => [] ];
 		$custom   = get_post_custom( $id );
 
 		//Set Text and Links
@@ -1029,19 +1066,19 @@ class TCB_Post_List {
 
 		if ( ! empty( $acf_data['text'] ) ) {
 			foreach ( $acf_data['text'] as $val ) {
-				$result['data'][] = array( 'key' => $val['name'], 'value' => $val['value'], 'label' => $val['label'] );
+				$result['data'][] = [ 'key' => $val['name'], 'value' => $val['value'], 'label' => $val['label'] ];
 			}
 		}
 		if ( ! empty( $acf_data['link'] ) ) {
 			foreach ( $acf_data['link'] as $val ) {
-				$result['link'][] = array( 'key' => $val['name'], 'value' => $val['value'], 'label' => $val['label'] );
+				$result['link'][] = [ 'key' => $val['name'], 'value' => $val['value'], 'label' => $val['label'] ];
 			}
 		}
 
-		$result['color'] = ! empty( $acf_data['color'] ) ? tcb_custom_fields_api()->prepare_custom_fields_colors( 0, $acf_data['color'] ) : array();
+		$result['color'] = ! empty( $acf_data['color'] ) ? tcb_custom_fields_api()->prepare_custom_fields_colors( 0, $acf_data['color'] ) : [];
 
 		//Format the links to be ready to go
-		$items = array();
+		$items = [];
 		if ( ! empty( $result['link'] ) ) {
 			foreach ( $result['link'] as $key => $val ) {
 				$items[ $val['key'] ] = array(
@@ -1054,10 +1091,10 @@ class TCB_Post_List {
 			$result['link'] = $items;
 		}
 
-		$extraCustomFields = array( 'image', 'number', 'countdown', 'audio', 'video' );
+		$extraCustomFields = [ 'image', 'number', 'countdown', 'audio', 'video' ];
 		//Set values for other cf types
 		foreach ( $extraCustomFields as $field ) {
-			$result[ $field ] = array();
+			$result[ $field ] = [];
 			if ( ! empty( $acf_data[ $field ] ) ) {
 				foreach ( $acf_data[ $field ] as $val ) {
 					$result[ $field ][ $val['name'] ] = $val;
@@ -1088,7 +1125,7 @@ class TCB_Post_List {
 	 *
 	 * @var array
 	 */
-	public static $front_attr = array(
+	public static $front_attr = [
 		'tcb-events',
 		'css',
 		'masonry',
@@ -1104,16 +1141,47 @@ class TCB_Post_List {
 		'featured-list',
 		'template-id',
 		'styled-scrollbar',
-	);
+		'dynamic_filter'
+	];
 
 	/**
 	 * Dataset attributes that don't have to persist anywhere ( the data is used only during construct() )
 	 *
 	 * @var array
 	 */
-	public static $ignored_attr = array(
+	public static $ignored_attr = [
 		'article-tcb-events',
 		'article-class',
 		'article-permalink',
-	);
+	];
+
+	public static function prepare_carousel( $content, &$attr ) {
+		/* Re-wrap the content in the carousel wrapper & add the carousel settings attribute */
+		if ( $attr['type'] === 'carousel' && isset( $attr['carousel-settings'] ) ) {
+			$carousel_setting['data-carousel-settings'] = $attr['carousel-settings'];
+			$content                                    = TCB_Utils::wrap_content( $content, 'div', '', 'tcb-carousel-container', $carousel_setting );
+
+			unset( $attr['carousel-settings'] );
+
+			if ( ! is_editor_page_raw( true ) ) {
+				/* no need inside the editor */
+				if ( empty( $attr['style'] ) ) {
+					$attr['style'] = '';
+				}
+
+				/* add styles for cwv elements */
+				foreach ( [ 'm', 't', 'd' ] as $media ) {
+					if ( ! empty( $attr["cwv-height-$media"] ) ) {
+						$attr['style'] .= "--tcb-cwv-height-$media:" . $attr["cwv-height-$media"] . 'px;';
+					}
+
+					if ( ! empty( $attr["cwv-slides-$media"] ) ) {
+						$attr['style'] .= "--tcb-cwv-slides-$media:" . $attr["cwv-slides-$media"] . ';';
+					}
+				}
+			}
+		}
+
+		return $content;
+	}
 }

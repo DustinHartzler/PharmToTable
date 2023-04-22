@@ -28,7 +28,7 @@ class Woo_Product_Purchase extends Trigger {
 	 * @return string
 	 */
 	public static function get_wp_hook() {
-		return 'thrive_woo_product_purchase';
+		return 'thrive_woo_product_purchase_completed';
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Woo_Product_Purchase extends Trigger {
 	 * @return int
 	 */
 	public static function get_hook_params_number() {
-		return 2;
+		return 3;
 	}
 
 	/**
@@ -54,8 +54,8 @@ class Woo_Product_Purchase extends Trigger {
 	 *
 	 * @return string
 	 */
-	public static function get_app_name() {
-		return 'WooCommerce';
+	public static function get_app_id() {
+		return Woo_App::get_id();
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Woo_Product_Purchase extends Trigger {
 	 * @return string
 	 */
 	public static function get_name() {
-		return 'WooCommerce product purchase';
+		return 'WooCommerce product purchase completed';
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Woo_Product_Purchase extends Trigger {
 	 * @return string
 	 */
 	public static function get_description() {
-		return 'This trigger will be fired whenever a WooCommerce product is payed';
+		return 'This trigger will be fired whenever a WooCommerce product purchase is completed.';
 	}
 
 	/**
@@ -88,14 +88,15 @@ class Woo_Product_Purchase extends Trigger {
 	public function process_params( $params = array() ) {
 		$data = array();
 
-		if ( ! empty( $params[1] ) ) {
+		if ( ! empty( $params[0] ) ) {
 
 			$data_object_classes = Data_Object::get();
 
-			list ( $product, $user ) = $params;
+			list ( $product, $user, $email ) = $params;
 
 			$data['woo_product_data'] = empty( $data_object_classes['woo_product_data'] ) ? $product : new $data_object_classes['woo_product_data']( $product );
 			$data['user_data']        = empty( $data_object_classes['user_data'] ) ? null : new $data_object_classes['user_data']( $user );
+			$data['email_data']       = empty( $data_object_classes['email_data'] ) ? null : new $data_object_classes['email_data']( $email );
 		}
 
 		return $data;

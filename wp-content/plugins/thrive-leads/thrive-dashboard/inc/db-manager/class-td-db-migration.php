@@ -47,7 +47,7 @@ class TD_DB_Migration {
 
 		$this->_wpdb         = $wpdb;
 		$this->_file_path    = $file_path;
-		$this->_table_prefix = $this->_wpdb->prefix . rtrim( $table_prefix, '_ ' ) . '_';
+		$this->_table_prefix = $this->_wpdb->prefix . ( empty( $table_prefix ) ? '' : rtrim( $table_prefix, '_ ' ) . '_' );
 	}
 
 	/**
@@ -96,7 +96,7 @@ class TD_DB_Migration {
 	 *
 	 * @param string $table_name
 	 * @param string $spec             full table spec, excluding brackets
-	 * @param bool   $add_collate_spec whether or not to add collate specification
+	 * @param bool   $add_collate_spec whether to add collate specification
 	 *
 	 * @return TD_DB_Migration allows fluent interface$this
 	 */

@@ -17,7 +17,7 @@
 	</div>
 	<br>
 <?php endif; ?>
-<?php tve_enqueue_style( 'tve_architect_edit_links', tve_editor_css() . '/thrive-architect-edit-links.css' ); ?>
+<?php tve_enqueue_style( 'tve_architect_edit_links', tve_editor_css( 'thrive-architect-edit-links.css' ) ); ?>
 <br/>
 <?php if ( ! $data['landing_page'] && ! empty( $data['tcb_enabled'] ) ) : ?>
 	<div class="postbox" style="text-align: center;">

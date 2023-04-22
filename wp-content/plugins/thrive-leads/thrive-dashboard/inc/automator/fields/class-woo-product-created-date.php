@@ -46,6 +46,6 @@ class Woo_Product_Created_Date extends Data_Field {
 	}
 
 	public static function get_field_value_type() {
-		return static::TYPE_DATE;
+		return static::TYPE_CLASS;
 	}
 }

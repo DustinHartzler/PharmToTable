@@ -22,6 +22,10 @@ class Css {
 
 	private $styles_loaded = [];
 
+	private $ID;
+
+	private $post;
+
 	public static function get_instance( $post_id = 0 ) {
 		if ( empty( self::$instances[ $post_id ] ) ) {
 			self::$instances[ $post_id ] = new self( $post_id );
@@ -154,8 +158,8 @@ class Css {
 				}
 			} else {
 				/* load thrive flat only if this post needs it. */
-				if ( ! Main::is_enabled() || Main::requires_architect_assets( $this->ID ) ) {
-					tve_enqueue_style( tve_get_style_enqueue_id(), static::get_flat_url( false ) );
+				if ( static::should_load_flat() || ! Main::is_enabled() || Main::requires_architect_assets( $this->ID ) ) {
+					static::enqueue_flat();
 				}
 
 				/**
@@ -182,6 +186,13 @@ class Css {
 	}
 
 	/**
+	 * Enqueue thrive flat styles
+	 */
+	public static function enqueue_flat() {
+		tve_enqueue_style( tve_get_style_enqueue_id(), static::get_flat_url( false ) );
+	}
+
+	/**
 	 * Return the inline css for the current post
 	 *
 	 * @param string $type
@@ -195,11 +206,7 @@ class Css {
 			$inline_css = '';
 		}
 
-		$inline_css = Fonts::parse_google_fonts( $inline_css );
-
-		$inline_css = tve_minify_css( $inline_css );
-
-		$inline_css = static::compat( $inline_css, $this->ID );
+		static::get_compat_css( $inline_css, $this->ID );
 
 		/**
 		 * Filters the inline css for the current post.
@@ -211,6 +218,24 @@ class Css {
 		 * @return string
 		 */
 		return apply_filters( 'tcb_lightspeed_inline_css', $inline_css, $type, $this->ID );
+	}
+
+	/**
+	 * Run compat function on CSS
+	 *
+	 * @param $inline_css
+	 * @param $id
+	 *
+	 * @return string
+	 */
+	public static function get_compat_css( $inline_css, $id = 0 ) {
+		$inline_css = Fonts::parse_google_fonts( $inline_css );
+
+		$inline_css = tve_minify_css( $inline_css );
+
+		$inline_css = static::compat( $inline_css, $id );
+
+		return $inline_css;
 	}
 
 	/**
@@ -232,14 +257,27 @@ class Css {
 
 			case 'inline':
 			default:
-				$styles = sprintf( '<style type="text/css" id="%s" %s class="tcb-lightspeed-style">%s</style>',
-					$this->get_style_handle( $type ),
-					$optimize_on_load ? ' onLoad="typeof window.lightspeedOptimizeStylesheet === \'function\' && window.lightspeedOptimizeStylesheet()"' : '',
-					$this->get_inline_css( $type ) );
+				$styles = static:: get_inline_style_node( $this->get_style_handle( $type ), $this->get_inline_css( $type ), $optimize_on_load );
 				break;
 		}
 
 		return $styles;
+	}
+
+	/**
+	 * Build a style node for CSS
+	 *
+	 * @param $handle
+	 * @param $css
+	 * @param $should_optimize
+	 *
+	 * @return string
+	 */
+	public static function get_inline_style_node( $handle, $css, $should_optimize = true ) {
+		return sprintf( '<style type="text/css" id="%s" %s class="tcb-lightspeed-style">%s</style>',
+			$handle,
+			$should_optimize ? ' onLoad="typeof window.lightspeedOptimizeStylesheet === \'function\' && window.lightspeedOptimizeStylesheet()"' : '',
+			$css );
 	}
 
 	/**
@@ -332,7 +370,7 @@ class Css {
 	 * @return string
 	 */
 	public static function get_flat_url( $include_version = true ) {
-		return tve_editor_css() . '/thrive_flat.css' . ( $include_version ? '?v=' . TVE_VERSION : '' );
+		return tve_editor_css( 'thrive_flat.css' ) . ( $include_version ? '?v=' . TVE_VERSION : '' );
 	}
 
 	/**
@@ -346,10 +384,11 @@ class Css {
 	public static function compat( $css, $id ) {
 
 		/* fit-content for chrome vs. -moz-fit-content for firefox */
-		$css = preg_replace_callback( '/[;|{]([^:]*):(-moz-)?fit-content/m', static function ( $matches ) {
-			$pre = stripos( $matches[0], '-moz' ) === false ? '-moz-' : '';
+		$css = preg_replace_callback( '/[;|{]([^:]*):(-moz-)?fit-content( !important)?/m', static function ( $matches ) {
+			$pre          = stripos( $matches[0], '-moz' ) === false ? '-moz-' : '';
+			$is_important = strpos( $matches[0], 'important' );
 
-			return $matches[0] . ';' . $matches[1] . ':' . $pre . 'fit-content';
+			return $matches[0] . ';' . $matches[1] . ':' . $pre . 'fit-content' . ( $is_important ? ' !important' : '' );
 		}, $css );
 
 		$css = preg_replace_callback( '/inset:([^;]*);/m', static function ( $matches ) {
@@ -405,6 +444,9 @@ class Css {
 	 * @return string
 	 */
 	public function get_css_location( $type ) {
+		/* this will allow controlling the location of stored CSS directly on client sites by defining this constant */
+		$css_location = defined( 'TVE_CSS_LOCATION' ) ? TVE_CSS_LOCATION : 'inline';
+
 		/**
 		 * Filter the location of the css for the current type and post
 		 *
@@ -412,6 +454,6 @@ class Css {
 		 * @param string $type
 		 * @param int    $post_id
 		 */
-		return apply_filters( 'tcb_lightspeed_css_location', 'inline', $type, $this->ID );
+		return apply_filters( 'tcb_lightspeed_css_location', $css_location, $type, $this->ID );
 	}
 }

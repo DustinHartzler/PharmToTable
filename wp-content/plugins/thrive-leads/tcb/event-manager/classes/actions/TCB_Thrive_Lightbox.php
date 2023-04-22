@@ -66,7 +66,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 		 * @param $data
 		 */
 		public function applyContentFilter( $data ) {
-			$lightbox_id = isset( $data['config']['l_id'] ) ? intval( $data['config']['l_id'] ) : 0;
+			$lightbox_id = isset( $data['config']['l_id'] ) ? (int) $data['config']['l_id'] : 0;
 
 			if ( ! $lightbox_id ) {
 				return false;

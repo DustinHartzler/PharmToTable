@@ -94,6 +94,22 @@ class Thrive_Dash_Api_CampaignMonitor_List {
 	}
 
 	/**
+	 * Delete a subscriber
+	 *
+	 * @param $email
+	 *
+	 * @throws Exception
+	 */
+	public function delete_subscriber( $email ) {
+
+		$data = array(
+			'body' => array( 'email' => $email )
+		);
+
+		$this->_manager->request( 'subscribers/' . $this->id, 'DELETE', $data );
+	}
+
+	/**
 	 * Working with current list instance requires a manager which is able to make requests
 	 *
 	 * @param $manager Thrive_Dash_Api_CampaignMonitor

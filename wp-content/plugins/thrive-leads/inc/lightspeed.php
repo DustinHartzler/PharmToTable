@@ -8,10 +8,14 @@
 use TCB\Lightspeed\Css;
 use TCB\Lightspeed\JS;
 use TCB\Lightspeed\Main;
+use TCB\Lightspeed\Woocommerce;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
+
+/* lightspeed version for thrive leads items */
+const TL_LIGHTSPEED_VERSION = 2;
 
 /**
  * Check if this is post type used in thrive leads
@@ -32,15 +36,13 @@ add_filter( 'tve_lightspeed_items_to_optimize', 'tve_leads_lightspeed_items_to_o
 
 add_filter( 'tcb_lightspeed_requires_architect_assets', 'tve_leads_requires_architect_assets', 10, 2 );
 
-add_action( 'tcb_lightspeed_item_optimized', 'tve_leads_lightspeed_item_optimized', 10, 2 );
+add_action( 'tcb_lightspeed_item_optimized', 'tve_leads_lightspeed_item_optimized', 10, 3 );
 
 add_action( 'tcb_lightspeed_optimize_localize_data', 'tve_leads_lightspeed_optimize_localize_data' );
 
 add_action( 'wp_enqueue_scripts', 'tve_leads_lightspeed_enqueue_flat', 9 );
 
 add_filter( 'tve_leads_ajax_load_forms', 'tve_leads_lightspeed_ajax_load_forms' );
-
-add_action( 'tcb_lightspeed_item_optimized', 'tcb_leads_lightspeed_item_optimized', 10, 3 );
 
 function tve_leads_lightspeed_enqueue_flat() {
 	if ( is_tve_leads_post_type() ) {
@@ -60,22 +62,26 @@ function tve_leads_lightspeed_enqueue_flat() {
 }
 
 /**
- * Save form height when user optimizes forms
+ * Save form height and version when user optimizes forms
  *
  * @param int             $post_id
  * @param int             $variation_key
  * @param WP_REST_Request $request
  */
-function tcb_leads_lightspeed_item_optimized( $post_id, $variation_key, $request ) {
-	$extra_data = $request->get_param( 'extra_data' );
+function tve_leads_lightspeed_item_optimized( $post_id, $variation_key, $request ) {
+	if ( is_tve_leads_post_type( get_post_type( $post_id ) ) ) {
+		update_post_meta( $post_id, Main::OPTIMIZATION_VERSION_META . "_$variation_key", TL_LIGHTSPEED_VERSION );
 
-	if ( ! empty( $extra_data[ TVE_LEADS_FIELD_FORM_HEIGHT ] ) ) {
-		global $tvedb;
-		$variation = $tvedb->get_form_variation( $variation_key );
+		$extra_data = $request->get_param( 'extra_data' );
 
-		$variation[ TVE_LEADS_FIELD_FORM_HEIGHT ] = $extra_data[ TVE_LEADS_FIELD_FORM_HEIGHT ];
+		if ( ! empty( $extra_data[ TVE_LEADS_FIELD_FORM_HEIGHT ] ) ) {
+			global $tvedb;
+			$variation = $tvedb->get_form_variation( $variation_key );
 
-		tve_leads_save_form_variation( $variation );
+			$variation[ TVE_LEADS_FIELD_FORM_HEIGHT ] = $extra_data[ TVE_LEADS_FIELD_FORM_HEIGHT ];
+
+			tve_leads_save_form_variation( $variation );
+		}
 	}
 }
 
@@ -174,11 +180,11 @@ function tve_leads_lightspeed_prepare_variations( $form ) {
 	if ( ! empty( $form->variations ) ) {
 		foreach ( $form->variations as $variation ) {
 			$variations[ $variation['key'] ] = array(
-				'id'      => $form->ID,
-				'name'    => $variation['post_title'],
-				'version' => (int) get_post_meta( $form->ID, Main::OPTIMIZATION_VERSION_META . '_' . $variation['key'], true ),
-				'url'     => tve_leads_get_preview_url( $form->ID, $variation['key'], false ),
-				'key'     => $variation['key'],
+				'id'        => $form->ID,
+				'name'      => $variation['post_title'],
+				'optimized' => (int) get_post_meta( $form->ID, Main::OPTIMIZATION_VERSION_META . '_' . $variation['key'], true ) === TL_LIGHTSPEED_VERSION ? 1 : 0,
+				'url'       => tve_leads_get_preview_url( $form->ID, $variation['key'], false ),
+				'key'       => $variation['key'],
 			);
 
 			$states = tve_leads_get_form_related_states( $variation );
@@ -186,11 +192,11 @@ function tve_leads_lightspeed_prepare_variations( $form ) {
 			foreach ( $states as $state ) {
 				if ( empty( $variations[ $state['key'] ] ) ) {
 					$variations[ $state['key'] ] = array(
-						'id'      => $form->ID,
-						'name'    => $state['post_title'],
-						'version' => (int) get_post_meta( $form->ID, Main::OPTIMIZATION_VERSION_META . '_' . $state['key'], true ),
-						'url'     => tve_leads_get_preview_url( $form->ID, $state['key'], false ),
-						'key'     => $state['key'],
+						'id'        => $form->ID,
+						'name'      => $state['post_title'],
+						'optimized' => (int) get_post_meta( $form->ID, Main::OPTIMIZATION_VERSION_META . '_' . $state['key'], true ) === TL_LIGHTSPEED_VERSION ? 1 : 0,
+						'url'       => tve_leads_get_preview_url( $form->ID, $state['key'], false ),
+						'key'       => $state['key'],
 					);
 				}
 			}
@@ -214,18 +220,6 @@ function tve_leads_requires_architect_assets( $requires, $post_id ) {
 	}
 
 	return $requires;
-}
-
-/**
- * Update optimization version after saving styles
- *
- * @param $post_id
- * @param $key
- */
-function tve_leads_lightspeed_item_optimized( $post_id, $key ) {
-	if ( is_tve_leads_post_type( get_post_type( $post_id ) ) ) {
-		update_post_meta( $post_id, Main::OPTIMIZATION_VERSION_META . "_$key", Main::LIGHTSPEED_VERSION );
-	}
 }
 
 /**
@@ -254,7 +248,11 @@ function tve_leads_save_optimized_assets( $post_id, $variation_key ) {
 		Css::get_instance( $post_id )->save_optimized_css( "base_$variation_key", isset( $_POST['optimized_styles'] ) ? $_POST['optimized_styles'] : '' );
 		JS::get_instance( $post_id, "_$variation_key" )->save_js_modules( isset( $_POST['js_modules'] ) ? $_POST['js_modules'] : array() );
 
-		update_post_meta( $post_id, Main::OPTIMIZATION_VERSION_META . "_$variation_key", Main::LIGHTSPEED_VERSION );
+		if ( class_exists( 'TCB\Lightspeed\Main' ) && method_exists( 'TCB\Lightspeed\Main', 'optimized_advanced_assets' ) ) {
+			Main::optimized_advanced_assets( $post_id, $_POST, '_' . $variation_key );
+		}
+
+		update_post_meta( $post_id, Main::OPTIMIZATION_VERSION_META . "_$variation_key", TL_LIGHTSPEED_VERSION );
 	}
 }
 
@@ -289,6 +287,11 @@ function tve_leads_lightspeed_ajax_load_forms( $response ) {
 					}
 
 					$response['lightspeed']['js'] = array_merge( $response['lightspeed']['js'], JS::get_instance( $form_id, '_' . $variation_key )->get_modules_urls() );
+
+					if ( tve_has_advanced_optimization( $form_id, $variation_key ) ) {
+						$response['lightspeed']['js']           = array_merge( $response['lightspeed']['js'], Woocommerce::get_woo_js_modules() );
+						$response['lightspeed']['css']['files'] = array_merge( $response['lightspeed']['css']['files'], Woocommerce::get_woo_styles() );
+					}
 				}
 			}
 		}
@@ -306,9 +309,15 @@ function tve_leads_lightspeed_ajax_load_forms( $response ) {
  * @param $variation_key
  */
 function tve_leads_lightspeed_enqueue_variation_assets( $form_id, $variation_key ) {
-	if ( tve_leads_has_lightspeed() && ! wp_doing_ajax() && ! is_tve_leads_post_type() ) {
-		TCB\Lightspeed\Css::get_instance( $form_id )->load_optimized_style( 'base_' . $variation_key );
-		JS::get_instance( $form_id, '_' . $variation_key )->load_modules();
+	$is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST;
+	if ( ! wp_doing_ajax() && ! is_tve_leads_post_type() && ! $is_rest ) {
+		if ( tve_leads_has_lightspeed() ) {
+			TCB\Lightspeed\Css::get_instance( $form_id )->load_optimized_style( 'base_' . $variation_key );
+			JS::get_instance( $form_id, '_' . $variation_key )->load_modules();
+		}
+		if ( tve_has_advanced_optimization( $form_id, $variation_key ) ) {
+			$GLOBALS['optimized_advanced_assets'] = true;
+		}
 	}
 }
 
@@ -319,4 +328,13 @@ function tve_leads_lightspeed_enqueue_variation_assets( $form_id, $variation_key
  */
 function tve_leads_has_lightspeed() {
 	return class_exists( 'TCB\Lightspeed\Main', false );
+}
+
+/**
+ * Checks if it has advanced optimization
+ *
+ * @return bool
+ */
+function tve_has_advanced_optimization( $form_id, $variation_key ) {
+	return \TCB\Integrations\WooCommerce\Main::active() && class_exists( 'TCB\Lightspeed\Woocommerce' ) && method_exists( 'TCB\Lightspeed\Woocommerce', 'get_modules' ) && Woocommerce::get_modules( $form_id, '_' . $variation_key );
 }

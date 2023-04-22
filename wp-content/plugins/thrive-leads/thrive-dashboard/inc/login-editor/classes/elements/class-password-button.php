@@ -24,7 +24,7 @@ class Password_Button extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Password button', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Password button', 'thrive-dash' );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Password_Button extends \TCB_Element_Abstract {
 				'Color' => array(
 					'config'  => array(
 						'default' => '000',
-						'label'   => __( 'Color', TVE_DASH_TRANSLATE_DOMAIN ),
+						'label'   => __( 'Color', 'thrive-dash' ),
 						'options' => array(
 							'output' => 'object',
 						),

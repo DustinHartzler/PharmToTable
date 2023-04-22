@@ -62,17 +62,17 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 		$content_box = array(
 			'contentbox' => array(
 				'config' => array(
-					'ContentPalettes'  => array(
-						'config'  => array(),
+					'ContentPalettes'  => [
+						'config'  => [],
 						'extends' => 'Palettes',
-					),
+					],
 					'BoxHeight'        => array(
 						'config'  => array(
 							'default' => '80',
 							'min'     => '1',
 							'max'     => '1000',
 							'label'   => __( 'Minimum Height', 'thrive-cb' ),
-							'um'      => array( 'px', 'vh' ),
+							'um'      => [ 'px', 'vh' ],
 							'css'     => 'min-height',
 						),
 						'to'      => ' > .tve-cb',
@@ -84,7 +84,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 							'min'     => '100',
 							'max'     => '2000',
 							'label'   => __( 'Maximum Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
@@ -94,30 +94,30 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 							'default'             => '000',
 							'label'               => __( 'Master Color', 'thrive-cb' ),
 							'important'           => true,
-							'affected_components' => array( 'shadow', 'background', 'borders' ),
-							'options'             => array(
+							'affected_components' => [ 'shadow', 'background', 'borders' ],
+							'options'             => [
 								'showGlobals' => false,
-							),
+							],
 						),
 					),
 					'VerticalPosition' => array(
 						'config'  => array(
 							'name'    => __( 'Vertical Position', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'top',
 									'default' => true,
 									'value'   => '',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'flex-end',
-								),
-							),
+								],
+							],
 							'info'    => true,
 						),
 						'extends' => 'ButtonGroup',
@@ -149,59 +149,62 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'borders'    => array(
-				'config' => array(
-					'Borders' => array(
+			'borders'    => [
+				'config' => [
+					'Borders' => [
 						'to'        => '>.tve-content-box-background',
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'to' => '>.tve-content-box-background',
-					),
-				),
-			),
-			'layout'     => array(
-				'config'            => array(
-					'Position' => array(
+					],
+				],
+			],
+			'layout'     => [
+				'config'            => [
+					'Position' => [
 						'important'          => true,
-						'disabled_positions' => array( 'auto' ),
-					),
-					'Height'   => array(
+						'disabled_positions' => [ 'auto' ],
+					],
+					'Height'   => [
 						'to'        => '> .tve-cb',
 						'important' => true,
-					),
-				),
-				'disabled_controls' => array(),
-			),
-			'background' => array(
-				'config' => array(
+					],
+				],
+				'disabled_controls' => [],
+			],
+			'background' => [
+				'config' => [
 					'to' => '>.tve-content-box-background',
-				),
-			),
-			'shadow'     => array(
-				'config' => array(
+				],
+			],
+			'shadow'     => [
+				'config' => [
 					'to' => '>.tve-content-box-background',
-				),
-			),
-			'decoration' => array(
-				'config' => array(
+				],
+			],
+			'decoration' => [
+				'config' => [
 					'to' => '>.tve-content-box-background',
-				),
-			),
-			'typography' => array(
-				'disabled_controls' => array(),
-				'config'            => array(
+				],
+			],
+			'typography' => [
+				'disabled_controls' => [],
+				'config'            => [
 					'to'             => '> .tve-cb',
 					'FontSize'       => $prefix_config,
 					'FontColor'      => $prefix_config,
 					'LineHeight'     => $prefix_config,
 					'FontFace'       => $prefix_config,
-					'ParagraphStyle' => array( 'hidden' => false ),
-				),
-			),
-			'scroll'     => array(
+					'ParagraphStyle' => [ 'hidden' => false ],
+				],
+			],
+			'scroll'     => [
 				'hidden' => false,
-			),
+			],
+			'conditional-display' => [
+				'hidden' => false,
+			],
 		);
 
 		return array_merge( $content_box, $this->shared_styles_component(), $this->group_component() );
@@ -220,7 +223,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_basic_label();
+		return static::get_thrive_basic_label();
 	}
 
 	/**
@@ -229,12 +232,12 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'contentbox',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425774-how-to-use-the-content-box-element',
-			),
-		);
+			],
+		];
 	}
 }

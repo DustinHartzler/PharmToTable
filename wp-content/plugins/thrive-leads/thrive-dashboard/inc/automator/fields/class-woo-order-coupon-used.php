@@ -53,15 +53,20 @@ class Woo_Order_Coupon_Used extends Data_Field {
 
 		foreach ( $query->posts as $post ) {
 			if ( ! empty( $post ) ) {
-				$coupons[ $post->ID ] = array(
+				$code = \wc_format_coupon_code( $post->post_title );
+				$coupons[ $code ] = array(
 					'label' => $post->post_title,
-					'id'    => $post->ID,
+					'id'    => $code,
 				);
 			}
 
 		}
 
 		return $coupons;
+	}
+
+	public static function get_field_value_type() {
+		return static::TYPE_STRING;
 	}
 
 	public static function get_id() {

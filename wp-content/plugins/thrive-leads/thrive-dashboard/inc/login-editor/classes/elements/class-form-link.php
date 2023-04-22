@@ -23,7 +23,7 @@ class Form_Link extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Form link', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Form link', 'thrive-dash' );
 	}
 
 	/**
@@ -32,7 +32,7 @@ class Form_Link extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.login #backtoblog, .login #nav';
+		return '.login #backtoblog, .login #nav, .privacy-policy-page-link';
 	}
 
 	public function own_components() {

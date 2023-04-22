@@ -624,6 +624,10 @@ class Thrive_Leads_Template_Manager extends Thrive_Leads_Request_Handler {
 			} else {
 				$template['thumbnail'] = tl_get_design_thumbnail( $template['thumbnail'] );
 			}
+			if ( ! empty( $template['thumbnail'] ) ) {
+				$template['thumb_sizes']['w'] = getimagesize( $template['thumbnail'] )[0];
+				$template['thumb_sizes']['h'] = getimagesize( $template['thumbnail'] )[1];
+			}
 			$template['multi_step'] = $is_multi_step;
 			$template['key']        = $template['id'] = 'user-saved-template-' . $index;
 

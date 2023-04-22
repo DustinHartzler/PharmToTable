@@ -57,6 +57,8 @@ class TCB_Symbols_Post_Type {
 		add_filter( 'tcb_post_types', array( $this, 'edit_symbol_post_type' ), 10, 3 );
 
 		add_filter( 'thrive_theme_allow_body_class', array( $this, 'theme_body_class' ), 99, 1 );
+
+		add_filter( 'tve_dash_exclude_post_types_from_index', [ $this, 'exclude_from_index' ] );
 	}
 
 	/**
@@ -164,6 +166,19 @@ class TCB_Symbols_Post_Type {
 		}
 
 		return $allow_theme_classes;
+	}
+
+	/**
+	 * Remove symbols from google index
+	 *
+	 * @param $post_types
+	 *
+	 * @return mixed
+	 */
+	public function exclude_from_index( $post_types ) {
+		$post_types[] = static::SYMBOL_POST_TYPE;
+
+		return $post_types;
 	}
 }
 

@@ -102,14 +102,24 @@ class JS {
 	 * @return array|array[]
 	 */
 	public function get_modules_urls() {
-		$urls = [];
-
 		$modules_to_load = $this->get_modules_to_load();
 
-		foreach ( $modules_to_load as $module ) {
-			$urls = array_merge( $urls, static::get_module_data( $module, 'libraries' ) );
+		return JS::get_js_urls( $modules_to_load );
+	}
 
-			$urls[ $module ] = JSModule::get_instance( $module, [] )->get_url();
+	/**
+	 * Return urls for an array of modules
+	 *
+	 * @return array|array[]
+	 */
+	public static function get_js_urls( $modules ) {
+		$urls = [];
+		if ( is_array( $modules ) ) {
+			foreach ( $modules as $module ) {
+				$urls = array_merge( $urls, static::get_module_data( $module, 'libraries' ) );
+
+				$urls[ $module ] = JSModule::get_instance( $module, [] )->get_url();
+			}
 		}
 
 		return $urls;
@@ -141,6 +151,10 @@ class JS {
 		} else if ( Main::requires_architect_assets( $this->ID ) || Main::has_architect_content( $this->ID ) ) {
 			/* load all modules */
 			$this->modules = array_keys( static::get_module_data() );
+
+			if ( ! empty( $this->modules ) ) {
+				$this->load_module_dependencies();
+			}
 		} else {
 			$this->modules = [];
 		}
@@ -196,6 +210,12 @@ class JS {
 			'audio'                 => [
 				'identifier' => '.thrv_audio',
 			],
+			'carousel'              => [
+				'identifier' => '[data-type="carousel"]',
+				'libraries'  => [
+					'carousel-libs' => tve_editor_js( '/carousel-libs' . \TCB_Utils::get_js_suffix() ),
+				],
+			],
 			/* this is the old contact form element which is no longer visible in the sidebar, but still has frontend JS */
 			'contact-form-compat'   => [
 				'identifier' => '.thrv-contact-form',
@@ -205,6 +225,12 @@ class JS {
 			],
 			'countdown'             => [
 				'identifier' => '.tve-countdown',
+			],
+			'conditional-display'   => [
+				'identifier' => '[data-display-group]',
+			],
+			'search-form'           => [
+				'identifier' => '.thrv-search-form',
 			],
 			'dropdown'              => [
 				'identifier' => '.tve_lg_dropdown, .tcb-form-dropdown, .tve-dynamic-dropdown',
@@ -219,6 +245,14 @@ class JS {
 					'plupload' => includes_url() . 'js/plupload/plupload.min.js',
 				],
 			],
+			'avatar-picker'         => [
+				'identifier'   => '.tve-avatar-picker-element',
+				'dependencies' => [ 'google-api', 'facebook-api', 'modal' ],
+				'libraries'    => [
+					'google-client' => 'https://accounts.google.com/gsi/client',
+					'google-api'    => 'https://apis.google.com/js/api.js',
+				],
+			],
 			'fill-counter'          => [
 				'identifier' => '.thrv-fill-counter',
 			],
@@ -226,10 +260,11 @@ class JS {
 				'identifier' => '.tve-number-counter',
 			],
 			'image-gallery'         => [
-				'identifier' => '.tcb-image-gallery',
-				'libraries'  => [
-					'image-gallery-libs' => tve_editor_js() . '/image-gallery-libs.min.js',
+				'identifier'   => '.tcb-image-gallery',
+				'libraries'    => [
+					'image-gallery-libs' => tve_editor_js( '/image-gallery-libs.min.js' ),
 				],
+				'dependencies' => [ 'carousel' ],
 			],
 			'lead-generation'       => [
 				'identifier'   => '.thrv_lead_generation',
@@ -253,8 +288,11 @@ class JS {
 				'dependencies' => [ 'post-list' ],
 			],
 			'post-list'             => [
-				'identifier'   => '.tcb-post-list, .tva-course-list',
+				'identifier'   => '.tcb-post-list, .tva-course-list, .thrive-display-testimonials',
 				'dependencies' => [ 'post-grid-compat', 'dropdown' ],
+			],
+			'post-list-filter'      => [
+				'identifier' => '.tcb-post-list-filter',
 			],
 			'pricing-table'         => [
 				'identifier' => '.thrv-pricing-table',
@@ -263,7 +301,7 @@ class JS {
 				'identifier' => '.tve-progress-bar-wrapper',
 			],
 			'social-share'          => [
-				'identifier' => '.thrv_social_custom',
+				'identifier' => '.thrv_social_custom,.tve_social_custom',
 			],
 			'table'                 => [
 				'identifier' => '.thrv_table',
@@ -297,7 +335,11 @@ class JS {
 			}, $data );
 		}
 
-		return empty( $module ) ? $data : $data[ $module ];
+		if ( ! empty( $module ) ) {
+			$data = isset( $data[ $module ] ) ? $data[ $module ] : [];
+		}
+
+		return $data;
 	}
 
 	/**

@@ -26,6 +26,10 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 		public $post;
 
 		public function __construct( $post_id = null ) {
+			global $tve_post;
+			if ( empty( $post_id ) && ! empty( $tve_post ) ) {
+				$post_id = $tve_post->ID;
+			}
 			$this->post = get_post( $post_id );
 		}
 
@@ -143,6 +147,8 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 
 			$tcb_content = wp_unslash( $tcb_content );
 			$tcb_content = tve_thrive_shortcodes( $tcb_content );
+			$tcb_content = do_shortcode( $tcb_content );
+
 			$tcb_content = preg_replace( '/<script(.*?)>(.*?)<\/script>/is', '', $tcb_content );
 			$tcb_content = preg_replace( '/<style(.*?)>(.*?)<\/style>/is', '', $tcb_content );
 

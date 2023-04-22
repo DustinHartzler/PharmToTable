@@ -43,8 +43,8 @@ abstract class TCB_Event_Action_Abstract {
 	 * @throws Exception
 	 */
 	public static final function actionFactory( $class_name, $constructor_param = null ) {
-		if ( ! class_exists( $class_name ) && file_exists( dirname( __FILE__ ) . '/actions/' . $class_name . '.php' ) ) {
-			require_once dirname( __FILE__ ) . '/actions/' . $class_name . '.php';
+		if ( ! class_exists( $class_name ) && file_exists( __DIR__ . "/actions/$class_name.php" ) ) {
+			require_once __DIR__ . "/actions/$class_name.php";
 		}
 
 		if ( ! class_exists( $class_name ) ) {

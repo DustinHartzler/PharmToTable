@@ -76,9 +76,10 @@ class Thrive_Dash_Api_CustomHtml {
 		if ( function_exists( 'tve_leads_get_form_type' ) ) {
 			$form_type = tve_leads_get_form_type( $form_type_id, array( 'get_variations' => false ) );
 			if ( $form_type && $form_type->post_name ) {
-				if($form_type->post_type == "tve_lead_shortcode" || $form_type->post_type == "tve_lead_2s_lightbox") {
+				if ( $form_type->post_type == "tve_lead_shortcode" || $form_type->post_type == "tve_lead_2s_lightbox" ) {
 					return $form_type->post_type;
 				}
+
 				return $form_type->post_name;
 			}
 		}
@@ -90,11 +91,11 @@ class Thrive_Dash_Api_CustomHtml {
 		$variation_id = $_POST['_key'];
 
 		if ( function_exists( 'tve_leads_get_form_related_states' ) ) {
-			$states = tve_leads_get_form_related_states($variation_id);
+			$states = tve_leads_get_form_related_states( $variation_id );
 			if ( $states ) {
-				foreach($states as $key => $state) {
-					if($state['key'] == $variation_id) {
-						unset($states[$key]);
+				foreach ( $states as $key => $state ) {
+					if ( $state['key'] == $variation_id ) {
+						unset( $states[ $key ] );
 					}
 				}
 
@@ -187,17 +188,17 @@ class Thrive_Dash_Api_CustomHtml {
 	 */
 	public function domParse( $code ) {
 		$response = array(
-			'form_action'        => "",
-			'hidden_inputs'      => "",
+			'form_action'        => '',
+			'hidden_inputs'      => '',
 			'form_method'        => 'POST',
 			'parse_status'       => 0,
 			'not_visible_inputs' => '',
 			'is_mailchimp'       => false,
 			'elements'           => array(),
-			'element_order'      => array()
+			'element_order'      => array(),
 		);
 
-		if ( empty( $code ) ) {
+		if ( empty( $code ) || ! extension_loaded( 'dom' ) ) {
 			return $response;
 		}
 
@@ -235,7 +236,7 @@ class Thrive_Dash_Api_CustomHtml {
 						$response['elements'][ 'shortcode_' . $shortcode_index ++ ] = array(
 							'encoded_name' => 'shortcode_' . $shortcode_index ++,
 							'type'         => 'shortcode',
-							'value'        => $text
+							'value'        => $text,
 						);
 						continue;
 					}
@@ -267,17 +268,17 @@ class Thrive_Dash_Api_CustomHtml {
 	/**
 	 *
 	 * @param DOMElement $element current element (input / select / textarea)
-	 * @param array $response
+	 * @param array      $response
 	 */
-	public function readElementInput( DOMElement $element, & $response ) {
+	public function readElementInput( DOMElement $element, &$response ) {
 		$element_type = $element->getAttribute( 'type' );
 		if ( empty( $element_type ) ) {
 			$element_type = 'text';
 		}
 		if ( $element_type == "hidden" ) {
-			$element_name      = $element->getAttribute( 'name' );
-			$element_value     = $element->getAttribute( 'value' );
-			$temp_hidden_input = "<input type='hidden' name='" . $element_name . "' value='" . $element_value . "' />";
+			$element_name              = $element->getAttribute( 'name' );
+			$element_value             = $element->getAttribute( 'value' );
+			$temp_hidden_input         = "<input type='hidden' name='" . $element_name . "' value='" . $element_value . "' />";
 			$response['hidden_inputs'] .= $temp_hidden_input;
 
 			return;
@@ -296,7 +297,7 @@ class Thrive_Dash_Api_CustomHtml {
 			'datetime-local',
 			'month',
 			'number',
-			'search'
+			'search',
 		);
 
 		$o_name = $element->getAttribute( 'name' );
@@ -314,14 +315,14 @@ class Thrive_Dash_Api_CustomHtml {
 		if ( in_array( $element_type, $text_input_types ) ) {
 			//hot fix for mailchimp
 			if ( $this->_isMailchimp() && strlen( $element_name ) > 30 ) {
-				$element_value     = str_replace( " ", "", $element->getAttribute( 'value' ) );
-				$temp_hidden_input = '<input type="text" style="position: absolute !important; left: -5000px !important;" name="' . $o_name . '" value="' . $element_value . '" />';
+				$element_value                  = str_replace( " ", "", $element->getAttribute( 'value' ) );
+				$temp_hidden_input              = '<input type="text" style="position: absolute !important; left: -5000px !important;" name="' . $o_name . '" value="' . $element_value . '" />';
 				$response['not_visible_inputs'] .= $temp_hidden_input;
 			} else {
 				$response['elements'][ $element_name ] = array(
 					'encoded_name' => $element_name,
 					'type'         => 'text',
-					'name'         => $o_name
+					'name'         => $o_name,
 				);
 			}
 		} elseif ( $element_type === 'radio' ) {
@@ -331,7 +332,7 @@ class Thrive_Dash_Api_CustomHtml {
 					'encoded_name' => $element_name,
 					'type'         => 'radio',
 					'name'         => $o_name,
-					'options'      => array()
+					'options'      => array(),
 				);
 			}
 			$response['elements'][ $element_name ]['options'][ sanitize_title( $value ) ] = $value;
@@ -350,9 +351,9 @@ class Thrive_Dash_Api_CustomHtml {
 	/**
 	 *
 	 * @param DOMElement $DOMDropDown current element (input / select / textarea)
-	 * @param array $response
+	 * @param array      $response
 	 */
-	public function readElementSelect( DOMElement $DOMDropDown, & $response ) {
+	public function readElementSelect( DOMElement $DOMDropDown, &$response ) {
 		$options        = array();
 		$o_name         = $DOMDropDown->getAttribute( 'name' );
 		$drop_down_name = $this->attrName( $o_name );
@@ -376,7 +377,7 @@ class Thrive_Dash_Api_CustomHtml {
 		foreach ( $options as $value => $label ) {
 			$sorted [] = array(
 				'label' => $label,
-				'value' => $value
+				'value' => $value,
 			);
 		}
 
@@ -385,22 +386,22 @@ class Thrive_Dash_Api_CustomHtml {
 			'type'          => 'select',
 			'default_value' => $options[''],
 			'name'          => $o_name,
-			'options'       => $sorted
+			'options'       => $sorted,
 		);
 	}
 
 	/**
 	 *
 	 * @param DOMElement $DOMTextarea current element (input / select / textarea)
-	 * @param array $response
+	 * @param array      $response
 	 */
-	public function readElementTextarea( DOMElement $DOMTextarea, & $response ) {
+	public function readElementTextarea( DOMElement $DOMTextarea, &$response ) {
 		$o_name                                 = $DOMTextarea->getAttribute( 'name' );
 		$textarea_name                          = $this->attrName( $o_name );
 		$response['elements'][ $textarea_name ] = array(
 			'encoded_name' => $textarea_name,
 			'type'         => 'textarea',
-			'name'         => $o_name
+			'name'         => $o_name,
 		);
 	}
 

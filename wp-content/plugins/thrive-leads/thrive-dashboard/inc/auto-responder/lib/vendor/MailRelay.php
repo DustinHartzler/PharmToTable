@@ -111,7 +111,7 @@ class Thrive_Dash_Api_MailRelay {
 			return $this->update_subscriber( $subscriber, $args );
 		}
 
-		$args['function'] = 'addSubscriber';
+		$args['function'] = 'add_subscriber';
 		$args['groups'][] = $group_id;
 
 		return $this->call( $args, 'POST' );

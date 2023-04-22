@@ -14,7 +14,7 @@ global $tvedb;
  */
 class Thrive_Leads_DB {
 	/**
-	 * @var wpdb the $wpdb instance
+	 * @var WP_Query
 	 */
 	protected $wpdb = null;
 
@@ -1170,6 +1170,21 @@ class Thrive_Leads_DB {
 
 		return $state;
 	}
+	/**
+	 * check if  already_subscribed state for a form
+	 *
+	 * @param int $parent_id
+	 *
+	 * @return array|null
+	 */
+	public function form_has_already_subscribed_state( $parent_id ) {
+		$sql   = "SELECT * FROM {form_variations} WHERE post_parent = %d AND `form_state` = %s";
+		$state = $this->wpdb->get_row( $this->prepare( $sql, array( $parent_id, 'already_subscribed' ) ), ARRAY_A );
+
+		return ! empty( $state );
+	}
+
+
 
 	/**
 	 * completely delete all child states for a variation
@@ -1720,6 +1735,47 @@ class Thrive_Leads_DB {
 		$sql        = "DELETE FROM {$table_name} WHERE `variation_key` IN ('{$v}')";
 
 		return $this->wpdb->query( $sql );
+	}
+
+	/**
+	 * Check if we have a design variation containing the specific string
+	 *
+	 * @param $string
+	 *
+	 * @return boolean
+	 */
+	public function search_string_in_designs( $string ) {
+		$sql = 'SELECT `key` FROM ' . tve_leads_table_name( 'form_variations' ) . ' WHERE content LIKE %s';
+
+		$this->wpdb->query( $this->prepare( $sql, [ "%$string%" ] ) );
+
+		return $this->wpdb->num_rows > 0;
+	}
+
+	/**
+	 * Get an array of sorted groups, containing loaded display options
+	 * Improves performance by reducing the number of queries on initial request - avoids executing queries for each lead group
+	 *
+	 * @return WP_Post[]
+	 */
+	public function get_groups_with_options() {
+		$wp_posts    = $this->wpdb->posts;
+		$wp_postmeta = $this->wpdb->postmeta;
+
+		$sql = $this->prepare(
+			"SELECT {$wp_posts}.*, display_settings.show_group_options, display_settings.hide_group_options 
+				FROM {$wp_posts} 
+				INNER JOIN {$wp_postmeta} ON ( {$wp_posts}.ID = {$wp_postmeta}.post_id )
+				INNER JOIN {group_options} AS display_settings ON display_settings.`group` = {$wp_posts}.ID 
+				WHERE 
+					{$wp_posts}.post_status = %s AND 
+					{$wp_posts}.post_type = %s AND 
+					{$wp_postmeta}.meta_key = %s
+				ORDER BY {$wp_postmeta}.meta_value+0 ASC",
+			[ 'publish', TVE_LEADS_POST_GROUP_TYPE, 'tve_group_order' ]
+		);
+
+		return array_map( 'get_post', $this->wpdb->get_results( $sql ) );
 	}
 }
 

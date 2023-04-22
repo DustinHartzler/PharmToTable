@@ -138,7 +138,7 @@ class TCB_Post_Thumbnail_Element extends TCB_Post_List_Sub_Element_Abstract {
 						'config'  => array(
 							'default' => 'thumbnail',
 							'name'    => __( 'Image Size', 'thrive-cb' ),
-							'options' => self::get_size_options(),
+							'options' => static::get_size_options(),
 						),
 						'extends' => 'Select',
 					),

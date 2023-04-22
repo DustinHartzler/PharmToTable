@@ -15,6 +15,72 @@
 	</div>
 </div>
 
+<div id="tve-conditional-display-component" class="tve-component" data-view="ConditionalDisplay">
+	<div class="dropdown-header" data-prop="docked">
+		<div class="group-description">
+			<?php echo esc_html__( 'Conditional Display', 'thrive-cb' ) ?>
+		</div>
+		<i></i>
+	</div>
+	<div class="dropdown-content">
+		<div class="display-order">
+			<?php echo esc_html__( 'Display order', 'thrive-cb' ) ?>
+		</div>
+		<div class="display-list">
+			<div class="custom-display-list"></div>
+			<div class="default-display-list"></div>
+		</div>
+		<button class="tve-button green ghost long click mt-10" data-fn="addDisplay">
+			<?php tcb_icon( 'plus-regular' ); ?>
+			<?php echo esc_html__( 'Add display', 'thrive-cb' ) ?>
+		</button>
+		<div class="tve-advanced-controls mt-20 hide-states">
+			<div class="dropdown-header with-info" data-prop="advanced">
+				<div class="dropdown-info">
+					<span class="mr-10"><?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?></span>
+					<span class="click tve-lazy-load-info" data-fn="openTooltip"><?php tcb_icon( 'info-circle-solid' ); ?></span>
+				</div>
+			</div>
+
+			<div class="dropdown-content pt-0">
+				<div class="hide-states">
+					<div class="tve-control no-space" data-view="LazyLoad"></div>
+					<div class="tve-cond-lazy-load-settings">
+						<div class="tve-control no-space" data-view="UniformHeights"></div>
+						<div class="tve-control full-width" data-view="InheritBackground"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="tve-carousel-component" class="tve-component" data-view="Carousel">
+	<div class="dropdown-header" data-prop="docked">
+		<div class="group-description">
+			<?php echo esc_html__( 'Carousel Options', 'thrive-cb' ) ?>
+		</div>
+		<i></i>
+	</div>
+	<div class="dropdown-content">
+		<div class="tve-control sep-bottom mb-10 pb-0" data-view="MovementSettings"></div>
+		<div class="tve-control" data-view="SlidesToScroll"></div>
+		<div class="tve-control" data-view="SlidesToShow"></div>
+		<div class="tve-control" data-view="Autoplay"></div>
+		<div class="tve-autoplay-controls sep-bottom">
+			<div class="tve-control" data-view="AutoplaySpeed"></div>
+			<div class="tve-control" data-view="PauseOn"></div>
+		</div>
+		<div class="tve-control" data-view="CenterMode"></div>
+		<div class="tve-control" data-view="CenterPadding"></div>
+		<div class="tve-control" data-view="AdaptiveHeight"></div>
+		<div class="tve-control" data-view="UniformSlidesHeight"></div>
+		<div class="tve-control" data-view="VerticalPosition"></div>
+		<div class="tve-control" data-view="Fade"></div>
+		<div class="tve-control" data-view="FadeImageWidth"></div>
+	</div>
+</div>
+
 <div id="tve-styles-templates-component" class="tve-component" data-view="StylesTemplates">
 	<div class="dropdown-header" data-prop="docked">
 		<?php echo esc_html__( 'HTML Attributes', 'thrive-cb' ); ?>
@@ -279,7 +345,7 @@
 				<div class="tve-control" data-key="global_style" data-initializer="global_style_control"></div>
 			</div>
 
-			<div class="shared-styles-actions" data-state="1">
+			<div class="shared-styles-actions tcb-hide" data-state="1">
 				<a href="javascript:void(0)" class="click" data-fn="edit_style" data-side="top" data-tooltip="<?php echo esc_attr__( 'Edit Global Style', 'thrive-cb' ); ?>">
 					<?php tcb_icon( 'edit' ); ?>
 				</a>
@@ -293,7 +359,7 @@
 				</a>
 			</div>
 
-			<div class="control-grid no-space shared-styles-actions" data-state="2">
+			<div class="control-grid no-space shared-styles-actions tcb-hide" data-state="2">
 				<span class="global-edit-warning">
 					<span><?php echo esc_html__( 'You are editing the Global Style', 'thrive-cb' ); ?>: </span>
 					<strong><span class="shared-styles-name"></span></strong>.
@@ -316,7 +382,7 @@
 		</div>
 	</div>
 
-	<div class="control-grid pt-5 no-space shared-styles-actions" data-state="1">
+	<div class="control-grid pt-5 no-space shared-styles-actions tcb-hide" data-state="1">
 		<span class="global-edit-warning">
 			<?php echo esc_html__( 'This element has a Global Style applied: some of its properties are not editable at the instance level (e.g. Typography, Background, Borders etc). You can modify these by clicking on the pencil icon above.', 'thrive-cb' ); ?>
 		</span>

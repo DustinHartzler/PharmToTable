@@ -37,7 +37,7 @@ class Woo_Order_Completed extends Trigger {
 	 * @return array
 	 */
 	public static function get_provided_data_objects() {
-		return array( 'user_data', 'woo_order_data' );
+		return array( 'user_data', 'woo_order_data', 'email_data' );
 	}
 
 	/**
@@ -54,8 +54,8 @@ class Woo_Order_Completed extends Trigger {
 	 *
 	 * @return string
 	 */
-	public static function get_app_name() {
-		return 'WooCommerce';
+	public static function get_app_id() {
+		return Woo_App::get_id();
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Woo_Order_Completed extends Trigger {
 	 * @return string
 	 */
 	public static function get_name() {
-		return 'WooCommerce order completed';
+		return 'WooCommerce order complete';
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Woo_Order_Completed extends Trigger {
 
 			$data['user_data']      = empty( $data_object_classes['user_data'] ) ? null : new $data_object_classes['user_data']( $order->get_user() );
 			$data['woo_order_data'] = empty( $data_object_classes['woo_order_data'] ) ? $order : new $data_object_classes['woo_order_data']( $order );
-
+			$data['email_data']     = empty( $data_object_classes['email_data'] ) ? $order : new $data_object_classes['email_data']( $order->get_billing_email() );
 		}
 
 		return $data;

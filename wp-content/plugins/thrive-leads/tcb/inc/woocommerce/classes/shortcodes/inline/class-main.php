@@ -23,9 +23,9 @@ class Main {
 	const LINK_SHORTCODE = 'thrive_woo_link_shortcode';
 
 	/* price shortcode attributes */
-	const PRICE_ON_SALE_EFFECT = 'on_sale_effect';
+	const PRICE_ON_SALE_EFFECT          = 'on_sale_effect';
 	const PRICE_INCLUDE_CURRENCY_SYMBOL = 'include_currency_symbol';
-	const PRICE_SHOW_DECIMALS = 'show_decimals';
+	const PRICE_SHOW_DECIMALS           = 'show_decimals';
 
 	const PATH = 'classes/shortcodes/inline/';
 
@@ -139,7 +139,7 @@ class Main {
 				break;
 			case 'dynamic_product_link':
 				$product_id = $attr['product-id'];
-				$link       = get_site_url() . '/' . $attr['redirect-destination'] . '/';
+				$link       = $attr['redirect-destination'] === 'cart' ? wc_get_cart_url() : Woo_Main::get_checkout_url();
 
 				if ( $product_id ) {
 					$variation_id = empty( $attr['product-variation-id'] ) ? 0 : $attr['product-variation-id'];
@@ -148,7 +148,7 @@ class Main {
 						'add-to-cart' => $variation_id ? $variation_id : $product_id,
 					), $link );
 
-					if ( $product->get_type() === 'grouped' ) {
+					if ( $product && $product->get_type() === 'grouped' ) {
 						$children = $product->get_children();
 						foreach ( $children as $child ) {
 							//the default quantity for each part of a grouped product is 1

@@ -1,5 +1,7 @@
 <?php
 
+define( 'TVE_LEADS_ADMIN_URL', plugin_dir_url( __FILE__ ) . 'admin/' );
+
 /**
  * this should handle file inclusions, requires etc
  */
@@ -29,8 +31,6 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 if ( ! file_exists( dirname( dirname( __FILE__ ) ) . '/thrive-visual-editor/thrive-visual-editor.php' ) || ! is_plugin_active( 'thrive-visual-editor/thrive-visual-editor.php' ) ) {
 	include_once plugin_dir_path( __FILE__ ) . 'tcb-bridge/init.php';
 }
-
-define( 'TVE_LEADS_ADMIN_URL', plugin_dir_url( __FILE__ ) . 'admin/' );
 
 /* check database version and run any necessary update scripts */
 require_once plugin_dir_path( __FILE__ ) . 'database/Thrive_Leads_Database_Manager.php';
@@ -125,6 +125,7 @@ add_action( 'plugins_loaded', 'tve_leads_load_dash_version' );
 add_filter( 'td_nm_trigger_types', 'tve_leads_filter_nm_trigger_types' );
 
 add_filter( 'tcb_post_grid_banned_types', 'tve_leads_add_post_grid_banned_types' );
+add_filter( 'tcb_can_export_content', 'tl_hide_export_content', 10, 2 );
 
 if ( ! is_admin() ) {
 

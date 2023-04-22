@@ -339,6 +339,7 @@ class Thrive_Dash_Api_Sendreach_Params extends Thrive_Dash_Api_Sendreach impleme
 	 * @param mixed $offset the offset to check on
 	 * @return boolean
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($offset)
 	{
 		return $this->contains($offset);
@@ -350,6 +351,7 @@ class Thrive_Dash_Api_Sendreach_Params extends Thrive_Dash_Api_Sendreach impleme
 	 * @param integer $offset the offset to retrieve element.
 	 * @return mixed the element at the offset, null if no element is found at the offset
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		return $this->itemAt($offset);
@@ -361,6 +363,7 @@ class Thrive_Dash_Api_Sendreach_Params extends Thrive_Dash_Api_Sendreach impleme
 	 * @param integer $offset the offset to set element
 	 * @param mixed $item the element value
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($offset,$item)
 	{
 		$this->add($offset, $item);
@@ -371,6 +374,7 @@ class Thrive_Dash_Api_Sendreach_Params extends Thrive_Dash_Api_Sendreach impleme
 	 * This method is required by the interface ArrayAccess.
 	 * @param mixed $offset the offset to unset element
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($offset)
 	{
 		$this->remove($offset);

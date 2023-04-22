@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Rest_Api {
 
 	const  REST_NAMESPACE = 'tcb/v1';
-	const  REST_ROUTE     = 'lightspeed/';
+	const  REST_ROUTE = 'lightspeed/';
 
 	public static function register_routes() {
 		register_rest_route( static::REST_NAMESPACE, static::REST_ROUTE . 'analyze', [
@@ -27,6 +27,12 @@ class Rest_Api {
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'analyze' ],
 				'permission_callback' => [ __CLASS__, 'has_admin_access' ],
+				'args'                => [
+					'to_analyze' => [
+						'type'     => 'array',
+						'required' => false,
+					],
+				],
 			],
 		] );
 
@@ -45,6 +51,11 @@ class Rest_Api {
 								Fonts::ENABLE_ASYNC_FONTS_LOAD,
 								Fonts::ENABLE_FONTS_OPTIMIZATION,
 								Fonts::DISABLE_GOOGLE_FONTS,
+								Gutenberg::DISABLE_GUTENBERG,
+								Gutenberg::DISABLE_GUTENBERG_LP,
+								Woocommerce::DISABLE_WOOCOMMERCE,
+								Woocommerce::DISABLE_WOOCOMMERCE_LP,
+								Emoji::DISABLE_EMOJI,
 							], true );
 						},
 					],
@@ -73,16 +84,30 @@ class Rest_Api {
 	 *
 	 * @return \WP_REST_Response
 	 */
-	public static function analyze() {
+	public static function analyze( $request ) {
 		/* make sure there's enough memory to analyze lots of content */
 		@ini_set( 'memory_limit', TVE_EXTENDED_MEMORY_LIMIT );
+		$groups     = [];
+		$to_analyze = $request->get_param( 'to_analyze' );
 
-		/**
-		 * returns an array of items to be optimized
-		 *
-		 * @return array
-		 */
-		$groups = apply_filters( 'tve_lightspeed_items_to_optimize', Main::get_architect_posts_for_optimization() );
+		if ( ! empty( $to_analyze ) ) {
+			if ( in_array( 'lp', $to_analyze ) ) {
+				$groups = Main::get_lp_for_optimize();
+			}
+			if ( in_array( 'ttb', $to_analyze ) ) {
+				$groups = Main::get_content_for_optimization( $request );
+			}
+
+		} else {
+			/**
+			 * returns an array of items to be optimized
+			 *
+			 * @return array
+			 */
+			$groups = Main::get_architect_posts_for_optimization();
+		}
+
+		$groups = apply_filters( 'tve_lightspeed_items_to_optimize', $groups, $request );
 
 		return new \WP_REST_Response( $groups );
 	}
@@ -114,9 +139,7 @@ class Rest_Api {
 		$post_id = (int) $request->get_param( 'id' );
 		$key     = empty( $request->get_param( 'key' ) ) ? '' : '_' . $request->get_param( 'key' );
 
-		Css::get_instance( $post_id )->save_optimized_css( 'base' . $key, $request->get_param( 'optimized_styles' ) );
-
-		Js::get_instance( $post_id, $key )->save_js_modules( $request->get_param( 'js_modules' ) );
+		Main::handle_optimize_saves( $post_id, $request, $key );
 
 		/**
 		 * Action called after an item has been optimized

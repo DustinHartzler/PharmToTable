@@ -105,7 +105,7 @@ class Thrive_Dash_Api_GoToWebinar {
 	/**
 	 * get the required credentials that will need to be stored
 	 */
-	public function getCredentials() {
+	public function get_credentials() {
 		if ( empty( $this->accessToken ) ) {
 			return array();
 		}

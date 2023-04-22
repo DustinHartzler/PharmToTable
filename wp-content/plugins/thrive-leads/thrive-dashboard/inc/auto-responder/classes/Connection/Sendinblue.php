@@ -9,26 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian Pop
- * Date: 06-Jan-16
- * Time: 1:19 PM
- */
 class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'SendinBlue';
 	}
 
@@ -37,12 +31,12 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'sendinblueemail' );
-		if ( $related_api->isConnected() ) {
-			$this->setParam( 'new_connection', 1 );
+	public function output_setup_form() {
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'sendinblueemail' );
+		if ( $related_api->is_connected() ) {
+			$this->set_param( 'new_connection', 1 );
 		}
-		$this->_directFormHtml( 'sendinblue' );
+		$this->output_controls_html( 'sendinblue' );
 	}
 
 	/**
@@ -50,21 +44,21 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * on error, it should register an error message (and redirect?)
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $ajax_call ? __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid SendinBlue key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid SendinBlue key', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $ajax_call ? sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) : $this->error( sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -73,7 +67,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		$this->save();
 
 		/** @var Thrive_Dash_List_Connection_SendinblueEmail $related_api */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'sendinblueemail' );
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'sendinblueemail' );
 
 		if ( isset( $_POST['connection']['new_connection'] ) && intval( $_POST['connection']['new_connection'] ) === 1 ) {
 			/**
@@ -81,8 +75,8 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			 */
 
 			$r_result = true;
-			if ( ! $related_api->isConnected() ) {
-				$r_result = $related_api->readCredentials();
+			if ( ! $related_api->is_connected() ) {
+				$r_result = $related_api->read_credentials();
 			}
 
 			if ( $r_result !== true ) {
@@ -94,11 +88,11 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			/**
 			 * let's make sure that the api was not edited and disconnect it
 			 */
-			$related_api->setCredentials( array() );
+			$related_api->set_credentials( array() );
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		$this->success( __( 'SendinBlue connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'SendinBlue connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -111,8 +105,8 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
-		$sendinblue = $this->getApi();
+	public function test_connection() {
+		$sendinblue = $this->get_api();
 
 		try {
 			$sendinblue->get_account();
@@ -133,7 +127,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Sendinblue( "https://api.sendinblue.com/v2.0", $this->param( 'key' ) );
 	}
 
@@ -142,10 +136,10 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 		/** @var Thrive_Dash_Api_Sendinblue $sendinblue */
-		$sendinblue = $this->getApi();
+		$sendinblue = $this->get_api();
 
 		$data = array(
 			"page"       => 1,
@@ -170,7 +164,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", 'thrive-dash' );
 
 			return false;
 		}
@@ -184,7 +178,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 		if ( ! is_array( $arguments ) ) {
 			$arguments = (array) $arguments;
@@ -192,7 +186,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 
 		$merge_tags = array();
 		if ( ! empty( $arguments['name'] ) ) {
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 			$merge_tags = array(
 				'NAME'      => $first_name,
 				'FIRSTNAME' => $first_name,
@@ -204,7 +198,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		}
 
 		/** @var Thrive_Dash_Api_Sendinblue $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		if ( ! empty( $arguments['phone'] ) ) {
 			// SendinBlue does not accept phone numbers starting with 0 or other special chars
@@ -225,9 +219,9 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 
 			return true;
 		} catch ( Thrive_Dash_Api_SendinBlue_Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SendinBlue Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SendinBlue Error', 'thrive-dash' );
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', 'thrive-dash' );
 		}
 
 	}
@@ -237,14 +231,14 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 */
 	public function disconnect() {
 
-		$this->setCredentials( array() );
+		$this->set_credentials( array() );
 		Thrive_Dash_List_Manager::save( $this );
 
 		/**
 		 * disconnect the email service too
 		 */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'sendinblueemail' );
-		$related_api->setCredentials( array() );
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'sendinblueemail' );
+		$related_api->set_credentials( array() );
 		Thrive_Dash_List_Manager::save( $related_api );
 
 		return $this;
@@ -255,7 +249,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '{{ contact.EMAIL }}';
 	}
 
@@ -268,13 +262,13 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 */
 	public function get_api_custom_fields( $params, $force = false, $get_all = true ) {
 
-		$cached_data = $this->_get_cached_custom_fields();
+		$cached_data = $this->get_cached_custom_fields();
 		if ( false === $force && ! empty( $cached_data ) ) {
 			return $cached_data;
 		}
 
 		/** @var Thrive_Dash_Api_Sendinblue $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		try {
 			$attributes = $api->get_attributes();
@@ -350,7 +344,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			$name         = strpos( $id['type'], 'mapping_' ) !== false ? $id['type'] . '_' . $key : $key;
 			$cf_form_name = str_replace( '[]', '', $name );
 
-			$result[ $field[0]['name'] ] = $this->processField( $args[ $cf_form_name ] );
+			$result[ $field[0]['name'] ] = $this->process_field( $args[ $cf_form_name ] );
 		}
 
 		return $result;
@@ -373,7 +367,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 
 		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
-		$mapped_fields = $this->getMappedFieldsIDs();
+		$mapped_fields = $this->get_mapped_field_ids();
 
 		foreach ( $mapped_fields as $mapped_field_name ) {
 
@@ -408,11 +402,11 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return int
 	 */
-	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+	public function add_custom_fields( $email, $custom_fields = array(), $extra = array() ) {
 
 		try {
 			/** @var Thrive_Dash_Api_Sendinblue $api */
-			$api     = $this->getApi();
+			$api     = $this->get_api();
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
@@ -422,9 +416,9 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 				$args['name'] = $extra['name'];
 			}
 
-			$this->addSubscriber( $list_id, $args );
+			$this->add_subscriber( $list_id, $args );
 
-			$args['attributes'] = $this->_prepareCustomFieldsForApi( $custom_fields );
+			$args['attributes'] = $this->prepare_custom_fields_for_api( $custom_fields );
 
 			$subscriber = $api->create_update_user( $args );
 
@@ -442,7 +436,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return array
 	 */
-	public function getAvailableCustomFields( $list_id = null ) {
+	public function get_available_custom_fields( $list_id = null ) {
 
 		return $this->get_api_custom_fields( null, true );
 	}
@@ -455,14 +449,14 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 *
 	 * @return array
 	 */
-	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+	public function prepare_custom_fields_for_api( $custom_fields = array(), $list_identifier = null ) {
 
 		$prepared_fields = array();
 		$api_fields      = $this->get_api_custom_fields( null, true );
 
 		foreach ( $api_fields as $field ) {
 			foreach ( $custom_fields as $key => $custom_field ) {
-				if ( $field['id'] === $key ) {
+				if ( $custom_field && $field['id'] === $key ) {
 					$prepared_fields[ $key ] = $custom_field;
 				}
 			}
@@ -475,9 +469,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		return $prepared_fields;
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
-	}
+
 	/**
 	 * Checks if a connection is V3
 	 *
@@ -495,10 +487,10 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 * @return string
 	 */
 	public function upgrade() {
-		$api              = $this->getApi();
+		$api              = $this->get_api();
 		$api_key          = $this->param( 'key' );
 		$upgrade_response = array();
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'sendinblueemail' );
+		$related_api      = Thrive_Dash_List_Manager::connection_instance( 'sendinblueemail' );
 
 		try {
 			$upgrade_response = $api->upgrade_to_v3( $api_key );
@@ -510,11 +502,11 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 				'new_connection' => '0',
 			);
 
-			$this->setCredentials( $connection );
+			$this->set_credentials( $connection );
 
 			/* Update also the credentials of the related api */
-			if ( $related_api->isConnected() ) {
-				$related_api->setCredentials( $connection );
+			if ( $related_api->is_connected() ) {
+				$related_api->set_credentials( $connection );
 				$related_api->save();
 			}
 			$this->save();

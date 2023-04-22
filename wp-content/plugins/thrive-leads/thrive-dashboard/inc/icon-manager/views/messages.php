@@ -6,7 +6,7 @@
 	<?php endif ?>
 	<?php if ( ! empty( $this->messages['success'] ) ) : ?>
 		<div class="updated">
-			<p><?php echo esc_html( $this->messages['success'] ); ?></p>
+			<p><?php echo sprintf( esc_html( $this->messages['success'] ), '<span id="tve-redirect-count">2</span>' ); ?></p>
 			<?php if ( ! empty( $this->messages['redirect'] ) ) : ?>
 				<input type="hidden" id="tve-redirect-to" value="<?php echo esc_attr( $this->messages['redirect'] ); ?>">
 			<?php endif ?>

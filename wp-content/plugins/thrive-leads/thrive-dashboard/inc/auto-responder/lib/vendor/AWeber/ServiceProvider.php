@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 03.04.2015
- * Time: 15:55
- */
 class Thrive_Dash_Api_AWeber_ServiceProvider implements Thrive_Dash_Api_AWeber_Oauth_ServiceProvider {
 	/**
 	 * @var String Location for API calls
@@ -64,4 +58,4 @@ class Thrive_Dash_Api_AWeber_ServiceProvider implements Thrive_Dash_Api_AWeber_O
 	public function getUserData() {
 		return '';
 	}
-} 
+}

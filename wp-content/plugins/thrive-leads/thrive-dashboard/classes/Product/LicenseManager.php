@@ -9,36 +9,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 12/9/2015
- * Time: 5:40 PM
- */
 class TVE_Dash_Product_LicenseManager {
 	const LICENSE_OPTION_NAME = 'thrive_license';
-	const TCB_TAG = 'tcb';
-	const TL_TAG = 'tl';
-	const TCW_TAG = 'tcw';
-	const ALL_TAG = 'all';
-	const TU_TAG = 'tu';
-	const THO_TAG = 'tho';
-	const TVO_TAG = 'tvo';
-	const TQB_TAG = 'tqb';
-	const TCM_TAG = 'tcm';
-	const TVA_TAG = 'tva';
-	const TAB_TAG = 'tab';
+	const TCB_TAG             = 'tcb';
+	const TL_TAG              = 'tl';
+	const TCW_TAG             = 'tcw';
+	const ALL_TAG             = 'all';
+	const TU_TAG              = 'tu';
+	const THO_TAG             = 'tho';
+	const TVO_TAG             = 'tvo';
+	const TQB_TAG             = 'tqb';
+	const TCM_TAG             = 'tcm';
+	const TVA_TAG             = 'tva';
+	const TAB_TAG             = 'tab';
+	const TPM_TAG             = 'tpm';
 
-	const TAG_FOCUS = 'focusblog';
-	const TAG_LUXE = 'luxe';
-	const TAG_IGNITION = 'ignition';
-	const TAG_MINUS = 'minus';
-	const TAG_SQUARED = 'squared';
-	const TAG_VOICE = 'voice';
+	const TAG_FOCUS     = 'focusblog';
+	const TAG_LUXE      = 'luxe';
+	const TAG_IGNITION  = 'ignition';
+	const TAG_MINUS     = 'minus';
+	const TAG_SQUARED   = 'squared';
+	const TAG_VOICE     = 'voice';
 	const TAG_PERFORMAG = 'performag';
-	const TAG_PRESSIVE = 'pressive';
-	const TAG_STORIED = 'storied';
-	const TAG_RISE = 'rise';
+	const TAG_PRESSIVE  = 'pressive';
+	const TAG_STORIED   = 'storied';
+	const TAG_RISE      = 'rise';
 
 	protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
@@ -48,7 +43,7 @@ class TVE_Dash_Product_LicenseManager {
 	protected $accepted_tags = array();
 
 	protected function __construct() {
-		$this->license_data = get_option( self::LICENSE_OPTION_NAME, array() );
+		$this->license_data = get_option( static::LICENSE_OPTION_NAME, array() );
 		$reflection         = new ReflectionClass( $this );
 
 		$constants = $reflection->getConstants();
@@ -63,11 +58,11 @@ class TVE_Dash_Product_LicenseManager {
 	}
 
 	public static function getInstance() {
-		if ( empty( self::$instance ) ) {
-			self::$instance = new TVE_Dash_Product_LicenseManager();
+		if ( empty( static::$instance ) ) {
+			static::$instance = new TVE_Dash_Product_LicenseManager();
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 
 	/**
@@ -80,16 +75,16 @@ class TVE_Dash_Product_LicenseManager {
 	 */
 	public static function isThemeTag( $tag ) {
 		return in_array( $tag, array(
-			self::TAG_FOCUS,
-			self::TAG_IGNITION,
-			self::TAG_LUXE,
-			self::TAG_MINUS,
-			self::TAG_PERFORMAG,
-			self::TAG_PRESSIVE,
-			self::TAG_RISE,
-			self::TAG_SQUARED,
-			self::TAG_STORIED,
-			self::TAG_VOICE,
+			static::TAG_FOCUS,
+			static::TAG_IGNITION,
+			static::TAG_LUXE,
+			static::TAG_MINUS,
+			static::TAG_PERFORMAG,
+			static::TAG_PRESSIVE,
+			static::TAG_RISE,
+			static::TAG_SQUARED,
+			static::TAG_STORIED,
+			static::TAG_VOICE,
 		) );
 	}
 
@@ -103,7 +98,7 @@ class TVE_Dash_Product_LicenseManager {
 	public function itemActivated( $item ) {
 
 		if ( $item instanceof TVE_Dash_Product_Abstract ) {
-			$item = $item->getTag();
+			$item = $item->get_tag();
 		}
 
 		if ( function_exists( 'thrive_product_manager' ) ) {
@@ -114,13 +109,13 @@ class TVE_Dash_Product_LicenseManager {
 			$licensed = get_option( 'thrive_license_status', false ) === 'ACTIVE';
 		} else {
 			switch ( $item ) {
-				case self::TCB_TAG:
+				case static::TCB_TAG:
 					$licensed = get_option( 'tve_license_status', false ) === 'ACTIVE';
 					break;
-				case self::TL_TAG:
+				case static::TL_TAG:
 					$licensed = get_option( 'tve_leads_license_status', false ) === 'ACTIVE';
 					break;
-				case self::TCW_TAG:
+				case static::TCW_TAG:
 					$licensed = get_option( 'tcw_license_status', false ) === 'ACTIVE';
 					break;
 				default:
@@ -142,20 +137,16 @@ class TVE_Dash_Product_LicenseManager {
 	 * @return bool
 	 */
 	protected function checkData( $item = null ) {
-		if ( empty( $this->license_data ) ) {
+		if ( empty( $this->license_data ) || null === $item ) {
 			return false;
 		}
 
-		if ( in_array( self::ALL_TAG, $this->license_data ) ) {
+		if ( in_array( static::ALL_TAG, $this->license_data ) ) {
 			return true;
 		}
 
-		if ( null === $item ) {
-			return false;
-		}
-
 		if ( $item instanceof TVE_Dash_Product_Abstract ) {
-			$tag = $item->getTag();
+			$tag = $item->get_tag();
 		} elseif ( is_string( $item ) ) {
 			$tag = $item;
 		}
@@ -197,7 +188,7 @@ class TVE_Dash_Product_LicenseManager {
 			/** @var WP_Error $licenseValid */
 			/** Couldn't connect to the API URL - possible because wp_remote_get failed for whatever reason.  Maybe CURL not activated on server, for instance */
 			$response['success'] = 0;
-			$response['reason']  = sprintf( __( "An error occurred while connecting to the license server. Error: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you", TVE_DASH_TRANSLATE_DOMAIN ), $licenseValid->get_error_message() );
+			$response['reason']  = sprintf( __( "An error occurred while connecting to the license server. Error: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you", 'thrive-dash' ), $licenseValid->get_error_message() );
 
 			return $response;
 		}
@@ -207,7 +198,7 @@ class TVE_Dash_Product_LicenseManager {
 		if ( empty( $response ) ) {
 			$response            = new stdClass();
 			$response['success'] = 0;
-			$response['reason']  = sprintf( __( "An error occurred while receiving the license status. The response was: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you.", TVE_DASH_TRANSLATE_DOMAIN ), $licenseValid['body'] );
+			$response['reason']  = sprintf( __( "An error occurred while receiving the license status. The response was: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you.", 'thrive-dash' ), $licenseValid['body'] );
 
 			return $response;
 		}
@@ -223,7 +214,7 @@ class TVE_Dash_Product_LicenseManager {
 		//check success flag
 		if ( empty( $response['success'] ) ) {
 			$response['success'] = 0;
-			$response['reason']  = __( 'Invalid response!', TVE_DASH_TRANSLATE_DOMAIN );
+			$response['reason']  = __( 'Invalid response!', 'thrive-dash' );
 
 			return null;
 		}
@@ -231,7 +222,7 @@ class TVE_Dash_Product_LicenseManager {
 		//check if products is not empty and is array
 		if ( empty( $response['products'] ) || ! is_array( $response['products'] ) ) {
 			$response['success'] = 0;
-			$response['reason']  = __( 'Invalid products returned from server!', TVE_DASH_TRANSLATE_DOMAIN );
+			$response['reason']  = __( 'Invalid products returned from server!', 'thrive-dash' );
 
 			return null;
 		}
@@ -239,20 +230,45 @@ class TVE_Dash_Product_LicenseManager {
 		foreach ( $response['products'] as $product_tag ) {
 			if ( ! in_array( $product_tag, $this->accepted_tags ) ) {
 				$response['success'] = 0;
-				$response['reason']  = __( 'Products returned from server are not accepted for licensing!', TVE_DASH_TRANSLATE_DOMAIN );
+				$response['reason']  = __( 'Products returned from server are not accepted for licensing!', 'thrive-dash' );
 
 				return null;
 			}
 		}
 
 		//do the logic and update the option in DB
-		if ( in_array( self::ALL_TAG, $response['products'] ) ) {
-			update_option( self::LICENSE_OPTION_NAME, array( self::ALL_TAG ) );
+		if ( in_array( static::ALL_TAG, $response['products'] ) ) {
+			update_option( static::LICENSE_OPTION_NAME, array( static::ALL_TAG ) );
 		} else {
-			$existing = get_option( self::LICENSE_OPTION_NAME, array() );
-			update_option( self::LICENSE_OPTION_NAME, array_unique( array_merge( $existing, $response['products'] ) ) );
+			$existing = get_option( static::LICENSE_OPTION_NAME, array() );
+			update_option( static::LICENSE_OPTION_NAME, array_unique( array_merge( $existing, $response['products'] ) ) );
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Based on $text_domain returns a tag associated
+	 *
+	 * @param string $text_domain
+	 *
+	 * @return string
+	 */
+	public static function get_product_tag( $text_domain ) {
+		$mapping = array(
+			'thrive-cb'              => static::TCB_TAG,
+			'thrive-leads'           => static::TL_TAG,
+			'thrive-clever-widgets'  => static::TCW_TAG,
+			'thrive-ult'             => static::TU_TAG,
+			'thrive-headline'        => static::THO_TAG,
+			'thrive-ovation'         => static::TVO_TAG,
+			'thrive-quiz-builder'    => static::TQB_TAG,
+			'thrive-comments'        => static::TCM_TAG,
+			'thrive-apprentice'      => static::TVA_TAG,
+			'thrive-optimize'        => static::TAB_TAG,
+			'thrive-product-manager' => static::TPM_TAG,
+		);
+
+		return isset( $mapping[ $text_domain ] ) ? $mapping[ $text_domain ] : '';
 	}
 }

@@ -136,7 +136,6 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-
 					'consent'        => array(
 						'config' => array(
 							'labels' => array(

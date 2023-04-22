@@ -29,10 +29,10 @@
 			class="tvd-btn-flat-blue tvd-btn-flat tve-leads-asset-back-connection tvd-modal-prev-step tvd-waves-effect">&lsaquo; <?php echo __( "Back", 'thrive-leads' ) ?></button>
 	</div>
 	<div class="tve-leads-delivery-step2 tvd-modal-step">
-		<?php foreach ( Thrive_Dash_List_Manager::getAvailableAPIsByType( false, array( 'email' ) ) as $key => $api ) : ?>
+		<?php foreach ( Thrive_Dash_List_Manager::get_available_apis( false, [ 'include_types' => [ 'email' ] ] ) as $key => $api ) : ?>
 			<?php /** @var $api Thrive_Dash_List_Connection_Abstract */ ?>
 			<div class="tve-leads-connection-form" data-key="<?php echo $key ?>" style="">
-				<?php echo $api->outputSetupForm() ?>
+				<?php echo $api->output_setup_form() ?>
 			</div>
 		<?php endforeach; ?>
 	</div>

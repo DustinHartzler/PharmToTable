@@ -29,11 +29,12 @@ class FormSettings {
 	 * @var array
 	 */
 	public static $defaults = array(
-		'apis'        => array(),
-		'captcha'     => 0,
-		'extra'       => array(),
-		'custom_tags' => array(),
-		'form_identifier' => ''
+		'apis'            => array(),
+		'captcha'         => 0,
+		'extra'           => array(),
+		'custom_tags'     => array(),
+		'form_identifier' => '',
+		'inputs'          => array(),
 	);
 
 	public function __construct( $config ) {
@@ -223,7 +224,7 @@ class FormSettings {
 				if ( is_array( $parsed_field ) && ! empty( $parsed_field ) ) {
 					$key = array_keys( $parsed_field )[0];
 
-					if ( is_array( $parsed_field[ $key ] ) && !empty( $parsed_field[ $key ] ) ) {
+					if ( is_array( $parsed_field[ $key ] ) && ! empty( $parsed_field[ $key ] ) ) {
 						$second_key = array_keys( $parsed_field[ $key ] )[0];
 
 						$data[ $api_key . '_' . $key ][ $second_key ] = $value;
@@ -253,91 +254,58 @@ class FormSettings {
 			}
 		}
 	}
-}
 
-/**
- * Processes each form settings instance, saving it to the database
- *
- * @param array $forms array of form settings
- * @param int   $post_parent
- *
- * @return array map of replacements
- */
-function save_form_settings( $forms, $post_parent ) {
-	$replaced   = array();
-	$post_title = 'Form settings' . ( $post_parent ? ' for content ' . $post_parent : '' );
+	/**
+	 * On duplicate we need to re save the form settings on a new entry
+	 */
+	public static function save_form_settings_from_duplicated_content( $content, $post_parent ) {
+		/* pattern used to find the settings id from the content */
+		$pattern = '/data-settings-id="(.+?)"/';
 
-	foreach ( $forms as $form ) {
-		$id       = ! empty( $form['id'] ) ? (int) $form['id'] : 0;
-		$instance = FormSettings::get_one( $form['id'], $post_parent )
-		                        ->set_config( wp_unslash( $form['settings'] ) )
-		                        ->save( $post_title, empty( $post_parent ) ? null : array( 'post_parent' => $post_parent ) );
-		if ( $instance->ID !== $id ) {
-			$replaced[ $form['id'] ] = $instance->ID;
+		/* Find if we have in content a form by searching for it's form settings id */
+		preg_match_all( $pattern, $content, $matches );
+
+		/* If we find a match we need to generate another entry for post settings and replace the new id in the content */
+		if ( ! empty( $matches[1] ) ) {
+
+			$forms = [];
+
+			if ( is_array( $matches[1] ) ) {
+				foreach ( $matches[1] as $form_settings_id ) {
+					$form_settings_instance = self::get_one( $form_settings_id, $post_parent );
+					$forms[]                = $form_settings_instance->get_form_settings_array();
+				}
+			} else {
+				$form_settings_id       = $matches[1];
+				$form_settings_instance = self::get_one( $form_settings_id, $post_parent );
+				$forms[]                = $form_settings_instance->get_form_settings_array();
+			}
+
+			$replaced = tve_save_form_settings( $forms, $post_parent );
+
+			foreach ( $replaced as $old_id => $new_id ) {
+				$old_id = (int) $old_id;
+
+				$content = preg_replace( "/data-settings-id=\"$old_id\"/", "data-settings-id=\"$new_id\"", $content );
+			}
+
 		}
-	}
 
-	return $replaced;
-}
-
-/**
- * Delete one or multiple form settings
- *
- * @param array|int|string $id
- */
-function delete_form_settings( $id ) {
-	if ( empty( $id ) ) {
-		return;
-	}
-
-	if ( ! is_array( $id ) ) {
-		$id = array( $id );
-	}
-
-	foreach ( $id as $form_id ) {
-		$form_id = (int) $form_id;
-		FormSettings::get_one( $form_id )->delete();
-	}
-}
-
-/**
- * On frontend contexts, always remove form settings from content
- */
-add_filter( 'tve_thrive_shortcodes', static function ( $content, $is_editor_page ) {
-	if ( $is_editor_page || strpos( $content, FormSettings::SEP ) === false ) {
 		return $content;
 	}
 
-	return preg_replace( FormSettings::pattern( true ), '', $content );
-}, 10, 2 );
-
-/**
- * Process content pre-save
- */
-add_filter( 'tcb.content_pre_save', static function ( $response, $post_data ) {
 	/**
-	 * Allows skipping the process of saving form settings to database
+	 * Returns an array with the settings of a form, but without it's original ID so we can use this array to regenerate and save the settings for a cloned form
 	 *
-	 * @param bool $skip whether or not to skip
-	 *
-	 * @return bool
+	 * @return array
 	 */
-	$process_form_settings = apply_filters( 'tcb_process_form_settings', true );
+	public function get_form_settings_array() {
+		/* We need to change the original ID so we won't find the initial instance of the settings, but to  create a new one */
+		$temporary_id = $this->ID . '_temporary';
 
-	if ( $process_form_settings && ! empty( $post_data['forms'] ) ) {
-		/**
-		 * save form settings to the database
-		 */
-		$post_id = isset( $post_data['post_id'] ) ? (int) $post_data['post_id'] : 0;
-		if ( ! empty( $post_data['ignore_post_parent'] ) ) {
-			$post_id = null;
-		}
-		$response['forms'] = \TCB\inc\helpers\save_form_settings( $post_data['forms'], $post_id );
+		return [
+			'id'       => $temporary_id,
+			'settings' => $this->get_config(),
+		];
 	}
-
-	if ( $process_form_settings && ! empty( $post_data['deleted_forms'] ) ) {
-		\TCB\inc\helpers\delete_form_settings( $post_data['deleted_forms'] );
-	}
-
-	return $response;
-}, 10, 2 );
+}

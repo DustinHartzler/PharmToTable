@@ -5,6 +5,13 @@
  *
  * @package thrive-dashboard
  */
+
+use TCB\inc\helpers\FormSettings;
+use TCB\Integrations\Automator\Form_Identifier;
+use Thrive\Automator\Items\Data_Object;
+use Thrive\Automator\Items\Filter;
+use Thrive\Automator\Items\Trigger;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -40,16 +47,42 @@ function tve_dash_get_thrivethemes_shares( $network = 'facebook' ) {
  */
 function tve_dash_fetch_share_count_facebook( $url ) {
 	$credentials = Thrive_Dash_List_Manager::credentials( 'facebook' );
+
 	if ( ! empty( $credentials ) && ! empty( $credentials['app_id'] ) && ! empty( $credentials['app_secret'] ) ) {
-		$fb_url = add_query_arg( array(
+		/* General query args for the Facebook API requests */
+		$query_args  = array(
 			'id'           => rawurlencode( $url ),
 			'access_token' => $credentials['app_id'] . '|' . $credentials['app_secret'],
-			//changed from engagement to og_object{engagement} to get the accurate number of shares
-			//unofficial reference: https://developers.facebook.com/community/threads/178543204270768/
-			'fields'       => 'og_object{engagement}',
-		), 'https://graph.facebook.com/v11.0/' );
+		);
+		$url_post_id = url_to_postid( $url );
 
-		$data = _tve_dash_util_helper_get_json( $fb_url );
+		/* If we have an id, the url is on this site, so we can save the last updated time */
+		if ( $url_post_id ) {
+			$last_updated_time = get_post_meta( url_to_postid( $url ), 'tve_facebook_count_updated', true );
+			$updated_time      = current_time( 'timestamp' );
+
+			/* We scrape the url every hour or if it was not already scraped */
+			if ( empty( $last_updated_time ) || $updated_time - $last_updated_time > ( 60 * 60 ) ) {
+				$update_query_args = $query_args;
+				/* Reference here: https://developers.facebook.com/docs/sharing/opengraph/using-objects#update */
+				$update_query_args['scraped'] = 'true';
+				$fb_url_update                = add_query_arg( $update_query_args, 'https://graph.facebook.com/v12.0/' );
+
+				/* Make the post call so that Facebook will scrape again the url */
+				_tve_dash_util_helper_get_json( $fb_url_update, 'wp_remote_post' );
+
+				/* Update in post meta the time of the last update */
+				update_post_meta( $url_post_id, 'tve_facebook_count_updated', $updated_time );
+			}
+		}
+
+		/* Changed from engagement to og_object{engagement} to get the accurate number of shares
+		Unofficial reference: https://developers.facebook.com/community/threads/178543204270768/ */
+		$query_args['fields'] = 'og_object{engagement}';
+		$fb_url_get           = add_query_arg( $query_args, 'https://graph.facebook.com/v12.0/' );
+
+		/* Get the Share count */
+		$data = _tve_dash_util_helper_get_json( $fb_url_get );
 	}
 
 	return ! empty( $data['og_object'] ) && ! empty( $data['og_object']['engagement'] ) ? (int) $data['og_object']['engagement']['count'] : 0;
@@ -190,40 +223,67 @@ function _tve_dash_util_helper_get_json( $url, $fn = 'wp_remote_get' ) {
  * Checks if the current request is performed by a crawler. It identifies crawlers by inspecting the user agent string
  *
  * @param bool $apply_filter Whether or not to apply the crawler detection filter ( tve_dash_is_crawler )
- * @param bool $check_cache_plugins
  *
  * @return int|false False form empty UAS. int 1|0 if a crawler has|not been detected
  */
 function tve_dash_is_crawler( $apply_filter = false ) {
 
-	if ( isset( $GLOBALS['thrive_dashboard_bot_detection'] ) ) {
-		return $GLOBALS['thrive_dashboard_bot_detection'];
-	}
 	/**
 	 * wp_is_mobile() checks to go before bot detection. There are some cases where a false positive is recorded. Example: Pinterest
 	 * The Pinterest app built-in web browser's UA string contains "Pinterest" which is flagged as a crawler
 	 */
 	if ( empty( $_SERVER['HTTP_USER_AGENT'] ) || wp_is_mobile() ) {
-		return $GLOBALS['thrive_dashboard_bot_detection'] = false;
+		return false;
 	}
 
-	$user_agent = sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] );
+	if ( isset( $GLOBALS['thrive_dashboard_bot_detection'] ) ) {
+		$is_crawler = $GLOBALS['thrive_dashboard_bot_detection'];
+	}
 
-	$uas_list = require plugin_dir_path( __FILE__ ) . '_crawlers.php';
-	$regexp   = '#(' . implode( '|', $uas_list ) . ')#i';
+	if ( ! isset( $is_crawler ) ) {
+		$user_agent = sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] );
 
-	if ( ! $apply_filter ) {
-		return $GLOBALS['thrive_dashboard_bot_detection'] = preg_match( $regexp, $user_agent );
+		$uas_list = require plugin_dir_path( __FILE__ ) . '_crawlers.php';
+		$regexp   = '#(' . implode( '|', $uas_list ) . ')#i';
+
+		$is_crawler = preg_match( $regexp, $user_agent );
+
+		/*
+		 * Apply the filter to allow overwriting the bot detection. Can be used by 3rd party plugins to force the initial ajax request
+		 * This filter is incorrectly named, it is just being applied during the localization of frontend ajax data from thrive-dashboard
+		 */
+		if ( $apply_filter ) {
+			/**
+			 * Filter tve_dash_is_crawler
+			 *
+			 * @param int $detected 1|0 whether the crawler is detected
+			 *
+			 * @since 1.0.20
+			 */
+			$is_crawler = apply_filters( 'tve_dash_is_crawler', $is_crawler );
+		}
 	}
 
 	/**
-	 * Filter tve_dash_is_crawler
+	 * Finally, filter the value, allowing any other 3rd party plugin to override bot detection.
+	 * To be used in cases where the page is actually fetched by a bot used by a caching plugin to render a cached version of the page.
 	 *
-	 * @param int $detected 1|0 whether or not the crawler is detected
+	 * @param int $is_crawler Whether a bot has been detected or not ( 1 / 0 )
 	 *
-	 * @since 1.0.20
+	 * @return int
 	 */
-	return apply_filters( 'tve_dash_is_crawler', $GLOBALS['thrive_dashboard_bot_detection'] = preg_match( $regexp, $user_agent ) );
+	$GLOBALS['thrive_dashboard_bot_detection'] = (int) apply_filters( 'tve_dash_is_crawler_override', $is_crawler );
+
+	return $GLOBALS['thrive_dashboard_bot_detection'];
+}
+
+/**
+ * Whether the server software is Apache or something else
+ *
+ * @return bool
+ */
+function tve_dash_is_apache() {
+	return ( strpos( $_SERVER['SERVER_SOFTWARE'], 'Apache' ) !== false || strpos( $_SERVER['SERVER_SOFTWARE'], 'LiteSpeed' ) !== false );
 }
 
 /**
@@ -397,6 +457,11 @@ function tve_get_debug_data() {
 		'value' => $wpdb->db_version(),
 	);
 
+	$info[] = array(
+		'name'  => 'Server Software',
+		'value' => $_SERVER['SERVER_SOFTWARE'],
+	);
+
 	return $info;
 }
 
@@ -421,9 +486,9 @@ function tve_dash_show_activation_error( $error_type, $_ = null ) {
 
 			$link = admin_url( 'update-core.php' );
 			if ( ! $is_cli ) {
-				$link = '<a target="_top" href="' . $link . '">' . __( 'updates', TVE_DASH_TRANSLATE_DOMAIN ) . '</a>';
+				$link = '<a target="_top" href="' . $link . '">' . __( 'updates', 'thrive-dash' ) . '</a>';
 			}
-			$message = sprintf( __( '%s requires at least WordPress version %s. Your WordPress version is %s. Update WordPress by visiting the %s page', TVE_DASH_TRANSLATE_DOMAIN ), $product, $min_wp_version, get_bloginfo( 'version' ), $link );
+			$message = sprintf( __( '%s requires at least WordPress version %s. Your WordPress version is %s. Update WordPress by visiting the %s page', 'thrive-dash' ), $product, $min_wp_version, get_bloginfo( 'version' ), $link );
 			break;
 
 		default:
@@ -487,13 +552,13 @@ function tve_dash_get_webhook_trigger_integrated_apis() {
 			'label'              => 'FluentCRM',
 			'image'              => TVE_DASH_URL . '/inc/auto-responder/views/images/fluentcrm.png',
 			'custom_integration' => true,
-			'data'               => Thrive_Dash_List_Manager::connectionInstance( 'fluentcrm' )->get_tags(),
+			'data'               => Thrive_Dash_List_Manager::connection_instance( 'fluentcrm' )->get_tags(),
 			'selected'           => false,
 			'kb_article'         => 'http://help.thrivethemes.com/en/articles/5024011-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-fluentcrm',
 		),
 		'infusionsoft'   => array(
 			'key'        => 'infusionsoft',
-			'label'      => 'InfusionSoft',
+			'label'      => 'Keap (Infusionsoft)',
 			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/infusionsoft.png',
 			'selected'   => false,
 			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741865-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-infusionsoft',
@@ -515,6 +580,68 @@ function tve_dash_get_webhook_trigger_integrated_apis() {
 	);
 }
 
+/**
+ * Sync form data with specific custom fields setup
+ *
+ * @param $trigger_data
+ *
+ * @return array|mixed
+ * @throws Exception
+ */
+function tve_sync_form_data( $trigger_data ) {
+	if ( empty( $trigger_data['extra_data']['form_identifier']['value'] ) || $trigger_data['extra_data']['form_identifier']['value'] === 'none' ) {
+		$trigger = Trigger::get_by_id( $trigger_data['id'] );
+
+		if ( ! $trigger ) {
+			return $trigger_data;
+		}
+
+		$default = $trigger::get_info();
+		if ( ! empty( $trigger_data['conditions'] ) ) {
+			$default['conditions'] = $trigger_data['conditions'];
+		}
+		$default['extra_data']                               = $trigger_data['extra_data'];
+		$default['extra_data']['form_identifier']['value']   = '';
+		$default['extra_data']['form_identifier']['preview'] = '';
+
+		return $default;
+	}
+	$custom_fields = [];
+	$form          = FormSettings::get_one( $trigger_data['extra_data']['form_identifier']['value'] );
+	if ( ! empty( $form ) ) {
+		$data_fields                                    = Data_Object::get_all_filterable_fields( [ 'form_data' ] );
+		$trigger_data['filterable_fields']['form_data'] = $data_fields['form_data'];
+		$not_custom                                     = [ 'email', 'phone', 'name', 'password', 'confirm_password' ];
+		foreach ( $form->inputs as $input ) {
+			if ( ! empty( $input['id'] ) && ! in_array( $input['id'], $not_custom, true ) ) {
+				$custom_fields[ $input['id'] ] = [
+					'id'            => $input['id'],
+					'validators'    => [],
+					'name'          => $input['label'],
+					'description'   => 'Custom field',
+					'tooltip'       => 'Custom field',
+					'placeholder'   => 'Custom field',
+					'is_ajax_field' => false,
+					'value_type'    => 'string',
+					'shortcode_tag' => '%' . $input['id'] . '%',
+					'dummy_value'   => $input['label'] . ' field value',
+					'primary_key'   => false,
+					'filters'       => [ 'string_ec' ],
+				];
+				if ( $input['id'] === 'user_consent' ) {
+					$custom_fields[ $input['id'] ]['filters'] = [ 'boolean' ];
+				}
+			}
+
+		}
+
+		unset( $trigger_data['filterable_fields']['form_data'][ Form_Identifier::get_id() ] );
+		$trigger_data['filterable_fields']['form_data'] = array_merge( $trigger_data['filterable_fields']['form_data'], $custom_fields );
+	}
+
+	return $trigger_data;
+}
+
 
 /**
  * get relevant data from webhook trigger
@@ -529,3 +656,38 @@ function tve_dash_get_general_webhook_data( $request ) {
 	return array( 'email' => empty( $contact ) ? '' : $contact );
 }
 
+function tve_dash_to_camel_case( $string ) {
+	$string = implode( '', array_map( 'ucfirst', explode( '_', $string ) ) );
+
+	return lcfirst( $string );
+}
+
+/**
+ * Check if a plugin with the same name for file and folder is active
+ *
+ * @param $plugin_name
+ *
+ * @return boolean
+ */
+function tve_dash_is_plugin_active( $plugin_name ) {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	if ( substr( $plugin_name, - 4 ) !== '.php' ) {
+		$slug = $plugin_name . '/' . $plugin_name . '.php';
+	} else {
+		$slug = str_replace( '.php', '', $plugin_name ) . '/' . $plugin_name;
+	}
+
+	return is_plugin_active( $slug );
+}
+
+function tve_dash_is_ttb_active() {
+	/**
+	 * Allows template builder website or landing page preview website to hook here and modify this functionality
+	 *
+	 * @returns boolean
+	 */
+
+	return apply_filters( 'tve_dash_is_ttb_active', wp_get_theme()->get_template() === 'thrive-theme' );
+}

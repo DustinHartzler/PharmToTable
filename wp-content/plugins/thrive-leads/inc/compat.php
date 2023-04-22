@@ -41,3 +41,15 @@ function tve_leads_get_shop_template( $post ) {
 
 	return $post;
 }
+
+add_action( 'wp_enqueue_scripts', static function () {
+	/* fixes a conflict with TheGem theme SUPP-13635 */
+	if ( is_editor_page() && tve_leads_post_type_editable( get_post_type() ) ) {
+		wp_dequeue_script( 'thegem-menu-init-script' );
+		wp_dequeue_script( 'thegem-thegem-form-elements' );
+		wp_dequeue_script( 'thegem-header' );
+		wp_dequeue_script( 'jquery-fancybox' );
+		wp_dequeue_script( 'fancybox-init-script' );
+		wp_dequeue_script( 'thegem-scripts' );
+	}
+}, 9000 );

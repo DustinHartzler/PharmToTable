@@ -51,13 +51,9 @@ class Hooks {
 
 
 	public static function render_backbone_templates() {
-		if ( function_exists( 'get_current_screen' ) ) {
-			$screen = get_current_screen();
-
-			if ( $screen !== null && property_exists( $screen, 'id' ) && $screen->id === 'admin_page_tve_dash_coming_soon' ) {
-				$templates = tve_dash_get_backbone_templates( plugin_dir_path( __DIR__ ) . 'views', 'coming-soon' );
-				tve_dash_output_backbone_templates( $templates, 'coming-soon-' );
-			}
+		if ( tve_get_current_screen_key() === 'admin_page_tve_dash_coming_soon' ) {
+			$templates = tve_dash_get_backbone_templates( plugin_dir_path( __DIR__ ) . 'views', 'coming-soon' );
+			tve_dash_output_backbone_templates( $templates, 'coming-soon-' );
 		}
 	}
 
@@ -72,12 +68,12 @@ class Hooks {
 			'id'     => 'coming-soon',
 			'parent' => 'top-secondary',
 			'group'  => null,
-			'title'  => '<span style="width:18px;height:12px;display:inline-block;background-image:url(' . TVE_DASH_URL . '/css/images/thrive-leaf.png);margin-right:5px !important;" class="thrive-adminbar-icon"></span>' . __( 'Coming Soon Mode Active', TVE_DASH_TRANSLATE_DOMAIN ),
+			'title'  => '<span style="width:18px;height:12px;display:inline-block;background-image:url(' . TVE_DASH_URL . '/css/images/thrive-leaf.png);margin-right:5px !important;" class="thrive-adminbar-icon"></span>' . __( 'Coming Soon Mode Active', 'thrive-dash' ),
 			'href'   => admin_url( 'admin.php?page=tve_dash_coming_soon' ),
 			'meta'   => array(
 				'class' => 'thrive-coming-soon',
 				'html'  => '<style>#wpadminbar .thrive-coming-soon {background: orange; display:' . $item_visibility . '}</style>',
-				'title' => __( 'Go to Coming Soon Dashboard', TVE_DASH_TRANSLATE_DOMAIN ),
+				'title' => __( 'Go to Coming Soon Dashboard', 'thrive-dash' ),
 			),
 		) );
 	}
@@ -106,7 +102,7 @@ class Hooks {
 	 */
 	public static function admin_menu() {
 		add_submenu_page(
-			null,
+			'',
 			Main::title(),
 			Main::title(),
 			'manage_options',
@@ -136,8 +132,13 @@ class Hooks {
 				'page_name'              => Main::get_page_name(),
 				'base_url'               => admin_url(),
 				'is_empty_page'          => Main::is_empty_page(),
-				'is_ttb_active'          => Main::is_ttb_active(),
+				'is_ttb_active'          => tve_dash_is_ttb_active(),
 				'is_admin_page'          => $screen === 'admin_page_tve_dash_coming_soon',
+                't'                      => array(
+                    'search_page'        => __( 'Search an existing page', 'thrive-dash' ),
+                    'add_page_title'     => __( 'Please add the page title!', 'thrive-dash' ),
+                    'saved_successfully' => __( 'Changes saved successfully', 'thrive-dash' ),
+                ),
 			) );
 		}
 	}
@@ -151,7 +152,7 @@ class Hooks {
 
 			wp_localize_script( 'tvd-coming-soon-editor', 'TVD_CS_CONST', array(
 				'is_empty_page' => Main::is_empty_page(),
-				'is_ttb_active' => Main::is_ttb_active(),
+				'is_ttb_active' => tve_dash_is_ttb_active(),
 			) );
 		}
 	}
@@ -197,9 +198,9 @@ class Hooks {
 		$features['coming-soon'] = array(
 			'icon'        => 'tvd-coming-soon',
 			'title'       => Main::title(),
-			'description' => __( 'Display a "Coming Soon" page to let visitors know that you are currently working on your website.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description' => __( 'Display a "Coming Soon" page to let visitors know that you are currently working on your website.', 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', Main::MENU_SLUG, admin_url( 'admin.php' ) ),
-			'btn_text'    => __( 'Coming Soon Mode', TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( 'Coming Soon Mode', 'thrive-dash' ),
 		);
 
 		return $features;

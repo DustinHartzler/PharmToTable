@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="tve-control hide-tablet hide-mobile" data-view="ColumnNumber"></div>
 				<div class="tve-control" data-view="ToggleWidth"></div>
 				<div class="tve-control" data-view="VerticalSpace"></div>
-				<div class="tve-control hide-tablet hide-mobile" data-view="HorizontalSpace"></div>
+				<div class="tve-control" data-view="HorizontalSpace"></div>
 			</div>
 			<div class="tve-control mt-10" data-view="AutoCollapse"></div>
 			<div class="tve-control" data-view="DropdownAnimation"></div>

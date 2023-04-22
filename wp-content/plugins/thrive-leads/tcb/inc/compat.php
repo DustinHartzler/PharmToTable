@@ -98,6 +98,7 @@ function tve_hooked_in_template_redirect() {
 		'ultimate-member/index.php',
 		'woocommerce/woocommerce.php',
 		'maintenance/maintenance.php',
+		'simply-schedule-appointments/simply-schedule-appointments.php',
 	);
 
 	foreach ( $hooked_in_template_redirect as $plugin ) {
@@ -727,7 +728,9 @@ add_action( 'wp_head', function () {
 }, PHP_INT_MAX );
 
 /**
- * Compatibility with Oliver POS - A WooCommerce Point of Sale (POS)
+ * Compatibility with:
+ *  -> Oliver POS - A WooCommerce Point of Sale (POS)
+ *  -> Quiz and Survey Master
  *
  * We don't need their styles inside the editor
  * Added in admin_enqueue_scripts because there is the place where they register their styles
@@ -736,6 +739,22 @@ add_action( 'admin_enqueue_scripts', function () {
 	if ( is_editor_page_raw() ) {
 		wp_deregister_style( 'oliver-pos-feedback-css' );
 		wp_dequeue_style( 'oliver-pos-feedback-css' );
+
+		wp_deregister_style( 'qsm_admin_style' );
+		wp_dequeue_style( 'qsm_admin_style' );
+	}
+}, PHP_INT_MAX );
+
+/**
+ * Compatibility with Rank Math
+ *
+ * We don't need their scripts inside the editor
+ * Added in wp_enqueue_scripts because there is the place where they register their scripts
+ */
+add_action( 'wp_enqueue_scripts', function () {
+	if ( is_editor_page_raw() ) {
+		wp_deregister_script( 'rank-math-analytics-stats' );
+		wp_dequeue_script( 'rank-math-analytics-stats' );
 	}
 }, PHP_INT_MAX );
 
@@ -781,6 +800,17 @@ add_filter( 'rank_math/researches/toc_plugins', function ( $toc_plugins ) {
 } );
 
 /**
+ * Don't load metrics files on the editor page
+ */
+add_filter( 'tve_dash_metrics_should_enqueue', function ( $should_enqueue ) {
+	if ( is_editor_page_raw( true ) || TCB_Editor()->is_main_frame() ) {
+		$should_enqueue = false;
+	}
+
+	return $should_enqueue;
+} );
+
+/**
  * Fixes a custom menu regression that added these classes to all saved menus
  */
 add_filter( 'tve_thrive_shortcodes', static function ( $content ) {
@@ -806,8 +836,33 @@ add_filter( 'tve_dash_yoast_sitemap_exclude_taxonomies', static function ( $taxo
 } );
 
 /**
+ * Replace page & post identifiers
+ *
+ */
+add_action( 'after_thrive_clone_item', static function ( $new_id, $old_id ) {
+	$css = tve_get_post_meta( $new_id, 'tve_custom_css' );
+
+	$css = str_replace( [ "page-id-$old_id", "postid-$old_id" ], [ "page-id-$new_id", "postid-$new_id" ], $css );
+
+	tve_update_post_meta( $new_id, 'tve_custom_css', $css );
+}, 10, 2 );
+
+/**
  * Modify the page, header/footer, and template sections content so that Digital Access Pass shortcodes are rendered
  */
 add_filter( 'thrive_template_structure', 'tcb_dap_shortcode_in_content' );
 add_filter( 'thrive_template_header_content', 'tcb_dap_shortcode_in_content' );
 add_filter( 'thrive_template_footer_content', 'tcb_dap_shortcode_in_content' );
+
+add_action( 'current_screen', 'tcb_current_screen' );
+
+/**
+ * Some pages don't have a title, so we need to set it manually
+ */
+function tcb_current_screen() {
+	$screen = tve_get_current_screen_key();
+	global $title;
+	if ( $screen && empty( $title ) && ( strpos( $screen, 'tcb_' ) !== false || strpos( $screen, 'tve_' ) !== false ) ) {
+		$title = 'Thrive Architect';
+	}
+}

@@ -1,62 +1,59 @@
-(function ($) {
+( function ( $ ) {
 
-    $(function () {
-        var $upload = $('#tve_icon_pack_upload'),
-            $remove = $('#tve_icon_pack_remove'),
-            $input = $('#tve_icon_pack_file'),
-            $input_id = $('#tve_icon_pack_file_id'),
-            $save = $('#tve_icon_pack_save'),
-            initial_value = $input.val(),
-            wp_file_frame = null;
+	$( function () {
+		const $upload = $( '#tve_icon_pack_upload' ),
+			$remove = $( '#tve_icon_pack_remove' ),
+			$input = $( '#tve_icon_pack_file' ),
+			$inputId = $( '#tve_icon_pack_file_id' );
+		let wpFileFrame;
 
-        $input.focus(function () {
-            $upload.click();
-        });
+		$input.on('click', () => {
+			$upload.click();
+		} );
 
-        $upload.on('click', function (e) {
-            e.preventDefault();
-            if (wp_file_frame) {
-                wp_file_frame.open();
-                return false;
-            }
+		$upload.on( 'click', e => {
+			e.preventDefault();
+			if ( ! wpFileFrame ) {
 
-            wp_file_frame = wp.media.frames.file_frame = wp.media({
-                title: 'Upload IcoMoon Font Pack',
-                button: {
-                    text: 'Use file'
-                },
-                multiple: false
-            });
-            wp_file_frame.on('select', function() {
-                var attachment = wp_file_frame.state().get('selection').first().toJSON();
-                $input_id.val(attachment.id);
-                $input.val(attachment.filename);
-            });
-            wp_file_frame.open();
+				wpFileFrame = wp.media.frames.file_frame = wp.media( {
+					title: 'Upload IcoMoon Font Pack',
+					button: {
+						text: 'Use file'
+					},
+					multiple: false
+				} );
+				wpFileFrame.on( 'select', function () {
+					const attachment = wpFileFrame.state().get( 'selection' ).first().toJSON();
+					$inputId.val( attachment.id );
+					$input.val( attachment.filename );
+				} );
+			}
 
-            return false;
-        });
+			wpFileFrame.open();
 
-        $remove.on('click', function () {
-            $input.val('');
-            $input_id.val('');
-        });
+			return false;
+		} );
 
-        var $redirect_to = $('#tve-redirect-to'),
-            $redirect_in = $('#tve-redirect-count');
+		$remove.on( 'click', function () {
+			$input.val( '' );
+			$inputId.val( '' );
+		} );
 
-        if ($redirect_in.length && $redirect_to.length) {
-            var interval = setInterval(function () {
-                var _current = parseInt($redirect_in.text());
-                _current--;
-                $redirect_in.html(_current + '');
-                if (_current == 0) {
-                    clearInterval(interval);
-                    location.href = $redirect_to.val();
-                }
-            }, 1000);
-        }
+		const $redirectTo = $( '#tve-redirect-to' ),
+			$redirectIn = $( '#tve-redirect-count' );
 
-    });
+		if ( $redirectIn.length && $redirectTo.length ) {
+			const interval = setInterval( function () {
+				let _current = parseInt( $redirectIn.text() );
+				_current --;
+				$redirectIn.html( _current + '' );
+				if ( _current === 0 ) {
+					clearInterval( interval );
+					location.href = $redirectTo.val();
+				}
+			}, 1000 );
+		}
 
-})(jQuery);
+	} );
+
+} )( jQuery );

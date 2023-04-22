@@ -44,10 +44,11 @@ class Woo_Order_Status_Filter extends Data_Field {
 	public static function get_options_callback() {
 		$statuses = array();
 
-		foreach ( wc_get_order_statuses() as $key => $status ) {
-			$statuses[ $key ] = array(
-				'label' => $status,
-				'id'    => $key,
+		foreach ( wc_get_order_statuses() as $key => $label ) {
+			$status              = strpos( $key, 'wc-' ) === 0 ? substr( $key, 3 ) : $key;
+			$statuses[ $status ] = array(
+				'label' => $label,
+				'id'    => $status,
 			);
 		}
 

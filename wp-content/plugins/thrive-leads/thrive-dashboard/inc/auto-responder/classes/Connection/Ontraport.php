@@ -9,26 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 4/9/2015
- * Time: 2:16 PM
- */
 class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Ontraport';
 	}
 
@@ -37,8 +31,8 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'ontraport' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'ontraport' );
 	}
 
 	/**
@@ -48,27 +42,27 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$key    = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		$app_id = ! empty( $_POST['connection']['app_id'] ) ? sanitize_text_field( $_POST['connection']['app_id'] ) : '';
 
 		if ( empty( $key ) || empty( $app_id ) ) {
-			return $this->error( __( 'You must provide a valid Ontraport AppID/APIKey', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Ontraport AppID/APIKey', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Ontraport: %s', TVE_DASH_TRANSLATE_DOMAIN ), $this->_error ) );
+			return $this->error( sprintf( __( 'Could not connect to Ontraport: %s', 'thrive-dash' ), $this->_error ) );
 		}
 
 		/**
 		 * finally, save the connection details
 		 */
 		$this->save();
-		$this->success( __( 'Ontraport connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'Ontraport connected successfully', 'thrive-dash' ) );
 
 		return true;
 	}
@@ -78,8 +72,8 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
-		return is_array( $this->_getLists() );
+	public function test_connection() {
+		return is_array( $this->_get_lists() );
 	}
 
 	/**
@@ -87,7 +81,7 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 *
 	 * @return Thrive_Dash_Api_Ontraport
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Ontraport( $this->param( 'app_id' ), $this->param( 'key' ) );
 	}
 
@@ -98,7 +92,7 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 *
 	 * @return array|string for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		/**
 		 * just try getting the lists as a connection test
 		 */
@@ -107,7 +101,7 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 			$lists = array();
 
 			/** @var $op Thrive_Dash_Api_Ontraport */
-			$op = $this->getApi();
+			$op = $this->get_api();
 
 			$data = $op->get_campaigns();
 
@@ -142,7 +136,7 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 
 		try {
 
-			$data = $this->getApi()->get_sequences();
+			$data = $this->get_api()->get_sequences();
 
 			if ( ! empty( $data ) ) {
 				foreach ( $data as $id => $list ) {
@@ -168,11 +162,11 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 		try {
 
-			list( $firstname, $lastname ) = $this->_getNameParts( $arguments['name'] );
+			list( $firstname, $lastname ) = $this->get_name_parts( $arguments['name'] );
 
 			$data = array(
 				'firstname' => $firstname,
@@ -185,7 +179,7 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 				$data['phone'] = $arguments['phone'];
 			}
 
-			$this->getApi()->add_contact( $list_identifier, $data );
+			$this->get_api()->add_contact( $list_identifier, $data );
 
 		} catch ( Exception $e ) {
 			return $e->getMessage();
@@ -194,12 +188,9 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 		return true;
 	}
 
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '[Email]';
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
-	}
 
 }

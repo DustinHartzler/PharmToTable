@@ -90,8 +90,6 @@ class Rest_Api {
 	public static function render_product_categories( $request ) {
 		$args = $request->get_param( 'args' );
 
-		Main::init_frontend_woo_functionality();
-
 		$content = Shortcodes\Product_Categories\Main::render( $args );
 
 		return new \WP_REST_Response( array( 'content' => $content ), 200 );

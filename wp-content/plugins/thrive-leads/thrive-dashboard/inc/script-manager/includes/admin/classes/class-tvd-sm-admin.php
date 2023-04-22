@@ -34,10 +34,7 @@ class TVD_SM_Admin {
 	}
 
 	public function enqueue_scripts() {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-
-		if ( $screen_id === 'admin_page_tve_dash_script_manager' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tve_dash_script_manager' ) {
 			tve_dash_enqueue();
 			tve_dash_enqueue_style( 'tvd-sm-admin-css', TVD_SM_Constants::url( '/assets/css/admin.css' ) );
 			tve_dash_enqueue_script( 'tvd-sm-admin-js', TVD_SM_Constants::url( 'assets/js/dist/admin.min.js' ), array(
@@ -79,28 +76,24 @@ class TVD_SM_Admin {
 	 * Hook based on the current screen
 	 */
 	public function conditional_hooks() {
-		if ( ! $screen = get_current_screen() ) {
-			return;
-		}
-
 		/**
 		 * if screen = script_manager feature then load all the templates for the SM admin side
 		 */
-		if ( $screen->id === 'admin_page_tve_dash_script_manager' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tve_dash_script_manager' ) {
 			add_action( 'admin_print_scripts', array( $this, 'admin_backbone_templates' ), 9 );
 			add_filter( 'admin_title', array( $this, 'change_title' ) );
 		}
 	}
 
 	public function change_title( $title ) {
-		return __( 'Script Manager', TVE_DASH_TRANSLATE_DOMAIN ) . $title;
+		return __( 'Script Manager', 'thrive-dash' ) . $title;
 	}
 
 	/**
 	 * Add page to admin menu so the page could be accessed
 	 */
 	public function admin_menu() {
-		add_submenu_page( null, __( 'Landing Pages Analytics & Scripts', TVE_DASH_TRANSLATE_DOMAIN ), __( 'Landing Pages Analytics & Scripts', TVE_DASH_TRANSLATE_DOMAIN ), 'manage_options', 'tve_dash_script_manager', array(
+		add_submenu_page( '', __( 'Landing Pages Analytics & Scripts', 'thrive-dash' ), __( 'Landing Pages Analytics & Scripts', 'thrive-dash' ), 'manage_options', 'tve_dash_script_manager', array(
 			$this,
 			'admin_dashboard',
 		) );

@@ -2,13 +2,13 @@
 ( function ( global ) {
 	'use strict';
 
-	var util = newUtil();
-	var inliner = newInliner();
-	var fontFaces = newFontFaces();
-	var images = newImages();
+	const util = newUtil();
+	const inliner = newInliner();
+	const fontFaces = newFontFaces();
+	const images = newImages();
 
 	// Default impl options
-	var defaultOptions = {
+	const defaultOptions = {
 		// Default is to fail on error, no placeholder
 		imagePlaceholder: undefined,
 		// Default cache bust is false, it will use the cache
@@ -17,7 +17,7 @@
 		useCredentials: false
 	};
 
-	var domtoimage = {
+	const domtoimage = {
 		toSvg: toSvg,
 		toPng: toPng,
 		toJpeg: toJpeg,
@@ -25,13 +25,17 @@
 		toPixelData: toPixelData,
 		toCanvas: toCanvas,
 		impl: {
-			fontFaces: fontFaces,
-			images: images,
-			util: util,
-			inliner: inliner,
+			fontFaces,
+			images,
+			util,
+			inliner,
 			options: {}
 		}
 	};
+
+	if ( typeof window === "object" ) {
+		window.domtoimage = domtoimage;
+	}
 
 	if ( typeof exports === "object" && typeof module === "object" ) {
 		module.exports = domtoimage;
@@ -255,7 +259,7 @@
 		}
 
 		function processClone( original, clone ) {
-			if ( ! ( clone instanceof Element ) ) {
+			if ( [ 'Text', 'Comment' ].includes( clone.constructor.name ) ) {
 				return clone;
 			}
 
@@ -561,6 +565,10 @@
 			}
 
 			return new Promise( function ( resolve ) {
+				if ( TVE.fetchedExternalLinks[ url ] ) {
+					resolve( TVE.fetchedExternalLinks[ url ] );
+				}
+
 
 				var placeholder;
 				if ( domtoimage.impl.options.imagePlaceholder ) {
@@ -588,7 +596,15 @@
 				if ( domtoimage.impl.options.useCredentials ) {
 					request.withCredentials = true;
 				}
-				if ( ! url.includes( window.location.hostname ) && ! url.includes( 'gravatar' ) ) {
+
+				let hostname = window.location.hostname;
+
+				//strip the www from the hostname if it exists because some links don't include it
+				if ( hostname.substring( 0, 4 ) === 'www.' ) {
+					hostname = hostname.substring( 4 );
+				}
+
+				if ( ! url.includes( hostname ) && ! url.includes( 'gravatar' ) && ! url.includes( 'fonts.gstatic' ) ) {
 					url = '//cors-anywhere.herokuapp.com/' + url;
 				}
 
@@ -614,6 +630,9 @@
 					var encoder = new FileReader();
 					encoder.onloadend = function () {
 						var content = encoder.result.split( /,/ )[ 1 ];
+						if ( TVE.fetchedExternalLinks ) {
+							TVE.fetchedExternalLinks[ url ] = content;
+						}
 						resolve( content );
 					};
 					encoder.readAsDataURL( request.response );
@@ -794,11 +813,13 @@
 			function getCssRules( styleSheets ) {
 				var cssRules = [];
 				styleSheets.forEach( function ( sheet ) {
-					if ( sheet.hasOwnProperty( "cssRules" ) ) {
+					if ( Object.getPrototypeOf( sheet ).hasOwnProperty( 'cssRules' ) ) {
 						try {
 							util.asArray( sheet.cssRules || [] ).forEach( cssRules.push.bind( cssRules ) );
 						} catch ( e ) {
-							console.log( 'Error while reading CSS rules from ' + sheet.href, e.toString() );
+							if ( ! sheet.href.includes( 'google' ) ) {
+								console.log( 'Error while reading CSS rules from ' + sheet.href, e.toString() );
+							}
 						}
 					}
 				} );

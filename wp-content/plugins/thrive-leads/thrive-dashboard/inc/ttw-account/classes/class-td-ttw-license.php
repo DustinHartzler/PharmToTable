@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property string  state
  * @property string  expiration
  * @property string  refund_date
- * @property string  tag
+ * @property array   tags
  * @property boolean can_update
  *
  * Representation of a single user license
@@ -39,10 +39,11 @@ class TD_TTW_License {
 		'status',
 		'name',
 		'state',
-		'tag',
+		'tags',
 		'expiration',
 		'refund_date',
 		'can_update',
+		'mm_product_id',
 	];
 
 	public function __construct( $data ) {
@@ -66,7 +67,8 @@ class TD_TTW_License {
 			array(
 				1, // active
 				9, // pending cancellation
-			)
+			),
+			true
 		);
 	}
 
@@ -77,7 +79,7 @@ class TD_TTW_License {
 	 */
 	public function is_expired() {
 
-		return (int) $this->status === self::EXPIRED_STATUS;
+		return self::EXPIRED_STATUS === (int) $this->status;
 	}
 
 	/**
@@ -87,7 +89,7 @@ class TD_TTW_License {
 	 */
 	public function is_invalid() {
 
-		return (int) $this->status === self::INVALID_STATUS;
+		return self::INVALID_STATUS === (int) $this->status;
 	}
 
 	/**
@@ -97,7 +99,7 @@ class TD_TTW_License {
 	 */
 	public function is_refunded() {
 
-		return (int) $this->status === self::REFUNDED_STATUS;
+		return self::REFUNDED_STATUS === (int) $this->status;
 	}
 
 	/**
@@ -140,15 +142,5 @@ class TD_TTW_License {
 	public function can_update() {
 
 		return true === $this->can_update;
-	}
-
-	/**
-	 * Check if the current license is a membership
-	 *
-	 * @return bool
-	 */
-	public function is_membership() {
-
-		return $this->tag === self::MEMBERSHIP_TAG;
 	}
 }

@@ -83,6 +83,8 @@ function tve_get_cloud_template_data( $tag, $args = array() ) {
 	if ( isset( $args['id'] ) ) {
 		$id = $args['id'];
 		unset( $args['id'] );
+	} else {
+		return new WP_Error( 'tcb_download_err', __( 'Invalid template id.', 'thrive-cb' ) );
 	}
 
 	$args = wp_parse_args( $args, array(
@@ -288,14 +290,12 @@ function tve_delete_cloud_saved_data() {
 
 	tvd_reset_transient();
 
-	$query    = new WP_Query( array(
-			'post_type'      => array(
-				TCB_CT_POST_TYPE,
-			),
-			'posts_per_page' => '-1',
-			'fields'         => 'ids',
-		)
-	);
+	$query = new WP_Query( [
+		'post_type'      => [ TCB_CT_POST_TYPE ],
+		'posts_per_page' => '-1',
+		'fields'         => 'ids',
+	] );
+
 	$post_ids = $query->posts;
 	foreach ( $post_ids as $id ) {
 		wp_delete_post( $id, true );

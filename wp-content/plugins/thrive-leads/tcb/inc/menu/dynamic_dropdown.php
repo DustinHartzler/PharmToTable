@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<i></i>
 	</div>
 	<div class="dropdown-content">
-		<div class="tve-control tve-style-options no-space preview palettes-v2" data-view="StyleChange"></div>
+		<div class="tve-control tve-style-options no-space preview palettes-v2" data-view="StyleChange" data-has-palettes-v2="true"></div>
 		<div class="tve-control" data-key="SelectStylePicker" data-initializer="stylePickerInitializer"></div>
 		<hr>
 		<div class="tve-control" data-view="Width"></div>

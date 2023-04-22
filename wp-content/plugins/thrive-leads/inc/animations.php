@@ -157,6 +157,10 @@ class TVE_Leads_Animation_Abstract {
 	public function get_display_name() {
 		return $this->get_title();
 	}
+
+    public function get_translatable_title() {
+        return __( 'Default', 'thrive-leads' );
+    }
 }
 
 /**
@@ -166,6 +170,10 @@ class TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Instant extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Instant';
+
+	public function get_translatable_title() {
+        return __( 'Instant', 'thrive-leads' );
+    }
 }
 
 /**
@@ -175,6 +183,10 @@ class TVE_Leads_Animation_Instant extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Zoom_In extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Zoom In';
+
+    public function get_translatable_title() {
+        return __( 'Zoom In', 'thrive-leads' );
+    }
 }
 
 /**
@@ -184,6 +196,10 @@ class TVE_Leads_Animation_Zoom_In extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Zoom_Out extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Zoom Out';
+
+    public function get_translatable_title() {
+        return __( 'Zoom Out', 'thrive-leads' );
+    }
 }
 
 /**
@@ -194,6 +210,9 @@ class TVE_Leads_Animation_Zoom_Out extends TVE_Leads_Animation_Abstract {
 class TVE_Leads_Animation_Rotational extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Rotational';
 
+    public function get_translatable_title() {
+        return __( 'Rotational', 'thrive-leads' );
+    }
 }
 
 /**
@@ -204,6 +223,9 @@ class TVE_Leads_Animation_Rotational extends TVE_Leads_Animation_Abstract {
 class TVE_Leads_Animation_Slide_Top extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Slide in from Top';
 
+    public function get_translatable_title() {
+        return __( 'Slide in from Top', 'thrive-leads' );
+    }
 }
 
 /**
@@ -213,6 +235,10 @@ class TVE_Leads_Animation_Slide_Top extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Slide_Bot extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Slide in from Bottom';
+
+    public function get_translatable_title() {
+        return __( 'Slide in from Bottom', 'thrive-leads' );
+    }
 }
 
 /**
@@ -222,6 +248,10 @@ class TVE_Leads_Animation_Slide_Bot extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Slide_Left extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Slide in from Left';
+
+    public function get_translatable_title() {
+        return __( 'Slide in from Left', 'thrive-leads' );
+    }
 }
 
 /**
@@ -231,6 +261,10 @@ class TVE_Leads_Animation_Slide_Left extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Slide_Right extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Slide in from Right';
+
+    public function get_translatable_title() {
+        return __( 'Slide in from Right', 'thrive-leads' );
+    }
 }
 
 /**
@@ -240,6 +274,10 @@ class TVE_Leads_Animation_Slide_Right extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_3d_Slit extends TVE_Leads_Animation_Abstract {
 	protected $title = '3D Slit';
+
+    public function get_translatable_title() {
+        return __( '3D Slit', 'thrive-leads' );
+    }
 }
 
 /**
@@ -249,6 +287,10 @@ class TVE_Leads_Animation_3d_Slit extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_3d_Flip_Horizontal extends TVE_Leads_Animation_Abstract {
 	protected $title = '3D Flip (Horizontal)';
+
+    public function get_translatable_title() {
+        return __( '3D Flip (Horizontal)', 'thrive-leads' );
+    }
 }
 
 /**
@@ -258,6 +300,10 @@ class TVE_Leads_Animation_3d_Flip_Horizontal extends TVE_Leads_Animation_Abstrac
  */
 class TVE_Leads_Animation_3d_Flip_Vertical extends TVE_Leads_Animation_Abstract {
 	protected $title = '3D Flip (Vertical)';
+
+    public function get_translatable_title() {
+        return __( '3D Flip (Vertical)', 'thrive-leads' );
+    }
 }
 
 /**
@@ -267,6 +313,10 @@ class TVE_Leads_Animation_3d_Flip_Vertical extends TVE_Leads_Animation_Abstract 
  */
 class TVE_Leads_Animation_3d_Sign extends TVE_Leads_Animation_Abstract {
 	protected $title = '3D Sign';
+
+    public function get_translatable_title() {
+        return __( '3D Sign', 'thrive-leads' );
+    }
 }
 
 /**
@@ -276,6 +326,10 @@ class TVE_Leads_Animation_3d_Sign extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_3d_Rotate_Bottom extends TVE_Leads_Animation_Abstract {
 	protected $title = '3D Rotate Bottom';
+
+    public function get_translatable_title() {
+        return __( '3D Rotate Bottom', 'thrive-leads' );
+    }
 }
 
 /**
@@ -285,6 +339,10 @@ class TVE_Leads_Animation_3d_Rotate_Bottom extends TVE_Leads_Animation_Abstract 
  */
 class TVE_Leads_Animation_3d_Rotate_Left extends TVE_Leads_Animation_Abstract {
 	protected $title = '3D Rotate Left';
+
+    public function get_translatable_title() {
+        return __( '3D Rotate Left', 'thrive-leads' );
+    }
 }
 
 /**
@@ -294,6 +352,10 @@ class TVE_Leads_Animation_3d_Rotate_Left extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Blur extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Blur';
+
+    public function get_translatable_title() {
+        return __( 'Blur', 'thrive-leads' );
+    }
 }
 
 /**
@@ -303,6 +365,10 @@ class TVE_Leads_Animation_Blur extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Make_Way extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Make Way';
+
+    public function get_translatable_title() {
+        return __( 'Make Way', 'thrive-leads' );
+    }
 }
 
 /**
@@ -312,6 +378,10 @@ class TVE_Leads_Animation_Make_Way extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Slip_From_Top extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Slip from Top';
+
+    public function get_translatable_title() {
+        return __( 'Slip from Top', 'thrive-leads' );
+    }
 }
 
 /**
@@ -321,6 +391,10 @@ class TVE_Leads_Animation_Slip_From_Top extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Bounce_In extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Bounce In';
+
+    public function get_translatable_title() {
+        return __( 'Bounce In', 'thrive-leads' );
+    }
 }
 
 /**
@@ -330,6 +404,10 @@ class TVE_Leads_Animation_Bounce_In extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Bounce_In_Down extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Bounce In Down';
+
+    public function get_translatable_title() {
+        return __( 'Bounce In Down', 'thrive-leads' );
+    }
 }
 
 /**
@@ -339,6 +417,10 @@ class TVE_Leads_Animation_Bounce_In_Down extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Bounce_In_Left extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Bounce In Left';
+
+    public function get_translatable_title() {
+        return __( 'Bounce In Left', 'thrive-leads' );
+    }
 }
 
 /**
@@ -348,6 +430,10 @@ class TVE_Leads_Animation_Bounce_In_Left extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Bounce_In_Right extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Bounce In Right';
+
+    public function get_translatable_title() {
+        return __( 'Bounce In Right', 'thrive-leads' );
+    }
 }
 
 /**
@@ -357,4 +443,8 @@ class TVE_Leads_Animation_Bounce_In_Right extends TVE_Leads_Animation_Abstract {
  */
 class TVE_Leads_Animation_Bounce_In_Up extends TVE_Leads_Animation_Abstract {
 	protected $title = 'Bounce In Up';
+
+    public function get_translatable_title() {
+        return __( 'Bounce In Up', 'thrive-leads' );
+    }
 }

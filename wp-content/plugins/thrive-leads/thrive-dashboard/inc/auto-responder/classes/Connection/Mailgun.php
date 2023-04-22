@@ -9,26 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian Pop
- * Date: 28-Dec-15
- * Time: 9:22 AM
- */
 class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'email';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Mailgun';
 	}
 
@@ -37,8 +31,8 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'mailgun' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'mailgun' );
 	}
 
 	/**
@@ -46,7 +40,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * on error, it should register an error message (and redirect?)
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
 		$key    = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
@@ -54,26 +48,26 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 		$zone   = ! empty( $_POST['connection']['zone'] ) ? sanitize_text_field( $_POST['connection']['zone'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $ajax_call ? __( 'You must provide a valid Mailgun key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Mailgun key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid Mailgun key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid Mailgun key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $domain ) ) {
-			return $ajax_call ? __( 'The domain name field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'The domain name field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'The domain name field must not be empty', 'thrive-dash' ) : $this->error( __( 'The domain name field must not be empty', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( compact( 'key', 'domain', 'zone' ) );
+		$this->set_credentials( compact( 'key', 'domain', 'zone' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $ajax_call ? sprintf( __( 'Could not connect to Mailgun using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( 'Could not connect to Mailgun using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( 'Could not connect to Mailgun using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) : $this->error( sprintf( __( 'Could not connect to Mailgun using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
 		 * finally, save the connection details
 		 */
 		$this->save();
-		$this->success( __( 'Mailgun connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'Mailgun connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -86,9 +80,9 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_Mailgun $mailgun */
-		$mailgun = $this->getApi();
+		$mailgun = $this->get_api();
 
 		if ( isset( $_POST['connection']['domain'] ) ) {
 			$domain = sanitize_text_field( $_POST['connection']['domain'] );
@@ -102,13 +96,8 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 		$from_email = get_option( 'admin_email' );
 		$to         = $from_email;
 
-		if ( ! empty( $data['from_name'] ) ) {
-			$from_email = $data['from_name'] . ' < ' . $from_email . ' >';
-		}
-
 		$subject      = 'API connection test';
-		$html_content = 'This is a test email from Thrive Leads Mailgun API.';
-		$text_content = 'This is a test email from Thrive Leads Mailgun API.';
+		$text_content = $html_content = 'This is a test email from Thrive Leads Mailgun API.';
 
 		try {
 			$mailgun->sendMessage( "$domain",
@@ -146,7 +135,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 * @return bool|string true for success or error message for failure
 	 */
 	public function sendCustomEmail( $data ) {
-		$mailgun = $this->getApi();
+		$mailgun = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'mailgun' );
 		if ( isset( $credentials ) ) {
@@ -182,7 +171,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 * @return bool|string
 	 */
 	public function sendMultipleEmails( $data ) {
-		$mailgun = $this->getApi();
+		$mailgun = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'mailgun' );
 		if ( isset( $credentials ) ) {
@@ -241,12 +230,12 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 */
 	public function sendEmail( $post_data ) {
 
-		$mailgun = $this->getApi();
+		$mailgun = $this->get_api();
 
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
@@ -309,7 +298,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		$zone     = $this->param( 'zone' );
 		$endpoint = $zone && $zone === 'europe' ? 'api.eu.mailgun.net' : 'api.mailgun.net';
 
@@ -321,7 +310,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 	}
 
@@ -333,7 +322,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 	}
 }

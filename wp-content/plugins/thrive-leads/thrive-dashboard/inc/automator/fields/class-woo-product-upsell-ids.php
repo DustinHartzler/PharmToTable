@@ -50,6 +50,6 @@ class Woo_Product_Upsell_Ids extends Data_Field {
 	}
 
 	public static function get_field_value_type() {
-		return static::TYPE_STRING;
+		return static::TYPE_ARRAY;
 	}
 }

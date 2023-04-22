@@ -86,7 +86,7 @@ class TCB_Admin {
 
 		if ( $cap ) {
 			$menus['tcb'] = array(
-				'parent_slug' => null, //null | tve_dash_section
+				'parent_slug' => '',
 				'page_title'  => __( 'Content Templates', 'thrive-cb' ),
 				'menu_title'  => __( 'Content Templates', 'thrive-cb' ),
 				'capability'  => $cap,
@@ -162,10 +162,12 @@ class TCB_Admin {
 	public function dashboard_add_features( $features ) {
 
 		if ( tcb_has_external_cap() ) {
-			$features['font_manager']     = true;
-			$features['icon_manager']     = true;
-			$features['api_connections']  = true;
-			$features['general_settings'] = true;
+			$features['smart_site']           = true;
+			$features['font_manager']         = true;
+			$features['icon_manager']         = true;
+			$features['api_connections']      = true;
+			$features['general_settings']     = true;
+			$features['notification_manager'] = true;
 		}
 
 		return $features;
@@ -211,7 +213,7 @@ class TCB_Admin {
 		wp_enqueue_style( 'wp-pointer' );
 		wp_enqueue_script( 'wp-pointer' );
 
-		tve_enqueue_script( 'tcb-admin-edit-post', tve_editor_js() . '/admin' . $js_suffix );
+		tve_enqueue_script( 'tcb-admin-edit-post', tve_editor_js( '/admin' . $js_suffix ) );
 		wp_localize_script( 'tcb-admin-edit-post', 'TCB_Post_Edit_Data', array_merge( tcb_admin_get_localization(), array(
 			'post_id'      => get_the_ID(),
 			'landing_page' => tve_post_is_landing_page(),
@@ -239,7 +241,7 @@ class TCB_Admin {
 			return;
 		}
 
-		if ( 'page' == $post_type && $page_for_posts && $post_id == $page_for_posts ) {
+		if ( 'page' === $post_type && $page_for_posts && $post_id == $page_for_posts ) {
 			tcb_template( 'admin/cannot-edit-blog-page' );
 
 			return;
@@ -289,8 +291,7 @@ class TCB_Admin {
 			return false;
 		}
 
-		$screen = get_current_screen();
-		if ( empty( $screen ) || ! $screen->base || 'post' != $screen->base ) {
+		if ( 'post' !== tve_get_current_screen_key( 'base' ) ) {
 			return false;
 		}
 
@@ -327,7 +328,7 @@ class TCB_Admin {
 		) );
 		echo '</script>';
 		$js_suffix = TCB_Utils::get_js_suffix();
-		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_url() . '/editor/js/dist/gutenberg' . $js_suffix, array( 'jquery' ) );
+		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_js( '/gutenberg' . $js_suffix ), array( 'jquery' ) );
 	}
 
 	/**
@@ -338,9 +339,7 @@ class TCB_Admin {
 	 * @return string
 	 */
 	public function wp_editor_body_class( $classes ) {
-
-		$screen = get_current_screen();
-		if ( empty( $screen ) || ! $screen->base || 'post' != $screen->base ) {
+		if ( 'post' !== tve_get_current_screen_key( 'base' ) ) {
 			return $classes;
 		}
 		$post_type = get_post_type();

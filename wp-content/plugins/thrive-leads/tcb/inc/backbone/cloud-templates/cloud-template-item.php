@@ -18,7 +18,7 @@
 						<a href="https://thrivethemes.com/architect/upgrade/?utm_campaign=tarc-upgrade&utm_medium=tarc-lite&utm_source=ttb-ui&utm_content=tarc-element&utm_term=ttb-customer" title="Thrive Architect" target="_blank"><?php echo esc_html__( 'Upgrade', 'thrive-cb' ); ?></a>
 					</div>
 					<# } #>
-					<img class="tve-lazy-img" src='<?php echo esc_url( tve_editor_css() . '/images/loading-spinner.gif' ); ?>' data-src="<#= item.thumb #>" data-ratio="<#= parseFloat(parseInt(item.thumb_size ? item.thumb_size.h : 150) / parseInt(item.thumb_size ? item.thumb_size.w : 150)).toFixed(3) #>"/>
+					<img class="tve-lazy-img" src='<?php echo esc_url( tve_editor_css( 'images/loading-spinner.gif' ) ); ?>' data-src="<#= item.thumb #>" data-ratio="<#= parseFloat(parseInt(item.thumb_size ? item.thumb_size.h : 150) / parseInt(item.thumb_size ? item.thumb_size.w : 150)).toFixed(3) #>"/>
 				</div>
 			</div>
 		</div>

@@ -16,7 +16,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return bool
 	 */
-	public function isRelated() {
+	public function is_related() {
 		return true;
 	}
 
@@ -25,14 +25,14 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'email';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'MailRelay';
 	}
 
@@ -41,8 +41,8 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'mailrelayemail' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'mailrelayemail' );
 	}
 
 	/**
@@ -50,12 +50,12 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return mixed|void
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$connection = $this->post( 'connection' );
 		$key        = ! empty( $connection['key'] ) ? $connection['key'] : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid MailRelay key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid MailRelay key', 'thrive-dash' ) );
 		}
 
 		$connection['domain'] = isset( $connection['url'] ) ? $connection['url'] : $connection['domain'];
@@ -63,15 +63,15 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 		$url = ! empty( $connection['domain'] ) ? $connection['domain'] : '';
 
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false || empty( $url ) ) {
-			return $this->error( __( 'You must provide a valid MailRelay URL', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid MailRelay URL', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $connection );
+		$this->set_credentials( $connection );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to MailRelay using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to MailRelay using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -83,14 +83,14 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 		 * Try to connect to the autoresponder too
 		 */
 		/** @var Thrive_Dash_List_Connection_MailRelay $related_api */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mailrelay' );
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'mailrelay' );
 
 		$r_result = true;
-		if ( ! $related_api->isConnected() ) {
+		if ( ! $related_api->is_connected() ) {
 			$_POST['connection']                   = $connection;
 			$_POST['connection']['new_connection'] = isset( $connection['new_connection'] ) ? absint( $connection['new_connection'] ) : 1;
 
-			$r_result = $related_api->readCredentials();
+			$r_result = $related_api->read_credentials();
 		}
 
 		if ( $r_result !== true ) {
@@ -99,7 +99,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 			return $this->error( $r_result );
 		}
 
-		return $this->success( __( 'MailRelay connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'MailRelay connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -107,10 +107,10 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_MailRelay $mr */
 
-		$mr = $this->getApi();
+		$mr = $this->get_api();
 
 		$email = get_option( 'admin_email' );
 
@@ -148,7 +148,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 * @return bool|string true for success or error message for failure
 	 */
 	public function sendCustomEmail( $data ) {
-		$mr = $this->getApi();
+		$mr = $this->get_api();
 
 		try {
 
@@ -180,7 +180,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 * @return bool|string
 	 */
 	public function sendMultipleEmails( $data ) {
-		$mr = $this->getApi();
+		$mr = $this->get_api();
 
 		/**
 		 * prepare $to
@@ -196,7 +196,8 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 			$extra_emails = array_merge( $extra_emails, $data['bcc'] );
 		}
 
-		foreach ( array_merge( $data['emails'], $extra_emails ) as $email ) {
+		$emails = is_array( $extra_emails ) ? array_merge( $data['emails'], $extra_emails ) : $data['emails'];
+		foreach ( $emails as $email ) {
 			$temp = array(
 				'email' => $email,
 				'name'  => '',
@@ -253,12 +254,12 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 */
 	public function sendEmail( $post_data ) {
-		$mr = $this->getApi();
+		$mr = $this->get_api();
 
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
@@ -324,7 +325,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 
 		if ( false !== strpos( $this->param( 'domain' ), 'ipzmarketing' ) ) {
 			$instance = new Thrive_Dash_Api_MailRelayV1( $this->param( 'domain' ), $this->param( 'key' ) );
@@ -343,7 +344,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return array
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 	}
 
@@ -355,7 +356,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 *
 	 * @return bool|string true for success or string error message for failure
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 
 	}

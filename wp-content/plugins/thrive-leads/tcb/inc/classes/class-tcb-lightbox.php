@@ -128,7 +128,7 @@ class TCB_Lightbox extends TCB_Post {
 	 */
 	public function output_layout() {
 		if ( is_editor_page() ) {
-			tve_enqueue_style( 'tve_lightbox_post', tve_editor_css() . '/editor_lightbox.css' );
+			tve_enqueue_style( 'tve_lightbox_post', tve_editor_css( 'editor_lightbox.css' ) );
 		}
 
 		/**
@@ -268,6 +268,29 @@ function tcb_lightbox_init() {
 }
 
 /**
+ * Hide notices for the tcb_lightbox post type dashboard page
+ *
+ * @return void
+ */
+function tcb_lightbox_admin_footer() {
+	$screen = tve_get_current_screen_key();
+	if ( $screen && $screen === 'edit-tcb_lightbox' ) {
+		echo '<style type="text/css">
+					#message, .error, .notice, .update-nag, .sbi_notice, .update, .updated {
+  						display: none !important;
+					}
+
+			  		:not(#_s):not(#_s) .tve-metrics-consent-notice {
+  						display: flex !important;
+  						margin: 0 0 25px 0;
+					}
+				</style>';
+	}
+}
+
+/**
  * Registers the tcb_lightbox post type
  */
 add_action( 'init', 'tcb_lightbox_init' );
+
+add_action( 'admin_footer', 'tcb_lightbox_admin_footer' );

@@ -23,7 +23,7 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 	}
 
 	public function identifier() {
-		return '.tve-dynamic-dropdown';
+		return '.tve-dynamic-dropdown:not(.tcb-filter-dropdown)';
 	}
 
 	public function hide() {

@@ -9,9 +9,16 @@ class Thrive_Leads_Group_Options {
 	private $table_name = 'group_options';
 	private $group;
 	private $description;
-	public $show_group_options;
-	public $hide_group_options;
+	public  $show_group_options;
+	public  $hide_group_options;
 	private $db;
+
+	/**
+	 * Stores the current page template
+	 *
+	 * @var string
+	 */
+	protected static $current_page_template;
 
 	protected $flags = array();
 
@@ -55,7 +62,7 @@ class Thrive_Leads_Group_Options {
 			'group'              => $this->group,
 			'description'        => $this->description,
 			'show_group_options' => $show_options,
-			'hide_group_options' => $hide_options
+			'hide_group_options' => $hide_options,
 		) ) !== false ? true : $this->db->last_error;
 	}
 
@@ -78,6 +85,7 @@ class Thrive_Leads_Group_Options {
 
 	/**
 	 * Read options from database
+	 *
 	 * @return $this
 	 */
 	public function initOptions() {
@@ -123,19 +131,20 @@ class Thrive_Leads_Group_Options {
 	}
 
 	// get current URL
-    public function get_current_URL() {
-        $requested_url = is_ssl() ? 'https://' : 'http://';
-        $requested_url .= $_SERVER['HTTP_HOST'];
-        $requested_url .= $_SERVER['REQUEST_URI'];
-	    if ( empty( $_SERVER['REQUEST_URI'] ) && ! empty( $_SERVER['REDIRECT_URL'] ) ) {
-            $requested_url = rtrim( $requested_url, '/' ) . '/' . ltrim( $_SERVER['REDIRECT_URL'], '/' );
-        }
+	public function get_current_URL() {
+		$requested_url = is_ssl() ? 'https://' : 'http://';
+		$requested_url .= $_SERVER['HTTP_HOST'];
+		$requested_url .= $_SERVER['REQUEST_URI'];
+		if ( empty( $_SERVER['REQUEST_URI'] ) && ! empty( $_SERVER['REDIRECT_URL'] ) ) {
+			$requested_url = rtrim( $requested_url, '/' ) . '/' . ltrim( $_SERVER['REDIRECT_URL'], '/' );
+		}
 
-        return $requested_url;
-    }
+		return $requested_url;
+	}
 
 	/**
 	 * Check if any option is checked
+	 *
 	 * @return bool
 	 */
 	public function checkForAnyOptionChecked() {
@@ -260,6 +269,13 @@ class Thrive_Leads_Group_Options {
 
 			$post = apply_filters( 'thrive_leads_current_post', $post );
 
+			/**
+			 * Filter current post that is used for the display manager
+			 *
+			 * @param WP_Post $post
+			 */
+			$_post = apply_filters( 'tve_display_manager_current_post', $post );
+
 			/** @var Thrive_Leads_Other_Screens_Tab $otherScreensTab */
 			$otherScreensTab = Thrive_Leads_Tab_Factory::build( 'other_screens' );
 			$otherScreensTab->setSavedOptions( $this );
@@ -289,23 +305,23 @@ class Thrive_Leads_Group_Options {
 			$taxonomyTermsTab = Thrive_Leads_Tab_Factory::build( 'taxonomy_terms' );
 			$taxonomyTermsTab->setSavedOptions( $this );
 
-			$inclusion = $otherScreensTab->allTypesAllowed( get_post_type() ) || $pagesTab->isPageAllowed( $post )
+			$inclusion = $otherScreensTab->allTypesAllowed( get_post_type() ) || $pagesTab->isPageAllowed( $_post )
 			             || $postTypesTab->isTypeAllowed( get_post_type() )
 			             || $directUrlsTab->isUrlAllowed( $this->get_current_URL() )
-			             || $pageTemplatesTab->isTemplateAllowed( basename( get_page_template() ) )
 			             || $visitorsStatusTab->isStatusAllowed( $visitorsStatus )
-			             || $taxonomyTermsTab->isPostAllowed( $post );
+			             || $taxonomyTermsTab->isPostAllowed( $_post )
+			             || $pageTemplatesTab->isTemplateAllowed( static::get_page_template() );
 
 			if ( $inclusion === false ) {
 				return false;
 			}
 
-			$exclusion = $otherScreensTab->allTypesDenied( get_post_type() ) || $pagesTab->isPageDenied( $post )
+			$exclusion = $otherScreensTab->allTypesDenied( get_post_type() ) || $pagesTab->isPageDenied( $_post )
 			             || $postTypesTab->isDeniedType( get_post_type() )
 			             || $directUrlsTab->isUrlDenied( $this->get_current_URL() )
-			             || $pageTemplatesTab->isTemplateDenied( basename( get_page_template() ) )
 			             || $visitorsStatusTab->isStatusDenied( $visitorsStatus )
-			             || $taxonomyTermsTab->isPostDenied( $post );
+			             || $taxonomyTermsTab->isPostDenied( $_post )
+			             || $pageTemplatesTab->isTemplateDenied( static::get_page_template() );
 
 			if ( $exclusion === true ) {
 				$display = false;
@@ -507,5 +523,18 @@ class Thrive_Leads_Group_Options {
 			return isset( $this->flags[ $set ] ) ? $this->flags[ $set ] : null;
 		}
 		$this->flags[ $set ] = $value;
+	}
+
+	/**
+	 * Get the current page template. Result is cached to avoid a database query for each Lead Group
+	 *
+	 * @return string
+	 */
+	public static function get_page_template() {
+		if ( static::$current_page_template === null ) {
+			static::$current_page_template = basename( get_page_template() );
+		}
+
+		return static::$current_page_template;
 	}
 }

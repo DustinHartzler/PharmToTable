@@ -49,6 +49,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<span class="mr-10"><?php echo esc_html__( 'Refresh from cloud', 'thrive-cb' ); ?></span>
 				</span>
 		</div>
+		<div class="lp-set-list-group mt-20 lp-smart">
+			<p>
+				<?php echo esc_html__( 'Theme Landing Page sets', 'thrive-cb' ); ?>
+			</p>
+			<span class="tve-separator"></span>
+		</div>
+		<div id="lp-ttb-set-list" class="pl-30 pt-10 lp-smart"></div>
+		<div class="lp-set-list-group mt-20 lp-smart">
+			<p>
+				<?php echo esc_html__( 'Smart Landing page sets', 'thrive-cb' ); ?>
+			</p>
+			<span class="tve-separator"></span>
+		</div>
 		<div id="lp-set-list" class="pl-30 pt-10"></div>
 	</div>
 </div>

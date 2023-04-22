@@ -120,7 +120,11 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 				),
 			),
 			'layout'     => array(
-				'config'            => array(),
+				'config'            => array(
+					'Position' => array(
+						'important' => true,
+					),
+				),
 				'disabled_controls' => array(
 					'Width',
 					'Height',

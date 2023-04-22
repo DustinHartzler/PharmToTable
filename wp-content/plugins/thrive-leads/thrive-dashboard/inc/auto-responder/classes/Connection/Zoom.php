@@ -18,14 +18,14 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'webinar';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Zoom';
 	}
 
@@ -34,28 +34,28 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'zoom' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'zoom' );
 	}
 
 	/**
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Zoom key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Zoom key', 'thrive-dash' ) );
 		}
 
 		$url = self::zoom_url;
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Zoom using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Zoom using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -63,7 +63,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 		 */
 		$this->save();
 
-		return $this->success( __( 'Zoom connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Zoom connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -71,10 +71,10 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 
 		/** @var Thrive_Dash_Api_Zoom $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		try {
 			$api->get_users();
@@ -93,14 +93,14 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return bool|string true for success or string error message for failure
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		$args = array();
 		if ( isset( $arguments['email'] ) ) {
 			$args['email'] = $arguments['email'];
 		}
 
 		if ( isset( $arguments['name'] ) ) {
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 
 			$args['first_name'] = $first_name;
 			$args['last_name']  = $last_name;
@@ -111,7 +111,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 		}
 
 		try {
-			$this->getApi()->register_to_webinar( ! empty( $arguments['zoom_webinar'] ) ? $arguments['zoom_webinar'] : $list_identifier, $args );
+			$this->get_api()->register_to_webinar( ! empty( $arguments['zoom_webinar'] ) ? $arguments['zoom_webinar'] : $list_identifier, $args );
 		} catch ( Exception $e ) {
 			return $this->error( $e->getMessage() );
 		}
@@ -129,14 +129,14 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 		// Used on user select/change ajax [in admin Lead generation]
 		if ( isset( $params['user_id'] ) ) {
 			try {
-				return $this->getApi()->get_webinars( $params['user_id'] );
+				return $this->get_api()->get_webinars( $params['user_id'] );
 			} catch ( Thrive_Dash_Api_Zoom_Exception $e ) {
 				return array();
 			}
 		}
 
 		try {
-			$params['users'] = $this->getApi()->get_users();
+			$params['users'] = $this->get_api()->get_users();
 		} catch ( Thrive_Dash_Api_Zoom_Exception $e ) {
 		}
 
@@ -148,7 +148,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return mixed|Thrive_Dash_Api_Zoom
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Zoom( array(
 				'apiKey'    => $this->param( 'key' ),
 				'secretKey' => $this->param( 'secret' ),
@@ -161,9 +161,9 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 *
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		/** @var Thrive_Dash_Api_Zoom $zoom */
-		$zoom = $this->getApi();
+		$zoom = $this->get_api();
 
 		try {
 			$list = $zoom->get_webinars();
@@ -174,9 +174,6 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 
 			return false;
 		}
-	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
 	}
 }

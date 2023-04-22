@@ -49,14 +49,10 @@ class TCB_Symbols_Dashboard {
 	 * Add symbols card in thrive dashboard
 	 */
 	public function dash_features() {
-		if ( ! $screen = get_current_screen() ) {
-			return;
-		}
-
 		/**
 		 * if screen = main dashboard then enable and display the feature
 		 */
-		if ( $screen->id === 'toplevel_page_tve_dash_section' ) {
+		if ( tve_get_current_screen_key() === 'toplevel_page_tve_dash_section' ) {
 			add_filter( 'tve_dash_filter_features', array( $this, 'admin_symbols_feature' ) );
 			add_filter( 'tve_dash_features', array( $this, 'admin_enable_feature' ) );
 		}
@@ -101,7 +97,7 @@ class TCB_Symbols_Dashboard {
 	 * Create page for symbols dashboard
 	 */
 	public function admin_menu() {
-		add_submenu_page( null, __( 'Symbols', 'thrive-cb' ), __( 'Symbols', 'thrive-cb' ), tcb_has_external_cap( true ), $this->_symbols_dashboard_page, array(
+		add_submenu_page( '', __( 'Symbols', 'thrive-cb' ), __( 'Symbols', 'thrive-cb' ), tcb_has_external_cap( true ), $this->_symbols_dashboard_page, array(
 			$this,
 			'admin_symbols_dashboard',
 		) );

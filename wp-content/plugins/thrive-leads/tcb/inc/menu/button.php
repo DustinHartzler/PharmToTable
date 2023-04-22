@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="tve-control tcb-icon-side-wrapper" data-key="icon_side" data-view="ButtonGroup"></div>
 			</div>
 
-			<div class="hide-states padding-4">
+			<div class="hide-states pt-5 pb-5">
 				<div class="tve-control no-space sep-top" data-key="ButtonSize" data-view="ButtonGroup"></div>
 				<div class="tve-control pt-5 gl-st-button-toggle-2" data-key="Align" data-view="ButtonGroup"></div>
 				<div class="tve-control gl-st-button-toggle-2" data-view="ButtonWidth"></div>

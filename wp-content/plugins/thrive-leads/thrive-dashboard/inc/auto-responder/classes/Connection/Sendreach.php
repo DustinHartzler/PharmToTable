@@ -9,25 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 7/22/2015
- * Time: 12:55 PM
- */
 class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'SendReach';
 	}
 
@@ -36,8 +31,8 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'sendreach' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'sendreach' );
 	}
 
 	/**
@@ -47,7 +42,7 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$key    = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		$secret = ! empty( $_POST['connection']['secret'] ) ? sanitize_text_field( $_POST['connection']['secret'] ) : '';
 
@@ -55,17 +50,17 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 			return $this->error( 'You must provide valid credentials!' );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SendReach (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SendReach (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		$this->save();
 
-		return $this->success( __( 'SendReach connection established', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SendReach connection established', 'thrive-dash' ) );
 	}
 
 	/**
@@ -73,10 +68,10 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_Sendreach $api */
-		$api         = $this->getApi();
-		$credentials = $this->getCredentials();
+		$api         = $this->get_api();
+		$credentials = $this->get_credentials();
 
 		/**
 		 * Backwards compatibility with Sendreach V2
@@ -108,7 +103,7 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		$config = new Thrive_Dash_Api_Sendreach_Config( array(
 			'apiUrl'     => 'http://dashboard.sendreach.com/api/index.php',
 			'publicKey'  => $this->param( 'key' ),
@@ -123,10 +118,10 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		$lists = array();
 
-		$credentials = $this->getCredentials();
+		$credentials = $this->get_credentials();
 
 		/**
 		 * Backwards compatibility with Sendreach V2
@@ -139,7 +134,7 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 
 		try {
 			/** @var Thrive_Dash_Api_Sendreach $api */
-			$api      = $this->getApi();
+			$api      = $this->get_api();
 			$endpoint = new Thrive_Dash_Api_Sendreach_Lists();
 			$raw      = $endpoint->getLists( $pageNumber = 1, $perPage = 1000 );
 
@@ -170,15 +165,15 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
-		$credentials = $this->getCredentials();
+	public function add_subscriber( $list_identifier, $arguments ) {
+		$credentials = $this->get_credentials();
 
 		/**
 		 * Backwards compatibility with Sendreach V2
 		 */
 		if ( ! isset( $credentials['version'] ) ) {
 			try {
-				$this->addSubscriberForV2( $list_identifier, $arguments );
+				$this->add_subscriberForV2( $list_identifier, $arguments );
 			} catch ( Exception $e ) {
 				return $e->getMessage();
 			}
@@ -186,17 +181,17 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 			return true;
 		}
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 
 		try {
 			/** @var Thrive_Dash_Api_Sendreach $api */
-			$api      = $this->getApi();
+			$api      = $this->get_api();
 			$endpoint = new Thrive_Dash_Api_Sendreach_ListSubscribers();
 
 			$endpoint->create( $list_identifier, array(
 				'EMAIL' => $arguments['email'], // the confirmation email will be sent!!! Use valid email address
 				'FNAME' => $first_name,
-				'LNAME' => $last_name
+				'LNAME' => $last_name,
 			) );
 		} catch ( Exception $e ) {
 			return $e->getMessage();
@@ -205,15 +200,15 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 		return true;
 	}
 
-	public function addSubscriberForV2( $list_identifier, $arguments ) {
+	public function add_subscriberForV2( $list_identifier, $arguments ) {
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 
-		$credentials = $this->getCredentials();
+		$credentials = $this->get_credentials();
 		$api         = new Thrive_Dash_Api_SendreachV2( $credentials['key'], $credentials['secret'] );
 
 		try {
-			$api->addSubscriber( $list_identifier, $first_name, $last_name, $arguments['email'] );
+			$api->add_subscriber( $list_identifier, $first_name, $last_name, $arguments['email'] );
 		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}
@@ -226,11 +221,8 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '[EMAIL]';
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
-	}
 }

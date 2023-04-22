@@ -105,7 +105,7 @@ class Thrive_Dash_Api_Drip {
 		// The API wants the params to be JSON encoded
 		$req_params = array( 'subscribers' => array( $params ) );
 
-		$res = $this->make_request( $url, $req_params, self::POST );
+		$res = $this->make_request( $url, $req_params, static::POST );
 
 		return empty( $res ) ? false : $res;
 	}
@@ -154,7 +154,7 @@ class Thrive_Dash_Api_Drip {
 		// The API wants the params to be JSON encoded
 		$req_params = array( 'subscribers' => array( $params ) );
 
-		return $this->make_request( $url, $req_params, self::POST );
+		return $this->make_request( $url, $req_params, static::POST );
 	}
 
 	/**
@@ -198,7 +198,7 @@ class Thrive_Dash_Api_Drip {
 		// The API wants the params to be JSON encoded
 		$req_params = array( 'subscribers' => array( $params ) );
 
-		$res = $this->make_request( $url, $req_params, self::POST );
+		$res = $this->make_request( $url, $req_params, static::POST );
 
 		return empty( $res ) ? false : $res;
 	}
@@ -228,7 +228,7 @@ class Thrive_Dash_Api_Drip {
 
 		// The API wants the params to be JSON encoded
 		$req_params = array( 'events' => array( $params ) );
-		$res        = $this->make_request( $url, $req_params, self::POST );
+		$res        = $this->make_request( $url, $req_params, static::POST );
 
 		return empty( $res ) ? false : $res;
 	}
@@ -245,11 +245,11 @@ class Thrive_Dash_Api_Drip {
 	public function make_request( $url, $params = array(), $req_method = self::GET ) {
 
 		switch ( $req_method ) {
-			case self::DELETE:
+			case static::DELETE:
 				$fn             = 'tve_dash_api_remote_post';
 				$args['method'] = 'delete';
 				break;
-			case self::GET:
+			case static::GET:
 				$fn = 'tve_dash_api_remote_get';
 				break;
 			default:
@@ -313,7 +313,7 @@ class Thrive_Dash_Api_Drip {
 		// The API wants the params to be JSON encoded
 		$req_params = array( 'tags' => array( $params ) );
 
-		$res = $this->make_request( $url, $req_params, self::POST );
+		$res = $this->make_request( $url, $req_params, static::POST );
 
 		return empty( $res ) ? false : $res;
 	}

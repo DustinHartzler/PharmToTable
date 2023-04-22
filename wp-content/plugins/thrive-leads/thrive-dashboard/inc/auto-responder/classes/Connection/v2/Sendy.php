@@ -15,14 +15,14 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Sendy';
 	}
 
@@ -31,8 +31,8 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'sendy' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'sendy' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$url = ! empty( $_POST['connection']['url'] ) ? esc_url_raw( $_POST['connection']['url'] ) : '';
 
 		$lists = ! empty( $_POST['connection']['lists'] ) ? map_deep( $_POST['connection']['lists'], 'sanitize_text_field' ) : array();
@@ -55,12 +55,12 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 
 		$_POST['connection']['lists'] = $lists;
 
-		$this->setCredentials( map_deep( $_POST['connection'], 'sanitize_text_field' ) );
+		$this->set_credentials( map_deep( $_POST['connection'], 'sanitize_text_field' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'Could not connect to Sendy', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Could not connect to Sendy', 'thrive-dash' ) );
 		}
 
 		$this->save();
@@ -73,9 +73,9 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_Sendy $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		return $api->testUrl();
 	}
@@ -85,7 +85,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Sendy( $this->param( 'url' ) );
 	}
 
@@ -94,7 +94,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		$lists = array();
 
 		foreach ( $this->param( 'lists' ) as $id ) {
@@ -115,7 +115,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		/** @var Thrive_Dash_Api_Sendy $api */
 		$api = new Thrive_Dash_Api_Sendy( $this->param( 'url' ) );
 
@@ -150,8 +150,8 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @param array $params allow various different calls to this method
 	 */
-	public function renderExtraEditorSettings( $params = array() ) {
-		$this->_directFormHtml( 'sendy/note', $params );
+	public function render_extra_editor_settings( $params = array() ) {
+		$this->output_controls_html( 'sendy/note', $params );
 	}
 
 	/**
@@ -159,7 +159,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '[Email]';
 	}
 

@@ -9,26 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 4/10/2015
- * Time: 3:16 PM
- */
 class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'iContact';
 	}
 
@@ -37,8 +31,8 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'iContact' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'iContact' );
 	}
 
 	/**
@@ -48,21 +42,21 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$apiId       = ! empty( $_POST['connection']['appId'] ) ? sanitize_text_field( $_POST['connection']['appId'] ) : '';
 		$apiUsername = ! empty( $_POST['connection']['apiUsername'] ) ? sanitize_text_field( $_POST['connection']['apiUsername'] ) : '';
 		$apiPassword = ! empty( $_POST['connection']['apiPassword'] ) ? sanitize_text_field( $_POST['connection']['apiPassword'] ) : '';
 
 		if ( empty( $apiId ) || empty( $apiUsername ) || empty( $apiPassword ) ) {
-			return $this->error( __( 'You must provide a valid iContact AppID/Username/Password', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid iContact AppID/Username/Password', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to iContact: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to iContact: %s', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -70,7 +64,7 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 		 */
 		$this->save();
 
-		return $this->success( __( 'iContact connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'iContact connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -78,8 +72,8 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
-		$lists = $this->_getLists();
+	public function test_connection() {
+		$lists = $this->_get_lists();
 		if ( $lists === false ) {
 			return $this->_error;
 		}
@@ -92,8 +86,8 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return Thrive_Dash_Api_iContact
 	 */
-	protected function _apiInstance() {
-		return Thrive_Dash_Api_iContact::getInstance()->setConfig( $this->getCredentials() );
+	protected function get_api_instance() {
+		return Thrive_Dash_Api_iContact::getInstance()->setConfig( $this->get_credentials() );
 	}
 
 	/**
@@ -101,8 +95,8 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
-		$api   = $this->getApi();
+	protected function _get_lists() {
+		$api   = $this->get_api();
 		$lists = array();
 
 		try {
@@ -132,12 +126,12 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed true -> success; string -> error;
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		$sEmail  = $arguments['email'];
 		$sStatus = 'normal';
 		$sPrefix = null;
 		$sPhone  = null;
-		list( $sFirstName, $sLastName ) = $this->_getNameParts( $arguments['name'] );
+		list( $sFirstName, $sLastName ) = $this->get_name_parts( $arguments['name'] );
 		$sSuffix     = null;
 		$sStreet     = null;
 		$sStreet2    = null;
@@ -149,7 +143,7 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 		try {
 
 			/** @var Thrive_Dash_Api_iContact $api */
-			$api = $this->getApi();
+			$api = $this->get_api();
 
 			$contact = $api->addContact( $sEmail, $sStatus, $sPrefix, $sFirstName, $sLastName, $sSuffix, $sStreet, $sStreet2, $sCity, $sState, $sPostalCode, $sPhone );
 			if ( empty( $contact ) || ! is_object( $contact ) || empty( $contact->contactId ) ) {
@@ -171,7 +165,4 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
-	}
 }

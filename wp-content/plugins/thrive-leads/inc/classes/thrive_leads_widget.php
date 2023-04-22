@@ -91,7 +91,7 @@ class Thrive_Leads_Widget extends WP_Widget {
 
 		if ( in_array( $GLOBALS['tve_lead_forms']['widget']['form_type']->post_parent, $instance['lead_group'] ) ) {
 			if ( ! empty( $GLOBALS['tve_lead_forms']['widget']['placeholder'] ) ) {
-				$args['before_widget'] = tve_leads_get_form_placeholder( 'widget' ) . $args['before_widget'];
+				$args['before_widget'] = tve_leads_get_form_placeholder( 'before_widget' ) . $args['before_widget'];
 				$args['after_widget']  .= '</div>';
 			}
 

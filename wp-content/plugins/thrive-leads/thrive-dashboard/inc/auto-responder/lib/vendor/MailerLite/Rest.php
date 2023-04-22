@@ -15,54 +15,45 @@ class Thrive_Dash_Api_MailerLite_Rest extends Thrive_Dash_Api_MailerLite {
 		$name = '',
 		$id = null;
 
-	function __construct($apiKey)
-	{
+	function __construct( $apiKey ) {
 		parent::__construct();
 		$this->apiKey = $apiKey;
-		$this->path = $this->url . $this->name . '/';
+		$this->path   = $this->url . $this->name . '/';
 	}
 
-	function setId($id)
-	{
+	function setId( $id ) {
 		$this->id = $id;
-		if ($this->id)
-		{
+		if ( $this->id ) {
 			$this->path = $this->url . $this->name . '/' . $id . '/';
-		}
-		else
-		{
+		} else {
 			$this->path = $this->url . $this->name . '/';
 		}
+
 		return $this;
 	}
 
-	function getAll()
-	{
-		return $this->execute('GET');
+	function getAll() {
+		return $this->execute( 'GET' );
 	}
 
-	function get()
-	{
-		if ( ! $this->id)
-		{
-			throw new InvalidArgumentException('ID is not set.');
+	function get() {
+		if ( ! $this->id ) {
+			throw new InvalidArgumentException( 'ID is not set.' );
 		}
-		return $this->execute('GET');
+
+		return $this->execute( 'GET' );
 	}
 
-	function add($data = null)
-	{
-		return $this->execute('POST', $data);
+	function add( $data = null ) {
+		return $this->execute( 'POST', $data );
 	}
 
-	function put($data = null)
-	{
-		return $this->execute('PUT', $data);
+	function put( $data = null ) {
+		return $this->execute( 'PUT', $data );
 	}
 
-	function remove()
-	{
-		return $this->execute('DELETE');
+	function remove() {
+		return $this->execute( 'DELETE' );
 	}
 
 }

@@ -31,7 +31,7 @@ class Tvd_Auth_Check {
 	public static function auth_enqueue_scripts() {
 		tve_dash_enqueue_script( 'tvd-auth-check', TVE_DASH_URL . '/inc/auth-check/auth-check.js' );
 
-		wp_localize_script( 'tvd-auth-check', 'tvd_auth_check', array( 'userkey' => self::generate_editor_key() ) );
+		wp_localize_script( 'tvd-auth-check', 'tvd_auth_check', array( 'userkey' => static::generate_editor_key() ) );
 	}
 
 	/**

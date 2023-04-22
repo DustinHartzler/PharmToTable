@@ -28,11 +28,11 @@ class TD_NM_Checker {
 	}
 
 	public static function instance() {
-		if ( ! self::$instance ) {
-			self::$instance = new self;
+		if ( ! static::$instance ) {
+			static::$instance = new self();
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 
 	public function on_quiz_completion( $quiz, $user ) {
@@ -46,7 +46,7 @@ class TD_NM_Checker {
 		foreach ( $notifications as $notification ) {
 			$trigger = new TD_NM_Trigger_Quiz_Completion( $notification->trigger['settings'] );
 			if ( $trigger->applicable_on_data( $quiz ) ) {
-				self::instance()->execute_quiz_completion_actions( $notification->actions, $data );
+				static::instance()->execute_quiz_completion_actions( $notification->actions, $data );
 			}
 		}
 	}
@@ -63,7 +63,7 @@ class TD_NM_Checker {
 		foreach ( $notifications as $notification ) {
 			$trigger = new TD_NM_Trigger_Email_Sign_Up( $notification->trigger['settings'] );
 			if ( $trigger->applicable_on_data( $tl_item ) ) {
-				self::instance()->execute_sign_up_actions( $notification->actions, $sign_up_data );
+				static::instance()->execute_sign_up_actions( $notification->actions, $sign_up_data );
 			}
 		}
 	}

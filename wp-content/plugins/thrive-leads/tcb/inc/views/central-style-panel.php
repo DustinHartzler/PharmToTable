@@ -9,12 +9,13 @@
 
 $has_data = array(
 	'styles' => ! empty( $data['styles']['button'] ) || ! empty( $data['styles']['section'] ) || ! empty( $data['styles']['contentbox'] ),
-	'vars'   => ! empty( $data['vars']['colours'] ) || ! empty( $data['vars']['gradients'] ),
+	'vars'   => ! empty( $data['vars']['colours'] ) || ! empty( $data['vars']['gradients'] ) || ! empty( $data['skin_palettes'] ),
+	'fonts'  => true,
 );
 
 ?>
 <div id="c-s-p-content" class="scrollbar">
-	<div class="items-4 input tve-btn-group">
+	<div class="items-4 input tve-btn-group tve-csp-button-group">
 		<?php if ( $has_data['vars'] ) : ?>
 			<div class="tve-btn click" data-fn="dom_switch_section" data-value="vars">
 				<span><?php tcb_icon( 'palette' ); ?></span>
@@ -25,6 +26,12 @@ $has_data = array(
 			<div class="tve-btn click" data-fn="dom_switch_section" data-value="styles">
 				<span><?php tcb_icon( 'blocks' ); ?></span>
 				<span><?php echo esc_html__( 'Elements', 'thrive-cb' ); ?></span>
+			</div>
+		<?php endif; ?>
+		<?php if ( $has_data['fonts'] ) : ?>
+			<div class="tve-btn click" data-fn="dom_switch_section" data-value="fonts">
+				<span><?php tcb_icon( 'typography' ); ?></span>
+				<span><?php echo esc_html__( 'Fonts', 'thrive-cb' ); ?></span>
 			</div>
 		<?php endif; ?>
 	</div>
@@ -45,5 +52,9 @@ $has_data = array(
 
 	<?php if ( $has_data['vars'] ) : ?>
 		<div class="c-s-p-section" data-section="vars"></div>
+	<?php endif; ?>
+
+	<?php if ( $has_data['fonts'] ) : ?>
+		<div class="c-s-p-section" data-section="fonts"></div>
 	<?php endif; ?>
 </div>

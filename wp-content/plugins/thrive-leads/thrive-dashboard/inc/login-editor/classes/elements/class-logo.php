@@ -23,7 +23,7 @@ class Logo extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Logo', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Logo', 'thrive-dash' );
 	}
 
 	/**
@@ -46,14 +46,14 @@ class Logo extends \TCB_Element_Abstract {
 				'config' => array(
 					'ImagePicker' => array(
 						'config' => array(
-							'label' => __( 'Chose Logo Image', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label' => __( 'Chose Logo Image', 'thrive-dash' ),
 						),
 					),
 					'Size'        => array(
 						'config'  => array(
 							'min'   => 24,
 							'max'   => 320,
-							'label' => __( 'Logo Size', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label' => __( 'Logo Size', 'thrive-dash' ),
 							'um'    => array( 'px' ),
 						),
 						'extends' => 'Slider',

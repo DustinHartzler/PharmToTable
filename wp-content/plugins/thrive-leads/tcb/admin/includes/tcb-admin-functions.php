@@ -21,7 +21,6 @@ function tcb_admin_get_localization() {
 		'admin_nonce'        => wp_create_nonce( TCB_Admin_Ajax::NONCE ),
 		'dash_url'           => admin_url( 'admin.php?page=tve_dash_section' ),
 		't'                  => include tcb_admin()->admin_path( 'includes/i18n.php' ),
-		'architect_logo'     => tcb_admin()->admin_url( 'assets/images/admin-logo.png' ),
 		'symbols_logo'       => tcb_admin()->admin_url( 'assets/images/admin-logo.png' ),
 		'rest_routes'        => array(
 			'symbols'            => tcb_admin()->tcm_get_route_url( 'symbols' ),
@@ -43,30 +42,44 @@ function tcb_admin_get_localization() {
  * @param array $templates
  *
  * @return array
+ * todo: we will not need this after we move the category grouping logic to JS ( see the comments in admin-ajax )
  */
-function tcb_admin_get_category_templates( $templates = array() ) {
-	$return         = array();
-	$no_preview_img = tcb_admin()->admin_url( 'assets/images/no-template-preview.jpg' );
-	foreach ( $templates as $key => $tpl ) {
-		if ( empty( $tpl['image_url'] ) ) {
-			$tpl['image_url'] = $no_preview_img;
+function tcb_admin_get_category_templates( $templates = [] ) {
+	$template_categories = [];
+	$no_preview_img      = TCB_Utils::get_placeholder_url();
+
+	foreach ( $templates as $template ) {
+		if ( empty( $template['image_url'] ) ) {
+			$template['image_url'] = $no_preview_img;
 		}
-		if ( isset( $tpl['id_category'] ) && is_numeric( $tpl['id_category'] ) ) {
-			if ( empty( $return[ $tpl['id_category'] ] ) ) {
-				$return[ $tpl['id_category'] ] = array();
+
+		if ( isset( $template['id_category'] ) && is_numeric( $template['id_category'] ) ) {
+			$category_id = $template['id_category'];
+
+			/* @var \TCB\UserTemplates\Category */
+			$category_instance = \TCB\UserTemplates\Category::get_instance_with_id( $category_id );
+
+			switch ( $category_instance->get_meta( 'type' ) ) {
+				case 'uncategorized':
+					$group = 'uncategorized';
+					break;
+				case 'page_template':
+					$group = \TCB\UserTemplates\Category::PAGE_TEMPLATE_IDENTIFIER;
+					break;
+				default:
+					$group = $category_id;
+					break;
 			}
-			$return[ $tpl['id_category'] ][] = array_merge( array( 'id' => $key ), $tpl );
-		} elseif ( isset( $tpl['id_category'] ) && $tpl['id_category'] === '[#page#]' ) {
-			$return[ $tpl['id_category'] ][] = array_merge( array( 'id' => $key ), $tpl );
-		} else {
-			if ( empty( $return['uncategorized'] ) ) {
-				$return['uncategorized'] = array();
+
+			if ( empty( $template_categories[ $group ] ) ) {
+				$template_categories[ $group ] = [];
 			}
-			$return['uncategorized'][] = array_merge( array( 'id' => $key ), $tpl );
+
+			$template_categories[ $group ][] = $template;
 		}
 	}
 
-	return $return;
+	return $template_categories;
 }
 
 /**
@@ -78,7 +91,7 @@ function tcb_admin_get_category_templates( $templates = array() ) {
  * @return array
  */
 function tcb_filter_templates( $templates, $search ) {
-	$result = array();
+	$result = [];
 
 	foreach ( $templates as $template ) {
 		if ( stripos( $template['name'], $search ) !== false ) {

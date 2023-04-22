@@ -2,6 +2,8 @@
 
 namespace TVE\Dashboard\Automator;
 
+use Thrive\Automator\Items\Action_Field;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -9,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Woo_Products_Field
  */
-class Woo_Products_Field extends \Thrive\Automator\Items\Action_Field {
+class Woo_Products_Field extends Action_Field {
 	/**
 	 * Field name
 	 */
@@ -21,21 +23,22 @@ class Woo_Products_Field extends \Thrive\Automator\Items\Action_Field {
 	 * Field description
 	 */
 	public static function get_description() {
-		return 'Select products to add them to the order';
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return '';
+		return __( 'Select products to add them to the order', 'thrive-dash' );
 	}
 
 	/**
 	 * $$value will be replaced by field value
 	 * $$length will be replaced by value length
 	 *
-	 * @var string
+	 *
+	 * @return string
 	 */
 	public static function get_preview_template() {
 		return 'Product: $$value';
@@ -44,11 +47,11 @@ class Woo_Products_Field extends \Thrive\Automator\Items\Action_Field {
 	/**
 	 * For multiple option inputs, name of the callback function called through ajax to get the options
 	 */
-	public static function get_options_callback() {
+	public static function get_options_callback( $action_id, $action_data ) {
 		$products = array();
-		foreach ( \wc_get_products( array( 'limit' => - 1 ) ) as $key => $product ) {
-			$id               = $product->get_id();
-			$products[ $key ] = array(
+		foreach ( Woo::get_products() as $product ) {
+			$id              = $product->get_id();
+			$products[ $id ] = array(
 				'label' => $product->get_name(),
 				'id'    => $id,
 			);

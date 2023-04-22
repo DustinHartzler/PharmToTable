@@ -1,6 +1,6 @@
 <?php
 
-namespace TVA\Automator;
+namespace TVE\Dashboard\Automator;
 
 use Thrive\Automator\Items\Data_Field;
 

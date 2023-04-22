@@ -1,4 +1,4 @@
-<div class="cloud-template-item modal-item" data-saved="<#= saved #>">
+<div class="cloud-template-item modal-item" data-saved="<#= saved #>" data-id="<#= item.get('id')|| 0 #>">
 	<div class="modal-title-w-options">
 		<div class="cb-template-name">
 			<div class="template-name"><#= item.get('name') #></div>
@@ -16,7 +16,7 @@
 		<# } #>
 
 	</div>
-	<div class="cloud-item click" data-fn="selectTemplate" data-id="<#= item.get('id')|| 0 #>">
+	<div class="cloud-item click<#= item.get('thumbnail') ? '' : ' no-thumbnail' #>" data-fn="selectTemplate" data-id="<#= item.get('id')|| 0 #>">
 		<# if( saved ) { #>
 		<div class="symbol-delete-notice " style="display: none">
 			<span class="click" data-fn="hideDelete"><?php tcb_icon( 'close2' ); ?></span>
@@ -35,9 +35,11 @@
 		<div class="cb-template-wrapper">
 			<div class="cb-template-thumbnail">
 				<# if(item.get('thumbnail')){ #>
-				<img src="<#= item.get('thumbnail') #>"/>
+				<img class='loaded'
+				     src="<#= item.get('thumbnail') #>"
+				     data-ratio="<#= item.get('thumb_sizes') ? parseFloat(parseInt(item.get('thumb_sizes').h) / parseInt(item.get('thumb_sizes').w)).toFixed(3) : '1'#>"/>
 				<# } else { #>
-				<img src="<?php echo plugins_url( 'thrive-leads/admin/img/no-preview-thumbnail.jpg' ) ?>"/>
+				<img class='loaded' src="<?php echo plugins_url( 'thrive-leads/admin/img/no-preview-thumbnail.jpg' ) ?>" data-ratio="1"/>
 				<# } #>
 			</div>
 		</div>

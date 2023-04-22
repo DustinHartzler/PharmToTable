@@ -2,7 +2,7 @@
 
 namespace TVE\Dashboard\Automator;
 
-use Thrive\Automator\Items\Action_Fields;
+use Thrive\Automator\Items\Action_Field;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Autoresponder_Field
  */
-class Optin_Type_Field extends \Thrive\Automator\Items\Action_Field {
+class Optin_Type_Field extends Action_Field {
 
 	/**
 	 * Field name
@@ -37,7 +37,7 @@ class Optin_Type_Field extends \Thrive\Automator\Items\Action_Field {
 	/**
 	 * For multiple option inputs, name of the callback function called through ajax to get the options
 	 */
-	public static function get_options_callback() {
+	public static function get_options_callback( $action_id, $action_data ) {
 		return array(
 			's' => array(
 				'id'   => 's',

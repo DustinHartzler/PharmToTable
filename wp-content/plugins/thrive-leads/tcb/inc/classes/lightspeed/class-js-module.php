@@ -33,7 +33,7 @@ class JSModule {
 		return self::$instances[ $key ];
 	}
 
-	public function __construct( $key, $libraries ) {
+	public function __construct( $key = '', $libraries = [] ) {
 		$this->key       = $key;
 		$this->libraries = $libraries;
 	}
@@ -44,10 +44,13 @@ class JSModule {
 
 	/**
 	 * Module url
+	 *
+	 * @param boolean $include_version
+	 *
 	 * @return string
 	 */
 	public function get_url( $include_version = true ) {
-		return tve_editor_js() . '/modules/' . $this->key . \TCB_Utils::get_js_suffix() . ( $include_version ? '?v=' . TVE_VERSION : '' );
+		return tve_editor_js( '/modules/' . $this->key . \TCB_Utils::get_js_suffix() ) . ( $include_version ? '?v=' . TVE_VERSION : '' );
 	}
 
 	/**

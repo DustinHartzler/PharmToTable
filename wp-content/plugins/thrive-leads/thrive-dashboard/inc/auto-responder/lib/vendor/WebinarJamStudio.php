@@ -112,13 +112,36 @@ class Thrive_Dash_Api_WebinarJamStudio {
 			'phone'      => $phone ? $phone : ' ',
 		);
 
-		$this->apiVersion == 1 || $this->apiVersion == 4 ?
-			$params['first_name'] = $name ? $name : ' ' :
+		if ( $this->apiVersion == 1 || $this->apiVersion == 4 ) {
+			list( $params['first_name'], $params['last_name'] ) = $this->_getNameParts( $name );
+		} else {
 			$params['name'] = $name ? $name : ' ';
+		}
 
 		$this->_call( 'register', $params, 'POST' );
 
 		return true;
+	}
+
+	protected function _getNameParts( $full_name ) {
+		if ( empty( $full_name ) ) {
+			return array( '', '' );
+		}
+		$parts = explode( ' ', $full_name );
+
+		if ( count( $parts ) == 1 ) {
+			return array(
+				$parts[0],
+				'',
+			);
+		}
+		$last_name  = array_pop( $parts );
+		$first_name = implode( ' ', $parts );
+
+		return array(
+			sanitize_text_field( $first_name ),
+			sanitize_text_field( $last_name ),
+		);
 	}
 
 	/**
@@ -142,8 +165,8 @@ class Thrive_Dash_Api_WebinarJamStudio {
 	/**
 	 * perform a webservice call
 	 *
-	 * @param string $path   api path
-	 * @param array  $params request parameters
+	 * @param string $path api path
+	 * @param array $params request parameters
 	 * @param string $method GET or POST
 	 *
 	 * @throws Thrive_Dash_Api_WebinarJamStudio_Exception
@@ -190,7 +213,7 @@ class Thrive_Dash_Api_WebinarJamStudio {
 			throw new Thrive_Dash_Api_WebinarJamStudio_Exception( 'API call error. Response was: ' . $body );
 		}
 
-		if ( $data['status'] != 'success' ) {
+		if ( empty( $data['status'] ) || $data['status'] != 'success' ) {
 			$message = isset( $data['message'] ) ? $data['message'] : '';
 			if ( empty( $message ) ) {
 				$message = 'Raw response was: ' . $body;

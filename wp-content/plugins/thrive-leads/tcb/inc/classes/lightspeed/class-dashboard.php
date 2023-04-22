@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class Dashboard
+ *
  * @package TCB\Lightspeed
  */
 class Dashboard {
@@ -30,12 +31,14 @@ class Dashboard {
 
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
 
-		add_action( 'admin_print_footer_scripts', [ __CLASS__, 'render_backbone_templates' ] );
+		if ( ! \tvd_is_during_update() ) {
+			add_action( 'admin_print_footer_scripts', [ __CLASS__, 'render_backbone_templates' ] );
+		}
 	}
 
 	public static function admin_menu() {
 		add_submenu_page(
-			null,
+			'',
 			static::TITLE,
 			static::TITLE,
 			'manage_options',
@@ -89,19 +92,33 @@ class Dashboard {
 
 			tve_dash_enqueue_style( 'tcb-admin-lightspeed', tve_editor_url( 'admin/assets/css/admin-lightspeed.css' ) );
 
-			wp_localize_script( 'tcb-admin-lightspeed', 'lightspeed_localize', [
-				'version' => Main::LIGHTSPEED_VERSION,
+			$data = [
 				'options' => [
 					'is_enabled'                     => Main::is_enabled(),
 					Fonts::ENABLE_ASYNC_FONTS_LOAD   => Fonts::is_loading_fonts_async(),
 					Fonts::ENABLE_FONTS_OPTIMIZATION => Fonts::is_enabled(),
 					Fonts::DISABLE_GOOGLE_FONTS      => Fonts::is_blocking_google_fonts(),
+					Gutenberg::DISABLE_GUTENBERG     => Gutenberg::is_gutenberg_disabled(),
+					Gutenberg::DISABLE_GUTENBERG_LP  => Gutenberg::is_gutenberg_disabled( true ),
+					Emoji::DISABLE_EMOJI     => Emoji::is_emoji_disabled()
 				],
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 				'route'   => get_rest_url( get_current_blog_id(), 'tcb/v1/lightspeed' ),
 				/* if a user needs a bigger timeout, he can set the constant in wp config */
 				'timeout' => defined( 'LIGHTSPEED_TIMEOUT' ) ? LIGHTSPEED_TIMEOUT : 10,
-			] );
+				't' => array(
+					'assets'   => __( 'Asset Optimization', 'thrive-cb' ),
+					'fonts'    => __( 'Font Settings', 'thrive-cb' ),
+					'advanced' => __( 'Advanced Settings', 'thrive-cb' ),
+				)
+			];
+
+			if ( \TCB\Integrations\WooCommerce\Main::active() ) {
+				$data['options'][ Woocommerce::DISABLE_WOOCOMMERCE ]    = Woocommerce::is_woocommerce_disabled();
+				$data['options'][ Woocommerce::DISABLE_WOOCOMMERCE_LP ] = Woocommerce::is_woocommerce_disabled( true );
+			}
+
+			wp_localize_script( 'tcb-admin-lightspeed', 'lightspeed_localize', $data );
 		}
 	}
 

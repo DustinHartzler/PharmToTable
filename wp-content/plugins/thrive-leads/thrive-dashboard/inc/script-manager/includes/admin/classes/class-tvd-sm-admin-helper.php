@@ -27,11 +27,11 @@ class TVD_SM_Admin_Helper {
 	 * @return TVD_SM_Admin_Helper
 	 */
 	public static function instance() {
-		if ( self::$_instance === null ) {
-			self::$_instance = new self();
+		if ( static::$_instance === null ) {
+			static::$_instance = new self();
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
 
 	/**

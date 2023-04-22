@@ -53,7 +53,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<div class="dropdown-content pt-0">
 					<div class="ids-container mb-5">
-						<label for="tcb-woo-category-ids-select">
+						<label for="tcb-woo-product-category-select">
 							<?php echo esc_html__( 'Show individual categories', 'thrive-cb' ); ?>
 						</label>
 						<select id="tcb-woo-product-category-select" class="tcb-woo-select"></select>

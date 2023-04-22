@@ -43,34 +43,102 @@ function tve_dash_init_action() {
  */
 function tve_dash_admin_menu() {
 	add_menu_page(
-		"Thrive Dashboard",
-		"Thrive Dashboard",
+		'Thrive Dashboard',
+		'Thrive Dashboard',
 		TVE_DASH_CAPABILITY,
-		"tve_dash_section",
-		"tve_dash_section",
+		'tve_dash_section',
+		'tve_dash_section',
 		TVE_DASH_IMAGES_URL . '/logo-icon.png'
 	);
 
 	if ( is_super_admin() ) {
 		add_submenu_page(
-			null,
-			__( 'Access Manager', TVE_DASH_TRANSLATE_DOMAIN ),
-			__( 'Access Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'',
+			__( 'Access Manager', 'thrive-dash' ),
+			__( 'Access Manager', 'thrive-dash' ),
 			'manage_options',
 			'tve_dash_access_manager',
-			'tve_dash_access_manager_main_page'
+			function () {
+				require_once( TVE_DASH_PATH . '/inc/access-manager/includes/templates/access-manager.php' );
+			}
 		);
 	}
 
 	add_submenu_page(
-		null,
-		__( 'System Info', TVE_DASH_TRANSLATE_DOMAIN ),
-		__( 'System Info', TVE_DASH_TRANSLATE_DOMAIN ),
+		'',
+		__( 'System Info', 'thrive-dash' ),
+		__( 'System Info', 'thrive-dash' ),
 		'manage_options',
 		'tve-debug',
 		function () {
 			tve_dash_enqueue();
 			require_once( TVE_DASH_PATH . '/inc/plugin-updates/debug-screen.php' );
+		}
+	);
+
+	add_submenu_page(
+		'',
+		__( 'Update Info', 'thrive-dash' ),
+		__( 'Update Info', 'thrive-dash' ),
+		'manage_options',
+		'tve-updates',
+		static function () {
+			require_once( TVE_DASH_PATH . '/inc/plugin-updates/update-channel.php' );
+		}
+	);
+
+	add_submenu_page(
+		'',
+		__( 'Update Info', 'thrive-dash' ),
+		__( 'Update Info', 'thrive-dash' ),
+		'manage_options',
+		'tve-update-switch-stable-channel',
+		static function () {
+			//Nonce check
+			check_admin_referer( 'tvd_switch_stable_channel_nonce' );
+
+			$defaults = array(
+				'page'            => 'tve-update-switch-stable-channel',
+				'name'            => '',
+				'current_version' => 0, //Needed only for UI
+				'plugin_file'     => '',
+				'_wpnonce'        => '', //Nonce key
+				'plugin_slug'     => '',
+				'type'            => '', //Theme OR Plugin
+			);
+			$args     = wp_parse_args( $_GET, $defaults );
+
+			if ( ! empty( $args['type'] ) && ! empty( $args['tvd_channel'] ) && $args['tvd_channel'] === 'tvd_switch_to_stable_channel' && in_array( $args['type'], [ 'plugin', 'theme' ] ) ) {
+				$name = sanitize_text_field( $args['name'] );
+
+				if ( $args['type'] === 'theme' ) {
+
+					$theme = 'thrive-theme';
+
+					require_once( TVE_DASH_PATH . '/inc/plugin-updates/classes/class-tvd-theme-upgrader.php' );
+
+					$theme_upgrader = new TVD_Theme_Upgrader( new Theme_Upgrader_Skin( array(
+						'title' => $name,
+						'nonce' => 'upgrade-plugin_' . $theme,
+						'url'   => 'index.php?page=' . esc_url( $args['page'] ) . '&theme_file=' . $theme . 'action=upgrade-theme',
+						'theme' => $theme,
+					) ) );
+					$theme_upgrader->get_latest_version( $theme );
+				} else if ( $args['type'] === 'plugin' ) {
+					require_once( TVE_DASH_PATH . '/inc/plugin-updates/classes/class-tvd-plugin-upgrader.php' );
+
+					$plugin_upgrader = new TVD_Plugin_Upgrader( new Plugin_Upgrader_Skin( array(
+						'title'  => $name,
+						'nonce'  => 'upgrade-plugin_' . esc_html( $args['plugin_slug'] ),
+						'url'    => 'index.php?page=' . esc_url( $args['page'] ) . '&plugin_file=' . esc_url( $args['plugin_file'] ) . 'action=upgrade-plugin',
+						'plugin' => esc_html( $args['plugin_slug'] ),
+					) ) );
+					$plugin_upgrader->get_latest_version( $args['plugin_file'] );
+				}
+			} else {
+				tve_dash_enqueue();
+				require_once( TVE_DASH_PATH . '/inc/plugin-updates/update-switch-stable-channel.php' );
+			}
 		}
 	);
 
@@ -81,17 +149,17 @@ function tve_dash_admin_menu() {
 
 	$menus = array(
 		'license_manager'     => array(
-			'parent_slug' => is_plugin_active( 'thrive-product-manager/thrive-product-manager.php' ) ? null : 'tve_dash_section',
-			'page_title'  => __( 'Thrive License Manager', TVE_DASH_TRANSLATE_DOMAIN ),
-			'menu_title'  => __( 'License Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'parent_slug' => tve_dash_is_plugin_active( 'thrive-product-manager' ) ? '' : 'tve_dash_section',
+			'page_title'  => __( 'Thrive License Manager', 'thrive-dash' ),
+			'menu_title'  => __( 'License Manager', 'thrive-dash' ),
 			'capability'  => 'manage_options',
 			'menu_slug'   => 'tve_dash_license_manager_section',
 			'function'    => 'tve_dash_license_manager_section',
 		),
 		'general_settings'    => array(
-			'parent_slug' => 'tve_dash_section',
-			'page_title'  => __( 'Thrive General Settings', TVE_DASH_TRANSLATE_DOMAIN ),
-			'menu_title'  => __( 'General Settings', TVE_DASH_TRANSLATE_DOMAIN ),
+			'parent_slug' => '',
+			'page_title'  => __( 'Thrive General Settings', 'thrive-dash' ),
+			'menu_title'  => __( 'General Settings', 'thrive-dash' ),
 			'capability'  => TVE_DASH_CAPABILITY,
 			'menu_slug'   => 'tve_dash_general_settings_section',
 			'function'    => 'tve_dash_general_settings_section',
@@ -100,35 +168,35 @@ function tve_dash_admin_menu() {
 			/**
 			 * in order to not include the page in the menu -> use null as the first parameter
 			 */
-			'parent_slug' => tve_dash_is_debug_on() ? 'tve_dash_section' : null,
-			'page_title'  => __( 'Thrive UI toolkit', TVE_DASH_TRANSLATE_DOMAIN ),
-			'menu_title'  => __( 'Thrive UI toolkit', TVE_DASH_TRANSLATE_DOMAIN ),
+			'parent_slug' => tve_dash_is_debug_on() ? 'tve_dash_section' : '',
+			'page_title'  => __( 'Thrive UI toolkit', 'thrive-dash' ),
+			'menu_title'  => __( 'Thrive UI toolkit', 'thrive-dash' ),
 			'capability'  => 'manage_options',
 			'menu_slug'   => 'tve_dash_ui_toolkit',
 			'function'    => 'tve_dash_ui_toolkit',
 		),
 		/* Font Manager Page */
 		'font_manager'        => array(
-			'parent_slug' => null,
-			'page_title'  => __( 'Thrive Font Manager', TVE_DASH_TRANSLATE_DOMAIN ),
-			'menu_title'  => __( 'Thrive Font Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'parent_slug' => '',
+			'page_title'  => __( 'Thrive Font Manager', 'thrive-dash' ),
+			'menu_title'  => __( 'Thrive Font Manager', 'thrive-dash' ),
 			'capability'  => TVE_DASH_CAPABILITY,
 			'menu_slug'   => 'tve_dash_font_manager',
 			'function'    => 'tve_dash_font_manager_main_page',
 		),
 		/* Font Import Manager Page */
 		'font_import_manager' => array(
-			'parent_slug' => null,
-			'page_title'  => __( 'Thrive Font Import Manager', TVE_DASH_TRANSLATE_DOMAIN ),
-			'menu_title'  => __( 'Thrive Font Import Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'parent_slug' => '',
+			'page_title'  => __( 'Thrive Font Import Manager', 'thrive-dash' ),
+			'menu_title'  => __( 'Thrive Font Import Manager', 'thrive-dash' ),
 			'capability'  => TVE_DASH_CAPABILITY,
 			'menu_slug'   => 'tve_dash_font_import_manager',
 			'function'    => 'tve_dash_font_import_manager_main_page',
 		),
 		'icon_manager'        => array(
-			'parent_slug' => null,
-			'page_title'  => __( 'Icon Manager', TVE_DASH_TRANSLATE_DOMAIN ),
-			'menu_title'  => __( 'Icon Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'parent_slug' => '',
+			'page_title'  => __( 'Icon Manager', 'thrive-dash' ),
+			'menu_title'  => __( 'Icon Manager', 'thrive-dash' ),
 			'capability'  => TVE_DASH_CAPABILITY,
 			'menu_slug'   => 'tve_dash_icon_manager',
 			'function'    => 'tve_dash_icon_manager_main_page',
@@ -140,10 +208,53 @@ function tve_dash_admin_menu() {
 
 	foreach ( $thrive_products_order as $order => $menu_short ) {
 		if ( array_key_exists( $menu_short, $menus ) ) {
-			add_submenu_page( $menus[ $menu_short ]['parent_slug'], $menus[ $menu_short ]['page_title'], $menus[ $menu_short ]['menu_title'], $menus[ $menu_short ]['capability'], $menus[ $menu_short ]['menu_slug'], $menus[ $menu_short ]['function'] );
+			add_submenu_page( $menus[ $menu_short ]['parent_slug'] ?: '', $menus[ $menu_short ]['page_title'], $menus[ $menu_short ]['menu_title'], $menus[ $menu_short ]['capability'], $menus[ $menu_short ]['menu_slug'], $menus[ $menu_short ]['function'] );
 		}
 	}
 }
+
+/**
+ * Plugin Action Links
+ *
+ * Injects a stable link into plugin actions links used to switch Beta Versions of Thrive Plugins to Stable Versions
+ *
+ * @param $actions
+ * @param $plugin_file
+ * @param $plugin_data
+ * @param $context
+ *
+ * @return array $actions
+ */
+add_filter( 'plugin_action_links', static function ( $actions, $plugin_file, $plugin_data, $context ) {
+
+	if ( ! isset( $plugin_data['Version'] ) || ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( $plugin_file ) ) ) {
+		return $actions;
+	}
+
+	// Multisite check.
+	if ( is_multisite() && ( ! is_network_admin() && ! is_main_site() ) ) {
+		return $actions;
+	}
+
+	$slug = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : dirname( plugin_basename( $plugin_file ) );
+
+	if ( strpos( $slug, 'thrive-' ) !== false && strpos( $plugin_data['Version'], 'beta' ) !== false && tvd_update_is_using_stable_channel() ) {
+		$stable_url = add_query_arg(
+			array(
+				'current_version' => urlencode( $plugin_data['Version'] ),
+				'name'            => urlencode( $plugin_data['Name'] ),
+				'plugin_slug'     => urlencode( $slug ),
+				'_wpnonce'        => wp_create_nonce( 'tvd_switch_stable_channel_nonce' ),
+				'type'            => 'plugin',
+				'plugin_file'     => $plugin_file,
+				'page'            => 'tve-update-switch-stable-channel',
+			), admin_url( 'admin.php' ) );
+
+		$actions['tvd-switch-stable-update'] = '<a href="' . esc_url( $stable_url ) . '">' . __( 'Switch to stable version', 'thrive-dash' ) . '</a>';
+	}
+
+	return $actions;
+}, 10, 4 );
 
 function tve_dash_icon_manager_main_page() {
 	$tve_icon_manager = Tve_Dash_Thrive_Icon_Manager::instance();
@@ -164,13 +275,13 @@ function tve_dash_needs_enqueue( $hook ) {
 	$accepted_hooks = array(
 		'toplevel_page_tve_dash_section',
 		'thrive-dashboard_page_tve_dash_license_manager_section',
-		'thrive-dashboard_page_tve_dash_general_settings_section',
 		'thrive-dashboard_page_tve_dash_ui_toolkit',
 		'admin_page_tve_dash_ui_toolkit',
 		'admin_page_tve_dash_api_connect',
 		'admin_page_tve_dash_api_error_log',
 		'admin_page_tve_dash_api_connect',
 		'thrive-dashboard_page_tve_dash_access_manager',
+		'admin_page_tve-updates',
 	);
 
 	$accepted_hooks = apply_filters( 'tve_dash_include_ui', $accepted_hooks, $hook );
@@ -179,8 +290,40 @@ function tve_dash_needs_enqueue( $hook ) {
 }
 
 function tve_dash_admin_enqueue_scripts( $hook ) {
+
+	if ( $hook === 'themes.php' && tve_dash_is_ttb_active() ) {
+
+		$thrive_theme = wp_get_theme();
+
+		if ( tvd_update_is_using_stable_channel() && strpos( $thrive_theme->get( 'Version' ), 'beta' ) !== false ) {
+			$stable_url = add_query_arg(
+				array(
+					'current_version' => urlencode( $thrive_theme->get( 'Version' ) ),
+					'name'            => urlencode( $thrive_theme->get( 'Name' ) ),
+					'plugin_slug'     => urlencode( 'thrive-theme' ),
+					'_wpnonce'        => wp_create_nonce( 'tvd_switch_stable_channel_nonce' ),
+					'type'            => 'theme',
+					'page'            => 'tve-update-switch-stable-channel',
+				), admin_url( 'admin.php' ) );
+
+			wp_enqueue_script( 'tve-dash-theme-switch-stable', TVE_DASH_URL . '/inc/plugin-updates/js/themes-switch-stable.js', array(
+				'jquery',
+				'backbone',
+				'theme',
+			), false, true );
+
+			wp_localize_script( 'tve-dash-theme-switch-stable', 'TVD_STABLE_THEME',
+				array(
+					'name'      => $thrive_theme->name,
+					'link_html' => '<a href="' . $stable_url . '" style="position:absolute;right: 5px; bottom: 5px;" class="tvd-switch-stable-theme button">Switch to stable version</a>',
+				)
+			);
+		}
+	}
+
 	if ( tve_dash_needs_enqueue( $hook ) ) {
 		tve_dash_enqueue();
+		wp_enqueue_media(); //Weeded for wp object localization in JS
 	}
 
 	/**
@@ -192,14 +335,15 @@ function tve_dash_admin_enqueue_scripts( $hook ) {
 }
 
 /**
- * Whether or not we should thrive blocks
+ * Whether we should thrive blocks
  *
  * @return bool
  */
 function tve_should_load_blocks() {
 	$allow  = false;
-	$screen = get_current_screen();
-	if ( ! empty( $screen ) ) {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+	if ( $screen !== null ) {
 		$allow = $screen->is_block_editor();
 	}
 
@@ -218,7 +362,40 @@ function tve_dash_admin_dequeue_conflicting( $hook ) {
 		wp_deregister_style( 'select2' );
 		wp_dequeue_script( 'select2' );
 		wp_deregister_script( 'select2' );
+
+		//FS poster select2
+		wp_dequeue_style( 'fsp-select2' );
+		wp_deregister_style( 'fsp-select2' );
+		wp_dequeue_style( 'fsp-select2-custom' );
+		wp_deregister_style( 'fsp-select2-custom' );
+		wp_dequeue_script( 'fsp-select2' );
+		wp_deregister_script( 'fsp-select2' );
 	}
+}
+
+/**
+ * Additional generic data for Vue views
+ * Should be included only in Dashboard pages that use Vue
+ *
+ * @return void
+ */
+function tve_dash_enqueue_vue() {
+	include_once TVE_DASH_PATH . '/css/font/dashboard-icons.svg';
+	wp_enqueue_style( 'media' );
+	wp_enqueue_media();
+	tve_dash_enqueue_script( 'tve-dash-main-vue', TVE_DASH_URL . '/assets/dist/js/dash-vue.js', [ 'lodash', 'jquery' ] );
+
+	wp_localize_script( 'tve-dash-main-vue', 'TD', [
+		'rest_nonce' => wp_create_nonce( 'wp_rest' ),
+		'dash_url'   => esc_url( admin_url( 'admin.php?page=tve_dash_section' ) ),
+	] );
+
+	wp_enqueue_style( 'td-font', '//fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700,800' );
+
+	/**
+	 * SUPP-15199 remove active campaign calendar that overwrites setfullyear and breaks other things
+	 */
+	remove_filter( 'mce_external_plugins', 'activecampaign_add_buttons' );
 }
 
 /**
@@ -244,32 +421,33 @@ function tve_dash_enqueue() {
 			'ajax_retry_api_log'  => 'tve_dash_api_form_retry',
 		),
 		'routes'             => array(
-			'settings'          => 'generalSettings',
-			'license'           => 'license',
-			'active_states'     => 'activeState',
-			'error_log'         => 'getErrorLogs',
-			'affiliate_links'   => 'affiliateLinks',
-			'add_aff_id'        => 'saveAffiliateId',
-			'get_aff_id'        => 'getAffiliateId',
-			'token'             => 'token',
-			'save_token'        => 'saveToken',
-			'delete_token'      => 'deleteToken',
-			'change_capability' => 'changeCapability',
+			'settings'                      => 'generalSettings',
+			'license'                       => 'license',
+			'active_states'                 => 'activeState',
+			'error_log'                     => 'getErrorLogs',
+			'affiliate_links'               => 'affiliateLinks',
+			'add_aff_id'                    => 'saveAffiliateId',
+			'get_aff_id'                    => 'getAffiliateId',
+			'token'                         => 'token',
+			'save_token'                    => 'saveToken',
+			'delete_token'                  => 'deleteToken',
+			'change_capability'             => 'changeCapability',
+			'update_user_functionality'     => 'updateUserFunctionality',
+			'reset_capabilities_to_default' => 'resetCapabilitiesToDefault',
 		),
 		'translations'       => array(
-			'UnknownError'      => __( 'Unknown error', TVE_DASH_TRANSLATE_DOMAIN ),
-			'Deleting'          => __( 'Deleting...', TVE_DASH_TRANSLATE_DOMAIN ),
-			'Testing'           => __( 'Testing...', TVE_DASH_TRANSLATE_DOMAIN ),
-			'Loading'           => __( 'Loading...', TVE_DASH_TRANSLATE_DOMAIN ),
-			'ConnectionWorks'   => __( 'Connection works!', TVE_DASH_TRANSLATE_DOMAIN ),
-			'ConnectionFailed'  => __( 'Connection failed!', TVE_DASH_TRANSLATE_DOMAIN ),
-			'Unlimited'         => __( 'Unlimited', TVE_DASH_TRANSLATE_DOMAIN ),
-			'CapabilityError'   => __( 'You are not allowed to remove this capability!', TVE_DASH_TRANSLATE_DOMAIN ),
-			'CapabilitySuccess' => __( 'Capability changed successfully', TVE_DASH_TRANSLATE_DOMAIN ),
-			'RequestError'      => 'Request error, please contact Thrive developers !',
-			'Copy'              => 'Copy',
-			'ImportedKit'       => __( 'Kit successfully imported', TVE_DASH_TRANSLATE_DOMAIN ),
-			'RemovedKit'        => __( 'Kit removed', TVE_DASH_TRANSLATE_DOMAIN ),
+			'UnknownError'     => __( 'Unknown error', 'thrive-dash' ),
+			'Deleting'         => __( 'Deleting...', 'thrive-dash' ),
+			'Testing'          => __( 'Testing...', 'thrive-dash' ),
+			'Loading'          => __( 'Loading...', 'thrive-dash' ),
+			'ConnectionWorks'  => __( 'Connection works!', 'thrive-dash' ),
+			'ConnectionFailed' => __( 'Connection failed!', 'thrive-dash' ),
+			'Unlimited'        => __( 'Unlimited', 'thrive-dash' ),
+			'CapabilityError'  => __( 'You are not allowed to remove this capability!', 'thrive-dash' ),
+			'RequestError'     => 'Request error, please contact Thrive developers !',
+			'Copy'             => 'Copy',
+			'ImportedKit'      => __( 'Kit successfully imported', 'thrive-dash' ),
+			'RemovedKit'       => __( 'Kit removed', 'thrive-dash' ),
 		),
 		'products'           => array(
 			TVE_Dash_Product_LicenseManager::ALL_TAG => 'All products',
@@ -278,10 +456,10 @@ function tve_dash_enqueue() {
 			TVE_Dash_Product_LicenseManager::TCW_TAG => 'Thrive Clever Widgets',
 		),
 		'license_types'      => array(
-			'individual' => __( 'Individual product', TVE_DASH_TRANSLATE_DOMAIN ),
-			'full'       => __( 'Full membership', TVE_DASH_TRANSLATE_DOMAIN ),
+			'individual' => __( 'Individual product', 'thrive-dash' ),
+			'full'       => __( 'Full membership', 'thrive-dash' ),
 		),
-		'is_polylang_active' => is_plugin_active( 'polylang/polylang.php' ),
+		'is_polylang_active' => tve_dash_is_plugin_active( 'polylang' ),
 		'tvd_fa_kit'         => get_option( 'tvd_fa_kit', '' ),
 	);
 
@@ -367,10 +545,10 @@ function tve_dash_reset_license() {
 }
 
 function tve_dash_load_text_domain() {
-	$domain = TVE_DASH_TRANSLATE_DOMAIN;
+	$domain = 'thrive-dash';
 	$locale = $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
-	$path = 'thrive-dashboard/languages/';
+	$path = 'thrive-dashboard/languages';
 	//$path = apply_filters('tve_dash_filter_plugin_languages_path', $path);
 
 	load_textdomain( $domain, WP_LANG_DIR . '/thrive/' . $domain . "-" . $locale . ".mo" );
@@ -417,10 +595,26 @@ function tve_dash_output_backbone_templates( $templates, $prefix = '', $suffix =
 
 	foreach ( $templates as $tpl_id => $path ) {
 		$tpl_id = $prefix . $tpl_id . $suffix;
-		echo '<script type="text/template" id="' . esc_attr( $tpl_id ) . '">';
+
+		ob_start();
 		include $path;
-		echo '</script>';
+		$content = ob_get_clean();
+
+		echo '<script type="text/template" id="' . esc_attr( $tpl_id ) . '">' . tve_dash_escape_script_tags( $content ) . '</script>';
+
 	}
+}
+
+/**
+ * Some plugins add inline scripts thinking that this is the frontend render, which ruins the backbone html <script></script> tags and breaks the HTML afterwards.
+ * As a fix, we replace the inner script tags with <tve-script>, and reverse this operation when we apply backbone templates in the editor.
+ *
+ * @param $content
+ *
+ * @return string|string[]
+ */
+function tve_dash_escape_script_tags( $content ) {
+	return str_replace( array( '<script', '</script>' ), array( '<tve-script', '</tve-script>' ), $content );
 }
 
 /**
@@ -508,6 +702,7 @@ function tve_dash_frontend_enqueue() {
 		'is_crawler'      => $force_ajax_send !== false ? false : (bool) tve_dash_is_crawler( true ),
 		// Apply the filter to allow overwriting the bot detection. Can be used by 3rd party plugins to force the initial ajax request
 		'recaptcha'       => $captcha_api,
+		'post_id'         => get_the_ID(),
 	);
 	wp_localize_script( 'tve-dash-frontend', 'tve_dash_front', $data );
 }
@@ -536,6 +731,13 @@ function tve_dash_frontend_ajax_load() {
 		wp_send_json( $response );
 	}
 
+	if ( isset( $_POST['post_id'] ) ) {
+		global $post;
+
+		$post = get_post( $_POST['post_id'] );
+	}
+	//set a global to know we are on dashboard lazy load
+	$GLOBALS['tve_dash_frontend_ajax_load'] = true;
 	foreach ( map_deep( $_POST['tve_dash_data'], 'sanitize_text_field' ) as $key => $data ) {
 		/**
 		 * this is a really ugly one, but is required, because code from various plugins relies on $_POST / $_REQUEST
@@ -556,6 +758,13 @@ function tve_dash_frontend_ajax_load() {
 	if ( ! empty( $GLOBALS['tve_dash_resources'] ) ) {
 		$response['__resources'] = $GLOBALS['tve_dash_resources'];
 	}
+
+	/**
+	 * Used for changing the response on dashboard requests
+	 */
+	$response = apply_filters( 'tve_dash_frontend_ajax_response', $response );
+
+	$GLOBALS['tve_dash_frontend_ajax_load'] = false;
 
 	wp_send_json( $response );
 }
@@ -622,7 +831,7 @@ function tve_dash_should_index_page() {
 	$should_index = empty( $post_types ) || ! is_singular( $post_types );
 
 	/**
-	 * Allows filtering whether or not the current page should be indexed.
+	 * Allows filtering whether the current page should be indexed.
 	 *
 	 * @param bool $should_index
 	 *
@@ -632,10 +841,16 @@ function tve_dash_should_index_page() {
 }
 
 function tve_dash_current_screen() {
+	/**
+	 * Some pages don't have a title, so we need to set it manually
+	 */
+	$screen = tve_get_current_screen_key();
+	global $title;
+	if ( $screen && empty( $title ) && strpos( $screen, 'tve_dash' ) !== false ) {
+		$title = 'Thrive Dashboard';
+	}
 
-	$screen = get_current_screen();
-
-	if ( $screen->id === 'admin_page_tve_dash_license_manager_section' && is_plugin_active( 'thrive-product-manager/thrive-product-manager.php' ) ) {
+	if ( $screen === 'admin_page_tve_dash_license_manager_section' && tve_dash_is_plugin_active( 'thrive-product-manager' ) ) {
 		$url = thrive_product_manager()->get_admin_url();
 		wp_redirect( $url );
 		die;
@@ -678,6 +893,37 @@ function tve_dash_admin_bar_menu( $wp_admin_bar ) {
 }
 
 add_action( 'admin_bar_menu', 'tve_dash_admin_bar_menu', 999 );
+
+/**
+ * Update setting for Thrive Suite
+ */
+add_action( 'wp_ajax_tve_update_settings', static function () {
+
+	check_ajax_referer( 'tve-dash' );
+
+	$value = sanitize_text_field( $_POST['value'] );
+
+	if ( current_user_can( 'manage_options' ) && in_array( $value, array( 'stable', 'beta' ) ) ) {
+
+		update_option( 'tve_update_option', $value );
+
+		/**
+		 * We need to delete transients on channel changed to refresh the update cache
+		 */
+		foreach ( get_plugins() as $plugin_file => $plugin_data ) {
+			$slug = dirname( plugin_basename( $plugin_file ) );
+
+			if ( strpos( $slug, 'thrive-' ) !== false ) {
+				delete_option( 'external_updates-' . $slug );
+			}
+		}
+		wp_clean_update_cache();
+
+		wp_die( 'Success!' );
+	}
+
+	wp_die( 'Nope!' );
+} );
 
 /* Quick query to remove all of our transients */
 add_action( 'wp_ajax_tve_debug_reset_transient', function () {
@@ -736,12 +982,11 @@ function tve_dash_incompatible_tar_version() {
 			parse_str( $parts['query'], $query );
 
 			$products_incompatible_with_tar[] = array(
-				'title'  => $product->getTitle(),
+				'title'  => $product->get_title(),
 				'screen' => ! empty( $query['page'] ) ? $query['page'] : '',
 			);
 		}
 	}
-
 
 	$products_counter = count( $products_incompatible_with_tar );
 
@@ -750,11 +995,7 @@ function tve_dash_incompatible_tar_version() {
 		$titles  = array_column( $products_incompatible_with_tar, 'title' );
 		$screens = array_column( $products_incompatible_with_tar, 'screen' );
 
-		/**
-		 * @var WP_Screen
-		 */
-		$screen = get_current_screen();
-		if ( $screen && in_array( str_replace( 'thrive-dashboard_page_', '', $screen->base ), $screens, true ) ) {
+		if ( in_array( str_replace( 'thrive-dashboard_page_', '', tve_get_current_screen_key( 'base' ) ), $screens, true ) ) {
 			return;
 		}
 
@@ -779,7 +1020,7 @@ function tve_dash_incompatible_tar_version() {
 
 		$text = sprintf( 'Current %s of %s %s compatible with the current version of Thrive Architect. Please update all plugins to the latest versions.', $version, $products_str, $is_not );
 
-		$text .= ' <a href="' . network_admin_url( 'plugins.php' ) . '">' . __( 'Manage plugins', TVE_DASH_TRANSLATE_DOMAIN ) . '</a>';
+		$text .= ' <a href="' . network_admin_url( 'plugins.php' ) . '">' . __( 'Manage plugins', 'thrive-dash' ) . '</a>';
 
 		echo sprintf( '<div class="error"><p>%s</p></div>', $text );
 	}
@@ -866,3 +1107,31 @@ add_filter( 'wpseo_sitemap_exclude_taxonomy', static function ( $exclude, $tax_n
 
 	return $exclude;
 }, 10, 2 );
+
+/**
+ * Loads the class used for Conditional Display in TAR
+ */
+function tve_load_conditional_display_classes() {
+	if ( class_exists( '\TCB\ConditionalDisplay\Main', false ) ) {
+		require_once TVE_DASH_PATH . '/inc/conditional-display/class-main.php';
+		\TVE\Architect\ConditionalDisplay\Main::init();
+	}
+}
+
+add_action( 'init', 'tve_load_conditional_display_classes', 11 );
+
+add_action( 'thrive_prepare_migrations',
+	/**
+	 * @throws Exception
+	 */
+	static function () {
+		\TD_DB_Manager::add_manager(
+			TVE_DASH_PATH . '/inc/db-manager/migrations',
+			'tve_td_db_version',
+			TVE_DASH_DB_VERSION,
+			'Thrive Dashboard',
+			/* this is empty because the table prefixes are different (reporting uses 'thrive_' and smart site uses 'td_'), so they are added to the tables directly */
+			'',
+			'tve_dash_reset'
+		);
+	} );

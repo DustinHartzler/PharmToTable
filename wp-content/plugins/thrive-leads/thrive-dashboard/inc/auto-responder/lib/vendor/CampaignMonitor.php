@@ -103,7 +103,7 @@ class Thrive_Dash_Api_CampaignMonitor {
 	 *
 	 * @param string $route
 	 * @param string $method
-	 * @param array  $args
+	 * @param array $args
 	 *
 	 * @return array|mixed|object
 	 * @throws Exception
@@ -125,7 +125,19 @@ class Thrive_Dash_Api_CampaignMonitor {
 
 		$args = array_merge( $defaults, $args );
 
-		$fn = strtolower( $method ) === 'post' ? 'tve_dash_api_remote_post' : 'tve_dash_api_remote_get';
+		switch ( strtolower( $method ) ) {
+			case 'post':
+				$fn = 'tve_dash_api_remote_post';
+				break;
+			case 'delete':
+				$url = $url. '?' . http_build_query($args['body']);
+				$args['method'] = 'DELETE';
+				$fn = 'tve_dash_api_remote_request';
+				break;
+			default:
+				$fn = 'tve_dash_api_remote_get';
+				break;
+		}
 
 		$response = $fn( $url, $args );
 

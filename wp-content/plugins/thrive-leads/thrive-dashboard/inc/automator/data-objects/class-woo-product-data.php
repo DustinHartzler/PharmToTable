@@ -2,6 +2,10 @@
 
 namespace TVE\Dashboard\Automator;
 
+use Exception;
+use Thrive\Automator\Items\Data_Object;
+use function wc_get_product;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -9,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Woo_Product_Data
  */
-class Woo_Product_Data extends \Thrive\Automator\Items\Data_Object {
+class Woo_Product_Data extends Data_Object {
 	/**
 	 * Get the data-object identifier
 	 *
@@ -19,6 +23,10 @@ class Woo_Product_Data extends \Thrive\Automator\Items\Data_Object {
 		return 'woo_product_data';
 	}
 
+	public static function get_nice_name() {
+		return 'WooCommerce product';
+	}
+
 	/**
 	 * Array of field object keys that are contained by this data-object
 	 *
@@ -26,6 +34,7 @@ class Woo_Product_Data extends \Thrive\Automator\Items\Data_Object {
 	 */
 	public static function get_fields() {
 		return array(
+			'woo_product_id',
 			'product_type',
 			'woo_product_name',
 			'product_slug',
@@ -75,7 +84,7 @@ class Woo_Product_Data extends \Thrive\Automator\Items\Data_Object {
 
 	public static function create_object( $param ) {
 		if ( empty( $param ) ) {
-			throw new \Exception( 'No parameter provided for Woo_Product_Data object' );
+			throw new Exception( 'No parameter provided for Woo_Product_Data object' );
 		}
 
 		$product = null;
@@ -84,11 +93,12 @@ class Woo_Product_Data extends \Thrive\Automator\Items\Data_Object {
 		} elseif ( is_a( $param, 'WC_Product' ) ) {
 			$product = $param;
 		} elseif ( is_numeric( $param ) ) {
-			$product = \wc_get_product( $param );
+			$product = wc_get_product( $param );
 		}
 
 		if ( $product ) {
 			return array(
+				'woo_product_id'             => $product->get_id(),
 				'product_type'               => $product->get_type(),
 				'woo_product_name'           => $product->get_name(),
 				'product_slug'               => $product->get_slug(),
@@ -137,5 +147,21 @@ class Woo_Product_Data extends \Thrive\Automator\Items\Data_Object {
 		}
 
 		return $product;
+	}
+
+	public static function get_data_object_options() {
+
+		$options = [];
+
+		foreach ( Woo::get_products() as $product ) {
+			$name           = $product->get_name();
+			$id             = $product->get_id();
+			$options[ $id ] = array(
+				'id'    => $id,
+				'label' => $name,
+			);
+		}
+
+		return $options;
 	}
 }

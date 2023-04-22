@@ -17,7 +17,7 @@ class Form_Identifier_Data_Field extends \Thrive\Automator\Items\Data_Field {
 	 * Field name
 	 */
 	public static function get_name() {
-		return 'Specific form';
+		return 'Specific forms';
 	}
 
 	/**
@@ -58,22 +58,25 @@ class Form_Identifier_Data_Field extends \Thrive\Automator\Items\Data_Field {
 			$lg_post = FormSettings::get_one( $lg->ID );
 
 			if ( ! empty( $lg_post ) ) {
-				$saved_identifier = $lg_post->form_identifier;
+				$post = get_post( $lg->post_parent );
+				if ( ! empty( $post ) && $post->post_status !== 'trash' ) {
+					$saved_identifier = $lg_post->form_identifier;
+					if ( empty( $saved_identifier ) && ! empty( $lg->post_parent ) ) {
 
-				if ( empty( $saved_identifier ) && ! empty( $lg->post_parent ) ) {
-					$post                      = get_post( $lg->post_parent );
-					$form_identifier           = ( empty( $post->post_name ) ? '' : $post->post_name ) . '-form-' . substr( uniqid( '', true ), - 6, 6 );
-					$config                    = $lg_post->get_config( false );
-					$config['form_identifier'] = $form_identifier;
-					$post_title                = 'Form settings' . ( $lg->post_parent ? ' for content ' . $lg->post_parent : '' );
-					$lg_post->set_config( $config )
-					        ->save( $post_title, array( 'post_parent' => $lg->post_parent ) );
+						$form_identifier           = ( empty( $post->post_name ) ? '' : $post->post_name ) . '-form-' . substr( uniqid( '', true ), - 6, 6 );
+						$config                    = $lg_post->get_config( false );
+						$config['form_identifier'] = $form_identifier;
+						$post_title                = 'Form settings' . ( $lg->post_parent ? ' for content ' . $lg->post_parent : '' );
+						$lg_post->set_config( $config )
+						        ->save( $post_title, array( 'post_parent' => $lg->post_parent ) );
+					}
+
+					$form_id         = $lg_post->form_identifier;
+					$lgs[ $form_id ] = [
+						'label' => $form_id,
+						'id'    => $form_id,
+					];
 				}
-				$form_id         = $lg_post->form_identifier;
-				$lgs[ $form_id ] = [
-					'label' => $form_id,
-					'id'    => $form_id,
-				];
 			}
 		}
 

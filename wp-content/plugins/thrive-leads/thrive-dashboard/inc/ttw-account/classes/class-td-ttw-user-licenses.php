@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class TD_TTW_User_Licenses
- *
+ * @static TD_TTW_User_Licenses get_instance
  * @property string status
  */
 class TD_TTW_User_Licenses {
@@ -34,7 +34,7 @@ class TD_TTW_User_Licenses {
 
 	private function __construct() {
 
-		$this->_data = get_transient( self::NAME );
+		$this->_data = thrive_get_transient( self::NAME );
 
 		$this->_init_licenses_instances();
 
@@ -46,28 +46,19 @@ class TD_TTW_User_Licenses {
 	private function _init_licenses_instances() {
 
 		foreach ( (array) $this->_data as $item ) {
-			$tag = ! empty( $item['tag'] ) ? $item['tag'] : '';
-
-			if ( is_array( $tag ) ) {
-				$tag = in_array( self::TTB_TAG, $tag )
-					? self::TTB_TAG
-					: TD_TTW_License::MEMBERSHIP_TAG;
-			}
-
-			if ( ! empty( $tag ) && empty( $this->_licenses_instances[ $tag ] ) ) {
-				$this->_licenses_instances[ $tag ] = new TD_TTW_License( $item );
+			if ( ! empty( $item['tags'] ) && is_array( $item['tags'] ) ) {
+				foreach ( $item['tags'] as $tag ) {
+					/**
+					 * There might be a cases where user has purchased the same license multiple times; e.g. Suit with tag: all
+					 * TTW serves them all but those which can_update are first in the list
+					 * So that, the last ones in the list which cannot_update do not overwrite those which can_update()
+					 */
+					if ( empty( $this->_licenses_instances[ $tag ] ) ) {
+						$this->_licenses_instances[ $tag ] = new TD_TTW_License( $item );
+					}
+				}
 			}
 		}
-	}
-
-	/**
-	 * Check if there is an active membership
-	 *
-	 * @return bool
-	 */
-	public function has_active_membership() {
-
-		return $this->has_membership() && $this->is_membership_active();
 	}
 
 	/**
@@ -77,17 +68,7 @@ class TD_TTW_User_Licenses {
 	 */
 	public function is_membership_active() {
 
-		return $this->get_license( TD_TTW_License::MEMBERSHIP_TAG )->is_active();
-	}
-
-	/**
-	 * Check if the membership license is invalid
-	 *
-	 * @return bool
-	 */
-	public function is_membership_invalid() {
-
-		return $this->get_license( TD_TTW_License::MEMBERSHIP_TAG )->is_invalid();
+		return $this->get_membership() && $this->get_membership()->is_active();
 	}
 
 	/**
@@ -123,9 +104,9 @@ class TD_TTW_User_Licenses {
 	}
 
 	/**
-	 * Get membership type license
+	 * Returns a license which has 'all' in tags list
 	 *
-	 * @return TD_TTW_License
+	 * @return TD_TTW_License|null
 	 */
 	public function get_membership() {
 
@@ -137,15 +118,17 @@ class TD_TTW_User_Licenses {
 	 *
 	 * @param string $tag
 	 *
-	 * @return TD_TTW_License
+	 * @return TD_TTW_License|null
 	 */
 	public function get_license( $tag ) {
 
+		$license = null;
+
 		if ( isset( $this->_licenses_instances[ $tag ] ) ) {
-			return $this->_licenses_instances[ $tag ];
+			$license = $this->_licenses_instances[ $tag ];
 		}
 
-		return new TD_TTW_License( [] );
+		return $license;
 	}
 
 	/**
@@ -173,7 +156,7 @@ class TD_TTW_User_Licenses {
 	 */
 	public function recheck_license() {
 
-		delete_transient( self::NAME );
+		thrive_delete_transient( self::NAME );
 		remove_query_arg( self::RECHECK_KEY );
 
 		$this->get_licenses_details();
@@ -200,17 +183,20 @@ class TD_TTW_User_Licenses {
 	 *
 	 * @return string
 	 */
-	public function get_recheck_url() {
+	public function get_recheck_url( $file = 'plugins.php' ) {
 
 		if ( isset( $_REQUEST['page'] ) && sanitize_text_field( $_REQUEST['page'] ) === TD_TTW_Update_Manager::NAME ) {
 			$url = ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( $_SERVER['REQUEST_URI'] ) : '';
 		} else {
-			$url = admin_url( 'plugins.php' );
+			$url = admin_url( $file );
 		}
 
-		return add_query_arg( array(
-			TD_TTW_User_Licenses::RECHECK_KEY => 1,
-		), $url );
+		return add_query_arg(
+			array(
+				TD_TTW_User_Licenses::RECHECK_KEY => 1,
+			),
+			$url
+		);
 	}
 
 	/**
@@ -228,7 +214,7 @@ class TD_TTW_User_Licenses {
 		include $this->path( 'templates/debugger.phtml' );
 		$html = ob_get_clean();
 
-		if ( $return === true ) {
+		if ( true === $return ) {
 			return $html;
 		}
 
@@ -248,9 +234,14 @@ class TD_TTW_User_Licenses {
 			return array();
 		}
 
-		$licenses = get_transient( self::NAME );
+		$licenses = thrive_get_transient( self::NAME );
+		/* some sanity checks : there are cases when this is an array containing a single empty array. this IF identifies and corrects that case */
+		if ( is_array( $licenses ) && ! empty( $licenses ) && empty( array_filter( $licenses ) ) ) {
+			// force a re-fetch
+			$licenses = false;
+		}
 
-		if ( $licenses !== false ) {
+		if ( false !== $licenses ) {
 
 			return $licenses;
 		}
@@ -270,16 +261,22 @@ class TD_TTW_User_Licenses {
 		$body = wp_remote_retrieve_body( $response );
 		$body = json_decode( $body, true );
 
-		if ( ! is_array( $body ) || ! isset( $body['success'] ) || $body['success'] === false ) {
+		$response_status_code = wp_remote_retrieve_response_code( $response );
+		if ( 200 !== $response_status_code ) {
+			$error_message = isset( $body['message'] ) ? $body['message'] : 'It looks like there has been an error while fetching your ThriveThemes license details.';
+			thrive_set_transient( 'td_ttw_connection_error', $error_message, self::CACHE_LIFE_TIME );
+		}
 
-			set_transient( self::NAME, array(), self::CACHE_LIFE_TIME );
+		if ( ! is_array( $body ) || empty( $body['success'] ) ) {
+			thrive_set_transient( self::NAME, array(), self::CACHE_LIFE_TIME );
 
 			return array();
 		}
 
 		$licenses_details = $body['data'];
 
-		set_transient( self::NAME, $licenses_details, self::CACHE_LIFE_TIME );
+		thrive_set_transient( self::NAME, $licenses_details, self::CACHE_LIFE_TIME );
+		thrive_delete_transient( 'td_ttw_connection_error' );
 
 		return $licenses_details;
 	}
@@ -291,6 +288,6 @@ class TD_TTW_User_Licenses {
 	 */
 	public function can_update_ttb() {
 
-		return $this->get_license( self::TTB_TAG )->can_update();
+		return $this->get_license( self::TTB_TAG ) && $this->get_license( self::TTB_TAG )->can_update();
 	}
 }

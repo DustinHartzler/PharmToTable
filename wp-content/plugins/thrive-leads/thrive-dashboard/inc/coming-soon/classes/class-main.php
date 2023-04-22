@@ -39,7 +39,7 @@ class Main {
 	 * @return string|void
 	 */
 	public static function title() {
-		return __( 'Coming Soon Mode', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Coming Soon Mode', 'thrive-dash' );
 	}
 
 	/**
@@ -87,15 +87,6 @@ class Main {
 	 */
 	public static function get_preview_url() {
 		return get_permalink( static::get_page_id() );
-	}
-
-	/**
-	 * Check if TTB is active
-	 *
-	 * @return bool
-	 */
-	public static function is_ttb_active() {
-		return wp_get_theme()->name === 'Thrive Theme Builder';
 	}
 
 	/**

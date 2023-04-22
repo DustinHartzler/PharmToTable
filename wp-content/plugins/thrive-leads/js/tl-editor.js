@@ -89,9 +89,9 @@ TL_Editor.views.ModalTemplates = TVE.modal.base.extend( {
 		}
 
 		this.getItems().then( function ( templates ) {
-			self.setItems( self.filterTemplates( templates ) );
-
-			self.applyMasonry();
+			self.setItems( self.filterTemplates( templates ) ).then( function () {
+				self.applyMasonry();
+			} )
 		} );
 	},
 
@@ -153,6 +153,7 @@ TL_Editor.views.ModalTemplates = TVE.modal.base.extend( {
 	 * @param templates
 	 */
 	setItems: function ( templates ) {
+		var promises = [];
 		var self = this,
 			tpl = TVE.tpl( 'templates/item' );
 		if ( templates.length === 0 ) {
@@ -160,9 +161,26 @@ TL_Editor.views.ModalTemplates = TVE.modal.base.extend( {
 		} else {
 			templates.forEach( function ( item, index, list ) {
 				const saved = ( self.templatesType === 'saved' );
-				self.$template_items.append( tpl( {item: item, saved: saved} ) )
+				var thumb_sizes = item.get( 'thumb_sizes' );
+				if ( saved && thumb_sizes && isNaN( parseInt( thumb_sizes.h ) ) ) {
+					var newPromise = new Promise( function ( resolve ) {
+						var currentImg = new Image();
+
+						currentImg.src = item.get( 'thumbnail' );
+						currentImg.onload = function () {
+							item.set( {thumb_sizes: {w: currentImg.width, h: currentImg.height}} );
+							self.$template_items.append( tpl( {item: item, saved: saved} ) )
+							resolve()
+						};
+					} );
+					promises.push( newPromise );
+				} else {
+					self.$template_items.append( tpl( {item: item, saved: saved} ) )
+				}
 			} )
 		}
+
+		return Promise.allSettled( promises );
 	},
 
 	/**
@@ -234,10 +252,24 @@ TL_Editor.views.ModalTemplates = TVE.modal.base.extend( {
 	 * Apply masonry on the current template list
 	 */
 	applyMasonry: function () {
+		const dynamicImageWidth = parseInt( this.$el.find( '.cloud-template-item' ).outerWidth( true ) );
+
+		this.$el.find( 'img' ).each( function () {
+			const imageRatio = jQuery( this )[ 0 ].getAttribute( 'data-ratio' );
+			if ( imageRatio ) {
+				jQuery( this ).parent().css( 'height', dynamicImageWidth * parseFloat( imageRatio ) );
+			}
+		} );
+
 		if ( this.$template_items.data( 'masonry' ) ) {
 			this.$template_items.data( 'masonry' ).destroy()
 		}
-		this.$template_items.masonry()
+
+		const self = this;
+
+		setTimeout( function () {
+			self.$template_items.masonry();
+		}, 0 );
 	},
 
 	/**
@@ -334,6 +366,13 @@ TL_Editor.views.ModalTemplates = TVE.modal.base.extend( {
 				   return TVE.main.overlay( 'close' );
 			   }
 			   TL_Editor.state.insertResponse( response );
+
+			   /**
+			    * Fix form identifiers on template insert so we dont use the ones from cloud templates
+			    */
+			   TVE.Editor_Page.editor.find( TVE.identifier( 'lead_generation' ) ).each( function () {
+				   TVE.Components.lead_generation.regenerateFormIdentifier( TVE.inner_$( this ) );
+			   } )
 
 			   try {
 				   /**
@@ -621,7 +660,10 @@ TVE.leads.StateSwitchAction = TVE.leads.LightboxStateAction.extend( {
 				TL_Editor.state.ajax( {
 					custom_action: 'duplicate',
 					id: link.getAttribute( 'data-id' )
-				} ).done( TL_Editor.state.insertResponse );
+				} ).done( function ( response ) {
+					TL_Editor.state.insertResponse( response );
+					TVE.Components.lead_generation.removeSettingsId( TVE.Editor_Page.editor ); //remove old LG settings id
+				} );
 			} );
 
 			return false;
@@ -741,7 +783,14 @@ TVE.leads.StateSwitchAction = TVE.leads.LightboxStateAction.extend( {
 		}
 		TVE.Editor_Page.blur();
 		TVE.Editor_Page.editor.find( '.on_hover' ).removeClass( 'on_hover' );
-		TVE.generateElementPreview( TVE.Editor_Page.editor, saveCallback, {}, true );
+		TVE.inner_$( '.preview-cloned-content' ).remove();
+
+		var $content = TVE.inner_$( '.thrv-leads-screen-filler, .thrv-leads-slide-in' );
+		if ( $content.length === 0 ) {
+			$content = TVE.Editor_Page.editor
+		}
+		var $contentToPreview = TVE.getContentToPreview( $content );
+		TVE.generateElementPreview( $contentToPreview, saveCallback, {}, true );
 	}
 
 	/**

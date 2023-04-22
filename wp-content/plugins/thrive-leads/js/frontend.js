@@ -1,12 +1,12 @@
 /**
  * Frontend javascript functionalities handling the display of forms
  */
-var TL_Front = TL_Front || {};
+window.TL_Front = window.TL_Front || {};
 
 /* minor hackery to ensure we have this available */
-var ThriveGlobal = ThriveGlobal || {$j: jQuery.noConflict()};
+window.ThriveGlobal = window.ThriveGlobal || {$j: jQuery.noConflict()};
 
-var modulesFinishedLoading = false;
+let modulesFinishedLoading = false;
 
 TL_Front.add_page_css = function ( stylesheets ) {
 	ThriveGlobal.$j.each( stylesheets, function ( _id, href ) {
@@ -47,7 +47,8 @@ TL_Front.lightspeed_assets = function ( assets ) {
 	if ( assets.css ) {
 		if ( assets.css.files ) {
 			for ( var file in assets.css.files ) {
-				if ( ! hasFlat() ) {
+				var isFlat = file === 'flat';
+				if ( ( ! hasFlat() && isFlat ) || ! isFlat ) {
 					ThriveGlobal.$j( '<link rel="stylesheet" href="' + assets.css.files[ file ] + '"/>' ).prependTo( 'head' );
 				}
 			}
@@ -82,8 +83,38 @@ TL_Front.lightspeed_assets = function ( assets ) {
 
 	loadModule()
 }
+/**
+ * Add the conditions from TL in the localized conditions preview object
+ *
+ * @param allData - request data
+ */
+TL_Front.conditional_display = function ( allData ) {
+	/* if we have conditional displays on the request, we append them to the localized variable */
+	if ( typeof allData !== 'undefined' && allData.lazy_load_conditional_preview && tcb_condition_sets ) {
+		allData.lazy_load_conditional_preview.forEach( function ( display ) {
+			var index = tcb_condition_sets.findIndex( function ( item ) {
+				return item.key === display.key
+			} );
+			if ( index === - 1 ) {
+				tcb_condition_sets.push( display );
+			}
+		} )
+	}
+}
 
 TL_Front.$document = ThriveGlobal.$j( document );
+
+/**
+ * Extend the TL_Const object being careful not to overwrite some of its fields.
+ *
+ * @param {*} configuration
+ */
+TL_Front.extendConst = function ( configuration ) {
+	if ( TL_Const.current_screen ) { // this makes sure the original screen data is not changed
+		delete configuration.current_screen;
+	}
+	ThriveGlobal.$j.extend( true, TL_Const, configuration );
+}
 
 /**
  * Emulates the default document.write function - but appending elements with jquery - thus not breaking the body on document.write after domready
@@ -316,6 +347,9 @@ ThriveGlobal.$j( function () {
 		if ( position === 'top' ) {
 			ThriveGlobal.$j( 'body' ).animate( {marginTop: 0}, 200, function () {
 				document.body.style.removeProperty( 'margin-top' );
+				if ( TCB_Front && TCB_Front.$window ) {
+					TCB_Front.$window.trigger( 'scroll' );
+				}
 			} );
 		} else if ( position === 'bottom' ) {
 			ThriveGlobal.$j( 'body' ).animate( {marginBottom: 0 + 'px'}, 200, function () {
@@ -333,11 +367,34 @@ ThriveGlobal.$j( function () {
 		ThriveGlobal.$j( '#tve-lg-error-container' ).hide();
 	} );
 
+	/**
+	 * Replace shortcodes from conditional displays
+	 */
+	ThriveGlobal.$j( window ).on( 'conditional_display_loaded', () => {
+		const shortcodeKeys = Object.keys( TL_Front.contentHtml || {} );
+		if ( shortcodeKeys.length ) {
+			shortcodeKeys.forEach( key => {
+				const $placeholder = ThriveGlobal.$j( `.tl-placeholder-f-type-${key}` );
+				if ( $placeholder.length ) {
+					const $content = ThriveGlobal.$j( TL_Front.contentHtml[ key ] );
+					$placeholder.replaceWith( $content );
+					setTimeout( () => {
+						ThriveGlobal.$j( TL_Front ).trigger( 'showform.thriveleads', {$target: $content} );
+					} );
+				}
+			} );
+		}
+	} )
+
 	if ( ! TL_Const.ajax_load ) {
 		TL_Front.do_impression();
 	}
 
-	TL_Front.ajax_load_callback = function ( response ) {
+	TL_Front.ajax_load_callback = function ( response, allData ) {
+		if ( allData ) {
+			TL_Front.conditional_display( allData );
+		}
+
 		if ( ! response || ! response.res || ! response.js || ! response.html ) {
 			return;
 		}
@@ -351,25 +408,26 @@ ThriveGlobal.$j( function () {
 				ThriveGlobal.$j( '.tl-widget-container' ).remove();
 			}
 
-			function show_trigger( two_step_key ) {
-				var two_step_id = two_step_key.replace( 'two_step_', '' );
-				ThriveGlobal.$j( '.tl-2step-trigger-' + two_step_id ).show();
+			function show_trigger( twoStepKey ) {
+				ThriveGlobal.$j( `.tl-2step-trigger-${twoStepKey.replace( 'two_step_', '' )}` ).show();
 			}
 
-			ThriveGlobal.$j.each( response.html, function ( elem_type, html ) {
+			ThriveGlobal.$j.each( response.html, function ( elementType, html ) {
 				if ( ! html ) {
 					return true;
 				}
-				if ( elem_type === 'in_content' ) {
+				TL_Front.contentHtml = TL_Front.contentHtml || {};
+				TL_Front.contentHtml[ elementType ] = html;
+				if ( elementType === 'in_content' ) {
 					// move the placeholder after the nth paragraph
-					var position = parseInt( response.in_content_pos ),
+					let position = parseInt( response.in_content_pos ),
 						fn = 'after',
 						post = ThriveGlobal.$j( '.tve-tl-cnt-wrap' );
 
 					if ( ! post.length ) {
 						post = ThriveGlobal.$j( '#tve_editor.tar-main-content' );
 					}
-					var p = post.find( 'p' ).filter( ':visible' ).not( '.thrv_table p, form p, .tcb-post-list p, .thrv_text_element div p' );
+					const p = post.find( 'p' ).filter( ':visible' ).not( '.thrv_table p, form p, .tcb-post-list p, .thrv_text_element div p, p.wp-caption-text, .thrv_responsive_video p, .thrv_header p' );
 
 					if ( p.length === 0 && position === 0 ) {
 						post.prepend( html );
@@ -382,27 +440,27 @@ ThriveGlobal.$j( function () {
 						p.eq( position - 1 )[ fn ]( html );
 					}
 				} else {
-					var $placeholder = ThriveGlobal.$j( '.tl-placeholder-f-type-' + elem_type );
-					if ( response.js[ elem_type ] && response.js[ elem_type ].content_locking ) {
+					const $placeholder = ThriveGlobal.$j( '.tl-placeholder-f-type-' + elementType );
+					if ( response.js[ elementType ] && response.js[ elementType ].content_locking ) {
 						/**
 						 * content locking shortcode - add the blur class if this is the case
 						 * or show the locked content if the user has a conversion registered
 						 */
-						var $parent = $placeholder.parents( '.tve_content_lock' ).first();
+						const $parent = $placeholder.parents( '.tve_content_lock' ).first();
 
-						if ( response.js[ elem_type ].has_conversion ) {
+						if ( response.js[ elementType ].has_conversion ) {
 							/* remove the placeholder because we're going to display the content. */
 							$placeholder.remove();
 							$parent.removeClass( 'tve_lock_hide' );
 							return true;
 						}
 
-						if ( response.js[ elem_type ].lock === 'tve_lock_blur' ) {
-							$parent.removeClass( 'tve_lock_hide' ).addClass( response.js[ elem_type ].lock );
+						if ( response.js[ elementType ].lock === 'tve_lock_blur' ) {
+							$parent.removeClass( 'tve_lock_hide' ).addClass( response.js[ elementType ].lock );
 						}
 					}
 
-					if ( elem_type === 'widget' ) {
+					if ( elementType === 'widget' ) {
 						if ( $placeholder.hasClass( 'tl-preload-form' ) ) {
 							$placeholder.first().replaceWith( ThriveGlobal.$j( html ).addClass( 'tve-leads-triggered' ) )
 						} else {
@@ -414,8 +472,8 @@ ThriveGlobal.$j( function () {
 					}
 
 					/* for the forms that we going to be added in the page, we're displaying the trigger */
-					if ( elem_type.indexOf( 'two_step' ) === 0 ) {
-						show_trigger( elem_type );
+					if ( elementType.indexOf( 'two_step' ) === 0 ) {
+						show_trigger( elementType );
 					}
 				}
 			} );
@@ -512,6 +570,12 @@ ThriveGlobal.$j( function () {
 
 		setTimeout( dom_ready, 50 );
 		TL_Const.forms = response.js;
+
+		/* After the wait we should search for the placeholders and remove them
+		because for hidden displays we get no response and we don't have any way of replacing them with content */
+		setTimeout( () => {
+			ThriveGlobal.$j( '.tl-preload-form' ).remove();
+		}, 1000 );
 	};
 
 	function init() {
@@ -559,6 +623,11 @@ ThriveGlobal.$j( function () {
 			return isFluent;
 		}
 
+		function isHappyForm( $form ) {
+			var formID = $form.attr( 'id' );
+			return formID && formID.includes( 'happyforms' ) && window.HappyForms;
+		}
+
 		/**
 		 * listen for the forms submission, and send tracking data requests
 		 * the submit listener is delegated just to be sure we can track everything
@@ -568,7 +637,7 @@ ThriveGlobal.$j( function () {
 				type = $form.parents( '.tve-leads-conversion-object' ).first().attr( 'data-tl-type' ),
 				custom_fields = {};
 
-			if ( $form.data( 'tve-force-submit' ) || $form.closest( '.thrv_custom_html_shortcode' ).length || $form.data( 'tl-do-submit' ) || ! type || ! TL_Const.forms[ type ] || isFluentForm( $form ) ) {
+			if ( $form.data( 'tve-force-submit' ) || $form.closest( '.thrv_custom_html_shortcode' ).length || $form.data( 'tl-do-submit' ) || ! type || ! TL_Const.forms[ type ] || isFluentForm( $form ) || isHappyForm( $form ) ) {
 				return true;
 			}
 			$form.tve_form_loading();
@@ -738,7 +807,7 @@ ThriveGlobal.$j( function () {
 				case 'post-footer':
 				case 'php-insert':
 				default:
-					$form.find( 'input:not(:hidden)' ).val( '' );
+					$form.find( 'input:not(:hidden):not([type="checkbox"]):not([type="radio"])' ).val( '' );
 					break;
 			}
 
@@ -1060,6 +1129,9 @@ TL_Front.open_lightbox = function ( $target, TargetEvent ) {
 	if ( TargetEvent && TargetEvent.tve_trigger === 'exit' ) {
 		$target.data( 'shown-on-exit', true );
 	}
+
+	/* trigger a custom event after we opened the lightbox */
+	TCB_Front.$window.trigger( 'tl_after_lightbox_open', $target );
 };
 
 TL_Front.open_two_step_lightbox = TL_Front.open_lightbox;
@@ -1071,7 +1143,7 @@ TL_Front.open_ribbon = function ( $target ) {
 	 */
 	function open_it() {
 		$target.addClass( 'tve-leads-triggered' );
-		var $editor = $target.find( '.tve_shortcode_editor' ),
+		const $editor = $target.find( '.tve_shortcode_editor' ),
 			editorHeight = $editor.length ? $editor.outerHeight() : 0,
 			position = $target.attr( 'data-position' ) || 'top';
 
@@ -1086,17 +1158,19 @@ TL_Front.open_ribbon = function ( $target ) {
 				$target.css( 'bottom', '0px' );
 				$target.css( 'top', 'auto' );
 				break;
+			default:
+				break;
 		}
 
 		/**
 		 * Mozilla is really slow at applying the loaded css. we need this workaround to have it work in mozilla.
 		 */
-		var iterations = 0,
-			initial_height = Math.max( $target.outerHeight(), editorHeight ),
+		let iterations = 0,
+			initialHeight = Math.max( $target.outerHeight(), editorHeight ),
 			ii = setInterval( function () {
 				iterations ++;
-				var _h = Math.max( $target.outerHeight(), editorHeight );
-				if ( _h != initial_height || iterations == 10 ) {
+				const _h = Math.max( $target.outerHeight(), editorHeight );
+				if ( _h != initialHeight || iterations == 10 ) {
 					clearInterval( ii );
 				}
 				if ( position === 'top' ) {
@@ -1112,8 +1186,16 @@ TL_Front.open_ribbon = function ( $target ) {
 				}
 			}, 100 );
 
+		const $header = ThriveGlobal.$j( 'body' ).find( '.thrv_header.tve-scroll-sticky' );
+
+		if ( $header.length && position === 'top' ) {
+			const extraOffset = parseFloat( TCB_Front.inlineCssVariable( $header, '--tcb-header-extra-offset' ) ) || 0;
+
+			TCB_Front.inlineCssVariable( $header, '--tcb-header-extra-offset', extraOffset + initialHeight + 'px' );
+		}
+
 		$target.off( 'switchstate' ).on( 'switchstate', function ( e, $target ) {
-			var args = Array.prototype.slice.call( arguments, 1 );
+			const args = Array.prototype.slice.call( arguments, 1 );
 			TL_Front.switch_ribbon_state.apply( TL_Front, args );
 		} );
 	}
@@ -1139,37 +1221,39 @@ TL_Front.switch_ribbon_state = function ( $target ) {
 };
 
 TL_Front.open_greedy_ribbon = function ( $target ) {
-	var $body = ThriveGlobal.$j( 'body' ),
+	const $body = ThriveGlobal.$j( 'body' ),
 		$window = ThriveGlobal.$j( window ),
 		initial_position = $body.css( 'position' );
+
 	$window.scrollTop( 0 );
 	//for situations where the user's theme adds a position css on body
 	$body.css( 'position', 'static' );
 	$body.addClass( 'tve-tl-gr-anim' );
-	$target.css( 'top', ThriveGlobal.$j( '#wpadminbar' ).length ? '32px' : '0px' );
-	var wHeight = $target.outerHeight();
-	$body[ 0 ].style.setProperty( 'margin-top', wHeight + 'px', 'important' );
-	var greedyCondition = 1;
 
+	TCB_Front.$window.trigger( 'scroll' );
+	$target.css( 'top', ThriveGlobal.$j( '#wpadminbar' ).length ? '32px' : '0px' );
+	const wHeight = $target.outerHeight();
+	$body[ 0 ].style.setProperty( 'margin-top', wHeight + 'px', 'important' );
+	let greedyCondition = 1;
 	setTimeout( function () {
 		ThriveGlobal.$j( '.tve-leads-ribbon[data-position="top"]' ).removeClass( 'tve-leads-triggered' );
 	}, 50 );
 
 	$window.scroll( function () {
-		var isFormOpen = $body.hasClass( 'tve-tl-gr-anim' );
-		if ( greedyCondition === 1 && isFormOpen ) {
-			var browserScroll = $window.scrollTop();
+		const isFormOpen = $body.hasClass( 'tve-tl-gr-anim' );
+		if ( greedyCondition && isFormOpen ) {
+			const browserScroll = $window.scrollTop();
 			if ( browserScroll > wHeight ) {
-				var hasWistiaPopover = $target.find( '.tve_ea_thrive_wistia' ).length || $target.find( '.tve_with_wistia_popover' );
+				const hasWistiaPopover = $target.find( '.tve_ea_thrive_wistia' ).length || $target.find( '.tve_with_wistia_popover' );
 				if ( hasWistiaPopover ) {
 					ThriveGlobal.$j( '.wistia_placebo_close_button' ).trigger( 'click' );
 				}
 				$body.removeClass( 'tve-tl-gr-anim' );
 				$target.addClass( 'tve-no-animation' );
-				var greedyScroll = browserScroll - wHeight;
+				const greedyScroll = browserScroll - wHeight;
 				$target.removeClass( 'tve-leads-triggered' );
 				$target.find( '.thrv_responsive_video iframe, .thrv_custom_html_shortcode iframe, .thrv_responsive_video video' ).each( function () {
-					var $this = ThriveGlobal.$j( this );
+					const $this = ThriveGlobal.$j( this );
 					$this.attr( 'data-src', $this.attr( 'src' ) );
 					$this.attr( 'src', '' );
 				} );
@@ -1293,6 +1377,9 @@ TL_Front.open_screen_filler = function ( $target, TargetEvent ) {
 			$this.attr( 'src', $this.attr( 'data-src' ) );
 		}
 	} );
+	setTimeout( () => {
+		TCB_Front.resizePageSection();
+	}, 500 )
 };
 
 TL_Front.switch_slide_in_state = function ( $state ) {
@@ -1416,13 +1503,18 @@ TL_Front.close_form = function ( element, trigger, action, config ) {
 	TL_Front.handle_typefocus( $parent, 'pause' );
 	switch ( type ) {
 		case 'ribbon':
-			var $close = $parent.find( '.tve-ribbon-close' );
+			let $close = $parent.find( '.tve-ribbon-close' );
 			if ( ! $close.length ) {
 				$close = jQuery( '<span class="tve-ribbon-close" style="display: none"></span>' ).appendTo( $parent );
 			}
 			$close.trigger( 'click' );//there already exists a bind for close
-			if ( TCB_Front && TCB_Front.$window ) {
-				TCB_Front.$window.trigger( 'scroll' );
+
+			const $header = ThriveGlobal.$j( 'body' ).find( '.thrv_header.tve-scroll-sticky' );
+
+			if ( $header.length && $parent.attr( 'data-position' ) === 'top' ) {
+				const extraOffset = ( parseFloat( TCB_Front.inlineCssVariable( $header, '--tcb-header-extra-offset' ) ) - $parent.outerHeight( true ) ) + 'px'
+
+				TCB_Front.inlineCssVariable( $header, '--tcb-header-extra-offset', extraOffset );
 			}
 			break;
 		case 'slide-in':

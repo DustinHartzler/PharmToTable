@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package TCB\Notifications
  */
-class Notifications_Content_Wrapper extends \TCB_Element_Abstract {
+class Notifications_Content_Wrapper extends \TCB_Cloud_Template_Element_Abstract {
 
 	/**
 	 * Name of the element
@@ -34,7 +34,7 @@ class Notifications_Content_Wrapper extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.notifications-content-wrapper .notifications-content';
+		return '.notifications-content-wrapper';
 	}
 
 	public function own_components() {
@@ -42,7 +42,12 @@ class Notifications_Content_Wrapper extends \TCB_Element_Abstract {
 		$components['animation']                   = [ 'hidden' => true ];
 		$components['typography']                  = [ 'hidden' => true ];
 		$components['layout']['disabled_controls'] = [ 'Alignment', 'Display', '.tve-advanced-controls' ];
-		$components['notification']                = [
+		/* only apply the styles to the currently visible notification state */
+		$components['layout']['config']     = [ 'to' => '.notifications-content:visible' ];
+		$components['background']['config'] = [ 'to' => '.notifications-content:visible' ];
+		$components['borders']['config']    = [ 'to' => '.notifications-content:visible' ];
+		$components['shadow']['config']     = [ 'to' => '.notifications-content:visible' ];
+		$components['notification']         = [
 			'config' => [
 				'DisplayPosition'    => [
 					'config'  => [
@@ -140,12 +145,53 @@ class Notifications_Content_Wrapper extends \TCB_Element_Abstract {
 				'AnimationTime'      => [
 					'config'  => [
 						'min'     => '0',
-						'max'     => '10000',
-						'default' => '3000',
-						'label'   => __( 'Show for (ms)', 'thrive-cb' ),
-						'um'      => '',
+						'max'     => '10',
+						'default' => '3',
+						'step'    => '0.1',
+						'label'   => __( 'Show for (s)', 'thrive-cb' ),
+						'um'      => array( 's' ),
 					],
 					'extends' => 'Slider',
+				],
+				'MaximumWidth'       => [
+					'config'  => [
+						'min'     => '100',
+						'max'     => '2000',
+						'default' => '200',
+						'label'   => __( 'Maximum Width', 'thrive-cb' ),
+						'um'      => array( 'px' ),
+					],
+					'extends' => 'Slider',
+				],
+				'MinimumHeight'      => [
+					'config'  => [
+						'min'     => '1',
+						'max'     => '1000',
+						'default' => '200',
+						'label'   => __( 'Minimum Height', 'thrive-cb' ),
+						'um'      => array( 'px' ),
+					],
+					'extends' => 'Slider',
+				],
+				'VerticalPosition'   => [
+					'config'  => [
+						'name'    => __( 'Content Align', 'thrive-cb' ),
+						'buttons' => array(
+							[
+								'icon'  => 'top',
+								'value' => 'flex-start',
+							],
+							[
+								'icon'  => 'vertical',
+								'value' => 'center',
+							],
+							[
+								'icon'  => 'bot',
+								'value' => 'flex-end',
+							],
+						),
+					],
+					'extends' => 'ButtonGroup',
 				],
 			],
 		];
@@ -157,8 +203,11 @@ class Notifications_Content_Wrapper extends \TCB_Element_Abstract {
 		return true;
 	}
 
-	public function has_hover_state() {
-		return true;
+	/**
+	 * @return bool
+	 */
+	public function is_placeholder() {
+		return false;
 	}
 }
 

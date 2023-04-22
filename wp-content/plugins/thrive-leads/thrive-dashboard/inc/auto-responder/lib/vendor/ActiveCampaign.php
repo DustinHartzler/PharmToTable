@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 07.05.2015
- * Time: 17:05
- */
 class Thrive_Dash_Api_ActiveCampaign {
 	/**
 	 * @var string API URL - taken from the activecampaign API tab
@@ -71,7 +65,7 @@ class Thrive_Dash_Api_ActiveCampaign {
 	 *
 	 * @throws Thrive_Dash_Api_ActiveCampaign_Exception
 	 */
-	public function getForms() {
+	public function get_forms() {
 		$result = $this->call( 'form_getforms' );
 
 		$forms = array();
@@ -93,7 +87,7 @@ class Thrive_Dash_Api_ActiveCampaign {
 	 * @return array
 	 * @throws Thrive_Dash_Api_ActiveCampaign_Exception
 	 */
-	public function addSubscriber( $list_id, $args ) {
+	public function add_subscriber( $list_id, $args ) {
 
 		$email            = ! empty( $args['email'] ) ? $args['email'] : '';
 		$firstName        = ! empty( $args['firstname'] ) ? $args['firstname'] : '';
@@ -403,10 +397,16 @@ class Thrive_Dash_Api_ActiveCampaign {
 					'global_fields' => 1,
 				)
 			);
-
-			if ( ! empty( $result[0]['fields'] ) ) {
-				$custom_fields = $result[0]['fields'];
+			//go through all lists and take all fields
+			if ( is_array( $result ) ) {
+				foreach ( $result as $list ) {
+					if ( ! empty( $list['fields'] ) ) {
+						$custom_fields = array_merge( $custom_fields, $list['fields'] );
+					}
+				}
 			}
+			$unique_ids    = array_unique( array_column( $custom_fields, 'id' ) );
+			$custom_fields = array_intersect_key( $custom_fields, $unique_ids );
 		} catch ( Thrive_Dash_Api_ActiveCampaign_Exception $e ) {
 			return $e->getMessage();
 		}

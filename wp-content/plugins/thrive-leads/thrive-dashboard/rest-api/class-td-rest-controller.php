@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 17-Jul-19
- * Time: 04:15 PM
- */
 
 /**
  * Class TD_REST_Controller
@@ -99,9 +93,9 @@ class TD_REST_Controller extends WP_REST_Controller {
 		if ( $api === 'general' ) {
 			$data = tve_dash_get_general_webhook_data( $request );
 		} else {
-			$api_instance = Thrive_Dash_List_Manager::connectionInstance( $api );
+			$api_instance = Thrive_Dash_List_Manager::connection_instance( $api );
 			if ( $api_instance ) {
-				$data = $api_instance->getWebhookdata( $request );
+				$data = $api_instance->get_webhook_data( $request );
 			}
 		}
 
@@ -162,7 +156,7 @@ class TD_REST_Controller extends WP_REST_Controller {
 		} else {
 			$result = new WP_Error(
 				'wrong_api_key_provided',
-				__( 'Provided API Key is wrong', TVE_DASH_TRANSLATE_DOMAIN ),
+				__( 'Provided API Key is wrong', 'thrive-dash' ),
 				array(
 					'api_key' => $api_key,
 				)

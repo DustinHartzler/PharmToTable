@@ -203,12 +203,12 @@ class TCB_Number_Counter_Element extends TCB_Element_Abstract {
 		$components['typography']['config']['TextAlign'] = array_merge(
 			$components['typography']['config']['TextAlign'],
 			[
-				'property'     => 'justify-content',
+				'property'     => 'text-align',
 				'property_val' => [
-					'left'    => 'flex-start',
+					'left'    => 'left',
 					'center'  => 'center',
-					'right'   => 'flex-end',
-					'justify' => 'space-evenly',
+					'right'   => 'right',
+					'justify' => 'justify',
 				],
 			] );
 

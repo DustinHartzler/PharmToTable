@@ -16,7 +16,7 @@
 <div class="tcb-button-link-container">
 	<div class="btn-link mt-10"></div>
 </div>
-<div class="tcb-menu-display-container">
+<div class="tcb-menu-display-container mt-10">
 	<hr>
 	<div class="tcb-menu-display mt-5"></div>
 </div>

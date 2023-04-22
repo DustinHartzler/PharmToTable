@@ -45,10 +45,13 @@ class Form_Post_Data_Field extends \Thrive\Automator\Items\Data_Field {
 			'post_status'    => 'draft',
 		] );
 		$posts    = [];
-
+		/**
+		 * Prevent showing LG from some post types
+		 */
+		$banned_post_types = apply_filters( 'tve_aut_banned_post_types', [] );
 		foreach ( $lg_posts->posts as $lg_post ) {
 			$parent_post = get_post( $lg_post->post_parent );
-			if ( ! empty( $parent_post ) ) {
+			if ( ! empty( $parent_post ) && ! in_array( $parent_post->post_type, $banned_post_types, true ) ) {
 				$posts[ $parent_post->ID ] = [
 					'label' => $parent_post->post_title,
 					'id'    => $parent_post->ID,
@@ -74,5 +77,9 @@ class Form_Post_Data_Field extends \Thrive\Automator\Items\Data_Field {
 
 	public static function get_dummy_value() {
 		return '10';
+	}
+
+	public static function get_field_value_type() {
+		return static::TYPE_STRING;
 	}
 }

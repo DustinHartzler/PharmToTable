@@ -4,6 +4,7 @@
  */
 
 global $tve_leads_help_videos;
+
 return array(
 	/* group display settings */
 	'DisplayGroupSettings'             => __( 'Display Settings', 'thrive-leads' ),
@@ -57,6 +58,7 @@ return array(
 	'SetWinnerShortcodeMessage'        => __( 'You have successfully selected a winner. It is now being show as the default form. All non-winning forms have been added to the "Archived Forms" section at the bottom.', 'thrive-leads' ),
 	'SetWinnerTwoStepLightboxMessage'  => __( 'You have successfully selected a winner. It is now being show as the default form. All non-winning forms have been added to the "Archived Forms" section at the bottom.', 'thrive-leads' ),
 	'GroupNameRequired'                => __( 'Lead group name cannot be empty', 'thrive-leads' ),
+	'FormNameRequired'                 => __( 'Form name cannot be empty', 'thrive-leads' ),
 	'ShortcodeNameRequired'            => __( 'Lead Shortcode Name cannot be empty', 'thrive-leads' ),
 	'TitleScript'                      => __( 'You are not allowed to use scripts as a title', 'thrive-leads' ),
 	'TwoStepLightboxNameRequired'      => __( 'ThriveBox Name cannot be empty', 'thrive-leads' ),

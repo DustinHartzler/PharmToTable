@@ -55,7 +55,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<hr>
 
 		<div id="api-controls" class="mt-10">
-
 			<div class="no-api tve-advanced-controls extend-grey">
 				<div class="dropdown-header" data-prop="advanced">
 					<span>
@@ -64,6 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<div class="dropdown-content pt-0">
 					<?php do_action( 'tcb_lead_generation_menu' ); ?>
+					<div class="tve-control" data-view="FormIdentifier"></div>
 					<div class="tve-lg-prevention">
 						<p class="strong"><?php echo esc_html__( 'Spam prevention', 'thrive-cb' ); ?></p>
 						<div class="tve-control" data-view="Captcha"></div>

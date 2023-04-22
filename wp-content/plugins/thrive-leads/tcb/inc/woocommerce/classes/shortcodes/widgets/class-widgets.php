@@ -151,9 +151,17 @@ class Widgets {
 
 			/** @var \WP_Query */
 			global $wp_query;
-			/* set the global query the same one we we're editing on so we can convert shortcodes better */
 
-			$wp_query->query( map_deep( $_GET['query'], 'sanitize_text_field' ) );
+			$query_args = map_deep( $_GET['query'], 'sanitize_text_field' );
+
+			if ( ! empty( $query_args['p'] ) ) {
+				/* manually set the post type inside the query, otherwise the 'post' post-type gets queried */
+				$query_args['post_type'] = get_post_type( $query_args['p'] );
+			}
+
+			/* set the global query as the same one that we're editing so we can convert shortcodes better */
+			$wp_query->query( $query_args );
+
 			if ( $wp_query->is_singular() ) {
 				/* product page */
 				$wp_query->the_post();

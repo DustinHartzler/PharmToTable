@@ -40,5 +40,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 	</div>
-	<img src="<?php echo esc_url( tve_editor_css() . '/images/drag-img.png' ); ?>" width="20" height="20" id="tcb-drag-img">
+	<img src="<?php echo esc_url( tve_editor_css( 'images/drag-img.png' ) ); ?>" width="20" height="20" id="tcb-drag-img">
 </div>

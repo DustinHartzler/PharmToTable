@@ -2,6 +2,10 @@
 
 namespace TVE\Dashboard\Automator;
 
+use Exception;
+use Thrive\Automator\Items\Data_Object;
+use function wc_get_order;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -9,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Woo_Order_Data
  */
-class Woo_Order_Data extends \Thrive\Automator\Items\Data_Object {
+class Woo_Order_Data extends Data_Object {
 
 	/**
 	 * Get the data-object identifier
@@ -20,6 +24,10 @@ class Woo_Order_Data extends \Thrive\Automator\Items\Data_Object {
 		return 'woo_order_data';
 	}
 
+	public static function get_nice_name() {
+		return 'WooCommerce order';
+	}
+
 	/**
 	 * Array of field object keys that are contained by this data-object
 	 *
@@ -27,6 +35,7 @@ class Woo_Order_Data extends \Thrive\Automator\Items\Data_Object {
 	 */
 	public static function get_fields() {
 		return array(
+			'woo_order_id',
 			'order_number',
 			'order_key',
 			'customer_id',
@@ -85,19 +94,19 @@ class Woo_Order_Data extends \Thrive\Automator\Items\Data_Object {
 
 	public static function create_object( $param ) {
 		if ( empty( $param ) ) {
-			throw new \Exception( 'No parameter provided for Woo_Order_Data object' );
+			throw new Exception( 'No parameter provided for Woo_Order_Data object' );
 		}
 
 		$order = null;
 		if ( is_a( $param, 'WC_Order' ) ) {
 			$order = $param;
 		} elseif ( is_numeric( $param ) ) {
-			$order = \wc_get_order( $param );
+			$order = wc_get_order( $param );
 		}
 
 		if ( $order ) {
 			return array(
-				'order_id'           => $order->get_id(),
+				'woo_order_id'       => $order->get_id(),
 				'order_number'       => $order->get_order_number(),
 				'order_key'          => $order->get_order_key(),
 				'customer_id'        => $order->get_customer_id(),
@@ -131,26 +140,24 @@ class Woo_Order_Data extends \Thrive\Automator\Items\Data_Object {
 				'created_via'          => $order->get_created_via(),
 				'customer_note'        => $order->get_customer_note(),
 				'date_completed'       => $order->get_date_completed(),
-
-				'date_paid'          => $order->get_date_paid(),
-				'cart_hash'          => $order->get_cart_hash(),
-				'parent_id'          => $order->get_parent_id(),
-				'order_currency'     => $order->get_order_currency(),
-				'order_version'      => $order->get_version(),
-				'prices_include_tax' => $order->get_prices_include_tax(),
-				'date_created'       => $order->get_date_created(),
-				'date_modified'      => $order->get_date_modified(),
-
-				'order_status'   => $order->get_status(),
-				'discount_total' => $order->get_discount_total(),
-				'shipping_total' => $order->get_shipping_total(),
-				'shipping_tax'   => $order->get_shipping_tax(),
-				'cart_tax'       => $order->get_cart_tax(),
-				'grand_total'    => $order->get_total(),
-				'total_tax'      => $order->get_total_tax(),
-				'coupon_used'    => $order->get_coupon_codes(),
-				'item_count'     => $order->get_item_count(),
-				'has_free_item'  => $order->has_free_item(),
+				'date_paid'            => $order->get_date_paid(),
+				'cart_hash'            => $order->get_cart_hash(),
+				'parent_id'            => $order->get_parent_id(),
+				'order_currency'       => $order->get_currency(),
+				'order_version'        => $order->get_version(),
+				'prices_include_tax'   => $order->get_prices_include_tax(),
+				'date_created'         => $order->get_date_created(),
+				'date_modified'        => $order->get_date_modified(),
+				'order_status'         => $order->get_status(),
+				'discount_total'       => $order->get_discount_total(),
+				'shipping_total'       => $order->get_shipping_total(),
+				'shipping_tax'         => $order->get_shipping_tax(),
+				'cart_tax'             => $order->get_cart_tax(),
+				'grand_total'          => $order->get_total(),
+				'total_tax'            => $order->get_total_tax(),
+				'coupon_used'          => $order->get_coupon_codes(),
+				'item_count'           => $order->get_item_count(),
+				'has_free_item'        => $order->has_free_item(),
 			);
 		}
 

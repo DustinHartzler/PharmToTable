@@ -180,6 +180,7 @@ return array(
 	'ExaleadCloudview',
 	'Excel\/',
 	'Exploratodo',
+	'EyeMonIT',
 	'ezooms',
 	'facebookexternalhit',
 	'facebookplatform',

@@ -8,10 +8,10 @@
 		</div>
 		<div class="dropdown-content">
 			<?php if ( tcb_editor()->is_landing_page() ) : ?>
-				<div class="field-section p-texts center-text">
-					<button class="style-input lp-typography-button tve-button click" data-fn="f:main.sidebar_extra.settings.landing_page_fonts">
-						<?php echo esc_html__( 'Edit landing page typography', 'thrive-cb' ); ?>
-					</button>
+				<div class="typography-message-container">
+					<section class="typography-component-section">
+						<span class="message-topography "><?php echo esc_html__( 'Landing page typography is now more easily accessible in the Central Style Panel', 'thrive-cb' ); ?></span>
+					</section>
 				</div>
 			<?php endif; ?>
 		</div>

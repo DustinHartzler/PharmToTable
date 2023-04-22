@@ -57,7 +57,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 	 */
 	public function own_components() {
 		return array(
-			'menu_item'  => array(
+			'menu_item'           => array(
 				'config' => array(
 					'HoverEffect'  => array(
 						'config'  => array(
@@ -98,7 +98,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 						'extends' => 'Select',
 					),
 					'Display'      => array(
-						'config' => array(
+						'config'  => array(
 							'name'    => __( 'Show when', 'thrive-cb' ),
 							'options' => array(
 								'always'     => __( 'Always', 'thrive-cb' ),
@@ -131,7 +131,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					),
 				),
 			),
-			'typography' => array(
+			'typography'          => array(
 				'disabled_controls' => array(
 					'.tve-advanced-controls',
 				),
@@ -170,7 +170,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					),
 				),
 			),
-			'background' => array(
+			'background'          => array(
 				'config' => array(
 					'ColorPicker' => array(
 						'config' => array(
@@ -179,7 +179,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					),
 				),
 			),
-			'layout'     => array(
+			'layout'              => array(
 				'disabled_controls' => array(
 					'margin-top',
 					'margin-bottom',
@@ -188,7 +188,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					'Display',
 				),
 			),
-			'borders'    => array(
+			'borders'             => array(
 				'config' => array(
 					'Corners' => array(
 						'overflow' => false,

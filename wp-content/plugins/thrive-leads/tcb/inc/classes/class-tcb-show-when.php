@@ -20,7 +20,7 @@ class TCB_Show_When_Menu_Option {
 		add_filter( 'wp_nav_menu_objects', array( $this, 'remove_specific_menu_items' ), 9 ); //before TA and TL
 	}
 
-	function add_show_when_dropdown_to_menu_item( $item_id, $item ) {
+	public function add_show_when_dropdown_to_menu_item( $item_id, $item ) {
 		echo tcb_template( 'show-when-dropdown.phtml', array( 'item' => $item, 'item_id' => $item_id ), true ); //phpcs:ignore
 	}
 
@@ -50,11 +50,11 @@ class TCB_Show_When_Menu_Option {
 	 */
 	public static function get_instance() {
 
-		if ( ! self::$instance ) {
-			self::$instance = new self();
+		if ( ! static::$instance ) {
+			static::$instance = new static();
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 
 	/**
@@ -79,7 +79,6 @@ class TCB_Show_When_Menu_Option {
 	 * @return array of nav menu items
 	 */
 	public function remove_specific_menu_items( $sorted_menu_items ) {
-
 		/**
 		 * shift elements to left so that the elements start from 0 and not 1
 		 */
@@ -145,6 +144,10 @@ class TCB_Show_When_Menu_Option {
 			}
 			$index += 1;
 		}
+		//reset top level count once the elements are hidden
+		$GLOBALS['tcb_wp_menu']['top_level_count'] = count( array_filter( $sorted_menu_items, function ( $item ) {
+			return empty( $item->menu_item_parent );
+		} ) );
 
 		return $sorted_menu_items;
 	}

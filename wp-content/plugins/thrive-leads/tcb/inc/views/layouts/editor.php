@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		var ajaxurl = '<?php echo esc_js( admin_url( 'admin-ajax.php', 'relative' ) ); ?>';
 	</script>
 </head>
-<body class="tcb-editor-main preview-desktop" style="padding: 0;margin: 0;height: 100%;overflow:hidden;">
+<body class="tcb-editor-main preview-desktop <?php echo get_post_type() ?>" style="padding: 0;margin: 0;height: 100%;overflow:hidden;">
 <div class="tcb-wrap-all" id="tve-main-frame">
 	<div id="tve-page-loader" class="tve-open">
 		<?php tcb_template( 'loading-spinner.php' ); ?>

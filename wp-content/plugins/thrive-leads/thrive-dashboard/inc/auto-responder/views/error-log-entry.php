@@ -24,13 +24,13 @@
 			<span class="retry">
 				<span class="tvd-icon-loop2 tvd-tooltipped tvd-logs-icon tvd-logs-icon-repeat"
 				      data-position="bottom"
-				      data-tooltip="<?php echo esc_html__( 'Retry', TVE_DASH_TRANSLATE_DOMAIN ) ?>"></span>
+				      data-tooltip="<?php echo esc_html__( 'Retry', 'thrive-dash' ) ?>"></span>
 			</span>
 		<# } #>
 		<span class="delete">
 			<span class="tvd-icon-trash-o tvd-tooltipped tvd-logs-icon tvd-logs-icon-delete"
 			      data-position="bottom"
-			      data-tooltip="<?php echo esc_html__( 'Delete', TVE_DASH_TRANSLATE_DOMAIN ) ?>"></span>
+			      data-tooltip="<?php echo esc_html__( 'Delete', 'thrive-dash' ) ?>"></span>
 		</span>
 	</div>
 </td>

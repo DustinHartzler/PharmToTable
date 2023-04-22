@@ -2,6 +2,9 @@
 
 namespace TVE\Dashboard\Automator;
 
+use Thrive\Automator\Items\Action;
+use function wc_get_order;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -9,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Woo_Order_Status_Update
  */
-class Woo_Order_Status_Update extends \Thrive\Automator\Items\Action {
+class Woo_Order_Status_Update extends Action {
 
 	private $status;
 
@@ -54,8 +57,8 @@ class Woo_Order_Status_Update extends \Thrive\Automator\Items\Action {
 	 *
 	 * @return string
 	 */
-	public static function get_app_name() {
-		return 'WooCommerce';
+	public static function get_app_id() {
+		return Woo_App::get_id();
 	}
 
 	/**
@@ -85,18 +88,18 @@ class Woo_Order_Status_Update extends \Thrive\Automator\Items\Action {
 	}
 
 	public function do_action( $data ) {
-
-		if ( empty( $data['woo_order_data'] ) ) {
+		global $automation_data;
+		$order_data = $automation_data->get( 'woo_order_data' );
+		if ( empty( $order_data ) ) {
 			return false;
 		}
 
-		$order = wc_get_order( $data['woo_order_data']->get_value( 'order_id' ) );
+		$order = wc_get_order( $order_data->get_value( Woo_Order_Id::get_id() ) );
 
 		if ( empty( $order ) ) {
 			return false;
 		}
-
-		$order->set_status( $this->status, '', true );
+		$order->update_status( $this->status, '', true );
 	}
 
 }

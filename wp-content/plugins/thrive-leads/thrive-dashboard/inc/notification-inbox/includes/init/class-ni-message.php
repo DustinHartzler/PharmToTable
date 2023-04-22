@@ -71,11 +71,11 @@ class TD_Inbox_Message {
 	public function __construct( $data ) {
 
 		if ( ! is_array( $data ) ) {
-			throw new Exception( __METHOD__ . __( ' message must be array ', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __METHOD__ . __( ' message must be array ', 'thrive-dash' ) );
 		}
 
 		if ( empty( $data['title'] ) ) {
-			throw new Exception( __METHOD__ . __( ' title can not be empty.. ', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __METHOD__ . __( ' title can not be empty.. ', 'thrive-dash' ) );
 		}
 
 		$this->_set( $data );

@@ -29,6 +29,7 @@ class Thrive_Dash_Api_Postmark_Attachment implements \JsonSerializable {
 		return new Thrive_Dash_Api_Postmark_Attachment( base64_encode( file_get_contents( $filePath ) ), $attachmentName, $mimeType );
 	}
 
+	#[\ReturnTypeWillChange]
 	function jsonSerialize() {
 
 		$retval = array(

@@ -58,7 +58,7 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		return array(
-			'text'       => array(
+			'text'                => array(
 				'config' => array(
 					'ToggleControls' => array(
 						'config'  => array(
@@ -70,107 +70,107 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'ButtonGroup',
 					),
-					'FontSize'       => array(
-						'config'  => array(
+					'FontSize'       => [
+						'config'  => [
 							'default' => '16',
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => '',
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'fontSize',
-						),
+						],
 						'extends' => 'FontSize',
-					),
+					],
 					'LineHeight'     => array(
 						'css_prefix' => tcb_selection_root() . ' ',
-						'config'     => array(
+						'config'     => [
 							'default' => '1',
 							'min'     => '1',
 							'max'     => '200',
 							'label'   => '',
-							'um'      => array( 'em', 'px' ),
+							'um'      => [ 'em', 'px' ],
 							'css'     => 'lineHeight',
-						),
+						],
 						'extends'    => 'LineHeight',
 					),
-					'LetterSpacing'  => array(
-						'config'  => array(
+					'LetterSpacing'  => [
+						'config'  => [
 							'default' => 'auto',
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => '',
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'letterSpacing',
-						),
+						],
 						'extends' => 'Slider',
-					),
-					'FontColor'      => array(
-						'config'  => array(
+					],
+					'FontColor'      => [
+						'config'  => [
 							'default' => '000',
 							'label'   => 'Color',
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
-						),
+							],
+						],
 						'extends' => 'ColorPicker',
-					),
-					'FontBackground' => array(
-						'config'  => array(
+					],
+					'FontBackground' => [
+						'config'  => [
 							'default' => '000',
 							'label'   => 'Highlight',
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
-						),
+							],
+						],
 						'extends' => 'ColorPicker',
-					),
+					],
 					'FontFace'       => array(
 						'css_prefix' => tcb_selection_root() . ' ',
-						'config'     => array(
+						'config'     => [
 							'template' => 'controls/font-manager',
 							'inline'   => true,
-						),
+						],
 					),
 					'TextStyle'      => array(
 						'css_prefix' => tcb_selection_root() . ' ',
-						'config'     => array(
+						'config'     => [
 							'important' => true,
-						),
+						],
 					),
-					'TextTransform'  => array(
-						'config'  => array(
+					'TextTransform'  => [
+						'config'  => [
 							'name'    => 'Transform',
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'none',
 									'text'    => '',
 									'value'   => 'none',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-all-caps',
 									'text'  => '',
 									'value' => 'uppercase',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-capital',
 									'text'  => '',
 									'value' => 'capitalize',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-lowercase',
 									'text'  => '',
 									'value' => 'lowercase',
-								),
-							),
-						),
+								],
+							],
+						],
 						'extends' => 'ButtonGroup',
-					),
+					],
 					'LineSpacing'    => array(
 						'css_prefix' => tcb_selection_root() . ' ',
-						'config'     => array(
+						'config'     => [
 							'important' => true,
-						),
+						],
 					),
 					'HeadingToggle'  => array(
 						'config'  => array(
@@ -192,46 +192,49 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'layout'     => array(
-				'config'            => array(
-					'MarginAndPadding' => array(),
-					'Position'         => array(
+			'layout'              => [
+				'config'            => [
+					'MarginAndPadding' => [],
+					'Position'         => [
 						'important' => true,
-					),
-				),
-				'disabled_controls' => array(
+					],
+				],
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
-			'borders'    => array(
-				'config' => array(
-					'Borders' => array(
+				],
+			],
+			'borders'             => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
-			),
-			'shadow'     => array(
-				'config' => array(
+					],
+				],
+			],
+			'shadow'              => [
+				'config' => [
 					'important'   => true,
 					'with_froala' => true,
-				),
-			),
-			'typography' => array(
+				],
+			],
+			'typography'          => [
 				'hidden' => true,
-			),
-			'animation'  => array(
+			],
+			'animation'           => array(
 				'disabled_controls' => array(
 					'.btn-inline:not(.anim-animation)',
 				),
 			),
-			'scroll'     => array(
+			'scroll'              => [
 				'hidden'            => false,
-				'disabled_controls' => array( '[data-value="sticky"]' ),
-			),
+				'disabled_controls' => [ '[data-value="sticky"]' ],
+			],
+			'conditional-display' => [
+				'hidden' => false,
+			],
 		);
 	}
 
@@ -241,7 +244,7 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_basic_label();
+		return static::get_thrive_basic_label();
 	}
 
 	/**
@@ -250,12 +253,12 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'text',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425764-how-to-use-the-text-element',
-			),
-		);
+			],
+		];
 	}
 }

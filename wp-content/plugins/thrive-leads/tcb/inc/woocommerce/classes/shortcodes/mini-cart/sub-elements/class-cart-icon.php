@@ -59,6 +59,8 @@ class Cart_Icon extends Abstract_Sub_Element {
 			),
 		);
 
+		$components['borders'] = [ 'hidden' => true ];
+
 		return $components;
 	}
 }

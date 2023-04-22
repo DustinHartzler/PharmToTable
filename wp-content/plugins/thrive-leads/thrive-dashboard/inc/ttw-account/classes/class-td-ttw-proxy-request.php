@@ -16,7 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TD_TTW_Proxy_Request {
 
 	const URL = 'http://service-api.thrivethemes.com';
+
 	const API_PASS = '!!@#ThriveIsTheBest123$$@#';
+
 	const API_KEY = '@(#$*%)^SDFKNgjsdi870234521SADBNC#';
 
 	protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
@@ -43,18 +45,17 @@ class TD_TTW_Proxy_Request {
 	 */
 	public function execute( $route ) {
 
-		// Disable proxy request for localhost testing when debug is on
-		if ( 'http://local.thrivethemes.com' === TD_TTW_Connection::get_ttw_url() && TD_TTW_Connection::is_debug_mode() ) {
-
+		// Allow bypassing proxy server
+		if ( defined( 'TPM_BYPASS_PROXY' ) && TPM_BYPASS_PROXY ) {
 			return $this->request->execute();
 		}
 
-		$params = [
+		$params = array(
 			'body'    => $this->request->get_body(),
 			'headers' => $this->request->get_headers(),
 			'url'     => $this->request->get_url(),
 			'pw'      => self::API_PASS,
-		];
+		);
 
 		$headers = array(
 			'X-Thrive-Authenticate' => $this->_build_auth_string( $params ),
@@ -67,9 +68,12 @@ class TD_TTW_Proxy_Request {
 			'sslverify' => false,
 		);
 
-		$url = add_query_arg( array(
-			'p' => $this->_calc_hash( $params ),
-		), trim( $this->_get_url(), '/' ) . '/' . ltrim( $route, '/' ) );
+		$url = add_query_arg(
+			array(
+				'p' => $this->_calc_hash( $params ),
+			),
+			trim( $this->_get_url(), '/' ) . '/' . ltrim( $route, '/' )
+		);
 
 		return wp_remote_post( $url, $args );
 	}

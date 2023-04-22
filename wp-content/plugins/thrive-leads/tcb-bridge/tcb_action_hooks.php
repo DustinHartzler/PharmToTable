@@ -763,7 +763,7 @@ function tve_leads_variation_has_content( $variation ) {
  * UPDATE 19.11.2015 - the Custom CSS is only saved once in the default state (in the "parent" variation)
  *
  * @param mixed $variation can be either a numeric value - for variation_key or an already loaded variation array
- * @param bool  $return    whether to output the CSS or return it
+ * @param bool $return whether to output the CSS or return it
  *
  * @return string the CSS, if $return was true
  */
@@ -831,7 +831,7 @@ function tve_leads_output_custom_css( $variation, $return = false ) {
  * it will also return any custom CSS setup for this
  *
  * @param array $variation if present, the system will assume that it needs to render the content on another page (actual display logic for the forms)
- * @param array $filters   allows control of the output
+ * @param array $filters allows control of the output
  *
  * @return string
  *
@@ -1048,7 +1048,7 @@ function tve_leads_save_editor_content() {
 /**
  * get the default variation content from a pre-defined template
  *
- * @param array  $variation    the form design object
+ * @param array $variation the form design object
  * @param string $template_key formatted like {main_key}|{template_name}
  *
  * @return string the content
@@ -1618,7 +1618,7 @@ function tve_leads_delivery_connection() {
 	$connection     = get_option( 'tve_api_delivery_service', false );
 	$email_body     = get_option( 'tve_leads_asset_mail_subject', false );
 	$email_subject  = get_option( 'tve_leads_asset_mail_body', false );
-	$connected_apis = Thrive_List_Manager::getAvailableAPIsByType( true, array( 'email' ) );
+	$connected_apis = Thrive_List_Manager::get_available_apis( true, [ 'include_types' => [ 'email' ] ] );
 	$asset          = ! empty( $_POST['asset_option'] ) ? $_POST['asset_option'] : '0';
 	$asset_group    = ! empty( $_POST['asset_group'] ) ? $_POST['asset_group'] : '';
 
@@ -1986,6 +1986,8 @@ function tve_leads_forms_config( $config ) {
 			$config[ $key ]['components'][ $key ]['config']['AssetDelivery'] = array(
 				'config' => array(
 					'label' => __( 'Enable asset delivery', 'thrive-leads' ),
+					'tooltip'       => __( 'Asset delivery requires an email address to be submitted in your form.', 'thrive-leads' ),
+					'tooltip_side' => 'top',
 				),
 			);
 			$config[ $key ]['components'][ $key ]['config']['AssetGroup']    = array(

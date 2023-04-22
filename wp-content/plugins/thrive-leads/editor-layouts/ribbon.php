@@ -33,15 +33,15 @@ if ( ! empty( $variation[ TVE_LEADS_FIELD_TEMPLATE ] ) ) {
 					<?php echo apply_filters( 'tve_editor_custom_content', null ) ?>
 				</div>
 				<?php echo apply_filters( 'tve_leads_variation_append_states', '', $variation ); ?>
-			</div>
-			<div class="tve-leads-template-description"
-				 style="opacity: .6; padding-top: 240px; text-align: center; position: relative; z-index: -1; <?php if ( $hide_form ): ?>display: none;<?php endif; ?>">
-				<h4><?php echo __( 'This is a Form Design type called "Ribbon". It is displayed on the top of the page and it\'s usually a long horizontal bar', 'thrive-leads' ) ?></h4>
-				<h4><?php echo __( 'The content of the page will be scrolled down with the same amount as the ribbon\'s height', 'thrive-leads' ) ?></h4>
-				<h4><?php echo __( 'The ribbon will always stay on top, even when the user scrolls the page', 'thrive-leads' ) ?></h4>
-			</div>
-		</div>
-	</div>
+            </div>
+            <div class="tve-leads-template-description"
+                 style="opacity: .6; padding-top: 240px; text-align: center; position: relative; z-index: -1; <?php if ( $hide_form ): ?>display: none;<?php endif; ?>">
+                <h4><?php echo __( 'This is a Form Design type called "Ribbon". It is displayed on the ' . $variation['position'] . ' of the page and it\'s usually a long horizontal bar', 'thrive-leads' ) ?></h4>
+                <h4><?php echo __( 'The content of the page will be scrolled down with the same amount as the ribbon\'s height', 'thrive-leads' ) ?></h4>
+                <h4><?php echo __( 'The ribbon will always stay on ' . $variation['position'] . ', even when the user scrolls the page', 'thrive-leads' ) ?></h4>
+            </div>
+        </div>
+    </div>
 <?php if ( empty( $is_ajax_render ) ) : ?>
 	<div id="tve_page_loader" class="tve_page_loader">
 		<div class="tve_loader_inner"><img src="<?php echo tve_editor_css() ?>/images/loader.gif" alt=""/></div>

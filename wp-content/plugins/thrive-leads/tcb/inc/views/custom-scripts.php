@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 ?>
-<div class="state-custom-scripts state">
+<div class="state-custom-scripts state state-no-search">
 	<span class="label tcb-hide"><?php echo esc_html__( 'Custom Scripts', 'thrive-cb' ); ?></span>
 	<div class="scripts-message-container">
 		<section class="custom-scripts-section">

@@ -39,7 +39,7 @@ class TCB_Button_Group_Item_Element extends TCB_Button_Element {
 	 * @return string
 	 */
 	public function active_state_config() {
-		return '.tcb-active-state';
+		return true;
 	}
 
 	/**
@@ -76,6 +76,7 @@ class TCB_Button_Group_Item_Element extends TCB_Button_Element {
 		);
 		$components['borders']['config']['Borders']['important'] = true;
 		$components['borders']['config']['Corners']['important'] = true;
+		$components['scroll'] = [ 'hidden' => true ];
 
 		return $components;
 	}

@@ -592,6 +592,8 @@ function tve_leads_delete_post( $group_id ) {
 	$tvedb->delete_logs( array( 'main_group_id' => $group_id ) );
 	$post->post_status = 'trash';
 
+	do_action( 'tve_leads_delete_post', $post->ID );
+
 	return wp_update_post( $post );
 }
 
@@ -1930,8 +1932,8 @@ function tve_leads_get_conversion_rate_test_data( $filter ) {
 	$conversions = 0;
 	$impressions = 0;
 	foreach ( $chart_data_temp as $key ) {
-		$conversions += array_sum( $key['conversion_count'] );
-		$impressions += array_sum( $key['impression_count'] );
+		$conversions += isset( $key['conversion_count'] ) ? array_sum( $key['conversion_count'] ) : 0;
+		$impressions += isset( $key['impression_count'] ) ? array_sum( $key['impression_count'] ) : 0;
 	}
 	$average_rate = (float) tve_leads_conversion_rate( $impressions, $conversions, '', 2 );
 
@@ -2354,7 +2356,7 @@ function tve_leads_get_test( $test_id, $filters = array() ) {
 			//we don't calculate for the control item
 			if ( $index > 0 ) {
 				//Percentage improvement = conversion rate of variation - conversion rate of control
-				if ( is_numeric( $test->items[0]->conversion_rate ) ) {
+				if ( is_numeric( $item->conversion_rate ) && is_numeric( $test->items[0]->conversion_rate ) ) {
 					$item->percentage_improvement = round( ( ( $item->conversion_rate - $test->items[0]->conversion_rate ) * 100 ) / $test->items[0]->conversion_rate, 2 );
 				} else {
 					$item->percentage_improvement = 'N/A';
@@ -2755,6 +2757,20 @@ function tve_leads_get_already_subscribed_state( $default_state ) {
 
 	return $tvedb->get_variation_already_subscribed_state( $default_state['key'] );
 }
+
+/**
+ * check if form has already subscribed state
+ *
+ * @param array $form_id
+ *
+ * @return array|null
+ */
+function tve_leads_has_already_subscribed_state( $form_id ) {
+	global $tvedb;
+
+	return $tvedb->form_has_already_subscribed_state( $form_id );
+}
+
 
 /**
  * get the tracking data for a post from the post-meta option
@@ -3231,7 +3247,7 @@ function tve_leads_get_chart_annotations( $filter, $chart_data ) {
  * @return mixed
  */
 function tve_leads_get_wizard_proprieties( $asset_groups = array() ) {
-	$connected_apis = Thrive_List_Manager::getAvailableAPIsByType( true, array( 'email' ) );
+	$connected_apis = Thrive_List_Manager::get_available_apis( true, [ 'include_types' => [ 'email' ] ] );
 	if ( empty( $connected_apis ) ) {
 		$proprieties['connections'] = 0;
 	} else {
@@ -3387,3 +3403,7 @@ function tve_leads_get_asset_delivery_groups( $arguments = array() ) {
 
 	return $posts_array = get_posts( $arguments );
 }
+
+
+
+

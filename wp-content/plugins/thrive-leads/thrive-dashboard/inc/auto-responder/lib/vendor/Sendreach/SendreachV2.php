@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 7/22/2015
- * Time: 1:31 PM
- */
 class Thrive_Dash_Api_SendreachV2 {
 	protected $api_url = 'http://api.sendreach.com/index.php';
 	protected $key;
@@ -32,7 +26,7 @@ class Thrive_Dash_Api_SendreachV2 {
 		return $this->_send( array( 'action' => 'lists_view' ) );
 	}
 
-	public function addSubscriber( $list_id, $first_name, $last_name, $email ) {
+	public function add_subscriber( $list_id, $first_name, $last_name, $email ) {
 		$params = array(
 			'action'     => 'subscriber_add',
 			'list_id'    => $list_id,
