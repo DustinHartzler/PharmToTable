@@ -104,4 +104,58 @@
 <script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
 <!-- / https://optinmonster.com -->
 
-<chat-widget style="--chat-widget-primary-color: #003D42; --chat-widget-active-color:#003D42 ;--chat-widget-bubble-color: #003D42" location-id="b673jIFyEKZBQFHQ1rCO" prompt-avatar="https://widgets.leadconnectorhq.com/chat-widget/assets/defaultAvatar.png" agency-name="FG Funnels" agency-website="http://fgfunnels.com" ></chat-widget> <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" > </script>
+<script>
+  window.prechatTemplate = {
+      "SubmitLabel": "Start Chat",
+      "fields": {
+"0": {
+"error": "Please Enter a valid name",
+"fieldId": "name",
+"label": "Name",
+"required": "yes",
+"type": "text"
+},
+"1": {
+"error": "Please Enter a valid Email",
+"fieldId": "email",
+"label": "Email",
+"required": "yes",
+"type": "email"
+},
+"2": {
+"error": "Please Enter a valid Phone Number",
+"fieldId": "phone",
+"label": "Phone",
+"required": "yes",
+"type": "phone"
+},
+      },
+      "heading": "👋 Chat with Us",
+      "mainbgColor": "#003d42",
+      "maintxColor": "#fff",
+      "textBanner": "We can't wait to talk to you. But first, please take a couple of moments to tell us a bit about yourself."
+    };
+    window.fcSettings = {
+      onInit: function() {
+        window.fcPreChatform.fcWidgetInit(window.prechatTemplate);
+    }
+    };
+    window.fcWidgetMessengerConfig = {
+      config: {
+content: {
+actions: {
+tab_chat: "Chat"
+},
+headers: {
+chat: "Chat With Us"
+}
+},
+cssNames: {
+expanded: "custom_fc_expanded",
+widget: "custom_fc_frame"
+}
+      }
+    };
+  </script>
+  <script src="https://snippets.freshchat.com/js/fc-pre-chat-form-v2.js"></script>
+  <script src='//fw-cdn.com/6640648/3233413.js' chat='true'></script>
