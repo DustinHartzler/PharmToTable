@@ -365,8 +365,25 @@
     <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootsnav.js"></script>
     <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/main.js"></script>
 <?php wp_footer(); ?>
-<!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
-<script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
-<!-- / https://optinmonster.com -->
+
+<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/click-outside.js"></script>
+<script type="text/javascript">
+_linkedin_partner_id = "4910812";
+window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+</script><script type="text/javascript">
+(function(l) {
+if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
+window.lintrk.q=[]}
+var s = document.getElementsByTagName("script")[0];
+var b = document.createElement("script");
+b.type = "text/javascript";b.async = true;
+b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+s.parentNode.insertBefore(b, s);})(window.lintrk);
+</script>
+<noscript>
+<img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=4910812&fmt=gif" />
+</noscript>
+
 </body>
 </html>
