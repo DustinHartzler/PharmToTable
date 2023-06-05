@@ -3849,3 +3849,6 @@ body .sbi_review_step1_notice .sbi-btn-link:not(:last-child) {
   text-align: center;
   z-index: 26;
 }
+.sbi-new-indicator {
+	background-color: #1da867;
+}

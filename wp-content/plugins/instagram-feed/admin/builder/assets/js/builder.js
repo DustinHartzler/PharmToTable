@@ -39,6 +39,7 @@ sbiBuilder = new Vue({
 		ajaxHandler: sbi_builder.ajax_handler,
 		adminPostURL: sbi_builder.adminPostURL,
 		widgetsPageURL: sbi_builder.widgetsPageURL,
+		themeSupportsWidgets: sbi_builder.themeSupportsWidgets,
 		translatedText: sbi_builder.translatedText,
 		socialShareLink: sbi_builder.socialShareLink,
 		licenseType: sbi_builder.licenseType,

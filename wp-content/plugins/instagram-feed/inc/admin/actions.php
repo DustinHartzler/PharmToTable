@@ -54,6 +54,17 @@ function sb_instagram_menu() {
 		''
 	);
 
+	if ( version_compare(PHP_VERSION, '7.1.0') >= 0 && !is_plugin_active( 'reviews-feed/sb-reviews.php' ) && !is_plugin_active( 'reviews-feed-pro/sb-reviews-pro.php' )  ) {
+		add_submenu_page(
+			'sb-instagram-feed',
+			__( 'Reviews Feed', 'instagram-feed' ) ,
+			'<span class="sbi_get_sbr">' . __( 'Reviews Feed', 'instagram-feed' ) . '</span>'. '<span class="sbi-notice-alert sbi-new-indicator"><span>New!</span></span>',
+			$cap,
+			'admin.php?page=sbr',
+			''
+		);
+	}
+
 	//Show a Instagram plugin menu item if it isn't already installed
 	if( !is_plugin_active( 'custom-facebook-feed/custom-facebook-feed.php' ) && !is_plugin_active( 'custom-facebook-feed-pro/custom-facebook-feed.php' )  && current_user_can( 'activate_plugins' ) && current_user_can( 'install_plugins' ) ){
 		add_submenu_page(

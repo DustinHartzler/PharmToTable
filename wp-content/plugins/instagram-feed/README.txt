@@ -3,7 +3,7 @@ Contributors: smashballoon, craig-at-smash-balloon, am, smub
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 4.1
 Tested up to: 6.2
-Stable tag: 6.1.3
+Stable tag: 6.1.5
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -334,6 +334,14 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Plus more customization options added all the time!
 
 == Changelog ==
+= 6.1.5 =
+* Fix: Fixed personal accounts unable to retrieve new tweets and showing an error with the code 100.
+* Fix: Updated API calls for business accounts to work with upcoming changes from Instagram.
+
+= 6.1.4 =
+* Fix: Removed the option to add a feed to a widget if the current theme does not support widgets.
+* New: Added a menu item to easily install our new [Reviews Feed](https://wordpress.org/plugins/reviews-feed/) plugin!
+
 = 6.1.3 =
 * Fix: Fixed a PHP Warning: strtotime(): Epoch doesn’t fit in a PHP integer.
 * Fix: Header bio was not updating when the bio for the connected Instagram account was updated.

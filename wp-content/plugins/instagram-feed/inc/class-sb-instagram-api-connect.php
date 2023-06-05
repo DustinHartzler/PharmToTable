@@ -292,7 +292,7 @@ class SB_Instagram_API_Connect
 					$url = 'https://graph.instagram.com/me?fields=id,username,media_count,account_type&access_token=' . $access_token;
 				} else {
 					$num = min( $num, 200 );
-					$url = 'https://graph.instagram.com/' . $connected_account['user_id'] . '/media?fields=media_url,thumbnail_url,caption,id,media_type,media_product_type,timestamp,username,comments_count,like_count,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D&limit=' . $num . '&access_token=' . $access_token;
+					$url = 'https://graph.instagram.com/' . $connected_account['user_id'] . '/media?fields=media_url,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D&limit=' . $num . '&access_token=' . $access_token;
 				}
 			}
 
@@ -307,7 +307,7 @@ class SB_Instagram_API_Connect
 					$url = 'https://graph.facebook.com/' . $connected_account['user_id'] . '?fields=biography,id,username,website,followers_count,media_count,profile_picture_url,name&access_token=' . sbi_maybe_clean( $connected_account['access_token'] );
 				} else {
 					$num = min( $num, 200 );
-					$url = 'https://graph.facebook.com/v10.0/' . $connected_account['user_id'] . '/media?fields=media_url,media_product_type,video_title,thumbnail_url,caption,id,media_type,timestamp,username,comments_count,like_count,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D&limit=' . $num . '&access_token=' . sbi_maybe_clean( $connected_account['access_token'] );
+					$url = 'https://graph.facebook.com/v17.0/' . $connected_account['user_id'] . '/media?fields=media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,comments_count,like_count,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D&limit=' . $num . '&access_token=' . sbi_maybe_clean( $connected_account['access_token'] );
 				}
 			}
 

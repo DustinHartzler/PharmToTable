@@ -32,7 +32,7 @@
               </svg>
 
           </a>
-					<a :href="widgetsPageURL + '?cff_feed_id=' + customizerFeedData.feed_info.id" class="sbi-fb-embed-btn sbi-btn-grey">
+					<a :href="widgetsPageURL + '?cff_feed_id=' + customizerFeedData.feed_info.id" class="sbi-fb-embed-btn sbi-btn-grey" v-if="themeSupportsWidgets != null && themeSupportsWidgets">
               <div class="sb-icon-label">
                   <div v-html="svgIcons['addWidget']"></div>
                   <span>{{embedPopupScreen.addWidget}}</span>
