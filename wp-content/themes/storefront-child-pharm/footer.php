@@ -160,7 +160,6 @@ widget: "custom_fc_frame"
   <script src="https://snippets.freshchat.com/js/fc-pre-chat-form-v2.js"></script>
   <script src='//fw-cdn.com/6640648/3233413.js' chat='true'></script>
 
-  /* LinkedIn Insight Tag */
   <script type="text/javascript">
 _linkedin_partner_id = "4910812";
 window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
