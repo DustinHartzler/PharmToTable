@@ -204,3 +204,15 @@ h2 span {
 	}
   }
 
+
+/*DPP Program*/
+.text-output p {
+  color: #fff !important;
+  font-size: 20px !important;
+}
+
+.testimonial-items .item{
+  width: 514px;
+  float: left;
+  margin-left: 10px;
+}

@@ -4051,7 +4051,7 @@ body,
     font-family: "Font Awesome 5 Free";
     text-align: center;
     font-size: 50px;
-    color: var(--primary);
+    color: #71CABC;
     font-weight: 900;
 }
 
@@ -5704,4 +5704,16 @@ p.services {
 .field-wrap textarea {
     padding-left: 10px;
     border: 2px solid #dedede;
+}
+
+/*DPP Program*/
+.text-output p {
+  color: #fff !important;
+  font-size: 20px !important;
+}
+
+.testimonial-items .item{
+  width: 514px;
+  float: left;
+  margin-left: 10px;
 }
