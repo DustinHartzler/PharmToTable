@@ -322,7 +322,7 @@
             <div id="preview-container" class="preview-container hl_page-preview--content">
                <div data-v-10a911cc="">
                   <div class="radius0 shadow10 noBorder c-section c-wrapper section-2PSFRFO2B8 desktop-only" style="" id="section-2PSFRFO2B8" data-v-10a911cc="">
-                     <div style="background:url(http://pharm.local/wp-content/themes/storefront-child-pharm/assets/img/dpp/dpp.png);opacity:1;" class="bg full-center" data-v-1a07e071=""></div>
+                     <div style="background:url(https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/dpp.png);opacity:1;" class="bg full-center" data-v-1a07e071=""></div>
                      <div class="inner" data-v-10a911cc="">
                         <div class="radius10 row-align-center row-align-left alignRow.value noBorder c-row c-wrapper row-BKIGAGIEB4" id="row-BKIGAGIEB4" data-v-10a911cc="">
                            <div class="inner" data-v-10a911cc="">
@@ -373,7 +373,7 @@
                      </div>
                   </div>
                   <div class="radius0 noBorder shadow10 c-section c-wrapper section-7BC8SH74JW mobile-only" style="" id="section-7BC8SH74JW" data-v-10a911cc="">
-                     <div style="background:url(http://pharm.local/wp-content/themes/storefront-child-pharm/assets/img/dpp/dpp.png);opacity:1;" class="bg full-center" data-v-1a07e071=""></div>
+                     <div style="background:url(https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/dpp.png);opacity:1;" class="bg full-center" data-v-1a07e071=""></div>
                      <div class="inner" data-v-10a911cc="">
                         <div class="alignRow.value radius10 row-align-left noBorder row-align-center c-row c-wrapper row-Y7411PR3D2" id="row-Y7411PR3D2" data-v-10a911cc="">
                            <div class="inner" data-v-10a911cc="">
@@ -645,7 +645,7 @@
                                        <div style="cursor:pointer;" class="image-container cimage-O6TATK2CTL" data-v-39a99d6f="">
                                           <div data-v-39a99d6f="">
                                              <div>
-                                                <picture class="hl-image-picture" style=""><img src="http://pharm.local/wp-content/themes/storefront-child-pharm/assets/img/dpp/1.png" alt="" height="auto" width="300" class="radius0 hl-optimized"></picture>
+                                                <picture class="hl-image-picture" style=""><img src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/1.png" alt="" height="auto" width="300" class="radius0 hl-optimized"></picture>
                                              </div>
                                           </div>
                                        </div>
@@ -672,7 +672,7 @@
                                        <div style="cursor:pointer;" class="image-container cimage-BY92U3GXDE" data-v-39a99d6f="">
                                           <div data-v-39a99d6f="">
                                              <div>
-                                                <picture class="hl-image-picture" style="" loading="lazy"><img src="http://pharm.local/wp-content/themes/storefront-child-pharm/assets/img/dpp/2.png" alt="" height="300" width="300" class="radius0 hl-optimized"></picture>
+                                                <picture class="hl-image-picture" style="" loading="lazy"><img src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/2.png" alt="" height="300" width="300" class="radius0 hl-optimized"></picture>
                                              </div>
                                           </div>
                                        </div>
@@ -699,7 +699,7 @@
                                        <div style="cursor:pointer;" class="image-container cimage-T8V6EO4XGO" data-v-39a99d6f="">
                                           <div data-v-39a99d6f="">
                                              <div>
-                                                <picture class="hl-image-picture" style=""><img src="http://pharm.local/wp-content/themes/storefront-child-pharm/assets/img/dpp/3.png" alt="" height="auto" width="300" class="radius0 hl-optimized"></picture>
+                                                <picture class="hl-image-picture" style=""><img src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/3.png" alt="" height="auto" width="300" class="radius0 hl-optimized"></picture>
                                              </div>
                                           </div>
                                        </div>
