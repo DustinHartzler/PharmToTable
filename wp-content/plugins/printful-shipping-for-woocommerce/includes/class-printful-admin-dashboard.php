@@ -33,7 +33,7 @@ class Printful_Admin_Dashboard {
 	public static function view() {
 
 		$dashboard = self::instance();
-		$api_key = Printful_Integration::instance()->get_option( 'printful_key' );
+		$api_key = Printful_Integration::instance()->get_option( 'printful_oauth_key' );
 		$connect_status = Printful_Integration::instance()->is_connected();
 
 		if ( $connect_status ) {
@@ -68,7 +68,7 @@ class Printful_Admin_Dashboard {
 		Printful_Admin::load_template( 'header', array( 'tabs' => Printful_Admin::get_tabs() ) );
 
 		Printful_Admin::load_template( 'connect', array(
-				'consumer_key'       => $this->_get_consumer_key(),
+				'connect_url'       => $this->get_connect_url(),
 				'waiting_sync'       => isset( $_GET['sync-in-progress'] ),
 				'consumer_key_error' => isset( $_GET['consumer-key-error'] ),
 				'issues'             => $issues,
@@ -238,6 +238,13 @@ class Printful_Admin_Dashboard {
 		}
 
 		return $orders;
+	}
+
+	public function get_connect_url()
+	{
+		$consumer_key = $this->_get_consumer_key();
+
+		return Printful_Base::get_printful_host() . 'integration-callback/woocommerce/connect?website=' . urlencode( trailingslashit( get_home_url() ) ) . '&key=' . urlencode( $consumer_key ) . '&returnUrl=' . urlencode( get_admin_url( null,'admin.php?page=' . Printful_Admin::MENU_SLUG_DASHBOARD ) );
 	}
 
 	/**

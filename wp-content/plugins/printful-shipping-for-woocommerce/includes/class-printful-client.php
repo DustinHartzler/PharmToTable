@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Printful_Client {
 
 	private $key = false;
+    private $isOAuth = false;
 	private $lastResponseRaw;
 	private $lastResponse;
 	private $userAgent = 'Printful WooCommerce Plugin';
@@ -15,12 +16,14 @@ class Printful_Client {
 	/**
 	 * @param string $key Printful Store API key
 	 * @param bool|string $disable_ssl Force HTTP instead of HTTPS for API requests
+     * @param bool $is_oauth Should use OAuth header
 	 *
 	 * @throws PrintfulException if the library failed to initialize
 	 */
-	public function __construct( $key = '', $disable_ssl = false ) {
+	public function __construct( $key = '', $disable_ssl = false, $is_oauth = false ) {
 
 		$key = (string) $key;
+        $this->isOAuth = (bool) $is_oauth;
 
 		$this->userAgent .= ' ' . Printful_Base::VERSION . ' (WP ' . get_bloginfo( 'version' ) . ' + WC ' . WC()->version . ')';
 
@@ -151,11 +154,15 @@ class Printful_Client {
 			$url .= '?' . http_build_query( $params );
 		}
 
+        $authHeader = $this->isOAuth
+            ? 'Bearer ' . $this->key
+            : 'Basic ' . base64_encode( $this->key );
+
 		$request = array(
 			'timeout'    => 10,
 			'user-agent' => $this->userAgent,
 			'method'     => $method,
-			'headers'    => array( 'Authorization' => 'Basic ' . base64_encode( $this->key ) ),
+			'headers'    => array( 'Authorization' => $authHeader ),
 			'body'       => $data !== null ? json_encode( $data ) : null,
 		);
 

@@ -390,7 +390,7 @@ class Printful_Admin_Status {
 	private function check_PF_API_key() {
 
 		$option = get_option( 'woocommerce_printful_settings', array() );
-		if ( ! empty( $option['printful_key'] ) && strlen( $option['printful_key'] ) == 36 ) {
+		if ( ! empty( $option['printful_oauth_key'] ) ) {
 			return self::PF_STATUS_OK;
 		}
 

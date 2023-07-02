@@ -30,7 +30,7 @@ class Printful_REST_API_Controller extends WC_REST_Controller
                 'permission_callback' => array( $this, 'get_items_permissions_check' ),
                 'show_in_index' => false,
                 'args' => array(
-                    'accessKey' => array(
+                    'token' => array(
                         'required' => false,
                         'type' => 'string',
                         'description' => __( 'Printful access key', 'printful' ),
@@ -113,15 +113,15 @@ class Printful_REST_API_Controller extends WC_REST_Controller
 
 	    $options = get_option( 'woocommerce_printful_settings', array() );
 
-        $api_key  = $request->get_param('accessKey');
+        $token  = $request->get_param('token');
         $store_id = $request->get_param('storeId');
         $store_id = intval( $store_id );
 
-        if ( ! is_string( $api_key ) || strlen( $api_key ) == 0 || $store_id == 0 ) {
+        if ( ! is_string( $token ) || strlen( $token ) == 0 || $store_id == 0 ) {
             $error = 'Failed to update access data';
         }
 
-	    $options['printful_key']      = $api_key;
+	    $options['printful_oauth_key'] = $token;
 	    $options['printful_store_id'] = $store_id;
 
         Printful_Integration::instance()->update_settings( $options );

@@ -36,13 +36,6 @@ class Printful_Admin_Settings {
         );
 
         return array(
-            'printful_key' => array(
-                'title' => __( 'Printful store API key', 'printful' ),
-                'type' => 'text',
-                'desc_tip' => true,
-                'description' => __( 'Your store\'s Printful API key. Create it in the Prinful dashboard', 'printful' ),
-                'default' => false,
-            ),
             'calculate_tax' => array(
                 'title' => __( 'Calculate sales tax', 'printful' ),
                 'type' => 'checkbox',
@@ -180,6 +173,8 @@ class Printful_Admin_Settings {
 		Printful_Admin::load_template( 'header', array( 'tabs' => Printful_Admin::get_tabs() ) );
 
 		echo '<form method="post" name="printful_settings" action="' . esc_url( admin_url( 'admin-ajax.php?action=save_printful_settings' ) ) . '">';
+
+		Printful_Admin::load_template('reconnect', ['reconnect_url' => Printful_Admin_Dashboard::instance()->get_connect_url()]);
 
 		// Integration settings
 		$integration_settings = $this->setup_fields( __('Integration settings', 'printful'), '', self::getIntegrationFields() );

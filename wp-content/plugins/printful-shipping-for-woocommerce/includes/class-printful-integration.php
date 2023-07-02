@@ -25,34 +25,42 @@ class Printful_Integration
      * @throws PrintfulException
      */
 	public function get_client() {
+		$isOauth = true;
+		$key = $this->get_option( 'printful_oauth_key' );
+		if (!$key) {
+			$isOauth = false;
+			$key = $this->get_option( 'printful_key' );
+		}
 
 		require_once 'class-printful-client.php';
-		$client = new Printful_Client( $this->get_option( 'printful_key' ), $this->get_option( 'disable_ssl' ) == 'yes' );
+		$client = new Printful_Client( $key, $this->get_option( 'disable_ssl' ) == 'yes', $isOauth );
 
 		return $client;
 	}
 
     /**
-     * Check if the connection to printful is working
+     * Check if the connection to Printful is working
      * @param bool $force
      * @return bool
      * @throws PrintfulException
      */
 	public function is_connected( $force = false ) {
-
 		$api_key = $this->get_option( 'printful_key' );
-
+		$api_oauth_key = $this->get_option( 'printful_oauth_key' );
+        
 		//dont need to show error - the plugin is simply not setup
-		if ( empty( $api_key ) ) {
+		if ( empty( $api_key ) && empty( $api_oauth_key ) ) {
 			return false;
 		}
 
+		$invalid_api_key_error_message = sprintf(
+            'Invalid API key. Please reconnect your store in <a href="%s">Printful plugin settings</a>',
+            admin_url( 'admin.php?page=printful-dashboard&tab=settings' )
+        );
+
 		//validate length, show error
-		if ( strlen( $api_key ) != 36 ) {
-			$message      = 'Invalid API key - the key must be 36 characters long. Please ensure that your API key in <a href="%s">Settings</a> matches the one in your <a href="%s">Printful dashboard</a>.';
-			$settings_url = admin_url( 'admin.php?page=printful-dashboard&tab=settings' );
-			$printful_url = Printful_Base::get_printful_host() . 'dashboard/';
-			$this->set_connect_error(sprintf( $message, $settings_url, $printful_url ) );
+		if ( $api_key && strlen( $api_key ) != 36 ) {
+			$this->set_connect_error( $invalid_api_key_error_message );
 
 			return false;
 		}
@@ -79,20 +87,12 @@ class Printful_Integration
 				$response = true;
 				$this->clear_connect_error();
 				set_transient( self::PF_API_CONNECT_STATUS, array( 'status' => 1 ) );  //no expiry
-			} elseif ( $storeData['type'] != 'woocommerce' ) {
-				$message      = 'Invalid API key. This API key belongs to a ' . ucfirst( $storeData['type'] ) . ' store. Please copy the correct key from <a href="%s">Printful store settings</a> and enter it in the <a href="%s">Printful plugin settings</a>';
-				$settings_url = admin_url( 'admin.php?page=printful-dashboard&tab=settings' );
-				$printful_url = Printful_Base::get_printful_host() . 'dashboard/store';
-				$this->set_connect_error( sprintf( $message, $settings_url, $printful_url ) );
-				set_transient( self::PF_API_CONNECT_STATUS, array( 'status' => 0 ), MINUTE_IN_SECONDS );  //try again in 1 minute
 			}
 		} catch ( Exception $e ) {
 
 			if ( $e->getCode() == 401 ) {
-				$message      = 'Invalid API key. Please ensure that your API key in <a href="%s">Printful plugin settings</a> matches the one in your <a href="%s">Printful store settings</a>.';
-				$settings_url = admin_url( 'admin.php?page=printful-dashboard&tab=settings' );
-				$printful_url = Printful_Base::get_printful_host() . 'dashboard/store';
-				$this->set_connect_error( sprintf( $message, $settings_url, $printful_url ) );
+				$this->set_connect_error( $invalid_api_key_error_message );
+
 				set_transient( self::PF_API_CONNECT_STATUS, array( 'status' => 0 ), MINUTE_IN_SECONDS );  //try again in 1 minute
 			} else {
 				$this->set_connect_error( 'Could not connect to Printful API. Please try again later. (Error ' . $e->getCode() . ': ' . $e->getMessage() . ')' );
