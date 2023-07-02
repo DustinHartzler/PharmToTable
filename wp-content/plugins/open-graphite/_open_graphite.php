@@ -3,7 +3,7 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.6.1
+Version: 		1.7.0
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
 License:        GPLv2
@@ -82,9 +82,9 @@ class open_graphite_otmeta {
 				
 			$ogoptions 		= get_option( 'openg_settings' ); 
 			$user           = wp_get_current_user();
-			$allowed_roles  = array('editor', 'administrator', 'author'); /* Show metabox to these roles */
+			$allowed_roles	= isset($ogoptions['og_roles']) ? (array) $ogoptions['og_roles'] : array();
 			$post_types		= isset($ogoptions['post_types']) ? $ogoptions['post_types'] : '';
-			if( array_intersect($allowed_roles, $user->roles ) ) {
+			if( array_intersect($allowed_roles, $user->roles ) || current_user_can('administrator')) {
 			
 				if ($post_types) {
 					add_meta_box(

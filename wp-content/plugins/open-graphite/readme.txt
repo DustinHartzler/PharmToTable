@@ -5,7 +5,7 @@ Author URI:         https://rocketapps.com.au/
 Plugin URI:         https://wordpress.org/plugins/open-graphite/
 Tags:               open graph, social, facebook, twitter, thumbnail
 Requires at least:  4.7
-Tested up to:       6.1
+Tested up to:       6.2
 Stable tag:         trunk
 License:            GPLv3 or later
 License URI:        https://www.gnu.org/licenses/gpl-3.0.html
@@ -44,6 +44,40 @@ For posts and pages...
 * Scroll down to the Open Graphite metabox
 * Enter your desired title, description, image and object type
 
+== Frequently Asked Questions ==
+
+= Can I customise how each page or post is previewed when shared on social media? =
+
+Yes. You can either set the option to automatically use the existing title, text (or excerpt) and image, or specify them manually on each page or post in the Open Graphite metabox.
+
+= There appears to be duplicate sets of open graph tags =
+
+Any other plug-in that inserts open graph tags into your website (Yoast is one that comes to mind) may conflict with Open Graphite to not work properly.
+
+To test if you have a conflict, simply view the source code of your home page in your browser and search for any instances of og: within. Typically a plug-in will output the meta tags into it's own group. For this plug-in, they will be directly below the <code><!--/ Open Graphite /--></code> comment but other plug-ins will output something else (if at all). The only solution to resolve a conflict is to disable one of the plug-ins.
+
+= Facebook isn't showing the correct information when I share my page or post =
+
+Facebook (and possibly other social networks) will cache the open graph properties of a post that has previously been shared for up to 24 hours (maybe longer). During this time, any changes you make to your open graph properties will not be picked up by Facebook immediately. But there are a couple of solutions.
+
+1) <a href="https://rocketapps.com.au/product/open-graphite-pro/" target="_blank">Upgrade to Pro</a> and get a Facebook Access Token, or...
+
+2) Use the official <a href="https://developers.facebook.com/tools/debug/" target="_blank">Facebook Debugger</a>, paste in the URL of your page or post and hit the Debug button. When it has finished, hit the Scrape Again button. This will force Facebook to fetch the latest open graph data from your post. Twitter has a similar tool called the <a href="https://cards-dev.twitter.com/validator/" target="_blank">Card Validator</a> for this purpose as well.
+
+Facebook might complain about the lack of an App ID when you pass your URL through their debugger, but this will not prevent anything from working correctly.
+
+= Do I need a Facebook App ID? =
+
+You don't need a Facebook App ID for this plugin to work. That said, there may be instances where having one is helpful. <a href="https://developers.facebook.com/docs/development/create-an-app" target="_blank">Decide for yourself</a>. But if you plan on using the Facebook Access Token feature (highly recommended) then you will absolutely need a Facebook App ID.
+
+= Will my current settings be inherited if I upgrade to pro? =
+
+Yes. If you <a href="https://rocketapps.com.au/product/open-graphite-pro/" target="_blank">Upgrade to Pro</a> all your current configurations will be preserved.
+
+= Where can I get support for this plugin? =
+
+Leave a message at the <a href="https://wordpress.org/support/plugin/open-graphite/" target="_blank">plug-in support page</a>.
+
 == Screenshots ==
 
 1. screenshot-1.png
@@ -52,10 +86,10 @@ For posts and pages...
 
 While the free version of Open Graphite is supported in the <a href="https://wordpress.org/support/plugin/open-graphite">WordPress support page</a>, one-on-one priority support is given to <a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> license holders.
 
-<a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> has additional features, such as:
+<strong><a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> has additional features, such as:</strong>
 
 * The ability to use with any custom post type
-* Force Facebook to automatically and immediately update your title, description or featured image when you make edits (no need to use the Facebook debugger)
+* Force Facebook to automatically and immediately update your title, description or featured image when you make edits
 * Mobile and desktop previews for Facebook, Twitter and Linkedin
 * WooCommerce product support
 * Pinterest specific options
@@ -68,6 +102,13 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 * Priority support
 
 == Changelog ==
+
+= 1.7.0 =
+
+New setting: Specify which roles can access the Open Graphite interface.
+Fix: Issue where meta box had transparent background.
+Help: Updated help topics.
+Tweak: Settings interface.
 
 = 1.6.1 =
 
