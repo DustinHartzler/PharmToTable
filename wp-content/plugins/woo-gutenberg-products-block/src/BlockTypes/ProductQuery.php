@@ -76,6 +76,38 @@ class ProductQuery extends AbstractBlock {
 	}
 
 	/**
+	 * Extra data passed through from server to client for block.
+	 *
+	 * @param array $attributes  Any attributes that currently are available from the block.
+	 *                           Note, this will be empty in the editor context when the block is
+	 *                           not in the post content on editor load.
+	 */
+	protected function enqueue_data( array $attributes = [] ) {
+		parent::enqueue_data( $attributes );
+
+		$gutenberg_version = '';
+
+		if ( is_plugin_active( 'gutenberg/gutenberg.php' ) ) {
+			if ( defined( 'GUTENBERG_VERSION' ) ) {
+				$gutenberg_version = GUTENBERG_VERSION;
+			}
+
+			if ( ! $gutenberg_version ) {
+				$gutenberg_data    = get_file_data(
+					WP_PLUGIN_DIR . '/gutenberg/gutenberg.php',
+					array( 'Version' => 'Version' )
+				);
+				$gutenberg_version = $gutenberg_data['Version'];
+			}
+		}
+
+		$this->asset_data_registry->add(
+			'post_template_has_support_for_grid_view',
+			version_compare( $gutenberg_version, '16.0', '>=' )
+		);
+	}
+
+	/**
 	 * Check if a given block
 	 *
 	 * @param array $parsed_block The block being rendered.
@@ -165,18 +197,21 @@ class ProductQuery extends AbstractBlock {
 		}
 
 		$common_query_values = array(
-			'post_type'      => 'product',
-			'post__in'       => array(),
-			'post_status'    => 'publish',
+			'meta_query'     => array(),
 			'posts_per_page' => $query['posts_per_page'],
 			'orderby'        => $query['orderby'],
 			'order'          => $query['order'],
 			'offset'         => $query['offset'],
-			'meta_query'     => array(),
+			'post__in'       => array(),
+			'post_status'    => 'publish',
+			'post_type'      => 'product',
 			'tax_query'      => array(),
 		);
 
-		return $this->merge_queries(
+		$handpicked_products = isset( $parsed_block['attrs']['query']['include'] ) ?
+			$parsed_block['attrs']['query']['include'] : $common_query_values['post__in'];
+
+		$merged_query = $this->merge_queries(
 			$common_query_values,
 			$this->get_global_query( $parsed_block ),
 			$this->get_custom_orderby_query( $query['orderby'] ),
@@ -185,6 +220,8 @@ class ProductQuery extends AbstractBlock {
 			$this->get_filter_by_taxonomies_query( $query ),
 			$this->get_filter_by_keyword_query( $query )
 		);
+
+		return $this->filter_query_to_only_include_ids( $merged_query, $handpicked_products );
 	}
 
 	/**
@@ -305,6 +342,23 @@ class ProductQuery extends AbstractBlock {
 			'meta_key' => $meta_keys[ $orderby ],
 			'orderby'  => 'meta_value_num',
 		);
+	}
+
+	/**
+	 * Apply the query only to a subset of products
+	 *
+	 * @param array $query  The query.
+	 * @param array $ids  Array of selected product ids.
+	 *
+	 * @return array
+	 */
+	private function filter_query_to_only_include_ids( $query, $ids ) {
+		if ( ! empty( $ids ) ) {
+			$query['post__in'] = empty( $query['post__in'] ) ?
+				$ids : array_intersect( $ids, $query['post__in'] );
+		}
+
+		return $query;
 	}
 
 	/**

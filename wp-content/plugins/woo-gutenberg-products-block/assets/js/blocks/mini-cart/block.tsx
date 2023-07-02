@@ -4,7 +4,10 @@
 import { renderParentBlock } from '@woocommerce/atomic-utils';
 import Drawer from '@woocommerce/base-components/drawer';
 import { useStoreCart } from '@woocommerce/base-context/hooks';
-import { translateJQueryEventToNative } from '@woocommerce/base-utils';
+import {
+	getValidBlockAttributes,
+	translateJQueryEventToNative,
+} from '@woocommerce/base-utils';
 import { getRegisteredBlockComponents } from '@woocommerce/blocks-registry';
 import {
 	formatPrice,
@@ -31,18 +34,19 @@ import classnames from 'classnames';
 /**
  * Internal dependencies
  */
+import type { BlockAttributes } from './types';
 import QuantityBadge from './quantity-badge';
 import { MiniCartContentsBlock } from './mini-cart-contents/block';
 import './style.scss';
-import { blockName } from './mini-cart-contents/attributes';
+import {
+	blockName,
+	attributes as miniCartContentsAttributes,
+} from './mini-cart-contents/attributes';
 
-interface Props {
-	isInitiallyOpen?: boolean;
-	colorClassNames?: string;
-	style?: Record< string, Record< string, string > >;
-	contents: string;
-	addToCartBehaviour: string;
-	hasHiddenPrice: boolean;
+type Props = BlockAttributes;
+
+function getScrollbarWidth() {
+	return window.innerWidth - document.documentElement.clientWidth;
 }
 
 const MiniCartBlock = ( attributes: Props ): JSX.Element => {
@@ -51,6 +55,7 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 		colorClassNames,
 		style,
 		contents = '',
+		miniCartIcon,
 		addToCartBehaviour = 'none',
 		hasHiddenPrice = false,
 	} = attributes;
@@ -85,10 +90,14 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 	useEffect( () => {
 		const body = document.querySelector( 'body' );
 		if ( body ) {
+			const scrollBarWidth = getScrollbarWidth();
 			if ( isOpen ) {
-				Object.assign( body.style, { overflow: 'hidden' } );
+				Object.assign( body.style, {
+					overflow: 'hidden',
+					paddingRight: scrollBarWidth + 'px',
+				} );
 			} else {
-				Object.assign( body.style, { overflow: '' } );
+				Object.assign( body.style, { overflow: '', paddingRight: 0 } );
 			}
 		}
 	}, [ isOpen ] );
@@ -105,6 +114,17 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 				renderParentBlock( {
 					Block: MiniCartContentsBlock,
 					blockName,
+					getProps: ( el: Element ) => {
+						return {
+							attributes: getValidBlockAttributes(
+								miniCartContentsAttributes,
+								/* eslint-disable @typescript-eslint/no-explicit-any */
+								( el instanceof HTMLElement
+									? el.dataset
+									: {} ) as any
+							),
+						};
+					},
 					selector: '.wp-block-woocommerce-mini-cart-contents',
 					blockMap: getRegisteredBlockComponents( blockName ),
 				} );
@@ -187,17 +207,31 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 		  parseInt( cartTotals.total_items_tax, 10 )
 		: parseInt( cartTotals.total_items, 10 );
 
-	const ariaLabel = sprintf(
-		/* translators: %1$d is the number of products in the cart. %2$s is the cart total */
-		_n(
-			'%1$d item in cart, total price of %2$s',
-			'%1$d items in cart, total price of %2$s',
-			cartItemsCount,
-			'woo-gutenberg-products-block'
-		),
-		cartItemsCount,
-		formatPrice( subTotal, getCurrencyFromPriceResponse( cartTotals ) )
-	);
+	const ariaLabel = hasHiddenPrice
+		? sprintf(
+				/* translators: %1$d is the number of products in the cart. */
+				_n(
+					'%1$d item in cart',
+					'%1$d items in cart',
+					cartItemsCount,
+					'woo-gutenberg-products-block'
+				),
+				cartItemsCount
+		  )
+		: sprintf(
+				/* translators: %1$d is the number of products in the cart. %2$s is the cart total */
+				_n(
+					'%1$d item in cart, total price of %2$s',
+					'%1$d items in cart, total price of %2$s',
+					cartItemsCount,
+					'woo-gutenberg-products-block'
+				),
+				cartItemsCount,
+				formatPrice(
+					subTotal,
+					getCurrencyFromPriceResponse( cartTotals )
+				)
+		  );
 
 	const colorStyle = {
 		backgroundColor: style?.color?.background,
@@ -230,7 +264,7 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 						{ taxLabel }
 					</small>
 				) }
-				<QuantityBadge count={ cartItemsCount } />
+				<QuantityBadge count={ cartItemsCount } icon={ miniCartIcon } />
 			</button>
 			<Drawer
 				className={ classnames(
@@ -240,7 +274,6 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 						'is-loading': cartIsLoading,
 					}
 				) }
-				title=""
 				isOpen={ isOpen }
 				onClose={ () => {
 					setIsOpen( false );
