@@ -101,6 +101,7 @@ class OMAPI_Actions {
 		if (
 			empty( $option['userId'] )
 			|| empty( $option['accountId'] )
+			|| empty( $option['accountUserId'] )
 			|| empty( $option['currentLevel'] )
 			|| empty( $option['plan'] )
 			|| empty( $creds['apikey'] )

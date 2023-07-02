@@ -190,7 +190,7 @@ class OMAPI_Urls {
 
 		$url = add_query_arg( 'redirect_to', rawurlencode( $final_destination ), $app_url );
 
-		$account_id = OMAPI::get_instance()->get_option( 'userId' );
+		$account_id = OMAPI::get_instance()->get_option( 'accountUserId' );
 		if ( ! empty( $account_id ) ) {
 			$url = add_query_arg( 'accountId', $account_id, $url );
 		}

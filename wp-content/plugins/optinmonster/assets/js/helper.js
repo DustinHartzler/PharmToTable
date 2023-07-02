@@ -6,6 +6,7 @@
  * ========================================================== */
 window.OMAPI_Helper = window.OMAPI_Helper || {};
 (function (window, document, app) {
+	// eslint-disable-next-line strict
 	'use strict';
 
 	app.fixIds = [];
@@ -20,20 +21,21 @@ window.OMAPI_Helper = window.OMAPI_Helper || {};
 	 */
 	app.maybeFixZindex = (form, campaignId) => {
 		// If the campaign has already been "fixed," bail.
-		if (-1 !== app.fixIds.indexOf(campaignId) || document.getElementById('om-wpforms-zindex')) {
+		if (-1 !== app.fixIds.indexOf(campaignId) || document.getElementById('om-wpforms-gforms-zindex')) {
 			return;
 		}
 
 		// If picker fields exist in the form, add it.
-		const pickers = form.querySelectorAll('.wpforms-datepicker, .wpforms-timepicker');
+		const pickers = form.querySelectorAll('.wpforms-datepicker, .wpforms-timepicker, .gform-theme-datepicker');
 		if (pickers.length) {
 			app.fixIds.push(campaignId);
 		}
 
 		// Append style element with the z-index fix to the head.
 		const style = document.createElement('style');
-		style.id = 'om-wpforms-zindex';
-		style.innerText = '.flatpickr-calendar.open, .ui-timepicker-wrapper { z-index: 999999999 !important; }';
+		style.id = 'om-wpforms-gforms-zindex';
+		style.innerText =
+			'.flatpickr-calendar.open, .ui-timepicker-wrapper, body #ui-datepicker-div.gform-theme-datepicker.gform-theme-datepicker[style] { z-index: 999999999 !important; }';
 
 		document.head.appendChild(style);
 	};
@@ -54,7 +56,7 @@ window.OMAPI_Helper = window.OMAPI_Helper || {};
 
 		// If there are no more ids to "fix," remove the styles.
 		if (!app.fixIds.length) {
-			document.getElementById('om-wpforms-zindex').remove();
+			document.getElementById('om-wpforms-gforms-zindex').remove();
 		}
 	};
 
@@ -83,6 +85,19 @@ window.OMAPI_Helper = window.OMAPI_Helper || {};
 		});
 	};
 
+	const gformEventCallback = (event, cb) => {
+		const campaignId = event.detail.Campaign.id;
+		const forms = document.querySelectorAll(`#om-${campaignId} form`);
+
+		window._omapp._utils.helpers.each(forms, (i, form) => {
+			const isGravityForm = form.id ? -1 !== form.id.indexOf('gform_') : false;
+
+			if (isGravityForm) {
+				cb(campaignId, form);
+			}
+		});
+	};
+
 	// Find any WPForms forms and listen for a submission to trigger a conversion.
 	document.addEventListener('om.Html.append.after', (event) => {
 		wpfEventCallback(event, (campaignId, form) => {
@@ -98,6 +113,20 @@ window.OMAPI_Helper = window.OMAPI_Helper || {};
 			};
 
 			window._omapp._utils.helpers.on(form, 'submit.omWpformsConversion', cb);
+			app.maybeFixZindex(form, campaignId);
+		});
+
+		gformEventCallback(event, (campaignId, form) => {
+			// Re-initialize Gravity Forms.
+			if (window.gform && window.gform.tools && window.gform.tools.trigger) {
+				window.gform.tools.trigger('gform_main_scripts_loaded');
+			}
+
+			// Re-initialize the Gravity Forms date picker.
+			if (window.gformInitDatepicker) {
+				window.gformInitDatepicker();
+			}
+
 			app.maybeFixZindex(form, campaignId);
 		});
 	});

@@ -349,6 +349,11 @@ class OMAPI_Rules {
 	 * @return OMAPI_Rules
 	 */
 	public function collect_optin_fields() {
+		// Bail early if the optin id is empty.
+		if ( empty( $this->optin->ID ) ) {
+			return $this;
+		}
+
 		foreach ( $this->fields as $field ) {
 			$this->field_values[ $field ] = get_post_meta( $this->optin->ID, '_omapi_' . $field, true );
 		}

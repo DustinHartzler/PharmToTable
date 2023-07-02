@@ -260,7 +260,7 @@ class OMAPI_Blocks {
 				'wizardUri'             => OMAPI_Urls::wizard(),
 				'upgradeUri'            => OMAPI_Urls::upgrade( 'gutenberg', '--FEATURE--' ),
 				'apiUrl'                => esc_url_raw( OPTINMONSTER_APIJS_URL ),
-				'omUserId'              => $this->base->get_option( 'userId' ),
+				'omUserId'              => $this->base->get_option( 'accountUserId' ),
 				'outputSettingsUrl'     => OMAPI_Urls::campaign_output_settings( '%s' ),
 				'editUrl'               => OMAPI_Urls::om_app(
 					'campaigns/--CAMPAIGN_SLUG--/edit/',

@@ -30,6 +30,15 @@ class OMAPI_MemberPress extends OMAPI_Integrations_Base {
 	public $courses;
 
 	/**
+	 * Holds the OMAPI_MemberPress_ProductEducation class instance.
+	 *
+	 * @since 2.13.5
+	 *
+	 * @var OMAPI_MemberPress_ProductEducation
+	 */
+	public $education;
+
+	/**
 	 * The minimum MemberPress version required.
 	 *
 	 * @since 2.13.0
@@ -47,11 +56,21 @@ class OMAPI_MemberPress extends OMAPI_Integrations_Base {
 		parent::__construct();
 
 		// Set our object.
-		$this->courses = new OMAPI_MemberPress_Courses( $this );
+		$this->courses   = new OMAPI_MemberPress_Courses( $this );
+		$this->education = new OMAPI_MemberPress_ProductEducation();
 
 		if ( self::is_active() && self::is_minimum_version() ) {
 			add_filter( 'optin_monster_campaigns_js_api_args', array( $this, 'add_args' ) );
 			add_filter( 'optin_monster_api_setting_ui_data', array( $this, 'add_args' ) );
+
+			wp_enqueue_style(
+				$this->base->plugin_slug . '-memberpress',
+				$this->base->url . 'assets/dist/css/memberpress.min.css',
+				array(),
+				$this->base->asset_version()
+			);
+
+			$this->education->add_meta_box();
 		}
 	}
 
@@ -104,10 +123,10 @@ class OMAPI_MemberPress extends OMAPI_Integrations_Base {
 	 *
 	 * @since 2.13.0
 	 *
-	 * @param  array $payload The data to be formatted
+	 * @param  array $payload The data to be formatted.
 	 * @return array          The formatted data
 	 */
-	static function format_data( $payload ) {
+	public static function format_data( $payload ) {
 		$data = array();
 
 		if ( empty( $payload ) || ! is_array( $payload ) ) {
@@ -130,8 +149,8 @@ class OMAPI_MemberPress extends OMAPI_Integrations_Base {
 	 *
 	 * @since 2.13.0
 	 *
-	 * @param  string $model The entity model name
-	 * @return array         The array model data
+	 * @param  string $model The entity model name.
+	 * @return array         The array model data.
 	 */
 	private function retrieve_mp_data( $model ) {
 		// Bail if MemberPress isn't currently active.
@@ -151,17 +170,17 @@ class OMAPI_MemberPress extends OMAPI_Integrations_Base {
 	/**
 	 * Determine if a "pro" template is enabled.
 	 *
-	 * @param string $name The template name
-	 * @return boolean     True if enabled
+	 * @param string $name The template name.
+	 * @return boolean     True if enabled.
 	 */
-	static function isProTemplateEnabled( $name ) {
-		if( ! class_exists( 'MeprOptions', true ) ) {
+	public static function isProTemplateEnabled( $name ) {
+		if ( ! class_exists( 'MeprOptions', true ) ) {
 			return false;
 		}
 
 		$options   = MeprOptions::fetch();
 		$attribute = 'design_enable_' . $name . '_template';
 
-		return ! empty( $options->$attribute ) && filter_var( $options->$attribute, FILTER_VALIDATE_BOOLEAN );	
+		return ! empty( $options->$attribute ) && filter_var( $options->$attribute, FILTER_VALIDATE_BOOLEAN );
 	}
 }

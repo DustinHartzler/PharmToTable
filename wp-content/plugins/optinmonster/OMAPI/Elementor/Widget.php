@@ -142,7 +142,7 @@ class OMAPI_Elementor_Widget extends Widget_Base {
 		wp_register_script(
 			$script_id,
 			$this->base->url . 'assets/dist/js/elementor.min.js',
-			array( 'elementor-frontend', 'jquery' ),
+			array( 'elementor-frontend', 'jquery', 'react', 'wp' ),
 			$this->base->asset_version(),
 			true
 		);

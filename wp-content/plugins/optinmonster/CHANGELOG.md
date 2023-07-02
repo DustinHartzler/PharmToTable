@@ -1,6 +1,29 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 2.13.5 - 2023-06-22
+* Improvements to onboarding flow.
+* Improvements MemberPress integration.
+* Changes to prepare for the upcoming retirement of legacy campaigns.
+
+### 2.13.4 - 2023-06-06
+* Fixed a bug where elementor support could cause JavaScript errors.
+* Fixed various issues the could occur as a result of connecting to the OptinMonster app as a sub-account.
+* Added information to the account connection setting to make it easier to see which account is connected.
+* Improved support for Australian time zones
+* Improved support for Gravity Forms.
+* Updates to npm packages used to build JS.
+
+### 2.13.3 - 2023-06-06
+* Skipped.
+
+### 2.13.2 - 2023-04-25
+* Changes to display rule display to prepare for future upgrades.
+* Updates to npm packages used to build JS.
+* Fixed error that could occur for sites running the Easy Digital Downloads integration and PHP 8.
+* Reorganization of display rule categories on the "Personalization" settings page.
+* Fixed PHP warning that could occur when determining which campaigns to output on a page.
+
 ### 2.13.1 - 2023-04-03
 * Added announcements/product education widgets to the Dashboard page.
 * Fixed an issue where initiating a campaign search failed to reset pagination.

@@ -57,6 +57,7 @@ class OMAPI_ApiKey {
 		unset( $option['customApiUrl'] );
 		unset( $option['apiCname'] );
 		unset( $option['userId'] );
+		unset( $option['accountUserId'] );
 		unset( $option['accountId'] );
 		unset( $option['currentLevel'] );
 		unset( $option['plan'] );
@@ -100,6 +101,7 @@ class OMAPI_ApiKey {
 
 		// Remove any pre-saved site/user/account data, so we re-fetch it elsewhere.
 		unset( $option['userId'] );
+		unset( $option['accountUserId'] );
 		unset( $option['accountId'] );
 		unset( $option['currentLevel'] );
 		unset( $option['plan'] );

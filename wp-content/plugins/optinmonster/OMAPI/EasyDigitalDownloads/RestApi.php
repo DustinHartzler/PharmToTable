@@ -266,7 +266,7 @@ class OMAPI_EasyDigitalDownloads_RestApi extends OMAPI_BaseRestApi {
 	 * @throws Exception If plugin action fails.
 	 */
 	public function get_display_rules_info() {
-		$edd_output = new OMAPI_EasyDigitalDownloads_Output();
+		$edd_output = new OMAPI_EasyDigitalDownloads_Output( $this->edd );
 
 		return new WP_REST_Response(
 			$edd_output->display_rules_data(),
