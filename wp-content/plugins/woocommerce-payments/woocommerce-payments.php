@@ -8,11 +8,11 @@
  * Woo: 5278104:bf3cf30871604e15eec560c962593c1f
  * Text Domain: woocommerce-payments
  * Domain Path: /languages
- * WC requires at least: 7.3
- * WC tested up to: 7.5.1
- * Requires at least: 5.9
- * Requires PHP: 7.0
- * Version: 5.7.0
+ * WC requires at least: 7.6
+ * WC tested up to: 7.8.0
+ * Requires at least: 6.0
+ * Requires PHP: 7.3
+ * Version: 6.1.1
  *
  * @package WooCommerce\Payments
  */
@@ -26,7 +26,8 @@ define( 'WCPAY_SUBSCRIPTIONS_ABSPATH', __DIR__ . '/vendor/woocommerce/subscripti
 
 require_once __DIR__ . '/vendor/autoload_packages.php';
 require_once __DIR__ . '/includes/class-wc-payments-features.php';
-require_once __DIR__ . '/includes/platform-checkout-user/class-platform-checkout-extension.php';
+require_once __DIR__ . '/includes/woopay-user/class-woopay-extension.php';
+require_once __DIR__ . '/includes/woopay/class-woopay-session.php';
 
 /**
  * Plugin activation hook.
@@ -132,6 +133,13 @@ function wcpay_jetpack_init() {
 // Jetpack's Rest_Authentication needs to be initialized even before plugins_loaded.
 Automattic\Jetpack\Connection\Rest_Authentication::init();
 
+/**
+ * Needs to be loaded as soon as possible
+ * Check https://github.com/Automattic/woocommerce-payments/issues/4759
+ */
+\WCPay\WooPay\WooPay_Session::init();
+
+
 // Jetpack-config will initialize the modules on "plugins_loaded" with priority 2, so this code needs to be run before that.
 add_action( 'plugins_loaded', 'wcpay_jetpack_init', 1 );
 
@@ -161,9 +169,14 @@ if ( ! function_exists( 'wcpay_init_subscriptions_core' ) ) {
 		$is_plugin_active = function( $plugin_name ) {
 			$plugin_slug = "$plugin_name/$plugin_name.php";
 
-			// Check if specified $plugin_name is in the process of being activated via the Admin > Plugins screen.
-			if ( isset( $_GET['action'], $_GET['plugin'] ) && 'activate' === $_GET['action'] && $plugin_slug === $_GET['plugin'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return true;
+			// Check if the specified $plugin_name is in the process of being activated via the Admin > Plugins screen.
+			if ( isset( $_GET['action'], $_GET['plugin'], $_GET['_wpnonce'] ) && wp_verify_nonce( wc_clean( wp_unslash( $_GET['_wpnonce'] ) ), "activate-plugin_{$plugin_slug}" ) ) {
+				$action = sanitize_text_field( wp_unslash( $_GET['action'] ) );
+				$plugin = sanitize_text_field( wp_unslash( $_GET['plugin'] ) );
+
+				if ( current_user_can( 'activate_plugin', $plugin_slug ) && 'activate' === $action && $plugin_slug === $plugin ) {
+					return true;
+				}
 			}
 
 			// Check if specified $plugin_name is in the process of being activated via the WP CLI.
@@ -317,13 +330,13 @@ function wcpay_tasks_init() {
 add_action( 'plugins_loaded', 'wcpay_tasks_init' );
 
 /**
- * Register blocks extension for platform checkout.
+ * Register blocks extension for woopay.
  */
-function register_platform_checkout_extension() {
-	( new Platform_Checkout_Extension() )->register_extend_rest_api_update_callback();
+function register_woopay_extension() {
+	( new WooPay_Extension() )->register_extend_rest_api_update_callback();
 }
 
-add_action( 'woocommerce_blocks_loaded', 'register_platform_checkout_extension' );
+add_action( 'woocommerce_blocks_loaded', 'register_woopay_extension' );
 
 /**
  * As the class is defined in later versions of WC, Psalm infers error.
