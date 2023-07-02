@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Compatibility with Product Add-Ons.
  *
  * @class    WCS_ATT_Integration_PAO
- * @version  3.1.1
+ * @version  4.1.1
  */
 class WCS_ATT_Integration_PAO {
 
@@ -203,14 +203,6 @@ class WCS_ATT_Integration_PAO {
 			return $cart_item;
 		}
 
-		/*
-		 * If PB/CP has already moved add-ons price calculations away from session load, let it handle everything.
-		 * Remember PB/CP is filtering prices before APFS, so it reapplies add-on prices in time.
-		 */
-		if ( isset( $cart_item[ 'data' ]->bundled_price_offset ) || isset( $cart_item[ 'data' ]->composited_price_offset ) ) {
-			return $cart_item;
-		}
-
 		$subscription_scheme = WCS_ATT_Product_Schemes::get_subscription_scheme( $cart_item[ 'data' ], 'object' );
 
 		if ( ! empty( $subscription_scheme ) && $subscription_scheme->has_price_filter() ) {
@@ -277,9 +269,9 @@ class WCS_ATT_Integration_PAO {
 
 			$schemes             = WCS_ATT_Product_Schemes::get_subscription_schemes( $product );
 			$price_filter_exists = WCS_ATT_Product_Schemes::price_filter_exists( $schemes );
-			$discount_addons     = $price_filter_exists && self::discount_addons( $product ) ? 'yes' :'no';
+			$discount_addons     = $price_filter_exists && self::discount_addons( $product ) ? 'yes' : 'no';
 
-			echo '<div class="wcsatt-pao-data" data-discount_addons="' . $discount_addons . '"></div>';
+			echo '<div class="wcsatt-pao-data" data-discount_addons="' . esc_attr( $discount_addons ) . '"></div>';
 		}
 	}
 
