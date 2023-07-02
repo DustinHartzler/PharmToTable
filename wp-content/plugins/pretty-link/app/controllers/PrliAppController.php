@@ -363,7 +363,7 @@ class PrliAppController extends PrliBaseController {
 
       wp_enqueue_script(
         'pretty-link-richtext-format',
-        PRLI_JS_URL . '/editor.js',
+        PRLI_JS_URL . '/build/editor.js',
         $prereqs,
         PRLI_VERSION,
         true
