@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdff3fbf86561c218fad2a5244d3cc5bb
+class ComposerStaticInit20180ab6a867c8e10ecea424df51c1b1
 {
     public static $files = array (
         '7e03bc80976ad8e42da9beffeb3edb01' => __DIR__ . '/../..' . '/includes/sensei-functions.php',
@@ -12,6 +12,7 @@ class ComposerStaticInitdff3fbf86561c218fad2a5244d3cc5bb
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'SenseiLMS_Plugin_Updater' => __DIR__ . '/../..' . '/includes/admin/class-senseilms-plugin-updater.php',
         'Sensei\\Blocks\\Course_Theme\\Course_Content' => __DIR__ . '/../..' . '/includes/blocks/course-theme/class-course-content.php',
         'Sensei\\Blocks\\Course_Theme\\Course_Navigation' => __DIR__ . '/../..' . '/includes/blocks/course-theme/class-course-navigation.php',
         'Sensei\\Blocks\\Course_Theme\\Course_Progress_Bar' => __DIR__ . '/../..' . '/includes/blocks/course-theme/class-course-progress-bar.php',
@@ -56,6 +57,7 @@ class ComposerStaticInitdff3fbf86561c218fad2a5244d3cc5bb
         'Sensei\\Internal\\Emails\\Email_Settings_Tab' => __DIR__ . '/../..' . '/includes/internal/emails/class-email-settings-tab.php',
         'Sensei\\Internal\\Emails\\Generators\\Course_Completed' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-course-completed.php',
         'Sensei\\Internal\\Emails\\Generators\\Course_Created' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-course-created.php',
+        'Sensei\\Internal\\Emails\\Generators\\Course_Teachers_Trait' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-course-teachers-trait.php',
         'Sensei\\Internal\\Emails\\Generators\\Course_Welcome' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-course-welcome.php',
         'Sensei\\Internal\\Emails\\Generators\\Email_Generators_Abstract' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-email-generators-abstract.php',
         'Sensei\\Internal\\Emails\\Generators\\New_Course_Assigned' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-new-course-assigned.php',
@@ -513,7 +515,7 @@ class ComposerStaticInitdff3fbf86561c218fad2a5244d3cc5bb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInitdff3fbf86561c218fad2a5244d3cc5bb::$classMap;
+            $loader->classMap = ComposerStaticInit20180ab6a867c8e10ecea424df51c1b1::$classMap;
 
         }, null, ClassLoader::class);
     }

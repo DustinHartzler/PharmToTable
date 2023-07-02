@@ -299,10 +299,10 @@ window.addEventListener("resize",o()(t,500)))}))}
 /***/68825:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */F:()=>/* binding */s
+/* harmony export */F:()=>/* binding */i
 /* harmony export */});
-/* harmony import */var r=n(47701),o=n.n(r),i=n(65736),__=i.__,s=function(){o()((function(){var e,t=document.querySelectorAll('[data-id="complete-lesson-form"]'),n=document.querySelectorAll('[data-id="complete-lesson-button"]'),r=document.querySelectorAll(".sensei-course-theme-course-progress-bar-inner"),o=null!==(e=document.querySelector(".sensei-course-theme__main-content"))&&void 0!==e?e:document.body,i=function(e,t){e.preventDefault(),n.forEach((function(e){e.setAttribute("disabled","disabled"),e.classList.add("is-busy")})),setTimeout((function(){t.submit()}),1e3)},s=function(e){var t=e.target;i(e,t),r.forEach((function(e){var t=e.dataset,n=(+t.completed+1)/+t.count*100;// Percentage with one more completed.
-e.style.width="".concat(n,"%")})),o.insertAdjacentHTML("afterbegin",'<div class="sensei-course-theme-lesson-completion-notice">\n\t\t\t\t\t'.concat(window.sensei.checkCircleIcon,'\n\t\t\t\t\t<p role="alert" class="sensei-course-theme-lesson-completion-notice__text">\n\t\t\t\t\t\t').concat(__("Lesson complete","sensei-lms"),"\n\t\t\t\t\t</p>\n\t\t\t\t</div>"))};t.forEach((function(e){e.addEventListener("submit",s)}))}))};
+/* harmony import */var r=n(47701),o=n.n(r),i=function(){o()((function(){var e=document.querySelectorAll('[data-id="complete-lesson-form"]'),t=document.querySelectorAll('[data-id="complete-lesson-button"]'),n=document.querySelectorAll(".sensei-course-theme-course-progress-bar-inner"),r=function(e,n){e.preventDefault(),t.forEach((function(e){e.setAttribute("disabled","disabled"),e.classList.add("is-busy")})),setTimeout((function(){n.submit()}),1e3)},o=function(e){var t=e.target;r(e,t),n.forEach((function(e){var t=e.dataset,n=(+t.completed+1)/+t.count*100;// Percentage with one more completed.
+e.style.width="".concat(n,"%")}))};e.forEach((function(e){e.addEventListener("submit",o)}))}))};
 /* harmony import */}
 /***/,
 /***/1487:
@@ -372,9 +372,6 @@ window.addEventListener("scroll",(function(){var e=document.documentElement,t=e.
 /***/,
 /***/47701:
 /***/e=>{"use strict";e.exports=window.wp.domReady}
-/***/,
-/***/65736:
-/***/e=>{"use strict";e.exports=window.wp.i18n}
 /***/,
 /***/1793:
 /***/(e,t,n)=>{"use strict";
