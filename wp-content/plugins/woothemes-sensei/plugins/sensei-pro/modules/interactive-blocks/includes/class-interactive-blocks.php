@@ -9,6 +9,8 @@ namespace Sensei_Pro_Interactive_Blocks;
 
 use Sensei_Interactive_Blocks_Sensei_Home\Sensei_Home;
 use Sensei_Interactive_Blocks_Sensei_Home\Sensei_LMS_Home;
+use Sensei_Pro_Interactive_Blocks\Tutor_Chat\Tutor_Chat_Rest_Api;
+use Sensei_Pro_Interactive_Blocks\Tutor_Chat\Tutor_Chat_Service;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,6 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Interactive_Blocks {
 	const MODULE_NAME = 'interactive-blocks';
+
+	/**
+	 * Tutor Chat REST API.
+	 *
+	 * @var Tutor_Chat_Rest_Api
+	 */
+	public $tutor_chat_rest_api;
 
 	/**
 	 * Script and stylesheet loading.
@@ -56,14 +65,16 @@ class Interactive_Blocks {
 	 * @param Assets_Provider $assets_provider The assets' provider.
 	 */
 	public static function init( Assets_Provider $assets_provider ) {
-		$instance                  = self::instance();
-		$instance->assets_provider = $assets_provider;
+		$instance                      = self::instance();
+		$instance->assets_provider     = $assets_provider;
+		$instance->tutor_chat_rest_api = new Tutor_Chat_Rest_Api( new Tutor_Chat_Service() );
 
 		$instance->include_dependencies();
 		$instance->init_blocks();
 
 		add_action( 'init', [ $instance, 'register_assets' ] );
 		add_action( 'wp_enqueue_scripts', [ $instance, 'enqueue_frontend_assets' ] );
+		add_action( 'rest_api_init', [ $instance, 'init_rest_api_endpoints' ] );
 
 		// Add Sensei LMS blocks category.
 		if ( is_wp_version_compatible( '5.8' ) ) {
@@ -261,5 +272,12 @@ class Interactive_Blocks {
 			],
 			$categories
 		);
+	}
+
+	/**
+	 * Initialize REST API endpoints.
+	 */
+	public function init_rest_api_endpoints() {
+		$this->tutor_chat_rest_api->register_routes();
 	}
 }

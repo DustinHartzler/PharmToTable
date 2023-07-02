@@ -1,5 +1,30 @@
 *** Sensei Pro (WC Paid Courses) ***
 
+2023-06-22 - version 4.15.1.1.15.1
+* Sensei LMS: Version bump to 4.15.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.15.1/changelog.txt
+* Sensei Pro: Version bump to 1.15.1
+	* Buy course button looking broken when rendered inside course list block and has multiple products attached
+
+2023-06-01 - version 4.15.0.1.15.0
+* Sensei LMS: Version bump to 4.15.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.15.0/changelog.txt
+* Sensei Pro: Version bump to 1.15.0
+	* Improve the Learning Mode experience
+	* Fix error when course enrolment job runs
+	* Fix visibility of Header and Course Navigation on Modern template of Learning Mode
+
+2023-05-10 - version 4.14.0.1.14.1 
+* Sensei Pro: Version bump to 1.14.1
+	* Fixed licensing issue for wcpc AI quiz question generator
+
+2023-05-10 - version 4.14.0.1.14.0 
+* Sensei LMS: Version bump to 4.14.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.14.0/changelog.txt
+* Sensei Pro: Version bump to 1.14.0
+	* Add disclamer with the reason that Sensei Pro can't be updated when license is not active
+	* Add functionality to generate question from lesson content using OpenAI
+	* Allow to check for Sensei Pro updates even with the license deactivated
+	* Remove type declaration for hooked method.
+	* Use wp_date to handle locale-dependent date formatting
+
 2023-04-19 - version 4.13.1.1.13.1
 * Sensei LMS: Version bump to 4.13.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.13.1/changelog.txt
 * Sensei Pro: Version bump to 1.13.1

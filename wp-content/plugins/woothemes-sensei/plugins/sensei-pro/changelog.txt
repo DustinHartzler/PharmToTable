@@ -1,5 +1,33 @@
 # Sensei Pro Changelog
 
+## 1.15.1 - 2023-06-22
+### Fixed
+- Buy course button looking broken when rendered inside course list block and has multiple products attached
+
+## 1.15.0 - 2023-06-01
+### Changed
+- Improve the Learning Mode experience
+
+### Fixed
+- Fix error when course enrolment job runs
+- Fix visibility of Header and Course Navigation on Modern template of Learning Mode
+
+## 1.14.1 - 2023-05-10
+### Fixed
+- Fixed licensing issue for wcpc AI quiz question generator
+
+## 1.14.0 - 2023-05-10
+### Added
+- Add disclamer with the reason that Sensei Pro can't be updated when license is not active
+- Add functionality to generate question from lesson content using OpenAI
+
+### Changed
+- Allow to check for Sensei Pro updates even with the license deactivated
+
+### Fixed
+- Remove type declaration for hooked method.
+- Use wp_date to handle locale-dependent date formatting
+
 ## 1.13.1 - 2023-04-19
 ### Fixed
 - Fix early returns to keep the original filtered value to prevent issues with other filters.

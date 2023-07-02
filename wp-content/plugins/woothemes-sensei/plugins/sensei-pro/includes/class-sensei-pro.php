@@ -105,6 +105,7 @@ final class Sensei_Pro {
 			'sensei-pro-home',
 			'glossary',
 			'course-showcase',
+			'sensei-pro-ai',
 		];
 	}
 

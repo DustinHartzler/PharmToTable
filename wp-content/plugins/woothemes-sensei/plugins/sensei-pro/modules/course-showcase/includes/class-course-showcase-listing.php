@@ -396,7 +396,8 @@ class Course_Showcase_Listing {
 	 */
 	public function add_eligible_state( $post_states, $post ): array {
 		if (
-			'course' !== $post->post_type
+			is_null( $post )
+			|| 'course' !== $post->post_type
 			|| ! isset( $_GET['eligible-badges'] ) // phpcs:ignore WordPress.Security.NonceVerification
 			|| '1' !== $_GET['eligible-badges'] // phpcs:ignore WordPress.Security.NonceVerification
 		) {

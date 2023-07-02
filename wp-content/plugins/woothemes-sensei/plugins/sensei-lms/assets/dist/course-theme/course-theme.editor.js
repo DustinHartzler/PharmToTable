@@ -34,14 +34,14 @@ function i(r){var e,t="var:";if(null!=r&&null!==(e=r.startsWith)&&void 0!==e&&e.
  *
  * @param {Object} settings Block settings.
  */
-function(r){var e=r.getEditWrapperProps;return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},r),{},{getEditWrapperProps:function(r){var t={};e&&(t=e(r));var n=
+function(r){var e=r.getEditWrapperProps;return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},r),{},{getEditWrapperProps:function(r){var t,n={};e&&(n=e(r));var l=
 /**
  * Get CSS variables for colors from style and color attributes.
  *
  * @param {Object} attributes Block attributes.
  * @return {Object} CSS variable name-value pairs.
  */
-function(r){var e,t,o,n,l=r.style,a=r.backgroundColor,c=r.customBackgroundColor,u=null==l||null===(e=l.elements)||void 0===e||null===(t=e.link)||void 0===t||null===(o=t.color)||void 0===o?void 0:o.text,s=i(null==l||null===(n=l.color)||void 0===n?void 0:n.background)||(d=a,d&&"var(--wp--preset--color--".concat(d,")"))||c,p={};var d;u&&(p["--sensei-primary-color"]=i(u));s&&(p["--sensei-background-color"]=s,p["--sensei-primary-contrast-color"]=s);return p}(r);return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},t),{},{style:(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},t.style||{}),n||{})})}})}))}
+function(r){var e,t,o,n,l=r.style,a=r.backgroundColor,c=r.customBackgroundColor,u=null==l||null===(e=l.elements)||void 0===e||null===(t=e.link)||void 0===t||null===(o=t.color)||void 0===o?void 0:o.text,s=i(null==l||null===(n=l.color)||void 0===n?void 0:n.background)||(p=a,p&&"var(--wp--preset--color--".concat(p,")"))||c,d={};var p;u&&(d["--sensei-primary-color"]=i(u));s&&(d["--sensei-background-color"]=s,d["--sensei-primary-contrast-color"]=s);return d}(r);return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},n),{},{style:(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},(null===(t=n)||void 0===t?void 0:t.style)||{}),l||{})})}})}))}
 /***/,
 /***/92694:
 /***/r=>{r.exports=window.wp.hooks;

@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'SenseiLMS_Plugin_Updater' => $baseDir . '/includes/admin/class-senseilms-plugin-updater.php',
     'Sensei\\Blocks\\Course_Theme\\Course_Content' => $baseDir . '/includes/blocks/course-theme/class-course-content.php',
     'Sensei\\Blocks\\Course_Theme\\Course_Navigation' => $baseDir . '/includes/blocks/course-theme/class-course-navigation.php',
     'Sensei\\Blocks\\Course_Theme\\Course_Progress_Bar' => $baseDir . '/includes/blocks/course-theme/class-course-progress-bar.php',
@@ -51,6 +52,7 @@ return array(
     'Sensei\\Internal\\Emails\\Email_Settings_Tab' => $baseDir . '/includes/internal/emails/class-email-settings-tab.php',
     'Sensei\\Internal\\Emails\\Generators\\Course_Completed' => $baseDir . '/includes/internal/emails/generators/class-course-completed.php',
     'Sensei\\Internal\\Emails\\Generators\\Course_Created' => $baseDir . '/includes/internal/emails/generators/class-course-created.php',
+    'Sensei\\Internal\\Emails\\Generators\\Course_Teachers_Trait' => $baseDir . '/includes/internal/emails/generators/class-course-teachers-trait.php',
     'Sensei\\Internal\\Emails\\Generators\\Course_Welcome' => $baseDir . '/includes/internal/emails/generators/class-course-welcome.php',
     'Sensei\\Internal\\Emails\\Generators\\Email_Generators_Abstract' => $baseDir . '/includes/internal/emails/generators/class-email-generators-abstract.php',
     'Sensei\\Internal\\Emails\\Generators\\New_Course_Assigned' => $baseDir . '/includes/internal/emails/generators/class-new-course-assigned.php',

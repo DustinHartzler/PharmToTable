@@ -30,6 +30,13 @@ class Block_Purchase_Course {
 	private $render_take_course;
 
 	/**
+	 * Attributes of purchase block
+	 *
+	 * @var array
+	 */
+	private $attributes;
+
+	/**
 	 * Course product IDs.
 	 *
 	 * @var \WC_Product[]
@@ -148,9 +155,10 @@ class Block_Purchase_Course {
 	public function maybe_override_take_course_block( $attributes, $content ) {
 
 		global $post;
-		$this->course_id = $post->ID;
-		$this->products  = $this->get_purchasable_products();
-		$this->button    = $content;
+		$this->course_id  = $post->ID;
+		$this->products   = $this->get_purchasable_products();
+		$this->button     = $content;
+		$this->attributes = $attributes;
 
 		$user_has_membership = class_exists( 'Sensei_WC_Paid_Courses\Course_Enrolment_Providers\WooCommerce_Memberships' )
 			&& \Sensei_WC_Paid_Courses\Course_Enrolment_Providers\WooCommerce_Memberships::does_user_have_membership( get_current_user_id(), $this->course_id );
@@ -285,12 +293,13 @@ class Block_Purchase_Course {
 	 * @return string Multiple products form HTML.
 	 */
 	private function render_multiple_products_form() {
-		$button = $this->render_button( esc_html__( 'Buy Course', 'sensei-pro' ) );
+		$button                  = $this->render_button( esc_html__( 'Buy Course', 'sensei-pro' ) );
+		$is_in_course_list_block = $this->attributes['isCourseListChild'] ?? false;
 
 		return '
-			<form method="post" enctype="multipart/form-data" class="multiple-products-form">
+			<form method="post" action="' . esc_url( get_permalink( $this->course_id ) ) . '" enctype="multipart/form-data" class="multiple-products-form">
 				<input type="hidden" name="quantity" value="1" />
-				' . $this->render_products() . '
+				' . ( $is_in_course_list_block ? '' : $this->render_products() ) . '
 				' . $button . '
 			</form>';
 	}

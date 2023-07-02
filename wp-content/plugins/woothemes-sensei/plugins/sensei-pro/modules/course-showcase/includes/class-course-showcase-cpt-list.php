@@ -135,7 +135,11 @@ class Course_Showcase_CPT_List {
 	 *
 	 * @return array
 	 */
-	public function hide_pending_state( array $post_states, \WP_Post $post ): array {
+	public function hide_pending_state( $post_states, $post ): array {
+		if ( is_null( $post ) ) {
+			return $post_states;
+		}
+
 		if ( Course_Showcase_Listing::POST_TYPE !== $post->post_type ) {
 			return $post_states;
 		}

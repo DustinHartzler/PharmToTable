@@ -415,12 +415,12 @@ class WooCommerce_Simple
 	/**
 	 * Check if the order has a product.
 	 *
-	 * @param \WC_Order $order       Order object.
-	 * @param int[]     $product_ids Product post IDs.
+	 * @param \WC_Order|WC_Order_Refund $order       Order / refunded order object.
+	 * @param int[]                     $product_ids Product post IDs.
 	 *
 	 * @return bool
 	 */
-	private function order_has_product( \WC_Order $order, $product_ids ) {
+	private function order_has_product( $order, $product_ids ) {
 		foreach ( $order->get_items() as $item ) {
 			if (
 				in_array( $item->get_product_id(), $product_ids, true )
