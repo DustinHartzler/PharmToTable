@@ -30,36 +30,36 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Forms
+	 * @var     bool|CKWC_Resource_Forms
 	 */
-	private $forms;
+	private $forms = false;
 
 	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Tags
+	 * @var     bool|CKWC_Resource_Tags
 	 */
-	private $tags;
+	private $tags = false;
 
 	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Sequences
+	 * @var     bool|CKWC_Resource_Sequences
 	 */
-	private $sequences;
+	private $sequences = false;
 
 	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Custom_Fields
+	 * @var     bool|CKWC_Resource_Custom_Fields
 	 */
-	private $custom_fields;
+	private $custom_fields = false;
 
 	/**
 	 * Constructor
@@ -88,6 +88,7 @@ class CKWC_Integration extends WC_Integration {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
 			// Takes the form data and saves it to WooCommerce's settings.
+			// PHPStan: WooCommerce's process_admin_options() returns a value, which PHPStan rightly flags, so we need to ignore this line.
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line
 
 			// Sanitizes and tests specific setting fields to ensure they're valid.
@@ -393,6 +394,15 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Custom Field Mappings.
+			'custom_field_last_name'        => array(
+				'title'       => __( 'Send Last Name', 'woocommerce-convertkit' ),
+				'type'        => 'custom_field',
+				'default'     => '',
+				'description' => __( 'The ConvertKit custom field to store the order\'s last name.', 'woocommerce-convertkit' ),
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled subscribe',
+			),
 			'custom_field_phone'            => array(
 				'title'       => __( 'Send Phone Number', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
@@ -670,7 +680,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// CSS to always enqueue.
-		wp_enqueue_style( 'ckwc-settings', CKWC_PLUGIN_URL . '/resources/backend/css/settings.css', array(), CKWC_PLUGIN_VERSION );
+		wp_enqueue_style( 'ckwc-settings', CKWC_PLUGIN_URL . 'resources/backend/css/settings.css', array(), CKWC_PLUGIN_VERSION );
 
 		// Depending on the screen name, enqueue scripts now.
 		switch ( $screen_name ) {
@@ -679,7 +689,7 @@ class CKWC_Integration extends WC_Integration {
 			 * Sync Past Orders Screen.
 			 */
 			case 'sync_past_orders':
-				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . '/resources/backend/css/sync-past-orders.css', array(), CKWC_PLUGIN_VERSION );
+				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/css/sync-past-orders.css', array(), CKWC_PLUGIN_VERSION );
 				break;
 
 			/**
@@ -730,15 +740,15 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
-		if ( ! $this->forms ) { // @phpstan-ignore-line
+		if ( ! $this->forms ) {
 			$this->forms = new CKWC_Resource_Forms();
 			$this->forms->refresh();
 		}
-		if ( ! $this->sequences ) { // @phpstan-ignore-line
+		if ( ! $this->sequences ) {
 			$this->sequences = new CKWC_Resource_Sequences();
 			$this->sequences->refresh();
 		}
-		if ( ! $this->tags ) { // @phpstan-ignore-line
+		if ( ! $this->tags ) {
 			$this->tags = new CKWC_Resource_Tags();
 			$this->tags->refresh();
 		}
@@ -798,7 +808,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Custom Fields, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
-		if ( ! $this->custom_fields ) { // @phpstan-ignore-line
+		if ( ! $this->custom_fields ) {
 			$this->custom_fields = new CKWC_Resource_Custom_Fields();
 			$this->custom_fields->refresh();
 		}
