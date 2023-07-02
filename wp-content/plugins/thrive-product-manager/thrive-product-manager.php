@@ -4,13 +4,13 @@
  * Plugin Name: Thrive Product Manager
  * Plugin URI: http://thrivethemes.com
  * Description: Connect this site with Thrive Themes account to install and activate Thrive product.
- * Version: 1.9
+ * Version: 1.12
  * Author: Thrive Themes
  * Author URI: http://thrivethemes.com
  */
 class Thrive_Product_Manager {
 
-	const V = '1.9';
+	const V = '1.12';
 	const T = 'thrive_product_manager';
 
 	protected static $_instance;

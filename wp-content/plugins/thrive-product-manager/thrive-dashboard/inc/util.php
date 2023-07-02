@@ -691,3 +691,62 @@ function tve_dash_is_ttb_active() {
 
 	return apply_filters( 'tve_dash_is_ttb_active', wp_get_theme()->get_template() === 'thrive-theme' );
 }
+
+/**
+ * Flush the cache for a certain page/post
+ * Currently works for: WP Super Cache, W3 Total Cache, WP Rocket, WP Fastest Cache
+ * Used in: Thrive Ultimatum(for promotion pages), Thrive Optimize
+ *
+ * @param $post_id
+ */
+function tve_flush_cache( $post_id ) {
+	$post_id = (int) $post_id;
+
+	if ( ! $post_id ) {
+		return;
+	}
+
+	/**
+	 * WP Super Cache flush the cache when a post is update/saved based on @see wp_transition_post_status()
+	 */
+	wp_update_post(
+		array(
+			'ID' => $post_id,
+		)
+	);
+
+	/**
+	 * W3 Total Cache
+	 */
+	if ( function_exists( 'w3tc_flush_post' ) ) {
+		w3tc_flush_post( $post_id );
+	}
+
+	/**
+	 * WP Rocket
+	 */
+	if ( function_exists( 'rocket_clean_post' ) ) {
+		rocket_clean_post( $post_id );
+	}
+
+	/**
+	 * WP Fastest Cache
+	 */
+	if ( function_exists( 'wpfc_clear_post_cache_by_id' ) ) {
+		wpfc_clear_post_cache_by_id( $post_id );
+	}
+}
+
+/**
+ * Do not cache a page
+ * Currently works for: WP Super Cache, W3 Total Cache, WP Rocket, WP Fastest Cache, or aby cache plugin that users the DONOTCACHEPAGE constant
+ */
+function tve_do_not_cache_page() {
+	! defined( 'DONOTCACHEPAGE' ) && define( 'DONOTCACHEPAGE', true );
+
+	add_filter( 'rocket_override_donotcachepage', '__return_false', PHP_INT_MAX );
+
+	if ( function_exists( 'wpfc_exclude_current_page' ) ) {
+		wpfc_exclude_current_page();
+	}
+}

@@ -122,10 +122,11 @@ abstract class TVE_Dash_Product_Abstract {
 	}
 
 	public function render_button() {
-		return sprintf( '<a class="%s" href="%s" target="%s">%s</a>',
+		return sprintf( '<a class="%s" href="%s" target="%s" data-source="%s">%s</a>',
 			"tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn" . ( $this->button['active'] ? '' : 'tvd-disabled' ) . ' ' . ( ! empty( $this->button['classes'] ) ? $this->button['classes'] : '' ),
 			$this->button['active'] && ! empty( $this->button['url'] ) ? $this->button['url'] : 'javascript:void(0)',
 			! empty( $this->button['target'] ) ? $this->button['target'] : '_self',
+			! empty( $this->button['data-source'] ) ? $this->button['data-source'] : '',
 			$this->button['label']
 		);
 	}

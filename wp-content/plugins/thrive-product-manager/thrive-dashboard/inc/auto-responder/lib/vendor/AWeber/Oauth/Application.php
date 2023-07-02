@@ -50,8 +50,9 @@ class Thrive_Dash_Api_AWeber_Oauth_Application implements Thrive_Dash_Api_AWeber
 
 	// Data binding this OAuthApplication to the consumer application it is acting
 	// as a proxy for
-	public $consumerKey = false;
+	public $consumerKey    = false;
 	public $consumerSecret = false;
+	public $app            = false;
 
 	/**
 	 * __construct

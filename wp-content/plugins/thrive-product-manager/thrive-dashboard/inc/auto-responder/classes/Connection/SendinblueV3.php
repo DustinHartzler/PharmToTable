@@ -23,7 +23,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 	 * @return string the API connection title
 	 */
 	public function get_title() {
-		return 'SendinBlue';
+		return 'Brevo';
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
 
 		if ( empty( $key ) ) {
-			$message = 'You must provide a valid SendinBlue V3 key';
+			$message = 'You must provide a valid Brevo key';
 
 			return $ajax_call ? __( $message, 'thrive-dash' ) : $this->error( __( $message, 'thrive-dash' ) );
 		}
@@ -60,7 +60,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			$message = 'Could not connect to SendinBlue V3 using the provided key (<strong>%s</strong>)';
+			$message = 'Could not connect to Brevo using the provided key (<strong>%s</strong>)';
 
 			return $ajax_call ? sprintf( __( $message, 'thrive-dash' ), $result ) : $this->error( sprintf( __( $message, 'thrive-dash' ), $result ) );
 		}
@@ -95,7 +95,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		$this->success( __( 'SendinBlue connected successfully', 'thrive-dash' ) );
+		$this->success( __( 'Brevo connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -292,9 +292,9 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 	}
 
 	/**
-	 * @param array $params which may contain `list_id`
-	 * @param bool $force make a call to API and invalidate cache
-	 * @param bool $get_all where to get lists with their custom fields
+	 * @param array $params  which may contain `list_id`
+	 * @param bool  $force   make a call to API and invalidate cache
+	 * @param bool  $get_all where to get lists with their custom fields
 	 *
 	 * @return array
 	 */
@@ -516,7 +516,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 	 * Prepare custom fields for api call
 	 *
 	 * @param array $custom_fields
-	 * @param null $list_identifier
+	 * @param null  $list_identifier
 	 *
 	 * @return array
 	 */

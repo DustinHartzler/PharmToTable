@@ -408,9 +408,9 @@ function tve_dash_enqueue() {
 		'jquery',
 		'backbone',
 	) );
+
 	wp_enqueue_script( 'jquery-zclip', TVE_DASH_URL . '/js/util/jquery.zclip.1.1.1/jquery.zclip.min.js', array( 'jquery' ) );
 	tve_dash_enqueue_style( 'tve-dash-styles-css', TVE_DASH_URL . '/css/styles.css' );
-	wp_enqueue_script( 'tve-dash-api-wistia-popover', '//fast.wistia.com/assets/external/popover-v1.js', array(), '', true );
 
 	$options = array(
 		'nonce'              => wp_create_nonce( 'tve-dash' ),
@@ -563,9 +563,10 @@ function tve_dash_load_text_domain() {
  *
  */
 function tve_dash_backbone_templates() {
-	$templates = tve_dash_get_backbone_templates( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/backbone', 'backbone' );
+	$templates       = tve_dash_get_backbone_templates( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/backbone', 'backbone' );
+	$templates_modal = tve_dash_get_backbone_templates( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/modal', 'templates' );
 
-	tve_dash_output_backbone_templates( $templates );
+	tve_dash_output_backbone_templates( array_merge( $templates, $templates_modal ) );
 }
 
 /**

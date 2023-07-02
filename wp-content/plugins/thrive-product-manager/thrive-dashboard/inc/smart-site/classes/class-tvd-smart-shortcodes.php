@@ -79,15 +79,26 @@ final class TVD_Smart_Shortcodes {
 		$data = '';
 		if ( ! empty( $args['id'] ) ) {
 			$field = $this->db->get_fields( array(), $args['id'] );
+
 			if ( ! empty( $field['data'] ) ) {
 				$field_data = maybe_unserialize( $field['data'] );
-				if ( ! empty( $field_data ) ) {
-					$data = $field_data['url'];
+
+				switch ( $field['identifier'] ) {
+					case 'alt_phone':
+					case 'phone':
+						$data = 'tel:' . $field_data['phone'];
+						break;
+					case 'mail':
+						$data = 'mailto:' . $field_data['email'];
+						break;
+					default:
+						$data = $field_data['url'];
 				}
+
 			}
 		}
 
-		return $data;
+		return ( ! empty( $field_data ) ) ? $data : '';
 	}
 
 	/**

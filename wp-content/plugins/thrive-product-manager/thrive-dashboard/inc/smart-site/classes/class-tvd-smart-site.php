@@ -264,6 +264,38 @@ if ( ! class_exists( 'TVD_Smart_Site' ) ) :
 			return $url;
 		}
 
+		public function add_phone_link( $fields_phone ) {
+
+			foreach ( $fields_phone as &$field ) {
+				$field['name'] .= ' (Click to call)';
+				if ( ! empty( $field['data'] ) ) {
+					$field_data = maybe_unserialize( $field['data'] );
+					if ( ! empty( $field_data['phone'] ) ) {
+						$field_data['url'] = 'tel:' . $field_data['phone'];
+						$field['data']     = maybe_serialize( $field_data );
+					}
+				}
+			}
+
+			return $fields_phone;
+		}
+
+		public function add_email_link( $field_email ) {
+
+			foreach ( $field_email as &$field ) {
+				$field['name'] .= ' (Click to email)';
+				if ( ! empty( $field['data'] ) ) {
+					$field_data = maybe_unserialize( $field['data'] );
+					if ( ! empty( $field_data['email'] ) ) {
+						$field_data['url'] = 'mailto:' . $field_data['email'];
+						$field['data']     = maybe_serialize( $field_data );
+					}
+				}
+			}
+
+			return $field_email;
+		}
+
 		/**
 		 * Get the data from global fields for the links that have a value set
 		 *
@@ -279,8 +311,17 @@ if ( ! class_exists( 'TVD_Smart_Site' ) ) :
 				$links = array();
 
 				foreach ( $groups as $group ) {
-					$fields = $this->db->get_fields_by_type( $group['id'], TVD_Smart_DB::$types['link'] );
-					$name   = $group['name'];
+					$fields_link  = $this->db->get_fields_by_type( $group['id'], TVD_Smart_DB::$types['link'] );
+					$fields_phone = $this->db->get_fields_by_type( $group['id'], TVD_Smart_DB::$types['phone'] );
+					$field_email  = $this->db->get_fields_by_type( $group['id'], TVD_Smart_DB::$types['email'] );
+
+					$fields_phone = $this->add_phone_link( $fields_phone );
+					$field_email  = $this->add_email_link( $field_email );
+
+
+					$new_fields = array_merge( $fields_phone, $field_email );
+					$fields     = array_merge( $new_fields, $fields_link );
+					$name       = $group['name'];
 
 					/* Add the fields in the group only when the group is empty */
 					if ( ! empty( $fields ) && empty( $links[ $name ] ) ) {
@@ -344,10 +385,22 @@ if ( ! class_exists( 'TVD_Smart_Site' ) ) :
 									'label'         => __( 'Field', 'thrive-dash' ),
 									'value'         => array(),
 									'extra_options' => array(
-										'multiline' => array(
+										'multiline'    => array(
 											'available_for' => array( TVD_Smart_DB::$types['address'] ),
 											'type'          => 'checkbox',
 											'label'         => __( 'Include line breaks', 'thrive-dash' ),
+											'value'         => false,
+										),
+										'enable_call'  => array(
+											'available_for' => array( TVD_Smart_DB::$types['phone'] ),
+											'type'          => 'checkbox',
+											'label'         => __( 'Enable click to call', 'thrive-dash' ),
+											'value'         => false,
+										),
+										'enable_email' => array(
+											'available_for' => array( TVD_Smart_DB::$types['email'] ),
+											'type'          => 'checkbox',
+											'label'         => __( 'Enable click to email', 'thrive-dash' ),
 											'value'         => false,
 										),
 									),

@@ -62,6 +62,7 @@ class Autoresponder_Field extends Action_Field {
 				'integrations',
 				'storage',
 				'collaboration',
+				'testimonial',
 			],
 		] );
 		$values = array();

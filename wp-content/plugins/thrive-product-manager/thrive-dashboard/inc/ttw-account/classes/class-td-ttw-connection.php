@@ -340,4 +340,13 @@ class TD_TTW_Connection {
 
 		return $data;
 	}
+
+	public function get_connection_data() {
+		return [
+			'user_id'  => $this->ttw_id,
+			'ttw_auth' => $this->ttw_salt,
+			'email'    => $this->ttw_email,
+			'referrer' => base64_encode( get_site_url() ),
+		];
+	}
 }

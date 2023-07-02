@@ -208,6 +208,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 			$data['name'] = $file['name'];
 			$data['path'] = $file['path_display'];
 		} catch ( Thrive_Dash_Api_Dropbox_Exception $e ) {
+            $data['error'] = $e->getMessage();
 		}
 
 		return $data;

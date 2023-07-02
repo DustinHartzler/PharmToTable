@@ -62,7 +62,7 @@ unset( $available_apis['zoom'] );
 			<div class="tvd-row">
 				<div class="tvd-col tvd-s12 tvd-m6">
 					<h4>
-						<#= item.get('title') #>
+						<#= item.get('title') === 'Brevo' ? 'Brevo (SendinBlue)' : item.get('title') #>
 					</h4>
 				</div>
 				<div class="tvd-col tvd-s12 tvd-m6">
@@ -159,7 +159,7 @@ unset( $available_apis['zoom'] );
 			<i class="tvd-icon-check tvd-icon-big tvd-icon-border tvd-icon-rounded"></i>
 			<h3 class="tvd-modal-title">
 				<#= item.get('title') #><br/><?php echo esc_html__( "Connection Ready!", 'thrive-dash' ) ?></h3>
-			<p>
+			<p class="tvd-open-video" data-source="KuZcvyv-Tvs">
 				<# if(typeof item.get('success_message') !== 'undefined' && item.get('success_message') != '') { #>
 				<#= item.get('success_message') #>
 				<# } else { #>
@@ -172,8 +172,7 @@ unset( $available_apis['zoom'] );
 				<#= item.get('title') #>.
 
 				<# if ( item.get('type') !== 'storage' ) { #>
-				<a class="wistia-popover[height=450,playerColor=2bb914,width=800]"
-				   href="//fast.wistia.net/embed/iframe/7sv6uvfshp?popover=true">
+				<a>
 					<?php echo esc_html__( "See how it's done.", 'thrive-dash' ) ?>
 				</a>
 				<# } #>

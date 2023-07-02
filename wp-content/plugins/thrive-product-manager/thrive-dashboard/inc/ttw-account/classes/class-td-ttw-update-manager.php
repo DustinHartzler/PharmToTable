@@ -9,9 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-magic-methods.php';
-require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-ttw-utils.php';
-
 class TD_TTW_Update_Manager {
 
 	use TD_Singleton;
@@ -59,8 +56,6 @@ class TD_TTW_Update_Manager {
 	 * Loads needed files
 	 */
 	private function _includes() {
-
-		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-connection.php';
 		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-user-licenses.php';
 		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-license.php';
 		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-request.php';

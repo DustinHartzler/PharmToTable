@@ -28,9 +28,16 @@ class Thrive_Dash_Api_FacebookPixel {
 	 */
 	protected $event_request;
 
+
+	/**
+	 * @var array
+	 */
+	private $connection_details;
+
 	public function __construct( $connection_details ) {
 		static::load_dependencies();
 
+		$this->connection_details = $connection_details;
 		/**
 		 * init api
 		 */
@@ -97,15 +104,30 @@ class Thrive_Dash_Api_FacebookPixel {
 	}
 
 	/**
+	 * Generate a random event ID
+	 *
+	 * @throws Exception
+	 */
+	public function generate_event_id() {
+		$pixel_id = $this->connection_details['pixel_id'];
+		$bytes    = random_bytes( 16 );
+
+		return $pixel_id . bin2hex( $bytes );
+	}
+
+	/**
 	 * Initiate an Event object
 	 *
 	 * @param $event_details
 	 *
 	 * @return Event
+	 * @throws Exception
 	 */
 	public function prepare_event_data( $event_details = [] ) {
 		$event_data = new Event();
 		$setters    = Event::setters();
+
+		$event_details['event_id'] = $this->generate_event_id();
 
 		$event_details = array_merge( static::get_event_defaults(), $event_details );
 
@@ -180,4 +202,5 @@ class Thrive_Dash_Api_FacebookPixel {
 
 		return $response;
 	}
+
 }

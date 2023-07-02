@@ -56,7 +56,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
 
 		if ( empty( $key ) ) {
-			$message = 'You must provide a valid SendinBlue V3 key';
+			$message = 'You must provide a valid Brevo key';
 
 			return $ajax_call ? __( $message, 'thrive-dash' ) : $this->error( __( $message, 'thrive-dash' ) );
 		}
@@ -67,7 +67,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			$message = 'Could not connect to SendinBlue V3 using the provided key (<strong>%s</strong>)';
+			$message = 'Could not connect to Brevo using the provided key (<strong>%s</strong>)';
 
 			return $ajax_call ? sprintf( __( $message, 'thrive-dash' ), $result ) : $this->error( sprintf( __( $message, 'thrive-dash' ), $result ) );
 		}
