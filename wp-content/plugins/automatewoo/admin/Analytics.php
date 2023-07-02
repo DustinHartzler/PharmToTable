@@ -63,6 +63,10 @@ class Analytics {
 	 * Register analytics JS.
 	 */
 	public static function register_script() {
+		if ( ! wc_admin_is_registered_page() ) {
+			return;
+		}
+
 		$script_asset = require AW()->admin_path( '/assets/build/analytics.asset.php' );
 
 		wp_register_script(

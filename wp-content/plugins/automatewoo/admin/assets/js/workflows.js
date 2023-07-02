@@ -156,6 +156,8 @@
 				action_name: $action.data( 'automatewoo-action-name' ),
 				target_field_name: $field.attr( 'data-name' ),
 				reference_field_value: $referenceField.val(),
+				nonce: AW.workflow.get( 'nonces' )
+					.aw_update_dynamic_action_select,
 			};
 
 			$.post( ajaxurl, data, function ( response ) {
@@ -224,6 +226,8 @@
 				).val(),
 				target_field_name: $field.attr( 'data-name' ),
 				reference_field_value: $referenceField.val(),
+				nonce: AW.workflow.get( 'nonces' )
+					.aw_update_dynamic_trigger_options_select,
 			};
 
 			$.post( ajaxurl, data, function ( response ) {
@@ -274,9 +278,13 @@
 				AW.workflowView.completeTriggerChange();
 			} );
 
-			this.$el.on( 'click', '.js-close-automatewoo-modal', function () {
-				AW.workflowView.cancelTriggerChange();
-			} );
+			this.$el.on(
+				'click',
+				`.${ AutomateWoo.Modal.triggerClasses.close }`,
+				function () {
+					AW.workflowView.cancelTriggerChange();
+				}
+			);
 		},
 
 		render() {
@@ -309,11 +317,15 @@
 					.trigger( 'submit' );
 			} );
 
-			this.$el.on( 'click', '.js-close-automatewoo-modal', function () {
-				data.action = 'cancel';
+			this.$el.on(
+				'click',
+				`.${ AutomateWoo.Modal.triggerClasses.close }`,
+				function () {
+					data.action = 'cancel';
 
-				modalView.disableButtons();
-			} );
+					modalView.disableButtons();
+				}
+			);
 		},
 
 		disableButtons() {
@@ -544,6 +556,7 @@ jQuery( function ( $ ) {
 					trigger_name: triggerName,
 					workflow_id: AW.workflow.get( 'id' ),
 					is_new_workflow: AW.workflow.get( 'isNew' ),
+					nonce: AW.workflow.get( 'nonces' ).aw_fill_trigger_fields,
 				},
 			} );
 		},
@@ -695,6 +708,7 @@ jQuery( function ( $ ) {
 					action_name: selectedAction,
 					action_number: actionNumber,
 					workflow_id: AW.workflow.get( 'id' ),
+					nonce: AW.workflow.get( 'nonces' ).aw_fill_action_fields,
 				},
 			} ).done( function ( response ) {
 				$action
@@ -931,6 +945,7 @@ jQuery( function ( $ ) {
 					workflow_id: AW.workflow.get( 'id' ),
 					trigger_name: trigger ? trigger.name : '',
 					action_fields: fields,
+					nonce: AW.workflow.get( 'nonces' ).aw_save_preview_data,
 				},
 				success() {
 					AutomateWoo.open_email_preview( 'workflow_action', {

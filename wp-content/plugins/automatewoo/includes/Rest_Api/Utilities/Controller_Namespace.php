@@ -12,6 +12,13 @@ namespace AutomateWoo\Rest_Api\Utilities;
 trait Controller_Namespace {
 
 	/**
+	 * Controller namespace.
+	 *
+	 * @var string
+	 */
+	protected $namespace;
+
+	/**
 	 * Constructor for classes that utilize this trait.
 	 */
 	public function __construct() {

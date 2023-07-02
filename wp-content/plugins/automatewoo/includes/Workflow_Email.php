@@ -251,7 +251,10 @@ class Workflow_Email {
 				$mailer->extra_footer_text = $this->get_unsubscribe_link();
 			}
 
-			$mailer->set_content( $this->content );
+			$allowed_html          = wp_kses_allowed_html( 'post' );
+			$allowed_html['style'] = array();
+
+			$mailer->set_content( wp_kses( $this->content, $allowed_html ) );
 			$mailer->set_include_automatewoo_styles( $this->include_automatewoo_styles );
 
 			if ( $this->tracking_enabled ) {

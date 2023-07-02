@@ -59,14 +59,33 @@ class ActionScheduler implements ActionSchedulerInterface {
 	 *
 	 * @since 5.2.0
 	 *
-	 * @param string $hook  The hook to trigger.
-	 * @param array  $args  Arguments to pass when the hook triggers.
-	 * @param string $group The group to assign this job to.
+	 * @param string $hook     The hook to trigger.
+	 * @param array  $args     Arguments to pass when the hook triggers.
+	 * @param string $group    The group to assign this job to.
+	 * @param int    $priority The priority of the scheduled action.
 	 *
 	 * @return string The action ID.
 	 */
-	public function schedule_immediate( string $hook, $args = [], $group = 'automatewoo' ) {
-		return as_schedule_single_action( gmdate( 'U' ) - 1, $hook, $args, $group );
+	public function schedule_immediate( string $hook, $args = [], $group = 'automatewoo', $priority = 10 ) {
+		return as_schedule_single_action( gmdate( 'U' ) - 1, $hook, $args, $group, false, $priority );
+	}
+
+	/**
+	 * Schedule a recurring action
+	 *
+	 * @since 5.8.1
+	 *
+	 * @param int    $timestamp When the first instance of the job will run.
+	 * @param int    $interval_in_seconds How long to wait between runs.
+	 * @param string $hook The hook to trigger.
+	 * @param array  $args Arguments to pass when the hook triggers.
+	 * @param string $group The group to assign this job to.
+	 * @param bool   $unique Whether the action should be unique.
+	 *
+	 * @return int The action ID.
+	 */
+	public function schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = 'automatewoo', $unique = true ) {
+		return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group, $unique );
 	}
 
 	/**
@@ -80,7 +99,7 @@ class ActionScheduler implements ActionSchedulerInterface {
 	 */
 	public function enqueue_async_action( $hook, $args = [], $group = 'automatewoo' ) {
 		$this->async_runner->attach_shutdown_hook();
-		return $this->schedule_immediate( $hook, $args, $group );
+		return $this->schedule_immediate( $hook, $args, $group, 0 );
 	}
 
 	/**

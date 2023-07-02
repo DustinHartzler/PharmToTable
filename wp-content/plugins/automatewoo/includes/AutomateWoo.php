@@ -2,6 +2,7 @@
 
 use AutomateWoo\ActionScheduler\ActionScheduler;
 use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
+use AutomateWoo\ActionScheduler\AW_AsyncRequest_QueueRunner;
 use AutomateWoo\Addons;
 use AutomateWoo\ActionScheduler\AsyncActionRunner;
 use AutomateWoo\Proxies\Bookings as BookingsProxy;
@@ -232,11 +233,11 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		( new \AutomateWoo\LegacyAddonHandler() )->init();
 
 		/**
-		 * Check if WooCommerce blocks are active
+		 * Check if WooCommerce blocks are active and if the opt-in checkbox should be displayed during checkout.
 		 *
 		 * @since 5.6.0
 		 */
-		if ( \AutomateWoo\Integrations::is_woocommerce_blocks_active() && Options::optin_enabled() ) {
+		if ( \AutomateWoo\Integrations::is_woocommerce_blocks_active() && Options::optin_enabled() && Options::checkout_optin_enabled() ) {
 			new \AutomateWoo\WooCommerce_Blocks_Integration();
 		}
 
@@ -397,7 +398,7 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	public function action_scheduler() {
 		if ( ! isset( $this->action_scheduler ) ) {
 			$async_runner           = new AsyncActionRunner(
-				new ActionScheduler_AsyncRequest_QueueRunner( ActionSchedulerCore::store() ),
+				new AW_AsyncRequest_QueueRunner( ActionSchedulerCore::store() ),
 				ActionSchedulerCore::lock()
 			);
 			$this->action_scheduler = new ActionScheduler( $async_runner );

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita663a12d3fa438a68e18ca62432158d8
+class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -37,6 +37,7 @@ class ComposerStaticInita663a12d3fa438a68e18ca62432158d8
         'AutomateWoo\\AbstractOptionsStore' => __DIR__ . '/../..' . '/includes/AbstractOptionsStore.php',
         'AutomateWoo\\Abstract_Model_With_Meta_Table' => __DIR__ . '/../..' . '/includes/Abstract_Model_With_Meta_Table.php',
         'AutomateWoo\\Action' => __DIR__ . '/../..' . '/includes/Action.php',
+        'AutomateWoo\\ActionScheduler\\AW_AsyncRequest_QueueRunner' => __DIR__ . '/../..' . '/includes/ActionScheduler/AW_AsyncRequest_QueueRunner.php',
         'AutomateWoo\\ActionScheduler\\ActionScheduler' => __DIR__ . '/../..' . '/includes/ActionScheduler/ActionScheduler.php',
         'AutomateWoo\\ActionScheduler\\ActionSchedulerInterface' => __DIR__ . '/../..' . '/includes/ActionScheduler/ActionSchedulerInterface.php',
         'AutomateWoo\\ActionScheduler\\AsyncActionRunner' => __DIR__ . '/../..' . '/includes/ActionScheduler/AsyncActionRunner.php',
@@ -400,6 +401,7 @@ class ComposerStaticInita663a12d3fa438a68e18ca62432158d8
         'AutomateWoo\\Jobs\\JobRegistryInterface' => __DIR__ . '/../..' . '/includes/Jobs/JobRegistryInterface.php',
         'AutomateWoo\\Jobs\\JobService' => __DIR__ . '/../..' . '/includes/Jobs/JobService.php',
         'AutomateWoo\\Jobs\\OneTimeActionSchedulerJobInterface' => __DIR__ . '/../..' . '/includes/Jobs/OneTimeActionSchedulerJobInterface.php',
+        'AutomateWoo\\Jobs\\RecurringJobInterface' => __DIR__ . '/../..' . '/includes/Jobs/RecurringJobInterface.php',
         'AutomateWoo\\Jobs\\RunQueuedWorkflows' => __DIR__ . '/../..' . '/includes/Jobs/RunQueuedWorkflows.php',
         'AutomateWoo\\Jobs\\SetupGuestCustomers' => __DIR__ . '/../..' . '/includes/Jobs/SetupGuestCustomers.php',
         'AutomateWoo\\Jobs\\SetupRegisteredCustomers' => __DIR__ . '/../..' . '/includes/Jobs/SetupRegisteredCustomers.php',
@@ -982,9 +984,9 @@ class ComposerStaticInita663a12d3fa438a68e18ca62432158d8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita663a12d3fa438a68e18ca62432158d8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita663a12d3fa438a68e18ca62432158d8::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita663a12d3fa438a68e18ca62432158d8::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2::$classMap;
 
         }, null, ClassLoader::class);
     }

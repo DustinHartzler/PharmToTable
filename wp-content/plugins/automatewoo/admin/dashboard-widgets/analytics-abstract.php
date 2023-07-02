@@ -39,6 +39,8 @@ abstract class Dashboard_Widget_Analytics extends Dashboard_Widget {
 	 */
 	protected function get_report_url( $page_id ) {
 		if ( Analytics::is_enabled() ) {
+			// SEMGREP WARNING EXPLANATION
+			// This is being escaped later in the consumer call (if not, a warning will be produced by PHPCS).
 			return add_query_arg(
 				[
 					'period'  => 'custom',
@@ -49,6 +51,8 @@ abstract class Dashboard_Widget_Analytics extends Dashboard_Widget {
 				Admin::page_url( 'analytics', $page_id )
 			);
 		} else {
+			// SEMGREP WARNING EXPLANATION
+			// This is being escaped later in the consumer call (if not, a warning will be produced by PHPCS).
 			return add_query_arg(
 				[
 					'range'      => 'custom',

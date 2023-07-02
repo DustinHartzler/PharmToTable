@@ -62,8 +62,9 @@ class Admin_Ajax {
 	 */
 	static function fill_trigger_fields() {
 
-		if ( ! current_user_can( 'manage_woocommerce' ) )
+		if ( ! self::is_authorized() ) {
 			die;
+		}
 
 		$trigger_name = Clean::string( aw_request('trigger_name') );
 		$workflow_id = absint( aw_request('workflow_id') );
@@ -100,7 +101,7 @@ class Admin_Ajax {
 	 */
 	public static function fill_action_fields() {
 
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -390,7 +391,8 @@ class Admin_Ajax {
 	 * Sends a test to supplied emails
 	 */
 	static function send_test_email() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -415,10 +417,13 @@ class Admin_Ajax {
 				$action->workflow->setup();
 				$current_user = get_current_user_id();
 				// Temporarily remove the current user since no current user is typically exists when running a workflow
+				// phpcs:ignore
 				wp_set_current_user( 0 );
 
 				$result = $action->run_test( [ 'recipients' => $to ] );
 
+				// Rollback to the previous user.
+				// phpcs:ignore
 				wp_set_current_user( $current_user );
 				$action->workflow->cleanup();
 
@@ -450,7 +455,7 @@ class Admin_Ajax {
 
 
 	static function test_sms() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -519,7 +524,7 @@ class Admin_Ajax {
 
 
 	static function database_update_items_to_process_count() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -542,7 +547,7 @@ class Admin_Ajax {
 	 * To preview an action save temporarily in the options table.
 	 */
 	static function save_preview_data() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -569,7 +574,7 @@ class Admin_Ajax {
 	 *
 	 */
 	static function dismiss_system_error_notice() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -665,8 +670,9 @@ class Admin_Ajax {
 
 	static function toggle_workflow_status() {
 
-		if ( ! current_user_can( 'manage_woocommerce' ) )
+		if ( ! self::is_authorized() ) {
 			die;
+		}
 
 		$workflow = Factory::get( aw_request( 'workflow_id' ) );
 		$new_state = Clean::string( aw_request( 'new_state' ) );
@@ -682,8 +688,9 @@ class Admin_Ajax {
 
 	static function update_dynamic_action_select() {
 
-		if ( ! current_user_can( 'manage_woocommerce' ) )
+		if ( ! self::is_authorized() ) {
 			die;
+		}
 
 		$action_name = Clean::string( aw_request( 'action_name' ) );
 		$target_field_name = Clean::string( aw_request( 'target_field_name' ) );
@@ -705,7 +712,7 @@ class Admin_Ajax {
 	 * @since 5.6.6
 	 */
 	static function update_dynamic_trigger_options_select() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! self::is_authorized() ) {
 			die;
 		}
 
@@ -723,4 +730,21 @@ class Admin_Ajax {
 		wp_send_json_success( $options );
 	}
 
+	/**
+	 * Verifies if user is authorized to perform an ajax request.
+	 * We do so by checking if is able to manage WooCommerce and also checking the nonce.
+	 *
+	 * @since 5.7.6
+	 *
+	 * @return bool True if is authorized, false otherwise
+	 */
+	static function is_authorized() {
+		$nonce = Clean::string( aw_request( 'nonce' ) );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) || ! wp_verify_nonce( $nonce, aw_request( 'action' ) ) ) {
+			return false;
+		}
+
+		return true;
+	}
 }

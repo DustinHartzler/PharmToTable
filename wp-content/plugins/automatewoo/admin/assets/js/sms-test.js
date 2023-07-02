@@ -1,6 +1,6 @@
 // Register eslint ignored glabals - to be revisited.
 // https://github.com/woocommerce/automatewoo/issues/1212
-/* global AutomateWoo, ajaxurl */
+/* global AutomateWoo, ajaxurl, automatewooSmsTestLocalizeScript */
 
 /**
  * AutomateWoo SMS Tester
@@ -48,6 +48,7 @@ jQuery( function ( $ ) {
 						AutomateWoo.SMS_Tester.$fields.test_message.val(),
 					test_recipient:
 						AutomateWoo.SMS_Tester.$fields.test_recipient.val(),
+					nonce: automatewooSmsTestLocalizeScript.nonce,
 				},
 			} )
 				.done( function ( response ) {

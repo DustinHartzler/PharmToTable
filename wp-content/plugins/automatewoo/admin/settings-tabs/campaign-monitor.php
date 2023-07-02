@@ -61,8 +61,12 @@ class Settings_Tab_Campaign_Monitor extends Admin_Settings_Tab_Abstract {
 
 	/**
 	 * Save settings.
+	 *
+	 * @param array $fields Which fields to save. If empty, all fields will be saved.
+	 *
+	 * @return void
 	 */
-	public function save() {
+	public function save( $fields = array() ): void {
 		Integrations::campaign_monitor()->clear_cache_data();
 		parent::save();
 	}

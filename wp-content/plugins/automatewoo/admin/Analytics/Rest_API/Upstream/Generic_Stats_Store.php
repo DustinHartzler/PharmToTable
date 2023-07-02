@@ -26,6 +26,14 @@ use WP_Error;
  * @version 5.6.8
  */
 abstract class Generic_Stats_Store extends Reports_Data_Store {
+
+	/**
+	 * Report columns.
+	 *
+	 * @var array
+	 */
+	protected $report_columns;
+
 	/**
 	 * Updates the database query with interval parameters.
 	 *

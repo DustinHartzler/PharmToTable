@@ -80,6 +80,11 @@ class PreSubmit {
 		$email = Clean::email( aw_request('email') );
 		$language = Clean::string( aw_request( 'language' ) );
 		$checkout_fields = Clean::recursive( aw_request( 'checkout_fields' ) );
+		$maybe_guest_or_user = Customer_Factory::get_by_email( $email, false );
+
+		if ( $maybe_guest_or_user ) {
+			Ajax::send_json_error();
+		}
 
 		$customer = Session_Tracker::set_session_by_captured_email( $email, $language );
 

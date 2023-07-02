@@ -72,7 +72,7 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends AbstractBatchedDailyTrig
 
 		$date = new DateTime();
 		Time_Helper::convert_from_gmt( $date ); // get cards based on the sites timezone
-		$date->modify( "+$days_before days" );
+		$date->modify( "{$days_before} days" );
 
 		$day_to_run    = (int) $date->format( 'j' );
 		$days_in_month = (int) $date->format( 't' );

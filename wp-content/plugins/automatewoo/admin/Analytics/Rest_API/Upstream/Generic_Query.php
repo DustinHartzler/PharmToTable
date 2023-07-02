@@ -27,6 +27,14 @@ use WC_Data_Store;
  * @since 5.6.9
  */
 class Generic_Query extends WooReportsQuery {
+
+	/**
+	 * Store name
+	 *
+	 * @var string
+	 */
+	public $store_name;
+
 	/**
 	 * Create a new query.
 	 *

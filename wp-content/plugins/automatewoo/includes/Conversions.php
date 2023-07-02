@@ -41,7 +41,7 @@ class Conversions {
 		}
 
 		$conversion_window_start = clone $conversion_window_end;
-		$conversion_window_start->modify( '-' . self::get_conversion_window() . ' days' );
+		$conversion_window_start->modify( ( -1 * self::get_conversion_window() ) . ' days' );
 
 		if ( ! $logs = self::get_logs_by_customer( $customer, $conversion_window_start, $conversion_window_end ) ) {
 			return;

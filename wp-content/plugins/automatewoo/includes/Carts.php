@@ -369,8 +369,9 @@ class Carts {
 			return;
 		}
 
+		$clear_inactive_carts_after = -1 * $clear_inactive_carts_after;
 		$delay_date = new DateTime();
-		$delay_date->modify("-$clear_inactive_carts_after days");
+		$delay_date->modify( "{$clear_inactive_carts_after} days" );
 
 		$table = Database_Tables::get( 'carts' );
 

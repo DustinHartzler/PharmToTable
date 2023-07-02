@@ -20,6 +20,8 @@ class Tracking {
 	static function get_open_tracking_url( $workflow ) {
 		$log = $workflow->get_current_log();
 
+		// SEMGREP WARNING EXPLANATION
+		// This URL is escaped later
 		$url = add_query_arg([
 			'aw-action' => 'open',
 			'log' => $log ? $log->get_id() : 0
@@ -49,6 +51,8 @@ class Tracking {
 			'redirect' => urlencode( $valid_redirect )
 		];
 
+		// SEMGREP WARNING EXPLANATION
+		// URL is escaped later by the consumer.
 		$url = add_query_arg( $args, home_url() );
 
 		return apply_filters( 'automatewoo_click_track_url', $url, $args );

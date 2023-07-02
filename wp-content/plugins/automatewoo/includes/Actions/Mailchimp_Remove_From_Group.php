@@ -35,21 +35,17 @@ class Action_Mailchimp_Remove_From_Group extends Action_Mailchimp_Add_To_Group {
 	/**
 	 * Implements run abstract method.
 	 *
+	 * @throws \Exception When the action fails.
 	 * @see ActionInterface::run()
 	 */
 	public function run() {
+		$this->validate_required_fields();
 
 		$list_id   = $this->get_option( 'list' );
 		$email     = $this->get_contact_email_option();
 		$interests = $this->get_option( 'groups' );
 
-		if ( ! $list_id || ! $interests || ! $email ) {
-			return;
-		}
-
-		if ( ! Integrations::mailchimp()->is_contact( $email, $list_id ) ) {
-			return; // can't remove groups if no contact
-		}
+		$this->validate_contact( $email, $list_id );
 
 		$group_updates = [];
 
@@ -57,7 +53,7 @@ class Action_Mailchimp_Remove_From_Group extends Action_Mailchimp_Add_To_Group {
 			$group_updates[ $interest_id ] = false;
 		}
 
-		Integrations::mailchimp()->update_contact_interest_groups( $email, $list_id, $group_updates );
+		$this->maybe_log_action( Integrations::mailchimp()->update_contact_interest_groups( $email, $list_id, $group_updates ) );
 	}
 
 }

@@ -115,7 +115,7 @@ class Report_Conversions_List extends Admin_List_Table {
 						'log_id' => $log_id
 					], admin_url('admin-ajax.php') );
 
-					return '<a class="js-open-automatewoo-modal" data-automatewoo-modal-type="ajax" href="' . $url . '">#'.$log_id.'</a>';
+					return '<a class="js-open-automatewoo-modal" href="' . $url . '">#'.$log_id.'</a>';
 				}
 				else {
 					return $this->format_blank();

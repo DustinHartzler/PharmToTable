@@ -70,7 +70,7 @@ class Dashboard_Widget_Logs extends Dashboard_Widget {
 
 						<div class="automatewoo-dashboard-list__item">
 
-							<a class="automatewoo-dashboard-list__item-button button view aw-button-icon js-open-automatewoo-modal" data-automatewoo-modal-type="ajax" href="<?php echo esc_url( $modal_url ); ?>"><?php esc_html_e( 'View', 'automatewoo' ); ?></a>
+							<a class="automatewoo-dashboard-list__item-button button view aw-button-icon js-open-automatewoo-modal" href="<?php echo esc_url( $modal_url ); ?>"><?php esc_html_e( 'View', 'automatewoo' ); ?></a>
 
 							<a href="<?php echo esc_url( get_edit_post_link( $workflow->get_id() ) ); ?>" class="automatewoo-dashboard-list__item-title"><?php echo esc_html( $workflow->get_title() ); ?></a>
 							<div class="automatewoo-dashboard-list__item-text">

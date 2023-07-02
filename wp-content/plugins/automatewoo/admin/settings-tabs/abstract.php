@@ -484,10 +484,14 @@ abstract class Admin_Settings_Tab_Abstract {
 
 	/**
 	 * Save settings.
+	 *
+	 * @param array $fields Which fields to save. If empty, all fields will be saved.
+	 *
+	 * @return void
 	 */
-	public function save() {
+	public function save( $fields = array() ): void {
 		$settings = $this->get_settings();
-		$saved    = $this->save_fields( $settings );
+		$saved    = $this->save_fields( $settings, $fields );
 
 		if ( $saved ) {
 			$this->add_message( __( 'Your settings have been saved.', 'automatewoo' ) );
@@ -496,18 +500,24 @@ abstract class Admin_Settings_Tab_Abstract {
 
 
 	/**
-	 * Save all fields.
+	 * Save fields.
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings to save.
+	 * @param array $fields   Which fields to save. If empty, all fields will be saved.
+	 *
 	 * @return bool
 	 */
-	public function save_fields( $settings ) {
-
+	public function save_fields( $settings, $fields ): bool {
 		if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return false;
 		}
 
 		foreach ( $settings as $option ) {
+			// If fields have been specified and current option is not in the list, skip it.
+			if ( ! empty( $fields ) && ! in_array( $option['id'], $fields, true ) ) {
+				continue;
+			}
+
 			$this->save_field( $option );
 		}
 
@@ -547,7 +557,12 @@ abstract class Admin_Settings_Tab_Abstract {
 
 			case 'multiselect':
 			case 'multi_select_countries':
-				$value = array_filter( Clean::recursive( (array) $raw_value ) );
+				$value = array_filter(
+					Clean::recursive( (array) $raw_value ),
+					function( $value ) {
+						return ! empty( $value );
+					}
+				);
 				break;
 
 			default:

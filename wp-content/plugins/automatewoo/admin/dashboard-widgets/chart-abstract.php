@@ -149,6 +149,9 @@ abstract class Dashboard_Widget_Chart extends Dashboard_Widget_Analytics {
 	 * @return string
 	 */
 	protected function get_report_url( $page_id ) {
+		// SEMGREP WARING EXPLANATION
+		// This URL is escaped later in consumer call (if not, a warning will be produced by PHPCS).
+		// Also, these are just dates and a controlled page_url (loaded by id).
 		return add_query_arg(
 			[
 				'range'      => 'custom',

@@ -75,9 +75,15 @@ abstract class Dashboard_Widget {
 	 * Display the widget.
 	 */
 	public function output() {
+		ob_start();
 		$this->output_before();
 		$this->output_content();
 		$this->output_after();
+		$output = ob_get_clean();
+
+		if ( $this->display ) {
+			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 	}
 
 	/**

@@ -59,7 +59,9 @@ class Integration_Campaign_Monitor extends Integration {
 		switch ( $method ) {
 			case 'GET':
 			case 'DELETE':
-				$url = add_query_arg( array_map( 'urlencode', $args ), $url );
+				// SEMGREP WARNING EXPLANATION
+				// This is escaped with esc_url_raw, but semgrep only takes into consideration esc_url.
+				$url = esc_url_raw( add_query_arg( array_map( 'urlencode', $args ), $url ) );
 				break;
 
 			default:

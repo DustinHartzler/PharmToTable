@@ -102,7 +102,7 @@ class Data_Store extends Log_Stats_Store {
 		$date_column_name = $this->date_column_name;
 		$this->interval_query->add_sql_clause( 'order_by', $this->get_sql_clause( 'order_by' ) );
 		$this->interval_query->add_sql_clause( 'limit', $this->get_sql_clause( 'limit' ) );
-		$this->interval_query->add_sql_clause( 'select', ", MAX(${table_name}.${date_column_name}) AS datetime_anchor" );
+		$this->interval_query->add_sql_clause( 'select', ", MAX({$table_name}.{$date_column_name}) AS datetime_anchor" );
 		if ( '' !== $selections ) {
 			$this->interval_query->add_sql_clause( 'select', ', ' . $selections );
 		}

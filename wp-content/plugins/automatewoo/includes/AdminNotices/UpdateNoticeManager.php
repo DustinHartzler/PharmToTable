@@ -21,7 +21,7 @@ class UpdateNoticeManager {
 	 *
 	 * @see output_admin_notice method to update the version number displayed in the notice
 	 */
-	protected static $version = '5.2';
+	protected static $version = '5.8.2';
 
 	/**
 	 * Attach callbacks.
@@ -52,10 +52,10 @@ class UpdateNoticeManager {
 	 * Outputs the update notice including details about the update.
 	 */
 	public static function output_admin_notice() {
-		$title       = __( 'Thanks for updating to AutomateWoo 5.2!', 'automatewoo' );
+		$title       = __( 'Thanks for updating to AutomateWoo 5.8.2!', 'automatewoo' );
 		$description = sprintf(
 			__(
-				'In this release we have introduced some minor new features, added support for PHP 8 and finished converting all background processing to the <%1$s>Action Scheduler<%2$s> library which is used in WooCommerce core.',
+				'In this release we have implemented a fix that addresses the issue with inline CSS being stripped from emails.',
 				'automatewoo'
 			),
 			'a href="https://actionscheduler.org/" target="_blank"',

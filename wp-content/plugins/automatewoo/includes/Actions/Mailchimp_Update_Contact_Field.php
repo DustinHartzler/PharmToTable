@@ -81,18 +81,17 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 	/**
 	 * Implements run abstract method.
 	 *
+	 * @throws \Exception When the action fails.
 	 * @see ActionInterface::run()
 	 */
 	public function run() {
+
+		$this->validate_required_fields();
 
 		$list_id = $this->get_option( 'list' );
 		$email   = $this->get_contact_email_option();
 		$field   = $this->get_option( 'field' );
 		$value   = $this->get_option( 'value', true );
-
-		if ( ! $list_id || ! $field || ! $email ) {
-			return;
-		}
 
 		$this->validate_contact( $email, $list_id );
 
@@ -104,6 +103,6 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 		];
 
 		$args['merge_fields'][ $field ] = $value;
-		Integrations::mailchimp()->request( 'PATCH', "/lists/$list_id/members/$subscriber_hash", $args );
+		$this->maybe_log_action( Integrations::mailchimp()->request( 'PATCH', "/lists/$list_id/members/$subscriber_hash", $args ) );
 	}
 }

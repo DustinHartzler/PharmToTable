@@ -54,6 +54,9 @@ class Generic_Stats_Controller extends Generic_Controller {
 	/**
 	 * Get the Report's schema, conforming to JSON Schema.
 	 *
+	 * Compatibility-code "WC<=7.8"
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
+	 *
 	 * @return array
 	 */
 	public function get_item_schema() {
@@ -174,6 +177,9 @@ class Generic_Stats_Controller extends Generic_Controller {
 	 *     'validate_callback' => 'rest_validate_request_arg',
 	 * );
 	 * ```
+	 *
+	 * Compatibility-code "WC<
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
 	 *
 	 * @return array
 	 */

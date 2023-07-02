@@ -1,6 +1,4 @@
 <?php
-// phpcs:ignoreFile
-
 namespace AutomateWoo;
 
 use AutomateWoo\DatabaseUpdates\AbstractDatabaseUpdate;
@@ -11,7 +9,7 @@ use AutomateWoo\DatabaseUpdates\AbstractDatabaseUpdate;
 class Installer {
 
 	/** @var array */
-	static $db_updates = [
+	public static $db_updates = [
 		'2.6.0',
 		'2.6.1',
 		'2.7.0',
@@ -26,10 +24,13 @@ class Installer {
 	];
 
 	/** @var int  */
-	static $db_update_items_processed = 0;
+	public static $db_update_items_processed = 0;
 
 
-	static function init() {
+	/**
+	 * Initialize installer.
+	 */
+	public static function init() {
 		add_action( 'admin_init', [ __CLASS__, 'admin_init' ], 5 );
 		add_filter( 'plugin_action_links_' . AW()->plugin_basename, [ __CLASS__, 'plugin_action_links' ] );
 	}
@@ -38,7 +39,7 @@ class Installer {
 	/**
 	 * Admin init
 	 */
-	static function admin_init() {
+	public static function admin_init() {
 
 		if ( defined( 'IFRAME_REQUEST' ) || wp_doing_ajax() ) {
 			return;
@@ -46,7 +47,7 @@ class Installer {
 
 		self::check_if_plugin_files_updated();
 
-		if ( Options::database_version() != AW()->version ) {
+		if ( Options::database_version() !== AW()->version ) {
 			self::install();
 
 			if ( ! Options::database_version() ) {
@@ -56,14 +57,13 @@ class Installer {
 			// check for required database update
 			if ( self::is_database_upgrade_required() ) {
 				add_action( 'admin_notices', [ __CLASS__, 'data_upgrade_prompt' ] );
-			}
-			else {
+			} else {
 				self::update_database_version( AW()->version );
 				self::do_plugin_updated_actions();
 			}
 		}
 
-		foreach( Addons::get_all() as $addon ) {
+		foreach ( Addons::get_all() as $addon ) {
 			$addon->check_version();
 		}
 	}
@@ -74,7 +74,7 @@ class Installer {
 	 *
 	 * @since 4.3.0
 	 */
-	static function check_if_plugin_files_updated() {
+	public static function check_if_plugin_files_updated() {
 		$file_version = Options::file_version();
 
 		if ( $file_version !== AW()->version ) {
@@ -82,7 +82,7 @@ class Installer {
 			$new_version = AW()->version;
 
 			if ( $old_version ) {
-				Logger::info( 'updates', sprintf( "AutomateWoo - Plugin updated from %s to %s", $old_version, $new_version ) );
+				Logger::info( 'updates', sprintf( 'AutomateWoo - Plugin updated from %s to %s', $old_version, $new_version ) );
 			}
 
 			update_option( 'automatewoo_file_version', $new_version, true );
@@ -94,7 +94,7 @@ class Installer {
 	/**
 	 * Install
 	 */
-	static function install() {
+	public static function install() {
 		Database_Tables::install_tables();
 		self::create_pages();
 
@@ -115,8 +115,8 @@ class Installer {
 	/**
 	 * @return bool
 	 */
-	static function is_database_upgrade_required() {
-		if ( Options::database_version() == AW()->version ) {
+	public static function is_database_upgrade_required() {
+		if ( Options::database_version() === AW()->version ) {
 			return false;
 		}
 
@@ -127,7 +127,7 @@ class Installer {
 	/**
 	 * @return array
 	 */
-	static function get_required_database_updates() {
+	public static function get_required_database_updates() {
 
 		$required_updates = [];
 
@@ -144,17 +144,17 @@ class Installer {
 	/**
 	 * Handle updates, may be called multiple times to batch complete
 	 * Returns false if updates are still required
+	 *
 	 * @return bool
 	 */
-	static function run_database_updates() {
+	public static function run_database_updates() {
+		wp_raise_memory_limit( 'admin' );
 
-		@ini_set( 'memory_limit', apply_filters( 'admin_memory_limit', WP_MAX_MEMORY_LIMIT ) );
-
-		$required_updates = self::get_required_database_updates();
+		$required_updates                = self::get_required_database_updates();
 		self::$db_update_items_processed = 0; // reset counter
 
 		// update one version at a time
-		$update = current( $required_updates );
+		$update   = current( $required_updates );
 		$complete = self::run_database_update( $update );
 
 		if ( count( $required_updates ) > 1 ) {
@@ -171,12 +171,16 @@ class Installer {
 
 	/**
 	 * Return true if update is complete, return false if another pass is required
-	 * @param $version
+	 *
+	 * @param string $version
 	 * @return bool
 	 */
-	static function run_database_update( $version ) {
+	public static function run_database_update( $version ) {
 
 		$update_file = AW()->path( "/includes/DatabaseUpdates/$version.php" );
+
+		// SEMGREP WARNING EXPlANATION
+		// No user input here
 		$update = include $update_file; // recent updates will return a class
 
 		if ( $update instanceof AbstractDatabaseUpdate ) {
@@ -184,8 +188,7 @@ class Installer {
 			self::$db_update_items_processed += $update->get_items_processed_count();
 
 			$complete = $update->is_complete();
-		}
-		else {
+		} else {
 			// don't check completion on legacy updates
 			$complete = true;
 		}
@@ -203,9 +206,9 @@ class Installer {
 	 *
 	 * @return int
 	 */
-	static function get_database_update_items_to_process_count() {
+	public static function get_database_update_items_to_process_count() {
 		$required_updates = self::get_required_database_updates();
-		$count = 0;
+		$count            = 0;
 
 		foreach ( $required_updates as $version ) {
 			if ( version_compare( $version, '2.7.0', '<=' ) ) {
@@ -213,8 +216,8 @@ class Installer {
 			}
 
 			$update_file = AW()->path( "/includes/DatabaseUpdates/$version.php" );
-			$update = include $update_file; /** @var $update AbstractDatabaseUpdate */
-			$count += $update->get_items_to_process_count();
+			$update      = include $update_file; /** @var $update AbstractDatabaseUpdate */
+			$count      += $update->get_items_to_process_count();
 		}
 
 		return $count;
@@ -223,7 +226,8 @@ class Installer {
 
 	/**
 	 * Update version to current
-	 * @param $version string
+	 *
+	 * @param string $version
 	 */
 	private static function update_database_version( $version ) {
 		update_option( 'automatewoo_version', $version, true );
@@ -233,18 +237,21 @@ class Installer {
 	/**
 	 * Renders prompt notice for user to update
 	 */
-	static function data_upgrade_prompt() {
-		Admin::get_view( 'data-upgrade-prompt', [
-			'plugin_name' => __( 'AutomateWoo', 'automatewoo' ),
-			'plugin_slug' => AW()->plugin_slug
-		]);
+	public static function data_upgrade_prompt() {
+		Admin::get_view(
+			'data-upgrade-prompt',
+			[
+				'plugin_name' => __( 'AutomateWoo', 'automatewoo' ),
+				'plugin_slug' => AW()->plugin_slug,
+			]
+		);
 	}
 
 
 	/**
 	 * @return bool
 	 */
-	static function is_data_update_screen() {
+	public static function is_data_update_screen() {
 		$screen = get_current_screen();
 		return $screen->id === 'automatewoo_page_automatewoo-data-upgrade';
 	}
@@ -253,10 +260,10 @@ class Installer {
 	/**
 	 * Show action links on the plugin screen.
 	 *
-	 * @param	mixed $links Plugin Action links
-	 * @return	array
+	 * @param  mixed $links Plugin Action links
+	 * @return array
 	 */
-	static function plugin_action_links( $links ) {
+	public static function plugin_action_links( $links ) {
 		$action_links = [
 			'settings' => '<a href="' . esc_url( Admin::page_url( 'settings' ) ) . '" title="' . esc_attr( __( 'View AutomateWoo Settings', 'automatewoo' ) ) . '">' . esc_html__( 'Settings', 'automatewoo' ) . '</a>',
 		];
@@ -265,7 +272,10 @@ class Installer {
 	}
 
 
-	static function do_plugin_updated_actions() {
+	/**
+	 * Run plugin updated actions.
+	 */
+	public static function do_plugin_updated_actions() {
 		do_action( 'automatewoo_updated' );
 		AW()->action_scheduler()->enqueue_async_action( 'automatewoo_updated_async' );
 
@@ -277,21 +287,24 @@ class Installer {
 	/**
 	 * Creates required pages, run on every update, so it can be repeated without creating duplicates
 	 */
-	static function create_pages() {
+	public static function create_pages() {
 
 		$created_pages = get_option( '_automatewoo_created_pages', [] );
 
-		$pages = apply_filters( 'automatewoo_create_pages', [
-			'communication_preferences' => [
-				'name' => _x( 'communication-preferences', 'Page slug', 'automatewoo' ),
-				'title' => _x( 'Communication preferences', 'Page title', 'automatewoo' ),
-				'content' => '[automatewoo_communication_preferences]',
-				'option' => 'automatewoo_communication_preferences_page_id'
-			],
-		]);
+		$pages = apply_filters(
+			'automatewoo_create_pages',
+			[
+				'communication_preferences' => [
+					'name'    => _x( 'communication-preferences', 'Page slug', 'automatewoo' ),
+					'title'   => _x( 'Communication preferences', 'Page title', 'automatewoo' ),
+					'content' => '[automatewoo_communication_preferences]',
+					'option'  => 'automatewoo_communication_preferences_page_id',
+				],
+			]
+		);
 
 		foreach ( $pages as $key => $page ) {
-			if ( in_array( $key, $created_pages ) ) {
+			if ( in_array( $key, $created_pages, true ) ) {
 				continue;
 			}
 

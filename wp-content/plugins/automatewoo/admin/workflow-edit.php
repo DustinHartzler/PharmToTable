@@ -166,7 +166,14 @@ class Admin_Workflow_Edit {
 			'allRules' => self::get_rules_data(),
 			'actions' => $actions_data,
 			'variables' => $variables_data,
-			'metaBoxHelpTips' => $meta_box_help_tips
+			'metaBoxHelpTips' => $meta_box_help_tips,
+			'nonces'          => [
+				'aw_fill_trigger_fields'                   => wp_create_nonce( 'aw_fill_trigger_fields' ),
+				'aw_fill_action_fields'                    => wp_create_nonce( 'aw_fill_action_fields' ),
+				'aw_save_preview_data'                     => wp_create_nonce( 'aw_save_preview_data' ),
+				'aw_update_dynamic_action_select'          => wp_create_nonce( 'aw_update_dynamic_action_select' ),
+				'aw_update_dynamic_trigger_options_select' => wp_create_nonce( 'aw_update_dynamic_trigger_options_select' ),
+			],
 		];
 	}
 

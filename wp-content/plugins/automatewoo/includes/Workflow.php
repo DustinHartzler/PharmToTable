@@ -774,7 +774,7 @@ class Workflow {
 
 		$scheduled_time = new DateTime;
 		$scheduled_time->setTimestamp( $min_wait_datetime->getTimestamp() );
-		$scheduled_time->modify( "+$scheduled_time_seconds_from_day_start seconds" );
+		$scheduled_time->modify( "{$scheduled_time_seconds_from_day_start} seconds" );
 		$scheduled_time->convert_to_utc_time();
 
 		return $scheduled_time;
@@ -1183,14 +1183,21 @@ class Workflow {
 		if ( $this->is_exempt_from_unsubscribing() ) {
 			return false;
 		}
+		// SEMGREP WARNING EXPLANATION
+		// This is escaped with esc_url_raw after, but semgrep only takes into consideration esc_url.
+		// Also, the URL is just the My Account Page. Not reaching any user input.
+		$url = add_query_arg(
+			[
+				'aw-action'    => 'unsubscribe',
+				'workflow'     => $this->get_id(),
+				'customer_key' => urlencode( $customer->get_key() ),
+			],
+			wc_get_page_permalink( 'myaccount' )
+		);
 
-		$url = add_query_arg([
-			'aw-action' => 'unsubscribe',
-			'workflow' => $this->get_id(),
-			'customer_key' => urlencode( $customer->get_key() ),
-		], wc_get_page_permalink('myaccount') );
+		$url = apply_filters( 'automatewoo_unsubscribe_url', $url, $this->get_id(), $customer );
 
-		return apply_filters( 'automatewoo_unsubscribe_url', $url, $this->get_id(), $customer );
+		return esc_url_raw( $url );
 	}
 
 
@@ -1514,6 +1521,8 @@ class Workflow {
 		$params = [];
 		parse_str( $this->get_ga_tracking_params(), $params );
 
+		// SEMGREP WARNING EXPLANATION
+		// URL is escaped later by the consumer.
 		return add_query_arg( $params, $url );
 	}
 

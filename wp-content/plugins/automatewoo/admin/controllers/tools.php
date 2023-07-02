@@ -165,6 +165,8 @@ class Tools_Controller extends Base {
 			return $base_url;
 		}
 
+		// SEMGREP WARNING EXPLANATION
+		// This is being escaped later in the consumer call (if not, a warning will be produced by PHPCS).
 		return add_query_arg([
 			'action' => $route,
 			'tool_id' => $tool->get_id()

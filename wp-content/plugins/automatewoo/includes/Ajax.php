@@ -23,7 +23,9 @@ class Ajax {
 	 * @return string
 	 */
 	static function get_endpoint( $request ) {
-		return esc_url_raw( add_query_arg( 'aw-ajax', $request ) );
+		// SEMGREP WARNING EXPLANATION
+		// $request seems to be always "%%endpoint%%" in the consumer side.
+		return add_query_arg( 'aw-ajax', $request );
 	}
 
 

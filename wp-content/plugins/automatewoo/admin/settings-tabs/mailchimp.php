@@ -52,12 +52,16 @@ class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 
 	/**
 	 * Save settings.
+	 *
+	 * @param array $fields Which fields to save. If empty, all fields will be saved.
+	 *
+	 * @return void
 	 */
-	public function save() {
-
-		$is_valid = self::validate_key();
-
-		if ( $is_valid ) {
+	public function save( $fields = array() ): void {
+		if ( ! self::validate_key() ) {
+			// Invalid API key - Only save the integration enabled setting.
+			parent::save( array( 'automatewoo_mailchimp_integration_enabled' ) );
+		} else {
 			$mailchimp = Integrations::mailchimp();
 
 			if ( $mailchimp ) {
@@ -66,7 +70,6 @@ class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 
 			parent::save();
 		}
-
 	}
 
 	/**

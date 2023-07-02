@@ -428,7 +428,7 @@ abstract class Trigger {
 	 */
 	protected function add_field_user_pause_period() {
 
-		$field = ( new Fields\Number() )
+		$field = ( new Fields\Positive_Number() )
 			->set_name( 'user_pause_period' )
 			->set_title( __( 'Customer pause period (days)', 'automatewoo' ) )
 			->set_description( __( 'Can be used to ensure that this trigger will only send once in a set period to a user or guest.', 'automatewoo' ) );
@@ -493,17 +493,23 @@ abstract class Trigger {
 		$user = $workflow->data_layer()->get_user();
 		$guest = $workflow->data_layer()->get_guest();
 
-		// there could be no pause period set
-		if ( ! $period ) {
+		// There could be no pause period set, and the value of $period will be false.
+		// In addition, users had been allowed to save a non-positive int, and these invalid values
+		// were run with the same result as the default value. Because there are no logs recorded
+		// with a future timestamp when querying, misleadingly made the validation result false.
+		//
+		// Here it returns invalid values earlier, following consistent results and avoiding
+		// further log queries with invalid values.
+		if ( ! $period || $period <= 0 ) {
 			return true;
 		}
 
 		if ( ! $user && ! $guest && ! $customer ) return true; // must have a customer, user or guest
 
-		$hours = $period * 24;
+		$days = -1 * (int) $period;
 
 		$period_date = new DateTime();
-		$period_date->modify("-$hours hours");
+		$period_date->modify( "{$days} days" );
 
 		// Check to see if this workflow has run since the period date
 		$log_query = new Log_Query();

@@ -6,7 +6,6 @@ use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
 use AutomateWoo\Cart;
 use AutomateWoo\Cart_Factory;
 use AutomateWoo\Cart_Query;
-use AutomateWoo\Cron;
 use AutomateWoo\DateTime;
 use AutomateWoo\Jobs\Traits\ValidateItemAsIntegerId;
 use AutomateWoo\OptionsStore;
@@ -19,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
+class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements RecurringJobInterface {
 
 	use ValidateItemAsIntegerId;
 
@@ -55,7 +54,7 @@ class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements StartO
 	 * @return string
 	 */
 	public function get_start_hook() {
-		return Cron::TWO_MINUTE_WORKER;
+		return $this->get_hook_base_name() . 'start';
 	}
 
 	/**
@@ -130,4 +129,14 @@ class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements StartO
 
 		$cart->update_status( 'abandoned' );
 	}
+
+	/**
+	 * Return the recurring job's interval in seconds.
+	 *
+	 * @return int The interval for this action
+	 */
+	public function get_interval(): int {
+		return JobService::TWO_MINUTE_INTERVAL;
+	}
+
 }

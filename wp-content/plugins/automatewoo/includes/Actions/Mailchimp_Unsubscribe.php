@@ -40,28 +40,28 @@ class Action_Mailchimp_Unsubscribe extends Action_Mailchimp_Abstract {
 	/**
 	 * Implements run abstract method.
 	 *
+	 * @throws \Exception When the action fails.
 	 * @see ActionInterface::run()
 	 */
 	public function run() {
-		$list_id = $this->get_option( 'list' );
-		$email   = $this->get_contact_email_option();
+		$this->validate_required_fields();
 
-		if ( ! $list_id ) {
-			return;
-		}
-
+		$list_id    = $this->get_option( 'list' );
+		$email      = $this->get_contact_email_option();
 		$subscriber = md5( $email );
 
 		if ( $this->get_option( 'unsubscribe_only' ) ) {
-			Integrations::mailchimp()->request(
-				'PATCH',
-				"/lists/$list_id/members/$subscriber",
-				[
-					'status' => 'unsubscribed',
-				]
+			$this->maybe_log_action(
+				Integrations::mailchimp()->request(
+					'PATCH',
+					"/lists/$list_id/members/$subscriber",
+					[
+						'status' => 'unsubscribed',
+					]
+				)
 			);
 		} else {
-			Integrations::mailchimp()->request( 'DELETE', "/lists/$list_id/members/$subscriber" );
+			$this->maybe_log_action( Integrations::mailchimp()->request( 'DELETE', "/lists/$list_id/members/$subscriber" ) );
 		}
 	}
 

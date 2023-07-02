@@ -65,7 +65,7 @@ class Admin_Workflow_List {
 
 			case 'times_run':
 				if ( $count = $workflow->get_times_run() ) {
-					echo '<a href="' . add_query_arg( '_workflow', $workflow->get_id(), Admin::page_url('logs') ) . '">' . $count . '</a>';
+					echo '<a href="' . esc_url( add_query_arg( '_workflow', $workflow->get_id(), Admin::page_url( 'logs' ) ) ) . '">' . $count . '</a>';
 				}
 				else {
 					echo '-';
@@ -74,7 +74,7 @@ class Admin_Workflow_List {
 
 			case 'queued':
 				if ( $count = $workflow->get_current_queue_count() ) {
-					echo '<a href="' . add_query_arg( '_workflow', $workflow->get_id(), Admin::page_url('queue') ) . '">' . $count . '</a>';
+					echo '<a href="' . esc_url( add_query_arg( '_workflow', $workflow->get_id(), Admin::page_url( 'queue' ) ) ) . '">' . $count . '</a>';
 				}
 				else {
 					echo '-';

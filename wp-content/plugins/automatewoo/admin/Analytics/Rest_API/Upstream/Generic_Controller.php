@@ -23,6 +23,9 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 	/**
 	 * Endpoint namespace.
 	 *
+	 * Compatibility-code "WC <= 7.8"
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
+	 *
 	 * @var string
 	 */
 	protected $namespace = 'wc-analytics';
@@ -63,6 +66,9 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 	/**
 	 * Add pagination headers and links.
 	 *
+	 * Compatibility-code "WC <= 7.8"
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
+	 *
 	 * @param WP_REST_Request        $request   Request data.
 	 * @param WP_REST_Response|array $response  Response data.
 	 * @param int                    $total     Total results.
@@ -75,9 +81,13 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 		$response->header( 'X-WP-Total', $total );
 		$response->header( 'X-WP-TotalPages', $max_pages );
 
-		$base = add_query_arg(
-			$request->get_query_params(),
-			rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) )
+		// SEMGREP WARNING EXPLANATION
+		// URL is escaped. However, Semgrep only considers esc_url as valid.
+		$base = esc_url_raw(
+			add_query_arg(
+				$request->get_query_params(),
+				rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) )
+			)
 		);
 
 		if ( $page > 1 ) {
@@ -85,13 +95,17 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 			if ( $prev_page > $max_pages ) {
 				$prev_page = $max_pages;
 			}
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
+			// SEMGREP WARNING EXPLANATION
+			// URL is escaped. However, Semgrep only considers esc_url as valid.
+			$prev_link = esc_url_raw( add_query_arg( 'page', $prev_page, $base ) );
 			$response->link_header( 'prev', $prev_link );
 		}
 
 		if ( $max_pages > $page ) {
 			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
+			// SEMGREP WARNING EXPLANATION
+			// URL is escaped. However, Semgrep only considers esc_url as valid.
+			$next_link = esc_url_raw( add_query_arg( 'page', $next_page, $base ) );
 			$response->link_header( 'next', $next_link );
 		}
 
@@ -100,6 +114,9 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 
 	/**
 	 * Prepare a report object for serialization.
+	 *
+	 * Compatibility-code "WC <= 7.8"
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
 	 *
 	 * @param stdClass        $report  Report data.
 	 * @param WP_REST_Request $request Request object.
@@ -124,6 +141,9 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 	 *
 	 * To be extended by specific report properites.
 	 *
+	 * Compatibility-code "WC <= 7.8"
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
+	 *
 	 * @return array
 	 */
 	public function get_item_properties_schema() {
@@ -143,6 +163,9 @@ class Generic_Controller extends WC_REST_Reports_Controller {
 
 	/**
 	 * Get the query params for collections.
+	 *
+	 * Compatibility-code "WC <= 7.8"
+	 * Once WC > 7.8 is out and covers our L-2, we can inherit this from `GenericController`.
 	 *
 	 * @return array
 	 */

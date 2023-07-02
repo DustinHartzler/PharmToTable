@@ -81,6 +81,11 @@ class Dashboard_Widget_Workflows extends Dashboard_Widget {
 	protected function output_content() {
 		$features = $this->get_featured();
 
+		if ( empty( $features ) ) {
+			$this->display = false;
+			return;
+		}
+
 		?>
 
 		<div class="automatewoo-dashboard__workflows">

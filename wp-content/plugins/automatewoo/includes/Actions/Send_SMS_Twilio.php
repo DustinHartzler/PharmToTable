@@ -183,7 +183,7 @@ class Action_Send_SMS_Twilio extends Action {
 			// don't track unsubscribe clicks
 			if ( ! strstr( $url, 'aw-action=unsubscribe' ) ) {
 				$url = $this->workflow->append_ga_tracking_to_url( $url );
-				$url = Tracking::get_click_tracking_url( $this->workflow, $url );
+				$url = esc_url_raw( Tracking::get_click_tracking_url( $this->workflow, $url ) );
 			}
 		}
 

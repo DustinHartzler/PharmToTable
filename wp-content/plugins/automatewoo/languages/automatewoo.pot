@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: AutomateWoo 5.7.2\n"
+"Project-Id-Version: AutomateWoo 5.8.2\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-18T12:55:57+00:00\n"
+"POT-Creation-Date: 2023-06-29T15:06:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: automatewoo\n"
@@ -17,13 +17,13 @@ msgstr ""
 #. Plugin Name of the plugin
 #: admin/admin.php:128
 #: admin/admin.php:134
-#: admin/admin.php:673
+#: admin/admin.php:687
 #: admin/coupons-list.php:30
 #: admin/WCAdminConnectPages.php:74
 #: automatewoo.php:107
 #: includes/Actions/Change_Workflow_Status.php:18
 #: includes/Actions/Clear_Queued_Events.php:17
-#: includes/Installer.php:238
+#: includes/Installer.php:244
 #: includes/Privacy.php:18
 #: admin/assets/build/index.js:19
 msgid "AutomateWoo"
@@ -121,7 +121,7 @@ msgstr ""
 
 #: admin/admin.php:232
 #: admin/WCAdminConnectPages.php:163
-#: includes/Installer.php:261
+#: includes/Installer.php:268
 msgid "Settings"
 msgstr ""
 
@@ -158,41 +158,41 @@ msgstr ""
 
 #. translators: %s: Error message
 #. translators: %s: The error message.
-#: admin/ajax.php:436
+#: admin/ajax.php:441
 #: admin/assets/build/index.js:19
 msgid "Error: %s"
 msgstr ""
 
-#: admin/ajax.php:443
+#: admin/ajax.php:448
 msgid "Success! %s email%s sent."
 msgstr ""
 
-#: admin/ajax.php:471
+#: admin/ajax.php:476
 msgid "Message sent."
 msgstr ""
 
-#: admin/ajax.php:488
+#: admin/ajax.php:493
 msgid "Permission error."
 msgstr ""
 
-#: admin/ajax.php:509
+#: admin/ajax.php:514
 #: admin/views/page-data-upgrade.php:19
 msgid "Add-on could not be updated"
 msgstr ""
 
-#: admin/ajax.php:615
+#: admin/ajax.php:620
 msgid "No log found."
 msgstr ""
 
-#: admin/ajax.php:629
+#: admin/ajax.php:634
 msgid "No queued event found."
 msgstr ""
 
-#: admin/ajax.php:647
+#: admin/ajax.php:652
 msgid "Variable not found."
 msgstr ""
 
-#: admin/ajax.php:661
+#: admin/ajax.php:666
 msgid "No cart found."
 msgstr ""
 
@@ -302,7 +302,7 @@ msgstr ""
 msgid "Number of total clicks."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Email_Tracking/Stats_Store.php:246
+#: admin/Analytics/Rest_API/Email_Tracking/Stats_Store.php:247
 msgid "Sorry, fetching email & SMS tracking data failed."
 msgstr ""
 
@@ -323,80 +323,80 @@ msgstr ""
 msgid "Sorry, fetching unsubscribers data failed."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:153
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:176
 msgid "Current page of the collection."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:161
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:184
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:170
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:193
 msgid "Limit response to resources published after a given ISO8601 compliant date."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:176
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:199
 msgid "Limit response to resources published before a given ISO8601 compliant date."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:182
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:205
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:189
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:212
 msgid "Sort collection by object attribute."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:198
+#: admin/Analytics/Rest_API/Upstream/Generic_Controller.php:221
 msgid "Force retrieval of fresh data instead of from the cache."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:64
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:67
 msgid "Reports data grouped by segment condition."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:72
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:75
 msgid "Segment identificator."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:78
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:147
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:81
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:150
 msgid "Interval subtotals."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:97
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:100
 msgid "Totals data."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:104
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:107
 msgid "Reports data grouped by intervals."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:112
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:115
 msgid "Type of interval."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:119
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:122
 msgid "The date the report start, in the site's timezone."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:126
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:129
 msgid "The date the report start, as GMT."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:133
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:136
 msgid "The date the report end, in the site's timezone."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:140
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:143
 msgid "The date the report end, as GMT."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:184
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:190
 msgid "Time interval to use for buckets in the returned data."
 msgstr ""
 
-#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:198
+#: admin/Analytics/Rest_API/Upstream/Generic_Stats_Controller.php:204
 msgid "Limit stats fields to the specified items."
 msgstr ""
 
@@ -557,7 +557,7 @@ msgid "Failed to init process."
 msgstr ""
 
 #: admin/controllers/tools.php:130
-#: admin/user-tags-export.php:60
+#: admin/user-tags-export.php:59
 msgid "Security check failed."
 msgstr ""
 
@@ -573,7 +573,7 @@ msgstr ""
 msgid "Success - Items may be still be processing in the background."
 msgstr ""
 
-#: admin/dashboard-widgets/analytics-abstract.php:69
+#: admin/dashboard-widgets/analytics-abstract.php:73
 msgid "View report"
 msgstr ""
 
@@ -700,7 +700,7 @@ msgstr ""
 #: admin/reports/carts.php:20
 #: admin/reports/carts.php:39
 #: includes/Privacy_Exporters.php:338
-#: includes/Variables/Cart_Link.php:17
+#: includes/Variables/Cart_Link.php:26
 msgid "Cart"
 msgstr ""
 
@@ -782,7 +782,7 @@ msgstr ""
 #: includes/Customer.php:362
 #: includes/Data_Layer.php:440
 #: includes/Guest.php:200
-#: includes/helpers.php:791
+#: includes/helpers.php:794
 msgctxt "full name"
 msgid "%1$s %2$s"
 msgstr ""
@@ -1056,7 +1056,7 @@ msgid "Created"
 msgstr ""
 
 #: admin/reports/guests.php:45
-#: admin/workflow-edit.php:254
+#: admin/workflow-edit.php:261
 msgid "Actions"
 msgstr ""
 
@@ -1138,7 +1138,7 @@ msgstr ""
 msgid "Select a page&hellip;"
 msgstr ""
 
-#: admin/settings-tabs/abstract.php:493
+#: admin/settings-tabs/abstract.php:497
 msgid "Your settings have been saved."
 msgstr ""
 
@@ -1425,7 +1425,7 @@ msgstr ""
 msgid "You can get your API key when logged in to MailChimp under Account > Extras > API Keys."
 msgstr ""
 
-#: admin/settings-tabs/mailchimp.php:78
+#: admin/settings-tabs/mailchimp.php:81
 msgid "The MailChimp API Key you entered is not valid."
 msgstr ""
 
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Auth Token"
 msgstr ""
 
-#: admin/user-tags-export.php:64
+#: admin/user-tags-export.php:63
 msgid "There are no users with that tag."
 msgstr ""
 
@@ -1629,7 +1629,7 @@ msgstr ""
 #: admin/views/meta-box-save.php:17
 #: admin/views/meta-box-save.php:106
 #: admin/views/meta-box-save.php:111
-#: admin/workflow-edit.php:224
+#: admin/workflow-edit.php:231
 msgid "Save"
 msgstr ""
 
@@ -1721,7 +1721,7 @@ msgid "Months"
 msgstr ""
 
 #: admin/views/meta-box-timing.php:111
-#: admin/workflow-edit.php:259
+#: admin/workflow-edit.php:266
 #: admin/workflow-list.php:41
 msgid "Timing"
 msgstr ""
@@ -1761,7 +1761,7 @@ msgid "(24 hour time)"
 msgstr ""
 
 #: admin/views/meta-box-trigger.php:31
-#: admin/workflow-edit.php:229
+#: admin/workflow-edit.php:236
 msgid "Trigger"
 msgstr ""
 
@@ -1773,7 +1773,7 @@ msgid "[Select]"
 msgstr ""
 
 #: admin/views/meta-box-variables.php:15
-#: admin/workflow-edit.php:269
+#: admin/workflow-edit.php:276
 msgid "Variables"
 msgstr ""
 
@@ -1922,7 +1922,7 @@ msgstr ""
 msgid "Database update complete"
 msgstr ""
 
-#: admin/views/page-data-upgrade.php:180
+#: admin/views/page-data-upgrade.php:181
 msgid "No updates available"
 msgstr ""
 
@@ -2035,15 +2035,15 @@ msgstr ""
 msgid "Edit Workflow"
 msgstr ""
 
-#: admin/workflow-edit.php:235
+#: admin/workflow-edit.php:242
 msgid "Manual workflow options"
 msgstr ""
 
-#: admin/workflow-edit.php:249
+#: admin/workflow-edit.php:256
 msgid "Rules <small>(optional)</small>"
 msgstr ""
 
-#: admin/workflow-edit.php:264
+#: admin/workflow-edit.php:271
 msgid "Options"
 msgstr ""
 
@@ -2097,6 +2097,10 @@ msgstr ""
 
 #: includes/Action.php:361
 msgid "THIS ACTION IS DEPRECATED AND SHOULD NOT BE USED."
+msgstr ""
+
+#: includes/Action.php:422
+msgid "The following required option(s) were not provided: %s."
 msgstr ""
 
 #: includes/Actions/Active_Campaign_Abstract.php:24
@@ -2253,7 +2257,7 @@ msgid "If delete is selected the subscriber's email will not be added to the sup
 msgstr ""
 
 #: includes/Actions/Campaign_Monitor_Remove_Subscriber.php:27
-#: includes/Workflow_Email.php:307
+#: includes/Workflow_Email.php:310
 msgid "Unsubscribe"
 msgstr ""
 
@@ -2407,6 +2411,14 @@ msgstr ""
 
 #: includes/Actions/Mailchimp_Update_Tags.php:39
 msgid "Tags to remove"
+msgstr ""
+
+#: includes/Actions/Mailchimp_Update_Tags.php:59
+msgid "Tags should not be empty."
+msgstr ""
+
+#: includes/Actions/Mailchimp_Update_Tags.php:88
+msgid "There was no tags to update."
 msgstr ""
 
 #: includes/Actions/Mailpoet_Abstract.php:27
@@ -2743,7 +2755,7 @@ msgid "No valid recipients"
 msgstr ""
 
 #: includes/Actions/Send_SMS_Twilio.php:105
-#: includes/Workflow_Email.php:385
+#: includes/Workflow_Email.php:388
 msgid "The recipient is not opted-in to this workflow."
 msgstr ""
 
@@ -3134,11 +3146,11 @@ msgid "Need help? Try out one of our <%1$s>preset workflows<%2$s> or check out t
 msgstr ""
 
 #: includes/AdminNotices/UpdateNoticeManager.php:55
-msgid "Thanks for updating to AutomateWoo 5.2!"
+msgid "Thanks for updating to AutomateWoo 5.8.2!"
 msgstr ""
 
 #: includes/AdminNotices/UpdateNoticeManager.php:57
-msgid "In this release we have introduced some minor new features, added support for PHP 8 and finished converting all background processing to the <%1$s>Action Scheduler<%2$s> library which is used in WooCommerce core."
+msgid "In this release we have implemented a fix that addresses the issue with inline CSS being stripped from emails."
 msgstr ""
 
 #: includes/AdminNotices/UpdateNoticeManager.php:66
@@ -3542,38 +3554,42 @@ msgstr ""
 msgid "Your communication preferences were updated."
 msgstr ""
 
-#: includes/Frontend_Form_Handler.php:69
-msgid "Please enter a valid email address."
-msgstr ""
-
-#: includes/Frontend_Form_Handler.php:76
-msgid "Thanks! Your signup was successful."
+#: includes/Frontend_Form_Handler.php:72
+msgid "It was not possible to update communication preferences for this email."
 msgstr ""
 
 #: includes/Frontend_Form_Handler.php:79
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/Frontend_Form_Handler.php:86
+msgid "Thanks! Your signup was successful."
+msgstr ""
+
+#: includes/Frontend_Form_Handler.php:89
 msgid "Saved successfully! You won't receive marketing communications from us."
 msgstr ""
 
 #. translators: 1: Deprecated class name, 2: Version number, 3: Replacement class name.
-#: includes/helpers.php:763
+#: includes/helpers.php:766
 msgid "%1$s is deprecated since version %2$s! Use %3$s instead."
 msgstr ""
 
 #. translators: 1: Deprecated class name, 2: Version number.
-#: includes/helpers.php:771
+#: includes/helpers.php:774
 msgid "%1$s is deprecated since version %2$s with no alternative available."
 msgstr ""
 
-#: includes/Installer.php:261
+#: includes/Installer.php:268
 msgid "View AutomateWoo Settings"
 msgstr ""
 
-#: includes/Installer.php:286
+#: includes/Installer.php:298
 msgctxt "Page slug"
 msgid "communication-preferences"
 msgstr ""
 
-#: includes/Installer.php:287
+#: includes/Installer.php:299
 msgctxt "Page title"
 msgid "Communication preferences"
 msgstr ""
@@ -4532,7 +4548,7 @@ msgid "Order - Created Via"
 msgstr ""
 
 #: includes/Rules/Order_Created_Via.php:38
-#: includes/Variables/Cart_Link.php:18
+#: includes/Variables/Cart_Link.php:27
 msgid "Checkout"
 msgstr ""
 
@@ -5083,7 +5099,7 @@ msgstr ""
 msgid "This is useful for workflows that are not run immediately as it ensures the status of the %s hasn't changed since initial trigger."
 msgstr ""
 
-#: includes/Trigger.php:589
+#: includes/Trigger.php:595
 msgid "THIS TRIGGER IS DEPRECATED AND SHOULD NOT BE USED."
 msgstr ""
 
@@ -6047,11 +6063,11 @@ msgstr ""
 msgid "Displays the number of the items in cart."
 msgstr ""
 
-#: includes/Variables/Cart_Link.php:15
+#: includes/Variables/Cart_Link.php:21
 msgid "Displays a unique link to the cart page that will also restore items to the customer's cart."
 msgstr ""
 
-#: includes/Variables/Cart_Link.php:16
+#: includes/Variables/Cart_Link.php:24
 msgid "Sets which page the link will direct the customer to when clicked."
 msgstr ""
 
@@ -6360,7 +6376,7 @@ msgstr ""
 msgid "Displays a listing of products related to the items in an order."
 msgstr ""
 
-#: includes/Variables/Order_Reorder_Url.php:16
+#: includes/Variables/Order_Reorder_Url.php:22
 msgid "Displays a reorder URL for the order. When clicked all items from the order will be added to the user's cart."
 msgstr ""
 
@@ -6964,7 +6980,7 @@ msgctxt "timing option"
 msgid "Checked daily at %s"
 msgstr ""
 
-#: includes/Workflow_Email.php:372
+#: includes/Workflow_Email.php:375
 msgid "Workflow was not defined for email."
 msgstr ""
 

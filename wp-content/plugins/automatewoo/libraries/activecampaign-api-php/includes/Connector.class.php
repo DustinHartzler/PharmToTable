@@ -264,16 +264,10 @@ class AC_Connector {
 			$debug_str1 .= "curl_setopt(\$ch, CURLOPT_POSTFIELDS, \"" . $data . "\");\n";
 		}
 
-		curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($request, CURLOPT_SSL_VERIFYHOST, 0);
-
-		$debug_str1 .= "curl_setopt(\$ch, CURLOPT_SSL_VERIFYPEER, false);\n";
-		$debug_str1 .= "curl_setopt(\$ch, CURLOPT_SSL_VERIFYHOST, 0);\n";
-
 		$response = curl_exec($request);
 
 		$curl_error = curl_error($request);
-		
+
 		if (!$response && $curl_error) {
 			return $curl_error;
 		}

@@ -231,4 +231,33 @@ abstract class AbstractBatchedActionSchedulerJob extends AbstractActionScheduler
 		// Optionally over-ride this method in child class.
 	}
 
+	/**
+	 * Schedules a job with recurrence. Creates a hook named like "automatewoo/jobs/{$job_name}/start
+	 * recurrently. This hook is handled by the StartOnHook flow when the action is Completed.
+	 *
+	 * @since 5.8.1
+	 *
+	 * @see RecurringJobInterface
+	 */
+	public function schedule_recurring() {
+		/**
+		 * @var RecurringJobInterface $this
+		 */
+
+		$interval = apply_filters( "automatewoo/intervals/{$this->get_name()}", $this->get_interval() );
+		if ( $this->can_start() && ! $this->action_scheduler->next_scheduled_action( $this->get_start_hook() ) ) {
+			$this->action_scheduler->schedule_recurring_action( time() + $interval, $interval, $this->get_start_hook() );
+		}
+	}
+
+	/**
+	 * Cancels the recurring action
+	 *
+	 * @since 5.8.1
+	 */
+	public function cancel_recurring() {
+		if ( $this->action_scheduler->next_scheduled_action( $this->get_start_hook() ) ) {
+			$this->action_scheduler->cancel( $this->get_start_hook() );
+		}
+	}
 }

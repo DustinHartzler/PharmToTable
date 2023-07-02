@@ -1,5 +1,54 @@
 *** AutomateWoo Changelog ***
 
+2023-06-29 - version 5.8.2
+* Fix - Use of style tags in email templates.
+* Tweak - Set priority for AutomateWoo Async Actions.
+
+2023-06-28 - version 5.8.1
+* Dev - Set engines for the repository.
+* Dev - Tweak the tests for WC 7.8.1.
+* Fix - Load blocks integration only if opt-in should be displayed during checkout.
+* Tweak - Migrate AbandonedCarts Job from Cron Worker to ActionScheduler Recurrent Action.
+
+2023-06-27 - version 5.8.0
+* Fix - Avoid removing slashes in Sending Email content.
+* Tweak - Add logs for all the Mailchimp Actions.
+
+2023-06-14 - version 5.7.7
+* Dev - Unit tests for restoring cart.
+* Fix - Do not display widget wrapper when contents is empty.
+* Fix - The timezone offset calculation for the boundaries of stats intervals in the analytics pages.
+* Tweak - Add logs to MailChimp - Add Contact To List action.
+* Tweak - WC 7.8 compatibility.
+
+2023-06-08 - version 5.7.6
+* Dev - Add release preparation GH workflow.
+* Tweak - Ability to disable the Mailchimp integration without a valid API key.
+* Tweak - Security improvements.
+
+2023-05-30 - version 5.7.5
+* Dev - Made `AutomateWoo` namespace available instantly before the `DOMContentLoaded`.
+* Dev - Remove the `"inline"` `AutomateWoo.Modal` type, export actionable classes in `AutomateWoo.Modal.triggerClasses`.
+* Fix - Avoid the AutomateWoo indirectly changing the "Publish" button in the new post page to "Schedule" when the site timezone is other than UTC.
+* Fix - Prevent cart from being restored after checkout.
+* Fix - `woocommerce_admin_report_currency` filter integration.
+* Tweak - Compile CSS files without emitting a UTF-8 byte-order mark (BOM) to get better compatibility with other extensions optimizing CSS file loading.
+* Tweak - Use WP helper function for increasing memory limit.
+
+2023-05-10 - version 5.7.4
+* Fix - Prevent WP Nonce verification in Use bulk actions if the action is not related to AW.
+* Tweak - WC 7.7 compatibility.
+
+2023-05-02 - version 5.7.3
+* Compat - Improve PHP 8.2 compatibility.
+* Dev - Remove previous copy of Sensei when installing unit tests.
+* Dev - Remove the sign in the dynamic modifier from all DateTime::modify.
+* Dev - Security improvements: Fix array_filter with no callback and ignore include file warnings.
+* Dev - Security improvements: Fix/Clean unescaped add_query_vars.
+* Dev - Security improvements: Remove security issue with CURLOPT_SSL_VERIFYPEER.
+* Fix - Limit the Customer pause period days of abandoned cart triggers to at least 1.
+* Fix - PHP 8.2 Compatibility: Fix the incorrect time conversion for scheduled workflow in UTC-X timezones.
+
 2023-04-18 - version 5.7.2
 * Tweak - Improve Security.
 * Tweak - Remove Welcome Notice when a workflow is created.

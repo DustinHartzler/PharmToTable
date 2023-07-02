@@ -131,7 +131,7 @@ class Data_Store extends Log_Stats_Store {
 
 		$date_column_name = $this->date_column_name;
 		$this->interval_query->add_sql_clause( 'order_by', $this->get_sql_clause( 'order_by' ) );
-		$this->interval_query->add_sql_clause( 'select', ", ${table_name}.${date_column_name} AS datetime_anchor" );
+		$this->interval_query->add_sql_clause( 'select', ", {$table_name}.{$date_column_name} AS datetime_anchor" );
 
 		// Add meta property to manualy count non-unique clicks, and assign tracked event event dates.
 		$meta_table_name = $wpdb->prefix . static::$meta_table_name;
@@ -154,14 +154,15 @@ class Data_Store extends Log_Stats_Store {
 			'unique-clicks' => 0,
 			'clicks'        => 0,
 		);
-		$last_recorded_date = new DateTime( '0-0-0 0:0:0' );
+		$timezone           = $query_args['before']->getTimezone();
+		$last_recorded_date = new DateTime( '0-0-0 0:0:0', $timezone );
 		foreach ( $logs as $log ) {
 
 			$click_recorded     = false;
 			$log_tracked_events = maybe_unserialize( $log['meta_value'] );
 
 			// Record the trackable workflow run => message sent.
-			$event_date         = new DateTime( $log['datetime_anchor'] );
+			$event_date         = new DateTime( $log['datetime_anchor'], $timezone );
 			$last_recorded_date = max( $last_recorded_date, $event_date );
 			$time_interval      = TimeInterval::time_interval_id( $chosen_interval, $event_date );
 			$all_events[]       = array(
@@ -182,7 +183,7 @@ class Data_Store extends Log_Stats_Store {
 					continue;
 				}
 
-				$event_date         = new DateTime( $event['date'] );
+				$event_date         = new DateTime( $event['date'], $timezone );
 				$last_recorded_date = max( $last_recorded_date, $event_date );
 				$time_interval      = TimeInterval::time_interval_id( $chosen_interval, $event_date );
 				switch ( $event['type'] ) {
@@ -326,10 +327,11 @@ class Data_Store extends Log_Stats_Store {
 	 * @return array
 	 */
 	protected function get_limit_params( $query_args = array() ) {
-		$this->limit_parameters['offset'] = 0;
-		// This is expected number of intervals.
-		// However we can get more, as tracking events may happen after the requested dates.
-		$this->limit_parameters['per_page'] = TimeInterval::intervals_between( $query_args['after'], $query_args['before'], $query_args['interval'] );
-		return $this->limit_parameters;
+		return [
+			'offset'   => 0,
+			// This is expected number of intervals.
+			// However we can get more, as tracking events may happen after the requested dates.
+			'per_page' => TimeInterval::intervals_between( $query_args['after'], $query_args['before'], $query_args['interval'] ),
+		];
 	}
 }

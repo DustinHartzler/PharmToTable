@@ -349,6 +349,9 @@ class Mailer extends Mailer_Abstract {
 		}
 
 		if ( $_template_file && file_exists( $_template_file ) ) {
+
+			// SEMGREP WARNING EXPLANATION
+			// This has not reached user input. Is used in Mailer.php to load the templates
 			include $_template_file;
 		}
 	}

@@ -104,7 +104,7 @@ class Report_Carts extends Admin_List_Table {
 					'cart_id' => $cart->get_id()
 				], admin_url( 'admin-ajax.php' ) );
 
-				return '<a class="button view aw-button-icon js-open-automatewoo-modal" data-automatewoo-modal-type="ajax" data-automatewoo-modal-size="lg" href="' . $url . '">View</a>';
+				return '<a class="button view aw-button-icon js-open-automatewoo-modal" data-automatewoo-modal-size="lg" href="' . $url . '">View</a>';
 
 				break;
 		}

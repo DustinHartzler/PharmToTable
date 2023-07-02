@@ -186,7 +186,7 @@ class Clean {
 	 * @return string
 	 */
 	static function email_content( $content ) {
-		$content = wp_check_invalid_utf8( stripslashes( (string) $content ) );
+		$content = wp_check_invalid_utf8( (string) $content );
 		return $content;
 	}
 

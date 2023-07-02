@@ -389,4 +389,48 @@ abstract class Action implements ActionInterface {
 		}
 	}
 
+	/**
+	 * Add a message to the actions logs in case the response is not successful.
+	 *
+	 * @param Remote_Request $request the request to log
+	 * @throws \Exception When the request is not successful.
+	 */
+	protected function maybe_log_action( $request ) {
+		if ( ! $request->is_successful() ) {
+			$body = $request->get_body();
+			$body = $body['detail'] ?? $request->get_body_raw();
+			throw new \Exception( $body );
+		}
+	}
+
+
+	/**
+	 * Validates the required fields in the action.
+	 *
+	 * @throws \Exception When there are required fields not present.
+	 */
+	protected function validate_required_fields() {
+		$errors = array_filter(
+			$this->get_fields(),
+			function( $field ) {
+				return $field->get_required() && ! $this->get_option( $field->get_name() );
+			}
+		);
+
+		if ( ! empty( $errors ) ) {
+			$message = sprintf(
+				__( 'The following required option(s) were not provided: %s.', 'automatewoo' ),
+				implode(
+					', ',
+					array_map(
+						function ( $error ) {
+							return $error->get_title();
+						},
+						$errors
+					)
+				)
+			);
+			throw new \Exception( $message );
+		}
+	}
 }

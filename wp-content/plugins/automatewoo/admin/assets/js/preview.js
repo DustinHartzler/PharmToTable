@@ -1,6 +1,6 @@
 // Register eslint ignored glabals - to be revisited.
 // https://github.com/woocommerce/automatewoo/issues/1212
-/* global ajaxurl, alert */
+/* global ajaxurl, alert, automatewooPreviewLocalizeScript */
 jQuery( function ( $ ) {
 	/**
 	 * Init
@@ -32,6 +32,7 @@ jQuery( function ( $ ) {
 			type: $form.find( '[name="type"]' ).val(),
 			to_emails: $form.find( '[name="to_emails"]' ).val(),
 			args: JSON.parse( $form.find( '[name="args"]' ).val() ),
+			nonce: automatewooPreviewLocalizeScript.nonce,
 		};
 
 		$.post( ajaxurl, data, function ( response ) {

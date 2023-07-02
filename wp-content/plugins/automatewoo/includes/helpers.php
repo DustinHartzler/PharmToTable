@@ -135,6 +135,9 @@ function aw_get_template( $template_name, $imported_variables = [], $template_pa
 	$located = wc_locate_template( $template_name, $template_path, $default_path );
 
 	if ( file_exists( $located ) ) {
+		// SEMGREP WARNING EXPLANATION
+		// No user input here.
+		// Also, we are checking the file existence and locating it with wc_locate_template
 		include $located;
 	}
 

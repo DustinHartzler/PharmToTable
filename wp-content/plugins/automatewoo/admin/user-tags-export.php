@@ -1,8 +1,9 @@
 <?php
-// phpcs:ignoreFile
-
 namespace AutomateWoo;
 
+/**
+ * Export user tags to CSV file.
+ */
 class User_Tags_Export {
 
 	/**
@@ -12,9 +13,9 @@ class User_Tags_Export {
 
 
 	/**
-	 * @param $tag_id
+	 * @param int $tag_id
 	 */
-	function set_user_tag( $tag_id ) {
+	public function set_user_tag( $tag_id ) {
 		$this->tag = get_term( $tag_id, 'user_tag' );
 	}
 
@@ -24,9 +25,8 @@ class User_Tags_Export {
 	 * @param int $offset
 	 * @return array
 	 */
-	function get_users( $limit, $offset = 0 ) {
-
-		$users = [];
+	public function get_users( $limit, $offset = 0 ) {
+		$users    = [];
 		$user_ids = [];
 
 		if ( $this->tag ) {
@@ -43,41 +43,45 @@ class User_Tags_Export {
 	}
 
 
-
 	/**
 	 * Process content of CSV file
 	 *
 	 * @since 0.1
 	 **/
-	function generate_csv() {
+	public function generate_csv() {
 
-		$limit = empty( $_GET['limit'] ) ? null : absint( $_GET['limit'] );
+		$limit  = empty( $_GET['limit'] ) ? null : absint( $_GET['limit'] );
 		$offset = empty( $_GET['offset'] ) ? 0 : absint( $_GET['offset'] );
 
 		$users = $this->get_users( $limit, $offset );
 
-		if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'eut_export_csv') ) {
-			wp_die( __( 'Security check failed.', 'automatewoo' ) );
+		if ( ! wp_verify_nonce( sanitize_key( aw_get_url_var( '_wpnonce' ) ), 'eut_export_csv' ) ) {
+			wp_die( esc_html__( 'Security check failed.', 'automatewoo' ) );
 		}
 
 		if ( empty( $users ) ) {
-			wp_die( __( 'There are no users with that tag.', 'automatewoo' ) );
+			wp_die( esc_html__( 'There are no users with that tag.', 'automatewoo' ) );
 		}
 
 		$sitename = sanitize_file_name( get_bloginfo( 'name' ) );
 		$tag_name = sanitize_file_name( $this->tag->name );
 
-		$filename = $sitename . '-' . $tag_name . '-' . date( 'Y-m-d-H-i-s' ) . '.csv';
+		$filename = $sitename . '-' . $tag_name . '-' . gmdate( 'Y-m-d-H-i-s' ) . '.csv';
 
-		@ini_set( 'memory_limit', apply_filters( 'admin_memory_limit', WP_MAX_MEMORY_LIMIT ) );
-		@set_time_limit( 600 );
+		wp_raise_memory_limit( 'admin' );
+		@set_time_limit( 600 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Disposition: attachment; filename=' . $filename );
 		header( 'Content-Type: text/csv; charset=' . get_option( 'blog_charset' ), true );
 
 		$data_keys = [
-			'ID', 'user_login', 'user_nicename', 'user_email', 'user_registered', 'display_name'
+			'ID',
+			'user_login',
+			'user_nicename',
+			'user_email',
+			'user_registered',
+			'display_name',
 		];
 
 		$fields = array_merge( $data_keys );
@@ -87,20 +91,25 @@ class User_Tags_Export {
 			$headers[] = '"' . strtolower( $field ) . '"';
 		}
 
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo implode( ',', $headers ) . "\n";
 
 		foreach ( $users as $user ) {
-			if ( ! $user ) continue;
+			if ( ! $user ) {
+				continue;
+			}
 
 			$data = [];
 
 			foreach ( $fields as $field ) {
-				$value = isset( $user->{$field} ) ? $user->{$field} : '';
-				$value = is_array( $value ) ? serialize( $value ) : $value;
+				$value  = isset( $user->{$field} ) ? $user->{$field} : '';
+				$value  = is_array( $value ) ? serialize( $value ) : $value; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 				$data[] = '"' . str_replace( '"', '""', $value ) . '"';
 			}
+
 			echo implode( ',', $data ) . "\n";
 		}
+		// phpcs:enable
 
 		exit;
 	}

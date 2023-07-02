@@ -90,7 +90,7 @@ class Report_Queue extends Admin_List_Table {
 				);
 
 				?>
-                <a class="button view aw-button-icon js-open-automatewoo-modal" data-automatewoo-modal-type="ajax" href="<?php echo $modal_url ?>"><?php _e( 'View', 'automatewoo' ) ?></a>
+                <a class="button view aw-button-icon js-open-automatewoo-modal" href="<?php echo $modal_url ?>"><?php _e( 'View', 'automatewoo' ) ?></a>
                 <a class="button" href="<?php echo $run_url; ?>"><?php $event->is_failed() ? esc_attr_e( 'Retry', 'automatewoo' ) : esc_attr_e( 'Run Now', 'automatewoo' ) ?></a>
 				<?php
 

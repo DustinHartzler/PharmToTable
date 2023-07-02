@@ -48,6 +48,13 @@ class Store extends ReportsDataStore implements DataStoreInterface {
 	protected $context = 'conversions_list';
 
 	/**
+	 * Report columns.
+	 *
+	 * @var array
+	 */
+	protected $report_columns;
+
+	/**
 	 * Mapping columns to data type to return correct response types.
 	 *
 	 * @var array

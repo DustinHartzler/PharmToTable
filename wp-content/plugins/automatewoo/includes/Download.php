@@ -104,14 +104,19 @@ class Download {
 			return '';
 		}
 
-		return add_query_arg(
-			array(
-				'download_file' => $this->product_id,
-				'order'         => $order->get_order_key(),
-				'email'         => rawurlencode( $order->get_billing_email() ),
-				'key'           => $this->id,
-			),
-			trailingslashit( home_url() )
+		// SEMGREP WARNING EXPLANATION
+		// This is escaped by esc_url_raw but semgrep only takes into consideration esc_url.
+		// Also, the URL is just a Home URL and the email is encoded. Rest of the params are just integer IDs.
+		return esc_url_raw(
+			add_query_arg(
+				array(
+					'download_file' => $this->product_id,
+					'order'         => $order->get_order_key(),
+					'email'         => rawurlencode( $order->get_billing_email() ),
+					'key'           => $this->id,
+				),
+				trailingslashit( home_url() )
+			)
 		);
 	}
 

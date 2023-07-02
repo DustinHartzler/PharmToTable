@@ -54,11 +54,13 @@ class Action_Send_Email_Plain_Text extends Action_Send_Email_Abstract {
 	 * @return string|\WP_Error
 	 */
 	public function get_preview() {
-		$content = $this->get_option( 'email_content', true );
-
-		// no user should be logged in
+		$content      = $this->get_option( 'email_content', true );
 		$current_user = wp_get_current_user();
-		wp_set_current_user( 0 );
+
+		// When the user_id value is 0, it's a session for a logged-out user
+		// see https://wordpress.org/support/topic/sessions-with-user-id-0/
+		// phpcs:ignore
+		wp_set_current_user( 0 ); // no user should be logged in
 
 		$email_body = $this->get_workflow_email_object( $current_user->get( 'user_email' ), $content )
 			->get_email_body();

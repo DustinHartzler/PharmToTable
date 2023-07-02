@@ -30,6 +30,22 @@ interface ActionSchedulerInterface {
 	public function schedule_single( $timestamp, $hook, $args = [], $group = 'automatewoo' );
 
 	/**
+	 * Schedule an action to run recurrently
+	 *
+	 * @since 5.8.1
+	 *
+	 * @param int    $timestamp When the job will run first time.
+	 * @param int    $interval_in_seconds How long to wait between runs
+	 * @param string $hook The hook to trigger
+	 * @param array  $args Arguments to pass when the hook triggers
+	 * @param string $group The group to assign this job to
+	 * @param bool   $unique If the action is unique
+	 *
+	 * @return string The action ID.
+	 */
+	public function schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args = [], $group = 'automatewoo', $unique = true );
+
+	/**
 	 * Schedule an action to run now i.e. in the next available batch.
 	 *
 	 * This differs from async actions by having a scheduled time rather than being set for '0000-00-00 00:00:00'.

@@ -34,7 +34,8 @@ class Time_Helper {
 	 * @param \DateTime|DateTime $datetime
 	 */
 	static function convert_to_gmt( $datetime ) {
-		$datetime->modify( '-' . self::get_timezone_offset() * HOUR_IN_SECONDS .' seconds' );
+		$offset = -1 * self::get_timezone_offset() * HOUR_IN_SECONDS;
+		$datetime->modify( "{$offset} seconds" );
 	}
 
 
@@ -42,7 +43,8 @@ class Time_Helper {
 	 * @param \DateTime|DateTime $datetime
 	 */
 	static function convert_from_gmt( $datetime ) {
-		$datetime->modify( '+' . self::get_timezone_offset() * HOUR_IN_SECONDS .' seconds' );
+		$offset = self::get_timezone_offset() * HOUR_IN_SECONDS;
+		$datetime->modify( "{$offset} seconds" );
 	}
 
 

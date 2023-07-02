@@ -167,7 +167,7 @@ class Trigger_Wishlist_Reminder extends AbstractBatchedDailyTrigger {
 		}
 
 		$min_interval_date = new DateTime();
-		$min_interval_date->modify( "-$interval days" );
+		$min_interval_date->modify( ( -1 * $interval ) . ' days' );
 
 		return $date_created->getTimestamp() < $min_interval_date->getTimestamp();
 	}

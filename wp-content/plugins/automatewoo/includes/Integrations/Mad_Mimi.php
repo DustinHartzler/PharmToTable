@@ -57,7 +57,9 @@ class Integration_Mad_Mimi extends Integration {
 		];
 
 		$url = $this->api_root . $endpoint;
-		$url = add_query_arg( $args, $url );
+		// SEMGREP WARNING EXPLANATION
+		// This is escaped with esc_url_raw, but semgrep only takes into consideration esc_url.
+		$url = esc_url_raw( add_query_arg( $args, $url ) );
 
 		$request = new Remote_Request( $url, $request_args );
 

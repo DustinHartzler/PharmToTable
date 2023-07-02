@@ -138,7 +138,8 @@ if ( $plugin_slug === AW()->plugin_slug ) {
 					$.post( ajaxurl,
 						{
 							action: 'aw_database_update_items_to_process_count',
-							plugin_slug: '<?php echo esc_js( $plugin_slug ); ?>'
+							plugin_slug: '<?php echo esc_js( $plugin_slug ); ?>',
+							nonce: '<?php echo esc_js( wp_create_nonce( 'aw_database_update_items_to_process_count' ) ); ?>'
 						},
 						function( response ) {
 							if ( response.success ) {

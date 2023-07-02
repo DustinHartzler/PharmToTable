@@ -258,6 +258,8 @@ abstract class Base {
 			$path = AW()->admin_path( '/views' );
 		}
 
+		// SEMGREP WARNING EXPLANATION
+		// All the calls to this function are internal, w/o user input.
 		include "$path/$view.php";
 	}
 

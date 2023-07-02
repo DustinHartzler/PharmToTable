@@ -85,6 +85,8 @@ class Pagination {
 	 * @return string
 	 */
 	protected function get_link_base() {
+		// SEMGREP WARNING EXPLANATION
+		// This is escaped later in the add_page_link function.
 		return add_query_arg( $this->request->get_query_params(), rest_url( $this->request->get_route() ) );
 	}
 
@@ -96,7 +98,9 @@ class Pagination {
 	 * @param string $link_base Base URL.
 	 */
 	protected function add_page_link( $name, $page, $link_base ) {
-		$this->response->link_header( $name, add_query_arg( 'page', $page, $link_base ) );
+		// SEMGREP WARNING EXPLANATION
+		// This is escaped by esc_url_raw, but semgrep only takes into consideration esc_url.
+		$this->response->link_header( $name, esc_url_raw( add_query_arg( 'page', $page, $link_base ) ) );
 	}
 
 }

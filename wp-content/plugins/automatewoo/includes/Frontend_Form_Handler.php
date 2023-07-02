@@ -63,7 +63,17 @@ class Frontend_Form_Handler {
 
 
 	static function save_communication_signup() {
-		$customer = isset( $_POST['email'] ) ? Customer_Factory::get_by_email( $_POST['email'] ): false;
+
+		$email = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
+
+		$maybe_customer = Customer_Factory::get_by_email( $email, false );
+
+		if ( $maybe_customer ) {
+			wc_add_notice( __( 'It was not possible to update communication preferences for this email.', 'automatewoo' ), 'error' );
+			return;
+		}
+
+		$customer = Customer_Factory::get_by_email( $email );
 
 		if ( ! $customer ) {
 			wc_add_notice( __( 'Please enter a valid email address.', 'automatewoo' ), 'error' );
@@ -99,8 +109,5 @@ class Frontend_Form_Handler {
 		do_action( 'automatewoo/communication_page/save_preferences', $customer );
 
 	}
-
-
-
 
 }

@@ -107,9 +107,14 @@ class Wishlist {
 			return YITH_WCWL()->get_wishlist_url();
 		} elseif ( $this->get_integration() === 'woothemes' ) {
 			if ( class_exists( 'WC_Wishlists_Pages' ) ) {
-				return add_query_arg(
-					[ 'wlid' => $this->get_id() ],
-					\WC_Wishlists_Pages::get_url_for( 'view-a-list' )
+				// SEMGREP WARNING EXPLANATION
+				// This is escaped with esc_url_raw, but semgrep only takes into consideration esc_url.
+				// Also, the URL is not reaching any user input.
+				return esc_url_raw(
+					add_query_arg(
+						[ 'wlid' => $this->get_id() ],
+						\WC_Wishlists_Pages::get_url_for( 'view-a-list' )
+					)
 				);
 			}
 		}

@@ -37,17 +37,16 @@ class Action_Mailchimp_Subscribe extends Action_Mailchimp_Abstract {
 	/**
 	 * Implements Action run abstract method
 	 *
+	 * @throws \Exception When the action fails.
 	 * @see ActionInterface::run()
 	 */
 	public function run() {
+		$this->validate_required_fields();
+
 		$list_id    = $this->get_option( 'list' );
 		$email      = $this->get_contact_email_option();
 		$first_name = $this->get_option( 'first_name', true );
 		$last_name  = $this->get_option( 'last_name', true );
-
-		if ( ! $list_id ) {
-			return;
-		}
 
 		$args            = [];
 		$subscriber_hash = md5( $email );
@@ -62,7 +61,8 @@ class Action_Mailchimp_Subscribe extends Action_Mailchimp_Abstract {
 			];
 		}
 
-		Integrations::mailchimp()->request( 'PUT', "/lists/$list_id/members/$subscriber_hash", $args );
+		$this->maybe_log_action( Integrations::mailchimp()->request( 'PUT', "/lists/$list_id/members/$subscriber_hash", $args ) );
+
 	}
 
 }

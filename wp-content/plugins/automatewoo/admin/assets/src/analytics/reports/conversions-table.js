@@ -11,7 +11,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { Button, Tooltip } from 'extracted/@wordpress/components';
 import { dispatch, useDispatch } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
-import '#external/automatewoo/modal.js';
+import Modal from '#external/automatewoo/modal.js';
 
 /**
  * Internal dependencies
@@ -55,7 +55,8 @@ export default function ConversionsTable( { query, filters } ) {
 		useDispatch( REPORTS_STORE_NAME );
 	const dateFormat =
 		getSetting( 'admin', {} ).dateFormat || defaultTableDateFormat;
-	const { formatAmount, getCurrencyConfig } = getFilteredCurrencyInstance();
+	const { formatAmount, getCurrencyConfig } =
+		getFilteredCurrencyInstance( query );
 
 	const [ unmarking, setUnmarking ] = useState( false );
 	const bulkUnmark = useCallback(
@@ -175,8 +176,7 @@ export default function ConversionsTable( { query, filters } ) {
 				{
 					display: (
 						<a
-							className="js-open-automatewoo-modal"
-							data-automatewoo-modal-type="ajax"
+							className={ Modal.triggerClasses.openLink }
 							href={ `admin-ajax.php?action=aw_modal_log_info&log_id=${ logId }` }
 						>
 							{ logId }

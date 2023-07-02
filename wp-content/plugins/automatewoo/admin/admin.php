@@ -361,7 +361,9 @@ class Admin {
 				'currency_position'           => get_option( 'woocommerce_currency_pos' )
 			],
 			'nonces'        => [
-				'remove_notice' => wp_create_nonce( 'aw-remove-notice' ),
+				'remove_notice'                  => wp_create_nonce( 'aw-remove-notice' ),
+				'aw_dismiss_system_error_notice' => wp_create_nonce( 'aw_dismiss_system_error_notice' ),
+				'aw_toggle_workflow_status'      => wp_create_nonce( 'aw_toggle_workflow_status' ),
 			],
 		];
 
@@ -370,6 +372,14 @@ class Admin {
 			'automatewooLocalizeScript',
 			apply_filters( 'automatewoo/admin/js_settings', $settings )
 		);
+
+		wp_localize_script( 'automatewoo-preview', 'automatewooPreviewLocalizeScript', [
+			'nonce' => wp_create_nonce( 'aw_send_test_email' )
+		] );
+
+		wp_localize_script( 'automatewoo-sms-test', 'automatewooSmsTestLocalizeScript', [
+			'nonce' => wp_create_nonce( 'aw_test_sms' )
+		] );
 	}
 
 
@@ -612,7 +622,9 @@ class Admin {
 			case 'manual-workflow-runner':
 				$url = admin_url( 'admin.php?page=wc-admin&path=/automatewoo/manual-workflow-runner' );
 				if ( $id ) {
-					return add_query_arg( 'workflowId', $id, $url );
+					// SEMGREP WARNING EXPLANATION
+					// URL is escaped. However, Semgrep only considers esc_url as valid.
+					return esc_url_raw( add_query_arg( 'workflowId', $id, $url ) );
 				}
 				return $url;
 			case 'analytics':
@@ -640,6 +652,8 @@ class Admin {
 		if ( ! $path )
 			$path = AW()->admin_path( '/views/' );
 
+		// SEMGREP WARNING EXPLANATION
+		// No user input reached. This is for loading our views.
 		include $path.$view.'.php';
 	}
 
@@ -848,7 +862,7 @@ class Admin {
 	 * @return string
 	 */
 	static function get_docs_link( $page = '', $utm_source = false, $utm_campaign = false ) {
-		return self::get_website_link( "docs/$page", $utm_source, $utm_campaign );
+		return esc_url_raw( self::get_website_link( "docs/$page", $utm_source, $utm_campaign ) );
 	}
 
 	/**
@@ -861,6 +875,8 @@ class Admin {
 		$url = 'https://automatewoo.com/'.( $page ? trailingslashit( $page ) : '' );
 
 		if ( $utm_source ) {
+			// SEMGREP WARNING EXPLANATION
+			// This is escaped in the consumer function.
 			$url = add_query_arg( [
 				'utm_source' => $utm_source,
 				'utm_medium' => 'plugin',

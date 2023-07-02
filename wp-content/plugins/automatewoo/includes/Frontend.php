@@ -68,7 +68,9 @@ class Frontend {
 			$args['intent'] = urlencode( $intent );
 		}
 
-		return add_query_arg( $args, $url );
+		// SEMGREP WARNING EXPLANATION
+		// URL is escaped. However, Semgrep only considers esc_url as valid.
+		return esc_url_raw( add_query_arg( $args, $url ) );
 	}
 
 

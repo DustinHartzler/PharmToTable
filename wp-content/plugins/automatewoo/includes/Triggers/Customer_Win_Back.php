@@ -150,8 +150,9 @@ class Trigger_Customer_Win_Back extends AbstractBatchedDailyTrigger {
 			return false;
 		}
 
+		$days = -1 * (int) $days;
 		$date = new DateTime();
-		$date->modify( "-$days days" );
+		$date->modify( "{$days} days" );
 
 		return $date;
 	}
@@ -170,8 +171,9 @@ class Trigger_Customer_Win_Back extends AbstractBatchedDailyTrigger {
 			$days = absint( $workflow->get_trigger_option( 'days_since_last_purchase' ) ) + 3;
 		}
 
+		$days = -1 * (int) $days;
 		$date = new DateTime();
-		$date->modify( "-$days days" );
+		$date->modify( "{$days} days" );
 
 		return $date;
 	}

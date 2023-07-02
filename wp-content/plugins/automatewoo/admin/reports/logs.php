@@ -93,7 +93,7 @@ class Report_Logs extends Admin_List_Table {
 					'log_id' => $log->get_id()
 					], admin_url('admin-ajax.php') );
 
-				echo '<a class="button view aw-button-icon js-open-automatewoo-modal" data-automatewoo-modal-type="ajax" href="' . $url . '">View</a>';
+				echo '<a class="button view aw-button-icon js-open-automatewoo-modal" href="' . $url . '">View</a>';
 
 				break;
 		}

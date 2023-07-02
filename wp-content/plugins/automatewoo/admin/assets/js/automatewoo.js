@@ -5,9 +5,10 @@
 // https://github.com/woocommerce/automatewoo/issues/1212
 /* global automatewooLocalizeScript, ajaxurl */
 
-let AutomateWoo,
-	// eslint-disable-next-line prefer-const -- Avoid breaking changes for the legacy of potentially re-writable global const.
+const AutomateWoo = {},
 	AW = {};
+
+window.AutomateWoo = AutomateWoo;
 
 ( function ( $ ) {
 	AW.init = function () {
@@ -110,6 +111,7 @@ let AutomateWoo,
 					action: 'aw_toggle_workflow_status',
 					workflow_id: $switch.attr( 'data-workflow-id' ),
 					new_state: newState,
+					nonce: AW.params.nonces.aw_toggle_workflow_status,
 				},
 				function () {
 					$switch.removeClass( 'aw-loading' );
@@ -258,7 +260,7 @@ let AutomateWoo,
 } )( jQuery );
 
 jQuery( function ( $ ) {
-	AutomateWoo = {
+	Object.assign( AutomateWoo, {
 		_email_preview_window: null,
 
 		init() {
@@ -297,7 +299,11 @@ jQuery( function ( $ ) {
 				function () {
 					$.ajax( {
 						url: ajaxurl,
-						data: { action: 'aw_dismiss_system_error_notice' },
+						data: {
+							action: 'aw_dismiss_system_error_notice',
+							nonce: AW.params.nonces
+								.aw_dismiss_system_error_notice,
+						},
 					} );
 				}
 			);
@@ -373,7 +379,7 @@ jQuery( function ( $ ) {
 				'titlebar=no,toolbar=no,height=768,width=860,resizable=yes,status=no'
 			);
 		},
-	};
+	} );
 
 	AutomateWoo.init();
 

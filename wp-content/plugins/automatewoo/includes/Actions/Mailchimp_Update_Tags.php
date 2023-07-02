@@ -46,19 +46,17 @@ class Mailchimp_Update_Tags extends Action_Mailchimp_Abstract {
 	 * @throws \Exception When the contact isn't part of the list.
 	 */
 	public function run() {
+		$this->validate_required_fields();
+
 		$email       = $this->get_contact_email_option();
 		$list        = $this->get_option( 'list' );
 		$add_tags    = $this->parse_tags_field_keys( $this->get_option( 'add_tags', true ) );
 		$remove_tags = $this->parse_tags_field_keys( $this->get_option( 'remove_tags', true ) );
 		$remove      = $this->get_option( 'remove_others' );
 
-		if ( empty( $email ) ) {
-			return;
-		}
-
 		// Validate tag handling can proceed.
 		if ( empty( $add_tags ) && empty( $remove_tags ) && false === $remove ) {
-			return;
+			throw new \Exception( __( 'Tags should not be empty.', 'automatewoo' ) );
 		}
 
 		$this->validate_contact( $email, $list );
@@ -87,9 +85,9 @@ class Mailchimp_Update_Tags extends Action_Mailchimp_Abstract {
 
 		// Skip the API call if there's nothing to change.
 		if ( empty( $tag_updates ) ) {
-			return;
+			throw new \Exception( __( 'There was no tags to update.', 'automatewoo' ) );
 		}
 
-		Integrations::mailchimp()->update_member_tags( $email, $list, $tag_updates );
+		$this->maybe_log_action( Integrations::mailchimp()->update_member_tags( $email, $list, $tag_updates ) );
 	}
 }

@@ -49,7 +49,7 @@ jQuery( function ( $ ) {
 		},
 
 		open_modal() {
-			AutomateWoo.Modal.open( 'ajax' );
+			AutomateWoo.Modal.open();
 			AutomateWoo.Modal.loading();
 
 			const ajaxData = {

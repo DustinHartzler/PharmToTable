@@ -1,6 +1,4 @@
 <?php
-// phpcs:ignoreFile
-
 namespace AutomateWoo;
 
 /**
@@ -11,7 +9,7 @@ namespace AutomateWoo;
 abstract class Addon {
 
 	/** @var Addon - must declare in child */
-	protected static $_instance;
+	protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 	/** @var string */
 	public $id;
@@ -48,34 +46,36 @@ abstract class Addon {
 	/**
 	 * Method to init the add on
 	 */
-	abstract function init();
+	abstract public function init();
 
 	/**
 	 * Required method to return options class
+	 *
 	 * @return Options_API
 	 */
-	abstract function options();
+	abstract public function options();
 
 	/**
 	 * Optional installer method
 	 */
-	function install() {}
+	public function install() {}
 
 
 	/**
 	 * Constructor for add-on
+	 *
 	 * @param Plugin_Data|object $plugin_data
 	 */
-	function __construct( $plugin_data ) {
+	public function __construct( $plugin_data ) {
 
-		$this->id = $plugin_data->id;
-		$this->name = $plugin_data->name;
-		$this->version = $plugin_data->version;
-		$this->file = $plugin_data->file;
+		$this->id                      = $plugin_data->id;
+		$this->name                    = $plugin_data->name;
+		$this->version                 = $plugin_data->version;
+		$this->file                    = $plugin_data->file;
 		$this->min_automatewoo_version = $plugin_data->min_automatewoo_version;
 
 		$this->plugin_basename = plugin_basename( $plugin_data->file );
-		$this->plugin_path = dirname( $plugin_data->file );
+		$this->plugin_path     = dirname( $plugin_data->file );
 
 		add_action( 'automatewoo_init_addons', [ $this, 'register' ] );
 		add_action( 'automatewoo_init_addons', [ $this, 'init' ] );
@@ -86,7 +86,7 @@ abstract class Addon {
 	 * @param string $end
 	 * @return string
 	 */
-	function url( $end = '' ) {
+	public function url( $end = '' ) {
 		return untrailingslashit( plugin_dir_url( $this->plugin_basename ) ) . $end;
 	}
 
@@ -95,7 +95,7 @@ abstract class Addon {
 	 * @param string $end
 	 * @return string
 	 */
-	function path( $end = '' ) {
+	public function path( $end = '' ) {
 		return untrailingslashit( $this->plugin_path ) . $end;
 	}
 
@@ -103,17 +103,17 @@ abstract class Addon {
 	/**
 	 * Check the version stored in the database and determine if an upgrade needs to occur
 	 */
-	function check_version() {
+	public function check_version() {
 
-		if ( version_compare( $this->version, $this->options()->version, '=' ) )
+		if ( version_compare( $this->version, $this->options()->version, '=' ) ) {
 			return;
+		}
 
 		$this->install();
 
 		if ( $this->is_database_upgrade_available() ) {
 			add_action( 'admin_notices', [ $this, 'data_upgrade_prompt' ] );
-		}
-		else {
+		} else {
 			$this->update_database_version();
 		}
 	}
@@ -122,7 +122,7 @@ abstract class Addon {
 	/**
 	 * @return bool
 	 */
-	function is_database_upgrade_available() {
+	public function is_database_upgrade_available() {
 
 		if ( version_compare( $this->version, $this->options()->version, '=' ) || empty( $this->db_updates ) ) {
 			return false;
@@ -135,9 +135,8 @@ abstract class Addon {
 	/**
 	 * Handle updates
 	 */
-	function do_database_update() {
-
-		@ini_set( 'memory_limit', apply_filters( 'admin_memory_limit', WP_MAX_MEMORY_LIMIT ) );
+	public function do_database_update() {
+		wp_raise_memory_limit( 'admin' );
 
 		foreach ( $this->db_updates as $update ) {
 			if ( version_compare( $this->options()->version, $update, '<' ) ) {
@@ -152,7 +151,7 @@ abstract class Addon {
 	/**
 	 * Update version to current
 	 */
-	function update_database_version() {
+	public function update_database_version() {
 		update_option( $this->options()->prefix . 'version', $this->version, true );
 		do_action( 'automatewoo_addon_updated' );
 	}
@@ -161,11 +160,14 @@ abstract class Addon {
 	/**
 	 * Renders prompt notice for user to update
 	 */
-	function data_upgrade_prompt() {
-		AW()->admin->get_view( 'data-upgrade-prompt', [
-			'plugin_name' => $this->name,
-			'plugin_slug' => $this->id
-		]);
+	public function data_upgrade_prompt() {
+		AW()->admin->get_view(
+			'data-upgrade-prompt',
+			[
+				'plugin_name' => $this->name,
+				'plugin_slug' => $this->id,
+			]
+		);
 	}
 
 
@@ -182,7 +184,7 @@ abstract class Addon {
 	/**
 	 * Runs when the add-on plugin is activated.
 	 */
-	function activate() {
+	public function activate() {
 		flush_rewrite_rules();
 		AdminNotices::add_notice( 'addon_welcome_' . $this->id );
 	}
@@ -191,7 +193,7 @@ abstract class Addon {
 	/**
 	 * @return string
 	 */
-	function get_getting_started_url() {
+	public function get_getting_started_url() {
 		return '';
 	}
 
@@ -200,7 +202,7 @@ abstract class Addon {
 	 * @param Plugin_Data|mixed $data
 	 * @return Addon|mixed
 	 */
-	static function instance( $data ) {
+	public static function instance( $data ) {
 		if ( is_null( static::$_instance ) ) {
 			static::$_instance = new static( $data );
 		}
@@ -212,13 +214,57 @@ abstract class Addon {
 
 /**
  * @class Plugin_Data
+ *
+ * phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound
  */
 class Plugin_Data {
+
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
 	public $id;
+
+	/**
+	 * Name
+	 *
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * Version
+	 *
+	 * @var string
+	 */
 	public $version;
+
+	/**
+	 * Main plugin file
+	 *
+	 * @var string
+	 */
 	public $file;
+
+	/**
+	 * Minimum PHP version
+	 *
+	 * @var string
+	 */
 	public $min_php_version;
+
+	/**
+	 * Minimum AutomateWoo version
+	 *
+	 * @var string
+	 */
 	public $min_automatewoo_version;
+
+	/**
+	 * Minimum WooCommerce version
+	 *
+	 * @var string
+	 */
 	public $min_woocommerce_version;
 }

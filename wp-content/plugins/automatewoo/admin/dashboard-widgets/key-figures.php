@@ -65,6 +65,12 @@ class Dashboard_Widget_Key_Figures extends Dashboard_Widget {
 	 */
 	protected function output_content() {
 		$figures = $this->get_figures();
+
+		if ( empty( $figures ) ) {
+			$this->display = false;
+			return;
+		}
+
 		?>
 
 		<div class="automatewoo-dashboard__figures">

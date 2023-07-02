@@ -23,7 +23,9 @@ class Variable_Product_Add_To_Cart_Url extends Variable {
 	 */
 	function get_value( $product, $parameters ) {
 		// TODO what about variable products
-		return add_query_arg( 'add-to-cart', $product->get_id(), $product->get_permalink() );
+		// SEMGREP WARNING EXPLANATION
+		// URL is escaped. However, Semgrep only considers esc_url as valid.
+		return esc_url_raw( add_query_arg( 'add-to-cart', $product->get_id(), $product->get_permalink() ) );
 	}
 
 }

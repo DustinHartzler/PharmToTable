@@ -2,7 +2,6 @@
 
 namespace AutomateWoo\ActionScheduler;
 
-use ActionScheduler_AsyncRequest_QueueRunner as QueueRunnerAsyncRequest;
 use ActionScheduler_Lock;
 
 defined( 'ABSPATH' ) || exit;
@@ -34,10 +33,10 @@ class AsyncActionRunner {
 	/**
 	 * AsyncActionRunner constructor.
 	 *
-	 * @param QueueRunnerAsyncRequest $async_request
-	 * @param ActionScheduler_Lock    $locker
+	 * @param AW_AsyncRequest_QueueRunner $async_request
+	 * @param ActionScheduler_Lock        $locker
 	 */
-	public function __construct( QueueRunnerAsyncRequest $async_request, ActionScheduler_Lock $locker ) {
+	public function __construct( AW_AsyncRequest_QueueRunner $async_request, ActionScheduler_Lock $locker ) {
 		$this->async_request = $async_request;
 		$this->locker        = $locker;
 	}
