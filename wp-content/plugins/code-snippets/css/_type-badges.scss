@@ -22,12 +22,12 @@ h1 .snippet-type-badge, h2 .snippet-type-badge, h3 .snippet-type-badge {
 $badges: (php: $php-active, css: $css-highlight, js: $js-highlight, html: $html-active);
 
 @each $type, $color in $badges {
-	.nav-tab[data-type=#{$type}] .badge, .snippet-type-badge[data-type=#{$type}] {
+	.nav-tab[data-snippet-type=#{$type}] .badge, .snippet-type-badge[data-snippet-type=#{$type}] {
 		color: $color;
 		border-color: currentColor;
 	}
 
-	.nav-tab-inactive[data-type=#{$type}]:hover .badge {
+	.nav-tab-inactive[data-snippet-type=#{$type}]:hover .badge {
 		color: $color;
 	}
 }
@@ -39,10 +39,8 @@ $badges: (php: $php-active, css: $css-highlight, js: $js-highlight, html: $html-
 }
 
 .nav-tab.nav-tab-inactive {
-	background: #f6f7f7;
-	border-color: #f6f7f7;
+	background: transparent;
 	text-shadow: 0 1px 0 #fff;
-	float: right;
 
 	&, .badge {
 		color: #a7aaad;
@@ -53,8 +51,21 @@ $badges: (php: $php-active, css: $css-highlight, js: $js-highlight, html: $html-
 	}
 }
 
-.go-pro-button .badge {
+.go-pro-button .badge, .go-pro-badge {
 	color: #ce0000;
 	border-color: #ce0000;
 	margin-left: 1px;
+}
+
+.wp-core-ui .button.nav-tab-button {
+	margin-left: 0.5em;
+	float: right;
+	color: #a7aaad;
+	background: #f6f7f7;
+	border-color: #f6f7f7;
+
+	&:hover {
+		background-color: #fff;
+		color: #3c434a;
+	}
 }

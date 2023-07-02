@@ -35,13 +35,14 @@ class ComposerStaticInit59c4372c29034b13b29467a8519f8b6f
         'Code_Snippets\\List_Table' => __DIR__ . '/../..' . '/php/class-list-table.php',
         'Code_Snippets\\Manage_Menu' => __DIR__ . '/../..' . '/php/admin-menus/class-manage-menu.php',
         'Code_Snippets\\Plugin' => __DIR__ . '/../..' . '/php/class-plugin.php',
-        'Code_Snippets\\REST_API' => __DIR__ . '/../..' . '/php/class-rest-api.php',
+        'Code_Snippets\\REST_API\\Snippets_REST_Controller' => __DIR__ . '/../..' . '/php/rest-api/class-snippets-rest-controller.php',
         'Code_Snippets\\Settings\\Setting_Field' => __DIR__ . '/../..' . '/php/settings/class-setting-field.php',
         'Code_Snippets\\Settings_Menu' => __DIR__ . '/../..' . '/php/admin-menus/class-settings-menu.php',
         'Code_Snippets\\Snippet' => __DIR__ . '/../..' . '/php/class-snippet.php',
         'Code_Snippets\\Upgrade' => __DIR__ . '/../..' . '/php/class-upgrade.php',
         'Code_Snippets\\Validator' => __DIR__ . '/../..' . '/php/class-validator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Data_Item' => __DIR__ . '/../..' . '/php/class-data-item.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -34,7 +34,7 @@ class Contextual_Help {
 	 *
 	 * @param string $screen_name Name of current screen.
 	 */
-	public function __construct( $screen_name ) {
+	public function __construct( string $screen_name ) {
 		$this->screen_name = $screen_name;
 	}
 
@@ -80,7 +80,7 @@ class Contextual_Help {
 	 *
 	 * @return void
 	 */
-	private function add_help_tab( $id, $title, $paragraphs ) {
+	private function add_help_tab( string $id, string $title, $paragraphs ) {
 		$this->screen->add_help_tab(
 			array(
 				'title'   => $title,
@@ -105,7 +105,7 @@ class Contextual_Help {
 	 *
 	 * @return string
 	 */
-	private function get_intro_text() {
+	private function get_intro_text(): string {
 		return __( 'Snippets are similar to plugins - they both extend and expand the functionality of WordPress. Snippets are more light-weight, just a few lines of code, and do not put as much load on your server. ', 'code-snippets' );
 	}
 
@@ -113,7 +113,6 @@ class Contextual_Help {
 	 * Register and handle the help tabs for the manage snippets admin page
 	 */
 	private function load_manage_help() {
-
 		$this->add_help_tab(
 			'overview',
 			__( 'Overview', 'code-snippets' ),
@@ -136,7 +135,6 @@ class Contextual_Help {
 	 * Register and handle the help tabs for the single snippet admin page
 	 */
 	private function load_edit_help() {
-
 		$this->add_help_tab(
 			'overview',
 			__( 'Overview', 'code-snippets' ),

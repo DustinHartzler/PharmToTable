@@ -2,6 +2,9 @@
 
 namespace Code_Snippets;
 
+use Code_Snippets\REST_API\Snippets_REST_Controller;
+use function Code_Snippets\Settings\get_setting;
+
 /**
  * Functions specific to the administration interface
  *
@@ -53,10 +56,6 @@ class Admin {
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_meta_links' ), 10, 2 );
 		add_filter( 'debug_information', array( $this, 'debug_information' ) );
 		add_action( 'code_snippets/admin/manage', array( $this, 'print_notices' ) );
-
-		if ( ! empty( $_POST['save_snippet'] ) ) {
-			add_action( 'code_snippets/allow_execute_snippet', array( $this, 'prevent_exec_on_save' ), 10, 3 );
-		}
 	}
 
 	/**
@@ -72,40 +71,11 @@ class Admin {
 	 *
 	 * @since 1.7.1
 	 */
-	public function mu_menu_items( $menu_items ) {
+	public function mu_menu_items( array $menu_items ): array {
 		$menu_items['snippets'] = __( 'Snippets', 'code-snippets' );
 		$menu_items['snippets_settings'] = __( 'Snippets &raquo; Settings', 'code-snippets' );
 
 		return $menu_items;
-	}
-
-	/**
-	 * Prevent the snippet currently being saved from being executed
-	 * so that it is not run twice (once normally, once when validated)
-	 *
-	 * @param bool   $exec       Whether the snippet will be executed.
-	 * @param int    $exec_id    ID of the snippet being executed.
-	 * @param string $table_name Name of the database table the snippet is stored in.
-	 *
-	 * @return bool Whether the snippet will be executed.
-	 */
-	public function prevent_exec_on_save( $exec, $exec_id, $table_name ) {
-
-		if ( ! isset( $_POST['save_snippet'], $_POST['snippet_id'] ) ) {
-			return $exec;
-		}
-
-		if ( code_snippets()->db->get_table_name() !== $table_name ) {
-			return $exec;
-		}
-
-		$id = intval( $_POST['snippet_id'] );
-
-		if ( $id === $exec_id ) {
-			return false;
-		}
-
-		return $exec;
 	}
 
 	/**
@@ -116,7 +86,7 @@ class Admin {
 	 * @return array<string> Modified plugin action links
 	 * @since 2.0.0
 	 */
-	public function plugin_settings_link( $links ) {
+	public function plugin_settings_link( array $links ): array {
 		$format = '<a href="%1$s" title="%2$s">%3$s</a>';
 
 		array_unshift(
@@ -151,9 +121,9 @@ class Admin {
 	 * @return array<string> The modified plugin info links.
 	 * @since 2.0.0
 	 */
-	public function plugin_meta_links( $links, $file ) {
+	public function plugin_meta_links( array $links, string $file ): array {
 
-		/* We only want to affect the Code Snippets plugin listing */
+		// We only want to affect the Code Snippets plugin listing.
 		if ( plugin_basename( PLUGIN_FILE ) !== $file ) {
 			return $links;
 		}
@@ -201,7 +171,7 @@ class Admin {
 	 * @return array<string, array<string, mixed>> Updated Site Health information.
 	 * @author sc0ttkclark
 	 */
-	public function debug_information( $info ) {
+	public function debug_information( array $info ): array {
 		$fields = array();
 
 		// build the debug information from snippet data.
@@ -317,25 +287,31 @@ class Admin {
 	 *
 	 * @return void
 	 */
-	public static function render_snippet_type_tab( $type_name, $label, $current_type = '' ) {
+	public static function render_snippet_type_tab( string $type_name, string $label, string $current_type = '' ) {
 		if ( $type_name === $current_type ) {
-			printf( '<a class="nav-tab nav-tab-active" data-type="%s">', esc_attr( $type_name ) );
+			printf( '<a class="nav-tab nav-tab-active" data-snippet-type="%s">', esc_attr( $type_name ) );
 
 		} elseif ( Plugin::is_pro_type( $type_name ) ) {
 			printf(
-				'<a class="nav-tab nav-tab-inactive" data-type="%s" title="%s" href="https://codesnippets.pro/pricing/" target="_blank">',
+				'<a class="nav-tab nav-tab-inactive" data-snippet-type="%s" title="%s" href="https://codesnippets.pro/pricing/" target="_blank">',
 				esc_attr( $type_name ),
 				esc_attr__( 'Available in Code Snippets Pro (external link)', 'code-snippets' )
 			);
 
 		} else {
 			printf(
-				'<a class="nav-tab" href="%s" data-type="%s">',
+				'<a class="nav-tab" href="%s" data-snippet-type="%s">',
 				esc_url( add_query_arg( 'type', $type_name ) ),
 				esc_attr( $type_name )
 			);
 		}
 
-		echo esc_html( $label ), 'all' === $type_name ? '' : ' <span class="badge">' . esc_html( $type_name ) . '</span>', '</a>';
+		echo esc_html( $label );
+
+		if ( 'all' !== $type_name ) {
+			echo ' <span class="badge">' . esc_html( $type_name ) . '</span>';
+		}
+
+		echo '</a>';
 	}
 }

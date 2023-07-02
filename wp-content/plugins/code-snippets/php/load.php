@@ -36,6 +36,13 @@ const PLUGIN_FILE = CODE_SNIPPETS_FILE;
  */
 const CACHE_GROUP = 'code_snippets';
 
+/**
+ * Namespace used for REST API endpoints.
+ *
+ * @var string
+ */
+const REST_API_NAMESPACE = 'code-snippets/v';
+
 // Load dependencies with Composer.
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
@@ -45,7 +52,7 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
  * @since 2.6.0
  * @return Plugin
  */
-function code_snippets() {
+function code_snippets(): Plugin {
 	static $plugin;
 
 	if ( is_null( $plugin ) ) {

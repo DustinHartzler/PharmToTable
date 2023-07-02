@@ -15,7 +15,7 @@ class Export_Attachment extends Export {
 	 * @param string $format    File format. Used for file extension.
 	 * @param string $mime_type File MIME type. Used for Content-Type header.
 	 */
-	private function do_headers( $format, $mime_type = 'text/plain' ) {
+	private function do_headers( string $format, string $mime_type = 'text/plain' ) {
 		header( 'Content-Disposition: attachment; filename=' . sanitize_file_name( $this->build_filename( $format ) ) );
 		header( sprintf( 'Content-Type: %s; charset=%s', sanitize_mime_type( $mime_type ), get_bloginfo( 'charset' ) ) );
 	}
@@ -26,7 +26,10 @@ class Export_Attachment extends Export {
 	public function download_snippets_json() {
 		$this->do_headers( 'json', 'application/json' );
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo $this->export_snippets_json();
+		echo wp_json_encode(
+			$this->create_export_object(),
+			apply_filters( 'code_snippets/export/json_encode_options', 0 )
+		);
 		exit;
 	}
 

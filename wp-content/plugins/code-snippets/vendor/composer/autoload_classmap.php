@@ -20,11 +20,12 @@ return array(
     'Code_Snippets\\List_Table' => $baseDir . '/php/class-list-table.php',
     'Code_Snippets\\Manage_Menu' => $baseDir . '/php/admin-menus/class-manage-menu.php',
     'Code_Snippets\\Plugin' => $baseDir . '/php/class-plugin.php',
-    'Code_Snippets\\REST_API' => $baseDir . '/php/class-rest-api.php',
+    'Code_Snippets\\REST_API\\Snippets_REST_Controller' => $baseDir . '/php/rest-api/class-snippets-rest-controller.php',
     'Code_Snippets\\Settings\\Setting_Field' => $baseDir . '/php/settings/class-setting-field.php',
     'Code_Snippets\\Settings_Menu' => $baseDir . '/php/admin-menus/class-settings-menu.php',
     'Code_Snippets\\Snippet' => $baseDir . '/php/class-snippet.php',
     'Code_Snippets\\Upgrade' => $baseDir . '/php/class-upgrade.php',
     'Code_Snippets\\Validator' => $baseDir . '/php/class-validator.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Data_Item' => $baseDir . '/php/class-data-item.php',
 );
