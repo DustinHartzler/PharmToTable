@@ -2,11 +2,13 @@
 /**
  * The Template for displaying image swatches field.
  *
- * @version 6.0.0
+ * @version 6.4.0
  * @package woocommerce-product-addons
  *
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
+
+global $product;
 
 $loop             = 0;
 $field_name       = ! empty( $addon['field_name'] ) ? $addon['field_name'] : '';
@@ -53,7 +55,7 @@ foreach ( $addon['options'] as $i => $option ) {
 	$image_title = $option['label'] . ' ' . $price_tip;
 	?>
 		<a href="#" title="<?php echo esc_attr( $image_title ); ?>" class="wc-pao-addon-image-swatch" data-value="<?php echo esc_attr( sanitize_title( $option['label'] ) . '-' . $loop ); ?>" data-price="<?php echo esc_attr( ' <span class="wc-pao-addon-image-swatch-price">' . wptexturize( $option[ 'label' ] ) ); ?> <?php echo ! empty( $price_display ) ? esc_attr( '<span class="wc-pao-addon-price">' . wp_kses_post( $price_display ) . '</span>' ) : ''; ?>">
-			<img src="<?php echo esc_url( $image_src[0] ? $image_src[0] : wc_placeholder_img_src() ); ?>" alt="<?php echo wp_strip_all_tags( $image_title ); ?>" />
+			<img src="<?php echo esc_url( is_array( $image_src ) && $image_src[0] ? $image_src[0] : wc_placeholder_img_src() ); ?>" alt="<?php echo esc_attr( wp_strip_all_tags( $image_title ) ); ?>" />
 		</a>
 
 <?php } ?>
@@ -79,7 +81,11 @@ foreach ( $addon['options'] as $i => $option ) {
 		$price_type = ! empty( $option['price_type'] ) ? $option['price_type'] : '';
 		$label      = ! empty( $option['label'] ) ? $option['label'] : '';
 
-		$price_for_display = apply_filters( 'woocommerce_addons_add_price_to_name', true ) ? apply_filters(
+		apply_filters_deprecated( 'woocommerce_addons_add_price_to_name', array( true, $product ), '6.4.0', 'woocommerce_addons_add_product_price_to_value' );
+
+		$add_price_to_value = apply_filters( 'woocommerce_addons_add_product_price_to_value', true, $product );
+
+		$price_for_display = $add_price_to_value ? apply_filters(
 			'woocommerce_product_addons_option_price',
 			$price_raw ? '(' . wc_price( WC_Product_Addons_Helper::get_product_addon_price_for_display( $price_raw ) ) . ')' : '',
 			$option,

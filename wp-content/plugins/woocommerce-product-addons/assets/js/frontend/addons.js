@@ -240,13 +240,6 @@
 			 * Variable Products.
 			 */
 
-			// Do this when the variations change because we need to know if the product is in a valid configuration.
-			// The woocommerce-product-addons-update event will determine whether to show the subtotal panel or not.
-			$( ".variations_form" ).on( "woocommerce_variation_select_change", function () {
-				self.validation.validate();
-				self.updateTotals();
-			} );
-
 			// Reset addon totals when the variation selection is cleared. The form is not valid until a variation is selected.
 			self.$el.on( 'click', '.reset_variations', function () {
 				self.totals.reset();
@@ -511,6 +504,7 @@
 			self.total             = 0;
 			self.total_raw         = 0;
 			self.base_price        = self.$totals.data( 'price' );
+			self.product_id        = self.is_variable ? self.$variation_input.val() : self.$totals.data( 'product-id' );
 
 			/**
 			 * Compatibility with Smart Coupons self declared gift amount purchase.
@@ -919,8 +913,9 @@
 				 * Then, display one line item for each selected addon followed by each price (given that one exists).
 				 */
 				if ( formatted_sub_total ) {
-					var product_name  = self.$form.find( '.wc-pao-addon-container' ).data( 'product-name' ),
-						product_price = self.formatMoney( product_total_price );
+					var product_name       = self.$form.find( '.wc-pao-addon-container' ).data( 'product-name' ),
+						product_price      = self.formatMoney( product_total_price ),
+						product_tax_status = self.$form.find( '.wc-pao-addon-container' ).data( 'product-tax-status' );
 
 					/**
 					 * Bookings compatibility code.
@@ -1033,6 +1028,7 @@
 
 					// A suffix is present, but no special labels are used - meaning we don't need to figure out any other special values - just display the plain text value
 					if (
+						'taxable' === product_tax_status &&
 						! has_custom_price_with_taxes &&
 						false === woocommerce_addons_params.price_display_suffix.indexOf( '{price_including_tax}' ) > -1 &&
 						false === woocommerce_addons_params.price_display_suffix.indexOf( '{price_excluding_tax}' ) > -1
