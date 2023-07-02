@@ -2,9 +2,9 @@
 /**
  * My Account > Affiliate > Profile
  *
- * @package affiliate-for-woocommerce/templates/my-account/
- * @since   5.7.0
- * @version 1.2.0
+ * @package  affiliate-for-woocommerce/templates/my-account/
+ * @since    5.7.0
+ * @version  1.2.1
  */
 
 // Exit if accessed directly.
@@ -30,7 +30,8 @@ $referral_url_pattern = ( 'yes' === $afwc_use_pretty_referral_links ) ? ( $pname
 		</p>
 		<p id="afwc_id_save_wrap" style="display: none" ><?php echo esc_html_x( 'Change affiliate identifier: ', 'label to change affiliate identifier', 'affiliate-for-woocommerce' ); ?>
 			<input type="text" id="afwc_ref_url_id" value="<?php echo esc_attr( $affiliate_identifier ); ?>"/>
-			<button type="button" id="afwc_save_identifier" name="afwc_save_identifier"><?php echo esc_html_x( 'Save', 'save button', 'affiliate-for-woocommerce' ); ?></button>
+			<a href="#" id="afwc_save_identifier" name="afwc_save_identifier" title="<?php echo esc_html_x( 'Save', 'save button', 'affiliate-for-woocommerce' ); ?>"><i class="fa fa-save"></i></a>
+			<a href="#" id="afwc_cancel_change_identifier" name="afwc_cancel_change_identifier" title="<?php echo esc_attr_x( 'Cancel', 'label to cancel the action to change affiliate identifier', 'affiliate-for-woocommerce' ); ?>"><i class="fa fa-light fa-ban"></i></a>
 		</p>
 		<p id="afwc_id_msg" style="display: none"></p>
 		<p id="afwc_save_id_loader" style="display: none"><img src="<?php echo esc_url( WC()->plugin_url() . '/assets/images/wpspin-2x.gif' ); ?>" ></p>

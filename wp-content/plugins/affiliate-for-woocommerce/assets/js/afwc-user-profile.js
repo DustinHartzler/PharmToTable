@@ -11,7 +11,7 @@ jQuery(function(){
 		jQuery(document).on( 'click', '#afwc_actions', function(e) {
 			e.preventDefault();
 			jQuery('#afwc_is_affiliate_row input[name="afwc_is_affiliate"]')
-				.val(jQuery(this).data('affiliate-status') || '')
+				.val(jQuery(this).attr('data-affiliate-status') || '')
 				.prop('checked',true);
 			jQuery('input:submit.button-primary').trigger('click');
 		});

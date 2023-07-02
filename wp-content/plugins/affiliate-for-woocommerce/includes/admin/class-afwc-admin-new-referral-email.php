@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/admin/
  * @since    6.7.0
- * @version  1.0.0
+ * @version  1.0.1
  */
 
 // Exit if accessed directly.
@@ -23,9 +23,7 @@ if ( ! class_exists( 'AFWC_Admin_New_Referral_Email' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
-
 			add_action( 'woocommerce_email_order_meta', array( $this, 'affiliate_referral_details_email' ), 10, 4 );
-
 		}
 
 		/**
@@ -66,34 +64,36 @@ if ( ! class_exists( 'AFWC_Admin_New_Referral_Email' ) ) {
 			$afwc_api          = new AFWC_API();
 			$affiliate_details = is_callable( array( $afwc_api, 'get_affiliate_by_order' ) ) ? $afwc_api->get_affiliate_by_order( $order_id, 'all' ) : array();
 
-			if ( is_array( $affiliate_details ) ) {
-				$affiliate_id           = ! empty( $affiliate_details['affiliate_id'] ) ? $affiliate_details['affiliate_id'] : 0;
-				$affiliate_info         = get_userdata( $affiliate_id );
-				$affiliate_display_name = ! empty( $affiliate_info->display_name ) ? $affiliate_info->display_name : $affiliate_info->user_nicename;
+			if ( empty( $affiliate_details ) || ! is_array( $affiliate_details ) ) {
+				return;
+			}
 
-				$order_currency_symbol = ! empty( $affiliate_details['currency_id'] ) ? get_woocommerce_currency_symbol( $affiliate_details['currency_id'] ) : get_woocommerce_currency_symbol();
-				$commission_amount     = ! empty( $affiliate_details['amount'] ) ? $affiliate_details['amount'] : 0.00;
+			$affiliate_id           = ! empty( $affiliate_details['affiliate_id'] ) ? $affiliate_details['affiliate_id'] : 0;
+			$affiliate_info         = get_userdata( $affiliate_id );
+			$affiliate_display_name = ! empty( $affiliate_info->display_name ) ? $affiliate_info->display_name : $affiliate_info->user_nicename;
 
-				$campaign_id = ! empty( $affiliate_details['campaign_id'] ) ? $affiliate_details['campaign_id'] : 0;
-				if ( ! empty( $campaign_id ) ) {
-					global $wpdb;
-					$campaign_name = $wpdb->get_var( // phpcs:ignore
-										$wpdb->prepare( // phpcs:ignore
-												"SELECT title
-													FROM {$wpdb->prefix}afwc_campaigns
-													WHERE id = %d",
-											$campaign_id
-										)
-					);
-				}
+			$order_currency_symbol = ! empty( $affiliate_details['currency_id'] ) ? get_woocommerce_currency_symbol( $affiliate_details['currency_id'] ) : get_woocommerce_currency_symbol();
+			$commission_amount     = ! empty( $affiliate_details['amount'] ) ? $affiliate_details['amount'] : 0.00;
 
-				$conversion_type = ! empty( $affiliate_details['type'] ) ? $affiliate_details['type'] : '';
+			$campaign_id = ! empty( $affiliate_details['campaign_id'] ) ? $affiliate_details['campaign_id'] : 0;
+			if ( ! empty( $campaign_id ) ) {
+				global $wpdb;
+				$campaign_name = $wpdb->get_var( // phpcs:ignore
+									$wpdb->prepare( // phpcs:ignore
+											"SELECT title
+												FROM {$wpdb->prefix}afwc_campaigns
+												WHERE id = %d",
+										$campaign_id
+									)
+				);
+			}
 
-				if ( $plain_text ) {
-					include AFWC_PLUGIN_DIRPATH . '/templates/emails/plain/afwc-admin-new-referral.php'; // phpcs:ignore
-				} else {
-					include AFWC_PLUGIN_DIRPATH . '/templates/emails/afwc-admin-new-referral.php'; // phpcs:ignore
-				}
+			$conversion_type = ! empty( $affiliate_details['type'] ) ? $affiliate_details['type'] : '';
+
+			if ( $plain_text ) {
+				include AFWC_PLUGIN_DIRPATH . '/templates/emails/plain/afwc-admin-new-referral.php'; // phpcs:ignore
+			} else {
+				include AFWC_PLUGIN_DIRPATH . '/templates/emails/afwc-admin-new-referral.php'; // phpcs:ignore
 			}
 
 		}

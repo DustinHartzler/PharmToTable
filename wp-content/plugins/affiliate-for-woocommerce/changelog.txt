@@ -1,5 +1,115 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2023-07-01 - version 6.17.0
+* Fix: PHP Fatal error when sending a welcome email on affiliate approval [PHP 8.0+]
+* Fix: ArgumentCountError for sprintf() function when registering submenu [PHP 8.0+]
+* Fix: SSL verification is disabled but should not be for PayPal MassPay
+* Update: Additional validation for PayPal email address and commission amount to prevent PayPal Payout without it
+* Update: POT file
+
+2023-06-22 - version 6.16.0
+* New: Show the affiliate's children chain in the Network tab in My Account > Affiliate [User]
+* Update: Remove '!#campaign' from the campaigns tab URL in My Account > Affiliate [User]
+* Update: UI/UX improvements in Commission Plans [Admin]
+* Update: POT file
+
+2023-06-16 - version 6.15.0
+* New: WooCommerce 7.8.0 compatible
+* New: PHP 8.1 compatible
+* New: Send a welcome email to the affiliate if created by the user role either when signing up at the checkout or My account > Register
+* Fix: If a plan is dragged and dropped at the same place, the save order button gets enabled [Admin]
+* Fix: Non-existing plan IDs not deleted when saving the plan order [Admin]
+* Update: Disable 'autoload' for redirect and form fields options
+* Update: Affiliate Welcome Email
+* Update: Code improvements
+* Update: POT file
+
+2023-06-09 - version 6.14.0
+* New: Support for the new Cart and Checkout (WooCommerce) Blocks (https://woocommerce.com/checkout-blocks/)
+* Fix: Commission amount accepting non-numeric input in commission plans [Admin]
+* Fix: Referral data is not deleted when the order is permanently deleted (on HPOS)
+* Fix: Referral data is not updated when an order is untrashed (on HPOS)
+* Fix: Untrashing an order setting incorrect referral order status in some cases (without HPOS)
+* Fix: Few affiliate order meta are not deleted when an order is permanently deleted
+* Update: Check the current screen when adding a meta box on the orders add/edit page [Admin]
+* Update: Use a function to check if HPOS is enabled
+* Update: Remove usage of AFWC_IS_HPOS_ENABLED constant
+* Update: Code improvements
+* Update: POT file
+
+2023-06-02 - version 6.13.0
+* New: Documentation link in settings
+* Fix: Affiliate identifier changed in the input even when canceling changes in My Account > Affiliate > Profile [User]
+* Fix: Clearing Affiliate identifier and canceling leaving the field empty when editing again in My Account > Affiliate > Profile [User]
+* Fix: Multi-tier accepting commission greater than 100 for percentage commission type [Admin]
+* Update: Error handling for date picker error in the browser console on the affiliate dashboard [Admin]
+* Update: Code improvements when updating the affiliate status under the user profile [Admin]
+* Update: Welcome page for onboarding [Admin]
+* Update: Documentation links
+* Update: POT file
+
+2023-05-26 - version 6.12.0
+* New: Rule for referral medium (link or coupon) based commission in commission plans
+* New: Use payout status as text instead of an icon in the Referrals table on My Account > Affiliate > Reports [User]
+* New: Cancel icon to discard affiliate identifier changes in My Account > Affiliate > Profile [User]
+* Fix: Load more showing when no Referrals or Payouts to load on the affiliate dashboard [Admin]
+* Fix: Multi-tier commission type incorrectly shows Flat for Percentage commission type when creating a new plan [Admin]
+* Fix: Empty table data messages incorrectly aligned across three tables in My Account > Affiliate > Reports [User]
+* Fix: Error message missing when trying to save empty or same affiliate identifier in My Account > Affiliate > Profile [User]
+* Update: Empty table data messages across three tables in My Account > Affiliate > Reports [User]
+* Update: 'No more data to load' CSS in My Account > Affiliate > Reports [User]
+* Update: Show full product name in Products table on affiliate in My Account > Affiliate > Reports [User]
+* Update: Column width for Method and Notes in Payout History table on My Account > Affiliate > Reports [User]
+* Update: Use an icon instead of a button to save the affiliate identifier in My Account > Affiliate > Profile [User]
+* Update: Error message when trying to save an invalid affiliate identifier in My Account > Affiliate > Profile [User]
+* Update: POT file
+
+2023-05-20 - version 6.11.0
+* New: WordPress 6.2.1 compatible
+* New: Click to copy the campaign referral link in My Account > Affiliate > Campaigns [User]
+* New: Multi-tier UI/UX in the commission plan [Admin]
+* New: Show total commissions across tiers for multi-tier in the commission plan [Admin]
+* New: Date validation in the affiliate dashboard [Admin]
+* New: Set min-max dates in the affiliate dashboard [Admin]
+* New: Documentation links for campaigns and commission plans [Admin]
+* Fix: PHP Fatal error when trying to add/edit an order in lower versions of WooCommerce (without HPOS) [Admin]
+* Fix: Few errors incorrectly showing as warning notifications in the commission plan and campaigns [Admin]
+* Fix: Incorrect error notification if the amount is greater than 100 for percentage commissions in the commission plan [Admin]
+* Fix: Additional classes for title alignment on the commission plans listing [Admin]
+* Update: Rename conditions to rules in the commission plan [Admin]
+* Update: UI/UX improvements in the commission plan [Admin]
+* Update: UI/UX improvements in the campaigns [Admin]
+* Update: Campaigns tab description [Admin]
+* Update: Campaigns view in My Account > Affiliate > Campaigns [User]
+* Update: Notification messages in the commission plans and campaigns [Admin]
+* Update: Code improvements
+* Update: POT file
+
+2023-05-12 - version 6.10.0
+* New: WooCommerce 7.7.0 compatible
+* Fix: Security vulnerability where nonce validation is bypassed with Contact Form 7
+* Fix: Current time passed for from and to dates instead of the full day [Admin]
+* Update: Code improvements for Search & Filter, Smart Dates & Export card model close [Admin]
+* Update: POT file
+
+2023-05-09 - version 6.9.0
+* New: Smart dates (11 readymade date filters) in the date picker on the affiliate dashboard [Admin]
+* New: Record additional visitors' data during a referral hit
+* New: Cookie to capture the hit ID of a referral
+* New: Error messages for failed API requests [Admin]
+* Fix: Error notice showing warning notice style [Admin]
+* Fix: Storewide commission plan title misaligned compared to the rest of the plan's title [Admin]
+* Update: Remove date filters 'This Month', 'Last Month', 'This year' from Search & Filter [Admin]
+* Update: Database schema for default values and new column
+* Update: Messages for linking and unlinking affiliates in lifetime commissions [Admin]
+* Update: [GDPR] Additional visitor's data in personal data export & erase [Admin]
+* Update: POT file
+
+2023-04-28 - version 6.8.1
+* Fix: Using "Pretty affiliate links" gives internal server error in some cases
+* Update: Messages for self-linking, linking, and unlinking affiliates in lifetime commissions [Admin]
+* Update: POT file
+
 2023-04-21 - version 6.8.0
 * New: WooCommerce 7.6.0 compatible
 * Fix: Hidden fields in the registration form throwing console error for logged-in users [User]
@@ -67,7 +177,7 @@
 * Update: POT file
 
 2023-01-18 - version 6.2.0
-* New: 'Orders' tab is now 'Referrals' in the Affiliate Dashboard [Admin]
+* New: 'Orders' tab is now 'Referrals' in the affiliate dashboard [Admin]
 * Fix: Multiple referrals of the same order incorrectly marked when paying commission or updating commission status for an affiliate [Admin]
 * Fix: Multiple referrals of the same order not showing after the commission payout of an affiliate [Admin]
 * Fix: KPIs showing 0 in some cases
@@ -211,7 +321,7 @@
 * New: Loader for send payout, Storewide and affiliate KPIs [Admin]
 * New: Load translation files through 'load_plugin_textdomain'
 * Fix: Applying date filters reverting translations to English from any translated language in My Account > Affiliate > Reports [User]
-* Fix: 'Load more' stays enabled when no data to load in Payout History on My Account > Affiliate > Reports [User] 
+* Fix: 'Load more' stays enabled when no data to load in Payout History on My Account > Affiliate > Reports [User]
 * Fix: Uploads directory path causing write permission issue during CSV export on Flywheel hosting [Admin]
 * Update: UI improvements for small devices on My Account > Affiliate > Reports [User]
 * Update: ALT text for affiliate avatar [Admin]

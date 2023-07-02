@@ -1,14 +1,15 @@
 <?php
 /**
- * Class for ugrading Ddatabase of Affiliate For WooCommerce
+ * Class for ugrading Database of Affiliate For WooCommerce
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.2.1
- * @version     1.2.4
+ * @version     1.2.6
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
@@ -64,7 +65,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 */
 		public function initialize_db_upgrade() {
 			$current_db_version = get_option( '_afwc_current_db_version' );
-			if ( version_compare( $current_db_version, '1.3.0', '<' ) || empty( $current_db_version ) ) {
+			if ( version_compare( $current_db_version, '1.3.2', '<' ) || empty( $current_db_version ) ) {
 				update_option( 'afwc_db_upgrade_running', true, 'no' );
 				$this->do_db_upgrade();
 			}
@@ -128,6 +129,14 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 
 				if ( '1.2.9' === get_option( '_afwc_current_db_version' ) ) {
 					$this->upgrade_to_1_3_0();
+				}
+
+				if ( '1.3.0' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_3_1();
+				}
+
+				if ( '1.3.1' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_3_2();
 				}
 
 				update_option( 'afwc_db_upgrade_running', false, 'no' );
@@ -665,6 +674,94 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 				}
 			}
 			update_option( '_afwc_current_db_version', '1.3.0', 'no' );
+		}
+
+		/**
+		 * Function to upgrade the database to version 1.3.1.
+		 * Update the flag for the flush rewrite rule.
+		 */
+		public function upgrade_to_1_3_1() {
+
+			if ( 'not_found' === get_option( 'afwc_flushed_rules' ) ) {
+				update_option( 'afwc_flushed_rules', 1, 'no' );
+			} else {
+				delete_option( 'afwc_flushed_rules' );
+			}
+
+			update_option( '_afwc_current_db_version', '1.3.1', 'no' );
+		}
+
+		/**
+		 * Function to upgrade the database to version 1.3.2.
+		 * Update afwc_hits table and afwc_referral table.
+		 */
+		public function upgrade_to_1_3_2() {
+			global $wpdb;
+			// Operation on afwc_hits table.
+			$afwc_hits_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $wpdb->prefix . 'afwc_hits' ) . '%' ) ); // phpcs:ignore
+
+			// Check if table exist.
+			if ( ! empty( $afwc_hits_table ) ) {
+
+				// Check if columns exist.
+				$cols_from_afwc_hits = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_hits" ); // phpcs:ignore
+
+				// Add column id as primary key to afwc_hits if it doesn't exist.
+				if ( ! in_array( 'id', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits ADD COLUMN id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST" ); // phpcs:ignore
+				}
+
+				// Modify column ip in afwc_hits if it exists.
+				if ( in_array( 'ip', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits MODIFY COLUMN ip VARCHAR(100) DEFAULT NULL" ); // phpcs:ignore
+				}
+
+				// Modify column user_id in afwc_hits if it exists.
+				if ( in_array( 'user_id', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits MODIFY COLUMN user_id BIGINT(20) DEFAULT 0" ); // phpcs:ignore
+				}
+
+				// Modify column count in afwc_hits if it exists.
+				if ( in_array( 'count', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits MODIFY COLUMN count BIGINT(20) DEFAULT 1" ); // phpcs:ignore
+				}
+
+				// Modify column type in afwc_hits if it exists.
+				if ( in_array( 'type', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits MODIFY COLUMN type ENUM('link', 'coupon') DEFAULT 'link'" ); // phpcs:ignore
+				}
+
+				// Modify column campaign_id in afwc_hits if it exists.
+				if ( in_array( 'campaign_id', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits MODIFY COLUMN campaign_id INT(20) UNSIGNED DEFAULT 0" ); // phpcs:ignore
+				}
+
+				// Add column user_agent to afwc_hits if it doesn't exist.
+				if ( ! in_array( 'user_agent', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits ADD COLUMN user_agent TEXT DEFAULT NULL" ); // phpcs:ignore
+				}
+
+				// Add column url to afwc_hits if it doesn't exist.
+				if ( ! in_array( 'url', $cols_from_afwc_hits, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits ADD COLUMN url TEXT DEFAULT NULL" ); // phpcs:ignore
+				}
+			}
+
+			// Operation on afwc_referrals table.
+			$afwc_referrals_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $wpdb->prefix . 'afwc_referrals' ) . '%' ) ); // phpcs:ignore
+
+			// Check if table exist.
+			if ( ! empty( $afwc_referrals_table ) ) {
+				$cols_from_referral_table = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_referrals" ); // phpcs:ignore
+
+				// Add new column `hit_id` if it doesn't exist.
+				if ( ! in_array( 'hit_id', $cols_from_referral_table, true ) ) {
+					$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_referrals ADD COLUMN hit_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0" ); // phpcs:ignore
+				}
+			}
+
+			update_option( '_afwc_current_db_version', '1.3.2', 'no' );
+
 		}
 
 	}

@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/
  * @since    6.0.0
- * @version  1.0.0
+ * @version  1.0.1
  */
 
 // Exit if accessed directly.
@@ -30,9 +30,13 @@ if ( ! class_exists( 'AFWC_Rewrite_Rules' ) ) {
 		 *  Constructor
 		 */
 		public function __construct() {
-			add_action( 'init', array( $this, 'rewrite_rules' ), 999998 );
 			add_action( 'admin_init', array( $this, 'maybe_flush_rewrite_rules' ), 999999 );
-			add_filter( 'redirect_canonical', array( $this, 'prevent_homepage_redirects' ), 0, 2 );
+
+			// Hooks for pretty affiliate links.
+			if ( 'yes' === get_option( 'afwc_use_pretty_referral_links', 'no' ) ) {
+				add_action( 'init', array( $this, 'rewrite_rules' ), 999998 );
+				add_filter( 'redirect_canonical', array( $this, 'prevent_homepage_redirects' ), 0, 2 );
+			}
 		}
 
 		/**
@@ -79,10 +83,10 @@ if ( ! class_exists( 'AFWC_Rewrite_Rules' ) ) {
 		 * Flush rewrite rules if needed
 		 */
 		public function maybe_flush_rewrite_rules() {
-			if ( get_option( 'afwc_flushed_rules_pretty_referral_links' ) ) {
+			if ( get_option( 'afwc_flushed_rules' ) ) {
 				// Flush rewrite rules.
 				flush_rewrite_rules();
-				delete_option( 'afwc_flushed_rules_pretty_referral_links' );
+				delete_option( 'afwc_flushed_rules' );
 			}
 		}
 

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       5.2.0
- * @version     1.1.4
+ * @version     1.2.0
  */
 
 // Exit if accessed directly.
@@ -65,6 +65,9 @@ if ( ! class_exists( 'AFWC_Registration_Submissions' ) ) {
 			add_filter( 'afwc_registration_form_afwc_email', array( $this, 'validate_email' ), 9, 2 );
 			add_filter( 'afwc_registration_form_afwc_password', array( $this, 'validate_password' ), 9, 2 );
 			add_filter( 'afwc_registration_form_afwc_paypal_email', array( $this, 'validate_paypal_email' ), 9, 2 );
+
+			// Trigger to check whether the new registered user is approved by the affiliate role.
+			add_action( 'woocommerce_created_customer', array( $this, 'maybe_approved_by_user_role_after_signup' ) );
 		}
 
 		/**
@@ -528,6 +531,37 @@ if ( ! class_exists( 'AFWC_Registration_Submissions' ) ) {
 			return $is_approved;
 		}
 
+		/**
+		 * Function to do the affiliate approval actions if the affiliate is approved by the user role after signup.
+		 *
+		 * @param integer $user_id The newly registered user id.
+		 *
+		 * @return void.
+		 */
+		public function maybe_approved_by_user_role_after_signup( $user_id = 0 ) {
+
+			if ( empty( $user_id ) ) {
+				return;
+			}
+
+			$is_affiliate = afwc_is_user_affiliate( intval( $user_id ) );
+
+			// Send welcome email to the affiliate if approved.
+			if ( 'yes' === $is_affiliate && is_callable( array( 'AFWC_Emails', 'is_afwc_mailer_enabled' ) ) && true === AFWC_Emails::is_afwc_mailer_enabled( 'afwc_email_welcome_affiliate' ) ) {
+				// Trigger email.
+				do_action(
+					'afwc_email_welcome_affiliate',
+					array(
+						'affiliate_id'     => $user_id,
+						'is_auto_approved' => 'yes',
+						'approval_action'  => 'user_role',
+					)
+				);
+			}
+		}
+
 	}
 
 }
+
+AFWC_Registration_Submissions::get_instance();

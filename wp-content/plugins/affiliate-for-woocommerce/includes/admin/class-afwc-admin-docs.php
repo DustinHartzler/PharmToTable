@@ -1,11 +1,10 @@
 <?php
 /**
- * Main class for Affiliate For WooCommerce Admin Docs
+ * Class for Affiliate For WooCommerce Admin Welcome page.
  *
- * @since       1.0.0
- * @version     1.0.1
- *
- * @package     affiliate-for-woocommerce/includes/admin/
+ * @package   affiliate-for-woocommerce/includes/admin/
+ * @since     1.0.0
+ * @version   1.0.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +19,7 @@ if ( ! class_exists( 'AFWC_Admin_Docs' ) ) {
 	class AFWC_Admin_Docs {
 
 		/**
-		 * Include Admin Doc file
+		 * Include About file.
 		 */
 		public static function afwc_docs() {
 			global $wpdb;

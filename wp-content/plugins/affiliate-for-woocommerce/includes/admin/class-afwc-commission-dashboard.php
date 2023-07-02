@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.5.0
- * @version     1.3.4
+ * @version     1.3.6
  */
 
 // Exit if accessed directly.
@@ -73,7 +73,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 				if ( 'commission' === $key ) {
 					$params[ $key ] = wp_unslash( $value );
 				} else {
-					$params[ $key ] = trim( wc_clean( wp_unslash( $value ) ) );
+					$params[ $key ] = wc_clean( wp_unslash( $value ) );
 				}
 			}
 
@@ -352,7 +352,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 
 			if ( ! empty( $type ) ) {
 				$function    = 'get_' . $type . '_id_name_map';
-				$rule_values = self::$function( $term );
+				$rule_values = is_callable( array( 'self', $function ) ) ? self::$function( $term ) : array();
 			}
 
 			echo wp_json_encode( $rule_values );
@@ -534,7 +534,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			$data = json_decode( $params['data'], true );
 			foreach ( $data as $type => $ids ) {
 				$function             = 'get_' . $type . '_id_name_map';
-				$rule_values[ $type ] = self::$function( $ids, false );
+				$rule_values[ $type ] = is_callable( array( 'self', $function ) ) ? self::$function( $ids, false ) : array();
 			}
 
 			if ( ! empty( $rule_values ) ) {

@@ -3,8 +3,8 @@ Contributors: storeapps, niravmehta, ratnakardubey, Tarun.Parswani, Mansi Shah, 
 Donate link: https://www.storeapps.org/
 Tags: affiliates, affiliate wordpress, commission, woocommerce, affiliatewp, ecommerce, partner, share, affiliate plugin
 Requires at least: 5.0.0
-Tested up to: 6.1.1
-Stable tag: 6.8.0
+Tested up to: 6.2.2
+Stable tag: 6.17.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

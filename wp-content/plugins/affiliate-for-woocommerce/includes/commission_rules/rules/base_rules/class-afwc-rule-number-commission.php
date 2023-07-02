@@ -2,14 +2,14 @@
 /**
  * Class for Rule_Boolean
  *
+ * @package     affiliate-for-woocommerce/includes/commission_rules/rules/base_rules/
  * @since       2.5.0
- * @version     1.0.3
- *
- * @package     affiliate-for-woocommerce/includes/commission_rules
+ * @version     1.0.4
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
@@ -149,5 +149,5 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 		}
 
 	}
-}
 
+}

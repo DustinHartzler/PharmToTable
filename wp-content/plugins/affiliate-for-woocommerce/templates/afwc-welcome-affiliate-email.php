@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.0
- * @version     1.1.1
+ * @version     1.1.3
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,9 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <?php /* translators: %s: Affiliate's first name */ ?>
 <p><?php echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $user_name ) ); ?></p>
 
-<p><?php echo esc_html__( 'Your affiliate request has been approved.', 'affiliate-for-woocommerce' ); ?></p>
+<?php if ( ! empty( $approval_action ) && 'user_registration' === $approval_action ) { ?>
+	<p><?php echo esc_html_x( 'Your affiliate request has been approved.', 'Affiliate approval message', 'affiliate-for-woocommerce' ); ?></p>
+<?php } ?>
 <p><?php echo esc_html__( 'We are excited to have you as our affiliate partner. Here are the details you will need to get started:', 'affiliate-for-woocommerce' ); ?></p>
 
 <p><strong><?php echo esc_html__( 'Your affiliate ID: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $affiliate_id ); ?></p>
@@ -38,7 +40,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p><strong><?php echo esc_html__( 'Our products', 'affiliate-for-woocommerce' ); ?></strong></p>
 <p>
 	<?php
-		echo sprintf( esc_html__( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'affiliate-for-woocommerce' ) );
+		echo esc_html_x( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'Instruction to promote the store products with affiliate link', 'affiliate-for-woocommerce' );
 	if ( ! empty( $shop_page ) ) {
 		/* translators: %1$s: Opening a tag for shop page link %2$s: closing a tag for shop page link */
 		echo sprintf( esc_html__( ' %1$sHere is our complete product catalog%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $shop_page ) . '">', '</a>' );

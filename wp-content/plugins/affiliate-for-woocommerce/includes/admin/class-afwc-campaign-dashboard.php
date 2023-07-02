@@ -3,7 +3,7 @@
  * Main class for Campaigns Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.1.4
+ * @version     1.1.5
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,7 +50,7 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 				if ( 'campaign' === $key ) {
 					$params[ $key ] = wp_unslash( $value );
 				} else {
-					$params[ $key ] = trim( wc_clean( wp_unslash( $value ) ) );
+					$params[ $key ] = wc_clean( wp_unslash( $value ) );
 				}
 			}
 			$func_nm = ! empty( $params['cmd'] ) ? $params['cmd'] : '';

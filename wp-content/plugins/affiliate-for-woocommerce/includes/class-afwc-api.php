@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/
  * @since    1.10.0
- * @version  1.9.1
+ * @version  1.9.4
  */
 
 // Exit if accessed directly.
@@ -39,12 +39,14 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			 * Track referral before completion of Order with status "Pending"
 			 * When Order Complets, Change referral status from Pending to Unpaid
 			 */
-			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'track_conversion' ), 10, 1 );
+			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'track_conversion' ) );
+			// Support for WooCommerce checkout block.
+			add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'track_conversion' ) );
 
 			if ( class_exists( 'WC_Subscriptions_Core_Plugin' ) || class_exists( 'WC_Subscriptions' ) ) {
 				add_filter( 'wcs_renewal_order_created', array( $this, 'handle_renewal_order_created' ), 10, 2 );
 				if ( WCS_AFWC_Compatibility::get_instance()->is_wcs_core_gte( '2.5.0' ) ) {
-					add_filter( 'wc_subscriptions_renewal_order_data', array( $this, 'do_not_copy_affiliate_meta' ), 10, 1 );
+					add_filter( 'wc_subscriptions_renewal_order_data', array( $this, 'do_not_copy_affiliate_meta' ) );
 				} else {
 					add_filter( 'wcs_renewal_order_meta_query', array( $this, 'do_not_copy_meta' ), 10, 3 );
 				}
@@ -77,65 +79,87 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @param integer $visitor_id The visitor_id.
 		 * @param string  $source The source of hit.
 		 * @param mixed   $params extra params to override default params.
+		 *
+		 * @return int Return the id of new visitor record if successfully tracked otherwise 0.
 		 */
 		public function track_visitor( $affiliate_id = 0, $visitor_id = 0, $source = 'link', $params = array() ) {
+
+			if ( empty( $affiliate_id ) ) {
+				return 0;
+			}
+
 			global $wpdb;
 
-			if ( 0 !== $affiliate_id ) {
-				// prepare vars.
-				$current_user_id = get_current_user_id();
-				$visitor_id      = ( 0 !== $visitor_id ) ? $visitor_id : $current_user_id;
-				$datetime        = gmdate( 'Y-m-d H:i:s' );
+			// prepare vars.
+			$current_user_id = get_current_user_id();
 
-				// check type of refarral.
-				if ( function_exists( 'WC' ) ) {
-					$cart = WC()->cart;
-					if ( is_object( $cart ) && is_callable( array( $cart, 'is_empty' ) ) && ! $cart->is_empty() ) {
-						$afwc         = Affiliate_For_WooCommerce::get_instance();
-						$used_coupons = ( is_callable( array( $cart, 'get_applied_coupons' ) ) ) ? $cart->get_applied_coupons() : array();
-						if ( ! empty( $affiliate_id ) && ! empty( $used_coupons ) ) {
-							$type = $afwc->get_referral_type( $affiliate_id, $used_coupons );
-						}
+			// check type of referral.
+			if ( function_exists( 'WC' ) ) {
+				$cart = WC()->cart;
+				if ( is_object( $cart ) && is_callable( array( $cart, 'is_empty' ) ) && ! $cart->is_empty() ) {
+					$afwc         = Affiliate_For_WooCommerce::get_instance();
+					$used_coupons = ( is_callable( array( $cart, 'get_applied_coupons' ) ) ) ? $cart->get_applied_coupons() : array();
+					if ( ! empty( $used_coupons ) && is_callable( array( $afwc, 'get_referral_type' ) ) ) {
+						$source = $afwc->get_referral_type( $affiliate_id, $used_coupons );
 					}
 				}
-
-				// Get IP address.
-				$ip_address = ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) ? wc_clean( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : ''; // phpcs:ignore
-				$ip_int     = ip2long( $ip_address );
-				$ip_int     = ( PHP_INT_SIZE > 8 ) ? $ip_int : sprintf( '%u', $ip_int );
-				$ip_int     = ( ! empty( $ip_int ) ) ? $ip_int : 0;
-				$type       = ! empty( $type ) ? $type : $source;
-
-				$values = array( $affiliate_id, $datetime, $ip_int, $current_user_id, $type, $params['campaign_id'] );
-
-				$wpdb->query( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"INSERT INTO {$wpdb->prefix}afwc_hits ( affiliate_id, datetime, ip, user_id, type, campaign_id ) VALUES ( %d, %s, %d, %d, %s, %d ) ON DUPLICATE KEY
-									UPDATE count = count + 1",
-						$values
-					)
-				);
-
 			}
+
+			// Get IP address.
+			$ip_address = ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) ? wc_clean( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : ''; // phpcs:ignore
+			$ip_int     = ip2long( $ip_address );
+			$ip_int     = ( PHP_INT_SIZE > 8 ) ? $ip_int : sprintf( '%u', $ip_int );
+			$ip_int     = ( ! empty( $ip_int ) ) ? $ip_int : 0;
+
+			$user_agent = wc_get_user_agent();
+
+			$uri  = ! empty( $_SERVER['REQUEST_URI'] ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''; // phpcs:ignore
+			$host = ! empty( $_SERVER['HTTP_HOST'] ) ? wc_clean( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''; // phpcs:ignore
+			$url  = ! empty( $_SERVER['REQUEST_SCHEME'] ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_SCHEME'] ) ) . '://' . $host . $uri : ''; // phpcs:ignore
+
+			$wpdb->insert( // phpcs:ignore
+				$wpdb->prefix . 'afwc_hits',
+				array(
+					'affiliate_id' => intval( $affiliate_id ),
+					'datetime'     => gmdate( 'Y-m-d H:i:s' ),
+					'ip'           => $ip_int,
+					'user_id'      => ! empty( $current_user_id ) ? $current_user_id : 0,
+					'type'         => $source,
+					'campaign_id'  => ! empty( $params['campaign_id'] ) ? intval( $params['campaign_id'] ) : 0,
+					'user_agent'   => ! empty( $user_agent ) ? $user_agent : '',
+					'url'          => $url,
+				),
+				array( '%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s' )
+			);
+
+			return ! empty( $wpdb->insert_id ) ? $wpdb->insert_id : 0;
 		}
 
 		/**
 		 * Function to track conversion (referral)
 		 *
-		 * @param integer $oid object id for which converion recorder like orderid, pageid etc.
-		 * @param integer $affiliate_id The affiliate id.
-		 * @param string  $type The type of conversion e.g order, pageview etc.
-		 * @param mixed   $params extra params to override default params.
+		 * @param integer|WC_Order $order           WooCommerce order object or order ID.
+		 * @param integer          $affiliate_id    The affiliate ID.
+		 * @param string           $type            The type of conversion e.g order, pageview etc.
+		 * @param mixed            $params          Extra params to override default params.
 		 */
-		public function track_conversion( $oid = 0, $affiliate_id = 0, $type = 'order', $params = array() ) {
+		public function track_conversion( $order = 0, $affiliate_id = 0, $type = 'order', $params = array() ) {
 
 			global $wpdb;
+
+			$oid = 0;
+
+			if ( is_object( $order ) && $order instanceof WC_Order ) {
+				$oid = is_callable( array( $order, 'get_id' ) ) ? intval( $order->get_id() ) : 0;
+			} elseif ( is_numeric( $order ) ) {
+				$oid = intval( $order );
+			}
+
 			if ( 0 !== $oid ) {
 
 				$customer = get_current_user_id();
 
 				if ( empty( $customer ) ) {
-					$order    = wc_get_order( $oid );
 					$customer = $order instanceof WC_Order && is_callable( array( $order, 'get_billing_email' ) ) ? $order->get_billing_email() : '';
 				}
 
@@ -182,31 +206,40 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 						}
 					}
 
-					$values = array( $conversion_data['affiliate_id'], $conversion_data['oid'], $conversion_data['datetime'], $conversion_data['description'], $conversion_data['ip'], $conversion_data['user_id'], $conversion_data['amount'], $conversion_data['currency_id'], $conversion_data['data'], $conversion_data['status'], $conversion_data['type'], $conversion_data['reference'], $conversion_data['campaign_id'] );
-					// track in the db.
-					$referral_added = $wpdb->query( // phpcs:ignore
-						$wpdb->prepare( // phpcs:ignore
-							"INSERT INTO {$wpdb->prefix}afwc_referrals ( affiliate_id, post_id, datetime, description, ip, user_id, amount, currency_id, data, status, type, reference, campaign_id ) VALUES ( %d, %d, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %d )",
-							$values
-						)
-						); // phpcs:ignore
-						$main_referral_id = $wpdb->insert_id;
+					$values = array(
+						'affiliate_id' => intval( $conversion_data['affiliate_id'] ),
+						'post_id'      => $conversion_data['oid'],
+						'datetime'     => $conversion_data['datetime'],
+						'description'  => ! empty( $conversion_data['description'] ) ? $conversion_data['description'] : '',
+						'ip'           => $ip_int,
+						'user_id'      => $conversion_data['user_id'],
+						'amount'       => $conversion_data['amount'],
+						'currency_id'  => $conversion_data['currency_id'],
+						'data'         => ! empty( $conversion_data['data'] ) ? $conversion_data['data'] : '',
+						'status'       => $conversion_data['status'],
+						'type'         => $conversion_data['type'],
+						'reference'    => ! empty( $conversion_data['reference'] ) ? $conversion_data['reference'] : '',
+						'campaign_id'  => $conversion_data['campaign_id'],
+						'hit_id'       => ! empty( $conversion_data['hit_id'] ) ? intval( $conversion_data['hit_id'] ) : 0,
+					);
+
+					$placeholders = array( '%d', '%d', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d' );
+
+					$referral_added = $wpdb->insert( $wpdb->prefix . 'afwc_referrals', $values, $placeholders );  // phpcs:ignore
+
+					$main_referral_id = ! empty( $wpdb->insert_id ) ? intval( $wpdb->insert_id ) : 0;
+
 					// track parent commissions.
 					if ( ! empty( $conversion_data['commissions'] ) ) {
 						foreach ( $conversion_data['commissions'] as $affiliate_chain_id => $commission_amt ) {
-							$values[0]      = $affiliate_chain_id;
-							$values[6]      = $commission_amt;
-							$values[11]     = $main_referral_id;
-							$referral_added = $wpdb->query( // phpcs:ignore
-								$wpdb->prepare( // phpcs:ignore
-									"INSERT INTO {$wpdb->prefix}afwc_referrals ( affiliate_id, post_id, datetime, description, ip, user_id, amount, currency_id, data, status, type, reference, campaign_id ) VALUES ( %d, %d, %s, %s, %d, %s, %s, %s, %s, %s, %s, %d, %d )",
-									$values
-								)
-								); // phpcs:ignore
+							$values['affiliate_id'] = $affiliate_chain_id;
+							$values['amount']       = $commission_amt;
+							$values['reference']    = $main_referral_id;
+							$referral_added = $wpdb->insert( $wpdb->prefix . 'afwc_referrals', $values, $placeholders ); // phpcs:ignore
 						}
 					}
 
-					if ( $referral_added ) {
+					if ( ! empty( $referral_added ) ) {
 						$order = wc_get_order( $conversion_data['oid'] );
 						if ( $order instanceof WC_Order ) {
 							$order->update_meta_data( 'is_commission_recorded', 'yes' );
@@ -263,6 +296,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @return integer $amount  The amount after calculation.
 		 */
 		public function calculate_commission( $order_id = 0, $affiliate_id = 0 ) {
+			global $affiliate_for_woocommerce;
 			$set_commission       = array();
 			$remaining_items      = array();
 			$ordered_plans        = array();
@@ -302,12 +336,15 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			$afwc_excluded_products = get_option( 'afwc_storewide_excluded_products' );
 
+			$used_coupons = ( is_callable( array( $order, 'get_coupon_codes' ) ) ) ? $order->get_coupon_codes() : array();
+
 			// build the context for rule validation for this order.
 			$context['affiliate_id']         = $affiliate_id;
 			$context['product_id']           = array_keys( $item_total_map );
 			$context['affiliate_tag']        = ! empty( $affiliate_tag ) ? array_keys( $affiliate_tag ) : array();
 			$context['product_category']     = $product_cat_ids;
 			$context['category_prod_id_map'] = $category_prod_id_map;
+			$context['referral_medium']      = ( is_callable( array( $affiliate_for_woocommerce, 'get_referral_type' ) ) ) ? $affiliate_for_woocommerce->get_referral_type( $affiliate_id, $used_coupons ) : '';
 
 			// set commission for already excluded.
 			if ( ! empty( $afwc_excluded_products ) ) {
@@ -570,21 +607,8 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @return WC_Order
 		 */
 		public function handle_renewal_order_created( $renewal_order = null, $subscription = null ) {
-			$this->handle_subscription( $renewal_order );
+			$this->track_conversion( $renewal_order );
 			return $renewal_order;
-		}
-
-		/**
-		 * Record referral when subscription is created
-		 *
-		 * @param  WC_Order $renewal_order  The renewal order.
-		 * @param  WC_Order $original_order The original order.
-		 * @param  integer  $product_id     The product id.
-		 * @param  string   $new_order_role The new order role.
-		 */
-		public function handle_subscription( $renewal_order = null, $original_order = null, $product_id = null, $new_order_role = null ) {
-			$order_id = ( is_object( $renewal_order ) && is_callable( array( $renewal_order, 'get_id' ) ) ) ? $renewal_order->get_id() : 0;
-			$this->track_conversion( $order_id );
 		}
 
 		/**
@@ -651,6 +675,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				$conversion_data['currency_id']  = $currency_id;
 				$conversion_data['affiliate_id'] = $affiliate_id;
 				$conversion_data['campaign_id']  = $campaign_id;
+				$conversion_data['hit_id']       = ! is_admin() ? afwc_get_hit_id() : 0; // To prevent hit_id incorrectly set when admin is manually assigning/unassigning an order.
 				$conversion_data['commissions']  = $commissions;
 			}
 

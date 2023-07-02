@@ -49,6 +49,7 @@
 #afwc_load_more_products.disabled, #afwc_load_more_referrals.disabled, #afwc_load_more_payouts.disabled {
 	pointer-events: none;
 	cursor: default;
+	text-decoration: none;
 }
 tbody{
 	height: auto;
@@ -97,10 +98,10 @@ thead, tbody tr {
 		width: 25%;
 	}
 	.afwc_payout_history thead th:nth-child(3), .afwc_payout_history tbody td:nth-child(3) {
-		width: 25%;
+		width: 20%;
 	}
 	.afwc_payout_history thead th:nth-child(4), .afwc_payout_history tbody td:nth-child(4) {
-		width: 20%;
+		width: 25%;
 	}
 	.afwc_products thead th:nth-child(1), .afwc_products tbody td:nth-child(1) {
 		width: 55%;
@@ -197,17 +198,25 @@ thead, tbody tr {
 .afwc_kpi_last {
 	margin-right: 0em;
 }
-.fill_green {
+#afwc_commission_bar .fill_green {
 	background-color: #11AC1E;
 }
-.fill_orange {
+#afwc_commission_bar .fill_orange {
 	background-color: #F1693B;
 }
-.fill_red {
-	background-color: #F41F1F;
+.afwc_referrals .text_green {
+	color: #11AC1E;
+	font-weight: 600;
 }
-.fill_gray {
-	background-color: #535353;
+.afwc_referrals .text_orange {
+	color: #F1693B;
+	font-weight: 600;
+}
+.afwc_referrals .text_red {
+	color: #F41F1F;
+}
+.afwc_referrals .text_gray {
+	color: #535353;
 }
 #afwc_kpi_gross_commission .afwc_kpis_price, #afwc_kpi_gross_commission .afwc_kpis_number  {
 	color: #09616D;
@@ -401,8 +410,11 @@ thead, tbody tr {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: rgba(0,0,0,.1)
 }
-#afwc_dashboard_wrapper .afwc-table-header{
+#afwc_dashboard_wrapper .afwc-table-header {
 	font-size: 1.3em;
 	padding: 0.4em 0;
 	font-weight: 600;
+}
+#afwc_dashboard_wrapper .empty-table {
+	text-align: center;
 }

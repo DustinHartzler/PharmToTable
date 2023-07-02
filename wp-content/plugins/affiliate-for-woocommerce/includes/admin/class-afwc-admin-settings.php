@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.4.2
+ * @version     1.4.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,6 +36,7 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			add_action( 'woocommerce_settings_' . $this->tab_slug, array( $this, 'display_settings_tab' ) );
 			add_action( 'woocommerce_update_options_' . $this->tab_slug, array( $this, 'save_admin_settings' ) );
 			add_action( 'woocommerce_admin_field_afwc_ltc_excludes_list', array( $this, 'render_ltc_exclude_list_input' ) );
+			add_filter( 'woocommerce_admin_settings_sanitize_option', array( $this, 'sanitize_options' ), 10, 2 );
 			add_filter( 'woocommerce_admin_settings_sanitize_option_afwc_lifetime_commissions_excludes', array( $this, 'sanitize_ltc_exclude_list' ) );
 
 			// Ajax actions.
@@ -157,7 +158,8 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			$afwc_admin_settings = array(
 				array(
 					'title' => _x( 'Affiliate For WooCommerce Settings', 'Plugin setting tab name', 'affiliate-for-woocommerce' ),
-					'desc'  => _x( 'Use these options to configure the way plugin works.', 'setting tab description', 'affiliate-for-woocommerce' ),
+					/* translators: Link Affiliate For WooCommerce Settings documentation */
+					'desc'  => sprintf( _x( 'Use these options to configure the way plugin works. Learn more from %1$sdocumentation%2$s.', 'setting description with documentation link', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/settings/">', '</a>' ),
 					'type'  => 'title',
 					'id'    => 'afwc_admin_settings',
 				),
@@ -555,6 +557,26 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 		}
 
 		/**
+		 * Method to sanitize the options .
+		 *
+		 * @param mixed $value The value.
+		 * @param array $option The option.
+		 *
+		 * @return mixed the sanitized value.
+		 */
+		public function sanitize_options( $value = '', $option = array() ) {
+
+			$id = ( ! empty( $option ) && ! empty( $option['id'] ) ) ? $option['id'] : '';
+
+			// Enable to flush the rewrite rules if tracking param name and pretty URL option is updated.
+			if ( ! empty( $id ) && in_array( $id, array( 'afwc_pname', 'afwc_use_pretty_referral_links' ), true ) && true === $this->is_updated( $id, $value ) ) {
+				update_option( 'afwc_flushed_rules', 1, 'no' );
+			}
+
+			return $value;
+		}
+
+		/**
 		 * Method to sanitize and format the value for ltc exclude list.
 		 *
 		 * @param array $value The value.
@@ -588,6 +610,18 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			}
 
 			return $list;
+		}
+
+		/**
+		 * Method to check if option is updated.
+		 *
+		 * @param string $option The option name.
+		 * @param mixed  $value The value.
+		 *
+		 * @return bool Return true if new value is updated otherwise false.
+		 */
+		public function is_updated( $option = '', $value = '' ) {
+			return ! empty( $option ) && ( get_option( $option ) !== $value );
 		}
 
 	}

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.9.2
+ * @version     1.10.2
  */
 
 // Exit if accessed directly.
@@ -50,6 +50,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			add_action( 'init', array( $this, 'init_afwc' ) );
 			add_action( 'woocommerce_init', array( $this, 'init_afwc_on_wc' ) );
 			$this->includes();
+
 			// save affiliate form initial fields.
 			$this->save_afwc_reg_form_settings();
 
@@ -62,11 +63,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			add_action( 'parse_request', array( $this, 'afwc_parse_request' ) );
 
 			add_action( 'valid-paypal-standard-ipn-request', array( $this, 'handle_ipn_request' ) );
-
-			// Update update referral entry when order is trashed/untrashed/deleted.
-			add_action( 'trashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
-			add_action( 'untrashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
-			add_action( 'delete_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
 
 		}
 
@@ -101,6 +97,9 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 			if ( ! defined( 'AFWC_CAMPAIGN_COOKIE_NAME' ) ) {
 				define( 'AFWC_CAMPAIGN_COOKIE_NAME', 'afwc_campaign' );
+			}
+			if ( ! defined( 'AFWC_HIT_COOKIE_NAME' ) ) {
+				define( 'AFWC_HIT_COOKIE_NAME', 'afwc_hit' );
 			}
 			if ( ! defined( 'AFWC_TABLE_PREFIX' ) ) {
 				define( 'AFWC_TABLE_PREFIX', 'afwc_' );
@@ -183,21 +182,10 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 * Init Affiliate for WooCommerce constants when WooCommerce Initializes.
 		 */
 		public function init_afwc_on_wc() {
-
-			// Constant for store currency symbol.
+			// Constant for WooCommerce store currency symbol.
 			if ( ! defined( 'AFWC_CURRENCY' ) ) {
 				define( 'AFWC_CURRENCY', get_woocommerce_currency_symbol() );
 			}
-
-			// Check if WC HPOS is enabled.
-			if ( ! defined( 'AFWC_IS_HPOS_ENABLED' ) ) {
-				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && is_callable( array( '\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) ) {
-					define( 'AFWC_IS_HPOS_ENABLED', Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() );
-				} else {
-					define( 'AFWC_IS_HPOS_ENABLED', false );
-				}
-			}
-
 		}
 
 		/**
@@ -290,6 +278,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				include_once 'admin/class-afwc-admin-affiliate-users.php';
 				include_once 'admin/class-afwc-admin-link-unlink-in-order.php';
 				include_once 'admin/class-afwc-multi-tier.php';
+				include_once 'admin/class-afwc-admin-housekeeping.php';
 			}
 			include_once 'admin/class-afwc-admin-new-referral-email.php';
 
@@ -330,10 +319,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			include_once 'class-afwc-registration-submissions.php';
 
-			if ( 'yes' === get_option( 'afwc_use_pretty_referral_links', 'no' ) ) {
-				update_option( 'afwc_flushed_rules_pretty_referral_links', '1', 'no' );
-				include_once 'class-afwc-rewrite-rules.php';
-			}
+			include_once 'class-afwc-rewrite-rules.php';
 		}
 
 		/**
@@ -372,9 +358,9 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 
 			if ( 'affiliate-for-woocommerce-documentation' === $get_page ) {
-				add_submenu_page( 'woocommerce', sprintf( __( 'Getting Started', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Getting Started', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' );
+				add_submenu_page( 'woocommerce', _x( 'Getting Started', 'Page title for setup guide page', 'affiliate-for-woocommerce' ), _x( 'Getting Started', 'Menu name for setup guide page', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' );
 			}
-			add_submenu_page( 'woocommerce', sprintf( __( 'Affiliate Form Settings', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Affiliate Form Settings', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-form-settings', 'AFWC_Registration_Form::reg_form_settings' );
+			add_submenu_page( 'woocommerce', _x( 'Affiliate Form Settings', 'Page title for Affiliate Form Settings', 'affiliate-for-woocommerce' ), _x( 'Affiliate Form Settings', 'Menu name for Affiliate Form Settings', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-form-settings', 'AFWC_Registration_Form::reg_form_settings' );
 
 		}
 
@@ -462,12 +448,12 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 				// Handle older affiliates link through migrated pname.
 				if ( isset( $wp->query_vars[ $migrated_pname ] ) ) {
-					$id           = trim( $wp->query_vars[ $migrated_pname ] );
+					$id           = wc_clean( $wp->query_vars[ $migrated_pname ] );
 					$affiliate_id = afwc_get_user_id_based_on_affiliate_id( $id );
 				} elseif ( isset( $wp->query_vars[ $pname ] ) ) {
-					$affiliate_id = trim( $wp->query_vars[ $pname ] );
+					$affiliate_id = wc_clean( $wp->query_vars[ $pname ] );
 				} elseif ( isset( $wp->query_vars['ref'] ) ) {
-					$affiliate_id = trim( $wp->query_vars['ref'] );
+					$affiliate_id = wc_clean( $wp->query_vars['ref'] );
 				}
 
 				unset( $wp->query_vars[ $pname ] ); // we use this to avoid ending up on the blog listing page.
@@ -570,7 +556,18 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			$affiliate_api = AFWC_API::get_instance();
 			if ( is_callable( array( $affiliate_api, 'track_visitor' ) ) ) {
-				$affiliate_api->track_visitor( $affiliate_id, 0, 'link', $params );
+				$hit_id = $affiliate_api->track_visitor( $affiliate_id, 0, 'link', $params );
+
+				if ( ! empty( $hit_id ) ) {
+					// Set Hit ID in cookie.
+					setcookie(
+						AFWC_HIT_COOKIE_NAME,
+						$hit_id,
+						$expire,
+						COOKIEPATH ? COOKIEPATH : '/',
+						COOKIE_DOMAIN
+					);
+				}
 			}
 
 		}
@@ -1267,7 +1264,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				}
 
 				if ( ! empty( $payout_ids ) ) {
-					if ( AFWC_IS_HPOS_ENABLED ) {
+					if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 						$results = $wpdb->get_results( // phpcs:ignore 
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT po.payout_id,
@@ -1328,43 +1325,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			} else {
 				return $affiliates_payout_history;
 			}
-		}
-
-		/**
-		 * Function to update referral entry when order is trashed/untrashed/deleted.
-		 *
-		 * @param int $trashed_order_id Order ID being trashed/untrashed/deleted.
-		 * may need to change action for this function as it post dependent.
-		 */
-		public function afwc_update_referral_on_trash_delete_untrash( $trashed_order_id = 0 ) {
-
-			if ( empty( $trashed_order_id ) ) {
-				return;
-			}
-
-			$order = wc_get_order( $trashed_order_id );
-			if ( ! $order instanceof WC_Order ) {
-				return;
-			}
-
-			global $wpdb;
-
-			$current_action = current_action();
-			if ( 'delete_post' === $current_action ) {
-				$affected_row = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}afwc_referrals WHERE post_id = %d", $trashed_order_id ));// phpcs:ignore
-				if ( 1 === $affected_row ) {
-					$order->delete_meta_data( 'is_commission_recorded' );
-					$order->save();
-				}
-			} elseif ( 'untrashed_post' === $current_action || 'trashed_post' === $current_action ) {
-				$afwc_status = ( 'trashed_post' === $current_action ) ? 'deleted' : $order->get_status();
-				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET order_status = %s WHERE post_id = %d", $afwc_status, $trashed_order_id ) ); // phpcs:ignore
-				if ( 'untrashed_post' === $current_action ) {
-					$order->update_meta_data( 'is_commission_recorded', 'yes' );
-					$order->save();
-				}
-			}
-
 		}
 
 		/**
@@ -1434,7 +1394,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			);
 			$form_fields = apply_filters( 'afwc_registration_form_fields', $form_fields );
-			add_option( 'afwc_form_fields', $form_fields );
+			add_option( 'afwc_form_fields', $form_fields, '', 'no' );
 		}
 
 		/**

@@ -1,10 +1,10 @@
 <?php
 /**
- * Class for Affiliates Order linking and Unlinking
+ * Class to link and unlink affiliates from orders.
  *
- * @package     affiliate-for-woocommerce/includes/admin/
- * @since       2.1.1
- * @version     1.3.1
+ * @package  affiliate-for-woocommerce/includes/admin/
+ * @since    2.1.1
+ * @version  1.3.4
  */
 
 // Exit if accessed directly.
@@ -29,6 +29,14 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		private static $instance = null;
 
 		/**
+		 * Constructor
+		 */
+		public function __construct() {
+			add_action( 'add_meta_boxes', array( $this, 'add_afwc_custom_box' ), 10, 2 );
+			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'link_unlink_affiliate_in_order' ), 10, 2 );
+		}
+
+		/**
 		 * Get single instance of this class
 		 *
 		 * @return AFWC_Admin_Link_Unlink_In_Order Singleton object of this class
@@ -43,23 +51,30 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		}
 
 		/**
-		 *  Constructor
-		 */
-		public function __construct() {
-			add_action( 'add_meta_boxes', array( $this, 'add_afwc_custom_box' ) );
-			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'link_unlink_affiliate_in_order' ), 10, 2 );
-		}
-
-		/**
 		 * Function to add custom meta box in order add/edit screen.
+		 *
+		 * @param string $post_type            The post type of the current post being edited.
+		 * @param object $post_or_order_object The post or order currently being edited.
 		 */
-		public function add_afwc_custom_box() {
+		public function add_afwc_custom_box( $post_type = '', $post_or_order_object = null ) {
+			$current_screen    = is_callable( 'get_current_screen' ) ? get_current_screen() : null;
+			$current_screen_id = ( ! empty( $current_screen ) && $current_screen instanceof WP_Screen && ! empty( $current_screen->id ) ) ? $current_screen->id : '';
 
-			$screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
-					? wc_get_page_screen_id( 'shop-order' )
-					: 'shop_order';
+			if ( empty( $current_screen_id ) ) {
+				return;
+			}
 
-			if ( ! in_array( $screen, array( 'woocommerce_page_wc-orders', 'shop_order' ), true ) ) {
+			$wc_container     = is_callable( 'wc_get_container' ) ? wc_get_container() : null;
+			$order_controller = is_object( $wc_container )
+								&& is_callable( array( $wc_container, 'has' ) )
+								&& $wc_container->has( CustomOrdersTableController::class )
+								&& is_callable( array( $wc_container, 'get' ) )
+								? $wc_container->get( CustomOrdersTableController::class ) : null;
+			$screen           = is_object( $order_controller ) && is_callable( array( $order_controller, 'custom_orders_table_usage_is_enabled' ) ) && $order_controller->custom_orders_table_usage_is_enabled()
+							? wc_get_page_screen_id( 'shop-order' )
+							: 'shop_order';
+
+			if ( $current_screen_id !== $screen ) {
 				return;
 			}
 
@@ -70,9 +85,9 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		/**
 		 * Function to add/remove affiliate from an order.
 		 *
-		 * @param objec $post_or_order_object The Post/Order object.
+		 * @param object $post_or_order_object The post object or order object currently being edited.
 		 */
-		public function affiliate_in_order( $post_or_order_object ) {
+		public function affiliate_in_order( $post_or_order_object = null ) {
 			$order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
 			// $post_or_order_object should not be used directly below this point.
 
@@ -146,7 +161,6 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			</div>
 			<?php
 		}
-
 
 		/**
 		 * Function to do database updates when linking/unlinking affiliate from the order.

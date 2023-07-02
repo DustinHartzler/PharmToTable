@@ -1,10 +1,10 @@
 <?php
 /**
- * Main class for CF7 integration.
+ * Main class for Contact Form 7 (CF7) integration.
  *
  * @package     affiliate-for-woocommerce/includes/integration/contact-form-7/
  * @since       5.4.0
- * @version     1.1.1
+ * @version     1.1.3
  */
 
 // Exit if accessed directly.
@@ -79,7 +79,17 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 		 * @return object.
 		 */
 		public function password_validation( $result = null, $tag = '' ) {
-			if ( ( ! empty( $_POST['_wpnonce'] ) && ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['_wpnonce'] ) ), 'wp_rest' ) ) || empty( $tag ) ) { // phpcs:ignore 
+
+			$current_form = wpcf7_get_current_contact_form();
+
+			// Validate nonce if nonce is created by the CF7 form.
+			if ( $current_form instanceof WPCF7_ContactForm && is_callable( array( $current_form, 'nonce_is_active' ) ) && $current_form->nonce_is_active() && is_user_logged_in() ) {
+				if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['_wpnonce'] ) ), 'wp_rest' ) ) { // phpcs:ignore 
+					return $result;
+				}
+			}
+
+			if ( empty( $tags ) ) {
 				return $result;
 			}
 
@@ -110,17 +120,22 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 		 */
 		public function skip_validation( $result = null, $tags = array() ) {
 
-			if ( ( ! empty( $_POST['_wpnonce'] ) && ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['_wpnonce'] ) ), 'wp_rest' ) ) || empty( $tags ) ) { // phpcs:ignore 
-				return $result;
+			$current_form = wpcf7_get_current_contact_form();
+
+			// Validate nonce if nonce is created by the CF7 form.
+			if ( $current_form instanceof WPCF7_ContactForm && is_callable( array( $current_form, 'nonce_is_active' ) ) && $current_form->nonce_is_active() && is_user_logged_in() ) {
+				if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['_wpnonce'] ) ), 'wp_rest' ) ) { // phpcs:ignore 
+					return $result;
+				}
 			}
 
-			// Prevent the execution if the current form is not an affiliate registration form.
-			if ( is_callable( array( 'WPCF7_ContactForm', 'get_current' ) ) && ! $this->is_afwc_form( WPCF7_ContactForm::get_current() ) ) {
-				return $result;
-			}
-
-			// Return if the user is not exists.
-			if ( empty( $_POST['afwc_email'] ) || ! email_exists( wc_clean( wp_unslash( $_POST['afwc_email'] ) ) ) ) { // phpcs:ignore 
+			/** Prevent the execution if
+			 *   - the current form is not an affiliate registration form or
+			 *   - tags are not provided.
+			 *   - email is not provided.
+			 *   - provided email is already registered.
+			*/
+			if ( empty( $tags ) || ! $this->is_afwc_form( $current_form ) || empty( $_POST['afwc_email'] ) || ! email_exists( wc_clean( wp_unslash( $_POST['afwc_email'] ) ) ) ) { // phpcs:ignore 
 				return $result;
 			}
 
@@ -171,18 +186,13 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 		 * @return void.
 		 */
 		public function add_tag_generator() {
-			if ( ! empty( $_POST['_wpnonce'] ) && ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['_wpnonce'] ) ), 'wp_rest' ) ) { // phpcs:ignore
-				return;
+
+			$contact_form = wpcf7_get_current_contact_form();
+
+			if ( empty( $current_form ) || ! $current_form instanceof WPCF7_ContactForm ) {
+				$post = ! empty( $_REQUEST['post'] ) ? wc_clean( wp_unslash( $_REQUEST['post'] ) ) : 0; // phpcs:ignore
+				$contact_form = ( ! empty( $post ) && is_callable( array( 'WPCF7_ContactForm', 'get_instance' ) ) ) ? WPCF7_ContactForm::get_instance( $post ) : null;
 			}
-
-			// reference: contact form 7.
-			$post = ! empty( $_POST['post_ID'] ) ? wc_clean( wp_unslash( $_POST['post_ID'] ) ) : ( ! empty( $_REQUEST['post'] ) ? wc_clean( wp_unslash( $_REQUEST['post'] ) ) : 0 ); // phpcs:ignore
-
-			if ( empty( $post ) ) {
-				return;
-			}
-
-			$contact_form = is_callable( array( 'WPCF7_ContactForm', 'get_instance' ) ) ? WPCF7_ContactForm::get_instance( $post ) : null;
 
 			if ( ! $contact_form instanceof WPCF7_ContactForm || false === $this->is_afwc_form( $contact_form ) ) {
 				return;
@@ -353,7 +363,7 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 					'key'   => $key,
 					'value' => $value,
 					'type'  => ! empty( $field_types[ $key ] ) ? $field_types[ $key ] : '',
-					'label' => ucwords( trim( str_replace( '-', ' ', $key ) ) ),
+					'label' => ucwords( wc_clean( str_replace( '-', ' ', $key ) ) ),
 				);
 			}
 
@@ -696,7 +706,7 @@ JS;
 		public function posted_data( $data = array() ) {
 
 			// Prevent the execution if the current form is not an affiliate registration form.
-			if ( is_callable( array( 'WPCF7_ContactForm', 'get_current' ) ) && ! $this->is_afwc_form( WPCF7_ContactForm::get_current() ) ) {
+			if ( ! $this->is_afwc_form( wpcf7_get_current_contact_form() ) ) {
 				return $data;
 			}
 

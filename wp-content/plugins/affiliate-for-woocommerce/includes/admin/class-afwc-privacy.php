@@ -2,10 +2,12 @@
 /**
  * Affiliate Privacy Class
  *
- * @package     affiliate-for-woocommerce/includes/admin
- * @version     1.0.1
+ * @package   affiliate-for-woocommerce/includes/admin/
+ * @since     1.0.0
+ * @version   1.0.2
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -181,8 +183,8 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 
 			$hits_data     = $wpdb->get_row( // phpcs:ignore
 											$wpdb->prepare( // phpcs:ignore
-												"SELECT affiliate_id, SUM(count) as count 
-															FROM {$wpdb->prefix}afwc_hits 
+												"SELECT affiliate_id, SUM(count) as count
+															FROM {$wpdb->prefix}afwc_hits
 															WHERE affiliate_id = %s",
 												$user_id
 											),
@@ -192,7 +194,7 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 			$payouts_data     = $wpdb->get_results( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT * 
-																	FROM {$wpdb->prefix}afwc_payouts 
+																	FROM {$wpdb->prefix}afwc_payouts
 																	WHERE affiliate_id = %s",
 														$user_id
 													),
@@ -264,26 +266,27 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 		 * @param int $user_id The user ID.
 		 * @return array An array of personal data in name value pairs
 		 */
-		public function get_non_affiliate_user_data( $user_id ) {
+		public function get_non_affiliate_user_data( $user_id = 0 ) {
 			global $wpdb;
 
 			$personal_data            = array();
 			$data_to_export_from_hits = array(
-				'datetime' => __( 'Hit dateTime', 'affiliate-for-woocommerce' ),
-				'ip'       => __( 'IP address', 'affiliate-for-woocommerce' ),
-				'count'    => __( 'Hits count', 'affiliate-for-woocommerce' ),
+				'datetime'   => _x( 'Hit date time', 'Hits export field name for date Time', 'affiliate-for-woocommerce' ),
+				'ip'         => _x( 'IP address', 'Hits export field name for IP address', 'affiliate-for-woocommerce' ),
+				'count'      => _x( 'Hits count', 'Hits export field name for hits count', 'affiliate-for-woocommerce' ),
+				'user_agent' => _x( 'Browser user agent', 'Hits export field name for browser user agent', 'affiliate-for-woocommerce' ),
 			);
 
 			$data_to_export_from_referrals = array(
-				'post_id'  => __( 'Order ID', 'affiliate-for-woocommerce' ),
-				'datetime' => __( 'Date time', 'affiliate-for-woocommerce' ),
-				'ip'       => __( 'IP address', 'affiliate-for-woocommerce' ),
+				'post_id'  => _x( 'Order ID', 'Referrals export field name for order id', 'affiliate-for-woocommerce' ),
+				'datetime' => _x( 'Date time', 'Referrals export field name for date time', 'affiliate-for-woocommerce' ),
+				'ip'       => _x( 'IP address', 'Referrals export field name for IP address', 'affiliate-for-woocommerce' ),
 			);
 
 			$hits_data     = $wpdb->get_results( // phpcs:ignore
 												$wpdb->prepare( // phpcs:ignore
-													"SELECT datetime, ip, user_id, count 
-																FROM {$wpdb->prefix}afwc_hits 
+													"SELECT datetime, ip, user_id, count, user_agent 
+																FROM {$wpdb->prefix}afwc_hits
 																WHERE user_id = %s",
 													$user_id
 												),
@@ -292,8 +295,8 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 
 			$referrals_data     = $wpdb->get_results( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
-															"SELECT post_id, datetime, ip, user_id 
-															FROM {$wpdb->prefix}afwc_referrals 
+															"SELECT post_id, datetime, ip, user_id
+															FROM {$wpdb->prefix}afwc_referrals
 															WHERE user_id = %s",
 															$user_id
 														),
@@ -382,13 +385,13 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 			$is_affiliate = $this->is_user_affiliate( $email_address );
 
 			if ( 'no' === $is_affiliate ) {
-				// Given an user, search for IP in afwc_hits & afwc_referrals to anonymize them.
-				$success_response = $this->anonymize_ip_in_afwc_hits_referrals( $user_id );
+				// Given an user, search for IP and user agent in afwc_hits & afwc_referrals to anonymize them.
+				$success_response = $this->anonymize_column_data( $user_id );
 
 				if ( true === $success_response ) {
 					$response['items_removed'] = true;
 					/* translators: Email address. */
-					$response['messages'][] = sprintf( __( 'Anonymized IP for the user "%s"', 'affiliate-for-woocommerce' ), $email_address );
+					$response['messages'][] = sprintf( __( 'Anonymized data for the user "%s"', 'affiliate-for-woocommerce' ), $email_address );
 				}
 			}
 
@@ -397,46 +400,52 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 		}
 
 		/**
-		 * Find and anonymize IP address of customers by email address.
+		 * Anonymize data of customers by user id.
 		 *
 		 * @param int $user_id The user id.
 		 * @return boolean true or not.
 		 */
-		public function anonymize_ip_in_afwc_hits_referrals( $user_id ) {
-
+		public function anonymize_column_data( $user_id = 0 ) {
 			if ( empty( $user_id ) ) {
 				return true;
 			}
+
 			global $wpdb;
 
-			// Anonymize IP in afwc_hits.
-			$ip_addresses_hits   = $wpdb->get_col( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT ip 
-																	FROM {$wpdb->prefix}afwc_hits
-																	WHERE user_id = %s",
-														$user_id
-													)
+			$hits_data = $wpdb->get_results( // phpcs:ignore
+				$wpdb->prepare(
+					"SELECT id, ip, user_agent
+					FROM {$wpdb->prefix}afwc_hits
+					WHERE user_id = %s",
+					$user_id
+				)
 			);
 
-			foreach ( $ip_addresses_hits as $ip_addresses_hit ) {
-				$original_ip_address = $ip_addresses_hit;
-				$update_ip_address   = $this->create_case_query( $ip_addresses_hit );
+			$hits_update = false;
 
-				$res = $wpdb->query( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"UPDATE {$wpdb->prefix}afwc_hits
-							 						SET ip = 
-							 						( CASE 
-							 							WHEN ip = %d THEN %d
-							 						  ELSE ip
-							 						  END ) 
-							 					  WHERE user_id = %d",
-						$original_ip_address,
-						$update_ip_address,
-						$user_id
-					)
-				);
+			if ( ! empty( $hits_data ) ) {
+				foreach ( $hits_data as $hit_data ) {
+					$original_ip_address = ! empty( $hit_data->ip ) ? $hit_data->ip : '';
+					$original_user_agent = ! empty( $hit_data->user_agent ) ? $hit_data->user_agent : '';
+
+					$anonymized_ip_address = $this->create_case_query( $original_ip_address );
+					$anonymized_user_agent = base64_encode( $original_user_agent ); // phpcs:ignore 
+
+					$hits_update = $wpdb->query( // phpcs:ignore
+						$wpdb->prepare(
+							"UPDATE {$wpdb->prefix}afwc_hits 
+							SET ip = CASE WHEN ip = %s THEN %s ELSE ip END, 
+								user_agent = CASE WHEN user_agent = %s THEN %s ELSE user_agent END 
+							WHERE id = %d AND user_id = %d",
+							$original_ip_address,
+							$anonymized_ip_address,
+							$original_user_agent,
+							$anonymized_user_agent,
+							! empty( $hit_data->id ) ? $hit_data->id : 0,
+							$user_id
+						)
+					);
+				}
 			}
 
 			// Anonymize IP in afwc_referrals.
@@ -449,30 +458,31 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 														)
 			);
 
-			foreach ( $ip_addresses_referrals as $ip_addresses_referral ) {
-				$original_ip_address = $ip_addresses_referral;
-				$update_ip_address   = $this->create_case_query( $ip_addresses_referral );
+			$referrals_update = false;
 
-				$query = $wpdb->query( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"UPDATE {$wpdb->prefix}afwc_referrals
-							 						SET ip = 
-							 						( CASE 
-							 							WHEN ip = %d THEN %d
-							 						  ELSE ip
-							 						  END ) 
-							 					  WHERE user_id = %d",
-						$original_ip_address,
-						$update_ip_address,
-						$user_id
-					)
-				);
+			if ( ! empty( $ip_addresses_referrals ) ) {
+				foreach ( $ip_addresses_referrals as $ip_addresses_referral ) {
+					$original_ip_address = $ip_addresses_referral;
+					$update_ip_address   = $this->create_case_query( $ip_addresses_referral );
+
+					$referrals_update = $wpdb->query( // phpcs:ignore
+						$wpdb->prepare( // phpcs:ignore
+							"UPDATE {$wpdb->prefix}afwc_referrals
+														 SET ip = 
+														 ( CASE 
+															 WHEN ip = %d THEN %d
+														   ELSE ip
+														   END ) 
+													   WHERE user_id = %d",
+							$original_ip_address,
+							$update_ip_address,
+							$user_id
+						)
+					);
+				}
 			}
 
-			if ( ! empty( $res ) || ! empty( $query ) ) {
-				return true;
-			}
-
+			return ! empty( $hits_update ) && ! empty( $referrals_update );
 		}
 
 		/**

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.0
- * @version     1.4.5
+ * @version     1.4.6
  */
 
 // Exit if accessed directly.
@@ -99,6 +99,7 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 			$this->email_args['shop_page']           = apply_filters( 'afwc_shop_url', $shop_page, array( 'source' => $this ) );
 			$this->email_args['affiliate_id']        = $affiliate_identifier;
 			$this->email_args['is_auto_approved']    = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
+			$this->email_args['approval_action']     = ! empty( $this->email_args['approval_action'] ) ? $this->email_args['approval_action'] : 'user_registration';
 
 			// For any email placeholders.
 			$this->set_placeholders();
@@ -193,6 +194,7 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 				'shop_page'           => $this->email_args['shop_page'],
 				'my_account_afwc_url' => esc_url( $this->email_args['my_account_afwc_url'] ),
 				'is_auto_approved'    => $this->email_args['is_auto_approved'],
+				'approval_action'     => $this->email_args['approval_action'],
 				'additional_content'  => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
 		}

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       3.0.0
- * @version     1.1.0
+ * @version     1.1.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -109,7 +109,7 @@ if ( ! class_exists( 'AFWC_DB_Background_Process' ) ) {
 			global $wpdb;
 			$batch_size = 50;
 
-			if ( AFWC_IS_HPOS_ENABLED ) {
+			if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 				$result = $wpdb->query( // phpcs:ignore
 							$wpdb->prepare( // phpcs:ignore
 								"UPDATE {$wpdb->prefix}afwc_referrals as ar 

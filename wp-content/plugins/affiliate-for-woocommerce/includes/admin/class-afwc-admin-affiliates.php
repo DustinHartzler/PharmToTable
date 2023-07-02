@@ -3,7 +3,7 @@
  * Main class for Affiliates Admin
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.6.1
+ * @version     1.6.3
  */
 
 // Exit if accessed directly.
@@ -165,7 +165,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$this->to               = ( ! empty( $to ) ) ? gmdate( 'Y-m-d', strtotime( $to ) ) : '';
 			$this->sales_post_types = apply_filters( 'afwc_sales_post_types', array( 'shop_order' ) );
 			$this->batch_limit      = $this->get_batch_limit();
-			$this->start_limit      = ( ! empty( $page ) ) ? ( intval( $page ) - 1 ) * $this->batch_limit : 0;
+			$this->start_limit      = ( ! empty( $page ) ) ? ( intval( $page ) - 1 ) * intval( $this->batch_limit ) : 0;
 		}
 
 		/**
@@ -174,7 +174,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 		 * @return int
 		 */
 		public function get_batch_limit() {
-			return apply_filters( 'afwc_admin_affiliate_details_limit_per_page', intval( get_option( 'afwc_admin_affiliate_details_limit_per_page', AFWC_ADMIN_DASHBOARD_DEFAULT_BATCH_LIMIT ) ) );
+			$batch_limit = apply_filters( 'afwc_admin_affiliate_details_limit_per_page', intval( get_option( 'afwc_admin_affiliate_details_limit_per_page', AFWC_ADMIN_DASHBOARD_DEFAULT_BATCH_LIMIT ) ) );
+			return ! empty( $batch_limit ) ? intval( $batch_limit ) : 0;
 		}
 
 		/**
@@ -217,7 +218,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			if ( ! empty( $this->sales_post_types ) ) {
 				if ( 1 === count( $this->sales_post_types ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$post_ids = $wpdb->get_col( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT DISTINCT id
@@ -259,7 +260,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 							);
 						}
 					} else {
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$post_ids = $wpdb->get_col( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore 
 															"SELECT DISTINCT id 
@@ -301,7 +302,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					update_option( $option_nm, implode( ',', $this->sales_post_types ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$post_ids = $wpdb->get_col(  // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT DISTINCT id 
@@ -355,7 +356,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 							);
 						}
 					} else {
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$post_ids = $wpdb->get_col( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT DISTINCT id 
@@ -408,7 +409,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				}
 			} else {
 				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-					if ( AFWC_IS_HPOS_ENABLED ) {
+					if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 						$post_ids = $wpdb->get_col( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT DISTINCT id 
@@ -446,7 +447,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 						); // phpcs:ignore
 					}
 				} else {
-					if ( AFWC_IS_HPOS_ENABLED ) {
+					if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 						$post_ids = $wpdb->get_col( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT DISTINCT id 
@@ -485,7 +486,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$storewide_sales = 0;
 			if ( ! empty( $post_ids ) ) {
 				// is this block of code needed?
-				$storewide_post_id_query = AFWC_IS_HPOS_ENABLED ? "SELECT DISTINCT id FROM {$wpdb->prefix}wc_orders WHERE 1" : "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE 1"; // phpcs:ignore
+				$storewide_post_id_query = ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) ? "SELECT DISTINCT id FROM {$wpdb->prefix}wc_orders WHERE 1" : "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE 1"; // phpcs:ignore
 
 				// Let 3rd party plugin developers to calculate storewide sales for their custom post type.
 				// Remember to add sales to $storewide_sales.
@@ -1029,6 +1030,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 		public function get_affiliates_order_details() {
 			global $wpdb;
 
+			$batch_limit = intval( $this->batch_limit ) + 1;
+
 			$order_ids = $this->affiliates_orders;
 
 			$affiliates_order_details = array();
@@ -1036,8 +1039,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			if ( ! empty( $order_ids ) ) {
 				if ( 1 === count( $order_ids ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id,
@@ -1062,7 +1064,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->to . ' 23:59:59',
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1092,14 +1094,13 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->to . ' 23:59:59',
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
 						}
 					} else {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id,
@@ -1121,7 +1122,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						current( $order_ids ),
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1148,7 +1149,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 												current( $order_ids ),
 												current( $this->affiliate_ids ),
 												$this->start_limit,
-												$this->batch_limit
+												$batch_limit
 											),
 								'ARRAY_A'
 							);
@@ -1159,7 +1160,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					update_option( $option_nm, implode( ',', $order_ids ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id,
@@ -1186,7 +1187,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->to . ' 23:59:59',
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1218,14 +1219,13 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->to . ' 23:59:59',
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
 						}
 					} else {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id, 
@@ -1249,7 +1249,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$option_nm,
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1278,7 +1278,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$option_nm,
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1289,10 +1289,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				}
 			} elseif ( ! empty( $this->affiliate_ids ) ) {
 				if ( 1 === count( $this->affiliate_ids ) ) {
-
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results  = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id, 
@@ -1315,7 +1313,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->from . ' 00:00:00',
 																						$this->to . ' 23:59:59',
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							); // phpcs:ignore
@@ -1343,15 +1341,14 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->from . ' 00:00:00',
 																						$this->to . ' 23:59:59',
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							); // phpcs:ignore
 
 						}
 					} else {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id, 
@@ -1371,7 +1368,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						'%d-%b-%Y',
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							); // phpcs:ignore
@@ -1396,21 +1393,18 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						'%d-%b-%Y',
 																						current( $this->affiliate_ids ),
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							); // phpcs:ignore
-
 						}
 					}
 				} else {
-
 					$option_nm = 'afwc_orders_details_affiliate_ids_' . uniqid();
 					update_option( $option_nm, implode( ',', $this->affiliate_ids ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id, 
@@ -1435,7 +1429,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->from . ' 00:00:00',
 																						$this->to . ' 23:59:59',
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1465,14 +1459,13 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						$this->from . ' 00:00:00',
 																						$this->to . ' 23:59:59',
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
 						}
 					} else {
-
-						if ( AFWC_IS_HPOS_ENABLED ) {
+						if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																					$wpdb->prepare( // phpcs:ignore
 																						"SELECT referrals.post_id AS order_id, 
@@ -1494,7 +1487,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						'%d-%b-%Y',
 																						$option_nm,
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1521,7 +1514,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																						'%d-%b-%Y',
 																						$option_nm,
 																						$this->start_limit,
-																						$this->batch_limit
+																						$batch_limit
 																					),
 								'ARRAY_A'
 							);
@@ -1532,7 +1525,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				}
 			} else {
 				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-					if ( AFWC_IS_HPOS_ENABLED ) {
+					if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT referrals.post_id AS order_id, 
@@ -1555,7 +1548,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																					$this->from . ' 00:00:00',
 																					$this->to . ' 23:59:59',
 																					$this->start_limit,
-																					$this->batch_limit
+																					$batch_limit
 																				),
 							'ARRAY_A'
 						);
@@ -1583,13 +1576,13 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																					$this->from . ' 00:00:00',
 																					$this->to . ' 23:59:59',
 																					$this->start_limit,
-																					$this->batch_limit
+																					$batch_limit
 																				),
 							'ARRAY_A'
 						);
 					}
 				} else {
-					if ( AFWC_IS_HPOS_ENABLED ) {
+					if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT referrals.post_id AS order_id, 
@@ -1609,7 +1602,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																					'%d-%b-%Y',
 																					0,
 																					$this->start_limit,
-																					$this->batch_limit
+																					$batch_limit
 																				),
 							'ARRAY_A'
 						);
@@ -1634,7 +1627,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																					'%d-%b-%Y',
 																					0,
 																					$this->start_limit,
-																					$this->batch_limit
+																					$batch_limit
 																				),
 							'ARRAY_A'
 						);
@@ -1642,12 +1635,26 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				}
 			}
 
+			$load_more = false;
+
 			if ( ! empty( $affiliates_order_details_results ) ) {
-				foreach ( $affiliates_order_details_results as $result ) {
-					$order_ids[]                = $result['order_id'];
-					$result['referral_type']    = ucwords( ( empty( $result['referral_type'] ) ) ? 'link' : $result['referral_type'] );
-					$result['order_url']        = admin_url( 'post.php?post=' . $result['order_id'] . '&action=edit' );
-					$affiliates_order_details[] = $result;
+
+				if ( count( $affiliates_order_details_results ) === $batch_limit ) {
+					array_pop( $affiliates_order_details_results );
+					$load_more = true;
+				}
+
+				if ( ! empty( $affiliates_order_details_results ) ) {
+					foreach ( $affiliates_order_details_results as $result ) {
+						$current_order_id = ! empty( $result['order_id'] ) ? $result['order_id'] : '';
+						if ( empty( $current_order_id ) ) {
+							continue;
+						}
+						$order_ids[]                = $current_order_id;
+						$result['referral_type']    = ucwords( ( empty( $result['referral_type'] ) ) ? 'link' : $result['referral_type'] );
+						$result['order_url']        = admin_url( 'post.php?post=' . $current_order_id . '&action=edit' );
+						$affiliates_order_details[] = $result;
+					}
 				}
 			}
 
@@ -1655,7 +1662,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				$option_nm = 'afwc_orders_details_affiliate_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', array_unique( $order_ids ) ), 'no' );
 
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$results = $wpdb->get_results( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT wco.id AS order_id,
@@ -1724,7 +1731,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			// Let 3rd party developers to add additional details in orders details.
 			$affiliates_order_details = apply_filters( 'afwc_order_details', $affiliates_order_details, $order_ids );
 
-			return $affiliates_order_details;
+			return array(
+				'data' => ! empty( $affiliates_order_details ) && is_array( $affiliates_order_details ) ? $affiliates_order_details : array(),
+				'meta' => array( 'load_more' => $load_more ),
+			);
 		}
 
 		/**
@@ -1740,10 +1750,23 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$args['from']              = $this->from;
 			$args['to']                = $this->to;
 			$args['start_limit']       = $this->start_limit;
-			$args['batch_limit']       = $this->batch_limit;
+			$args['batch_limit']       = intval( $this->batch_limit ) + 1;
 			$args['with_total']        = false;
 			$affiliates_payout_history = Affiliate_For_WooCommerce::get_affiliates_payout_history( $args );
-			return $affiliates_payout_history;
+
+			$load_more = false;
+
+			if ( ! empty( $affiliates_payout_history ) ) {
+				if ( count( $affiliates_payout_history ) === $args['batch_limit'] ) {
+					array_pop( $affiliates_payout_history );
+					$load_more = true;
+				}
+			}
+
+			return array(
+				'data' => ! empty( $affiliates_payout_history ) && is_array( $affiliates_payout_history ) ? $affiliates_payout_history : array(),
+				'meta' => array( 'load_more' => $load_more ),
+			);
 
 		}
 

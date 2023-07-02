@@ -3,7 +3,7 @@
  * Main class for Affiliates Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.10.0
+ * @version     1.10.5
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -40,6 +40,17 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			'link_ltc_customers',
 			'unlink_ltc_customers',
 			'search_ltc_customers',
+		);
+
+		/**
+		 * Common Ajax events for both frontend and admin dashboard.
+		 *
+		 * @todo We can merge the $ajax_events and $common_ajax_events.
+		 *
+		 * @var array $common_ajax_events
+		 */
+		private $common_ajax_events = array(
+			'affiliate_chain_data',
 		);
 
 		/**
@@ -103,6 +114,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 			$suffix      = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			wp_register_style( 'tailwind', AFWC_PLUGIN_URL . '/assets/css/admin.css', array(), $plugin_data['Version'] );
+			wp_register_style( 'afwc-common-tailwind', AFWC_PLUGIN_URL . '/assets/css/common.css', array(), $plugin_data['Version'] );
 			wp_register_style( 'afwc-admin-dashboard-css', AFWC_PLUGIN_URL . '/assets/css/afwc-admin-dashboard.css', array(), $plugin_data['Version'] );
 			wp_enqueue_style( 'selectWoo', WC()->plugin_url() . '/assets/css/select2.css', array(), WC_VERSION );
 		}
@@ -117,6 +129,10 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			if ( ! wp_style_is( 'tailwind' ) ) {
 				wp_enqueue_style( 'tailwind' );
+			}
+
+			if ( ! wp_style_is( 'afwc-common-tailwind' ) ) {
+				wp_enqueue_style( 'afwc-common-tailwind' );
 			}
 
 			if ( ! wp_style_is( 'afwc-admin-dashboard-css' ) ) {
@@ -144,14 +160,12 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			$afwc_filters['order_status']['paid']     = __( 'Paid', 'affiliate-for-woocommerce' );
 			$afwc_filters['order_status']['rejected'] = __( 'Rejected', 'affiliate-for-woocommerce' );
 
-			$afwc_filters['tags']                      = afwc_get_user_tags_id_name_map(); // TODO:: get top 10 tags and pass.
-			$afwc_filters['tags']                      = ( ! empty( $afwc_filters['tags'] ) ) ? array_slice( $afwc_filters['tags'], 0, 10, true ) : $afwc_filters['tags'];
-			$afwc_filters['date_filter']['this_month'] = __( 'This Month', 'affiliate-for-woocommerce' );
-			$afwc_filters['date_filter']['last_month'] = __( 'Last Month', 'affiliate-for-woocommerce' );
-			$afwc_filters['date_filter']['this_year']  = __( 'This Year', 'affiliate-for-woocommerce' );
-			$plan_dashboard_data                       = array();
-			$registry                                  = is_callable( array( 'AFWC_Registry', 'get_registry' ) ) ? AFWC_Registry::get_registry() : array();
-			$rule_group_titles                         = ( ! empty( $registry ) && ! empty( $registry['meta'] ) && ! empty( $registry['meta']['rule_group_titles'] ) ) ? $registry['meta']['rule_group_titles'] : array();
+			$afwc_filters['tags'] = afwc_get_user_tags_id_name_map(); // TODO:: get top 10 tags and pass.
+			$afwc_filters['tags'] = ( ! empty( $afwc_filters['tags'] ) ) ? array_slice( $afwc_filters['tags'], 0, 10, true ) : $afwc_filters['tags'];
+
+			$plan_dashboard_data = array();
+			$registry            = is_callable( array( 'AFWC_Registry', 'get_registry' ) ) ? AFWC_Registry::get_registry() : array();
+			$rule_group_titles   = ( ! empty( $registry ) && ! empty( $registry['meta'] ) && ! empty( $registry['meta']['rule_group_titles'] ) ) ? $registry['meta']['rule_group_titles'] : array();
 
 			$commission_rules = ! empty( $registry['rule'] ) ? $registry['rule'] : array();
 			$plan_data        = array();
@@ -163,6 +177,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 				$plan['possibleOperators'] = is_callable( array( $class_obj, 'get_possible_operators' ) ) ? $class_obj->get_possible_operators() : array();
 				$plan['title']             = is_callable( array( $class_obj, 'get_title' ) ) ? $class_obj->get_title() : '';
 				$plan['placeholder']       = is_callable( array( $class_obj, 'get_placeholder' ) ) ? $class_obj->get_placeholder() : '';
+				$plan['options']           = is_callable( array( $class_obj, 'get_options' ) ) ? $class_obj->get_options() : array();
 				if ( empty( $plan_data[ $category ] ) ) {
 					$plan_data[ $category ] = array();
 				}
@@ -293,19 +308,19 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * Function to handle all ajax request
 		 */
 		public function request_handler() {
-			if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
+			if ( empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
 				return;
 			}
 
 			$params = array_map(
 				function ( $request_param ) {
-					return trim( wc_clean( wp_unslash( $request_param ) ) );
+					return wc_clean( wp_unslash( $request_param ) );
 				},
 				$_REQUEST // phpcs:ignore
 			);
 
 			$func_nm = ! empty( $params['cmd'] ) ? $params['cmd'] : '';
-			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) ) {
+			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) || ! ( current_user_can( 'manage_woocommerce' ) || in_array( $func_nm, $this->common_ajax_events, true ) ) ) {
 				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
 			}
 
@@ -425,8 +440,27 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			$payout_result = array();
 
-			// For now, only checking for 1st Affiliate, Multiple Affiliates Payout is not yet implemented.
-			if ( 'paypal' === $params['method'] && ! empty( $affiliate['email'] ) && ! empty( $affiliate['amount'] ) ) {
+			if ( 'paypal' === $params['method'] ) {
+
+				// For now, only checking for 1st Affiliate, Multiple Affiliates Payout is not yet implemented.
+				if ( empty( $affiliate['email'] ) ) {
+					wp_send_json(
+						array(
+							'ACK'   => 'Error',
+							'error' => _x( "The affiliate's PayPal email address is missing.", 'payout error message for empty email', 'affiliate-for-woocommerce' ),
+						)
+					);
+				}
+
+				if ( empty( $affiliate['amount'] ) ) {
+					wp_send_json(
+						array(
+							'ACK'   => 'Error',
+							'error' => _x( 'The commission amount is empty.', 'payout error message for empty amount', 'affiliate-for-woocommerce' ),
+						)
+					);
+				}
+
 				$paypal            = AFWC_PayPal_API::get_instance();
 				$affiliate['note'] = $note;
 
@@ -443,9 +477,10 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 				$payout_result = is_callable( array( $paypal, 'process_paypal_mass_payment' ) ) ? $paypal->process_paypal_mass_payment( array( $affiliate ), $currency ) : array( 'ACK' => 'Error' );
 
-				if ( is_wp_error( $payout_result ) || 'Success' !== $payout_result['ACK'] ) {
+				if ( is_wp_error( $payout_result ) || empty( $payout_result ) || ! is_array( $payout_result ) || 'Success' !== $payout_result['ACK'] ) {
+					$payout_result = ! empty( $payout_result ) && is_wp_error( $payout_result ) ? $payout_result : null;
 					/* translators: PayPal response message */
-					Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'PayPal payout failed. Message: %1$s Response: %2$s.', 'payout failed debug message', 'affiliate-for-woocommerce' ), is_wp_error( $payout_result ) && is_callable( array( $payout_result, 'get_error_message' ) ) ? $payout_result->get_error_message() : '', print_r( $payout_result, true ) ) ); // phpcs:ignore
+					Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'PayPal payout failed. Message: %1$s Response: %2$s.', 'payout failed debug message', 'affiliate-for-woocommerce' ), is_callable( array( $payout_result, 'get_error_message' ) ) ? $payout_result->get_error_message() : '', print_r( $payout_result, true ) ) ); // phpcs:ignore
 
 					wp_send_json(
 						array(
@@ -1119,12 +1154,34 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function affiliate_chain_data( $params = array() ) {
-			check_admin_referer( 'afwc-admin-multi-tier-data', 'security' );
+			$security = ( ! empty( $params['security'] ) ) ? wc_clean( wp_unslash( $params['security'] ) ) : ''; // phpcs:ignore
+
+			if ( empty( $security ) ) {
+				return;
+			}
+
 			if ( empty( $params['affiliate_id'] ) ) {
 				wp_send_json(
 					array(
 						'ACK'   => 'Error',
 						'error' => _x( 'Required params missing', 'error message when missing necessary parameters', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$access = false;
+
+			// Check for admin nonce.
+			if ( current_user_can( 'manage_woocommerce' ) && wp_verify_nonce( $security, 'afwc-admin-multi-tier-data' ) ) {
+				$access = true;
+			}
+
+			// Check for frontend nonce.
+			if ( ! $access && ! ( wp_verify_nonce( $security, 'afwc-multi-tier-data' ) && ( intval( $params['affiliate_id'] ) === get_current_user_id() ) ) ) {
+				return wp_send_json(
+					array(
+						'ACK' => 'Failed',
+						'msg' => _x( 'You do not have permission to fetch the multi tier details.', 'multi tier fetching error message', 'affiliate-for-woocommerce' ),
 					)
 				);
 			}

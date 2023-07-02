@@ -4,9 +4,10 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.5.2
+ * @version     1.7.0
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -29,7 +30,6 @@ function afwc_encode_affiliate_id( $affiliate_id ) {
  * @return array|string
  */
 function afwc_get_commission_statuses( $status = '' ) {
-
 	$statuses = array(
 		AFWC_REFERRAL_STATUS_PAID     => __( 'Paid', 'affiliate-for-woocommerce' ),
 		AFWC_REFERRAL_STATUS_UNPAID   => __( 'Unpaid', 'affiliate-for-woocommerce' ),
@@ -53,7 +53,6 @@ function afwc_get_commission_statuses( $status = '' ) {
  * @return array|string
  */
 function afwc_get_commission_status_colors( $status = '' ) {
-
 	$colors = apply_filters(
 		'afwc_commission_status_colors',
 		array(
@@ -81,7 +80,6 @@ function afwc_get_commission_status_colors( $status = '' ) {
  * @return array|string
  */
 function afwc_get_payout_methods( $method = '' ) {
-
 	$payout_methods = array(
 		'paypal'        => esc_html__( 'PayPal', 'affiliate-for-woocommerce' ),
 		'paypal-manual' => esc_html__( 'PayPal Manual', 'affiliate-for-woocommerce' ),
@@ -116,7 +114,6 @@ function afwc_get_tablename( $name ) {
  * @return integer Return the affiliate ID, either from current customer's lifetime affiliate or cookie.
  */
 function afwc_get_referrer_id( $customer = '' ) {
-
 	// If the lifetime commission is enabled, check for a lifetime affiliate for the current customer.
 	if ( 'yes' === get_option( 'afwc_enable_lifetime_commissions', 'no' ) ) {
 		$customer = ! empty( $customer ) ? $customer : get_current_user_id();
@@ -131,17 +128,27 @@ function afwc_get_referrer_id( $customer = '' ) {
 	}
 
 	// If there is an affiliate cookie set, return the ID of the affiliate in the cookie.
-	return ! empty( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? intval( trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) ) : 0; // phpcs:ignore
+	return ! empty( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? intval( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) : 0; // phpcs:ignore
 }
 
 /**
- * Get campaign id from cookie
+ * Get campaign id from cookie.
  *
- * @return integer Return the campain id if exists in the cookie otherwise 0.
+ * @return integer Return the campaign id if exists in the cookie otherwise 0.
  */
 function afwc_get_campaign_id() {
-	return ! empty( $_COOKIE[ AFWC_CAMPAIGN_COOKIE_NAME ] ) ? intval( trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_CAMPAIGN_COOKIE_NAME ] ) ) ) ) : 0; // phpcs:ignore
+	return ! empty( $_COOKIE[ AFWC_CAMPAIGN_COOKIE_NAME ] ) ? intval( wc_clean( wp_unslash( $_COOKIE[ AFWC_CAMPAIGN_COOKIE_NAME ] ) ) ) : 0; // phpcs:ignore
 }
+
+/**
+ * Get hit id from cookie.
+ *
+ * @return integer Return the hit id if exists in the cookie otherwise 0.
+ */
+function afwc_get_hit_id() {
+	return ! empty( $_COOKIE[ AFWC_HIT_COOKIE_NAME ] ) ? intval( wc_clean( wp_unslash( $_COOKIE[ AFWC_HIT_COOKIE_NAME ] ) ) ) : 0; // phpcs:ignore
+}
+
 
 /**
  * Get date range for smart date selector
@@ -380,9 +387,8 @@ function afwc_is_user_affiliate( $user = null ) {
 
 	if ( empty( $have_meta ) ) {
 		// Check if the affiliate exists in the affiliate user roles.
-		$user_roles      = ! empty( $user->roles ) ? $user->roles : array();
-		$affiliate_roles = get_option( 'affiliate_users_roles', array() );
-		$is_affiliate    = ( is_array( $affiliate_roles ) && is_array( $user_roles ) ) && count( array_intersect( $affiliate_roles, $user_roles ) ) > 0 ? 'yes' : $is_affiliate;
+		$user_roles   = ! empty( $user->roles ) ? $user->roles : array();
+		$is_affiliate = ( true === afwc_is_affiliate_user_role( $user_roles ) ) ? 'yes' : $is_affiliate;
 	} else {
 		// Assign the affiliate meta.
 		$is_affiliate = $have_meta;
@@ -505,7 +511,7 @@ function afwc_get_commission_plans( $status ) {
 }
 
 /**
- * Get WC paid status
+ * Get WC paid status.
  *
  * @return array $wc_paid_statuses
  */
@@ -514,13 +520,13 @@ function afwc_get_paid_order_status() {
 	$wc_paid_statuses = wc_get_is_paid_statuses();
 	$wc_paid_statuses = apply_filters( 'afwc_paid_order_statuses', $wc_paid_statuses );
 	foreach ( $wc_paid_statuses as $key => $value ) {
-		$wc_paid_statuses[ $key ] = ( strpos( $value, 'wc-' ) === false ) ? 'wc-' . $value : $value;
+		$wc_paid_statuses[ $key ] = afwc_prefix_wc_to_order_status( $value );
 	}
 	return $wc_paid_statuses;
 }
 
 /**
- * Get WC unpaid status
+ * Get WC unpaid status.
  *
  * @return array $wc_reject_statuses
  */
@@ -528,9 +534,25 @@ function afwc_get_reject_order_status() {
 	$wc_reject_statuses = array();
 	$wc_reject_statuses = apply_filters( 'afwc_rejected_order_statuses', array( 'refunded', 'cancelled', 'failed', 'draft' ) );
 	foreach ( $wc_reject_statuses as $key => $value ) {
-		$wc_reject_statuses[ $key ] = ( strpos( $value, 'wc-' ) === false ) ? 'wc-' . $value : $value;
+		$wc_reject_statuses[ $key ] = afwc_prefix_wc_to_order_status( $value );
 	}
 	return $wc_reject_statuses;
+}
+
+/**
+ * Function to prefix order status if not present.
+ *
+ * @param string $order_status The order status.
+ * @return string The prefixed orer status.
+ */
+function afwc_prefix_wc_to_order_status( $order_status = '' ) {
+	if ( empty( $order_status ) ) {
+		return;
+	}
+
+	$prefixed_order_status = ( strpos( $order_status, 'wc-' ) === false ) ? 'wc-' . $order_status : $order_status;
+
+	return $prefixed_order_status;
 }
 
 /**
@@ -709,7 +731,6 @@ function afwc_is_hpos_enabled() {
  * @return int Return the affiliate Id if the customer is linked with any affiliate otherwise 0.
  */
 function afwc_get_ltc_affiliate_by_customer( $customer = '' ) {
-
 	if ( 'no' === get_option( 'afwc_enable_lifetime_commissions', 'no' ) ) {
 		return 0;
 	}
@@ -727,4 +748,25 @@ function afwc_get_ltc_affiliate_by_customer( $customer = '' ) {
 	);
 
 	return ! empty( $affiliate_id ) ? intval( $affiliate_id ) : 0;
+}
+
+/**
+ * Function to check whether the given roles come under the affiliate user role.
+ *
+ * @param array|string $user_roles The user role.
+ *
+ * @return boolean Return true if the user roles are selected for the affiliate role in affiliate setting.
+ */
+function afwc_is_affiliate_user_role( $user_roles = array() ) {
+	if ( empty( $user_roles ) ) {
+		return false;
+	}
+
+	if ( ! is_array( $user_roles ) ) {
+		$user_roles = (array) $user_roles;
+	}
+
+	$affiliate_roles = get_option( 'affiliate_users_roles', array() );
+
+	return ( ! empty( $affiliate_roles ) && is_array( $affiliate_roles ) ) && count( array_intersect( $affiliate_roles, $user_roles ) ) > 0;
 }

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce/
  * @since       1.0.0
- * @version     1.4.0
+ * @version     1.4.1
  */
 
 // Exit if accessed directly.
@@ -47,7 +47,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 				$option_nm = 'afwc_woo_storewise_sales_post_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', $post_ids ), 'no' );
 
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
@@ -81,7 +81,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 
 				delete_option( $option_nm );
 			} else {
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
@@ -142,7 +142,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 				$option_nm = 'afwc_woo_storewise_refunds_post_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', $post_ids ), 'no' );
 
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
@@ -180,7 +180,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 
 				delete_option( $option_nm );
 			} else {
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
@@ -234,7 +234,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			update_option( $option_order_status, implode( ',', $prefixed_statuses ), 'no' );
 
 			if ( ! empty( $from ) && ! empty( $to ) ) {
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(COUNT( DISTINCT customer_id ), 0) AS customer_ids 
@@ -282,7 +282,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 					);
 				}
 			} else {
-				if ( AFWC_IS_HPOS_ENABLED ) {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(COUNT( DISTINCT customer_id ), 0) AS customer_ids 
@@ -345,7 +345,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 					$option_nm = 'afwc_woo_order_details_order_ids_' . uniqid();
 					update_option( $option_nm, implode( ',', $order_ids ), 'no' );
 
-					if ( AFWC_IS_HPOS_ENABLED ) {
+					if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 						$orders = $wpdb->get_results( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT id as ID, status as post_status

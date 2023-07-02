@@ -3,15 +3,15 @@
  * Plugin Name: Affiliate For WooCommerce
  * Plugin URI: https://woocommerce.com/products/affiliate-for-woocommerce/
  * Description: The best affiliate management plugin for WooCommerce. Track, manage and payout affiliate commissions easily.
- * Version: 6.8.0
+ * Version: 6.17.0
  * Author: StoreApps
  * Author URI: https://www.storeapps.org/
  * Developer: StoreApps
  * Developer URI: https://www.storeapps.org/
  * Requires at least: 5.0.0
- * Tested up to: 6.1.1
+ * Tested up to: 6.2.2
  * WC requires at least: 4.0.0
- * WC tested up to: 7.6.0
+ * WC tested up to: 7.8.1
  * Text Domain: affiliate-for-woocommerce
  * Domain Path: /languages/
  * Woo: 4830848:0f21ae7f876a631d2db8952926715502
@@ -34,9 +34,9 @@ register_activation_hook( __FILE__, 'affiliate_for_woocommerce_activate' );
 function affiliate_for_woocommerce_activate() {
 	include_once 'includes/class-afwc-install.php';
 	add_option( 'afwc_default_commission_status', 'unpaid', '', 'no' );
-	add_option( 'afwc_do_activation_redirect', true );
+	add_option( 'afwc_do_activation_redirect', true, '', 'no' );
 	add_option( 'afwc_pname', 'ref', '', 'no' );
-	update_option( 'afwc_flushed_rules', 'notfound', 'no' );
+	update_option( 'afwc_flushed_rules', 1, 'no' );
 }
 
 /**
@@ -85,7 +85,7 @@ function initialize_affiliate_for_woocommerce() {
 }
 add_action( 'plugins_loaded', 'initialize_affiliate_for_woocommerce' );
 
-// Declare compatibility with WC HPOS.
+// Declare WooCommerce custom order tables i.e HPOS compatibility.
 add_action(
 	'before_woocommerce_init',
 	function() {

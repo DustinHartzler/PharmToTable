@@ -58,52 +58,73 @@ jQuery(function(){
 		jQuery('#afwc_id_change_wrap, #afwc_id_save_wrap').toggle();
 	});
 
+	// If affiliate identifier change is canceled.
+	jQuery('#afwc_resources_wrapper').on( 'click', '#afwc_cancel_change_identifier', function( e ) {
+		e.preventDefault();
+		jQuery('#afwc_ref_url_id').val( jQuery('#afwc_id_change_wrap').find('code').text() || ''); // Revert the input value.
+		jQuery('#afwc_id_change_wrap').show();
+		jQuery('#afwc_id_save_wrap').hide();
+		jQuery('#afwc_id_msg').hide();
+	});
+
 	jQuery('#afwc_resources_wrapper').on( 'click', '#afwc_save_identifier', function( e ) {
 		e.preventDefault();
-		jQuery( '#afwc_id_msg' ).hide()
+		jQuery( '#afwc_id_msg' ).hide();
+		let savedIdentifier    = afwcProfileParams.savedAffiliateIdentifier;
 		let referralIdentifier = jQuery('#afwc_ref_url_id').val() || '';
-		if ( '' !== referralIdentifier && afwcProfileParams.saveReferralURLIdentifier ) {
-			if ( false === new RegExp(afwcProfileParams.identifierRegexPattern || '', 'g').test(referralIdentifier) ) {
-				jQuery( '#afwc_id_msg' )
-					.html( _x( 'Only alphabets and numbers are allowed. The number should not be in the first place.', 'referral identifier validation message', 'affiliate-for-woocommerce' ) )
-					.addClass( 'afwc_error' ).show();
-				return;
-			}
 
-			jQuery('#afwc_save_id_loader').show();
-			// Ajax call to save id.
-			jQuery.ajax({
-				url: afwcProfileParams.saveReferralURLIdentifier,
-				type: 'post',
-				dataType: 'json',
-				data: {
-					security: afwcProfileParams.saveIdentifierSecurity || '',
-					ref_url_id: referralIdentifier
-				},
-				success: function( response ) {
-					jQuery('#afwc_save_id_loader').hide();
-					if ( response.success ) {
-						if ( 'yes' === response.success ) {
-							jQuery('#afwc_id_change_wrap, #afwc_id_save_wrap').toggle();
-							if( response.message ) {
-								jQuery( '#afwc_id_msg' ).html( response.message ).addClass( 'afwc_success' ).removeClass( 'afwc_error' ).show();
-							}
-							if( jQuery('#afwc_id_change_wrap').length > 0 ) {
-								jQuery('#afwc_id_change_wrap').find('code').text(referralIdentifier);
-							}
-							if( jQuery('.afwc_ref_id_span').length > 0 ) {
-								jQuery('.afwc_ref_id_span').text(referralIdentifier);
-							}
-							if( jQuery('#afwc_affiliate_link_label').length > 0 && homeURL && pName ) {
-								jQuery('#afwc_affiliate_link_label').text( ( 'yes' == isPrettyReferral ) ? ( `${homeURL}${pName}/${referralIdentifier}` ) : ( `${homeURL}?${pName}=${referralIdentifier}` ) );
-							}
-						} else if ( 'no' === response.success && response.message ) {
-							jQuery( '#afwc_id_msg' ).html( response.message ).addClass( 'afwc_error' ).removeClass( 'afwc_success' ).show();
-						}
-					}
-					setTimeout( function(){ jQuery( '#afwc_id_msg' ).hide(); }, 10000);
+		if ( afwcProfileParams.saveReferralURLIdentifier ) {
+			if ( '' == referralIdentifier ) {
+				jQuery( '#afwc_id_msg' ).html( _x( 'Identifier cannot be empty.', 'referral identifier validation message', 'affiliate-for-woocommerce' ) ).addClass( 'afwc_error' ).show();
+				return;
+			} else {
+				if ( savedIdentifier === referralIdentifier ) {
+					jQuery( '#afwc_id_msg' ).html( _x( 'You are already using this identifier.', 'referral identifier validation message', 'affiliate-for-woocommerce' ) ).addClass( 'afwc_error' ).show();
+					return;
 				}
-			});
+
+				if ( false === new RegExp(afwcProfileParams.identifierRegexPattern || '', 'g').test(referralIdentifier) ) {
+					jQuery( '#afwc_id_msg' )
+						.html( _x( 'Invalid identifier. It should be a combination of alphabets and numbers, but the number should not be in the first position.', 'referral identifier validation message', 'affiliate-for-woocommerce' ) )
+						.addClass( 'afwc_error' ).show();
+					return;
+				}
+
+				jQuery('#afwc_save_id_loader').show();
+				// Ajax call to save ID.
+				jQuery.ajax({
+					url: afwcProfileParams.saveReferralURLIdentifier,
+					type: 'post',
+					dataType: 'json',
+					data: {
+						security: afwcProfileParams.saveIdentifierSecurity || '',
+						ref_url_id: referralIdentifier
+					},
+					success: function( response ) {
+						jQuery('#afwc_save_id_loader').hide();
+						if ( response.success ) {
+							if ( 'yes' === response.success ) {
+								jQuery('#afwc_id_change_wrap, #afwc_id_save_wrap').toggle();
+								if( response.message ) {
+									jQuery( '#afwc_id_msg' ).html( response.message ).addClass( 'afwc_success' ).removeClass( 'afwc_error' ).show();
+								}
+								if( jQuery('#afwc_id_change_wrap').length > 0 ) {
+									jQuery('#afwc_id_change_wrap').find('code').text(referralIdentifier);
+								}
+								if( jQuery('.afwc_ref_id_span').length > 0 ) {
+									jQuery('.afwc_ref_id_span').text(referralIdentifier);
+								}
+								if( jQuery('#afwc_affiliate_link_label').length > 0 && homeURL && pName ) {
+									jQuery('#afwc_affiliate_link_label').text( ( 'yes' == isPrettyReferral ) ? ( `${homeURL}${pName}/${referralIdentifier}` ) : ( `${homeURL}?${pName}=${referralIdentifier}` ) );
+								}
+							} else if ( 'no' === response.success && response.message ) {
+								jQuery( '#afwc_id_msg' ).html( response.message ).addClass( 'afwc_error' ).removeClass( 'afwc_success' ).show();
+							}
+						}
+						setTimeout( function(){ jQuery( '#afwc_id_msg' ).hide(); }, 10000);
+					}
+				});
+			}
 		}
 	})
 });

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
  * @since       1.8.0
- * @version     1.4.2
+ * @version     1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -215,7 +215,7 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 
 			$params = array_map(
 				function ( $request_param ) {
-					return trim( wc_clean( wp_unslash( $request_param ) ) );
+					return wc_clean( wp_unslash( $request_param ) );
 				},
 				$_REQUEST
 			);

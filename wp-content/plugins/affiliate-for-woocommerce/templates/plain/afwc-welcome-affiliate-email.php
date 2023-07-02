@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/plain/
  * @since       2.4.0
- * @version     1.1.1
+ * @version     1.1.3
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,10 @@ echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 /* translators: %s: Affiliate's first name */
 echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $user_name ) ) . "\n\n";
 
-echo esc_html__( 'Your affiliate request has been approved.', 'affiliate-for-woocommerce' ) . "\n\n";
+if ( ! empty( $approval_action ) && 'user_registration' === $approval_action ) {
+	echo esc_html_x( 'Your affiliate request has been approved.', 'Affiliate approval message', 'affiliate-for-woocommerce' ) . "\n\n";
+}
+
 echo esc_html__( 'We are excited to have you as our affiliate partner. Here are the details you will need to get started:', 'affiliate-for-woocommerce' ) . "\n\n";
 
 echo esc_html__( 'Your affiliate ID:', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $affiliate_id ) . "\n\n";
@@ -31,7 +34,7 @@ echo esc_html_x( 'Your affiliate dashboard', 'affiliate dashboard page text', 'a
 echo sprintf( esc_html_x( 'Log in to your affiliate dashboard regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard: %s.', 'Message to view the affiliate dashboard', 'affiliate-for-woocommerce' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
 
 echo esc_html__( 'Our Products', 'affiliate-for-woocommerce' ) . "\n";
-echo esc_html__( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'affiliate-for-woocommerce' ) . "\n";
+echo esc_html_x( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'Instruction to promote the store products with affiliate link', 'affiliate-for-woocommerce' ) . "\n";
 if ( ! empty( $shop_page ) ) {
 	/* translators: %s: Shop page link */
 	echo sprintf( esc_html__( 'Here is our complete product catalog: %s.', 'affiliate-for-woocommerce' ), esc_url( $shop_page ) ) . "\n\n";

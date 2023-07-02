@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.0.4
+ * @version     1.2.0
  */
 
 // Exit if accessed directly.
@@ -31,6 +31,7 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 				'affiliate_tag'    => 'AFWC_Affiliate_Tag_Commission',
 				'product'          => 'AFWC_Product_Commission',
 				'product_category' => 'AFWC_Product_Category_Commission',
+				'referral_medium'  => 'AFWC_Referral_Medium_Commission',
 			),
 
 		);
@@ -54,8 +55,9 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 		 */
 		private static function get_rule_group_titles() {
 			return array(
-				'affiliate' => __( 'Affiliate', 'affiliate-for-woocommerce' ),
-				'product'   => __( 'Product', 'affiliate-for-woocommerce' ),
+				'affiliate' => _x( 'Affiliate', 'Commission group title for affiliate rules', 'affiliate-for-woocommerce' ),
+				'product'   => _x( 'Product', 'Commission group title for product rules', 'affiliate-for-woocommerce' ),
+				'medium'    => _x( 'Medium', 'Commission group title for medium rules', 'affiliate-for-woocommerce' ),
 			);
 		}
 
