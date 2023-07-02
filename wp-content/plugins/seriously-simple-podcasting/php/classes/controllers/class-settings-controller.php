@@ -109,7 +109,7 @@ class Settings_Controller extends Controller {
 
 		// Add settings link to plugins page.
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ), array( $this, 'add_plugin_links' ) );
-
+		
 		// Load scripts and styles for settings page.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ), 10 );
@@ -212,7 +212,10 @@ class Settings_Controller extends Controller {
 	 */
 	public function add_plugin_links( $links ) {
 		$settings_link = '<a href="edit.php?post_type=' . SSP_CPT_PODCAST . '&page=podcast_settings">' . __( 'Settings', 'seriously-simple-podcasting' ) . '</a>';
-		array_push( $links, $settings_link );
+		$upgrade_link = '<a href="https://castos.com/podcast-hosting-wordpress/?utm_source=ssp&utm_medium=plugin-settings&utm_campaign=upgrade">' . __( 'Upgrade', 'seriously-simple-podcasting' ) . '</a>';
+
+		array_unshift( $links, $settings_link );
+		array_push( $links, $upgrade_link );
 
 		return $links;
 	}

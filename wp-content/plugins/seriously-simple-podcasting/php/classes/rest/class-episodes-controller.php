@@ -56,6 +56,165 @@ class Episodes_Controller extends WP_REST_Controller {
 				),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/podcasts/(?P<series>[\d]+)' . $this->rest_base,
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+			)
+		);
+
+		/**
+		 * Custom route to update the episode's podmotor_episode_id and audio_file.
+		 * Might be used in future to update other episode properties.
+		 * In future should replace @see update_rest_podcast()
+		 */
+		register_rest_route(
+			'ssp/v1',
+			'/episodes/(?P<episode_id>[\d]+)',
+			array(
+				'methods'             => 'PUT',
+				'callback'            => array( $this, 'update_episode' ),
+				'permission_callback' => array( $this, 'update_item_permissions_check' ),
+			)
+		);
+	}
+
+	/**
+	 * @param $request
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function update_item_permissions_check( $request ) {
+		$request_data = $request->get_json_params();
+		$signature    = $request->get_header( 'X-Castos-Signature' );
+		$timestamp    = $request->get_header( 'X-Castos-Timestamp' );
+		$status_401   = array( 'status' => 401 );
+
+		if ( empty( $signature ) || empty ( $timestamp ) ) {
+			return new \WP_Error( 'missing_signature', 'No signature or timestamp provided.', $status_401 );
+		}
+
+		if ( abs( time() - $timestamp ) > 10 * MINUTE_IN_SECONDS ) {
+			return new \WP_Error( 'invalid_timestamp', 'Invalid timestamp provided.', $status_401 );
+		}
+
+		$stored_key = ssp_get_option( 'podmotor_account_api_token' );
+
+		$expected_signature = hash_hmac( 'sha256', json_encode( $request_data ) . $timestamp, $stored_key );
+
+		if ( $signature !== $expected_signature ) {
+			return new \WP_Error( 'invalid_signature', 'Request signature invalid.', $status_401 );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get a collection of items
+	 *
+	 * @param \WP_REST_Request $request Full data about the request.
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function update_episode( $request ) {
+		try {
+			$this->validate_update_episode_request( $request );
+			$url_params = $request->get_url_params();
+			$episode_id = $url_params['episode_id'];
+			$new_data   = $request->get_json_params();
+
+			// In case of the error update sync information to show it to user.
+			// Todo: display this error message to users
+			if ( $new_data['error'] ) {
+				update_post_meta( $episode_id, 'ssp_sync_episode_error', $new_data['error'] );
+			} else {
+				// Successful sync, remove the possible previous error.
+				delete_post_meta( $episode_id, 'ssp_sync_episode_error' );
+			}
+
+			// Update the file data.
+			if ( ! empty( $new_data['file']['id'] ) && ! empty( $new_data['file']['url'] ) ) {
+
+				// Update Castos file ID.
+				update_post_meta( $episode_id, 'podmotor_file_id', $new_data['file']['id'] );
+
+				// Update file URL (meta key defaults to 'audio_file').
+				$audio_file_meta_key = apply_filters( 'ssp_audio_file_meta_key', 'audio_file' );
+				update_post_meta( $episode_id, $audio_file_meta_key, $new_data['file']['url'] );
+
+				// Also, update legacy 'enclosure' field which is the same as 'audio_file' just for consistency
+				update_post_meta( $episode_id, 'enclosure', $new_data['file']['url'] );
+			}
+
+			// Update Castos episode ID
+			if ( ! empty( $new_data['episode']['id'] ) ) {
+				update_post_meta( $episode_id, 'podmotor_episode_id', $new_data['episode']['id'] );
+			}
+
+			return rest_ensure_response( array(
+				'id'   => intval( $episode_id ),
+				'file' => array(
+					'id'  => intval( get_post_meta( $episode_id, 'podmotor_file_id', true ) ),
+					'url' => get_post_meta( $episode_id, $audio_file_meta_key, true ),
+				),
+				'episode' => array(
+					'id' => intval( get_post_meta( $episode_id, 'podmotor_episode_id', true ) ),
+				),
+			) );
+		} catch ( \Exception $e ) {
+			return new \WP_Error( $e->getCode(), $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Validates update request
+	 *
+	 * @param \WP_REST_Request $request Full data about the request.
+	 *
+	 * @throws \Exception
+	 */
+	private function validate_update_episode_request( $request ){
+		$url_params = $request->get_url_params();
+
+		if ( ! is_array( $url_params ) || empty( $url_params['episode_id'] ) ) {
+			throw new \Exception( 'Empty episode ID', 400 );
+		}
+
+		$episode = get_post( intval( $url_params['episode_id'] ) );
+
+		if ( ! $episode ) {
+			throw new \Exception( 'Episode not found', 404 );
+		}
+
+		$new_data = $request->get_json_params();
+
+		if ( ! is_array( $new_data ) || empty( $new_data ) ) {
+			throw new \Exception( 'Empty JSON', 400 );
+		}
+
+		// In case there is an error message don't validate it further.
+		if ( ! empty( $new_data['error'] ) ) {
+			return;
+		}
+
+		if ( empty( $new_data['file']['id'] ) ) {
+			throw new \Exception( 'Empty file ID', 400 );
+		}
+
+		if ( empty( $new_data['file']['url'] ) ) {
+			throw new \Exception( 'Empty file URL', 400 );
+		}
+
+		if ( empty( $new_data['episode']['id'] ) ) {
+			throw new \Exception( 'Empty Castos episode ID', 400 );
+		}
 	}
 
 	/**
@@ -370,6 +529,16 @@ class Episodes_Controller extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$params['context']['default'] = 'view';
+
+		$params['per_page'] = array (
+			'description' => 'Maximum number of items to be returned in result set.',
+			'type' => 'integer',
+			'default' => 10,
+			'minimum' => 1,
+			'maximum' => 500,
+			'sanitize_callback' => 'absint',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
 
 		$params['after'] = array(
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.' ),

@@ -316,7 +316,7 @@ if ( ! function_exists( 'ss_podcast' ) ) {
 					$template = str_replace( '%%CLASS%%', $class, $template );
 					$template = str_replace( '%%TITLE%%', $title, $template );
 
-					$meta     = $series->count . __( ' episodes', 'seriously-simple-podcasting' );
+					$meta     = sprintf( __( '%s episodes', 'seriously-simple-podcasting' ), $series->count );
 					$template = str_replace( '%%META%%', $meta, $template );
 
 					$html .= $template;
@@ -1467,9 +1467,9 @@ if ( ! function_exists( 'ssp_series_slug' ) ) {
 			return $slug;
 		}
 
-		$is_old_customer = wp_count_terms( CPT_Podcast_Handler::TAXONOMY_SERIES );
+		$is_old_customer = wp_count_terms( ssp_series_taxonomy() );
 
-		$slug =  $is_old_customer ? CPT_Podcast_Handler::TAXONOMY_SERIES : CPT_Podcast_Handler::DEFAULT_SERIES_SLUG;
+		$slug =  $is_old_customer ? ssp_series_taxonomy() : CPT_Podcast_Handler::DEFAULT_SERIES_SLUG;
 
 		return apply_filters( 'ssp_series_slug', $slug );
 	}
@@ -1597,7 +1597,7 @@ if ( ! function_exists( 'ssp_renderer' ) ) {
  */
 if ( ! function_exists( 'ssp_dynamo_btn' ) ) {
 	/**
-	 * Gets media prefix
+	 * Gets dynamo button
 	 *
 	 * @param string $title
 	 * @param string $subtitle
@@ -1616,6 +1616,25 @@ if ( ! function_exists( 'ssp_dynamo_btn' ) ) {
 		}
 
 		return ssp_renderer()->fetch( 'settings/dynamo-btn', compact( 'title', 'subtitle', 'description', 'default_podcast_title' ) );
+	}
+}
+
+
+/**
+ * Print upsell field.
+ */
+if ( ! function_exists( 'ssp_upsell_field' ) ) {
+	/**
+	 * Gets upsell field
+	 *
+	 * @param string $description
+	 * @param array $btn
+	 *
+	 * @return string
+	 * @since 2.21.0
+	 */
+	function ssp_upsell_field( $description, $btn ) {
+		return ssp_renderer()->fetch( 'settings/upsell-field', compact( 'description', 'btn' ) );
 	}
 }
 
@@ -1638,5 +1657,49 @@ if ( ! function_exists( 'ssp_get_episode_podcasts' ) ) {
 		}
 
 		return $series;
+	}
+}
+
+/**
+ * Gets array of podcast terms.
+ */
+if ( ! function_exists( 'ssp_get_podcasts' ) ) {
+	/**
+	 * Gets array of podcast terms.
+	 *
+	 * @param bool $hide_empty
+	 *
+	 * @return WP_Term[]
+	 */
+	function ssp_get_podcasts( $hide_empty = false ) {
+		return get_terms( 'series', array( 'hide_empty' => $hide_empty ) );
+	}
+}
+
+/**
+ * Gets SSP Version.
+ */
+if ( ! function_exists( 'ssp_version' ) ) {
+	/**
+	 * Gets SSP Version.
+	 *
+	 * @return string|null
+	 */
+	function ssp_version() {
+		return defined( 'SSP_VERSION' ) ? SSP_VERSION : null;
+	}
+}
+
+/**
+ * Gets SSP Version.
+ */
+if ( ! function_exists( 'ssp_series_taxonomy' ) ) {
+	/**
+	 * Gets SSP Version.
+	 *
+	 * @return string|null
+	 */
+	function ssp_series_taxonomy() {
+		return apply_filters( 'ssp_series_taxonomy', 'series' );
 	}
 }

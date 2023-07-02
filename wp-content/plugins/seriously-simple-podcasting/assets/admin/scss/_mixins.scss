@@ -1,0 +1,43 @@
+// Colors:
+$clr_blue_50: #F6F7F7;
+$clr_blue_100: #ccd6e2;
+$clr_blue_400: #3970AC;
+
+$clr_gray_300: #CBD5E1;
+$clr_gray_400: #9CA3AF;
+$clr_gray_500: #64748B;
+$clr_gray_600: #475569;
+$clr_gray_650: #4B5563; // Do not use it, use $clr_gray_600 instead
+
+$clr_red_200: #FFA5A5;
+$clr_red_400: #DF4E4F;
+
+$clr_white: #FFFFFF;
+
+
+// Breakpoints:
+$breakpoints: (
+	'sm':  767px,
+	'md': 960px,
+	'lg':  1200px
+) !default;
+
+/// Mixin to manage responsive breakpoints
+/// @author Kitty Giraudel
+/// @param {String} $breakpoint - Breakpoint name
+/// @require $breakpoints
+@mixin smaller($breakpoint) {
+	// If the key exists in the map
+	@if map-has-key($breakpoints, $breakpoint) {
+		// Prints a media query based on the value
+		@media (max-width: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+
+		// If the key doesn't exist in the map
+	@else {
+		@warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+	}
+}

@@ -3,6 +3,7 @@
 namespace SeriouslySimplePodcasting\Handlers;
 
 use SeriouslySimplePodcasting\Interfaces\Service;
+use SeriouslySimplePodcasting\Traits\Useful_Variables;
 
 /**
  * SSP Custom Post Type Podcast Handler
@@ -12,6 +13,10 @@ use SeriouslySimplePodcasting\Interfaces\Service;
  */
 class CPT_Podcast_Handler implements Service {
 
+	/**
+	 * @deprecated
+	 * @see ssp_series_taxonomy() instead
+	 * */
 	const TAXONOMY_SERIES = 'series';
 
 	const DEFAULT_SERIES_SLUG = 'podcasts';
@@ -95,27 +100,27 @@ class CPT_Podcast_Handler implements Service {
 	 * @return void
 	 */
 	protected function register_series_taxonomy( $podcast_post_types, $args ) {
-		register_taxonomy( apply_filters( 'ssp_series_taxonomy', self::TAXONOMY_SERIES ), $podcast_post_types, $args );
+		register_taxonomy( ssp_series_taxonomy(), $podcast_post_types, $args );
 	}
 
 	protected function get_podcast_args() {
 		$labels = array(
 			'name'                  => _x( 'Episode', 'post type general name', 'seriously-simple-podcasting' ),
 			'singular_name'         => _x( 'Episode', 'post type singular name', 'seriously-simple-podcasting' ),
-			'add_new'               => _x( 'Add New Episode', SSP_CPT_PODCAST, 'seriously-simple-podcasting' ),
-			'add_new_item'          => sprintf( __( 'Add New %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
-			'edit_item'             => sprintf( __( 'Edit %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
-			'new_item'              => sprintf( __( 'New %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
-			'all_items'             => sprintf( __( 'All %s', 'seriously-simple-podcasting' ), __( 'Episodes', 'seriously-simple-podcasting' ) ),
-			'view_item'             => sprintf( __( 'View %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
-			'search_items'          => sprintf( __( 'Search %s', 'seriously-simple-podcasting' ), __( 'Episodes', 'seriously-simple-podcasting' ) ),
-			'not_found'             => sprintf( __( 'No %s Found', 'seriously-simple-podcasting' ), __( 'Episodes', 'seriously-simple-podcasting' ) ),
-			'not_found_in_trash'    => sprintf( __( 'No %s Found In Trash', 'seriously-simple-podcasting' ), __( 'Episodes', 'seriously-simple-podcasting' ) ),
+			'add_new'               => __( 'Add New Episode', 'seriously-simple-podcasting' ),
+			'add_new_item'          => __( 'Add New Episode', 'seriously-simple-podcasting' ),
+			'edit_item'             => __( 'Edit Episode', 'seriously-simple-podcasting' ),
+			'new_item'              => __( 'New Episode', 'seriously-simple-podcasting' ),
+			'all_items'             => __( 'All Episodes', 'seriously-simple-podcasting' ),
+			'view_item'             => __( 'View Episode', 'seriously-simple-podcasting' ),
+			'search_items'          => __( 'Search Episodes', 'seriously-simple-podcasting' ),
+			'not_found'             => __( 'No Episodes Found', 'seriously-simple-podcasting' ),
+			'not_found_in_trash'    => __( 'No Episodes In Trash', 'seriously-simple-podcasting' ),
 			'parent_item_colon'     => '',
 			'menu_name'             => __( 'Podcasting', 'seriously-simple-podcasting' ),
-			'filter_items_list'     => sprintf( __( 'Filter %s list', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
-			'items_list_navigation' => sprintf( __( '%s list navigation', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
-			'items_list'            => sprintf( __( '%s list', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
+			'filter_items_list'     => __( 'Filter Episode list', 'seriously-simple-podcasting' ),
+			'items_list_navigation' => __( 'Episode list navigation', 'seriously-simple-podcasting' ),
+			'items_list'            => __( 'Episode list', 'seriously-simple-podcasting' ),
 		);
 		$slug   = apply_filters( 'ssp_archive_slug', __( SSP_CPT_PODCAST, 'seriously-simple-podcasting' ) );
 		$args   = array(
@@ -215,11 +220,12 @@ class CPT_Podcast_Handler implements Service {
 			'rewrite'           => array( 'slug' => ssp_series_slug() ),
 			'labels'            => $series_labels,
 			'show_in_rest'      => true,
+			'rest_base'         => 'series',
 			'show_admin_column' => true,
 			'capabilities'      => $this->roles_handler->get_podcast_tax_capabilities(),
 		);
 
-		return apply_filters( 'ssp_register_taxonomy_args', $series_args, self::TAXONOMY_SERIES );
+		return apply_filters( 'ssp_register_taxonomy_args', $series_args, ssp_series_taxonomy() );
 	}
 
 	/**
@@ -294,6 +300,14 @@ class CPT_Podcast_Handler implements Service {
 				'section'          => 'info',
 				'meta_description' => __( 'Seriously Simple Hosting file id.', 'seriously-simple-podcasting' ),
 			);
+		} else {
+			$description = __( 'Get lower bandwidth fees, file storage, and better stats when hosting with Castos.', 'seriously-simple-podcasting' );
+			$btn         = array(
+				'title' => 'Try Castos for free',
+				'url'   => 'https://castos.com/podcast-hosting-wordpress/?utm_source=ssp&utm_medium=episode-file-box&utm_campaign=upgrade'
+			);
+
+			$fields['audio_file']['description'] .= ssp_upsell_field( $description, $btn );
 		}
 
 		$post = get_post();
@@ -312,7 +326,7 @@ class CPT_Podcast_Handler implements Service {
 		$fields['cover_image'] = array(
 			'name'             => __( 'Episode Image:', 'seriously-simple-podcasting' ),
 			'description'      => __( 'The episode image should be square to display properly in podcasting apps and directories, and should be at least 300x300px in size.', 'seriously-simple-podcasting' ) .
-			'<br>' . ssp_dynamo_btn( $post_title, $podcast_title, 'Create an episode image with our free tool %s' ),
+			'<br>' . ssp_dynamo_btn( $post_title, $podcast_title, 'Create an episode image with our free tool' ),
 			'type'             => 'image',
 			'default'          => '',
 			'section'          => 'info',
