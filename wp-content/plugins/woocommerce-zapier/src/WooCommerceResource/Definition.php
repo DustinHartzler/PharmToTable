@@ -104,9 +104,11 @@ interface Definition {
 	 * Get the description of an individual resource object/record.
 	 *
 	 * @since 2.1.0
+	 * @since 2.5.0 Added $variation_id parameter.
 	 *
-	 * @param int $resource_id Resource ID.
+	 * @param int $resource_id  Resource ID.
+	 * @param int $variation_id Variation ID.
 	 * @return string|null Description or null if resource not found.
 	 */
-	public function get_description( $resource_id );
+	public function get_description( $resource_id, $variation_id = 0 );
 }

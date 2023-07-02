@@ -136,10 +136,6 @@ class AuthKeyRotator {
 			}
 
 			$keys = $this->key_data_store->get_existing_keys( $user->user_id );
-			if ( is_null( $keys ) ) {
-				continue;
-			}
-
 			foreach ( $keys as $key ) {
 				if ( ! $check_last_access_date || ( is_null( $key->last_access ) || $key->last_access < $last_access_date ) ) {
 					$this->logger->debug(

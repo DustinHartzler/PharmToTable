@@ -85,13 +85,14 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			throw new InvalidTaskException( __( 'Invalid task history: no ID.', 'woocommerce-zapier' ) );
 		}
 
-		$data = $this->wp_db->get_row(
-			$this->wp_db->prepare(
-				'SELECT * FROM ' . $this->get_table_name() . ' WHERE history_id = %d LIMIT 1;',
-				$task->get_id()
-			),
-			ARRAY_A
+		$query = $this->wp_db->prepare(
+			'SELECT * FROM ' . $this->get_table_name() . ' WHERE history_id = %d LIMIT 1;',
+			$task->get_id()
 		);
+		if ( ! is_string( $query ) ) {
+			return;
+		}
+		$data = $this->wp_db->get_row( $query, ARRAY_A );
 
 		if ( ! is_array( $data ) ) {
 			// TODO: log?
@@ -105,6 +106,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 				'webhook_id'    => $data['webhook_id'],
 				'resource_type' => $data['resource_type'],
 				'resource_id'   => $data['resource_id'],
+				'variation_id'  => $data['variation_id'],
 				'message'       => $data['message'],
 				'type'          => $data['type'],
 			)
@@ -167,16 +169,15 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	 */
 	protected function map_to_db_fields_for_edit( $task ) {
 		$data = array(
-			'date_time'     => $task->get_date_time( 'edit' ),
+			// Convert WC_DateTime to a MySQL date/time or string to store in the DB.
+			'date_time'     => $task->get_date_time( 'edit' ) ? $task->get_date_time( 'edit' )->date( 'Y-m-d H:i:s' ) : '',
 			'webhook_id'    => $task->get_webhook_id( 'edit' ),
 			'resource_type' => $task->get_resource_type( 'edit' ),
 			'resource_id'   => $task->get_resource_id( 'edit' ),
+			'variation_id'  => $task->get_variation_id( 'edit' ),
 			'message'       => $task->get_message( 'edit' ),
 			'type'          => $task->get_type( 'edit' ),
 		);
-
-		// Convert WC_DateTime to a MySQL date/time.
-		$data['date_time'] = $data['date_time']->date( 'Y-m-d H:i:s' );
 
 		return $data;
 	}
@@ -218,6 +219,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	protected function get_tasks_matching_criteria( $args = array() ) {
 		$default_args = array(
 			'resource_id'   => null,
+			'variation_id'  => null,
 			'resource_type' => null,
 			'orderby'       => 'history_id',
 			'order'         => 'DESC',
@@ -228,10 +230,13 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 
 		$args = wp_parse_args( $args, $default_args );
 
-		$query = 'SELECT * FROM ' . $this->get_table_name();
+		$query = 'SELECT * FROM ' . $this->get_table_name() . ' WHERE 1=1';
 
 		if ( ! empty( $args['resource_type'] ) && ! empty( $args['resource_id'] ) ) {
-			$query .= $this->wp_db->prepare( ' WHERE resource_id = %d AND resource_type = %s', absint( $args['resource_id'] ), $args['resource_type'] );
+			$query .= $this->wp_db->prepare( ' AND resource_id = %d AND resource_type = %s', absint( $args['resource_id'] ), $args['resource_type'] );
+		}
+		if ( ! is_null( $args['variation_id'] ) ) {
+			$query .= $this->wp_db->prepare( ' AND variation_id = %d', absint( $args['variation_id'] ) );
 		}
 
 		if ( true === $args['count'] ) {
@@ -245,8 +250,12 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 		}
 		$query .= $this->wp_db->prepare( ' ORDER BY ' . sanitize_sql_orderby( $args['orderby'] . ' ' . $args['order'] ) . ' LIMIT %d, %d', absint( $args['offset'] ), absint( $args['limit'] ) );
 
-		$items = array();
-		foreach ( $this->wp_db->get_results( $query, ARRAY_A ) as $item ) {
+		$items  = array();
+		$result = $this->wp_db->get_results( $query, ARRAY_A );
+		if ( ! is_array( $result ) ) {
+			return array();
+		}
+		foreach ( $result as $item ) {
 			$items[] = new Task( $this, $item );
 		}
 		return $items;
@@ -281,6 +290,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			'%s',
 			'%d',
 			'%s',
+			'%d',
 			'%d',
 			'%s',
 			'%s',

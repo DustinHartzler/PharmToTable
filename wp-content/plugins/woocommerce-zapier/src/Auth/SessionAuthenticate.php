@@ -164,7 +164,7 @@ class SessionAuthenticate {
 
 			// Respond with a HTTP 406 Error because the Zapier platform doesn't handle a HTTP 401 responses properly.
 			$this->respond_auth_error(
-				'wc_zapier_rest_cannot_authenticate',
+				'woocommerce_auth_cannot_authenticate',
 				__( 'The username and/or password you supplied is incorrect.', 'woocommerce-zapier' ),
 				406
 			);
@@ -181,7 +181,7 @@ class SessionAuthenticate {
 		if ( ! $user->has_cap( 'manage_woocommerce' ) || ! $user->has_cap( 'promote_users' ) || ! $user->has_cap( 'edit_users' ) ) {
 			$this->logger->notice( 'Authentication attempt failed for user: %s. Insufficient user permissions.', $user->user_login );
 			$this->respond_auth_error(
-				'wc_zapier_rest_cannot_authorize',
+				'woocommerce_auth_cannot_authorize',
 				__( 'This user does not have the correct permissions.', 'woocommerce-zapier' ),
 				403
 			);
@@ -227,7 +227,7 @@ class SessionAuthenticate {
 			$method = isset( $_SERVER['REQUEST_METHOD'] ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : 'UNAVAILABLE';
 			$this->logger->notice( 'Authentication validation failed. Invalid Request Method: %s', $method );
 			$this->respond_auth_error(
-				'wc_zapier_method_not_allowed',
+				'woocommerce_auth_method_not_allowed',
 				__( '405 Method not Allowed', 'woocommerce-zapier' ),
 				405
 			);
@@ -236,7 +236,7 @@ class SessionAuthenticate {
 		if ( ! is_ssl() ) {
 			$this->logger->notice( 'Authentication validation failed. Not SSL.' );
 			$this->respond_auth_error(
-				'wc_zapier_bad_request',
+				'woocommerce_auth_bad_request',
 				__( '400 Bad Request', 'woocommerce-zapier' ),
 				400
 			);
@@ -248,7 +248,7 @@ class SessionAuthenticate {
 		if ( false === $content ) {
 			$this->logger->notice( 'Authentication validation failed. Error reading request body.' );
 			$this->respond_auth_error(
-				'wc_zapier_bad_request',
+				'woocommerce_auth_bad_request',
 				__( '400 Bad Request', 'woocommerce-zapier' ),
 				400
 			);
@@ -260,7 +260,7 @@ class SessionAuthenticate {
 			$this->logger->notice( 'Authentication validation failed. Malformed request body.' );
 			$this->logger->notice( 'JSON Error: %s', json_last_error_msg() );
 			$this->respond_auth_error(
-				'wc_zapier_bad_request',
+				'woocommerce_auth_bad_request',
 				__( '400 Bad Request', 'woocommerce-zapier' ),
 				400
 			);
@@ -272,7 +272,7 @@ class SessionAuthenticate {
 				array( empty( $request['username'] ) ? 'missing' : 'set', empty( $request['password'] ) ? 'missing' : 'set' )
 			);
 			$this->respond_auth_error(
-				'wc_zapier_bad_request',
+				'woocommerce_auth_bad_request',
 				__( '400 Bad Request', 'woocommerce-zapier' ),
 				400
 			);
@@ -284,7 +284,7 @@ class SessionAuthenticate {
 				array( gettype( $request['username'] ), gettype( $request['password'] ) )
 			);
 			$this->respond_auth_error(
-				'wc_zapier_bad_request',
+				'woocommerce_auth_bad_request',
 				__( '400 Bad Request', 'woocommerce-zapier' ),
 				400
 			);

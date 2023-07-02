@@ -69,8 +69,10 @@ class Manager {
 		foreach ( $additional_resources as $resource_class_name ) {
 			$class = new ReflectionClass( $resource_class_name );
 			if ( $class->implementsInterface( Definition::class ) ) {
-				$resource          = $this->container->get( $resource_class_name );
-				$this->resources[] = $resource;
+				$resource = $this->container->get( $resource_class_name );
+				if ( $resource instanceof Definition ) {
+					$this->resources[] = $resource;
+				}
 			}
 		}
 	}

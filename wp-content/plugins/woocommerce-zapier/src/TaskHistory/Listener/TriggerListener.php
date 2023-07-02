@@ -94,7 +94,18 @@ class TriggerListener {
 		$task->set_webhook_id( $webhook->get_id() );
 		$task->set_type( 'trigger' );
 		$task->set_resource_type( $webhook->get_resource() );
-		$task->set_resource_id( $arg );
+
+		$resource_id = \absint( $arg );
+		if ( 'product' === $task->get_resource_type() ) {
+			$product = \wc_get_product( $arg );
+			if ( $product && $product->get_parent_id() > 0 ) {
+				// A product variation was sent.
+				// Record the variation ID, but use the parent product ID as the resource ID.
+				$task->set_variation_id( $product->get_id() );
+				$resource_id = $product->get_parent_id();
+			}
+		}
+		$task->set_resource_id( $resource_id );
 
 		if ( is_wp_error( $response ) ) {
 			// Webhook delivery failed.
@@ -114,7 +125,7 @@ class TriggerListener {
 			$task->set_message(
 				sprintf(
 					// Translators: 1: Trigger Rule Name.
-					__( 'Sent to Zapier successfully via the <em>%1$s</em> trigger.', 'woocommerce-zapier' ),
+					__( 'Sent to Zapier successfully via the <em>%1$s</em> trigger', 'woocommerce-zapier' ),
 					$topic_name
 				)
 			);

@@ -27,6 +27,7 @@ class Task extends WC_Data {
 		'webhook_id'    => null,
 		'resource_type' => null,
 		'resource_id'   => null,
+		'variation_id'  => 0,
 		'message'       => '',
 		'type'          => '',
 	);
@@ -67,7 +68,7 @@ class Task extends WC_Data {
 			$this->set_object_read( true );
 		}
 
-		// If we have an ID, load the webhook from the DB.
+		// If we have an ID, load the task from the DB.
 		if ( 0 !== $this->get_id() ) {
 			try {
 				$this->data_store->read( $this );
@@ -94,10 +95,11 @@ class Task extends WC_Data {
 	 *
 	 * @param  string $context Get context.
 	 *
-	 * @return WC_DateTime Date/time object.
+	 * @return WC_DateTime|null DateTime object or null if not set.
 	 */
 	public function get_date_time( $context = 'view' ) {
-		return $this->get_prop( 'date_time', $context );
+		$date_time = $this->get_prop( 'date_time', $context );
+		return $date_time instanceof WC_DateTime ? $date_time : null;
 	}
 
 	/**
@@ -108,7 +110,7 @@ class Task extends WC_Data {
 	 * @return integer
 	 */
 	public function get_webhook_id( $context = 'view' ) {
-		return $this->get_prop( 'webhook_id', $context );
+		return absint( $this->get_prop( 'webhook_id', $context ) );
 	}
 
 	/**
@@ -128,7 +130,8 @@ class Task extends WC_Data {
 	 * @return string
 	 */
 	public function get_resource_type( $context = 'view' ) {
-		return $this->get_prop( 'resource_type', $context );
+		$resource_type = $this->get_prop( 'resource_type', $context );
+		return \is_scalar( $resource_type ) ? \strval( $resource_type ) : '';
 	}
 
 	/**
@@ -139,7 +142,18 @@ class Task extends WC_Data {
 	 * @return integer
 	 */
 	public function get_resource_id( $context = 'view' ) {
-		return $this->get_prop( 'resource_id', $context );
+		return absint( $this->get_prop( 'resource_id', $context ) );
+	}
+
+	/**
+	 * Get variation id.
+	 *
+	 * @param  string $context Get context.
+	 *
+	 * @return integer
+	 */
+	public function get_variation_id( $context = 'view' ) {
+		return absint( $this->get_prop( 'variation_id', $context ) );
 	}
 
 	/**
@@ -150,7 +164,9 @@ class Task extends WC_Data {
 	 * @return string
 	 */
 	public function get_message( $context = 'view' ) {
-		return $this->get_prop( 'message', $context );
+		$message = $this->get_prop( 'message', $context );
+		return \is_scalar( $message ) ? \strval( $message ) : '';
+
 	}
 
 	/**
@@ -161,7 +177,8 @@ class Task extends WC_Data {
 	 * @return string
 	 */
 	public function get_type( $context = 'view' ) {
-		return $this->get_prop( 'type', $context );
+		$type = $this->get_prop( 'type', $context );
+		return \is_scalar( $type ) ? \strval( $type ) : '';
 	}
 
 	/*
@@ -215,6 +232,17 @@ class Task extends WC_Data {
 	 */
 	public function set_resource_id( $value ) {
 		$this->set_prop( 'resource_id', absint( $value ) );
+	}
+
+	/**
+	 * Set variation id.
+	 *
+	 * @param int $value Value to set.
+	 *
+	 * @return void
+	 */
+	public function set_variation_id( $value ) {
+		$this->set_prop( 'variation_id', absint( $value ) );
 	}
 
 	/**

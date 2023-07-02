@@ -66,12 +66,13 @@ class Installer {
 		add_action( 'wc_zapier_db_upgrade_v_5_to_6', array( $this, 'install_database_table' ) );
 		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'delete_cron_jobs' ) );
 		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'update_messages_to_remove_view_edit_zap_link' ) );
+		add_action( 'wc_zapier_db_upgrade_v_14_to_15', array( $this, 'install_database_table' ) );
 	}
 
 	/**
 	 * Installs (or updates) the database table where history is stored.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function install_database_table() {
 		$collate = '';
@@ -87,6 +88,7 @@ CREATE TABLE {$this->db_table} (
   webhook_id bigint UNSIGNED,
   resource_type varchar(32) NOT NULL,
   resource_id bigint UNSIGNED NOT NULL,
+  variation_id bigint UNSIGNED NOT NULL DEFAULT 0,
   message text NOT NULL,
   type varchar(32) NOT NULL,
   PRIMARY KEY  (history_id)
@@ -105,11 +107,7 @@ SQL;
 					isset( $result[ $this->db_table ] ) ? $result[ $this->db_table ] : '',
 				)
 			);
-			return false;
 		}
-
-		return true;
-
 	}
 
 	/**
@@ -129,7 +127,11 @@ SQL;
 	 * @return bool
 	 */
 	public function database_table_exists() {
-		return $this->db_table === $this->wp_db->get_var( strval( $this->wp_db->prepare( 'SHOW TABLES LIKE %s', $this->db_table ) ) );
+		$query = $this->wp_db->prepare( 'SHOW TABLES LIKE %s', $this->db_table );
+		if ( ! is_string( $query ) ) {
+			return false;
+		}
+		return $this->db_table === $this->wp_db->get_var( $query );
 	}
 
 	/**

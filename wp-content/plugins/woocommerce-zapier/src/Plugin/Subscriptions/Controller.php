@@ -64,6 +64,7 @@ class Controller extends WC_REST_Subscriptions_Controller {
 	public function __construct( Logger $logger, TaskDataStore $data_store ) {
 		$this->logger     = $logger;
 		$this->data_store = $data_store;
+		// @phpstan-ignore-next-line False report of missing parent constructor.
 		parent::__construct();
 	}
 }

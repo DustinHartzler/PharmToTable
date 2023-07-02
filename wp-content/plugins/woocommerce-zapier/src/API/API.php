@@ -9,6 +9,8 @@ use OM4\WooCommerceZapier\ContainerService;
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
 use OM4\WooCommerceZapier\Helper\HTTPHeaders;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\Price\Controller as ProductPriceController;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\Stock\Controller as ProductStockController;
 use WP_HTTP_Response;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -108,9 +110,11 @@ class API {
 	 */
 	public function rest_api_init() {
 
-		// Non-resource specific controllers.
+		// Special controllers.
 		$controllers = array(
 			PingController::class,
+			ProductPriceController::class,
+			ProductStockController::class,
 			WebhookController::class,
 			WebhookTopicsController::class,
 		);

@@ -46,14 +46,20 @@ class CouponResource extends CustomPostTypeResource {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param int $resource_id Resource ID.
+	 * @param int $resource_id  Resource ID.
+	 * @param int $variation_id Variation ID.
 	 *
 	 * @return string|null
 	 */
-	public function get_description( $resource_id ) {
+	public function get_description( $resource_id, $variation_id = 0 ) {
 		$coupon_code = \wc_get_coupon_code_by_id( $resource_id );
 		if ( '' !== $coupon_code ) {
-			return $coupon_code;
+			return \sprintf(
+			/* translators: 1: Coupon ID, 2: Coupon Code */
+				__( 'Coupon #%1$d (%2$s)', 'woocommerce-zapier' ),
+				$resource_id,
+				\trim( $coupon_code )
+			);
 		}
 		return null;
 	}

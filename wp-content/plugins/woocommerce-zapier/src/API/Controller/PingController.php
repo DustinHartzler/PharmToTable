@@ -84,7 +84,7 @@ class PingController extends WC_REST_Controller {
 			$this->logger->critical( 'WooCommerce REST API Basic Authentication was not performed during ping because is_ssl() returned false.' );
 
 			return new WP_Error(
-				'wc_zapier_not_implemented',
+				'woocommerce_rest_not_implemented',
 				__( 'Sorry, SSL is not configured correctly.', 'woocommerce-zapier' ),
 				array( 'status' => 501 )
 			);
@@ -97,7 +97,7 @@ class PingController extends WC_REST_Controller {
 				$user = wp_get_current_user();
 				$this->logger->critical( 'Authentication attempt failed for user: %s. Insufficient user permissions.', $user->user_login );
 				return new WP_Error(
-					'wc_zapier_rest_cannot_authorize',
+					'woocommerce_rest_cannot_authorize',
 					__( 'This user does not have the correct permissions.', 'woocommerce-zapier' ),
 					array( 'status' => 403 )
 				);
@@ -105,7 +105,7 @@ class PingController extends WC_REST_Controller {
 
 			$this->logger->critical( 'Authentication attempt failed. could not authenticate user.' );
 			return new WP_Error(
-				'wc_zapier_rest_cannot_view',
+				'woocommerce_rest_cannot_view',
 				__( 'Sorry, you cannot list resources.', 'woocommerce-zapier' ),
 				array( 'status' => rest_authorization_required_code() )
 			);

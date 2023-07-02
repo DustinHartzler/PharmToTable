@@ -23,7 +23,7 @@ trait APIListenerTrait {
 	/**
 	 * Item Create.
 	 *
-	 * @uses WC_REST_CRUD_Controller::create_item() as parent::create_item() Create a single item.
+	 * @uses WP_REST_Controller::create_item() as parent::create_item() Create a single item.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -35,6 +35,7 @@ trait APIListenerTrait {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
+		// @phpstan-ignore-next-line Structure comes from WooCommerce.
 		$this->create_task( $response->data['id'], __( 'Created via Zapier', 'woocommerce-zapier' ) );
 		return $response;
 	}
@@ -42,13 +43,22 @@ trait APIListenerTrait {
 	/**
 	 * Item Delete.
 	 *
-	 * @uses WC_REST_CRUD_Controller::delete_item() as parent::delete_item() Delete a single item.
+	 * @uses WP_REST_Controller::delete_item() as parent::delete_item() Delete a single item.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function delete_item( $request ) {
+		/**
+		 * Deletes an item.
+		 *
+		 * Return type differs from docblock. Despite the docblock indicating that
+		 * the return type might be a boolean, the actual implementation in
+		 * WP_REST_Controller::delete_item() does not ever return a boolean.
+		 *
+		 * @var WP_Error|WP_REST_Response $response
+		 */
 		$response = parent::delete_item( $request );
 		if ( is_a( $response, 'WP_Error' ) ) {
 			$this->log_error_response( $request, $response );
@@ -68,7 +78,7 @@ trait APIListenerTrait {
 	/**
 	 * Item update.
 	 *
-	 * @uses WC_REST_CRUD_Controller::update_item() as parent::update_item() Update a single item.
+	 * @uses WP_REST_Controller::update_item() as parent::update_item() Update a single item.
 
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -80,21 +90,21 @@ trait APIListenerTrait {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
-		$this->create_task( $response->data['id'], __( 'Updated via Zapier', 'woocommerce-zapier' ) );
+		$this->create_task( $request['id'], __( 'Updated via Zapier', 'woocommerce-zapier' ) );
 		return $response;
 	}
 
 	/**
 	 * Create a Task History record.
 	 *
-	 * @uses self::$data_store TaskDataStore instance.
-	 *
-	 * @param int    $resource_id Resource ID.
-	 * @param string $message     Message.
+	 * @param  int    $resource_id  Resource ID.
+	 * @param  string $message  Message.
+	 * @param  int    $variation_id Variation ID.
 	 *
 	 * @return void
+	 * @uses self::$data_store TaskDataStore instance.
 	 */
-	protected function create_task( $resource_id, $message ) {
+	protected function create_task( $resource_id, $message, $variation_id = 0 ) {
 		/**
 		 * Task instance.
 		 *
@@ -103,6 +113,9 @@ trait APIListenerTrait {
 		$task = $this->data_store->new_task();
 		$task->set_type( 'action' );
 		$task->set_resource_id( $resource_id );
+		if ( $variation_id ) {
+			$task->set_variation_id( $variation_id );
+		}
 		$task->set_resource_type( $this->resource_type );
 		$task->set_message( $message );
 		if ( 0 === $task->save() ) {

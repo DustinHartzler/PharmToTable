@@ -127,14 +127,20 @@ class OrderResource extends CustomPostTypeResource {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param int $resource_id Resource ID.
+	 * @param int $resource_id  Resource ID.
+	 * @param int $variation_id Variation ID.
 	 *
 	 * @return string|null
 	 */
-	public function get_description( $resource_id ) {
+	public function get_description( $resource_id, $variation_id = 0 ) {
 		$object = \wc_get_order( $resource_id );
 		if ( ! is_bool( $object ) && is_a( $object, 'WC_Order' ) && 'trash' !== $object->get_status() ) {
-			return trim( $object->get_formatted_billing_full_name() );
+			return \sprintf(
+				/* translators: 1: Order ID, 2: Order Formatted Full Billing Name */
+				__( 'Order #%1$d (%2$s)', 'woocommerce-zapier' ),
+				$object->get_order_number(),
+				\trim( $object->get_formatted_billing_full_name() )
+			);
 		}
 		return null;
 	}

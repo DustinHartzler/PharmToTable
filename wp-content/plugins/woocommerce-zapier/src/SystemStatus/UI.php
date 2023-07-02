@@ -8,6 +8,7 @@ use OM4\WooCommerceZapier\Plugin;
 use OM4\WooCommerceZapier\Settings;
 use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
 use OM4\WooCommerceZapier\Webhook\DataStore as WebhookDataStore;
+use OM4\WooCommerceZapier\Webhook\ZapierWebhook;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
@@ -221,18 +222,19 @@ class UI {
 				'name' => sprintf( __( 'Webhook #%1$s', 'woocommerce-zapier' ), $webhook->get_id() ),
 				'note' => sprintf(
 					// Both line breaks and <br /> tags are used below so that the HTML output (and the text output) both show a new line.
-					// Translators: 1: Webhook Name. 2: Webhook Status. 3: Webhook Topic. 4: Webhook Delivery Count.
+					// Translators: 1: Webhook Name. 2: Webhook Status. 3: Webhook Topic. 4: Webhook Delivery Count. 5: Webhook User Info.
 					__(
 						'%1$s<br />
 - Status: %2$s<br />
 - Trigger: %3$s<br />
-- Delivery Count: %4$s',
+- Delivery Count: %4$s%5$s',
 						'woocommerce-zapier'
 					),
 					$webhook->get_name(),
 					$webhook->get_status(),
 					$webhook->get_topic(),
-					(string) $count
+					(string) $count,
+					$this->get_webhook_user_info_output( $webhook )
 				),
 			);
 		}
@@ -250,6 +252,49 @@ class UI {
 			);
 		}
 		return $rows;
+	}
+
+	/**
+	 * Check if the webhook has a valid (administrator) user.
+	 *
+	 * If it does, return an empty string.
+	 * If it does not, return a string with information about the user.
+	 *
+	 * @since 2.4.2
+	 *
+	 * @param  ZapierWebhook $webhook Webhook to check.
+	 *
+	 * @return string
+	 */
+	protected function get_webhook_user_info_output( ZapierWebhook $webhook ) {
+		// Check if the webhook has a valid (administrator) user.
+
+		$user = get_user_by( 'id', $webhook->get_user_id() );
+		if ( ! $user ) {
+			return sprintf(
+				// Translators: 1: User ID.
+				__( "<br />\n- User: Id %d does not exist", 'woocommerce-zapier' ),
+				$webhook->get_user_id()
+			);
+		}
+		/**
+		 * Check user has the correct permissions.
+		 *
+		 * @see \OM4\WooCommerceZapier\Auth\SessionAuthenticate::authenticate()
+		 */
+		if ( $user->has_cap( 'manage_woocommerce' ) && $user->has_cap( 'promote_users' ) && $user->has_cap( 'edit_users' ) ) {
+			return sprintf(
+				// Translators: 1: User Login.
+				__( "<br />\n- User: %s", 'woocommerce-zapier' ),
+				$user->user_login
+			);
+		}
+
+		return sprintf(
+			// Translators: 1: User Login.
+			__( "<br />\n- User: %s does not have the correct permissions", 'woocommerce-zapier' ),
+			$user->user_login
+		);
 	}
 
 	/**

@@ -4,6 +4,7 @@ namespace OM4\WooCommerceZapier\Webhook;
 
 use OM4\WooCommerceZapier\Webhook\TopicsRetriever as WebhookTopicsRetriever;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
+use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -140,12 +141,12 @@ class Resources {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param array   $payload      Data to be sent out by the webhook.
-	 * @param string  $resource_key Type/name of the resource.
-	 * @param integer $resource_id  ID of the resource.
-	 * @param integer $webhook_id   ID of the webhook.
+	 * @param array|WP_Error $payload      Data to be sent out by the webhook.
+	 * @param string         $resource_key Type/name of the resource.
+	 * @param integer        $resource_id  ID of the resource.
+	 * @param integer        $webhook_id   ID of the webhook.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public function woocommerce_webhook_payload( $payload, $resource_key, $resource_id, $webhook_id ) {
 		foreach ( $this->resource_manager->get_enabled() as $resource ) {

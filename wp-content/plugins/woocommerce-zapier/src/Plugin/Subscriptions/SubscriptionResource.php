@@ -161,14 +161,20 @@ class SubscriptionResource extends CustomPostTypeResource {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param int $resource_id Resource ID.
+	 * @param int $resource_id  Resource ID.
+	 * @param int $variation_id Variation ID.
 	 *
 	 * @return string|null
 	 */
-	public function get_description( $resource_id ) {
-		$object = wcs_get_subscription( $resource_id );
+	public function get_description( $resource_id, $variation_id = 0 ) {
+		$object = \wcs_get_subscription( $resource_id );
 		if ( false !== $object && is_a( $object, 'WC_Subscription' ) && 'trash' !== $object->get_status() ) {
-			return $object->get_formatted_billing_full_name();
+			return \sprintf(
+			/* translators: 1: Subscription ID, 2: Subscription Formatted Full Billing Name */
+				__( 'Subscription #%1$d (%2$s)', 'woocommerce-zapier' ),
+				$object->get_id(),
+				\trim( $object->get_formatted_billing_full_name() )
+			);
 		}
 		return null;
 	}

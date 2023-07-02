@@ -49,7 +49,10 @@ use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
 use OM4\WooCommerceZapier\WooCommerceResource\Order\Controller as OrderController;
 use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderResource;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\Controller as ProductController;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\Price\Controller as ProductPriceController;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\Stock\Controller as ProductStockController;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\WCVariationController;
 use WC_Webhook_Data_Store;
 
 defined( 'ABSPATH' ) || exit;
@@ -93,9 +96,9 @@ class ContainerService {
 			AdminUI::class,
 			function () {
 				return new AdminUI(
-					$this->container->get( TaskHistoryUI::class ),
-					$this->container->get( Settings::class ),
-					$this->container->get( SystemStatusUI::class )
+					$this->get( TaskHistoryUI::class ),
+					$this->get( Settings::class ),
+					$this->get( SystemStatusUI::class )
 				);
 			}
 		);
@@ -104,9 +107,9 @@ class ContainerService {
 			API::class,
 			function() {
 				return new API(
-					$this->container->get( FeatureChecker::class ),
-					$this->container->get( ResourceManager::class ),
-					$this->container->get( HTTPHeaders::class ),
+					$this->get( FeatureChecker::class ),
+					$this->get( ResourceManager::class ),
+					$this->get( HTTPHeaders::class ),
 					$this
 				);
 			}
@@ -130,7 +133,7 @@ class ContainerService {
 			Installer::class,
 			function() {
 				return new Installer(
-					$this->container->get( Logger::class )
+					$this->get( Logger::class )
 				);
 			}
 		);
@@ -139,11 +142,11 @@ class ContainerService {
 			ExistingUserUpgrade::class,
 			function() {
 				return new ExistingUserUpgrade(
-					$this->container->get( Logger::class ),
-					$this->container->get( Settings::class ),
-					$this->container->get( WordPressDB::class ),
-					$this->container->get( UpgradedToVersion2Notice::class ),
-					$this->container->get( LegacyFeedsDeletedNotice::class )
+					$this->get( Logger::class ),
+					$this->get( Settings::class ),
+					$this->get( WordPressDB::class ),
+					$this->get( UpgradedToVersion2Notice::class ),
+					$this->get( LegacyFeedsDeletedNotice::class )
 				);
 			}
 		);
@@ -152,9 +155,9 @@ class ContainerService {
 			UpgradedToVersion2Notice::class,
 			function () {
 				return new UpgradedToVersion2Notice(
-					$this->container->get( Logger::class ),
-					$this->container->get( Settings::class ),
-					$this->container->get( AdminUI::class )
+					$this->get( Logger::class ),
+					$this->get( Settings::class ),
+					$this->get( AdminUI::class )
 				);
 			}
 		);
@@ -163,9 +166,9 @@ class ContainerService {
 			LegacyFeedsDeletedNotice::class,
 			function () {
 				return new LegacyFeedsDeletedNotice(
-					$this->container->get( Logger::class ),
-					$this->container->get( Settings::class ),
-					$this->container->get( AdminUI::class )
+					$this->get( Logger::class ),
+					$this->get( Settings::class ),
+					$this->get( AdminUI::class )
 				);
 			}
 		);
@@ -174,10 +177,10 @@ class ContainerService {
 			NewUser::class,
 			function () {
 				return new NewUser(
-					$this->container->get( Settings::class ),
-					$this->container->get( TaskDataStore::class ),
-					$this->container->get( KeyDataStore::class ),
-					$this->container->get( NewUserWelcomeNotice::class )
+					$this->get( Settings::class ),
+					$this->get( TaskDataStore::class ),
+					$this->get( KeyDataStore::class ),
+					$this->get( NewUserWelcomeNotice::class )
 				);
 			}
 		);
@@ -186,9 +189,9 @@ class ContainerService {
 			NewUserWelcomeNotice::class,
 			function () {
 				return new NewUserWelcomeNotice(
-					$this->container->get( Logger::class ),
-					$this->container->get( Settings::class ),
-					$this->container->get( AdminUI::class )
+					$this->get( Logger::class ),
+					$this->get( Settings::class ),
+					$this->get( AdminUI::class )
 				);
 			}
 		);
@@ -209,12 +212,13 @@ class ContainerService {
 				return new CustomerResource();
 			}
 		);
+
 		$this->container->add(
 			CustomerController::class,
 			function() {
 				return new CustomerController(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -224,16 +228,17 @@ class ContainerService {
 			CouponResource::class,
 			function() {
 				return new CouponResource(
-					$this->container->get( FeatureChecker::class )
+					$this->get( FeatureChecker::class )
 				);
 			}
 		);
+
 		$this->container->add(
 			CouponController::class,
 			function() {
 				return new CouponController(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -245,12 +250,13 @@ class ContainerService {
 				return new OrderResource();
 			}
 		);
+
 		$this->container->add(
 			OrderController::class,
 			function() {
 				return new OrderController(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -262,12 +268,44 @@ class ContainerService {
 				return new ProductResource();
 			}
 		);
+
 		$this->container->add(
 			ProductController::class,
 			function() {
 				return new ProductController(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class ),
+					$this->get( WCVariationController::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			ProductPriceController::class,
+			function() {
+				return new ProductPriceController(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			ProductStockController::class,
+			function() {
+				return new ProductStockController(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			WCVariationController::class,
+			function() {
+				return new WCVariationController(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -277,27 +315,28 @@ class ContainerService {
 			BookingsPlugin::class,
 			function() {
 				return new BookingsPlugin(
-					$this->container->get( FeatureChecker::class ),
-					$this->container->get( Logger::class )
+					$this->get( FeatureChecker::class ),
+					$this->get( Logger::class )
 				);
 			}
 		);
+
 		$this->container->add(
 			BookingResource::class,
 			function() {
 				return new BookingResource(
-					$this->container->get( BookingsV1Controller::class ),
-					$this->container->get( FeatureChecker::class ),
-					$this->container->get( Logger::class )
+					$this->get( BookingsV1Controller::class ),
+					$this->get( FeatureChecker::class )
 				);
 			}
 		);
+
 		$this->container->add(
 			BookingsV1Controller::class,
 			function() {
 				return new BookingsV1Controller(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -307,35 +346,38 @@ class ContainerService {
 			SubscriptionsPlugin::class,
 			function() {
 				return new SubscriptionsPlugin(
-					$this->container->get( FeatureChecker::class ),
-					$this->container->get( Logger::class ),
-					$this->container->get( SubscriptionResource::class )
+					$this->get( FeatureChecker::class ),
+					$this->get( Logger::class ),
+					$this->get( SubscriptionResource::class )
 				);
 			}
 		);
+
 		$this->container->add(
 			SubscriptionResource::class,
 			function() {
 				return new SubscriptionResource(
-					$this->container->get( FeatureChecker::class )
+					$this->get( FeatureChecker::class )
 				);
 			}
 		);
+
 		$this->container->add(
 			SubscriptionsController::class,
 			function() {
 				return new SubscriptionsController(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
+
 		$this->container->add(
 			SubscriptionsV1Controller::class,
 			function() {
 				return new SubscriptionsV1Controller(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -344,7 +386,7 @@ class ContainerService {
 			KeyDataStore::class,
 			function () {
 				return new KeyDataStore(
-					$this->container->get( WordPressDB::class )
+					$this->get( WordPressDB::class )
 				);
 			}
 		);
@@ -353,8 +395,8 @@ class ContainerService {
 			AuthKeyRotator::class,
 			function () {
 				return new AuthKeyRotator(
-					$this->container->get( KeyDataStore::class ),
-					$this->container->get( Logger::class )
+					$this->get( KeyDataStore::class ),
+					$this->get( Logger::class )
 				);
 			}
 		);
@@ -363,10 +405,10 @@ class ContainerService {
 			ListTable::class,
 			function () {
 				return new ListTable(
-					$this->container->get( TaskDataStore::class ),
-					$this->container->get( Resources::class ),
-					$this->container->get( FeatureChecker::class ),
-					$this->container->get( ResourceManager::class )
+					$this->get( TaskDataStore::class ),
+					$this->get( Resources::class ),
+					$this->get( FeatureChecker::class ),
+					$this->get( ResourceManager::class )
 				);
 			}
 		);
@@ -375,7 +417,7 @@ class ContainerService {
 			Logger::class,
 			function () {
 				return new Logger(
-					$this->container->get( Settings::class )
+					$this->get( Settings::class )
 				);
 			}
 		);
@@ -384,7 +426,7 @@ class ContainerService {
 			PingController::class,
 			function() {
 				return new PingController(
-					$this->container->get( Logger::class )
+					$this->get( Logger::class )
 				);
 			}
 		);
@@ -409,11 +451,11 @@ class ContainerService {
 			SystemStatusUI::class,
 			function() {
 				return new SystemStatusUI(
-					$this->container->get( Settings::class ),
-					$this->container->get( TaskDataStore::class ),
-					$this->container->get( KeyDataStore::class ),
-					$this->container->get( WebhookDataStore::class ),
-					$this->container->get( Installer::class )
+					$this->get( Settings::class ),
+					$this->get( TaskDataStore::class ),
+					$this->get( KeyDataStore::class ),
+					$this->get( WebhookDataStore::class ),
+					$this->get( Installer::class )
 				);
 			}
 		);
@@ -422,8 +464,8 @@ class ContainerService {
 			SessionAuthenticate::class,
 			function() {
 				return new SessionAuthenticate(
-					$this->container->get( KeyDataStore::class ),
-					$this->container->get( Logger::class )
+					$this->get( KeyDataStore::class ),
+					$this->get( Logger::class )
 				);
 			}
 		);
@@ -432,7 +474,7 @@ class ContainerService {
 			TaskDataStore::class,
 			function () {
 				return new TaskDataStore(
-					$this->container->get( WordPressDB::class )
+					$this->get( WordPressDB::class )
 				);
 			}
 		);
@@ -441,9 +483,9 @@ class ContainerService {
 			TaskHistoryInstaller::class,
 			function () {
 				return new TaskHistoryInstaller(
-					$this->container->get( Logger::class ),
-					$this->container->get( WordPressDB::class ),
-					$this->container->get( TaskDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( WordPressDB::class ),
+					$this->get( TaskDataStore::class )
 				);
 			}
 		);
@@ -453,7 +495,7 @@ class ContainerService {
 			function() {
 				return new TaskHistoryUI(
 					$this,
-					$this->container->get( ResourceManager::class )
+					$this->get( ResourceManager::class )
 				);
 			}
 		);
@@ -462,9 +504,9 @@ class ContainerService {
 			TriggerListener::class,
 			function () {
 				return new TriggerListener(
-					$this->container->get( Logger::class ),
-					$this->container->get( TaskDataStore::class ),
-					$this->container->get( Resources::class )
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class ),
+					$this->get( Resources::class )
 				);
 			}
 		);
@@ -486,7 +528,10 @@ class ContainerService {
 		$this->container->add(
 			WebhookDeliveryFilter::class,
 			function() {
-				return new WebhookDeliveryFilter( $this->container->get( HTTPHeaders::class ) );
+				return new WebhookDeliveryFilter(
+					$this->get( HTTPHeaders::class ),
+					$this->get( Logger::class )
+				);
 			}
 		);
 
@@ -494,8 +539,8 @@ class ContainerService {
 			WebhookInstaller::class,
 			function () {
 				return new WebhookInstaller(
-					$this->container->get( Logger::class ),
-					$this->container->get( WebhookDataStore::class )
+					$this->get( Logger::class ),
+					$this->get( WebhookDataStore::class )
 				);
 			}
 		);
@@ -503,7 +548,7 @@ class ContainerService {
 		$this->container->add(
 			WebhookController::class,
 			function() {
-				return new WebhookController( $this->container->get( ResourceManager::class ) );
+				return new WebhookController( $this->get( ResourceManager::class ) );
 			}
 		);
 
@@ -511,8 +556,8 @@ class ContainerService {
 			WebhookTopicsController::class,
 			function() {
 				return new WebhookTopicsController(
-					$this->container->get( Resources::class ),
-					$this->container->get( ResourceManager::class )
+					$this->get( Resources::class ),
+					$this->get( ResourceManager::class )
 				);
 			}
 		);
@@ -521,8 +566,8 @@ class ContainerService {
 			Resources::class,
 			function() {
 				return new Resources(
-					$this->container->get( WebhookTopicsRetriever::class ),
-					$this->container->get( ResourceManager::class )
+					$this->get( WebhookTopicsRetriever::class ),
+					$this->get( ResourceManager::class )
 				);
 			}
 		);

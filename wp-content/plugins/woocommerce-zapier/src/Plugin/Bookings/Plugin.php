@@ -5,8 +5,8 @@ namespace OM4\WooCommerceZapier\Plugin\Bookings;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
 use OM4\WooCommerceZapier\Logger;
-use OM4\WooCommerceZapier\Plugin\Bookings\BookingResource;
 use OM4\WooCommerceZapier\Plugin\Base;
+use OM4\WooCommerceZapier\Plugin\Bookings\BookingResource;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -170,7 +170,7 @@ class Plugin extends Base {
 	/**
 	 * Get the WooCommerce Bookings version number.
 	 *
-	 * @var string
+	 * @return string
 	 */
 	public function get_plugin_version() {
 		return WC_BOOKINGS_VERSION;

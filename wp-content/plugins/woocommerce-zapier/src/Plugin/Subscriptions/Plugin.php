@@ -74,6 +74,11 @@ class Plugin extends Base {
 			return false;
 		}
 
+		add_filter(
+			'wc_zapier_variable_product_types_to_variation_types',
+			array( $this, 'add_variable_product_types_to_variation_types' )
+		);
+
 		foreach ( $this->resource_definition->get_webhook_triggers() as $trigger ) {
 			foreach ( $trigger->get_actions() as $action ) {
 				if ( 0 === strpos( $action, 'wc_zapier_' ) ) {
@@ -86,9 +91,27 @@ class Plugin extends Base {
 	}
 
 	/**
+	 * Add the variable subscription product and variation type to the list of supported product types.
+	 *
+	 * Executed via the `wc_zapier_variable_product_types_to_variation_types` filter.
+	 *
+	 * @see \WC_Product_Variable_Subscription::get_type()
+	 * @see \WC_Product_Subscription_Variation::get_type()
+	 * @since 2.5.1
+	 *
+	 * @param array<string, string> $types The allowed product variation types.
+	 *
+	 * @return array<string, string> The key is the variable product type, the value is the variation type.
+	 */
+	public function add_variable_product_types_to_variation_types( $types ) {
+		$types['variable-subscription'] = 'subscription_variation';
+		return $types;
+	}
+
+	/**
 	 * Get the WooCommerce Subscriptions version number.
 	 *
-	 * @var string
+	 * @return string
 	 */
 	public function get_plugin_version() {
 		return WC_Subscriptions::$version;

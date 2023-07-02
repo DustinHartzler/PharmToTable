@@ -74,19 +74,19 @@ class KeyDataStore {
 	 *
 	 * @param integer $user_id WordPress User ID.
 	 *
-	 * @return stdClass[]|null Array of key details, or null if no keys found.
+	 * @return stdClass[] Array of key details, or null if no keys found.
 	 */
 	public function get_existing_keys( $user_id ) {
-		$result = $this->wp_db->get_results(
-			strval(
-				$this->wp_db->prepare(
-					"SELECT * FROM {$this->db_table_name} WHERE user_id = %d AND description LIKE %s ORDER BY last_access DESC",
-					$user_id,
-					// Description begins with Zapier.
-					'%' . $this->wp_db->esc_like( $this->app_name ) . '%'
-				)
-			)
+		$query = $this->wp_db->prepare(
+			"SELECT * FROM {$this->db_table_name} WHERE user_id = %d AND description LIKE %s ORDER BY last_access DESC",
+			$user_id,
+			// Description begins with Zapier.
+			'%' . $this->wp_db->esc_like( $this->app_name ) . '%'
 		);
+		if ( ! is_string( $query ) ) {
+			return array();
+		}
+		$result = $this->wp_db->get_results( $query );
 		if ( ! is_array( $result ) ) {
 			return array();
 		}
@@ -99,15 +99,15 @@ class KeyDataStore {
 	 * @return stdClass[]
 	 */
 	public function get_key_user_counts() {
-		$counts = $this->wp_db->get_results(
-			strval(
-				$this->wp_db->prepare(
-					"SELECT user_id, count(key_id) as num_keys FROM {$this->db_table_name} WHERE description LIKE %s GROUP by user_id",
-					// Description begins with Zapier.
-					'%' . $this->wp_db->esc_like( $this->app_name ) . '%'
-				)
-			)
+		$query = $this->wp_db->prepare(
+			"SELECT user_id, count(key_id) as num_keys FROM {$this->db_table_name} WHERE description LIKE %s GROUP by user_id",
+			// Description begins with Zapier.
+			'%' . $this->wp_db->esc_like( $this->app_name ) . '%'
 		);
+		if ( ! is_string( $query ) ) {
+			return array();
+		}
+		$counts = $this->wp_db->get_results( $query );
 		if ( ! is_array( $counts ) ) {
 			return array();
 		}
@@ -121,14 +121,14 @@ class KeyDataStore {
 	 */
 	public function count() {
 		$table = $this->wp_db->prefix . 'woocommerce_api_keys';
-		$count = $this->wp_db->get_var(
-			strval(
-				$this->wp_db->prepare(
-					"SELECT count(*) FROM $table WHERE description LIKE %s",
-					'%' . $this->wp_db->esc_like( $this->app_name ) . '%'
-				)
-			)
+		$query = $this->wp_db->prepare(
+			"SELECT count(*) FROM $table WHERE description LIKE %s",
+			'%' . $this->wp_db->esc_like( $this->app_name ) . '%'
 		);
+		if ( ! is_string( $query ) ) {
+			return 0;
+		}
+		$count = $this->wp_db->get_var( $query );
 		return absint( $count );
 	}
 

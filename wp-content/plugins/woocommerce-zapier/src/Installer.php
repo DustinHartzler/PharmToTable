@@ -20,7 +20,7 @@ class Installer {
 	/**
 	 * Database version (used for install/upgrade tasks if required).
 	 */
-	const DB_VERSION = 14;
+	const DB_VERSION = 15;
 
 	/**
 	 * Name of the wp_option record that stores the installed version number.
@@ -59,7 +59,7 @@ class Installer {
 	 * @return int
 	 */
 	public function get_db_version() {
-		return intval( get_option( self::DB_VERSION_OPTION_NAME ) );
+		return absint( get_option( self::DB_VERSION_OPTION_NAME ) );
 	}
 
 	/**

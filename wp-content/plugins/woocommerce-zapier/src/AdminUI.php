@@ -52,8 +52,6 @@ class AdminUI {
 	/**
 	 * The full file name to the plugin's main Admin UI screen.
 	 * Use self::get_url() to get the full URL.
-	 *
-	 * @var string
 	 */
 	const ADMIN_PAGE = 'admin.php?page=wc_zapier';
 

@@ -3,7 +3,6 @@
 namespace OM4\WooCommerceZapier\Plugin\Bookings;
 
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
-use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\Plugin\Bookings\Payload;
 use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller;
 use OM4\WooCommerceZapier\Webhook\Trigger\Trigger;
@@ -40,23 +39,14 @@ class BookingResource extends CustomPostTypeResource {
 	protected $checker;
 
 	/**
-	 * Logger instance.
-	 *
-	 * @var Logger
-	 */
-	protected $logger;
-
-	/**
 	 * {@inheritDoc}
 	 *
 	 * @param V1Controller   $controller Controller instance.
 	 * @param FeatureChecker $checker    FeatureChecker instance.
-	 * @param Logger         $logger     Logger instance.
 	 */
-	public function __construct( V1Controller $controller, FeatureChecker $checker, Logger $logger ) {
+	public function __construct( V1Controller $controller, FeatureChecker $checker ) {
 		$this->controller          = $controller;
 		$this->checker             = $checker;
-		$this->logger              = $logger;
 		$this->key                 = 'booking';
 		$this->name                = __( 'Booking', 'woocommerce-zapier' );
 		$this->metabox_screen_name = 'wc_booking';
@@ -270,21 +260,31 @@ class BookingResource extends CustomPostTypeResource {
 	 * {@inheritDoc}
 	 */
 	public function get_webhook_payload() {
-		return new Payload( $this->key, $this->controller, $this->logger );
+		return new Payload( $this->key, $this->controller );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param int $resource_id Resource ID.
+	 * @param int $resource_id  Resource ID.
+	 * @param int $variation_id Variation ID.
 	 */
-	public function get_description( $resource_id ) {
-		$object = get_wc_booking( $resource_id );
+	public function get_description( $resource_id, $variation_id = 0 ) {
+		$object = \get_wc_booking( $resource_id );
 		if ( false !== $object && is_a( $object, 'WC_Booking' ) && 'trash' !== $object->get_status() ) {
 			// Use the corresponding order's billing name.
-			$order = wc_get_order( $object->get_order_id() );
+			$order = \wc_get_order( $object->get_order_id() );
 			if ( is_callable( array( $order, 'get_formatted_billing_full_name' ) ) ) {
-				return $order->get_formatted_billing_full_name();
+				return \sprintf(
+					/* translators: 1: Booking ID, 2: Order Formatted Full Billing Name */
+					__( 'Booking #%1$d (%2$s)', 'woocommerce-zapier' ),
+					$object->get_id(),
+					\trim( $order->get_formatted_billing_full_name() )
+				);
+			} else {
+				// Booking does not have an order or order no longer exists.
+				/* translators: 1: Booking ID */
+				return \sprintf( __( 'Booking #%d', 'woocommerce-zapier' ), $object->get_id() );
 			}
 		}
 		return null;
