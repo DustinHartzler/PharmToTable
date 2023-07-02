@@ -9,6 +9,7 @@ import {
 } from '@woocommerce/shared-context';
 import { withProductDataContext } from '@woocommerce/shared-hocs';
 import type { HTMLAttributes } from 'react';
+import { useStyleProps } from '@woocommerce/base-hooks';
 
 /**
  * Internal dependencies
@@ -22,15 +23,18 @@ const Preview = ( {
 	parentClassName,
 	sku,
 	className,
+	style,
 }: {
 	parentClassName: string;
 	sku: string;
 	className?: string | undefined;
+	style?: React.CSSProperties | undefined;
 } ) => (
 	<div
-		className={ classnames( className, 'wc-block-components-product-sku', {
+		className={ classnames( className, {
 			[ `${ parentClassName }__product-sku` ]: parentClassName,
 		} ) }
+		style={ style }
 	>
 		{ __( 'SKU:', 'woo-gutenberg-products-block' ) }{ ' ' }
 		<strong>{ sku }</strong>
@@ -39,6 +43,7 @@ const Preview = ( {
 
 const Block = ( props: Props ): JSX.Element | null => {
 	const { className } = props;
+	const styleProps = useStyleProps( props );
 	const { parentClassName } = useInnerBlockLayoutContext();
 	const { product } = useProductDataContext();
 	const sku = product.sku;
@@ -62,6 +67,16 @@ const Block = ( props: Props ): JSX.Element | null => {
 			className={ className }
 			parentClassName={ parentClassName }
 			sku={ sku }
+			{ ...( props.isDescendantOfAllProducts && {
+				className: classnames(
+					className,
+					'wc-block-components-product-sku wp-block-woocommerce-product-sku',
+					styleProps.className
+				),
+				style: {
+					...styleProps.style,
+				},
+			} ) }
 		/>
 	);
 };

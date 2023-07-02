@@ -111,6 +111,9 @@ class MiniCartContents extends AbstractBlock {
 		);
 
 		$parsed_style = '';
+		if ( array_key_exists( 'width', $attributes ) ) {
+			$parsed_style .= ':root{--drawer-width: ' . esc_html( $attributes['width'] ) . '}';
+		}
 
 		foreach ( $styles as $style ) {
 			$selector = is_array( $style['selector'] ) ? implode( ',', $style['selector'] ) : $style['selector'];
@@ -152,7 +155,11 @@ class MiniCartContents extends AbstractBlock {
 		$block_types[] = 'MiniCartItemsBlock';
 		$block_types[] = 'MiniCartProductsTableBlock';
 		$block_types[] = 'MiniCartShoppingButtonBlock';
+		$block_types[] = 'MiniCartCartButtonBlock';
+		$block_types[] = 'MiniCartCheckoutButtonBlock';
 		$block_types[] = 'MiniCartTitleBlock';
+		$block_types[] = 'MiniCartTitleItemsCounterBlock';
+		$block_types[] = 'MiniCartTitleLabelBlock';
 
 		return $block_types;
 	}

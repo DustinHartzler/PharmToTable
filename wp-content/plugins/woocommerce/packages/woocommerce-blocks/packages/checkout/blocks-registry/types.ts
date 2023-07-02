@@ -25,7 +25,9 @@ export enum innerBlockAreas {
 	MINI_CART = 'woocommerce/mini-cart-contents',
 	EMPTY_MINI_CART = 'woocommerce/empty-mini-cart-contents-block',
 	FILLED_MINI_CART = 'woocommerce/filled-mini-cart-contents-block',
+	MINI_CART_TITLE = 'woocommerce/mini-cart-title-block',
 	MINI_CART_ITEMS = 'woocommerce/mini-cart-items-block',
+	MINI_CART_FOOTER = 'woocommerce/mini-cart-footer-block',
 	CART_ORDER_SUMMARY = 'woocommerce/cart-order-summary-block',
 	CHECKOUT_ORDER_SUMMARY = 'woocommerce/checkout-order-summary-block',
 }
@@ -46,6 +48,7 @@ export type RegisteredBlocks = Record< string, RegisteredBlock >;
 
 export type CheckoutBlockOptions = {
 	metadata: CheckoutBlockOptionsMetadata;
+	force?: boolean;
 	component:
 		| LazyExoticComponent< React.ComponentType< unknown > >
 		| ( () => JSX.Element | null )

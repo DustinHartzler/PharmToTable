@@ -3,7 +3,7 @@
 /**
  * External dependencies
  */
-import { isEqual } from 'lodash';
+import fastDeepEqual from 'fast-deep-equal/es6';
 import { useRef } from '@wordpress/element';
 import {
 	CART_STORE_KEY as storeKey,
@@ -15,6 +15,7 @@ import {
 	EMPTY_CART_ERRORS,
 	EMPTY_SHIPPING_RATES,
 	EMPTY_TAX_LINES,
+	EMPTY_PAYMENT_METHODS,
 	EMPTY_PAYMENT_REQUIREMENTS,
 	EMPTY_EXTENSIONS,
 } from '@woocommerce/block-data';
@@ -112,6 +113,7 @@ export const defaultCartData: StoreCart = {
 	shippingRates: EMPTY_SHIPPING_RATES,
 	isLoadingRates: false,
 	cartHasCalculatedShipping: false,
+	paymentMethods: EMPTY_PAYMENT_METHODS,
 	paymentRequirements: EMPTY_PAYMENT_REQUIREMENTS,
 	receiveCart: () => undefined,
 	receiveCartContents: () => undefined,
@@ -245,7 +247,7 @@ export const useStoreCart = (
 
 	if (
 		! currentResults.current ||
-		! isEqual( currentResults.current, results )
+		! fastDeepEqual( currentResults.current, results )
 	) {
 		currentResults.current = results;
 	}

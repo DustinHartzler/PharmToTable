@@ -280,6 +280,10 @@ class MiniCart extends AbstractBlock {
 				'items-frontend',
 				'footer-frontend',
 				'products-table-frontend',
+				'cart-button-frontend',
+				'checkout-button-frontend',
+				'title-label-frontend',
+				'title-items-counter-frontend',
 			);
 		}
 		foreach ( $inner_blocks_frontend_scripts as $inner_block_frontend_script ) {
@@ -326,7 +330,7 @@ class MiniCart extends AbstractBlock {
 		$wp_scripts = wp_scripts();
 
 		// This script and its dependencies have already been appended.
-		if ( ! $script || array_key_exists( $script->handle, $this->scripts_to_lazy_load ) ) {
+		if ( ! $script || array_key_exists( $script->handle, $this->scripts_to_lazy_load ) || isset( $wp_scripts->queue[ $script->handle ] ) ) {
 			return;
 		}
 
@@ -455,6 +459,10 @@ class MiniCart extends AbstractBlock {
 		</span>';
 
 		if ( is_cart() || is_checkout() ) {
+			if ( $this->should_not_render_mini_cart( $attributes ) ) {
+				return '';
+			}
+
 			// It is not necessary to load the Mini Cart Block on Cart and Checkout page.
 			return '<div class="' . $wrapper_classes . '" style="visibility:hidden" aria-hidden="true">
 				<button class="wc-block-mini-cart__button" aria-label="' . esc_attr( $aria_label ) . '" disabled>' . $button_html . '</button>
@@ -463,10 +471,15 @@ class MiniCart extends AbstractBlock {
 
 		$template_part_contents = '';
 
-		// Determine if we need to load the template part from the theme, or WooCommerce in that order.
-		$theme_has_mini_cart   = BlockTemplateUtils::theme_has_template_part( 'mini-cart' );
-		$template_slug_to_load = $theme_has_mini_cart ? get_stylesheet() : BlockTemplateUtils::PLUGIN_SLUG;
-		$template_part         = BlockTemplateUtils::get_block_template( $template_slug_to_load . '//mini-cart', 'wp_template_part' );
+		// Determine if we need to load the template part from the DB, the theme or WooCommerce in that order.
+		$templates_from_db = BlockTemplateUtils::get_block_templates_from_db( array( 'mini-cart' ), 'wp_template_part' );
+		if ( count( $templates_from_db ) > 0 ) {
+			$template_slug_to_load = $templates_from_db[0]->theme;
+		} else {
+			$theme_has_mini_cart   = BlockTemplateUtils::theme_has_template_part( 'mini-cart' );
+			$template_slug_to_load = $theme_has_mini_cart ? get_stylesheet() : BlockTemplateUtils::PLUGIN_SLUG;
+		}
+		$template_part = BlockTemplateUtils::get_block_template( $template_slug_to_load . '//mini-cart', 'wp_template_part' );
 
 		if ( $template_part && ! empty( $template_part->content ) ) {
 			$template_part_contents = do_blocks( $template_part->content );
@@ -601,5 +614,16 @@ class MiniCart extends AbstractBlock {
 				'content'  => '<!-- wp:paragraph {"align":"center"} --><p class="has-text-align-center"><strong>' . __( 'Your cart is currently empty!', 'woocommerce' ) . '</strong></p><!-- /wp:paragraph -->',
 			)
 		);
+	}
+
+	/**
+	 * Returns whether the mini cart should be rendered or not.
+	 *
+	 * @param array $attributes Block attributes.
+	 *
+	 * @return bool
+	 */
+	public function should_not_render_mini_cart( array $attributes ) {
+		return isset( $attributes['cartAndCheckoutRenderStyle'] ) && 'hidden' !== $attributes['cartAndCheckoutRenderStyle'];
 	}
 }

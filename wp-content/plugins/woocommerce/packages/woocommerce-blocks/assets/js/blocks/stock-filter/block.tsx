@@ -4,11 +4,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
 import { Icon, chevronDown } from '@wordpress/icons';
-import {
-	usePrevious,
-	useShallowEqual,
-	useBorderProps,
-} from '@woocommerce/base-hooks';
+import { usePrevious, useShallowEqual } from '@woocommerce/base-hooks';
 import {
 	useQueryStateByKey,
 	useQueryStateByContext,
@@ -32,8 +28,11 @@ import isShallowEqual from '@wordpress/is-shallow-equal';
 import { decodeEntities } from '@wordpress/html-entities';
 import { isBoolean, objectHasProp } from '@woocommerce/types';
 import { addQueryArgs, removeQueryArgs } from '@wordpress/url';
-import { changeUrl, PREFIX_QUERY_ARG_FILTER_TYPE } from '@woocommerce/utils';
-import { difference } from 'lodash';
+import {
+	changeUrl,
+	PREFIX_QUERY_ARG_FILTER_TYPE,
+	normalizeQueryParams,
+} from '@woocommerce/utils';
 import classnames from 'classnames';
 
 /**
@@ -142,8 +141,6 @@ const StockStatusFilterBlock = ( {
 	 */
 	const [ remountKey, setRemountKey ] = useState( generateUniqueId() );
 
-	const borderProps = useBorderProps( blockAttributes );
-
 	/**
 	 * Compare intersection of all stock statuses and filtered counts to get a list of options to display.
 	 */
@@ -224,7 +221,7 @@ const StockStatusFilterBlock = ( {
 				QUERY_PARAM_KEY
 			);
 
-			if ( url !== window.location.href ) {
+			if ( url !== normalizeQueryParams( window.location.href ) ) {
 				changeUrl( url );
 			}
 
@@ -235,7 +232,7 @@ const StockStatusFilterBlock = ( {
 			[ QUERY_PARAM_KEY ]: checkedOptions.join( ',' ),
 		} );
 
-		if ( newUrl === window.location.href ) {
+		if ( newUrl === normalizeQueryParams( window.location.href ) ) {
 			return;
 		}
 
@@ -391,13 +388,17 @@ const StockStatusFilterBlock = ( {
 			return displayOption ? displayOption.value : token;
 		} );
 
-		const added = difference( tokens, checked );
+		const added = [ tokens, checked ].reduce( ( a, b ) =>
+			a.filter( ( c ) => ! b.includes( c ) )
+		);
 
 		if ( added.length === 1 ) {
 			return onChange( added[ 0 ] );
 		}
 
-		const removed = difference( checked, tokens );
+		const removed = [ checked, tokens ].reduce( ( a, b ) =>
+			a.filter( ( c ) => ! b.includes( c ) )
+		);
 		if ( removed.length === 1 ) {
 			onChange( removed[ 0 ] );
 		}
@@ -460,11 +461,10 @@ const StockStatusFilterBlock = ( {
 					<>
 						<FormTokenField
 							key={ remountKey }
-							className={ classnames( borderProps.className, {
+							className={ classnames( {
 								'single-selection': ! allowsMultipleOptions,
 								'is-loading': isLoading,
 							} ) }
-							style={ { ...borderProps.style } }
 							suggestions={ displayedOptions
 								.filter(
 									( option ) =>

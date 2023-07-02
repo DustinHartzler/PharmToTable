@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { ValidatedTextInput } from '@woocommerce/blocks-checkout';
+import { ValidatedTextInput, isPostcode } from '@woocommerce/blocks-checkout';
 import {
 	BillingCountryInput,
 	ShippingCountryInput,
@@ -21,7 +21,7 @@ import {
 	defaultAddressFields,
 	ShippingAddress,
 } from '@woocommerce/settings';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSelect, useDispatch, dispatch } from '@wordpress/data';
 import { VALIDATION_STORE_KEY } from '@woocommerce/block-data';
 import { FieldValidationStatus } from '@woocommerce/types';
 
@@ -123,6 +123,23 @@ const AddressForm = ( {
 		} );
 	}, [ addressFormFields, onChange, values ] );
 
+	// Clear postcode validation error if postcode is not required.
+	useEffect( () => {
+		addressFormFields.forEach( ( field ) => {
+			if ( field.key === 'postcode' && field.required === false ) {
+				const store = dispatch( 'wc/store/validation' );
+
+				if ( type === 'shipping' ) {
+					store.clearValidationError( 'shipping_postcode' );
+				}
+
+				if ( type === 'billing' ) {
+					store.clearValidationError( 'billing_postcode' );
+				}
+			}
+		} );
+	}, [ addressFormFields, type, clearValidationError ] );
+
 	useEffect( () => {
 		if ( type === 'shipping' ) {
 			validateShippingCountry(
@@ -143,6 +160,35 @@ const AddressForm = ( {
 	] );
 
 	id = id || instanceId;
+
+	/**
+	 * Custom validation handler for fields with field specific handling.
+	 */
+	const customValidationHandler = (
+		inputObject: HTMLInputElement,
+		field: string,
+		customValues: {
+			country: string;
+		}
+	): boolean => {
+		if (
+			field === 'postcode' &&
+			customValues.country &&
+			! isPostcode( {
+				postcode: inputObject.value,
+				country: customValues.country,
+			} )
+		) {
+			inputObject.setCustomValidity(
+				__(
+					'Please enter a valid postcode',
+					'woo-gutenberg-products-block'
+				)
+			);
+			return false;
+		}
+		return true;
+	};
 
 	return (
 		<div id={ id } className="wc-block-components-address-form">
@@ -229,8 +275,20 @@ const AddressForm = ( {
 						onChange={ ( newValue: string ) =>
 							onChange( {
 								...values,
-								[ field.key ]: newValue,
+								[ field.key ]:
+									field.key === 'postcode'
+										? newValue.trimStart().toUpperCase()
+										: newValue,
 							} )
+						}
+						customValidation={ ( inputObject: HTMLInputElement ) =>
+							field.required || inputObject.value
+								? customValidationHandler(
+										inputObject,
+										field.key,
+										values
+								  )
+								: true
 						}
 						errorMessage={ field.errorMessage }
 						required={ field.required }
