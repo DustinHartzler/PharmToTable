@@ -110,6 +110,10 @@
   width: 15% !important;
 }
 
+.column-health_status {
+  width: 5% !important;
+}
+
 #pretty-link-settings.postbox .inside,
 #pretty-link-settings.postbox .prli-settings-table {
   padding: 0;
@@ -185,24 +189,12 @@ tr.type-pretty-link td.page-title strong {
   align-items: center;
 }
 
-tr.type-pretty-link td.page-title span.prli-broken-link-indicator {
-  margin-right: 15px;
-}
-
-span.prli-broken-link-indicator:after {
-  cursor: pointer;
-  content: '⚠️';
-  font-weight: 700;
-  font-size: 20px;
-}
-
-.prli_broken_links a,
 .post-type-pretty-link .subsubsub {
   display: flex;
   align-items: center;
 }
 
-.prli_broken_links a span {
+.prli_broken_links a {
   margin: 0 5px;
 }
 
@@ -233,4 +225,20 @@ div.prli-pd-head h2 {
 
 #product-display .form-table th {
   width: 250px;
+}
+
+li.prli_broken_links .tooltip {
+  background: #c72323;
+  color: #fff;
+  padding: 2px 8px 2px;
+  border-radius: 5px;
+  border: 1px solid #a71919;
+}
+
+a.prli-link-health-upgrade {
+  color: rgb(253, 156, 39);
+}
+
+a.prli-link-health-upgrade:hover {
+  color: rgba(253, 156, 39, 0.6);
 }

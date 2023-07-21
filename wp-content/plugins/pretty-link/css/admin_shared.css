@@ -602,20 +602,6 @@ img.prli_loader {
   padding: 50px;
 }
 
-.prli-welcome .pre-badge {
-  text-transform: uppercase;
-  text-align: center;
-  max-width: 450px;
-  margin: 30px auto 20px;
-  font-weight: bold;
-  font-size: 30px;
-  color: #0D459C;
-}
-
-.prli-welcome .pre-badge:not(:first-of-type) {
-  margin-top: 100px;
-}
-
 .prli-welcome-badge,
 .prli-welcome-about {
   max-width: 450px;
@@ -642,72 +628,6 @@ img.prli_loader {
   text-transform: uppercase;
   font-size: 24px;
   margin-bottom: 0;
-}
-
-.prli-welcome-steps {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-column-gap: 50px;
-  margin-bottom: 50px;
-}
-
-.prli-welcome-steps ~ p {
-  text-align: center;
-}
-
-.prli-welcome-step {
-  color: #000;
-  font-weight: bold;
-}
-
-.prli-welcome-step img {
-  max-width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
-.prli-welcome-steps .welcome-step-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #0D459C;
-  color: #fff;
-  font-size: 30px;
-  margin: 0 auto 10px;
-  font-weight: bold;
-}
-
-.prlip-reason {
-  display: flex;
-  max-width: 950px;
-  margin: 50px auto 0;
-}
-
-.prlip-reason:nth-of-type(odd) {
-  flex-direction: row-reverse;
-}
-
-.prlip-reason .reason-content {
-  width: 60%;
-  max-width: 450px;
-  margin: 0 auto;
-}
-.prlip-reason .reason-image {
-  width: 40%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.prlip-reason .reason-image img {
-  max-width: 250px;
-  margin: 0 auto;
-}
-
-.prlip-reason .reason-content h3 {
-  color: #0D459C;
 }
 
 .prli-button-section {

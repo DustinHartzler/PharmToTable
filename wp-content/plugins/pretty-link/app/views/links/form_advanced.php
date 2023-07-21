@@ -66,7 +66,7 @@
       <input type="checkbox" name="track_me" <?php checked($values['track_me']); ?> />
     </td>
   </tr>
-  <tr id="prli_google_analytics" style="display: none">
+  <?php /*<tr id="prli_google_analytics" style="display: none">
     <th scope="row">
       <?php esc_html_e('Google Analytics', 'pretty-link'); ?>
       <?php PrliAppHelper::info_tooltip(
@@ -100,7 +100,7 @@
       endif;
       ?>
     </td>
-  </tr>
+  </tr> */ ?>
   <?php do_action('prli_link_form_advanced'); ?>
 </table>
 

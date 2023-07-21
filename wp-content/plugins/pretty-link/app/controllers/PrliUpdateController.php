@@ -171,6 +171,8 @@ class PrliUpdateController {
 
     $act = $this->deactivate_license();
 
+    PrliAuthenticatorController::clear_connection_data();
+
     $output = sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html($act['message']));
 
     ob_start();
@@ -589,8 +591,8 @@ class PrliUpdateController {
   public function send_mothership_request( $endpoint,
                                            $args=array(),
                                            $method='get',
-                                           $domain='http://mothership.caseproof.com',
                                            $blocking=true ) {
+    $domain = defined('PRLI_MOTHERSHIP_DOMAIN') ? PRLI_MOTHERSHIP_DOMAIN : 'http://mothership.caseproof.com';
     $uri = "{$domain}{$endpoint}";
 
     $arg_array = array(
@@ -778,6 +780,26 @@ class PrliUpdateController {
     delete_site_transient('prli_update_info');
     delete_site_transient('prli_addons');
     delete_site_transient('prli_all_addons');
+  }
+
+  public function get_license_info() {
+    $license_info = get_site_transient('prli_license_info');
+    $mothership_license = $this->mothership_license;
+
+
+    if(!$license_info && !empty($mothership_license)) {
+      try {
+        $domain = urlencode(PrliUtils::site_domain());
+        $args = compact('domain');
+        $license_info = $this->send_mothership_request("/versions/info/{$mothership_license}", $args, 'post');
+
+        set_site_transient('prli_license_info', $license_info, (24*HOUR_IN_SECONDS));
+      } catch (Exception $e) {
+        // Fail silently, license info will return false.
+      }
+    }
+
+    return $license_info;
   }
 
 } //End class

@@ -208,8 +208,9 @@ class PrliUtils {
     if(isset($track_me) and !empty($track_me) and $track_me) {
       $first_click = 0;
       $click_ip =         $this->get_current_client_ip();
-      $click_referer =    isset($_SERVER['HTTP_REFERER'])?sanitize_text_field( $_SERVER['HTTP_REFERER'] ):'';
-      $click_uri =        isset($_SERVER['REQUEST_URI'])?sanitize_text_field( $_SERVER['REQUEST_URI'] ):'';
+
+      $click_referer =    isset($_SERVER['HTTP_REFERER'])?esc_url( $_SERVER['HTTP_REFERER'] ):'';
+      $click_uri =        isset($_SERVER['REQUEST_URI'])?esc_url( $_SERVER['REQUEST_URI'] ):'';
       $click_user_agent = isset($_SERVER['HTTP_USER_AGENT'])?sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ):'';
 
       //Set Cookie if it doesn't exist
@@ -1334,6 +1335,23 @@ class PrliUtils {
     return array(
       'installed' => $installed_edition,
       'license' => $license_edition
+    );
+  }
+
+  /**
+   * Returns header data to be used with JWT and wp_remote_request.
+   *
+   * @access public
+   * @param string $jwt The JWT to use in the Authorization header.
+   * @param string $domain The domain to use in the Host header.
+   * @return array The processed header data.
+   */
+  public static function jwt_header($jwt, $domain) {
+    return array(
+      'Authorization' => 'Bearer ' . $jwt,
+      'Accept'        => 'application/json;ver=1.0',
+      'Content-Type'  => 'application/json; charset=UTF-8',
+      'Host'          => $domain
     );
   }
 }

@@ -48,6 +48,7 @@ class PrliAppController extends PrliBaseController {
     add_action('in_admin_header', array($this,'pl_admin_header'), 0);
 
     add_action('wp_ajax_pl_dismiss_upgrade_header', array($this, 'dismiss_upgrade_header'));
+    add_action('wp_ajax_prli_dismiss_daily_notice', array($this, 'dismiss_daily_notice'));
 
     // Admin footer text.
     add_filter('admin_footer_text', array($this, 'admin_footer'), 1, 2);
@@ -113,6 +114,15 @@ class PrliAppController extends PrliBaseController {
       </script>
       <?php
     }
+  }
+
+  public function dismiss_daily_notice() {
+    if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      $notice = sanitize_key($_POST['notice']);
+      set_transient("prli_dismiss_notice_${notice}", true, DAY_IN_SECONDS);
+    }
+
+    wp_send_json_success();
   }
 
   private function on_pretty_link_page() {
@@ -195,8 +205,7 @@ class PrliAppController extends PrliBaseController {
       }
     }
 
-    $onboarding_ctrl = new PrliOnboardingController();
-    add_submenu_page('options.php', __('Welcome', 'pretty-link'), null, $role, 'pretty-link-welcome', array($onboarding_ctrl, 'welcome_route'));
+    add_submenu_page('options.php', __('Welcome', 'pretty-link'), null, $role, 'pretty-link-onboarding', 'PrliOnboardingController::route');
 
     $addons_ctrl = new PrliAddonsController();
     add_submenu_page("edit.php?post_type={$pl_link_cpt}", esc_html__('Add-ons', 'pretty-link'), '<span style="color:#8CBD5A;">' . esc_html__('Add-ons', 'pretty-link') . '</span>', $role, 'pretty-link-addons', array($addons_ctrl, 'route'));
@@ -441,6 +450,15 @@ class PrliAppController extends PrliBaseController {
         PRLI_VERSION
       );
 
+      wp_localize_script(
+        'prli-admin-shared',
+        'PrliAdminShared',
+        array(
+          'ajax_url' => admin_url('admin-ajax.php'),
+          'dismiss_notice_nonce' => wp_create_nonce('prli_dismiss_notice')
+        )
+      );
+
       if($is_link_edit_page || $is_link_new_page) {
         global $prli_link, $post, $prli_blogurl;
 
@@ -482,7 +500,7 @@ class PrliAppController extends PrliBaseController {
         'reset_str' => __('Are you sure you want to reset your Pretty Link? This will delete all of the statistical data about this Pretty Link in your database.', 'pretty-link'),
         'reset_security' => wp_create_nonce('reset_pretty_link'),
         'broken_link_text' => sprintf(
-          __('To access Link Health, upgrade to <a href="%s">Pretty Links Pro.</a>', 'pretty-link'),
+          __('To access Link Health, upgrade to <a href="%s" class="prli-link-health-upgrade">Pretty Links Pro.</a>', 'pretty-link'),
           esc_url(admin_url('edit.php?post_type=pretty-link&page=pretty-link-updates#prli_upgrade'))
         )
       );
@@ -614,6 +632,11 @@ class PrliAppController extends PrliBaseController {
 
   /********* ADD REDIRECTS FOR STANDARD MODE ***********/
   public function redirect() {
+    // Bail out early if we're performing a search.
+    if(isset($_GET['s']) && !empty($_GET['s'])) {
+      return;
+    }
+
     global $prli_link;
 
     // Remove the trailing slash if there is one

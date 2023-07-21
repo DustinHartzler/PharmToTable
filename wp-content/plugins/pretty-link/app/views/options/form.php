@@ -52,7 +52,9 @@
             <li><a data-id="reporting"><?php esc_html_e('Reporting', 'pretty-link'); ?></a></li>
             <li><a data-id="replacements"><?php esc_html_e('Replacements', 'pretty-link'); ?></a></li>
             <li><a data-id="auto-create"><?php esc_html_e('Auto-Create Links', 'pretty-link'); ?></a></li>
-            <li><a data-id="prettybar"><?php esc_html_e('Pretty Bar', 'pretty-link'); ?></a></li>
+            <?php if($plp_update->is_installed() && get_option('prlipro_prettybar_active')): ?>
+              <li><a data-id="prettybar"><?php esc_html_e('Pretty Bar', 'pretty-link'); ?></a></li>
+            <?php endif; ?>
             <li><a data-id="social"><?php esc_html_e('Social', 'pretty-link'); ?></a></li>
             <li><a data-id="public-links"><?php esc_html_e('Public', 'pretty-link'); ?></a></li>
             <?php if(!$plp_update->is_installed() || $plp_update->is_installed() && is_plugin_active('pretty-link-product-displays/pretty-link-product-displays.php')): ?>
@@ -178,7 +180,7 @@
                       </td>
                     </tr>
 
-                    <tr valign="top" class="prli-pro-only pretty-link-blur">
+                    <?php /*<tr valign="top" class="prli-pro-only pretty-link-blur">
                       <th scope="row">
                         <label><?php esc_html_e('Enable Google Analytics', 'pretty-link') ?></label>
                         <?php PrliAppHelper::info_tooltip('prli-options-use-ga', esc_html__('Enable Google Analytics', 'pretty-link'),
@@ -189,7 +191,7 @@
                       <td>
                         <input type="checkbox" disabled />
                       </td>
-                    </tr>
+                    </tr> */ ?>
 
                     <tr valign="top" class="prli-pro-only pretty-link-blur">
                       <th scope="row">
@@ -349,10 +351,10 @@
                     <tr valign="top" class="prli-pro-only">
                       <th scope="row">
                         <label>
-                          <?php esc_html_e('Enable Replacements', 'pretty-link'); ?>
+                          <?php esc_html_e('Enable Keyword Replacements', 'pretty-link'); ?>
                           <?php PrliAppHelper::info_tooltip('prli-keyword-replacement',
-                            esc_html__('Enable Keyword and URL Auto Replacement', 'pretty-link'),
-                            esc_html__('If checked, this will enable you to automatically replace keywords and/or URLs on your blog with pretty links. You will specify the specific keywords and urls from your Pretty Link edit page.', 'pretty-link'));
+                            esc_html__('Enable Keyword Auto Replacement', 'pretty-link'),
+                            esc_html__('If checked, this will enable you to automatically replace keywords on your blog with pretty links. You will specify the specific keywords from your Pretty Link edit page.', 'pretty-link'));
                           ?>
                           <?php // echo PrliAppHelper::pro_only_feature_indicator('option-enable-replacements'); ?>
                         </label>
@@ -371,7 +373,7 @@
                       <tr valign="top" class="prli-pro-only">
                         <th scope="row">
                           <label>
-                            <?php esc_html_e('Thresholds', 'pretty-link'); ?>
+                            <?php esc_html_e('Enable Thresholds', 'pretty-link'); ?>
                             <?php PrliAppHelper::info_tooltip('prli-keyword-replacement-thresholds',
                               esc_html__('Set Keyword Replacement Thresholds', 'pretty-link'),
                               esc_html__('Don\'t want to have too many keyword replacements per page? Select to set some reasonable keyword replacement thresholds.', 'pretty-link'));
@@ -388,130 +390,9 @@
                     <table class="form-table">
                       <tbody>
                         <tr valign="top" class="prli-pro-only">
-                          <th scope="row">
-                            <label>
-                              <?php esc_html_e('Open in New Window', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-keyword-replacement-thresholds',
-                                esc_html__('Open Keyword Replacement Links in New Window', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: open strong tag, %2$s: close strong tag
-                                  esc_html__('Ensure that these keyword replacement links are opened in a separate window. %1$sNote:%2$s This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
-                                  '<strong>',
-                                  '</strong>'
-                                ));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-new-window'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="checkbox" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th scope="row">
-                            <label>
-                              <?php esc_html_e('Add No Follows', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-keyword-links-nofollow',
-                                esc_html__('Add \'nofollow\' attribute to all Keyword Pretty Links', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: open code tag, %2$s: close code tag, %3$s: open strong tag, %4$s close strong tag
-                                  esc_html__('This adds the html %1$sNOFOLLOW%2$s attribute to all keyword replacement links. %3$sNote:%4$s This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
-                                  '<code>',
-                                  '</code>',
-                                  '<strong>',
-                                  '</strong>'
-                                ));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-no-follows'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="checkbox" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th scope="row">
-                            <label>
-                              <?php esc_html_e('Add Sponsored', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-keyword-links-sponsored',
-                                esc_html__('Add \'sponsored\' attribute to all Keyword Pretty Links', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: open code tag, %2$s: close code tag, %3$s: open strong tag, %4$s close strong tag
-                                  esc_html__('This adds the html %1$sSPONSORED%2$s attribute to all keyword replacement links. %3$sNote:%4$s This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
-                                  '<code>',
-                                  '</code>',
-                                  '<strong>',
-                                  '</strong>'
-                                ));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-no-follows'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="checkbox" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th scope="row">
-                            <label>
-                              <?php esc_html_e('Custom CSS', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-keyword-custom-css',
-                                esc_html__('Add custom CSS to your keyword replacement links', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: open strong tag, %2$s: close strong tag
-                                  esc_html__('Add some custom formatting to your keyword pretty link replacements. %1$sNote:%2$s This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
-                                  '<strong>',
-                                  '</strong>'
-                                ));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-custom-css'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="text" class="regular-text" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
                           <th valign="row">
                             <label>
-                              <?php esc_html_e('Custom Hover CSS', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-keyword-custom-hover-css',
-                                esc_html__('Add custom hover CSS to your keyword replacement links', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: open strong tag, %2$s: close strong tag
-                                  esc_html__('Add some custom formatting to the hover attribute of your keyword pretty links. %1$sNote%2$s: This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
-                                  '<strong>',
-                                  '</strong>'
-                                ));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-custom-hover-css'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="text" class="regular-text" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th valign="row">
-                            <label>
-                              <?php esc_html_e('Link to Disclosures', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip(
-                                'prlipro-link-to-disclosures',
-                                esc_html__('Automatically Add a Link to Disclosures', 'pretty-link'),
-                                esc_html__('When enabled, this will add a link to your official affiliate link disclosure page to any page, post or custom post type that have any keyword or URL replacements. You\'ll also be able to customize the URL and position of the disclosure link.', 'pretty-link')
-                              );
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-link-to-disclosures'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="checkbox" class="prli-toggle-checkbox" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th valign="row">
-                            <label>
-                              <?php esc_html_e('Keyword Disclosures', 'pretty-link'); ?>
+                              <?php esc_html_e('Keyword Disclosure', 'pretty-link'); ?>
                               <?php PrliAppHelper::info_tooltip(
                                 'prlipro-enable-keyword-link-disclosures',
                                 esc_html__('Automatically Add Affiliate Link Disclosures to Keyword Replacements', 'pretty-link'),
@@ -531,29 +412,118 @@
                           </td>
                         </tr>
                         <tr valign="top" class="prli-pro-only">
+                          <th scope="row">
+                            <label>
+                              <?php esc_html_e('Open in New Window', 'pretty-link'); ?>
+                              <?php PrliAppHelper::info_tooltip('prli-keyword-replacement-thresholds',
+                                esc_html__('Open Keyword Replacement Links in New Window', 'pretty-link'),
+                                esc_html__('Ensure that these keyword replacement links are opened in a separate window.', 'pretty-link'));
+                              ?>
+                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-new-window'); ?>
+                            </label>
+                          </th>
+                          <td>
+                            <input type="checkbox" disabled />
+                          </td>
+                        </tr>
+                        <tr valign="top" class="prli-pro-only">
+                          <th scope="row">
+                            <label>
+                              <?php esc_html_e('Add Nofollow', 'pretty-link'); ?>
+                              <?php PrliAppHelper::info_tooltip('prli-keyword-links-nofollow',
+                                esc_html__('Add \'nofollow\' attribute to all Keyword Replacement Pretty Links', 'pretty-link'),
+                                sprintf(
+                                  // translators: %1$s: open code tag, %2$s: close code tag
+                                  esc_html__('This adds the html %1$sNOFOLLOW%2$s attribute to all keyword replacement links.', 'pretty-link'),
+                                  '<code>',
+                                  '</code>'
+                                ));
+                              ?>
+                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-no-follows'); ?>
+                            </label>
+                          </th>
+                          <td>
+                            <input type="checkbox" disabled />
+                          </td>
+                        </tr>
+                        <tr valign="top" class="prli-pro-only">
+                          <th scope="row">
+                            <label>
+                              <?php esc_html_e('Add Sponsored', 'pretty-link'); ?>
+                              <?php PrliAppHelper::info_tooltip('prli-keyword-links-sponsored',
+                                esc_html__('Add \'sponsored\' attribute to all Keyword Replacement Pretty Links', 'pretty-link'),
+                                sprintf(
+                                  // translators: %1$s: open code tag, %2$s: close code tag
+                                  esc_html__('This adds the html %1$sSPONSORED%2$s attribute to all keyword replacement links.', 'pretty-link'),
+                                  '<code>',
+                                  '</code>'
+                                ));
+                              ?>
+                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-no-follows'); ?>
+                            </label>
+                          </th>
+                          <td>
+                            <input type="checkbox" disabled />
+                          </td>
+                        </tr>
+                        <tr valign="top" class="prli-pro-only">
                           <th valign="row">
+                            <label>
+                              <?php esc_html_e('Keyword Post Types', 'pretty-link'); ?>
+                              <?php PrliAppHelper::info_tooltip(
+                                'prlipro-keyword-replacement-cpts',
+                                esc_html__('Keyword Post Types', 'pretty-link'),
+                                esc_html__('Select the post types you\'d like keywords to be replaced in.', 'pretty-link'));
+                              ?>
+                            </label>
+                          </th>
+                          <td class="prlipro-chip-field">
+                            <div class="prlipro-chip selected">
+                              <input type="checkbox" checked disabled>
+                              <label><?php esc_html_e('Posts', 'pretty-link'); ?></label>
+                            </div>
+                            <div class="prlipro-chip selected">
+                              <input type="checkbox" checked disabled>
+                              <label><?php esc_html_e('Pages', 'pretty-link'); ?></label>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <table class="form-table">
+                    <tbody>
+                    <tr valign="top" class="prli-pro-only">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Enable URL Replacements', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-url-replacement',
+                            esc_html__('Enable URL Auto Replacement', 'pretty-link'),
+                            esc_html__('If checked, this will enable you to automatically replace URLs on your blog with pretty links. You will specify the specific URLs from your Pretty Link edit page.', 'pretty-link'));
+                          ?>
+                          <?php // echo PrliAppHelper::pro_only_feature_indicator('option-enable-replacements'); ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input class="prli-toggle-checkbox" type="checkbox" checked disabled />
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+
+                  <div class="prli-sub-box pretty-link-url-replacement-options">
+                    <div class="prli-arrow prli-gray prli-up prli-sub-box-arrow"> </div>
+                    <table class="form-table">
+                      <tbody>
+                        <tr valign="top" class="prli-pro-only">
+                          <th scope="row">
                             <label>
                               <?php esc_html_e('Replace All URLs', 'pretty-link'); ?>
                               <?php PrliAppHelper::info_tooltip('prli-replace-urls',
                                 esc_html__('Replace All non-Pretty Link URLs With Pretty Link URLs', 'pretty-link'),
                                 esc_html__('This feature will take each url it finds and create or use an existing pretty link pointing to the url and replace it with the pretty link.', 'pretty-link'));
                               ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-replace-urls'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="checkbox" class="prli-toggle-checkbox" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th valign="row">
-                            <label>
-                              <?php esc_html_e('Replace in Comments', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-replace-in-comments',
-                                esc_html__('Replace Keywords and URLs in Comments', 'pretty-link'),
-                                esc_html__('This option will enable the keyword / URL replacement routine to run in Comments.', 'pretty-link'));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-replace-in-comments'); ?>
                             </label>
                           </th>
                           <td>
@@ -561,54 +531,113 @@
                           </td>
                         </tr>
                         <tr valign="top" class="prli-pro-only">
-                          <th valign="row">
+                          <th scope="row">
                             <label>
-                              <?php esc_html_e('Replace in Feeds', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('prli-replace-in-feeds',
-                                esc_html__('Replace Keywords and URLs in Feeds', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: br tag, %2$s open strong tag, %3$s: close strong tag
-                                  esc_html__('This option will enable the keyword / URL replacement routine to run in RSS Feeds.%1$s%2$sNote:%3$s This option can slow the load speed of your RSS feed -- unless used in conjunction with a caching plugin like W3 Total Cache or WP Super Cache.%1$s%2$sNote #2%3$s This option will only work if you have "Full Text" selected in your General WordPress Reading settings.%1$s%2$sNote #3:%3$s If this option is used along with "Replace Keywords and URLs in Comments" then your post comment feeds will have keywords replaced in them as well.', 'pretty-link'),
-                                  '<br>',
-                                  '<strong>',
-                                  '</strong>'
-                                ));
+                              <?php esc_html_e('URL Post Types', 'pretty-link'); ?>
+                              <?php PrliAppHelper::info_tooltip('prlipro-url-replacement-cpts',
+                                esc_html__('URL Post Types', 'pretty-link'),
+                                esc_html__('Select the post types you\'d like URLs to be replaced in.', 'pretty-link'));
                               ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-replace-in-feeds'); ?>
                             </label>
                           </th>
-                          <td>
-                            <input type="checkbox" disabled />
-                          </td>
-                        </tr>
-                        <tr valign="top" class="prli-pro-only">
-                          <th valign="row">
-                            <label>
-                              <?php esc_html_e('Index Replacements', 'pretty-link'); ?>
-                              <?php PrliAppHelper::info_tooltip('plp-index-keywords',
-                                esc_html__('Index Replacements', 'pretty-link'),
-                                sprintf(
-                                  // translators: %1$s: br tag, %2$s open strong tag, %3$s: close strong tag
-                                  esc_html__('This feature will index all of your keyword & URL replacements to dramatically improve performance.%1$s%1$sIf your site has a large number of replacements and/or posts then this feature may increase the load on your server temporarily and your replacements may not show up on your posts for a day or two initially (until all posts are indexed).%1$s%1$s%2$sNote:%3$s this feature requires the use of wp-cron.', 'pretty-link'),
-                                  '<br>',
-                                  '<strong>',
-                                  '</strong>'
-                                ));
-                              ?>
-                              <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-index'); ?>
-                            </label>
-                          </th>
-                          <td>
-                            <input type="checkbox" class="prli-toggle-checkbox" disabled />
+                          <td class="prlipro-chip-field">
+                            <div class="prlipro-chip selected">
+                              <input type="checkbox" checked disabled>
+                              <label><?php esc_html_e('Posts', 'pretty-link'); ?></label>
+                            </div>
+                            <div class="prlipro-chip selected">
+                              <input type="checkbox" checked disabled>
+                              <label><?php esc_html_e('Pages', 'pretty-link'); ?></label>
+                            </div>
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
+
+                  <table class="form-table">
+                    <tbody>
+                      <tr valign="top" class="prli-pro-only">
+                        <th valign="row">
+                          <label>
+                            <?php esc_html_e('Replace in Comments', 'pretty-link'); ?>
+                            <?php PrliAppHelper::info_tooltip('prli-replace-in-comments',
+                              esc_html__('Replace Keywords and URLs in Comments', 'pretty-link'),
+                              esc_html__('This option will enable the keyword / URL replacement routine to run in Comments.', 'pretty-link'));
+                            ?>
+                            <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-replace-in-comments'); ?>
+                          </label>
+                        </th>
+                        <td>
+                          <select disabled>
+                            <option value="none" selected><?php esc_html_e('None', 'pretty-link'); ?></option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr valign="top" class="prli-pro-only">
+                        <th valign="row">
+                          <label>
+                            <?php esc_html_e('Replace in Feeds', 'pretty-link'); ?>
+                            <?php PrliAppHelper::info_tooltip('prli-replace-in-feeds',
+                              esc_html__('Replace Keywords and URLs in Feeds', 'pretty-link'),
+                              sprintf(
+                                // translators: %1$s: br tag, %2$s open strong tag, %3$s: close strong tag
+                                esc_html__('This option will enable the keyword / URL replacement routine to run in RSS Feeds.%1$s%2$sNote:%3$s This option can slow the load speed of your RSS feed -- unless used in conjunction with a caching plugin like W3 Total Cache or WP Super Cache.%1$s%2$sNote #2%3$s This option will only work if you have "Full Text" selected in your General WordPress Reading settings.%1$s%2$sNote #3:%3$s If this option is used along with "Replace Keywords and URLs in Comments" then your post comment feeds will have keywords replaced in them as well.', 'pretty-link'),
+                                '<br>',
+                                '<strong>',
+                                '</strong>'
+                              ));
+                            ?>
+                            <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-replace-in-feeds'); ?>
+                          </label>
+                        </th>
+                        <td>
+                          <select disabled>
+                            <option value="none" selected><?php esc_html_e('None', 'pretty-link'); ?></option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr valign="top" class="prli-pro-only">
+                        <th valign="row">
+                          <label>
+                            <?php esc_html_e('Disclosure Notice', 'pretty-link'); ?>
+                            <?php PrliAppHelper::info_tooltip('prlipro-link-to-disclosures',
+                              esc_html__('Automatically Add a Link to Disclosures', 'pretty-link'),
+                              esc_html__('When enabled, this will add a link to your official affiliate link disclosure page to any page, post or custom post type that have any keyword or URL replacements. You\'ll also be able to customize the URL and position of the disclosure link.', 'pretty-link'));
+                            ?>
+                          </label>
+                        </th>
+                        <td>
+                          <input type="checkbox" class="prli-toggle-checkbox" disabled />
+                        </td>
+                      </tr>
+                      <tr valign="top" class="prli-pro-only">
+                        <th valign="row">
+                          <label>
+                            <?php esc_html_e('Enable Replacement Indexing', 'pretty-link'); ?>
+                            <?php PrliAppHelper::info_tooltip('plp-index-keywords',
+                              esc_html__('Enable Replacement Indexing', 'pretty-link'),
+                              sprintf(
+                                // translators: %1$s: br tag, %2$s open strong tag, %3$s: close strong tag
+                                esc_html__('This feature will index all of your keyword & URL replacements to dramatically improve performance.%1$s%1$sIf your site has a large number of replacements and/or posts then this feature may increase the load on your server temporarily and your replacements may not show up on your posts for a day or two initially (until all posts are indexed).%1$s%1$s%2$sNote:%3$s this feature requires the use of wp-cron.', 'pretty-link'),
+                                '<br>',
+                                '<strong>',
+                                '</strong>'
+                              ));
+                            ?>
+                            <?php // echo PrliAppHelper::pro_only_feature_indicator('option-replacement-index'); ?>
+                          </label>
+                        </th>
+                        <td>
+                          <input type="checkbox" class="prli-toggle-checkbox" disabled />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <?php
                   $upgrade_link = 'https://prettylinks.com/pl/pro-feature-indicator/upgrade?replacement-options';
-                  $section_title = esc_html__( 'Keywork &amp; URL Options', 'pretty-link' );
+                  $section_title = esc_html__( 'Keyword &amp; URL Options', 'pretty-link' );
                   include PRLI_VIEWS_PATH . "/admin/upgrade/dialog.php";
                 ?>
               </div>
@@ -665,7 +694,7 @@
               </div>
             </div>
 
-            <div class="prli-page" id="prettybar">
+            <?php /*<div class="prli-page" id="prettybar">
               <div class="prli-page-title"><?php esc_html_e('Pretty Bar Options', 'pretty-link'); ?></div>
               <div class="pretty-link-blur-wrap">
                 <div class="pretty-link-blur">
@@ -980,7 +1009,7 @@
                   include PRLI_VIEWS_PATH . "/admin/upgrade/dialog.php";
                 ?>
               </div>
-            </div>
+            </div>*/ ?>
 
             <div class="prli-page" id="social">
               <div class="prli-page-title"><?php esc_html_e('Social Buttons Options', 'pretty-link'); ?></div>

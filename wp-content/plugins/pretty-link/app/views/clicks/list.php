@@ -156,8 +156,8 @@
         <td><?php echo esc_html($click->host); ?></td>
       <?php endif; ?>
 
-        <td><?php echo esc_html($click->uri); ?></td>
-        <td><a href="<?php echo esc_url( $click->referer ); ?>"><?php echo esc_html( $click->referer ); ?></a></td>
+        <td><?php echo esc_html(urldecode($click->uri)); ?></td>
+        <td><a href="<?php echo esc_url( $click->referer ); ?>"><?php echo esc_html(urldecode( $click->referer)); ?></a></td>
         <td><a href="<?php echo esc_url(admin_url("admin.php?page=pretty-link-clicks&l={$click->link_id}")); ?>" title="<?php echo esc_attr(sprintf(__('View clicks for %s', 'pretty-link'), stripslashes($click->link_name))); ?>"><?php echo esc_html(stripslashes($click->link_name)); ?></a></td>
       </tr>
       <?php

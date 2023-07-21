@@ -301,17 +301,18 @@ class PrliLinksController extends PrliBaseController {
     do_action('prli_update_link', $link_id);
   }
 
-  public function transition_cpt_status( $new_status, $old_status, $post ) {
+  public function transition_cpt_status($new_status, $old_status, $post) {
     global $prli_link;
 
-    if( $new_status != $old_status ) {
+    if($new_status != $old_status) {
       $link_id = $prli_link->get_link_from_cpt($post->ID);
 
       if(empty($link_id)) { return; }
 
-      $link = $prli_link->getOne($link_id);
+      // No need to enable the link again going from draft to published.
+      if($new_status == 'publish' && $old_status == 'draft') { return; }
 
-      if( $new_status == 'publish' ) {
+      if($new_status == 'publish' || $new_status == 'draft') {
         $prli_link->enable_link($link_id);
       }
       else {
@@ -507,7 +508,7 @@ class PrliLinksController extends PrliBaseController {
       'links' => esc_html__('Pretty Links', 'pretty-link')
     );
 
-    return $columns;
+    return apply_filters('prli_admin_links_columns', $columns);
   }
 
   public function sortable_columns($columns) {
@@ -580,6 +581,8 @@ class PrliLinksController extends PrliBaseController {
           esc_url($link->url)
         );
       }
+
+      do_action('prli_admin_links_column_values', $column, $link);
     }
   }
 
@@ -739,8 +742,9 @@ class PrliLinksController extends PrliBaseController {
       if($plp_update->is_installed()) {
         global $plp_options, $prli_link_meta;
 
+        $plp_links_ctrl = new PlpLinksController();
+
         if ($plp_options->generate_qr_codes) {
-          $plp_links_ctrl = new PlpLinksController();
           $new_actions['qr'] = $plp_links_ctrl->qr_code_link($link->id);
         }
 
@@ -757,6 +761,10 @@ class PrliLinksController extends PrliBaseController {
               esc_html__('View Split Test Report', 'pretty-link')
             );
           }
+        }
+
+        if($plp_options->enable_link_health && $link->redirect_type != 'pixel') {
+          $new_actions['link_health'] = $plp_links_ctrl->health_status_link($link->id);
         }
       }
 
@@ -966,7 +974,7 @@ class PrliLinksController extends PrliBaseController {
     }
 
     if(!$plp_update->is_installed()) {
-      $views['prli_broken_links'] = __('<a href="#" id="prli-broken-links"><span class="prli-broken-link-indicator"></span> Broken Links</a>', 'pretty-link');
+      $views['prli_broken_links'] = __('<a href="#" id="prli-broken-links"><span class="tooltip">Broken</span> Links</a>', 'pretty-link');
     }
 
     return apply_filters('prli_quick_links', $views);

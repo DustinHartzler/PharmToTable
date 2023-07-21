@@ -4,7 +4,7 @@ Donate link: https://prettylinks.com
 Tags: affiliate links, link branding, link shortner, link tracking, redirects, affiliate, affiliate marketing, affiliates, short links, shorten, shortening, shortlink, shortlinks, shorturl, shrinking, marketing, marketing plugin, cloak, cloaker, cloaking, 301, 302, 307, 404, bit.ly, bitly, tinyurl, link cloaking, link redirection, link shortener, links, pretty links, url redirection, url shortener, urls, seo, slug, slugs
 Requires at least: 5.1
 Tested up to: 6.2
-Stable tag: 3.4.2
+Stable tag: 3.5.0
 
 🌠 The best WordPress link management, branding, tracking & sharing plugin. Easily make pretty & trackable shortlinks. 🔗
 
@@ -62,11 +62,14 @@ Need to download click data for your links? Pretty Links has you covered. The pl
 
 *Pretty Links Pro* is a **significant upgrade** that adds many tools and redirection types.  Here's a glimpse at some of the different features that Pretty Links Pro offers:
 
+* [**Product Displays**](https://prettylinks.com/blog/introducing-product-display-add-on?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features) (**NEW!**)
+Create beautifully styled and responsive displays for your affiliate links to drive more commissions with ease.
+
 * [**Keyword & URL Replacements**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
 Using one of Pretty Link's automation features, you can define a list of keywords and URLs, then Pretty Links will automatically scan your site's content and replace them with your pretty link.
 
 * [**Advanced Redirect Types**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Take full control over how your users are redirected. With the Pro version, you can now offer Cloaked redirects, Pretty Bar redirects, JavaScript redirects, Meta-Refresh redirects, Tracking Pixel redirects, and Geographic redirects.
+Take full control over how your users are redirected. With the Pro version, you can now offer Cloaked redirects, JavaScript redirects, Meta-Refresh redirects, Tracking Pixel redirects, and Geographic redirects.
 
 * [**Automatically Create Pretty Links for Posts/Pages**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
 Another one of Pretty Link's powerful automation features. Whenever a new page or post is published, Pretty Links will automatically create a pretty link for it.
@@ -76,6 +79,9 @@ Make link management easier by grouping your links together and assigning them a
 
 * [**Expiring Links**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
 Set an expiration date on your links and decide where the user is redirected to after clicking an expired link.
+
+* [**Link Health**](https://prettylinks.com/blog/repair-broken-links?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Runs weekly scans on your site to look for and report any broken links you've created within the Pretty Links plugin.
 
 You can learn more about *Pretty Links Pro* here:
 
@@ -125,6 +131,18 @@ Yes! Pretty Links is ready for translation. See our [Translating Pretty Links](h
 4. Click Tracking
 
 == Changelog ==
+= 3.5.0 =
+* NEW: Significantly improved onboarding process by implementing a full-fledged wizard that walks through the basics of setting up Pretty Links
+* Pro: Add filter hooks for geolocation
+* Pro: Add ability to scan link's health status individually
+* Pro: Display link's health status as a separate column on Pretty Links listing page
+* Pro: Deprecate Pretty Bar
+* Pro: Deprecate GA integration
+* Pro: Refactor Replacements tab so URL and Keyword replacements function independently of each other
+* Prevent redirect code from running during search
+* Allow special characters for URI and Referrer fields on Clicks page
+* Fix PHP warnings being displayed when editing a restored pretty link
+
 = 3.4.2 =
 * Update dependencies used for building Gutenberg assets.
 

@@ -63,7 +63,7 @@ table.prli-settings-table input[type=number] {
 }
 
 table.prli-settings-table .form-table th {
-  width: 250px;
+  width: 280px;
 }
 
 table.prli-settings-table td.prli-settings-table-pages {
@@ -231,3 +231,26 @@ table.prli-settings-table tr.prli-mobile-nav {
   }
 }
 
+.prlipro-chip-field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prlipro-chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  border-radius: 16px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.prlipro-chip input[type="checkbox"] {
+  display: none;
+}
+
+.prlipro-chip.selected {
+  background-color: #0074A2;
+  color: #ffffff;
+}
