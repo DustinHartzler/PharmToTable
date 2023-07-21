@@ -1,4 +1,18 @@
 <div v-if="selected === 'app-1'">
+    <div class="sb-tab-box sbi-uo-install-notice clearfix" v-if="!uoActive && !uncannyAutomatorScreen.shouldHideAutomatorNotice && uncannyAutomatorScreen.canInstallAutomatorPlugin">
+        <div class="sbi-tab-notice">
+            <div class="sbi-notice-left">
+                <span class="icon" v-html="generalTab.uoInstallNotice.logo"></span>
+                <div class="sbi-notice-text">
+                    <p>{{generalTab.uoInstallNotice.notice}}</p>
+                </div>
+            </div>
+            <div class="sbi-notice-right">
+                <button class="sbi-btn sbi-notice-learn-more" @click.prevent.default="activateView('automatorIntegrationModal')">{{generalTab.uoInstallNotice.learnMore}}</button>
+                <button class="sbi-btn sbi-uo-notice-dismiss" v-html="generalTab.uoInstallNotice.closeIcon" @click.prevent.default="dismissAutomatorNotice()"></button>
+            </div>
+        </div>
+    </div>
 	<div class="sb-tab-box sb-license-box clearfix">
 		<div class="tab-label">
 			<h3>{{generalTab.licenseBox.title}}</h3>

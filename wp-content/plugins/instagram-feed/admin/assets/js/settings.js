@@ -12,7 +12,11 @@ var settings_data = {
     sourcesList: sbi_settings.sources,
     dialogBoxPopupScreen: sbi_settings.dialogBoxPopupScreen,
     selectSourceScreen: sbi_settings.selectSourceScreen,
-
+    uncannyAutomatorScreen  : sbi_settings.uncannyAutomatorScreen,
+    automatorInstallBtnStatus: 'normal',
+    enableAutomatorSetupStep : sbi_settings.uncannyAutomatorScreen.enableSetupStep,
+    uoActive : sbi_settings.uoActive,
+    disableAutomatorBtn : false,
     socialWallActivated: sbi_settings.socialWallActivated,
     socialWallLinks: sbi_settings.socialWallLinks,
     stickyWidget: false,
@@ -53,6 +57,7 @@ var settings_data = {
     uploadSVG: sbi_settings.uploadSVG,
     exportSVG: sbi_settings.exportSVG,
     reloadSVG: sbi_settings.reloadSVG,
+    checkmarCircleSVG: sbi_settings.checkmarCircleSVG,
     tooltipHelpSvg: sbi_settings.tooltipHelpSvg,
     tooltip: {
         text: '',
@@ -87,6 +92,7 @@ var settings_data = {
         sourcePopupScreen: 'redirect_1',
         sourcePopupType: 'creation',
         instanceSourceActive: null,
+        automatorIntegrationModal : false,
     },
     //Add New Source
     newSourceData: sbi_settings.newSourceData ? sbi_settings.newSourceData : null,
@@ -632,6 +638,94 @@ var sbiSettings = new Vue({
                         this.clearCacheStatus = null;
                     }.bind(this), 3000);
                 });
+        },
+        installAutomatorPlugin: function(ispluginInstalled, isPluginActive, pluginDownloadPath, automatorPlugin) {
+            var self = this;
+            self.automatorInstallBtnStatus = 'loading';
+            self.disableAutomatorBtn = true;
+            let data = new FormData();
+            data.append( 'action', ! ispluginInstalled ? 'sbi_install_addon' : 'sbi_activate_addon' );
+            data.append( 'nonce', self.nonce );
+            data.append( 'type', 'plugin' );
+            data.append( 'plugin', ! ispluginInstalled ? pluginDownloadPath : automatorPlugin );
+            fetch(self.ajaxHandler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if ( data.success === true ) {
+                    self.automatorInstallBtnStatus = 'success';
+                    self.enableAutomatorSetupStep = true;
+                } else {
+                    self.automatorInstallBtnStatus = 'normal';
+                    self.disableAutomatorBtn = false;
+                }
+            });
+        },
+        dismissAutomatorNotice: function() {
+            var self = this;
+
+            // Remove the notice instantly from the UI for better user experience
+            self.uncannyAutomatorScreen.shouldHideAutomatorNotice = true;
+
+            let data = new FormData();
+            data.append( 'action', 'sbi_dismiss_automator_notice' );
+            data.append( 'nonce', self.nonce );
+            fetch(self.ajaxHandler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+        },
+        automatorInstallBtnIcon: function() {
+            if ( this.automatorInstallBtnStatus == 'loading' ) {
+                return this.loaderSVG;
+            } else if ( this.automatorInstallBtnStatus == 'success' ) {
+                return this.checkmarCircleSVG;
+            } else if ( this.automatorInstallBtnStatus == 'error' ) {
+                return this.timesSVG;
+            }
+
+            if ( this.uncannyAutomatorScreen.isPluginInstalled && this.uncannyAutomatorScreen.isPluginActive  ) {
+                return this.checkmarCircleSVG;
+            }
+
+            return this.uncannyAutomatorScreen.installSVG;
+        },
+        automatorInstallBtnText: function() {
+            if ( this.automatorInstallBtnStatus == 'loading' ) {
+                return 'Installing';
+            } else if ( this.automatorInstallBtnStatus == 'success' ) {
+                return 'Installed &amp; Activated Successfully';
+            }
+
+            if ( this.uncannyAutomatorScreen.isPluginInstalled && !this.uncannyAutomatorScreen.isPluginActive  ) {
+                return 'Activate Plugin';
+            }
+            if ( this.uncannyAutomatorScreen.isPluginInstalled && this.uncannyAutomatorScreen.isPluginActive  ) {
+                return 'Plugin Installed & Activated';
+            }
+
+            return 'Install Plugin';
+        },
+        setupAutomatorPlugin: function() {
+            var self = this;
+            let data = new FormData();
+            data.append( 'action', 'sbi_automator_setup_source' );
+            data.append( 'nonce', self.nonce );
+            fetch(self.ajaxHandler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if ( data.success === true ) {
+                    window.location.href = self.adminUrl + self.uncannyAutomatorScreen.setupPage;
+                }
+            });
         },
         showTooltip: function (tooltipName) {
             this.tooltipName = tooltipName;

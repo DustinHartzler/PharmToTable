@@ -3189,3 +3189,127 @@
 		margin-right: 20px;
 	}
 }
+
+
+
+  /* Uncanny Automator Integration Popup */
+
+  .sbi-integration-popup-modal .sbi-integration-popup {
+	width: 100%;
+	max-width: 580px;
+	box-shadow: 0px 26.7377px 77.2886px rgba(0, 0, 0, 0.107828), 0px 14.2952px 41.3222px rgba(0, 0, 0, 0.0894161), 0px 8.01379px 23.1649px rgba(0, 0, 0, 0.075), 0px 4.25607px 12.3027px rgba(0, 0, 0, 0.0605839), 0px 1.77104px 5.11942px rgba(0, 0, 0, 0.0421718);
+	border-radius: 8px;
+	padding: 25px 0 0 0;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-content-header {
+	text-align: center;
+	padding: 0 100px;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-content-header img {
+	width: 226px;
+	margin-bottom: -55px;
+}
+#sbi-settings .sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-content-header h3 {
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 140%;
+	text-align: center;
+	color: #141B38;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-content-header p {
+	font-weight: 400;
+	font-size: 12px;
+	line-height: 160%;
+	text-align: center;
+	color: #696D80;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-steps {
+	margin-top: 16px;
+	padding: 33px 43px 48px;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step {
+	background: #FFFFFF;
+	border: 1px solid #E6E6EB;
+	border-radius: 8px;
+	padding: 21px 100px 27px 20px;
+	position: relative;
+	margin-bottom: 12px;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-step-image {
+    position: absolute;
+    right: -7px;
+    width: 170px;
+    top: 17px;
+}
+
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-setup-step .sbi-step-image {
+	width: 186px;
+    right: -1px;
+	top: 8px;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step h4 {
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 160%;
+	color: #141B38;
+	margin: 0;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step p {
+	font-weight: 400;
+	font-size: 12px;
+	line-height: 160%;
+	color: #696D80;
+	margin-top: 0px;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn {
+	margin-top: 16px;
+	border-radius: 4px;
+	padding: 6px 8px;
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 160%;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn-install {
+	background-color: #0068A0;
+	color: #fff;
+	box-shadow: 0px 2px 5px rgba(60, 66, 87, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.08), inset 0px -1px 1px rgba(0, 0, 0, 0.12);
+	transition: all .2s ease-in;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn-install:hover {
+	background-color: #117db7;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn-install:disabled {
+	background-color: #117db7 !important;
+    color: white !important;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn svg {
+	margin-right: 1px;
+	width: 16px;
+	height: 17px;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn svg path {
+	fill: white;
+}
+.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step .sbi-btn:disabled {
+	background: #F9F9FA;
+	color: #696D80;
+}
+
+@media (max-width: 768px) {
+	.sbi-integration-popup-modal .sbi-integration-popup {
+		width: calc(85% - 20px);
+		left: 0px;
+	}
+} 
+
+@media (max-width: 600px) {
+	.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-content-header {
+		padding: 0 50px;
+	}
+	.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-steps {
+		padding: 33px 25px 48px;
+	}
+	.sbi-integration-popup-modal .sbi-integration-popup .sbi-popup-ua-integration-step {
+		padding: 21px 94px 27px 20px;
+	}
+} 

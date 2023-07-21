@@ -85,7 +85,7 @@ class SBI_Upgrader {
 	 */
 	public static function maybe_upgrade_redirect() {
 		$home_url = home_url();
-		check_ajax_referer( 'sbi_admin_nonce' , 'nonce');
+		check_ajax_referer( 'sbi-admin' , 'nonce');
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -160,6 +160,8 @@ class SBI_Upgrader {
 
 			// Redirect.
 			$oth = hash( 'sha512', wp_rand() );
+			$hashed_oth = hash_hmac( 'sha512', $oth, wp_salt() );
+
 			update_option( 'sbi_one_click_upgrade', $oth );
 			$version      = '1.0';
 			$version_info = SBI_Upgrader::get_version_info( $license_data );
@@ -172,7 +174,7 @@ class SBI_Upgrader {
 			$redirect = admin_url( 'admin.php?page=' . self::REDIRECT );
 			$url      = add_query_arg( array(
 				'key'         => $license,
-				'oth'         => $oth,
+				'oth'         => $hashed_oth,
 				'endpoint'    => $endpoint,
 				'version'     => $version,
 				'siteurl'     => $siteurl,
@@ -211,7 +213,7 @@ class SBI_Upgrader {
 			wp_send_json_error( $error );
 		}
 
-		if ( ! hash_equals( $oth, $post_oth ) ) {
+		if ( hash_hmac( 'sha512', $oth, wp_salt() ) !== $post_oth ) {
 			wp_send_json_error( $error );
 		}
 

@@ -199,7 +199,7 @@ class SBI_Feed_Saver_Manager {
 	 * @since 6.0
 	 */
 	public static function delete_source() {
-		check_ajax_referer( 'sbi_admin_nonce' , 'nonce');
+		check_ajax_referer( 'sbi-admin' , 'nonce');
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -526,7 +526,7 @@ class SBI_Feed_Saver_Manager {
 		}
 		$feeds_data = \SB_Instagram_Feed_Locator::instagram_feed_locator_query( $args );
 
-		if ( count( $feeds_data ) < SBI_Db::RESULTS_PER_PAGE ) {
+		if ( count( $feeds_data ) < SBI_Db::get_results_per_page() ) {
 			$args['html_location'] = array( 'footer', 'sidebar', 'header' );
 			$args['group_by'] = 'html_location';
 			$args['page'] = 1;

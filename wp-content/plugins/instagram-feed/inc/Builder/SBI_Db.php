@@ -398,7 +398,11 @@ class SBI_Db {
 			unset( $args['page'] );
 		}
 
-		$offset = max( 0, $page * self::RESULTS_PER_PAGE );
+		$offset = max( 0, $page * self::get_results_per_page() );
+		$limit = self::get_results_per_page();
+		if( isset( $args['all_feeds'] ) && $args['all_feeds'] ) {
+			$limit = self::feeds_count();
+		}
 
 		if ( isset( $args['id'] ) ) {
 			$sql = $wpdb->prepare(
@@ -414,7 +418,7 @@ class SBI_Db {
 			SELECT * FROM $feeds_table_name
 			LIMIT %d
 			OFFSET %d;",
-				self::RESULTS_PER_PAGE,
+				$limit,
 				$offset
 			);
 		}
@@ -956,5 +960,16 @@ class SBI_Db {
 				$source_id
 			);
 		return $wpdb->get_row( $sql, ARRAY_A );
+	}
+
+	/**
+	 * Get the number of results per page
+	 *
+	 * @return int
+	 * 
+	 * @since 6.1.6
+	 */
+	public static function get_results_per_page() {
+		return apply_filters( 'sbi_results_per_page', self::RESULTS_PER_PAGE );
 	}
 }

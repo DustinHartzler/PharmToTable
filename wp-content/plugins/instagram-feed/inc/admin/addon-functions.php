@@ -77,10 +77,9 @@ add_action( 'wp_ajax_sbi_activate_addon', 'sbi_activate_addon' );
  * @since 1.0.0
  */
 function sbi_install_addon() {
-
 	// Run a security check.
 	check_ajax_referer( 'sbi-admin', 'nonce' );
-
+	
 	// Check for permissions.
 	if ( ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error();
@@ -208,3 +207,42 @@ function sbi_encrypt_decrypt( $action, $string ) {
 
 	return $output;
 }
+
+
+/**
+ * AJAX dismiss Uncanny Automator notice
+ */
+function sbi_dismiss_automator_notice() {
+	// Run a security check.
+	check_ajax_referer( 'sbi-admin', 'nonce' );
+
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		wp_send_json_error();
+	}
+
+	$user_id = get_current_user_id();
+
+	// update the source for the automator plugin
+	update_user_meta( $user_id, 'sbi_dismiss_automator_notice', strtotime( 'now' ) );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_sbi_dismiss_automator_notice', 'sbi_dismiss_automator_notice');
+
+/**
+ * AJAX setup for the automator plugin to store the source information of Uncanny Automator
+ */
+function sbi_automator_setup_source() {
+	// Run a security check.
+	check_ajax_referer( 'sbi-admin', 'nonce' );
+
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		wp_send_json_error();
+	}
+
+	// update the source for the automator plugin
+	update_option( 'uncannyautomator_source', 'sb' );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_sbi_automator_setup_source', 'sbi_automator_setup_source');

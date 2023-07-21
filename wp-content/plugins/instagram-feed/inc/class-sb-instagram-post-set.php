@@ -50,6 +50,11 @@ class SB_Instagram_Post_Set {
 	private $first_post_top_time_stamp;
 
 	/**
+	 * @var array
+	 */
+	private $image_sizes;
+
+	/**
 	 * SB_Instagram_Post_Set constructor.
 	 *
 	 * @param array $post_data

@@ -71,6 +71,11 @@ class SB_Instagram_Feed
 	private $num_api_calls;
 
 	/**
+	 * @var int
+	 */
+	private $max_api_calls;
+
+	/**
 	 * @var array
 	 */
 	private $image_ids_post_set;

@@ -9,6 +9,7 @@
 namespace InstagramFeed\Admin;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use InstagramFeed\SBI_Response;
+use InstagramFeed\Helpers\Util;
 
 class SBI_Global_Settings {
 	//use SBI_Settings;
@@ -67,7 +68,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_save_settings() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -178,7 +179,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_activate_license() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -221,7 +222,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_deactivate_license() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -253,7 +254,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_test_connection() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -296,7 +297,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_recheck_connection() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -370,7 +371,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_import_settings_json() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -412,7 +413,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_export_settings_json() {
-		if ( ! check_ajax_referer( 'sbi_admin_nonce', 'nonce', false ) && ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
+		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) && ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
 			wp_send_json_error();
 		}
 
@@ -444,7 +445,7 @@ class SBI_Global_Settings {
 	 * @since 6.0
 	 */
 	public function sbi_clear_cache() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -541,7 +542,7 @@ class SBI_Global_Settings {
 	 * @since 6.0
 	 */
 	public function sbi_clear_image_resize_cache() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -564,7 +565,7 @@ class SBI_Global_Settings {
 	 */
 	public function sbi_clear_error_log() {
 		//Security Checks
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -609,7 +610,7 @@ class SBI_Global_Settings {
 	 * @since 6.0
 	 */
 	public function sbi_dpa_reset() {
-		check_ajax_referer( 'sbi_admin_nonce', 'nonce'  );
+		check_ajax_referer( 'sbi-admin', 'nonce'  );
 
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
 			wp_send_json_error();
@@ -669,8 +670,8 @@ class SBI_Global_Settings {
 			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
 
-		$upgrade_url 	= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', $license_key);
-		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, sanitize_key( $sbi_download_id ) );
+		$upgrade_url 	= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', esc_attr( $license_key ) );
+		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', esc_attr( $license_key ), sanitize_key( $sbi_download_id ) );
 		$learn_more_url = 'https://smashballoon.com/doc/my-license-key-wont-activate/?utm_campaign=instagram-free&utm_source=settings&utm_medium=license&utm_content=learn-more';
 
 		// Check if the license key reached max site installations
@@ -765,8 +766,14 @@ class SBI_Global_Settings {
 			return;
 		}
 		$sbi_status  = 'inactive';
+		
+		global $wp_version;
+		$can_install_automator_plugin = ( version_compare($wp_version,'5.3') >= 0 ) ? true : false;
+
 		$model = $this->get_settings_data();
-		$exported_feeds = \InstagramFeed\Builder\SBI_Db::feeds_query();
+		$exported_feeds = \InstagramFeed\Builder\SBI_Db::feeds_query(
+			['all_feeds' => true]
+		);
 		$feeds = array();
 		foreach( $exported_feeds as $feed_id => $feed ) {
 			$feeds[] = array(
@@ -792,6 +799,10 @@ class SBI_Global_Settings {
 			$sbi_status = ! empty( $sbi_license_data['license'] ) ? $sbi_license_data['license'] : false;
 			$licenseErrorMsg = ( isset( $sbi_license_data['error'] ) && isset( $sbi_license_data['errorMsg'] ) ) ? $sbi_license_data['errorMsg'] : null;
 		}
+
+		$current_user_id = get_current_user_id();
+		$get_sb_active_plugins_info = Util::get_sb_active_plugins_info();
+		$should_hide_automtor_notice = ( get_user_meta( $current_user_id, 'sbi_dismiss_automator_notice' ) ) ? true : false;
 
 		wp_enqueue_style(
 			'settings-style',
@@ -824,7 +835,7 @@ class SBI_Global_Settings {
 			$has_license_error = true;
 		}
 
-		$upgrade_url			= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', $license_key);
+		$upgrade_url			= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', esc_attr( $license_key ));
 	    $footer_upgrade_url		= 'https://smashballoon.com/instagram-feed/demo?utm_campaign=instagram-free&utm_source=settings&utm_medium=footer-banner&utm_content=Try Demo';
 	    $usage_tracking_url 	= 'https://smashballoon.com/instagram-feed/usage-tracking/';
 		$feed_issue_email_url 	= 'https://smashballoon.com/doc/email-report-is-not-in-my-inbox/?instagram';
@@ -836,10 +847,11 @@ class SBI_Global_Settings {
 		$sbi_settings = array(
 			'admin_url' 		=> admin_url(),
 			'ajax_handler'		=> admin_url( 'admin-ajax.php' ),
-			'nonce'             => wp_create_nonce( 'sbi_admin_nonce' ),
+			'nonce'             => wp_create_nonce( 'sbi-admin' ),
 			'supportPageUrl'    => admin_url( 'admin.php?page=sbi-support' ),
 			'builderUrl'		=> admin_url( 'admin.php?page=sbi-feed-builder' ),
 			'links'				=> $this->get_links_with_utm(),
+			'uoActive'			=>  is_plugin_active( 'uncanny-automator/uncanny-automator.php' ),
 			'pluginItemName'	=> SBI_PLUGIN_NAME,
 			'licenseType'		=> 'free',
 			'licenseKey'		=> $license_key,
@@ -861,6 +873,12 @@ class SBI_Global_Settings {
 			'socialWallActivated' => is_plugin_active( 'social-wall/social-wall.php' ),
 			'genericText'       => \InstagramFeed\Builder\SBI_Feed_Builder::get_generic_text(),
 			'generalTab'		=> array(
+				'uoInstallNotice' => array(
+					'notice' => __( 'Post to Instagram right from WordPress with Uncanny Automator', 'instagram-feed' ),
+					'learnMore' => __( 'Learn More', 'instagram feed' ),
+					'logo' => '<svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 13.5C9.5 13.87 9.4 14.2 9.22 14.5C8.88 13.91 8.24 13.5 7.5 13.5C6.76 13.5 6.12 13.91 5.78 14.5C5.61 14.2 5.5 13.87 5.5 13.5C5.5 12.4 6.4 11.5 7.5 11.5C8.6 11.5 9.5 12.4 9.5 13.5ZM22 13V16C22 16.55 21.55 17 21 17H20V18C20 19.11 19.11 20 18 20H4C3.46957 20 2.96086 19.7893 2.58579 19.4142C2.21071 19.0391 2 18.5304 2 18V17H1C0.45 17 0 16.55 0 16V13C0 12.45 0.45 12 1 12H2C2 8.13 5.13 5 9 5H10V3.73C9.4 3.39 9 2.74 9 2C9 0.9 9.9 0 11 0C12.1 0 13 0.9 13 2C13 2.74 12.6 3.39 12 3.73V5H13C16.87 5 20 8.13 20 12H21C21.55 12 22 12.45 22 13ZM18 15V12C18 9.24 15.76 7 13 7H9C6.24 7 4 9.24 4 12V15V18H18V15ZM14.5 11.5C13.4 11.5 12.5 12.4 12.5 13.5C12.5 13.87 12.61 14.2 12.78 14.5C13.12 13.91 13.76 13.5 14.5 13.5C15.24 13.5 15.88 13.91 16.22 14.5C16.4 14.2 16.5 13.87 16.5 13.5C16.5 12.9696 16.2893 12.4609 15.9142 12.0858C15.5391 11.7107 15.0304 11.5 14.5 11.5Z" fill="#663D00"/></svg>',
+					'closeIcon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#663D00"/></svg>'
+				),
 				'licenseBox'	=> array(
 					'title' => __( 'License Key', 'instagram-feed' ),
 					'description' => __( 'Your license key provides access to updates and support', 'instagram-feed' ),
@@ -1051,13 +1069,37 @@ class SBI_Global_Settings {
 			),
 
 			'selectSourceScreen' => \InstagramFeed\Builder\SBI_Feed_Builder::select_source_screen_text(),
-
+			'uncannyAutomatorScreen' => array(
+				'heading' => __( 'Automatically post from WordPress to Instagram with the #1 automation plugin', 'instagram-feed' ),
+				'description' => __( 'Uncanny Automator lets you easily automate your WordPress site.  Automatically push new blog posts to your Instagram Business account (and Facebook and Twitter too).', 'instagram-feed' ),
+				'integrationLogo' => SBI_PLUGIN_URL . '/admin/assets/img/instagram-with-uncanny-automator.png',
+				'installStep' => array(
+					'title' => __( 'Install and activate Uncanny Automator', 'instagram-feed' ),
+					'description' => __( 'The plugin is installed from the Wordpress.org repository', 'instagram-feed' ),
+					'icon' => SBI_PLUGIN_URL . '/admin/assets/img/uncanny-automator-logo.png',
+				),
+				'setupStep' => array(
+					'title' => __( 'Set up Uncanny Automator', 'instagram-feed' ),
+					'description' => __( 'Connect Uncanny Automator to your Instagram account', 'instagram-feed' ),
+					'icon' => SBI_PLUGIN_URL . '/admin/assets/img/setup-uncanny-automator.png',
+				),
+				'shouldHideAutomatorNotice' => $should_hide_automtor_notice,
+				'canInstallAutomatorPlugin' => $can_install_automator_plugin,
+				'isPluginInstalled' => $get_sb_active_plugins_info['is_uncanny_automator_installed'],
+				'isPluginActive' => is_plugin_active($get_sb_active_plugins_info['uncanny_automator_plugin']),
+				'pluginDownloadPath' => $get_sb_active_plugins_info['uncanny_automator_download_plugin'],
+				'automatorPlugin' => $get_sb_active_plugins_info['uncanny_automator_plugin'],
+				'installSVG' => '<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.213 3.34015C11.2019 2.51003 9.96799 1.99743 8.66634 1.86682V3.21349C9.63967 3.33349 10.5263 3.72015 11.2663 4.29349L12.213 3.34015ZM13.2863 7.83349H14.633C14.4997 6.49349 13.9663 5.27349 13.1597 4.28682L12.2063 5.23349C12.7944 5.98679 13.1676 6.88523 13.2863 7.83349ZM12.2063 11.7668L13.1597 12.7202C13.9887 11.7084 14.5012 10.4748 14.633 9.17349H13.2863C13.1663 10.1194 12.7932 11.0153 12.2063 11.7668ZM8.66634 13.7868V15.1335C10.0063 15.0002 11.2263 14.4668 12.213 13.6602L11.2597 12.7068C10.5263 13.2802 9.63967 13.6668 8.66634 13.7868ZM10.393 7.56015L8.66634 9.28015V5.16682H7.33301V9.28015L5.60634 7.55349L4.66634 8.50015L7.99967 11.8335L11.333 8.50015L10.393 7.56015ZM7.33301 13.7868V15.1335C3.96634 14.8002 1.33301 11.9602 1.33301 8.50015C1.33301 5.04015 3.96634 2.20015 7.33301 1.86682V3.21349C4.69967 3.54015 2.66634 5.78015 2.66634 8.50015C2.66634 11.2202 4.69967 13.4602 7.33301 13.7868Z" fill="white"/></svg>',
+				'enableSetupStep' => is_plugin_active($get_sb_active_plugins_info['uncanny_automator_plugin']),
+				'setupPage' => '/edit.php?post_type=uo-recipe&page=uncanny-automator-config&tab=premium-integrations&integration=instagram'
+			),
 			'nextCheck'	=> $this->get_cron_next_check(),
 			'loaderSVG' => '<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#fff" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h6.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>',
 			'checkmarkSVG' => '<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>',
 			'timesCircleSVG' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"/></svg>',
 			'uploadSVG' => '<svg class="btn-icon" width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M0.166748 14.6667H11.8334V13H0.166748V14.6667ZM0.166748 6.33333H3.50008V11.3333H8.50008V6.33333H11.8334L6.00008 0.5L0.166748 6.33333Z" fill="#141B38"/></svg>',
+			'checkmarCircleSVG'		=> '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg>',
 			'exportSVG' => '<svg class="btn-icon" width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M0.166748 14.6667H11.8334V13H0.166748V14.6667ZM11.8334 5.5H8.50008V0.5H3.50008V5.5H0.166748L6.00008 11.3333L11.8334 5.5Z" fill="#141B38"/></svg>',
 			'reloadSVG' => '<svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1106,7 +1148,7 @@ class SBI_Global_Settings {
 		if ( get_option('sbi_license_key') ) {
 			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
-		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=balloon&utm_medium=all-access', $license_key);
+		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=balloon&utm_medium=all-access', esc_attr( $license_key ));
 
 		return array(
 			'manageLicense' => 'https://smashballoon.com/account/downloads/?utm_campaign=instagram-free&utm_source=settings&utm_medium=manage-license',

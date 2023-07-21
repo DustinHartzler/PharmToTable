@@ -278,17 +278,42 @@ var sbiStorage = window.localStorage;
          *
          * @since 4.0
          */
-         processIFConnect : function(){
+        processIFConnect : function(){
             var self = this,
-            ifConnectURL = self.addNewSource.typeSelected === 'personal' ? self.sourceConnectionURLs.personal : self.sourceConnectionURLs.business,
+            accountType = self.addNewSource.typeSelected,
+            params = accountType === 'personal' ? self.sourceConnectionURLs.personal : self.sourceConnectionURLs.business,
+            ifConnectURL = params.connect,
+            
             screenType = (self.$parent.customizerFeedData != undefined) ? 'customizer'  : 'creationProcess',
             appendURL = ( screenType == 'customizer' ) ? self.sourceConnectionURLs.stateURL + ',feed_id='+ self.$parent.customizerFeedData.feed_info.id : self.sourceConnectionURLs.stateURL;
             //if(screenType != 'customizer'){
                 self.createLocalStorage(screenType);
             //}
-            var finalUrl = ifConnectURL + "{'{url=" + appendURL + "}'}";
-            window.location = finalUrl;
 
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = ifConnectURL;
+
+            const urlParams = {
+                'wordpress_user' : params.wordpress_user,
+                'v' : params.v,
+                'vn' : params.vn,
+                'sbi_con' : params.sbi_con,
+                'state' : "{'{url=" + appendURL + "}'}"
+            };
+
+            for (const param in urlParams) {
+                if (urlParams.hasOwnProperty(param)) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = param;
+                    input.value = urlParams[param];
+                    form.appendChild(input);
+                }
+            }
+
+            document.body.appendChild(form);
+            form.submit();
         },
 
         /**

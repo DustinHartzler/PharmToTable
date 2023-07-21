@@ -3,7 +3,7 @@ Contributors: smashballoon, craig-at-smash-balloon, am, smub
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 4.1
 Tested up to: 6.2
-Stable tag: 6.1.5
+Stable tag: 6.1.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -40,6 +40,7 @@ https://www.youtube.com/watch?v=517rApIqzbw
 * **Keep Your Site Looking Fresh** - Automatically push your new Instagram content straight to your site to keep it looking fresh and keeping your audience engaged.
 * **Super simple to set up** - Once installed, you can be displaying your Instagram photos within 30 seconds! No confusing steps or Instagram Developer account needed.
 * **Powers all Instagram oEmbeds on your site** - With WordPress removing support for Instagram oEmbeds, the plugin will now power all Instagram embeds on your site, old and new, to allow them to continue working.
+* Easily integrates with Elementor and Divi page builders
 
 = Pro Version =
 In order to maintain the free version of the plugin on an ongoing basis, and to provide quick and effective support for free, we offer a Pro version of the plugin. The Pro version allows you to:
@@ -334,6 +335,11 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Plus more customization options added all the time!
 
 == Changelog ==
+= 6.1.6 =
+* Fix: Changed code related to account connection for increased reliability.
+* Fix: Only 20 feeds were available for export when using the tool on the settings page.
+* Fix: Fixed an issue causing a PHP error "creation of a dynamic property" when using PHP 8.2.
+
 = 6.1.5 =
 * Fix: Fixed personal accounts unable to retrieve new tweets and showing an error with the code 100.
 * Fix: Updated API calls for business accounts to work with upcoming changes from Instagram.

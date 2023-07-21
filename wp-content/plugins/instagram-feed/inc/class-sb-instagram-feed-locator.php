@@ -252,7 +252,7 @@ class SB_Instagram_Feed_Locator {
 			unset( $args['page'] );
 		}
 
-		$offset = max( 0, $page * InstagramFeed\Builder\SBI_Db::RESULTS_PER_PAGE );
+		$offset = max( 0, $page * InstagramFeed\Builder\SBI_Db::get_results_per_page() );
 
 		if ( isset( $args['shortcode_atts'] ) ) {
 			$results = $wpdb->get_results(
@@ -266,7 +266,7 @@ class SB_Instagram_Feed_Locator {
 		  	LIMIT %d
 			OFFSET %d;",
 					$args['shortcode_atts'],
-					InstagramFeed\Builder\SBI_Db::RESULTS_PER_PAGE,
+					InstagramFeed\Builder\SBI_Db::get_results_per_page(),
 					$offset
 				),
 				ARRAY_A
@@ -283,7 +283,7 @@ class SB_Instagram_Feed_Locator {
 		  	LIMIT %d
 			OFFSET %d;",
 					$args['feed_id'],
-					InstagramFeed\Builder\SBI_Db::RESULTS_PER_PAGE,
+					InstagramFeed\Builder\SBI_Db::get_results_per_page(),
 					$offset
 				),
 				ARRAY_A
@@ -320,8 +320,8 @@ class SB_Instagram_Feed_Locator {
 			unset( $args['page'] );
 		}
 
-		$offset = max( 0, $page * InstagramFeed\Builder\SBI_Db::RESULTS_PER_PAGE );
-		$limit  = InstagramFeed\Builder\SBI_Db::RESULTS_PER_PAGE;
+		$offset = max( 0, $page * InstagramFeed\Builder\SBI_Db::get_results_per_page() );
+		$limit  = InstagramFeed\Builder\SBI_Db::get_results_per_page();
 
 		$results = $wpdb->get_results(
 			"

@@ -1875,3 +1875,45 @@ Sources Instance Popup
 .sbi-stck-el.sbi-stck-el-upgrd svg path{
   fill: #fff!important;
 }
+
+
+.sb-tab-content .sb-tab-box.sbi-uo-install-notice {
+    background: #FFF7E5;
+    box-shadow: 0px 9px 16px rgba(0, 0, 0, 0.0196802), 0px 3.75998px 6.68442px rgba(0, 0, 0, 0.0282725), 0px 2.01027px 3.57381px rgba(0, 0, 0, 0.035), 0px 1.12694px 2.00345px rgba(0, 0, 0, 0.0417275), 0px 0.598509px 1.06402px rgba(0, 0, 0, 0.0503198), 0px 0.249053px 0.442761px rgba(0, 0, 0, 0.07);
+    border-radius: 8px;
+    padding: 12px 12px 12px 34px;
+}
+.sb-tab-content .sbi-uo-install-notice .sbi-tab-notice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+.sb-tab-content .sbi-uo-install-notice .sbi-tab-notice .sbi-notice-left,
+.sb-tab-content .sbi-uo-install-notice .sbi-tab-notice .sbi-notice-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.sb-tab-content .sbi-uo-install-notice .sbi-notice-text p {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 160%;
+    color: #663D00;
+}
+.sb-tab-content .sbi-uo-install-notice .sbi-tab-notice .sbi-notice-right .sbi-notice-learn-more {
+    background: #F9F9FA;
+    border: 1px solid #E6E6EB;
+    box-shadow: 0px 2px 5px rgba(60, 66, 87, 0.05), 0px 1px 1px rgba(0, 0, 0, 0.05), inset 0px -1px 1px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 7px 11px;
+    transition: all .2s ease-in;
+}
+.sb-tab-content .sbi-uo-install-notice .sbi-tab-notice .sbi-notice-right .sbi-notice-learn-more:hover {
+    background-color: #ededed;
+}
+.sb-tab-content .sbi-uo-install-notice .sbi-tab-notice .sbi-notice-right .sbi-uo-notice-dismiss {
+    border: none;
+    background-color: transparent;
+    padding: 0px;
+}
