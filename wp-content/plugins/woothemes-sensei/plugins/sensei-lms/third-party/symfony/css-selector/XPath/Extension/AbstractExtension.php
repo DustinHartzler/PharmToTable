@@ -20,7 +20,7 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension;
  *
  * @internal
  */
-abstract class AbstractExtension implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\ExtensionInterface
+abstract class AbstractExtension implements ExtensionInterface
 {
     /**
      * {@inheritdoc}

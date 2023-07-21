@@ -32,25 +32,25 @@ class Tokenizer
     private $handlers;
     public function __construct()
     {
-        $patterns = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerPatterns();
-        $escaping = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerEscaping($patterns);
-        $this->handlers = [new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\WhitespaceHandler(), new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\IdentifierHandler($patterns, $escaping), new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\HashHandler($patterns, $escaping), new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\StringHandler($patterns, $escaping), new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\NumberHandler($patterns), new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\CommentHandler()];
+        $patterns = new TokenizerPatterns();
+        $escaping = new TokenizerEscaping($patterns);
+        $this->handlers = [new Handler\WhitespaceHandler(), new Handler\IdentifierHandler($patterns, $escaping), new Handler\HashHandler($patterns, $escaping), new Handler\StringHandler($patterns, $escaping), new Handler\NumberHandler($patterns), new Handler\CommentHandler()];
     }
     /**
      * Tokenize selector source code.
      */
-    public function tokenize(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader) : \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream
+    public function tokenize(Reader $reader) : TokenStream
     {
-        $stream = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream();
+        $stream = new TokenStream();
         while (!$reader->isEOF()) {
             foreach ($this->handlers as $handler) {
                 if ($handler->handle($reader, $stream)) {
                     continue 2;
                 }
             }
-            $stream->push(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_DELIMITER, $reader->getSubstring(1), $reader->getPosition()));
+            $stream->push(new Token(Token::TYPE_DELIMITER, $reader->getSubstring(1), $reader->getPosition()));
             $reader->moveForward(1);
         }
-        return $stream->push(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_FILE_END, null, $reader->getPosition()))->freeze();
+        return $stream->push(new Token(Token::TYPE_FILE_END, null, $reader->getPosition()))->freeze();
     }
 }

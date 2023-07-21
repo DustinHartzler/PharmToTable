@@ -23,18 +23,18 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class WhitespaceHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\HandlerInterface
+class WhitespaceHandler implements HandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : bool
+    public function handle(Reader $reader, TokenStream $stream) : bool
     {
         $match = $reader->findPattern('~^[ \\t\\r\\n\\f]+~');
         if (\false === $match) {
             return \false;
         }
-        $stream->push(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_WHITESPACE, $match[0], $reader->getPosition()));
+        $stream->push(new Token(Token::TYPE_WHITESPACE, $match[0], $reader->getPosition()));
         $reader->moveForward(\strlen($match[0]));
         return \true;
     }

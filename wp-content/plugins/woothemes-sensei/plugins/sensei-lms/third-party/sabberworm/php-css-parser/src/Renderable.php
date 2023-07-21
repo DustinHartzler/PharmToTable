@@ -11,7 +11,7 @@ interface Renderable
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat);
+    public function render(OutputFormat $oOutputFormat);
     /**
      * @return int
      */

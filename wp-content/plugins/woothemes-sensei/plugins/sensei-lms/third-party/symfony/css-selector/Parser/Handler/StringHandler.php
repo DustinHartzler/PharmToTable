@@ -27,11 +27,11 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class StringHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\HandlerInterface
+class StringHandler implements HandlerInterface
 {
     private $patterns;
     private $escaping;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerPatterns $patterns, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerEscaping $escaping)
+    public function __construct(TokenizerPatterns $patterns, TokenizerEscaping $escaping)
     {
         $this->patterns = $patterns;
         $this->escaping = $escaping;
@@ -39,7 +39,7 @@ class StringHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\
     /**
      * {@inheritdoc}
      */
-    public function handle(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : bool
+    public function handle(Reader $reader, TokenStream $stream) : bool
     {
         $quote = $reader->getSubstring(1);
         if (!\in_array($quote, ["'", '"'])) {
@@ -48,18 +48,18 @@ class StringHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\
         $reader->moveForward(1);
         $match = $reader->findPattern($this->patterns->getQuotedStringPattern($quote));
         if (!$match) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\InternalErrorException(\sprintf('Should have found at least an empty match at %d.', $reader->getPosition()));
+            throw new InternalErrorException(\sprintf('Should have found at least an empty match at %d.', $reader->getPosition()));
         }
         // check unclosed strings
         if (\strlen($match[0]) === $reader->getRemainingLength()) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unclosedString($reader->getPosition() - 1);
+            throw SyntaxErrorException::unclosedString($reader->getPosition() - 1);
         }
         // check quotes pairs validity
         if ($quote !== $reader->getSubstring(1, \strlen($match[0]))) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unclosedString($reader->getPosition() - 1);
+            throw SyntaxErrorException::unclosedString($reader->getPosition() - 1);
         }
         $string = $this->escaping->escapeUnicodeAndNewLine($match[0]);
-        $stream->push(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_STRING, $string, $reader->getPosition()));
+        $stream->push(new Token(Token::TYPE_STRING, $string, $reader->getPosition()));
         $reader->moveForward(\strlen($match[0]) + 1);
         return \true;
     }

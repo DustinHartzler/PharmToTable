@@ -64,21 +64,28 @@ class Tutor_Chat_Rest_Api extends \WP_REST_Controller {
 							'description' => __( 'The question the student replies.', 'sensei-pro' ),
 							'required'    => true,
 							'type'        => 'string',
+							'maxLength'   => 100,
+							'minLength'   => 1,
 						],
 						'answer'        => [
 							'description' => __( 'The correct answer provided by the teacher.', 'sensei-pro' ),
 							'required'    => true,
 							'type'        => 'string',
+							'maxLength'   => 100,
+							'minLength'   => 1,
 						],
 						'context'       => [
 							'description' => __( 'The context of the question to help tutor with thinking up a clue.', 'sensei-pro' ),
 							'type'        => 'string',
 							'required'    => true,
+							'maxLength'   => 200,
 						],
 						'student_reply' => [
 							'description' => __( 'The last student\'s to the question.', 'sensei-pro' ),
 							'type'        => 'string',
 							'required'    => true,
+							'maxLength'   => 100,
+							'minLength'   => 1,
 						],
 					],
 				],
@@ -111,7 +118,9 @@ class Tutor_Chat_Rest_Api extends \WP_REST_Controller {
 		$context       = $params['context'];
 		$student_reply = $params['student_reply'];
 
-		sensei_log_event( 'request_tutor_chat' );
+		if ( function_exists( 'sensei_log_event' ) ) {
+			sensei_log_event( 'request_tutor_chat' );
+		}
 
 		try {
 			$response = $this->tutor_chat_service->request( $question, $answer, $context, $student_reply );

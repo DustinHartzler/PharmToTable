@@ -8,7 +8,7 @@ use Sensei\ThirdParty\Pelago\Emogrifier\Utilities\ArrayIntersector;
 /**
  * This class can remove things from HTML.
  */
-class HtmlPruner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\AbstractHtmlProcessor
+class HtmlPruner extends AbstractHtmlProcessor
 {
     /**
      * We need to look for display:none, but we need to do a case-insensitive search. Since DOMDocument only
@@ -22,7 +22,7 @@ class HtmlPruner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
     /**
      * Removes elements that have a "display: none;" style.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeElementsWithDisplayNone() : self
     {
@@ -49,7 +49,7 @@ class HtmlPruner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param array<array-key, string> $classesToKeep names of classes that should not be removed
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeRedundantClasses(array $classesToKeep = []) : self
     {
@@ -71,7 +71,7 @@ class HtmlPruner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      */
     private function removeClassesFromElements(\DOMNodeList $elements, array $classesToKeep) : void
     {
-        $classesToKeepIntersector = new \Sensei\ThirdParty\Pelago\Emogrifier\Utilities\ArrayIntersector($classesToKeep);
+        $classesToKeepIntersector = new ArrayIntersector($classesToKeep);
         /** @var \DOMElement $element */
         foreach ($elements as $element) {
             $elementClasses = \preg_split('/\\s++/', \trim($element->getAttribute('class')));
@@ -104,11 +104,11 @@ class HtmlPruner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param CssInliner $cssInliner object instance that performed the CSS inlining
      *
-     * @return self fluent interface
+     * @return $this
      *
      * @throws \BadMethodCallException if `inlineCss` has not first been called on `$cssInliner`
      */
-    public function removeRedundantClassesAfterCssInlined(\Sensei\ThirdParty\Pelago\Emogrifier\CssInliner $cssInliner) : self
+    public function removeRedundantClassesAfterCssInlined(CssInliner $cssInliner) : self
     {
         $classesToKeepAsKeys = [];
         foreach ($cssInliner->getMatchingUninlinableSelectors() as $selector) {

@@ -5,7 +5,7 @@ namespace Sensei\ThirdParty\Sabberworm\CSS\Parsing;
 /**
  * Thrown if the CSS parser encounters a token it did not expect.
  */
-class UnexpectedTokenException extends \Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException
+class UnexpectedTokenException extends SourceException
 {
     /**
      * @var string

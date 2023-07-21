@@ -2,7 +2,7 @@
 
 namespace Sensei\ThirdParty\Sabberworm\CSS\Value;
 
-class RuleValueList extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
+class RuleValueList extends ValueList
 {
     /**
      * @param string $sSeparator

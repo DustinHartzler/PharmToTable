@@ -25,7 +25,8 @@
 /* harmony export */r.d(t,{
 /* harmony export */M:()=>/* binding */s
 /* harmony export */});
-/* harmony import */var n=r(69307),a=r(65736),i=r(55609),l=r(76061),__=a.__,s=function(e){var t=e.upsell,r=e.name,a=e.isActive,s=(0,n.useCallback)((function(){var e=document.querySelector("#".concat(l/* .formId */.cQ,' input[name="_wp_http_referer"]')),t=e.getAttribute("value");e.setAttribute("value","".concat(t,"#").concat(l/* .tabId */.fW))}),[]);// Update the _wp_http_referer so it opens the current settings
+/* harmony import */var n=r(69307),a=r(65736),i=r(55609),l=r(76061),__=a.__,s=function(e){var t=e.upsell,r=e.name,a=e.isActive,s=(0,n.useCallback)((function(){var e=document.querySelector("#".concat(l/* .formId */.cQ,' input[name="_wp_http_referer"]')),t=e.getAttribute("value");e.setAttribute("value","".concat(t,"#").concat(l/* .tabId */.fW))}),[]);
+// Update the _wp_http_referer so it opens the current settings
 // tab after page refresh.
 return(0,n.createElement)(n.Fragment,null,t&&(0,n.createElement)(i.Button,{isPrimary:!0,href:t.url,target:"_blank"},t.title),!a&&!t&&(0,n.createElement)(i.Button,{isPrimary:!0,type:"submit",value:r,name:l/* .inputName */.po,form:l/* .formId */.cQ,onClick:s},__("Activate","sensei-lms")),a&&(0,n.createElement)(i.Button,{isPrimary:!0,href:l/* .customizeUrl */.vX},__("Customize","sensei-lms")))};
 /* harmony import */}

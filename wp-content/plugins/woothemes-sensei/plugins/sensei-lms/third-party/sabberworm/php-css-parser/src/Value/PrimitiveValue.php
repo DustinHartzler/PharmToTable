@@ -2,7 +2,7 @@
 
 namespace Sensei\ThirdParty\Sabberworm\CSS\Value;
 
-abstract class PrimitiveValue extends \Sensei\ThirdParty\Sabberworm\CSS\Value\Value
+abstract class PrimitiveValue extends Value
 {
     /**
      * @param int $iLineNo

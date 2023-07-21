@@ -6,7 +6,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException;
-class LineName extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
+class LineName extends ValueList
 {
     /**
      * @param array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aComponents
@@ -22,7 +22,7 @@ class LineName extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    public static function parse(ParserState $oParserState)
     {
         $oParserState->consume('[');
         $oParserState->consumeWhiteSpace();
@@ -31,7 +31,7 @@ class LineName extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
             if ($oParserState->getSettings()->bLenientParsing) {
                 try {
                     $aNames[] = $oParserState->parseIdentifier();
-                } catch (\Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException $e) {
+                } catch (UnexpectedTokenException $e) {
                     if (!$oParserState->comes(']')) {
                         throw $e;
                     }
@@ -42,20 +42,20 @@ class LineName extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
             $oParserState->consumeWhiteSpace();
         } while (!$oParserState->comes(']'));
         $oParserState->consume(']');
-        return new \Sensei\ThirdParty\Sabberworm\CSS\Value\LineName($aNames, $oParserState->currentLine());
+        return new LineName($aNames, $oParserState->currentLine());
     }
     /**
      * @return string
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
-        return '[' . parent::render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat::createCompact()) . ']';
+        return '[' . parent::render(OutputFormat::createCompact()) . ']';
     }
 }

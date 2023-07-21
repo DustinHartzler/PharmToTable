@@ -5,7 +5,7 @@ namespace Sensei\ThirdParty\Sabberworm\CSS\Parsing;
 /**
  * Thrown if the CSS parser attempts to print something invalid.
  */
-class OutputException extends \Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException
+class OutputException extends SourceException
 {
     /**
      * @param string $sMessage

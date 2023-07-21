@@ -6,7 +6,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException;
-class Size extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
+class Size extends PrimitiveValue
 {
     /**
      * vh/vw/vm(ax)/vmin/rem are absolute insofar as they don’t scale to the immediate parent (only the viewport)
@@ -59,7 +59,7 @@ class Size extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, $bIsColorComponent = \false)
+    public static function parse(ParserState $oParserState, $bIsColorComponent = \false)
     {
         $sSize = '';
         if ($oParserState->comes('-')) {
@@ -83,7 +83,7 @@ class Size extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
                 }
             }
         }
-        return new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size((float) $sSize, $sUnit, $bIsColorComponent, $oParserState->currentLine());
+        return new Size((float) $sSize, $sUnit, $bIsColorComponent, $oParserState->currentLine());
     }
     /**
      * @return array<int, array<string, string>>
@@ -170,12 +170,12 @@ class Size extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $l = \localeconv();
         $sPoint = \preg_quote($l['decimal_point'], '/');

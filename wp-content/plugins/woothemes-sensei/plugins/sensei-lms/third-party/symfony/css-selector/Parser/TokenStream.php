@@ -49,7 +49,7 @@ class TokenStream
      *
      * @return $this
      */
-    public function push(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token $token) : self
+    public function push(Token $token) : self
     {
         $this->tokens[] = $token;
         return $this;
@@ -68,7 +68,7 @@ class TokenStream
      *
      * @throws InternalErrorException If there is no more token
      */
-    public function getNext() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token
+    public function getNext() : Token
     {
         if ($this->peeking) {
             $this->peeking = \false;
@@ -76,14 +76,14 @@ class TokenStream
             return $this->peeked;
         }
         if (!isset($this->tokens[$this->cursor])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\InternalErrorException('Unexpected token stream end.');
+            throw new InternalErrorException('Unexpected token stream end.');
         }
         return $this->tokens[$this->cursor++];
     }
     /**
      * Returns peeked token.
      */
-    public function getPeek() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token
+    public function getPeek() : Token
     {
         if (!$this->peeking) {
             $this->peeked = $this->getNext();
@@ -109,7 +109,7 @@ class TokenStream
     {
         $next = $this->getNext();
         if (!$next->isIdentifier()) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('identifier', $next);
+            throw SyntaxErrorException::unexpectedToken('identifier', $next);
         }
         return $next->getValue();
     }
@@ -127,7 +127,7 @@ class TokenStream
         if ($next->isDelimiter(['*'])) {
             return null;
         }
-        throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('identifier or "*"', $next);
+        throw SyntaxErrorException::unexpectedToken('identifier or "*"', $next);
     }
     /**
      * Skips next whitespace if any.

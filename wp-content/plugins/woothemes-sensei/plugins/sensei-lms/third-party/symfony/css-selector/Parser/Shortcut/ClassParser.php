@@ -24,7 +24,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface;
  *
  * @internal
  */
-class ClassParser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface
+class ClassParser implements ParserInterface
 {
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class ClassParser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Pa
         //     2 => string 'input' (length=5)
         //     3 => string 'ab6bd_field' (length=11)
         if (\preg_match('/^(?:([a-z]++)\\|)?+([\\w-]++|\\*)?+\\.([\\w-]++)$/i', \trim($source), $matches)) {
-            return [new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ClassNode(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ElementNode($matches[1] ?: null, $matches[2] ?: null), $matches[3]))];
+            return [new SelectorNode(new ClassNode(new ElementNode($matches[1] ?: null, $matches[2] ?: null), $matches[3]))];
         }
         return [];
     }

@@ -24,7 +24,7 @@ class StyleRule
      * @param DeclarationBlock $declarationBlock
      * @param string $containingAtRule e.g. `@media screen and (max-width: 480px)`
      */
-    public function __construct(\Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock $declarationBlock, string $containingAtRule = '')
+    public function __construct(DeclarationBlock $declarationBlock, string $containingAtRule = '')
     {
         $this->declarationBlock = $declarationBlock;
         $this->containingAtRule = \trim($containingAtRule);
@@ -36,7 +36,7 @@ class StyleRule
     {
         /** @var array<int, Selector> $selectors */
         $selectors = $this->declarationBlock->getSelectors();
-        return \array_map(static function (\Sensei\ThirdParty\Sabberworm\CSS\Property\Selector $selector) : string {
+        return \array_map(static function (Selector $selector) : string {
             return (string) $selector;
         }, $selectors);
     }

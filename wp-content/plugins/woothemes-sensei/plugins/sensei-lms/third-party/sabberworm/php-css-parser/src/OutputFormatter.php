@@ -9,7 +9,7 @@ class OutputFormatter
      * @var OutputFormat
      */
     private $oFormat;
-    public function __construct(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oFormat)
+    public function __construct(OutputFormat $oFormat)
     {
         $this->oFormat = $oFormat;
     }
@@ -134,7 +134,7 @@ class OutputFormatter
             // If output exceptions are ignored, run the code with exception guards
             try {
                 return $cCode();
-            } catch (\Sensei\ThirdParty\Sabberworm\CSS\Parsing\OutputException $e) {
+            } catch (OutputException $e) {
                 return null;
             }
             // Do nothing
@@ -166,7 +166,7 @@ class OutputFormatter
             } else {
                 $sResult .= $sSeparator;
             }
-            if ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Renderable) {
+            if ($mValue instanceof Renderable) {
                 $sResult .= $mValue->render($oFormat);
             } else {
                 $sResult .= $mValue;

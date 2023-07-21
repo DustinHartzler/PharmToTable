@@ -20,27 +20,27 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-class NegationNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class NegationNode extends AbstractNode
 {
     private $selector;
     private $subSelector;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $selector, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $subSelector)
+    public function __construct(NodeInterface $selector, NodeInterface $subSelector)
     {
         $this->selector = $selector;
         $this->subSelector = $subSelector;
     }
-    public function getSelector() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getSelector() : NodeInterface
     {
         return $this->selector;
     }
-    public function getSubSelector() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getSubSelector() : NodeInterface
     {
         return $this->subSelector;
     }
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
         return $this->selector->getSpecificity()->plus($this->subSelector->getSpecificity());
     }

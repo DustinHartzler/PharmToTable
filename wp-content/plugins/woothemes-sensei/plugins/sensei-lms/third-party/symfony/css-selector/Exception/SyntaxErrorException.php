@@ -19,12 +19,12 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token;
  *
  * @author Jean-François Simon <jeanfrancois.simon@sensiolabs.com>
  */
-class SyntaxErrorException extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ParseException
+class SyntaxErrorException extends ParseException
 {
     /**
      * @return self
      */
-    public static function unexpectedToken(string $expectedValue, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token $foundToken)
+    public static function unexpectedToken(string $expectedValue, Token $foundToken)
     {
         return new self(\sprintf('Expected %s, but %s found.', $expectedValue, $foundToken));
     }

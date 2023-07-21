@@ -121,6 +121,7 @@ class Interactive_Blocks {
 		new TaskList_Block();
 		new Interactive_Video_Block();
 		new Accordion_Block();
+		new Tutor_AI_Block();
 	}
 
 	/**
@@ -128,6 +129,8 @@ class Interactive_Blocks {
 	 */
 	public function register_assets() {
 		$this->assets_provider->register( 'sensei-interactive-blocks-editor-script', 'interactive-blocks-editor.js' );
+
+		$this->assets_provider->register( 'interactive-blocks-tutor-ai', 'interactive-blocks-tutor-ai.js', [ 'sensei-interactive-blocks-editor-script' ] );
 
 		$this->maybe_register_video_apis();
 
@@ -179,6 +182,7 @@ class Interactive_Blocks {
 			'sensei-pro/question',
 			'sensei-pro/flashcard',
 			'sensei-lms/accordion',
+			'sensei-lms/tutor-ai',
 			'sensei-pro/hotspots',
 			'sensei-pro/task-list',
 			'sensei-pro/interactive-video',
@@ -217,11 +221,14 @@ class Interactive_Blocks {
 			$script,
 			'before'
 		);
+
 		wp_add_inline_script(
 			'sensei-interactive-blocks-frontend-script',
 			$script,
 			'before'
 		);
+
+		wp_add_inline_script( 'sensei-interactive-blocks-frontend-script', 'window.senseiProIsUserLoggedIn=' . wp_json_encode( is_user_logged_in() ) . ';', 'before' );
 	}
 
 	/**
@@ -233,6 +240,7 @@ class Interactive_Blocks {
 		include_once __DIR__ . '/blocks/class-flashcard-block.php';
 		include_once __DIR__ . '/blocks/class-hotspots-block.php';
 		include_once __DIR__ . '/blocks/class-tasklist-block.php';
+		include_once __DIR__ . '/blocks/class-tutor-ai-block.php';
 		include_once __DIR__ . '/blocks/class-interactive-video-block.php';
 	}
 

@@ -3,7 +3,7 @@
 namespace Sensei\ThirdParty\Sabberworm\CSS\Value;
 
 use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
-abstract class ValueList extends \Sensei\ThirdParty\Sabberworm\CSS\Value\Value
+abstract class ValueList extends Value
 {
     /**
      * @var array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
@@ -74,12 +74,12 @@ abstract class ValueList extends \Sensei\ThirdParty\Sabberworm\CSS\Value\Value
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return $oOutputFormat->implode($oOutputFormat->spaceBeforeListArgumentSeparator($this->sSeparator) . $this->sSeparator . $oOutputFormat->spaceAfterListArgumentSeparator($this->sSeparator), $this->aComponents);
     }

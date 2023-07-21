@@ -14,7 +14,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule;
  * RuleSet is a generic superclass denoting rules. The typical example for rule sets are declaration block.
  * However, unknown At-Rules (like `@font-face`) are also rule sets.
  */
-abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, \Sensei\ThirdParty\Sabberworm\CSS\Comment\Commentable
+abstract class RuleSet implements Renderable, Commentable
 {
     /**
      * @var array<string, Rule>
@@ -43,7 +43,7 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parseRuleSet(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet $oRuleSet)
+    public static function parseRuleSet(ParserState $oParserState, RuleSet $oRuleSet)
     {
         while ($oParserState->comes(';')) {
             $oParserState->consume(';');
@@ -52,8 +52,8 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
             $oRule = null;
             if ($oParserState->getSettings()->bLenientParsing) {
                 try {
-                    $oRule = \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule::parse($oParserState);
-                } catch (\Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException $e) {
+                    $oRule = Rule::parse($oParserState);
+                } catch (UnexpectedTokenException $e) {
                     try {
                         $sConsume = $oParserState->consumeUntil(["\n", ";", '}'], \true);
                         // We need to “unfind” the matches to the end of the ruleSet as this will be matched later
@@ -64,13 +64,13 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
                                 $oParserState->consume(';');
                             }
                         }
-                    } catch (\Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException $e) {
+                    } catch (UnexpectedTokenException $e) {
                         // We’ve reached the end of the document. Just close the RuleSet.
                         return;
                     }
                 }
             } else {
-                $oRule = \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule::parse($oParserState);
+                $oRule = Rule::parse($oParserState);
             }
             if ($oRule) {
                 $oRuleSet->addRule($oRule);
@@ -90,7 +90,7 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      *
      * @return void
      */
-    public function addRule(\Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule $oRule, \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule $oSibling = null)
+    public function addRule(Rule $oRule, Rule $oSibling = null)
     {
         $sRule = $oRule->getRule();
         if (!isset($this->aRules[$sRule])) {
@@ -133,7 +133,7 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      */
     public function getRules($mRule = null)
     {
-        if ($mRule instanceof \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule) {
+        if ($mRule instanceof Rule) {
             $mRule = $mRule->getRule();
         }
         /** @var array<int, Rule> $aResult */
@@ -145,7 +145,7 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
                 $aResult = \array_merge($aResult, $aRules);
             }
         }
-        \usort($aResult, function (\Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule $first, \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule $second) {
+        \usort($aResult, function (Rule $first, Rule $second) {
             if ($first->getLineNo() === $second->getLineNo()) {
                 return $first->getColNo() - $second->getColNo();
             }
@@ -209,7 +209,7 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      */
     public function removeRule($mRule)
     {
-        if ($mRule instanceof \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule) {
+        if ($mRule instanceof Rule) {
             $sRule = $mRule->getRule();
             if (!isset($this->aRules[$sRule])) {
                 return;
@@ -235,12 +235,12 @@ abstract class RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $sResult = '';
         $bIsFirst = \true;

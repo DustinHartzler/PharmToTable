@@ -4,7 +4,7 @@ namespace Sensei\ThirdParty\Sabberworm\CSS\Property;
 
 use Sensei\ThirdParty\Sabberworm\CSS\Comment\Commentable;
 use Sensei\ThirdParty\Sabberworm\CSS\Renderable;
-interface AtRule extends \Sensei\ThirdParty\Sabberworm\CSS\Renderable, \Sensei\ThirdParty\Sabberworm\CSS\Comment\Commentable
+interface AtRule extends Renderable, Commentable
 {
     /**
      * Since there are more set rules than block rules,

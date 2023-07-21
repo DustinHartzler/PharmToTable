@@ -2,7 +2,7 @@
 
 namespace Sensei\ThirdParty\Sabberworm\CSS\Property;
 
-class KeyframeSelector extends \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector
+class KeyframeSelector extends Selector
 {
     /**
      * regexp for specificity calculations

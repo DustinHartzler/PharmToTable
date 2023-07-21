@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit20180ab6a867c8e10ecea424df51c1b1
+class ComposerStaticInit50c32885f6c5ed40ae9661d67037ef70
 {
     public static $files = array (
         '7e03bc80976ad8e42da9beffeb3edb01' => __DIR__ . '/../..' . '/includes/sensei-functions.php',
@@ -515,7 +515,7 @@ class ComposerStaticInit20180ab6a867c8e10ecea424df51c1b1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit20180ab6a867c8e10ecea424df51c1b1::$classMap;
+            $loader->classMap = ComposerStaticInit50c32885f6c5ed40ae9661d67037ef70::$classMap;
 
         }, null, ClassLoader::class);
     }

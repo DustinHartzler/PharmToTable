@@ -1,5 +1,20 @@
 # Sensei Pro Changelog
 
+## 1.16.0 - 2023-07-13
+### Added
+- Add a TutorAI block to create guided questions [#2323](https://github.com/Automattic/sensei-pro/pull/2323)
+- Add a modal to generate the course outline using AI [#2327](https://github.com/Automattic/sensei-pro/pull/2327)
+
+### Changed
+- Bump minimum required PHP version to 7.3 [#2348](https://github.com/Automattic/sensei-pro/pull/2348)
+- Changed the name of the Checklist pattern to Tasklist [#2360](https://github.com/Automattic/sensei-pro/pull/2360)
+
+### Fixed
+- Delete orphaned post meta on plugin uninstall [#2368](https://github.com/Automattic/sensei-pro/pull/2368)
+- Fix a PHP warning generated in some edge cases [#2339](https://github.com/Automattic/sensei-pro/pull/2339)
+- Fix glossary posts being cached on some servers [#2324](https://github.com/Automattic/sensei-pro/pull/2324)
+- Prevent issue with language updates appearing as available after they've been installed [#2334](https://github.com/Automattic/sensei-pro/pull/2334)
+
 ## 1.15.1 - 2023-06-22
 ### Fixed
 - Buy course button looking broken when rendered inside course list block and has multiple products attached

@@ -4,7 +4,7 @@ namespace Sensei\ThirdParty\Sabberworm\CSS\CSSList;
 
 use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
 use Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule;
-class KeyFrame extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
+class KeyFrame extends CSSList implements AtRule
 {
     /**
      * @var string|null
@@ -56,12 +56,12 @@ class KeyFrame extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList impleme
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $sResult = "@{$this->vendorKeyFrame} {$this->animationName}{$oOutputFormat->spaceBeforeOpeningBrace()}{";
         $sResult .= parent::render($oOutputFormat);

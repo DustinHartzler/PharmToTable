@@ -26,7 +26,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr;
  *
  * @internal
  */
-class FunctionExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\AbstractExtension
+class FunctionExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -38,12 +38,12 @@ class FunctionExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector
     /**
      * @throws ExpressionErrorException
      */
-    public function translateNthChild(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function, bool $last = \false, bool $addNameTest = \true) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateNthChild(XPathExpr $xpath, FunctionNode $function, bool $last = \false, bool $addNameTest = \true) : XPathExpr
     {
         try {
-            [$a, $b] = \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Parser::parseSeries($function->getArguments());
-        } catch (\Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException $e) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Invalid series: "%s".', \implode('", "', $function->getArguments())), 0, $e);
+            [$a, $b] = Parser::parseSeries($function->getArguments());
+        } catch (SyntaxErrorException $e) {
+            throw new ExpressionErrorException(\sprintf('Invalid series: "%s".', \implode('", "', $function->getArguments())), 0, $e);
         }
         $xpath->addStarPrefix();
         if ($addNameTest) {
@@ -81,49 +81,49 @@ class FunctionExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector
         // -n means -1n
         // -1n+6 means elements 6 and previous
     }
-    public function translateNthLastChild(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateNthLastChild(XPathExpr $xpath, FunctionNode $function) : XPathExpr
     {
         return $this->translateNthChild($xpath, $function, \true);
     }
-    public function translateNthOfType(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateNthOfType(XPathExpr $xpath, FunctionNode $function) : XPathExpr
     {
         return $this->translateNthChild($xpath, $function, \false, \false);
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function translateNthLastOfType(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateNthLastOfType(XPathExpr $xpath, FunctionNode $function) : XPathExpr
     {
         if ('*' === $xpath->getElement()) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException('"*:nth-of-type()" is not implemented.');
+            throw new ExpressionErrorException('"*:nth-of-type()" is not implemented.');
         }
         return $this->translateNthChild($xpath, $function, \true, \false);
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function translateContains(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateContains(XPathExpr $xpath, FunctionNode $function) : XPathExpr
     {
         $arguments = $function->getArguments();
         foreach ($arguments as $token) {
             if (!($token->isString() || $token->isIdentifier())) {
-                throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException('Expected a single string or identifier for :contains(), got ' . \implode(', ', $arguments));
+                throw new ExpressionErrorException('Expected a single string or identifier for :contains(), got ' . \implode(', ', $arguments));
             }
         }
-        return $xpath->addCondition(\sprintf('contains(string(.), %s)', \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($arguments[0]->getValue())));
+        return $xpath->addCondition(\sprintf('contains(string(.), %s)', Translator::getXpathLiteral($arguments[0]->getValue())));
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function translateLang(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateLang(XPathExpr $xpath, FunctionNode $function) : XPathExpr
     {
         $arguments = $function->getArguments();
         foreach ($arguments as $token) {
             if (!($token->isString() || $token->isIdentifier())) {
-                throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException('Expected a single string or identifier for :lang(), got ' . \implode(', ', $arguments));
+                throw new ExpressionErrorException('Expected a single string or identifier for :lang(), got ' . \implode(', ', $arguments));
             }
         }
-        return $xpath->addCondition(\sprintf('lang(%s)', \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($arguments[0]->getValue())));
+        return $xpath->addCondition(\sprintf('lang(%s)', Translator::getXpathLiteral($arguments[0]->getValue())));
     }
     /**
      * {@inheritdoc}

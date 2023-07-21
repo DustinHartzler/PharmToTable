@@ -20,7 +20,7 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-class ElementNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class ElementNode extends AbstractNode
 {
     private $namespace;
     private $element;
@@ -40,9 +40,9 @@ class ElementNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
-        return new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity(0, 0, $this->element ? 1 : 0);
+        return new Specificity(0, 0, $this->element ? 1 : 0);
     }
     public function __toString() : string
     {

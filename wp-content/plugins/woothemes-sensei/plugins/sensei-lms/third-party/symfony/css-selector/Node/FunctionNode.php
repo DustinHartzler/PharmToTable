@@ -21,7 +21,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token;
  *
  * @internal
  */
-class FunctionNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class FunctionNode extends AbstractNode
 {
     private $selector;
     private $name;
@@ -29,13 +29,13 @@ class FunctionNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node
     /**
      * @param Token[] $arguments
      */
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $selector, string $name, array $arguments = [])
+    public function __construct(NodeInterface $selector, string $name, array $arguments = [])
     {
         $this->selector = $selector;
         $this->name = \strtolower($name);
         $this->arguments = $arguments;
     }
-    public function getSelector() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getSelector() : NodeInterface
     {
         return $this->selector;
     }
@@ -53,13 +53,13 @@ class FunctionNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
-        return $this->selector->getSpecificity()->plus(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity(0, 1, 0));
+        return $this->selector->getSpecificity()->plus(new Specificity(0, 1, 0));
     }
     public function __toString() : string
     {
-        $arguments = \implode(', ', \array_map(function (\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token $token) {
+        $arguments = \implode(', ', \array_map(function (Token $token) {
             return "'" . $token->getValue() . "'";
         }, $this->arguments));
         return \sprintf('%s[%s:%s(%s)]', $this->getNodeName(), $this->selector, $this->name, $arguments ? '[' . $arguments . ']' : '');

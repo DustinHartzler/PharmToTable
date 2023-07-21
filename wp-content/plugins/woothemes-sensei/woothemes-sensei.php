@@ -3,13 +3,13 @@
  * Plugin Name: Sensei Pro (WC Paid Courses)
  * Plugin URI: https://senseilms.com
  * Description: Whether you want to teach, tutor or train, we have you covered.
- * Version: 4.15.1.1.15.1
+ * Version: 4.16.0.1.16.0
  * Author: Automattic
  * Author URI: https://automattic.com
  * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Requires at least: 6.0
  * Tested up to: 6.2
- * Requires PHP: 7.2
+ * Requires PHP: 7.3
  * WC requires at least: 4.0
  * WC tested up to: 7.8
  * Text Domain: sensei-compat
@@ -29,7 +29,7 @@ if ( woothemes_sensei_has_conflicts() ) {
 }
 
 require_once dirname( __FILE__ ) . '/class-sensei-compat-dependency-checker.php';
-if ( Sensei_Compat_Dependency_Checker::is_php_version_at_least( '7.2.0' ) ) {
+if ( Sensei_Compat_Dependency_Checker::is_php_version_at_least( '7.3.0' ) ) {
 	add_action( 'admin_notices', array( 'Sensei_Compat_Dependency_Checker', 'show_php_notice' ) );
 	add_action( 'admin_init', array( 'Sensei_Compat_Dependency_Checker', 'deactivate_self' ) );
 	return;

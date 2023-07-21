@@ -20,7 +20,7 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-abstract class AbstractNode implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+abstract class AbstractNode implements NodeInterface
 {
     /**
      * @var string

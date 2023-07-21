@@ -13,7 +13,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Value\Value;
  * The root `CSSList` of a parsed file. Contains all top-level CSS contents, mostly declaration blocks,
  * but also any at-rules encountered.
  */
-class Document extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSBlockList
+class Document extends CSSBlockList
 {
     /**
      * @param int $iLineNo
@@ -27,10 +27,10 @@ class Document extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSBlockList
      *
      * @throws SourceException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    public static function parse(ParserState $oParserState)
     {
-        $oDocument = new \Sensei\ThirdParty\Sabberworm\CSS\CSSList\Document($oParserState->currentLine());
-        \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList::parseList($oParserState, $oDocument);
+        $oDocument = new Document($oParserState->currentLine());
+        CSSList::parseList($oParserState, $oDocument);
         return $oDocument;
     }
     /**
@@ -144,10 +144,10 @@ class Document extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSBlockList
      *
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat = null)
+    public function render(OutputFormat $oOutputFormat = null)
     {
         if ($oOutputFormat === null) {
-            $oOutputFormat = new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat();
+            $oOutputFormat = new OutputFormat();
         }
         return parent::render($oOutputFormat);
     }

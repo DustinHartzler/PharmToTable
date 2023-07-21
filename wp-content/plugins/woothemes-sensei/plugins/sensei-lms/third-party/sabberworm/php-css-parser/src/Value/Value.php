@@ -7,7 +7,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException;
 use Sensei\ThirdParty\Sabberworm\CSS\Renderable;
-abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
+abstract class Value implements Renderable
 {
     /**
      * @var int
@@ -28,7 +28,7 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parseValue(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, array $aListDelimiters = [])
+    public static function parseValue(ParserState $oParserState, array $aListDelimiters = [])
     {
         /** @var array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aStack */
         $aStack = [];
@@ -67,7 +67,7 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
                         break;
                     }
                 }
-                $oList = new \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList($sDelimiter, $oParserState->currentLine());
+                $oList = new RuleValueList($sDelimiter, $oParserState->currentLine());
                 for ($i = $iStartPosition - 1; $i - $iStartPosition + 1 < $iLength * 2; $i += 2) {
                     $oList->addListComponent($aStack[$i]);
                 }
@@ -75,7 +75,7 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
             }
         }
         if (!isset($aStack[0])) {
-            throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException(" {$oParserState->peek()} ", $oParserState->peek(1, -1) . $oParserState->peek(2), 'literal', $oParserState->currentLine());
+            throw new UnexpectedTokenException(" {$oParserState->peek()} ", $oParserState->peek(1, -1) . $oParserState->peek(2), 'literal', $oParserState->currentLine());
         }
         return $aStack[0];
     }
@@ -87,13 +87,13 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parseIdentifierOrFunction(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, $bIgnoreCase = \false)
+    public static function parseIdentifierOrFunction(ParserState $oParserState, $bIgnoreCase = \false)
     {
         $sResult = $oParserState->parseIdentifier($bIgnoreCase);
         if ($oParserState->comes('(')) {
             $oParserState->consume('(');
-            $aArguments = \Sensei\ThirdParty\Sabberworm\CSS\Value\Value::parseValue($oParserState, ['=', ' ', ',']);
-            $sResult = new \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction($sResult, $aArguments, ',', $oParserState->currentLine());
+            $aArguments = Value::parseValue($oParserState, ['=', ' ', ',']);
+            $sResult = new CSSFunction($sResult, $aArguments, ',', $oParserState->currentLine());
             $oParserState->consume(')');
         }
         return $sResult;
@@ -105,24 +105,24 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
      * @throws UnexpectedTokenException
      * @throws SourceException
      */
-    public static function parsePrimitiveValue(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    public static function parsePrimitiveValue(ParserState $oParserState)
     {
         $oValue = null;
         $oParserState->consumeWhiteSpace();
         if (\is_numeric($oParserState->peek()) || $oParserState->comes('-.') && \is_numeric($oParserState->peek(1, 2)) || ($oParserState->comes('-') || $oParserState->comes('.')) && \is_numeric($oParserState->peek(1, 1))) {
-            $oValue = \Sensei\ThirdParty\Sabberworm\CSS\Value\Size::parse($oParserState);
+            $oValue = Size::parse($oParserState);
         } elseif ($oParserState->comes('#') || $oParserState->comes('rgb', \true) || $oParserState->comes('hsl', \true)) {
-            $oValue = \Sensei\ThirdParty\Sabberworm\CSS\Value\Color::parse($oParserState);
+            $oValue = Color::parse($oParserState);
         } elseif ($oParserState->comes('url', \true)) {
-            $oValue = \Sensei\ThirdParty\Sabberworm\CSS\Value\URL::parse($oParserState);
+            $oValue = URL::parse($oParserState);
         } elseif ($oParserState->comes('calc', \true) || $oParserState->comes('-webkit-calc', \true) || $oParserState->comes('-moz-calc', \true)) {
-            $oValue = \Sensei\ThirdParty\Sabberworm\CSS\Value\CalcFunction::parse($oParserState);
+            $oValue = CalcFunction::parse($oParserState);
         } elseif ($oParserState->comes("'") || $oParserState->comes('"')) {
-            $oValue = \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString::parse($oParserState);
+            $oValue = CSSString::parse($oParserState);
         } elseif ($oParserState->comes("progid:") && $oParserState->getSettings()->bLenientParsing) {
             $oValue = self::parseMicrosoftFilter($oParserState);
         } elseif ($oParserState->comes("[")) {
-            $oValue = \Sensei\ThirdParty\Sabberworm\CSS\Value\LineName::parse($oParserState);
+            $oValue = LineName::parse($oParserState);
         } elseif ($oParserState->comes("U+")) {
             $oValue = self::parseUnicodeRangeValue($oParserState);
         } else {
@@ -137,11 +137,11 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    private static function parseMicrosoftFilter(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    private static function parseMicrosoftFilter(ParserState $oParserState)
     {
         $sFunction = $oParserState->consumeUntil('(', \false, \true);
-        $aArguments = \Sensei\ThirdParty\Sabberworm\CSS\Value\Value::parseValue($oParserState, [',', '=']);
-        return new \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction($sFunction, $aArguments, ',', $oParserState->currentLine());
+        $aArguments = Value::parseValue($oParserState, [',', '=']);
+        return new CSSFunction($sFunction, $aArguments, ',', $oParserState->currentLine());
     }
     /**
      * @return string
@@ -149,7 +149,7 @@ abstract class Value implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    private static function parseUnicodeRangeValue(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    private static function parseUnicodeRangeValue(ParserState $oParserState)
     {
         $iCodepointMaxLength = 6;
         // Code points outside BMP can use up to six digits

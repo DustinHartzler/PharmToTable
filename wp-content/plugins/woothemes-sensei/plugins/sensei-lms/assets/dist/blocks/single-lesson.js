@@ -139,7 +139,8 @@ function i(e){var t,n,o=c(e),i=(0,l/* .getColorAndStyleProps */.Y)(e),a={classNa
 /* harmony export */Y:()=>/* binding */i
 /* harmony export */});
 /* unused harmony export getGradientClass */
-/* harmony import */var s=n(64649),o=n(60042),r=n.n(o),l=n(52175),i=function(e){var t,n,o,i,a,c,u,d,m,p,v,b=e.attributes,f=e.colors,g=b.backgroundColor,h=b.customBackgroundColor,y=b.textColor,k=b.customTextColor,Z=b.gradient,w=b.style,C=void 0===w?{}:w,E=(0,l.getColorClassName)("background-color",g);C.color||(C.color={}),h&&(C.color.background=h),k&&(C.color.text=k);var x=function(e){if(e)return"has-".concat(e,"-gradient-background")}(Z),_=(0,l.getColorClassName)("color",y),B=r()(_,x,(a={},(0,s/* ["default"] */.Z)(a,E,!(null!=C&&null!==(t=C.color)&&void 0!==t&&t.gradient||!E)),(0,s/* ["default"] */.Z)(a,"has-text-color",y||(null==C||null===(n=C.color)||void 0===n?void 0:n.text)),(0,s/* ["default"] */.Z)(a,"has-background",g||(null==C||null===(o=C.color)||void 0===o?void 0:o.background)||Z||(null==C||null===(i=C.color)||void 0===i?void 0:i.gradient)),a)),N=null!=C&&null!==(c=C.color)&&void 0!==c&&c.background||null!=C&&null!==(u=C.color)&&void 0!==u&&u.text||null!=C&&null!==(d=C.color)&&void 0!==d&&d.gradient?{background:null!=C&&null!==(m=C.color)&&void 0!==m&&m.gradient?C.color.gradient:void 0,backgroundColor:null!=C&&null!==(p=C.color)&&void 0!==p&&p.background?C.color.background:void 0,color:null!=C&&null!==(v=C.color)&&void 0!==v&&v.text?C.color.text:void 0}:{};// This is needed only for themes that don't load their color stylesheets in the editor
+/* harmony import */var s=n(64649),o=n(60042),r=n.n(o),l=n(52175),i=function(e){var t,n,o,i,a,c,u,d,m,p,v,b=e.attributes,f=e.colors,g=b.backgroundColor,h=b.customBackgroundColor,y=b.textColor,k=b.customTextColor,Z=b.gradient,w=b.style,C=void 0===w?{}:w,E=(0,l.getColorClassName)("background-color",g);C.color||(C.color={}),h&&(C.color.background=h),k&&(C.color.text=k);var x=function(e){if(e)return"has-".concat(e,"-gradient-background")}(Z),_=(0,l.getColorClassName)("color",y),B=r()(_,x,(a={},(0,s/* ["default"] */.Z)(a,E,!(null!=C&&null!==(t=C.color)&&void 0!==t&&t.gradient||!E)),(0,s/* ["default"] */.Z)(a,"has-text-color",y||(null==C||null===(n=C.color)||void 0===n?void 0:n.text)),(0,s/* ["default"] */.Z)(a,"has-background",g||(null==C||null===(o=C.color)||void 0===o?void 0:o.background)||Z||(null==C||null===(i=C.color)||void 0===i?void 0:i.gradient)),a)),N=null!=C&&null!==(c=C.color)&&void 0!==c&&c.background||null!=C&&null!==(u=C.color)&&void 0!==u&&u.text||null!=C&&null!==(d=C.color)&&void 0!==d&&d.gradient?{background:null!=C&&null!==(m=C.color)&&void 0!==m&&m.gradient?C.color.gradient:void 0,backgroundColor:null!=C&&null!==(p=C.color)&&void 0!==p&&p.background?C.color.background:void 0,color:null!=C&&null!==(v=C.color)&&void 0!==v&&v.text?C.color.text:void 0}:{};
+// This is needed only for themes that don't load their color stylesheets in the editor
 // We force an inline style to apply the color.
 if(f){if(g){var O=(0,l.getColorObjectByAttributeValues)(f,g);N.backgroundColor=O.color}if(y){var P=(0,l.getColorObjectByAttributeValues)(f,y);N.color=P.color}}return{className:B||void 0,style:N}};
 /* harmony import */}
@@ -178,7 +179,8 @@ if(f){if(g){var O=(0,l.getColorObjectByAttributeValues)(f,g);N.backgroundColor=O
 /* harmony export */});
 /* harmony import */var s,o=n(50189),r=n(69307),l=n(4981),i=n(52175),a=n(9818),c=n(59678),u=n(36383),d=[["core/video"]],m=["core/embed","core/video","sensei-pro/interactive-video"];
 /* harmony import */
-/* harmony default export */const p=(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},c),{},{metadata:c,example:{innerBlocks:[{name:"core/image",attributes:{url:"".concat(null===(s=window.sensei)||void 0===s?void 0:s.assetUrl,"/images/featured-video-example.png")}}]},edit:function(e){var t=e.className,n=e.clientId,s=(0,a.useDispatch)("core/block-editor"),o=s.replaceInnerBlocks,c=s.moveBlockToPosition,u=(0,a.useSelect)((function(e){return e("core/block-editor").getBlocks(n).length})),p=(0,r.useRef)(u);(0,r.useEffect)((function(){p.current>0&&0===u&&o(n,[(0,l.createBlock)("core/video")],!1),p.current=u}),[u,n,o]);var v=(0,a.useSelect)((function(e){var t=e("core/block-editor"),s=t.getBlockParents,o=t.getBlockRootClientId,r=t.getBlockIndex;return{parentBlocks:s(n),rootClientId:o(n),blockIndex:r(n)}}),[n]),b=v.parentBlocks,f=v.rootClientId,g=v.blockIndex;// Move Featured Video block to top at top level.
+/* harmony default export */const p=(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},c),{},{metadata:c,example:{innerBlocks:[{name:"core/image",attributes:{url:"".concat(null===(s=window.sensei)||void 0===s?void 0:s.assetUrl,"/images/featured-video-example.png")}}]},edit:function(e){var t=e.className,n=e.clientId,s=(0,a.useDispatch)("core/block-editor"),o=s.replaceInnerBlocks,c=s.moveBlockToPosition,u=(0,a.useSelect)((function(e){return e("core/block-editor").getBlocks(n).length})),p=(0,r.useRef)(u);(0,r.useEffect)((function(){p.current>0&&0===u&&o(n,[(0,l.createBlock)("core/video")],!1),p.current=u}),[u,n,o]);var v=(0,a.useSelect)((function(e){var t=e("core/block-editor"),s=t.getBlockParents,o=t.getBlockRootClientId,r=t.getBlockIndex;return{parentBlocks:s(n),rootClientId:o(n),blockIndex:r(n)}}),[n]),b=v.parentBlocks,f=v.rootClientId,g=v.blockIndex;
+// Move Featured Video block to top at top level.
 return(0,r.useEffect)((function(){(null!=b&&b.length||g)&&c(n,f,"",0)}),[b,f,g,c,n]),(0,r.createElement)("div",{className:t},(0,r.createElement)(i.InnerBlocks,{allowedBlocks:m,template:d,renderAppender:!1}))},save:function(){return(0,r.createElement)(i.InnerBlocks.Content,null)},transforms:u/* .transforms */.L});
 /***/},
 /***/36383:
@@ -248,7 +250,8 @@ return(0,r.useEffect)((function(){(null!=b&&b.length||g)&&c(n,f,"",0)}),[b,f,g,c
 /* harmony export */});
 /* harmony import */var s,o,r=n(66886),l=n(69307),i=n(60042),a=n.n(i),c=n(52175),u=n(65736),d=n(38327),m=n(23205),p=n(97447),v=n(43451),b=n(19480),f=n(33570),__=u.__,g=(null===(s=window)||void 0===s||null===(o=s.sensei)||void 0===o?void 0:o.courseThemeEnabled)||!1;
 /* harmony import */
-/* harmony default export */const h=function(e){var t=e.className,n=e.clientId,s=e.setAttributes,o=e.attributes.toggledBlocks,i=(0,d/* ["default"] */.Z)(f/* .IN_PROGRESS_PREVIEW */.WD),u=(0,r/* ["default"] */.Z)(i,2),h=u[0],y=u[1],k=(0,m/* ["default"] */.Z)({parentClientId:n,setAttributes:s,toggledBlocks:o,blocks:[{blockName:"sensei-lms/button-reset-lesson",label:__("Reset Lesson","sensei-lms")}]}),Z=(0,p/* ["default"] */.Z)(),w=Z?"has-quiz":"no-quiz",C=(0,v/* ["default"] */.Z)(Z)?"allowed":"not-allowed";if(g)return null;// Filter inner blocks based on the settings.
+/* harmony default export */const h=function(e){var t=e.className,n=e.clientId,s=e.setAttributes,o=e.attributes.toggledBlocks,i=(0,d/* ["default"] */.Z)(f/* .IN_PROGRESS_PREVIEW */.WD),u=(0,r/* ["default"] */.Z)(i,2),h=u[0],y=u[1],k=(0,m/* ["default"] */.Z)({parentClientId:n,setAttributes:s,toggledBlocks:o,blocks:[{blockName:"sensei-lms/button-reset-lesson",label:__("Reset Lesson","sensei-lms")}]}),Z=(0,p/* ["default"] */.Z)(),w=Z?"has-quiz":"no-quiz",C=(0,v/* ["default"] */.Z)(Z)?"allowed":"not-allowed";if(g)return null;
+// Filter inner blocks based on the settings.
 var E=f/* .INNER_BLOCKS_TEMPLATE.filter */.Ql.filter((function(e){return!1!==o[e[0]]}));return(0,l.createElement)(l.Fragment,null,(0,l.createElement)(b/* ["default"] */.Z,{previewState:h,onPreviewChange:y,toggleBlocks:k}),(0,l.createElement)("div",{className:a()(t,"wp-block-sensei-lms-lesson-actions__preview-".concat(h),"wp-block-sensei-lms-lesson-actions__".concat(w),"wp-block-sensei-lms-lesson-actions__complete_lessons-".concat(C))},(0,l.createElement)("div",{className:"sensei-buttons-container"},(0,l.createElement)(c.InnerBlocks,{allowedBlocks:f/* .ACTION_BLOCKS */.dk,template:E,templateLock:"all",templateInsertUpdatesSelection:!1}))))};
 /***/},
 /***/70100:
@@ -287,7 +290,8 @@ if(t){var e=function(){i(!t.checked)};return t.addEventListener("change",e),func
 /* harmony export */});
 /* harmony import */var s=n(66886),o=n(9818),r=n(69307);
 /* harmony import */
-/* harmony default export */const l=function(){var e=(0,r.useState)((function(){var e=document.getElementById("question_counter");return e?parseInt(e.value,10)>0:null})),t=(0,s/* ["default"] */.Z)(e,2),n=t[0],l=t[1];(0,r.useEffect)((function(){var e=function(e){l(e.detail.questions>0)};// eslint-disable-next-line @wordpress/no-global-event-listener
+/* harmony default export */const l=function(){var e=(0,r.useState)((function(){var e=document.getElementById("question_counter");return e?parseInt(e.value,10)>0:null})),t=(0,s/* ["default"] */.Z)(e,2),n=t[0],l=t[1];(0,r.useEffect)((function(){var e=function(e){l(e.detail.questions>0)};
+// eslint-disable-next-line @wordpress/no-global-event-listener
 return window.addEventListener("sensei-quiz-editor-question-count-updated",e),function(){
 // eslint-disable-next-line @wordpress/no-global-event-listener
 window.removeEventListener("sensei-quiz-editor-question-count-updated",e)}}),[]);var i=((0,o.useSelect)((function(e){return e("core/editor").getEditedPostAttribute("meta")}))||{})._quiz_has_questions;return null!==n?n:i};
@@ -299,7 +303,8 @@ window.removeEventListener("sensei-quiz-editor-question-count-updated",e)}}),[])
 /* harmony export */});
 /* harmony import */var s=n(66886),o=n(69307),r=n(9818),l=n(33570);
 /* harmony import */
-/* harmony default export */const i=function(e){var t=(0,o.useState)(e),n=(0,s/* ["default"] */.Z)(t,2),i=n[0],a=n[1],c=(0,r.useSelect)((function(e){return e("core/block-editor").getSelectedBlock()}));// Update the preview state based on the block selection.
+/* harmony default export */const i=function(e){var t=(0,o.useState)(e),n=(0,s/* ["default"] */.Z)(t,2),i=n[0],a=n[1],c=(0,r.useSelect)((function(e){return e("core/block-editor").getSelectedBlock()}));
+// Update the preview state based on the block selection.
 return(0,o.useEffect)((function(){if(l/* .ACTION_BLOCKS.includes */.dk.includes(null==c?void 0:c.name)){var e=Object.keys(l/* .PREVIEW_STATE */.Cn).find((function(e){return l/* .PREVIEW_STATE */.Cn[e].includes(c.name)}));e!==i&&a(e)}}),[c,i]),[i,a]};
 /***/},
 /***/23205:
@@ -313,7 +318,8 @@ return(0,o.useEffect)((function(){if(l/* .ACTION_BLOCKS.includes */.dk.includes(
 // Add block using the default attributes, and the previous attributes if it exists.
 a=[].concat((0,r/* ["default"] */.Z)(p.innerBlocks),[(0,c.createBlock)(l,(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},u/* .BLOCKS_DEFAULT_ATTRIBUTES */.Zb[l]),g[l]))]).sort((function(e,t){return u/* .ACTION_BLOCKS.indexOf */.dk.indexOf(e.name)-u/* .ACTION_BLOCKS.indexOf */.dk.indexOf(t.name)})):!e&&i&&(
 // Remove block.
-a=p.innerBlocks.filter((function(e){return e.name!==l})),// Save block attributes to restore, if needed.
+a=p.innerBlocks.filter((function(e){return e.name!==l})),
+// Save block attributes to restore, if needed.
 h((function(e){return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},e),{},(0,s/* ["default"] */.Z)({},l,i.attributes))}))),a&&v(t,a,!1),n({toggledBlocks:(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},d),{},(0,s/* ["default"] */.Z)({},l,e))})}),label:e.label};var l}))};
 /***/},
 /***/84076:
@@ -391,7 +397,8 @@ h((function(e){return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},e),{},
 /* harmony default export */const c=function(e){(0,l.updateCategory)("sensei-lms",{icon:(0,o.createElement)(i/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,n=e.name,o=(0,s/* ["default"] */.Z)(e,a);t&&(
 // Remove the overlapping metadata keys from the settings object to make localization work.
 // This is needed because only the metadata object is localized, but the overlapping keys will be overwritten by the settings object and the localization is lost.
-o=(0,r.omit)(o,Object.keys(t))),// The metadata object should be used for the `block.json` strings to be localized.
+o=(0,r.omit)(o,Object.keys(t))),
+// The metadata object should be used for the `block.json` strings to be localized.
 // See https://github.com/Automattic/sensei/pull/5782 for more details.
 (0,l.registerBlockType)(t||n,o)}))};
 /***/},
@@ -401,10 +408,14 @@ o=(0,r.omit)(o,Object.keys(t))),// The metadata object should be used for the `b
 /* harmony import */var s=n(92819),o=(n(69307),n(9818),window.getComputedStyle);
 /* harmony import */(0,s.memoize)((function(){
 // Create temporary probe elements.
-var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",// Set probe position outside the screen to be hidden.
-e.style.position="fixed",e.style.top="-100vh",// Add probe to the screen.
-t.appendChild(n),e.appendChild(t),document.body.appendChild(e);// Save styles.
-var s={primaryColor:o(n).backgroundColor,primaryContrastColor:o(n).color};// Remove probe.
+var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",
+// Set probe position outside the screen to be hidden.
+e.style.position="fixed",e.style.top="-100vh",
+// Add probe to the screen.
+t.appendChild(n),e.appendChild(t),document.body.appendChild(e);
+// Save styles.
+var s={primaryColor:o(n).backgroundColor,primaryContrastColor:o(n).color};
+// Remove probe.
 return document.body.removeChild(e),s}))}
 /***/,
 /***/53112:

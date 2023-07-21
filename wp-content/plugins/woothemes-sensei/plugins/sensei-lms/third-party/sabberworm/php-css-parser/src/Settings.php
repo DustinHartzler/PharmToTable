@@ -39,7 +39,7 @@ class Settings
      */
     public static function create()
     {
-        return new \Sensei\ThirdParty\Sabberworm\CSS\Settings();
+        return new Settings();
     }
     /**
      * @param bool $bMultibyteSupport

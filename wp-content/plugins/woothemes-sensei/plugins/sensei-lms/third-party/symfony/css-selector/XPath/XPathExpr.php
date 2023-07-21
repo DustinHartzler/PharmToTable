@@ -56,7 +56,7 @@ class XPathExpr
     public function addNameTest() : self
     {
         if ('*' !== $this->element) {
-            $this->addCondition('name() = ' . \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($this->element));
+            $this->addCondition('name() = ' . Translator::getXpathLiteral($this->element));
             $this->element = '*';
         }
         return $this;

@@ -8,7 +8,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Value\URL;
 /**
  * Class representing an `@import` rule.
  */
-class Import implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
+class Import implements AtRule
 {
     /**
      * @var URL
@@ -31,7 +31,7 @@ class Import implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
      * @param string $sMediaQuery
      * @param int $iLineNo
      */
-    public function __construct(\Sensei\ThirdParty\Sabberworm\CSS\Value\URL $oLocation, $sMediaQuery, $iLineNo = 0)
+    public function __construct(URL $oLocation, $sMediaQuery, $iLineNo = 0)
     {
         $this->oLocation = $oLocation;
         $this->sMediaQuery = $sMediaQuery;
@@ -66,12 +66,12 @@ class Import implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return "@import " . $this->oLocation->render($oOutputFormat) . ($this->sMediaQuery === null ? '' : ' ' . $this->sMediaQuery) . ';';
     }

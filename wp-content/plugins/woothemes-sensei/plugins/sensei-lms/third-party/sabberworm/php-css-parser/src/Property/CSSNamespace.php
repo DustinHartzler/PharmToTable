@@ -7,7 +7,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
 /**
  * `CSSNamespace` represents an `@namespace` rule.
  */
-class CSSNamespace implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
+class CSSNamespace implements AtRule
 {
     /**
      * @var string
@@ -49,12 +49,12 @@ class CSSNamespace implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return '@namespace ' . ($this->sPrefix === null ? '' : $this->sPrefix . ' ') . $this->mUrl->render($oOutputFormat) . ';';
     }

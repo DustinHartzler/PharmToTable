@@ -7,7 +7,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException;
-class URL extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
+class URL extends PrimitiveValue
 {
     /**
      * @var CSSString
@@ -16,7 +16,7 @@ class URL extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
     /**
      * @param int $iLineNo
      */
-    public function __construct(\Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString $oURL, $iLineNo = 0)
+    public function __construct(CSSString $oURL, $iLineNo = 0)
     {
         parent::__construct($iLineNo);
         $this->oURL = $oURL;
@@ -28,7 +28,7 @@ class URL extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    public static function parse(ParserState $oParserState)
     {
         $bUseUrl = $oParserState->comes('url', \true);
         if ($bUseUrl) {
@@ -37,7 +37,7 @@ class URL extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
             $oParserState->consume('(');
         }
         $oParserState->consumeWhiteSpace();
-        $oResult = new \Sensei\ThirdParty\Sabberworm\CSS\Value\URL(\Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString::parse($oParserState), $oParserState->currentLine());
+        $oResult = new URL(CSSString::parse($oParserState), $oParserState->currentLine());
         if ($bUseUrl) {
             $oParserState->consumeWhiteSpace();
             $oParserState->consume(')');
@@ -47,7 +47,7 @@ class URL extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
     /**
      * @return void
      */
-    public function setURL(\Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString $oURL)
+    public function setURL(CSSString $oURL)
     {
         $this->oURL = $oURL;
     }
@@ -63,12 +63,12 @@ class URL extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return "url({$this->oURL->render($oOutputFormat)})";
     }

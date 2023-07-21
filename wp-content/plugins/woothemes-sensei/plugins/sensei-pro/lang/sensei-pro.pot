@@ -2,16 +2,16 @@
 # This file is distributed under the GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sensei Pro 1.15.1\n"
+"Project-Id-Version: Sensei Pro 1.16.0\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/support\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-22T20:53:11+00:00\n"
+"POT-Creation-Date: 2023-07-13T17:42:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: sensei-pro\n"
 
 #. Plugin Name of the plugin
@@ -645,6 +645,8 @@ msgstr ""
 
 #: modules/course-expiration/includes/emails/class-course-expiration-email.php:51
 #: modules/course-expiration/includes/emails/generators/class-course-expiration-email-generator.php:106
+#: tests/unit-tests/tests/modules/course-expiration/includes/emails/generators/test-class-course-expiration-email-generator.php:38
+#: tests/unit-tests/tests/modules/course-expiration/includes/emails/generators/test-class-course-expiration-email-generator.php:104
 msgid "l, F d, Y"
 msgstr ""
 
@@ -984,7 +986,7 @@ msgstr ""
 msgid "Could not complete the data migration process. Please, contact support."
 msgstr ""
 
-#: modules/interactive-blocks/includes/class-interactive-blocks.php:270
+#: modules/interactive-blocks/includes/class-interactive-blocks.php:278
 #: modules/premium-patterns/includes/class-premium-patterns.php:79
 msgid "Sensei LMS"
 msgstr ""
@@ -1016,20 +1018,21 @@ msgstr ""
 msgid "The question the student replies."
 msgstr ""
 
-#: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-rest-api.php:69
+#: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-rest-api.php:71
 msgid "The correct answer provided by the teacher."
 msgstr ""
 
-#: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-rest-api.php:74
+#: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-rest-api.php:78
 msgid "The context of the question to help tutor with thinking up a clue."
 msgstr ""
 
-#: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-rest-api.php:79
+#: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-rest-api.php:84
 msgid "The last student's to the question."
 msgstr ""
 
 #: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-service.php:32
 #: modules/sensei-pro-ai/includes/services/class-question-generator-service.php:32
+#: modules/shared-module/includes/class-ai-api-client.php:48
 msgid "No valid license was found. Verify you have a license and it's still active."
 msgstr ""
 
@@ -1041,11 +1044,13 @@ msgstr ""
 
 #: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-service.php:68
 #: modules/sensei-pro-ai/includes/services/class-question-generator-service.php:64
+#: modules/shared-module/includes/class-ai-api-client.php:76
 msgid "You have temporarily exceeded the amount of requests. Please try again in a while."
 msgstr ""
 
 #: modules/interactive-blocks/includes/tutor-chat/class-tutor-chat-service.php:73
 #: modules/sensei-pro-ai/includes/services/class-question-generator-service.php:69
+#: modules/shared-module/includes/class-ai-api-client.php:81
 msgid "Invalid license. You need an active and valid license."
 msgstr ""
 
@@ -1064,7 +1069,8 @@ msgid "Flashcards"
 msgstr ""
 
 #: modules/premium-patterns/includes/class-premium-patterns.php:109
-msgid "Checklist"
+#: assets/dist/interactive-blocks/interactive-blocks-editor.js:5
+msgid "Tasklist"
 msgstr ""
 
 #: modules/premium-patterns/includes/class-premium-patterns.php:120
@@ -1193,6 +1199,22 @@ msgstr ""
 msgid "The number of questions to create."
 msgstr ""
 
+#: modules/sensei-pro-ai/includes/rest-api/controllers/class-course-outline-controller.php:64
+msgid "The course title."
+msgstr ""
+
+#: modules/sensei-pro-ai/includes/rest-api/controllers/class-course-outline-controller.php:69
+msgid "The course description."
+msgstr ""
+
+#: modules/sensei-pro-ai/includes/rest-api/controllers/class-course-outline-controller.php:74
+msgid "The intended course audience"
+msgstr ""
+
+#: modules/sensei-pro-ai/includes/rest-api/controllers/class-course-outline-controller.php:79
+msgid "The audience skill level."
+msgstr ""
+
 #: modules/sensei-pro-ai/includes/services/class-question-generator-service.php:74
 msgid "Something went wrong. If the error persists try changing the content of the lesson slightly."
 msgstr ""
@@ -1233,6 +1255,16 @@ msgstr ""
 
 #: modules/senseilms-licensing/includes/class-senseilms-plugin-updater.php:230
 msgid "Update will be available after you activate your license."
+msgstr ""
+
+#: modules/shared-module/includes/class-ai-api-client.php:69
+#: modules/shared-module/includes/class-ai-api-client.php:86
+#: assets/dist/sensei-pro-setup/extensions-page.js:1
+#: assets/dist/sensei-pro-setup/licensing-page.js:1
+#: assets/dist/student-groups/add-student-to-group-button.js:1
+#: assets/dist/student-groups/group-action-menu.js:1
+#: assets/dist/student-groups/group-creation-modal.js:1
+msgid "Something went wrong. Please try again."
 msgstr ""
 
 #. translators: Placeholder is the date.
@@ -2334,6 +2366,7 @@ msgid "Block cannot be added inside itself."
 msgstr ""
 
 #: assets/dist/interactive-blocks/interactive-blocks-editor.js:1
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
 msgid "Question title"
 msgstr ""
 
@@ -2351,6 +2384,7 @@ msgid "Add interactive questions (multiple-choice, true/false, etc.) with feedba
 msgstr ""
 
 #: assets/dist/interactive-blocks/interactive-blocks-editor.js:1
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
 msgid "question"
 msgstr ""
 
@@ -2732,10 +2766,6 @@ msgid "Checkbox"
 msgstr ""
 
 #: assets/dist/interactive-blocks/interactive-blocks-editor.js:5
-msgid "Tasklist"
-msgstr ""
-
-#: assets/dist/interactive-blocks/interactive-blocks-editor.js:5
 msgid "A list for users to check off as items are completed."
 msgstr ""
 
@@ -2836,6 +2866,11 @@ msgid "Task Lists"
 msgstr ""
 
 #: assets/dist/interactive-blocks/interactive-blocks-frontend.js:1
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Tutor AI"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-frontend.js:1
 msgid "Questions"
 msgstr ""
 
@@ -2879,6 +2914,78 @@ msgstr ""
 
 #: assets/dist/interactive-blocks/interactive-blocks-frontend.js:6
 msgid "Required - Answer this question correctly to complete."
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-frontend.js:6
+msgid "Type your answer here…"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-frontend.js:6
+msgid "Something wrong, please try again"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-frontend.js:6
+msgid "The correct answer is: "
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Guide your students in finding the right answer with the help of AI, allowing them to delve deeper into the topic."
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "tutor"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "ai"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Tutor AI Documentation"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Read how the Tutor AI works"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Give Tutor AI better context"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "To help Tutor AI better understand how to guide your students to the correct answer, please provide here a short explanation of why the answer above is the correct one."
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Why is your answer correct?"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "AI Answer"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Answer to the Tutor AI question."
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "answer"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Add the correct answer your students should reach with the help of AI"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Student Answer"
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Student's reply to the Tutor AI question."
+msgstr ""
+
+#: assets/dist/interactive-blocks/interactive-blocks-tutor-ai.js:1
+msgid "Student's answer"
 msgstr ""
 
 #: assets/dist/sensei-blocks-home/sensei-home.js:1
@@ -3031,14 +3138,6 @@ msgstr ""
 
 #: assets/dist/sensei-pro-ai/js/sensei-gpt.js:5
 msgid "Using AI can feel like magic. But make sure to double check the text and make changes as you see fit."
-msgstr ""
-
-#: assets/dist/sensei-pro-setup/extensions-page.js:1
-#: assets/dist/sensei-pro-setup/licensing-page.js:1
-#: assets/dist/student-groups/add-student-to-group-button.js:1
-#: assets/dist/student-groups/group-action-menu.js:1
-#: assets/dist/student-groups/group-creation-modal.js:1
-msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: assets/dist/sensei-pro-setup/extensions-page.js:1
@@ -3357,6 +3456,71 @@ msgstr ""
 
 #: assets/dist/student-groups/student-management-bulk-actions.js:5
 msgid "Search groups"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:1
+msgid "Skill Level"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:1
+msgid "Please select"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:1
+msgid "Beginner Level"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:1
+msgid "Intermediate Level"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:1
+msgid "Advanced Level"
+msgstr ""
+
+#. translators: %1$d number of characters introduced, %2$d number of total characters allowed.
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Characters: %1$d/%2$d"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "AI is analyzing your text. This may take a few moments, up to 4 minutes."
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Tailored Course Outline"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Our AI can help you come up with a great course outline so you can just get in and add your own content to it. To get started, tell us about your target audience."
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Course Description"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Intended audience"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Who is the target audience? This is used by AI to generate course content and quiz questions."
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Generating a new Course Outline will replace the existing one."
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-plugin.js:2
+msgid "Generate course outline"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-toolbar.js:1
+msgid "Generate new course outline using ai"
+msgstr ""
+
+#: assets/dist/tailored-course-outline/tailored-course-outline-toolbar.js:1
+msgid "Generate new"
 msgstr ""
 
 #. translators: Error message.
@@ -3746,4 +3910,19 @@ msgstr ""
 #: modules/interactive-blocks/assets/tasklist-block/block.json
 msgctxt "block title"
 msgid "Task List"
+msgstr ""
+
+#: modules/interactive-blocks/assets/tutor-ai/answer-block/block.json
+msgctxt "block title"
+msgid "Tutor AI Answer"
+msgstr ""
+
+#: modules/interactive-blocks/assets/tutor-ai/block.json
+msgctxt "block title"
+msgid "Tutor AI"
+msgstr ""
+
+#: modules/interactive-blocks/assets/tutor-ai/student-text-block/block.json
+msgctxt "block title"
+msgid "Student Answer"
 msgstr ""

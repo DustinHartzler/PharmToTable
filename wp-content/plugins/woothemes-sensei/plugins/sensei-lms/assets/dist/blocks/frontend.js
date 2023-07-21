@@ -3,8 +3,10 @@
 /******/var e={
 /***/80503:
 /***/(e,t,n)=>{
-/* harmony import */var o=n(7705),i=document.activeElement,s=function(e){null==e||e.preventDefault();var t=(0,o/* .querySelectorAncestor */.Z)(e.target,"[data-sensei-modal]");if(t){// Put element's copy at the end of the body element.
-var n=t.cloneNode(!0);n.setAttribute("data-sensei-modal-clone",""),document.body.appendChild(n),["overlay","close"].forEach((function(e){n.querySelectorAll("[data-sensei-modal-".concat(e,"]")).forEach((function(e){e.addEventListener("click",a)}))})),// Open the modal.
+/* harmony import */var o=n(7705),i=document.activeElement,s=function(e){null==e||e.preventDefault();var t=(0,o/* .querySelectorAncestor */.Z)(e.target,"[data-sensei-modal]");if(t){
+// Put element's copy at the end of the body element.
+var n=t.cloneNode(!0);n.setAttribute("data-sensei-modal-clone",""),document.body.appendChild(n),["overlay","close"].forEach((function(e){n.querySelectorAll("[data-sensei-modal-".concat(e,"]")).forEach((function(e){e.addEventListener("click",a)}))})),
+// Open the modal.
 // Make sure the elements are opened only after they are painted by
 // the browser first. Otherwise the transition effects do not work.
 window.requestAnimationFrame((function(){return window.requestAnimationFrame((function(){n.setAttribute("data-sensei-modal-is-open",""),document.body.dispatchEvent(new CustomEvent("sensei-modal-open",{detail:n})),i=document.activeElement;var e=n.querySelector("[data-sensei-modal-content]");e&&(e.tabIndex=0,e.focus())}))}))}},a=function(e){null==e||e.preventDefault(),document.querySelectorAll("[data-sensei-modal-clone]").forEach((function(e){var t;e.remove(),document.body.dispatchEvent(new CustomEvent("sensei-modal-close",{detail:e})),null===(t=i)||void 0===t||t.focus()}))};
@@ -39,7 +41,8 @@ window.requestAnimationFrame((function(){return window.requestAnimationFrame((fu
  * The last focused element in the document.
  *
  * @type {Element}
- */ // Init modal when the DOM is fully ready.
+ */
+// Init modal when the DOM is fully ready.
 // eslint-disable-next-line @wordpress/no-global-event-listener
 window.addEventListener("load",(
 /**
@@ -47,7 +50,8 @@ window.addEventListener("load",(
  */
 function(){
 // Attach open events.
-document.querySelectorAll("[data-sensei-modal-open]").forEach((function(e){e.addEventListener("click",s)})),// Attach close event on Escape key.
+document.querySelectorAll("[data-sensei-modal-open]").forEach((function(e){e.addEventListener("click",s)})),
+// Attach close event on Escape key.
 // eslint-disable-next-line @wordpress/no-global-event-listener
 document.addEventListener("keydown",(function(e){"Escape"===e.key&&a(e)}))})),
 /**
