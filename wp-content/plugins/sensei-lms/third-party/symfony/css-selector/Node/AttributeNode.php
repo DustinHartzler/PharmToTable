@@ -20,14 +20,14 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-class AttributeNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class AttributeNode extends AbstractNode
 {
     private $selector;
     private $namespace;
     private $attribute;
     private $operator;
     private $value;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $selector, ?string $namespace, string $attribute, string $operator, ?string $value)
+    public function __construct(NodeInterface $selector, ?string $namespace, string $attribute, string $operator, ?string $value)
     {
         $this->selector = $selector;
         $this->namespace = $namespace;
@@ -35,7 +35,7 @@ class AttributeNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Nod
         $this->operator = $operator;
         $this->value = $value;
     }
-    public function getSelector() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getSelector() : NodeInterface
     {
         return $this->selector;
     }
@@ -58,9 +58,9 @@ class AttributeNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Nod
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
-        return $this->selector->getSpecificity()->plus(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity(0, 1, 0));
+        return $this->selector->getSpecificity()->plus(new Specificity(0, 1, 0));
     }
     public function __toString() : string
     {

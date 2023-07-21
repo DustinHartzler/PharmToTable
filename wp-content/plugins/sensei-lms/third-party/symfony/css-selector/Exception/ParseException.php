@@ -18,6 +18,6 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Exception;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class ParseException extends \Exception implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExceptionInterface
+class ParseException extends \Exception implements ExceptionInterface
 {
 }

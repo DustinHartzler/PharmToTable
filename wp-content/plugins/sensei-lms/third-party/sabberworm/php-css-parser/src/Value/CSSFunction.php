@@ -3,7 +3,7 @@
 namespace Sensei\ThirdParty\Sabberworm\CSS\Value;
 
 use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
-class CSSFunction extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
+class CSSFunction extends ValueList
 {
     /**
      * @var string
@@ -17,7 +17,7 @@ class CSSFunction extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
      */
     public function __construct($sName, $aArguments, $sSeparator = ',', $iLineNo = 0)
     {
-        if ($aArguments instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+        if ($aArguments instanceof RuleValueList) {
             $sSeparator = $aArguments->getListSeparator();
             $aArguments = $aArguments->getListComponents();
         }
@@ -53,12 +53,12 @@ class CSSFunction extends \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $aArguments = parent::render($oOutputFormat);
         return "{$this->sName}({$aArguments})";

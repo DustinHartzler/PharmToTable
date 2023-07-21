@@ -24,5 +24,5 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream;
  */
 interface HandlerInterface
 {
-    public function handle(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : bool;
+    public function handle(Reader $reader, TokenStream $stream) : bool;
 }

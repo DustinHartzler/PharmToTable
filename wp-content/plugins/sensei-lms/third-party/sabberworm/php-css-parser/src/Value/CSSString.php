@@ -7,7 +7,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException;
-class CSSString extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
+class CSSString extends PrimitiveValue
 {
     /**
      * @var string
@@ -29,7 +29,7 @@ class CSSString extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    public static function parse(ParserState $oParserState)
     {
         $sBegin = $oParserState->peek();
         $sQuote = null;
@@ -52,13 +52,13 @@ class CSSString extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
             while (!$oParserState->comes($sQuote)) {
                 $sContent = $oParserState->parseCharacter(\false);
                 if ($sContent === null) {
-                    throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException("Non-well-formed quoted string {$oParserState->peek(3)}", $oParserState->currentLine());
+                    throw new SourceException("Non-well-formed quoted string {$oParserState->peek(3)}", $oParserState->currentLine());
                 }
                 $sResult .= $sContent;
             }
             $oParserState->consume($sQuote);
         }
-        return new \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString($sResult, $oParserState->currentLine());
+        return new CSSString($sResult, $oParserState->currentLine());
     }
     /**
      * @param string $sString
@@ -81,12 +81,12 @@ class CSSString extends \Sensei\ThirdParty\Sabberworm\CSS\Value\PrimitiveValue
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $sString = \addslashes($this->sString);
         $sString = \str_replace("\n", '\\A', $sString);

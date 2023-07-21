@@ -18,6 +18,6 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Exception;
  *
  * @author Jean-François Simon <jeanfrancois.simon@sensiolabs.com>
  */
-class ExpressionErrorException extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ParseException
+class ExpressionErrorException extends ParseException
 {
 }

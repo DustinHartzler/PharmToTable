@@ -139,7 +139,8 @@ function i(e){var t,n,o=c(e),i=(0,s/* .getColorAndStyleProps */.Y)(e),a={classNa
 /* harmony export */Y:()=>/* binding */i
 /* harmony export */});
 /* unused harmony export getGradientClass */
-/* harmony import */var r=n(64649),o=n(60042),l=n.n(o),s=n(52175),i=function(e){var t,n,o,i,a,c,u,d,m,p,v,b=e.attributes,f=e.colors,g=b.backgroundColor,y=b.customBackgroundColor,h=b.textColor,k=b.customTextColor,w=b.gradient,Z=b.style,E=void 0===Z?{}:Z,C=(0,s.getColorClassName)("background-color",g);E.color||(E.color={}),y&&(E.color.background=y),k&&(E.color.text=k);var x=function(e){if(e)return"has-".concat(e,"-gradient-background")}(w),_=(0,s.getColorClassName)("color",h),O=l()(_,x,(a={},(0,r/* ["default"] */.Z)(a,C,!(null!=E&&null!==(t=E.color)&&void 0!==t&&t.gradient||!C)),(0,r/* ["default"] */.Z)(a,"has-text-color",h||(null==E||null===(n=E.color)||void 0===n?void 0:n.text)),(0,r/* ["default"] */.Z)(a,"has-background",g||(null==E||null===(o=E.color)||void 0===o?void 0:o.background)||w||(null==E||null===(i=E.color)||void 0===i?void 0:i.gradient)),a)),N=null!=E&&null!==(c=E.color)&&void 0!==c&&c.background||null!=E&&null!==(u=E.color)&&void 0!==u&&u.text||null!=E&&null!==(d=E.color)&&void 0!==d&&d.gradient?{background:null!=E&&null!==(m=E.color)&&void 0!==m&&m.gradient?E.color.gradient:void 0,backgroundColor:null!=E&&null!==(p=E.color)&&void 0!==p&&p.background?E.color.background:void 0,color:null!=E&&null!==(v=E.color)&&void 0!==v&&v.text?E.color.text:void 0}:{};// This is needed only for themes that don't load their color stylesheets in the editor
+/* harmony import */var r=n(64649),o=n(60042),l=n.n(o),s=n(52175),i=function(e){var t,n,o,i,a,c,u,d,m,p,v,b=e.attributes,f=e.colors,g=b.backgroundColor,y=b.customBackgroundColor,h=b.textColor,k=b.customTextColor,w=b.gradient,Z=b.style,E=void 0===Z?{}:Z,C=(0,s.getColorClassName)("background-color",g);E.color||(E.color={}),y&&(E.color.background=y),k&&(E.color.text=k);var x=function(e){if(e)return"has-".concat(e,"-gradient-background")}(w),_=(0,s.getColorClassName)("color",h),O=l()(_,x,(a={},(0,r/* ["default"] */.Z)(a,C,!(null!=E&&null!==(t=E.color)&&void 0!==t&&t.gradient||!C)),(0,r/* ["default"] */.Z)(a,"has-text-color",h||(null==E||null===(n=E.color)||void 0===n?void 0:n.text)),(0,r/* ["default"] */.Z)(a,"has-background",g||(null==E||null===(o=E.color)||void 0===o?void 0:o.background)||w||(null==E||null===(i=E.color)||void 0===i?void 0:i.gradient)),a)),N=null!=E&&null!==(c=E.color)&&void 0!==c&&c.background||null!=E&&null!==(u=E.color)&&void 0!==u&&u.text||null!=E&&null!==(d=E.color)&&void 0!==d&&d.gradient?{background:null!=E&&null!==(m=E.color)&&void 0!==m&&m.gradient?E.color.gradient:void 0,backgroundColor:null!=E&&null!==(p=E.color)&&void 0!==p&&p.background?E.color.background:void 0,color:null!=E&&null!==(v=E.color)&&void 0!==v&&v.text?E.color.text:void 0}:{};
+// This is needed only for themes that don't load their color stylesheets in the editor
 // We force an inline style to apply the color.
 if(f){if(g){var B=(0,s.getColorObjectByAttributeValues)(f,g);N.backgroundColor=B.color}if(h){var P=(0,s.getColorObjectByAttributeValues)(f,h);N.color=P.color}}return{className:O||void 0,style:N}};
 /* harmony import */}
@@ -195,7 +196,8 @@ if(f){if(g){var B=(0,s.getColorObjectByAttributeValues)(f,g);N.backgroundColor=B
 /**
  * Internal dependencies
  */
-/* harmony default export */const c=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{metadata:i,icon:a/* ["default"] */.Z,edit:l/* ["default"] */.ZP,save:s/* ["default"] */.Z,transforms:{from:[{type:"block",isMultiBlock:!0,blocks:["*"],__experimentalConvert:function(e){if(1!==e.length||"sensei-lms/conditional-content"!==e[0].name){// The conversion is done by creating a wrapper block and setting the selected blocks as inner blocks.
+/* harmony default export */const c=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{metadata:i,icon:a/* ["default"] */.Z,edit:l/* ["default"] */.ZP,save:s/* ["default"] */.Z,transforms:{from:[{type:"block",isMultiBlock:!0,blocks:["*"],__experimentalConvert:function(e){if(1!==e.length||"sensei-lms/conditional-content"!==e[0].name){
+// The conversion is done by creating a wrapper block and setting the selected blocks as inner blocks.
 var t=e.map((function(e){return(0,o.createBlock)(e.name,e.attributes,e.innerBlocks)})),n=["wide","full"],r=e.reduce((function(e,t){var r=t.attributes.align;return n.indexOf(r)>n.indexOf(e)?r:e}),void 0);return(0,o.createBlock)("sensei-lms/conditional-content",{align:r},t)}}}]}});
 /***/},
 /***/23868:
@@ -223,11 +225,16 @@ var t=e.map((function(e){return(0,o.createBlock)(e.name,e.attributes,e.innerBloc
 /***/(e,t,n)=>{"use strict";
 /* unused harmony export withQueryLoopPatternsAndSettingsHiddenForCourseList */
 /* harmony import */var r=n(90228),o=n(69307),l=n(65736),s=n(92694),__=l.__,i=!1,a=function(e){return!!document.getElementById("block-"+e)};
-/* harmony import */(0,s.addFilter)("editor.BlockEdit","sensei-lms/course-list-block",(function(e){return function(t){var n,l,s="core/query"===t.name,c=s&&(null==t||null===(n=t.attributes)||void 0===n||null===(l=n.className)||void 0===l?void 0:l.includes("wp-block-sensei-lms-course-list"));// Hide query loop toolbar settings for grid/list outlook.
-if(c&&t.isSelected?i=!0:t.isSelected&&(i=!1),a(t.clientId)&&i){var u=__("Grid view","sensei-lms"),d=document.querySelector('[aria-label="'.concat(u,'"]'));if(d)d.parentNode.style.display="none"}// Hide query loop patterns for course list.
-return i&&s&&!c&&!a(t.clientId)&&(// Hide carousel control button and switch to grid view.
-document.querySelectorAll("".concat(".block-editor-block-pattern-setup__display-controls")).forEach((function(e){var t=e.querySelectorAll("button");// Select Grid view.
-t[1].click(),// Hide all control buttons.
+/* harmony import */(0,s.addFilter)("editor.BlockEdit","sensei-lms/course-list-block",(function(e){return function(t){var n,l,s="core/query"===t.name,c=s&&(null==t||null===(n=t.attributes)||void 0===n||null===(l=n.className)||void 0===l?void 0:l.includes("wp-block-sensei-lms-course-list"));
+// Hide query loop toolbar settings for grid/list outlook.
+if(c&&t.isSelected?i=!0:t.isSelected&&(i=!1),a(t.clientId)&&i){var u=__("Grid view","sensei-lms"),d=document.querySelector('[aria-label="'.concat(u,'"]'));if(d)d.parentNode.style.display="none"}
+// Hide query loop patterns for course list.
+return i&&s&&!c&&!a(t.clientId)&&(
+// Hide carousel control button and switch to grid view.
+document.querySelectorAll("".concat(".block-editor-block-pattern-setup__display-controls")).forEach((function(e){var t=e.querySelectorAll("button");
+// Select Grid view.
+t[1].click(),
+// Hide all control buttons.
 t.forEach((function(e){e.style.display="none"}))})),document.querySelectorAll("".concat(".block-editor-block-pattern-setup-list__list-item")).forEach((function(e){(0,r/* ["default"] */.Z)(e.querySelectorAll("div")).find((function(e){return"course-list-element"===e.innerText}))||(e.style.display="none")}))),(0,o.createElement)(e,t)}}))}
 /***/,
 /***/71850:
@@ -242,11 +249,10 @@ t.forEach((function(e){e.style.display="none"}))})),document.querySelectorAll(""
 // to hide the Post Type dropdown for Course List block, so after changing the type to course,
 // the Query loop user will not be able to change the post type again. We don't want that to
 // happen.
-return(null===(n=e.className)||void 0===n?void 0:n.match(t.className))&&e.query.postType===t.query.postType},scope:["inserter"]})},m=(0,i.subscribe)((function(){var e=document.querySelector(".interface-interface-skeleton__sidebar");e&&(p(e),m())})),p=function(e){// pass in the settings panel node, as well as the options.
-new MutationObserver((function(){var e,t,n=(0,i.select)("core/block-editor").getSelectedBlock();"core/query"===(null==n?void 0:n.name)&&null!=n&&null!==(e=n.attributes)&&void 0!==e&&null!==(t=e.className)&&void 0!==t&&t.includes("wp-block-sensei-lms-course-list")&&v()})).observe(e,{childList:!0,subtree:!0})},v=function(){var e=document.querySelectorAll("".concat(".components-input-control__label",",").concat(".components-toggle-control__label"));e&&0!==e.length&&Array.from(e).forEach((function(e){[
-/* eslint-disable-next-line @wordpress/i18n-text-domain */
-__("Post type").toLowerCase(),
-/* eslint-disable-next-line @wordpress/i18n-text-domain */
+return(null===(n=e.className)||void 0===n?void 0:n.match(t.className))&&e.query.postType===t.query.postType},scope:["inserter"]})},m=(0,i.subscribe)((function(){var e=document.querySelector(".interface-interface-skeleton__sidebar");e&&(p(e),m())})),p=function(e){
+// pass in the settings panel node, as well as the options.
+new MutationObserver((function(){var e,t,n=(0,i.select)("core/block-editor").getSelectedBlock();"core/query"===(null==n?void 0:n.name)&&null!=n&&null!==(e=n.attributes)&&void 0!==e&&null!==(t=e.className)&&void 0!==t&&t.includes("wp-block-sensei-lms-course-list")&&v()})).observe(e,{childList:!0,subtree:!0})},v=function(){var e=document.querySelectorAll("".concat(".components-input-control__label",",").concat(".components-toggle-control__label"));e&&0!==e.length&&Array.from(e).forEach((function(e){[/* eslint-disable-next-line @wordpress/i18n-text-domain */
+__("Post type").toLowerCase(),/* eslint-disable-next-line @wordpress/i18n-text-domain */
 __("Inherit query from template").toLowerCase()].includes(e.textContent.toLowerCase())&&(e.closest(".components-base-control").style.display="none")}))};
 /* harmony import */(0,a.addFilter)("blocks.registerBlockType","sensei-lms/course-list-block",(
 /**
@@ -283,7 +289,8 @@ function(e,t){if("sensei-lms/course-categories"!==t)return e;var n=e.edit;return
 /* harmony default export */const c=function(e){(0,s.updateCategory)("sensei-lms",{icon:(0,o.createElement)(i/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,n=e.name,o=(0,r/* ["default"] */.Z)(e,a);t&&(
 // Remove the overlapping metadata keys from the settings object to make localization work.
 // This is needed because only the metadata object is localized, but the overlapping keys will be overwritten by the settings object and the localization is lost.
-o=(0,l.omit)(o,Object.keys(t))),// The metadata object should be used for the `block.json` strings to be localized.
+o=(0,l.omit)(o,Object.keys(t))),
+// The metadata object should be used for the `block.json` strings to be localized.
 // See https://github.com/Automattic/sensei/pull/5782 for more details.
 (0,s.registerBlockType)(t||n,o)}))};
 /***/},
@@ -293,10 +300,14 @@ o=(0,l.omit)(o,Object.keys(t))),// The metadata object should be used for the `b
 /* harmony import */var r=n(92819),o=(n(69307),n(9818),window.getComputedStyle);
 /* harmony import */(0,r.memoize)((function(){
 // Create temporary probe elements.
-var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",// Set probe position outside the screen to be hidden.
-e.style.position="fixed",e.style.top="-100vh",// Add probe to the screen.
-t.appendChild(n),e.appendChild(t),document.body.appendChild(e);// Save styles.
-var r={primaryColor:o(n).backgroundColor,primaryContrastColor:o(n).color};// Remove probe.
+var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",
+// Set probe position outside the screen to be hidden.
+e.style.position="fixed",e.style.top="-100vh",
+// Add probe to the screen.
+t.appendChild(n),e.appendChild(t),document.body.appendChild(e);
+// Save styles.
+var r={primaryColor:o(n).backgroundColor,primaryContrastColor:o(n).color};
+// Remove probe.
 return document.body.removeChild(e),r}))}
 /***/,
 /***/53112:
@@ -508,6 +519,7 @@ function(e){var t=e.message,n=(0,o.useBlockProps)();return(0,r.createElement)("d
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (()=>{"use strict";
 /* harmony import */var e=n(66886),t=n(4981),r=n(9818),o=n(53227),l=n(23868),s=n(91447),i=n(71850),a={"sensei-lms/button-contact-teacher":["course","lesson"],"sensei-lms/conditional-content":["course","lesson"]};
-/* harmony import */(0,o/* ["default"] */.Z)([l/* ["default"] */.Z,s/* ["default"] */.Z]),(0,i/* .registerCourseListBlock */.MX)();var c=null,u=(0,r.subscribe)((function(){var n;(c=null===(n=(0,r.select)("core/editor"))||void 0===n?void 0:n.getCurrentPostType())&&(// Unregister blocks that should not appear in certain post types.
+/* harmony import */(0,o/* ["default"] */.Z)([l/* ["default"] */.Z,s/* ["default"] */.Z]),(0,i/* .registerCourseListBlock */.MX)();var c=null,u=(0,r.subscribe)((function(){var n;(c=null===(n=(0,r.select)("core/editor"))||void 0===n?void 0:n.getCurrentPostType())&&(
+// Unregister blocks that should not appear in certain post types.
 Object.entries(a).forEach((function(n){var r=(0,e/* ["default"] */.Z)(n,2),o=r[0],l=r[1];null!==l&&!l.includes(c)&&(0,t.getBlockTypes)().find((function(e){return e.name===o}))&&(0,t.unregisterBlockType)(o)})),u())}))})()})
 /******/();

@@ -33,14 +33,14 @@ class CssSelectorConverter
      */
     public function __construct(bool $html = \true)
     {
-        $this->translator = new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator();
+        $this->translator = new Translator();
         if ($html) {
-            $this->translator->registerExtension(new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\HtmlExtension($this->translator));
+            $this->translator->registerExtension(new HtmlExtension($this->translator));
             $this->cache =& self::$htmlCache;
         } else {
             $this->cache =& self::$xmlCache;
         }
-        $this->translator->registerParserShortcut(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Shortcut\EmptyStringParser())->registerParserShortcut(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Shortcut\ElementParser())->registerParserShortcut(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Shortcut\ClassParser())->registerParserShortcut(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Shortcut\HashParser());
+        $this->translator->registerParserShortcut(new EmptyStringParser())->registerParserShortcut(new ElementParser())->registerParserShortcut(new ClassParser())->registerParserShortcut(new HashParser());
     }
     /**
      * Translates a CSS expression to its XPath equivalent.

@@ -4,7 +4,7 @@ namespace Sensei\ThirdParty\Sabberworm\CSS\Comment;
 
 use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
 use Sensei\ThirdParty\Sabberworm\CSS\Renderable;
-class Comment implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
+class Comment implements Renderable
 {
     /**
      * @var int
@@ -51,12 +51,12 @@ class Comment implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return '/*' . $this->sComment . '*/';
     }

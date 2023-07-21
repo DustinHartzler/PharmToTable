@@ -12,6 +12,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Property\Import as CssImport;
 use Sensei\ThirdParty\Sabberworm\CSS\Renderable as CssRenderable;
 use Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock as CssDeclarationBlock;
 use Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet as CssRuleSet;
+use Sensei\ThirdParty\Sabberworm\CSS\Settings as ParserSettings;
 /**
  * Parses and stores a CSS document from a string of CSS, and provides methods to obtain the CSS in parts or as data
  * structures.
@@ -33,13 +34,28 @@ class CssDocument
     private $isImportRuleAllowed = \true;
     /**
      * @param string $css
+     * @param bool $debug
+     *        If this is `true`, an exception will be thrown if invalid CSS is encountered.
+     *        Otherwise the parser will try to do the best it can.
      */
-    public function __construct(string $css)
+    public function __construct(string $css, bool $debug)
     {
-        $cssParser = new \Sensei\ThirdParty\Sabberworm\CSS\Parser($css);
-        /** @var SabberwormCssDocument $sabberwormCssDocument */
-        $sabberwormCssDocument = $cssParser->parse();
-        $this->sabberwormCssDocument = $sabberwormCssDocument;
+        // CSS Parser currently throws exception with nested at-rules (like `@media`) in strict parsing mode
+        $parserSettings = ParserSettings::create()->withLenientParsing(!$debug || $this->hasNestedAtRule($css));
+        // CSS Parser currently throws exception with non-empty whitespace-only CSS in strict parsing mode, so `trim()`
+        // @see https://github.com/sabberworm/PHP-CSS-Parser/issues/349
+        $this->sabberwormCssDocument = (new CssParser(\trim($css), $parserSettings))->parse();
+    }
+    /**
+     * Tests if a string of CSS appears to contain an at-rule with nested rules
+     * (`@media`, `@supports`, `@keyframes`, `@document`,
+     * the latter two additionally with vendor prefixes that may commonly be used).
+     *
+     * @see https://github.com/sabberworm/PHP-CSS-Parser/issues/127
+     */
+    private function hasNestedAtRule(string $css) : bool
+    {
+        return \preg_match('/@(?:media|supports|(?:-webkit-|-moz-|-ms-|-o-)?+(keyframes|document))\\b/', $css) === 1;
     }
     /**
      * Collates the media query, selectors and declarations for individual rules from the parsed CSS, in order.
@@ -53,18 +69,18 @@ class CssDocument
         $ruleMatches = [];
         /** @var CssRenderable $rule */
         foreach ($this->sabberwormCssDocument->getContents() as $rule) {
-            if ($rule instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\AtRuleBlockList) {
+            if ($rule instanceof CssAtRuleBlockList) {
                 $containingAtRule = $this->getFilteredAtIdentifierAndRule($rule, $allowedMediaTypes);
                 if (\is_string($containingAtRule)) {
                     /** @var CssRenderable $nestedRule */
                     foreach ($rule->getContents() as $nestedRule) {
-                        if ($nestedRule instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock) {
-                            $ruleMatches[] = new \Sensei\ThirdParty\Pelago\Emogrifier\Css\StyleRule($nestedRule, $containingAtRule);
+                        if ($nestedRule instanceof CssDeclarationBlock) {
+                            $ruleMatches[] = new StyleRule($nestedRule, $containingAtRule);
                         }
                     }
                 }
-            } elseif ($rule instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock) {
-                $ruleMatches[] = new \Sensei\ThirdParty\Pelago\Emogrifier\Css\StyleRule($rule);
+            } elseif ($rule instanceof CssDeclarationBlock) {
+                $ruleMatches[] = new StyleRule($rule);
             }
         }
         return $ruleMatches;
@@ -79,17 +95,14 @@ class CssDocument
     public function renderNonConditionalAtRules() : string
     {
         $this->isImportRuleAllowed = \true;
-        /** @var array<int, CssRenderable> $cssContents */
         $cssContents = $this->sabberwormCssDocument->getContents();
         $atRules = \array_filter($cssContents, [$this, 'isValidAtRuleToRender']);
         if ($atRules === []) {
             return '';
         }
-        $atRulesDocument = new \Sensei\ThirdParty\Sabberworm\CSS\CSSList\Document();
+        $atRulesDocument = new SabberwormCssDocument();
         $atRulesDocument->setContents($atRules);
-        /** @var string $renderedRules */
-        $renderedRules = $atRulesDocument->render();
-        return $renderedRules;
+        return $atRulesDocument->render();
     }
     /**
      * @param CssAtRuleBlockList $rule
@@ -99,11 +112,10 @@ class CssDocument
      *         If the nested at-rule is supported, it's opening declaration (e.g. "@media (max-width: 768px)") is
      *         returned; otherwise the return value is null.
      */
-    private function getFilteredAtIdentifierAndRule(\Sensei\ThirdParty\Sabberworm\CSS\CSSList\AtRuleBlockList $rule, array $allowedMediaTypes) : ?string
+    private function getFilteredAtIdentifierAndRule(CssAtRuleBlockList $rule, array $allowedMediaTypes) : ?string
     {
         $result = null;
         if ($rule->atRuleName() === 'media') {
-            /** @var string $mediaQueryList */
             $mediaQueryList = $rule->atRuleArgs();
             [$mediaType] = \explode('(', $mediaQueryList, 2);
             if (\trim($mediaType) !== '') {
@@ -135,16 +147,16 @@ class CssDocument
      *
      * @return bool
      */
-    private function isValidAtRuleToRender(\Sensei\ThirdParty\Sabberworm\CSS\Renderable $rule) : bool
+    private function isValidAtRuleToRender(CssRenderable $rule) : bool
     {
-        if ($rule instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\Charset) {
+        if ($rule instanceof CssCharset) {
             return \false;
         }
-        if ($rule instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\Import) {
+        if ($rule instanceof CssImport) {
             return $this->isImportRuleAllowed;
         }
         $this->isImportRuleAllowed = \false;
-        if (!$rule instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule) {
+        if (!$rule instanceof CssAtRule) {
             return \false;
         }
         switch ($rule->atRuleName()) {
@@ -152,7 +164,7 @@ class CssDocument
                 $result = \false;
                 break;
             case 'font-face':
-                $result = $rule instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet && $rule->getRules('font-family') !== [] && $rule->getRules('src') !== [];
+                $result = $rule instanceof CssRuleSet && $rule->getRules('font-family') !== [] && $rule->getRules('src') !== [];
                 break;
             default:
                 $result = \true;

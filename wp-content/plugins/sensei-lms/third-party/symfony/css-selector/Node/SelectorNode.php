@@ -20,16 +20,16 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-class SelectorNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class SelectorNode extends AbstractNode
 {
     private $tree;
     private $pseudoElement;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $tree, string $pseudoElement = null)
+    public function __construct(NodeInterface $tree, string $pseudoElement = null)
     {
         $this->tree = $tree;
         $this->pseudoElement = $pseudoElement ? \strtolower($pseudoElement) : null;
     }
-    public function getTree() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getTree() : NodeInterface
     {
         return $this->tree;
     }
@@ -40,9 +40,9 @@ class SelectorNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
-        return $this->tree->getSpecificity()->plus(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity(0, 0, $this->pseudoElement ? 1 : 0));
+        return $this->tree->getSpecificity()->plus(new Specificity(0, 0, $this->pseudoElement ? 1 : 0));
     }
     public function __toString() : string
     {

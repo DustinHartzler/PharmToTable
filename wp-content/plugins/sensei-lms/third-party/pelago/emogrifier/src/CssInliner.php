@@ -11,7 +11,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ParseException;
 /**
  * This class provides functions for converting CSS styles into inline style attributes in your HTML code.
  */
-class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\AbstractHtmlProcessor
+class CssInliner extends AbstractHtmlProcessor
 {
     /**
      * @var int
@@ -137,7 +137,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param string $css the CSS to inline, must be UTF-8-encoded
      *
-     * @return self fluent interface
+     * @return $this
      *
      * @throws ParseException in debug mode, if an invalid selector is encountered
      * @throws \RuntimeException in debug mode, if an internal PCRE error occurs
@@ -153,7 +153,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
         if ($this->isStyleBlocksParsingEnabled) {
             $combinedCss .= $this->getCssFromAllStyleNodes();
         }
-        $parsedCss = new \Sensei\ThirdParty\Pelago\Emogrifier\Css\CssDocument($combinedCss);
+        $parsedCss = new CssDocument($combinedCss, $this->debug);
         $excludedNodes = $this->getNodesToExclude();
         $cssRules = $this->collateCssRules($parsedCss);
         $cssSelectorConverter = $this->getCssSelectorConverter();
@@ -167,7 +167,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
                     }
                     $this->copyInlinableCssToStyleAttribute($node, $cssRule);
                 }
-            } catch (\Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            } catch (ParseException $e) {
                 if ($this->debug) {
                     throw $e;
                 }
@@ -184,7 +184,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
     /**
      * Disables the parsing of inline styles.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function disableInlineStyleAttributesParsing() : self
     {
@@ -194,7 +194,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
     /**
      * Disables the parsing of `<style>` blocks.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function disableStyleBlocksParsing() : self
     {
@@ -206,7 +206,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param string $mediaName the media type name, e.g., "braille"
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function addAllowedMediaType(string $mediaName) : self
     {
@@ -218,7 +218,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param string $mediaName the tag name, e.g., "braille"
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeAllowedMediaType(string $mediaName) : self
     {
@@ -234,7 +234,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param string $selector the selector to exclude, e.g., ".editor"
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function addExcludedSelector(string $selector) : self
     {
@@ -246,7 +246,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param string $selector the selector to no longer exclude, e.g., ".editor"
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeExcludedSelector(string $selector) : self
     {
@@ -260,7 +260,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *
      * @param bool $debug set to true to enable debug mode
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function setDebug(bool $debug) : self
     {
@@ -453,7 +453,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
                     }
                     $excludedNodes[] = $node;
                 }
-            } catch (\Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            } catch (ParseException $e) {
                 if ($this->debug) {
                     throw $e;
                 }
@@ -464,10 +464,10 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
     /**
      * @return CssSelectorConverter
      */
-    private function getCssSelectorConverter() : \Sensei\ThirdParty\Symfony\Component\CssSelector\CssSelectorConverter
+    private function getCssSelectorConverter() : CssSelectorConverter
     {
-        if (!$this->cssSelectorConverter instanceof \Sensei\ThirdParty\Symfony\Component\CssSelector\CssSelectorConverter) {
-            $this->cssSelectorConverter = new \Sensei\ThirdParty\Symfony\Component\CssSelector\CssSelectorConverter();
+        if (!$this->cssSelectorConverter instanceof CssSelectorConverter) {
+            $this->cssSelectorConverter = new CssSelectorConverter();
         }
         return $this->cssSelectorConverter;
     }
@@ -495,7 +495,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *           e.g., `color: red; height: 4px;`);
      *         - "line" (the line number, e.g. 42).
      */
-    private function collateCssRules(\Sensei\ThirdParty\Pelago\Emogrifier\Css\CssDocument $parsedCss) : array
+    private function collateCssRules(CssDocument $parsedCss) : array
     {
         $matches = $parsedCss->getStyleRulesData(\array_keys($this->allowedMediaTypes));
         $cssRules = ['inlinable' => [], 'uninlinable' => []];
@@ -818,7 +818,7 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
     {
         try {
             $nodesMatchingSelector = $this->getXPath()->query($this->getCssSelectorConverter()->toXPath($cssSelector));
-        } catch (\Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ParseException $e) {
+        } catch (ParseException $e) {
             if ($this->debug) {
                 throw $e;
             }
@@ -918,12 +918,12 @@ class CssInliner extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\Abst
      *        Note that `CssInliner` processes `@media` rules so that they can be ordered correctly with respect to
      *        other uninlinable rules; these will not be duplicated from `$parsedCss`.
      */
-    private function copyUninlinableCssToStyleNode(\Sensei\ThirdParty\Pelago\Emogrifier\Css\CssDocument $parsedCss) : void
+    private function copyUninlinableCssToStyleNode(CssDocument $parsedCss) : void
     {
         $css = $parsedCss->renderNonConditionalAtRules();
         // avoid including unneeded class dependency if there are no rules
         if ($this->getMatchingUninlinableCssRules() !== []) {
-            $cssConcatenator = new \Sensei\ThirdParty\Pelago\Emogrifier\Utilities\CssConcatenator();
+            $cssConcatenator = new CssConcatenator();
             foreach ($this->getMatchingUninlinableCssRules() as $cssRule) {
                 $cssConcatenator->append([$cssRule['selector']], $cssRule['declarationsBlock'], $cssRule['media']);
             }

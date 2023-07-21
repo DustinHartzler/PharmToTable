@@ -7,7 +7,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule;
 /**
  * A RuleSet constructed by an unknown at-rule. `@font-face` rules are rendered into AtRuleSet objects.
  */
-class AtRuleSet extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
+class AtRuleSet extends RuleSet implements AtRule
 {
     /**
      * @var string
@@ -47,12 +47,12 @@ class AtRuleSet extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet implem
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $sArgs = $this->sArgs;
         if ($sArgs) {

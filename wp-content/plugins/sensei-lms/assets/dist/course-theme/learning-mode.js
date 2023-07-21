@@ -284,8 +284,10 @@ function(e){if("number"==typeof e)return e;if(i(e))return NaN;if(o(e)){var t="fu
 /***/49977:
 /***/(e,t,n)=>{"use strict";
 /* harmony import */var r=n(66726),o=n.n(r);
-/* harmony import */ // eslint-disable-next-line @wordpress/no-global-event-listener
-window.addEventListener("DOMContentLoaded",(function(){var e=document.querySelector("#wpadminbar");function t(){if(e){var t=e.getBoundingClientRect(),n=t.top,r=t.height,o=Math.max(0,r+n);document.documentElement.style.setProperty("--sensei-wpadminbar-offset",o+"px")}}e&&(t(),// eslint-disable-next-line @wordpress/no-global-event-listener
+/* harmony import */
+// eslint-disable-next-line @wordpress/no-global-event-listener
+window.addEventListener("DOMContentLoaded",(function(){var e=document.querySelector("#wpadminbar");function t(){if(e){var t=e.getBoundingClientRect(),n=t.top,r=t.height,o=Math.max(0,r+n);document.documentElement.style.setProperty("--sensei-wpadminbar-offset",o+"px")}}e&&(t(),
+// eslint-disable-next-line @wordpress/no-global-event-listener
 window.addEventListener("scroll",t,{capture:!1,passive:!0}),
 /**
    * The debounce has 2 reasons here:
@@ -324,9 +326,12 @@ e.style.width="".concat(n,"%")}))};e.forEach((function(e){e.addEventListener("su
  */
 function i(e){var t;
 // If the fetch api is not available then bail.
-if(window.fetch){var n=null===(t=document.querySelector('link[rel="https://api.w.org/"]'))||void 0===t?void 0:t.href;// If the rest api is not available then bail.
-if(n){// Prevent browser from refreshing.
-e.preventDefault();var i=e.target,s=i.querySelector("button.sensei-contact-teacher-form__submit"),c=i.parentElement.querySelector(".sensei-contact-teacher-close");s.classList.add("sensei-course-theme__button","is-busy"),s.disabled=!0;var a=["sensei_message_teacher_nonce","_wpnonce","post_id","contact_message"].reduce((function(e,t){return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},e),{},(0,r/* ["default"] */.Z)({},t,i.elements[t].value))}),{});window.fetch("".concat(n,"sensei-internal/v1/messages?_locale=user"),{method:"POST",body:JSON.stringify(a),headers:{"Content-Type":"application/json","X-WP-Nonce":a._wpnonce}}).then((function(){i.classList.add("is-success"),c.focus()})).catch((function(){// TODO: Show submit failed message.
+if(window.fetch){var n=null===(t=document.querySelector('link[rel="https://api.w.org/"]'))||void 0===t?void 0:t.href;
+// If the rest api is not available then bail.
+if(n){
+// Prevent browser from refreshing.
+e.preventDefault();var i=e.target,s=i.querySelector("button.sensei-contact-teacher-form__submit"),c=i.parentElement.querySelector(".sensei-contact-teacher-close");s.classList.add("sensei-course-theme__button","is-busy"),s.disabled=!0;var a=["sensei_message_teacher_nonce","_wpnonce","post_id","contact_message"].reduce((function(e,t){return(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},e),{},(0,r/* ["default"] */.Z)({},t,i.elements[t].value))}),{});window.fetch("".concat(n,"sensei-internal/v1/messages?_locale=user"),{method:"POST",body:JSON.stringify(a),headers:{"Content-Type":"application/json","X-WP-Nonce":a._wpnonce}}).then((function(){i.classList.add("is-success"),c.focus()})).catch((function(){
+// TODO: Show submit failed message.
 }))}}}
 /***/},
 /***/91729:
@@ -362,12 +367,14 @@ function(){document.querySelectorAll(".sensei-course-theme-lesson-video").forEac
  *
  * @type {string}
  */
-var r="sensei-course-theme--focus-mode",o="sensei-course-theme__sidebar--hidden",i=function(){var e=window.sessionStorage.getItem(r);if(e)try{var t=JSON.parse(e);"boolean"==typeof t&&s(t,!0)}catch(e){}},s=function(e,t){var n=document.body.classList,i=document.querySelector(".sensei-course-theme__sidebar"),s=n.contains(r),c=void 0===e?!s:e;c?t&&(null==i||i.classList.add(o)):null==i||i.classList.remove(o),n.toggle(r,c),window.sessionStorage.setItem(r,JSON.stringify(c))};// eslint-disable-next-line @wordpress/no-global-event-listener
+var r="sensei-course-theme--focus-mode",o="sensei-course-theme__sidebar--hidden",i=function(){var e=window.sessionStorage.getItem(r);if(e)try{var t=JSON.parse(e);"boolean"==typeof t&&s(t,!0)}catch(e){}},s=function(e,t){var n=document.body.classList,i=document.querySelector(".sensei-course-theme__sidebar"),s=n.contains(r),c=void 0===e?!s:e;c?t&&(null==i||i.classList.add(o)):null==i||i.classList.remove(o),n.toggle(r,c),window.sessionStorage.setItem(r,JSON.stringify(c))};
+// eslint-disable-next-line @wordpress/no-global-event-listener
 window.addEventListener("DOMContentLoaded",(function(){var e;i(),setTimeout((function(){document.body.classList.add("".concat(r,"--animated"))}),500),null===(e=document.querySelector(".sensei-course-theme__sidebar"))||void 0===e||e.addEventListener("transitionend",(function(e){var t;"left"===e.propertyName&&document.body.classList.contains(r)&&(null===(t=document.querySelector(".sensei-course-theme__sidebar"))||void 0===t||t.classList.add(o))}))}))}
 /***/,
 /***/91971:
 /***/(e,t,n)=>{"use strict";
-/* harmony import */var r=n(66886),o=0,i="scroll",s=function(e){var t=e<0?["up","down"]:["down","up"],n=(0,r/* ["default"] */.Z)(t,2),o=n[0],s=n[1];document.body.classList.remove("".concat(i,"-").concat(s)),document.body.classList.add("".concat(i,"-").concat(o))};// eslint-disable-next-line @wordpress/no-global-event-listener
+/* harmony import */var r=n(66886),o=0,i="scroll",s=function(e){var t=e<0?["up","down"]:["down","up"],n=(0,r/* ["default"] */.Z)(t,2),o=n[0],s=n[1];document.body.classList.remove("".concat(i,"-").concat(s)),document.body.classList.add("".concat(i,"-").concat(o))};
+// eslint-disable-next-line @wordpress/no-global-event-listener
 window.addEventListener("scroll",(function(){var e=document.documentElement,t=e.scrollTop,n=e.scrollHeight,r=e.clientHeight,c=t-o;o=Math.max(0,t),s(c);var a=n-t-r<100;document.body.classList.toggle("".concat(i,"-bottom"),a)}),{capture:!1,passive:!0})}
 /***/,
 /***/47701:

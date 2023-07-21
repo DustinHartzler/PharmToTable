@@ -23,7 +23,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr;
  *
  * @internal
  */
-class NodeExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\AbstractExtension
+class NodeExtension extends AbstractExtension
 {
     public const ELEMENT_NAME_IN_LOWER_CASE = 1;
     public const ATTRIBUTE_NAME_IN_LOWER_CASE = 2;
@@ -57,15 +57,15 @@ class NodeExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
     {
         return ['Selector' => [$this, 'translateSelector'], 'CombinedSelector' => [$this, 'translateCombinedSelector'], 'Negation' => [$this, 'translateNegation'], 'Function' => [$this, 'translateFunction'], 'Pseudo' => [$this, 'translatePseudo'], 'Attribute' => [$this, 'translateAttribute'], 'Class' => [$this, 'translateClass'], 'Hash' => [$this, 'translateHash'], 'Element' => [$this, 'translateElement']];
     }
-    public function translateSelector(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateSelector(Node\SelectorNode $node, Translator $translator) : XPathExpr
     {
         return $translator->nodeToXPath($node->getTree());
     }
-    public function translateCombinedSelector(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\CombinedSelectorNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateCombinedSelector(Node\CombinedSelectorNode $node, Translator $translator) : XPathExpr
     {
         return $translator->addCombination($node->getCombinator(), $node->getSelector(), $node->getSubSelector());
     }
-    public function translateNegation(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NegationNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateNegation(Node\NegationNode $node, Translator $translator) : XPathExpr
     {
         $xpath = $translator->nodeToXPath($node->getSelector());
         $subXpath = $translator->nodeToXPath($node->getSubSelector());
@@ -75,17 +75,17 @@ class NodeExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
         }
         return $xpath->addCondition('0');
     }
-    public function translateFunction(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateFunction(Node\FunctionNode $node, Translator $translator) : XPathExpr
     {
         $xpath = $translator->nodeToXPath($node->getSelector());
         return $translator->addFunction($xpath, $node);
     }
-    public function translatePseudo(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\PseudoNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translatePseudo(Node\PseudoNode $node, Translator $translator) : XPathExpr
     {
         $xpath = $translator->nodeToXPath($node->getSelector());
         return $translator->addPseudoClass($xpath, $node->getIdentifier());
     }
-    public function translateAttribute(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AttributeNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateAttribute(Node\AttributeNode $node, Translator $translator) : XPathExpr
     {
         $name = $node->getAttribute();
         $safe = $this->isSafeName($name);
@@ -96,7 +96,7 @@ class NodeExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
             $name = \sprintf('%s:%s', $node->getNamespace(), $name);
             $safe = $safe && $this->isSafeName($node->getNamespace());
         }
-        $attribute = $safe ? '@' . $name : \sprintf('attribute::*[name() = %s]', \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($name));
+        $attribute = $safe ? '@' . $name : \sprintf('attribute::*[name() = %s]', Translator::getXpathLiteral($name));
         $value = $node->getValue();
         $xpath = $translator->nodeToXPath($node->getSelector());
         if ($this->hasFlag(self::ATTRIBUTE_VALUE_IN_LOWER_CASE)) {
@@ -104,17 +104,17 @@ class NodeExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
         }
         return $translator->addAttributeMatching($xpath, $node->getOperator(), $attribute, $value);
     }
-    public function translateClass(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ClassNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateClass(Node\ClassNode $node, Translator $translator) : XPathExpr
     {
         $xpath = $translator->nodeToXPath($node->getSelector());
         return $translator->addAttributeMatching($xpath, '~=', '@class', $node->getName());
     }
-    public function translateHash(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\HashNode $node, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator $translator) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateHash(Node\HashNode $node, Translator $translator) : XPathExpr
     {
         $xpath = $translator->nodeToXPath($node->getSelector());
         return $translator->addAttributeMatching($xpath, '=', '@id', $node->getId());
     }
-    public function translateElement(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ElementNode $node) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateElement(Node\ElementNode $node) : XPathExpr
     {
         $element = $node->getElement();
         if ($element && $this->hasFlag(self::ELEMENT_NAME_IN_LOWER_CASE)) {
@@ -130,7 +130,7 @@ class NodeExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
             $element = \sprintf('%s:%s', $node->getNamespace(), $element);
             $safe = $safe && $this->isSafeName($node->getNamespace());
         }
-        $xpath = new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr('', $element);
+        $xpath = new XPathExpr('', $element);
         if (!$safe) {
             $xpath->addNameTest();
         }

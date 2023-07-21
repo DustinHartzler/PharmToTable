@@ -79,16 +79,20 @@
 /******/o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r)
 /******/,
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-t=o(66886),e=jQuery,r=window.inlineEditPost.edit,// and then we overwrite the function with our own code
+t=o(66886),e=jQuery,r=window.inlineEditPost.edit,
+// and then we overwrite the function with our own code
 window.inlineEditPost.edit=function(n){
 // "call" the original WP edit function
 // we don't want to leave WordPress hanging
-r.apply(this,arguments);// now we take care of our business
+r.apply(this,arguments);
+// now we take care of our business
 // get the post ID
 var i=0;if(n instanceof Element&&(i=parseInt(this.getId(n))),i>0){
 // define the edit row
-var o=e("#edit-"+i),a=window["sensei_quick_edit_"+i];//on the save button click, set senseiFieldValues to the values user entered in the form fields
-o.find(".save").on("click",(function(){e(".sensei-quiz-settings :input",o).each((function(){var r=e(this).attr("name"),t=e(this).val();a[r]=t}))})),// populate the data
+var o=e("#edit-"+i),a=window["sensei_quick_edit_"+i];
+//on the save button click, set senseiFieldValues to the values user entered in the form fields
+o.find(".save").on("click",(function(){e(".sensei-quiz-settings :input",o).each((function(){var r=e(this).attr("name"),t=e(this).val();a[r]=t}))})),
+// populate the data
 //data is localized in sensei_quick_edit object
 "on"==a.pass_required||"1"==a.pass_required?a.pass_required=1:a.pass_required=0,"on"==a.enable_quiz_reset||"1"==a.enable_quiz_reset?a.enable_quiz_reset=1:a.enable_quiz_reset=0,"auto"===a.quiz_grade_type||"1"===a.quiz_grade_type?a.quiz_grade_type=1:a.quiz_grade_type=0,"yes"==a.random_question_order||"1"==a.random_question_order?a.random_question_order=1:a.random_question_order=0;for(var u=0,s=Object.entries(a);u<s.length;u++){var d=(0,t/* ["default"] */.Z)(s[u],2),l=d[0],c=d[1],p=e(':input[name="'+l+'"]',o);"INPUT"==p.prop("nodeName")?p.val(parseInt(c)):e(':input[name="'+l+'"] option[value="'+c+'"] ',o).attr("selected",!0)}}}})
 /******/();

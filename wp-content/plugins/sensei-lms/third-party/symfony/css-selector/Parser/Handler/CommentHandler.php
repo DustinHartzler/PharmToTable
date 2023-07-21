@@ -22,12 +22,12 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class CommentHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\HandlerInterface
+class CommentHandler implements HandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : bool
+    public function handle(Reader $reader, TokenStream $stream) : bool
     {
         if ('/*' !== $reader->getSubstring(2)) {
             return \false;

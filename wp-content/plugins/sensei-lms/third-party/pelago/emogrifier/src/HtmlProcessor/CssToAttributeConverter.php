@@ -11,7 +11,7 @@ namespace Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor;
  *
  * To trigger the conversion, call the convertCssToVisualAttributes method.
  */
-class CssToAttributeConverter extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlProcessor\AbstractHtmlProcessor
+class CssToAttributeConverter extends AbstractHtmlProcessor
 {
     /**
      * This multi-level array contains simple mappings of CSS properties to
@@ -29,7 +29,7 @@ class CssToAttributeConverter extends \Sensei\ThirdParty\Pelago\Emogrifier\HtmlP
     /**
      * Maps the CSS from the style nodes to visual HTML attributes.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function convertCssToVisualAttributes() : self
     {

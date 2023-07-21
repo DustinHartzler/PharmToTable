@@ -27,7 +27,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface;
  *
  * @internal
  */
-class EmptyStringParser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface
+class EmptyStringParser implements ParserInterface
 {
     /**
      * {@inheritdoc}
@@ -36,7 +36,7 @@ class EmptyStringParser implements \Sensei\ThirdParty\Symfony\Component\CssSelec
     {
         // Matches an empty string
         if ('' == $source) {
-            return [new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ElementNode(null, '*'))];
+            return [new SelectorNode(new ElementNode(null, '*'))];
         }
         return [];
     }

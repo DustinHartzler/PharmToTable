@@ -22,7 +22,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr;
  *
  * @internal
  */
-class AttributeMatchingExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\AbstractExtension
+class AttributeMatchingExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -31,37 +31,37 @@ class AttributeMatchingExtension extends \Sensei\ThirdParty\Symfony\Component\Cs
     {
         return ['exists' => [$this, 'translateExists'], '=' => [$this, 'translateEquals'], '~=' => [$this, 'translateIncludes'], '|=' => [$this, 'translateDashMatch'], '^=' => [$this, 'translatePrefixMatch'], '$=' => [$this, 'translateSuffixMatch'], '*=' => [$this, 'translateSubstringMatch'], '!=' => [$this, 'translateDifferent']];
     }
-    public function translateExists(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateExists(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
         return $xpath->addCondition($attribute);
     }
-    public function translateEquals(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateEquals(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition(\sprintf('%s = %s', $attribute, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value)));
+        return $xpath->addCondition(\sprintf('%s = %s', $attribute, Translator::getXpathLiteral($value)));
     }
-    public function translateIncludes(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateIncludes(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition($value ? \sprintf('%1$s and contains(concat(\' \', normalize-space(%1$s), \' \'), %2$s)', $attribute, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral(' ' . $value . ' ')) : '0');
+        return $xpath->addCondition($value ? \sprintf('%1$s and contains(concat(\' \', normalize-space(%1$s), \' \'), %2$s)', $attribute, Translator::getXpathLiteral(' ' . $value . ' ')) : '0');
     }
-    public function translateDashMatch(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateDashMatch(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition(\sprintf('%1$s and (%1$s = %2$s or starts-with(%1$s, %3$s))', $attribute, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value), \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value . '-')));
+        return $xpath->addCondition(\sprintf('%1$s and (%1$s = %2$s or starts-with(%1$s, %3$s))', $attribute, Translator::getXpathLiteral($value), Translator::getXpathLiteral($value . '-')));
     }
-    public function translatePrefixMatch(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translatePrefixMatch(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition($value ? \sprintf('%1$s and starts-with(%1$s, %2$s)', $attribute, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value)) : '0');
+        return $xpath->addCondition($value ? \sprintf('%1$s and starts-with(%1$s, %2$s)', $attribute, Translator::getXpathLiteral($value)) : '0');
     }
-    public function translateSuffixMatch(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateSuffixMatch(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition($value ? \sprintf('%1$s and substring(%1$s, string-length(%1$s)-%2$s) = %3$s', $attribute, \strlen($value) - 1, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value)) : '0');
+        return $xpath->addCondition($value ? \sprintf('%1$s and substring(%1$s, string-length(%1$s)-%2$s) = %3$s', $attribute, \strlen($value) - 1, Translator::getXpathLiteral($value)) : '0');
     }
-    public function translateSubstringMatch(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateSubstringMatch(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition($value ? \sprintf('%1$s and contains(%1$s, %2$s)', $attribute, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value)) : '0');
+        return $xpath->addCondition($value ? \sprintf('%1$s and contains(%1$s, %2$s)', $attribute, Translator::getXpathLiteral($value)) : '0');
     }
-    public function translateDifferent(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateDifferent(XPathExpr $xpath, string $attribute, ?string $value) : XPathExpr
     {
-        return $xpath->addCondition(\sprintf($value ? 'not(%1$s) or %1$s != %2$s' : '%s != %s', $attribute, \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Translator::getXpathLiteral($value)));
+        return $xpath->addCondition(\sprintf($value ? 'not(%1$s) or %1$s != %2$s' : '%s != %s', $attribute, Translator::getXpathLiteral($value)));
     }
     /**
      * {@inheritdoc}

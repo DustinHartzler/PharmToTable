@@ -23,7 +23,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface;
  *
  * @internal
  */
-class ElementParser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface
+class ElementParser implements ParserInterface
 {
     /**
      * {@inheritdoc}
@@ -37,7 +37,7 @@ class ElementParser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\
         //     1 => string 'testns' (length=6)
         //     2 => string 'testel' (length=6)
         if (\preg_match('/^(?:([a-z]++)\\|)?([\\w-]++|\\*)$/i', \trim($source), $matches)) {
-            return [new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ElementNode($matches[1] ?: null, $matches[2]))];
+            return [new SelectorNode(new ElementNode($matches[1] ?: null, $matches[2]))];
         }
         return [];
     }

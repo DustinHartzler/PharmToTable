@@ -23,19 +23,19 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\Tokenizer;
  *
  * @internal
  */
-class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface
+class Parser implements ParserInterface
 {
     private $tokenizer;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\Tokenizer $tokenizer = null)
+    public function __construct(Tokenizer $tokenizer = null)
     {
-        $this->tokenizer = $tokenizer ?? new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\Tokenizer();
+        $this->tokenizer = $tokenizer ?? new Tokenizer();
     }
     /**
      * {@inheritdoc}
      */
     public function parse(string $source) : array
     {
-        $reader = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader($source);
+        $reader = new Reader($source);
         $stream = $this->tokenizer->tokenize($reader);
         return $this->parseSelectorList($stream);
     }
@@ -50,15 +50,15 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
     {
         foreach ($tokens as $token) {
             if ($token->isString()) {
-                throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::stringAsFunctionArgument();
+                throw SyntaxErrorException::stringAsFunctionArgument();
             }
         }
-        $joined = \trim(\implode('', \array_map(function (\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token $token) {
+        $joined = \trim(\implode('', \array_map(function (Token $token) {
             return $token->getValue();
         }, $tokens)));
         $int = function ($string) {
             if (!\is_numeric($string)) {
-                throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::stringAsFunctionArgument();
+                throw SyntaxErrorException::stringAsFunctionArgument();
             }
             return (int) $string;
         };
@@ -76,7 +76,7 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
         $first = $split[0] ?? null;
         return [$first ? '-' === $first || '+' === $first ? $int($first . '1') : $int($first) : 1, isset($split[1]) && $split[1] ? $int($split[1]) : 0];
     }
-    private function parseSelectorList(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : array
+    private function parseSelectorList(TokenStream $stream) : array
     {
         $stream->skipWhitespace();
         $selectors = [];
@@ -91,7 +91,7 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
         }
         return $selectors;
     }
-    private function parserSelectorNode(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode
+    private function parserSelectorNode(TokenStream $stream) : Node\SelectorNode
     {
         [$result, $pseudoElement] = $this->parseSimpleSelector($stream);
         while (\true) {
@@ -101,7 +101,7 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
                 break;
             }
             if (null !== $pseudoElement) {
-                throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::pseudoElementFound($pseudoElement, 'not at the end of a selector');
+                throw SyntaxErrorException::pseudoElementFound($pseudoElement, 'not at the end of a selector');
             }
             if ($peek->isDelimiter(['+', '>', '~'])) {
                 $combinator = $stream->getNext()->getValue();
@@ -110,16 +110,16 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
                 $combinator = ' ';
             }
             [$nextSelector, $pseudoElement] = $this->parseSimpleSelector($stream);
-            $result = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\CombinedSelectorNode($result, $combinator, $nextSelector);
+            $result = new Node\CombinedSelectorNode($result, $combinator, $nextSelector);
         }
-        return new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode($result, $pseudoElement);
+        return new Node\SelectorNode($result, $pseudoElement);
     }
     /**
      * Parses next simple node (hash, class, pseudo, negation).
      *
      * @throws SyntaxErrorException
      */
-    private function parseSimpleSelector(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream, bool $insideNegation = \false) : array
+    private function parseSimpleSelector(TokenStream $stream, bool $insideNegation = \false) : array
     {
         $stream->skipWhitespace();
         $selectorStart = \count($stream->getUsed());
@@ -131,13 +131,13 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
                 break;
             }
             if (null !== $pseudoElement) {
-                throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::pseudoElementFound($pseudoElement, 'not at the end of a selector');
+                throw SyntaxErrorException::pseudoElementFound($pseudoElement, 'not at the end of a selector');
             }
             if ($peek->isHash()) {
-                $result = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\HashNode($result, $stream->getNext()->getValue());
+                $result = new Node\HashNode($result, $stream->getNext()->getValue());
             } elseif ($peek->isDelimiter(['.'])) {
                 $stream->getNext();
-                $result = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ClassNode($result, $stream->getNextIdentifier());
+                $result = new Node\ClassNode($result, $stream->getNextIdentifier());
             } elseif ($peek->isDelimiter(['['])) {
                 $stream->getNext();
                 $result = $this->parseAttributeNode($result, $stream);
@@ -156,24 +156,24 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
                     continue;
                 }
                 if (!$stream->getPeek()->isDelimiter(['('])) {
-                    $result = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\PseudoNode($result, $identifier);
+                    $result = new Node\PseudoNode($result, $identifier);
                     continue;
                 }
                 $stream->getNext();
                 $stream->skipWhitespace();
                 if ('not' === \strtolower($identifier)) {
                     if ($insideNegation) {
-                        throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::nestedNot();
+                        throw SyntaxErrorException::nestedNot();
                     }
                     [$argument, $argumentPseudoElement] = $this->parseSimpleSelector($stream, \true);
                     $next = $stream->getNext();
                     if (null !== $argumentPseudoElement) {
-                        throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::pseudoElementFound($argumentPseudoElement, 'inside ::not()');
+                        throw SyntaxErrorException::pseudoElementFound($argumentPseudoElement, 'inside ::not()');
                     }
                     if (!$next->isDelimiter([')'])) {
-                        throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('")"', $next);
+                        throw SyntaxErrorException::unexpectedToken('")"', $next);
                     }
-                    $result = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NegationNode($result, $argument);
+                    $result = new Node\NegationNode($result, $argument);
                 } else {
                     $arguments = [];
                     $next = null;
@@ -185,24 +185,24 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
                         } elseif ($next->isDelimiter([')'])) {
                             break;
                         } else {
-                            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('an argument', $next);
+                            throw SyntaxErrorException::unexpectedToken('an argument', $next);
                         }
                     }
                     if (empty($arguments)) {
-                        throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('at least one argument', $next);
+                        throw SyntaxErrorException::unexpectedToken('at least one argument', $next);
                     }
-                    $result = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode($result, $identifier, $arguments);
+                    $result = new Node\FunctionNode($result, $identifier, $arguments);
                 }
             } else {
-                throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('selector', $peek);
+                throw SyntaxErrorException::unexpectedToken('selector', $peek);
             }
         }
         if (\count($stream->getUsed()) === $selectorStart) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('selector', $stream->getPeek());
+            throw SyntaxErrorException::unexpectedToken('selector', $stream->getPeek());
         }
         return [$result, $pseudoElement];
     }
-    private function parseElementNode(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ElementNode
+    private function parseElementNode(TokenStream $stream) : Node\ElementNode
     {
         $peek = $stream->getPeek();
         if ($peek->isIdentifier() || $peek->isDelimiter(['*'])) {
@@ -222,14 +222,14 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
         } else {
             $element = $namespace = null;
         }
-        return new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\ElementNode($namespace, $element);
+        return new Node\ElementNode($namespace, $element);
     }
-    private function parseAttributeNode(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $selector, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AttributeNode
+    private function parseAttributeNode(Node\NodeInterface $selector, TokenStream $stream) : Node\AttributeNode
     {
         $stream->skipWhitespace();
         $attribute = $stream->getNextIdentifierOrStar();
         if (null === $attribute && !$stream->getPeek()->isDelimiter(['|'])) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('"|"', $stream->getPeek());
+            throw SyntaxErrorException::unexpectedToken('"|"', $stream->getPeek());
         }
         if ($stream->getPeek()->isDelimiter(['|'])) {
             $stream->getNext();
@@ -249,30 +249,30 @@ class Parser implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\
             $stream->skipWhitespace();
             $next = $stream->getNext();
             if ($next->isDelimiter([']'])) {
-                return new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AttributeNode($selector, $namespace, $attribute, 'exists', null);
+                return new Node\AttributeNode($selector, $namespace, $attribute, 'exists', null);
             } elseif ($next->isDelimiter(['='])) {
                 $operator = '=';
             } elseif ($next->isDelimiter(['^', '$', '*', '~', '|', '!']) && $stream->getPeek()->isDelimiter(['='])) {
                 $operator = $next->getValue() . '=';
                 $stream->getNext();
             } else {
-                throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('operator', $next);
+                throw SyntaxErrorException::unexpectedToken('operator', $next);
             }
         }
         $stream->skipWhitespace();
         $value = $stream->getNext();
         if ($value->isNumber()) {
             // if the value is a number, it's casted into a string
-            $value = new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_STRING, (string) $value->getValue(), $value->getPosition());
+            $value = new Token(Token::TYPE_STRING, (string) $value->getValue(), $value->getPosition());
         }
         if (!($value->isIdentifier() || $value->isString())) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('string or identifier', $value);
+            throw SyntaxErrorException::unexpectedToken('string or identifier', $value);
         }
         $stream->skipWhitespace();
         $next = $stream->getNext();
         if (!$next->isDelimiter([']'])) {
-            throw \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\SyntaxErrorException::unexpectedToken('"]"', $next);
+            throw SyntaxErrorException::unexpectedToken('"]"', $next);
         }
-        return new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AttributeNode($selector, $namespace, $attribute, $operator, $value->getValue());
+        return new Node\AttributeNode($selector, $namespace, $attribute, $operator, $value->getValue());
     }
 }

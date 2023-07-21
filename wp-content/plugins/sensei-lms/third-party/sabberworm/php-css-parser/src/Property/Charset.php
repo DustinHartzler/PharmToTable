@@ -12,7 +12,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
  * - May only appear at the very top of a Document’s contents.
  * - Must not appear more than once.
  */
-class Charset implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
+class Charset implements AtRule
 {
     /**
      * @var string
@@ -64,12 +64,12 @@ class Charset implements \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return "@charset {$this->sCharset->render($oOutputFormat)};";
     }

@@ -6,7 +6,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException;
-class Color extends \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction
+class Color extends CSSFunction
 {
     /**
      * @param array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aColor
@@ -22,7 +22,7 @@ class Color extends \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    public static function parse(ParserState $oParserState)
     {
         $aColor = [];
         if ($oParserState->comes('#')) {
@@ -34,9 +34,9 @@ class Color extends \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction
                 $sValue = $sValue[0] . $sValue[0] . $sValue[1] . $sValue[1] . $sValue[2] . $sValue[2] . $sValue[3] . $sValue[3];
             }
             if ($oParserState->strlen($sValue) === 8) {
-                $aColor = ['r' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\intval($sValue[0] . $sValue[1], 16), null, \true, $oParserState->currentLine()), 'g' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\intval($sValue[2] . $sValue[3], 16), null, \true, $oParserState->currentLine()), 'b' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\intval($sValue[4] . $sValue[5], 16), null, \true, $oParserState->currentLine()), 'a' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\round(self::mapRange(\intval($sValue[6] . $sValue[7], 16), 0, 255, 0, 1), 2), null, \true, $oParserState->currentLine())];
+                $aColor = ['r' => new Size(\intval($sValue[0] . $sValue[1], 16), null, \true, $oParserState->currentLine()), 'g' => new Size(\intval($sValue[2] . $sValue[3], 16), null, \true, $oParserState->currentLine()), 'b' => new Size(\intval($sValue[4] . $sValue[5], 16), null, \true, $oParserState->currentLine()), 'a' => new Size(\round(self::mapRange(\intval($sValue[6] . $sValue[7], 16), 0, 255, 0, 1), 2), null, \true, $oParserState->currentLine())];
             } else {
-                $aColor = ['r' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\intval($sValue[0] . $sValue[1], 16), null, \true, $oParserState->currentLine()), 'g' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\intval($sValue[2] . $sValue[3], 16), null, \true, $oParserState->currentLine()), 'b' => new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(\intval($sValue[4] . $sValue[5], 16), null, \true, $oParserState->currentLine())];
+                $aColor = ['r' => new Size(\intval($sValue[0] . $sValue[1], 16), null, \true, $oParserState->currentLine()), 'g' => new Size(\intval($sValue[2] . $sValue[3], 16), null, \true, $oParserState->currentLine()), 'b' => new Size(\intval($sValue[4] . $sValue[5], 16), null, \true, $oParserState->currentLine())];
             }
         } else {
             $sColorMode = $oParserState->parseIdentifier(\true);
@@ -47,10 +47,10 @@ class Color extends \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction
             for ($i = 0; $i < $iLength; ++$i) {
                 $oParserState->consumeWhiteSpace();
                 if ($oParserState->comes('var')) {
-                    $aColor[$sColorMode[$i]] = \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction::parseIdentifierOrFunction($oParserState);
+                    $aColor[$sColorMode[$i]] = CSSFunction::parseIdentifierOrFunction($oParserState);
                     $bContainsVar = \true;
                 } else {
-                    $aColor[$sColorMode[$i]] = \Sensei\ThirdParty\Sabberworm\CSS\Value\Size::parse($oParserState, \true);
+                    $aColor[$sColorMode[$i]] = Size::parse($oParserState, \true);
                 }
                 if ($bContainsVar && $oParserState->comes(')')) {
                     // With a var argument the function can have fewer arguments
@@ -63,10 +63,10 @@ class Color extends \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction
             }
             $oParserState->consume(')');
             if ($bContainsVar) {
-                return new \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction($sColorMode, \array_values($aColor), ',', $oParserState->currentLine());
+                return new CSSFunction($sColorMode, \array_values($aColor), ',', $oParserState->currentLine());
             }
         }
-        return new \Sensei\ThirdParty\Sabberworm\CSS\Value\Color($aColor, $oParserState->currentLine());
+        return new Color($aColor, $oParserState->currentLine());
     }
     /**
      * @param float $fVal
@@ -115,12 +115,12 @@ class Color extends \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         // Shorthand RGB color values
         if ($oOutputFormat->getRGBHashNotation() && \implode('', \array_keys($this->aComponents)) === 'rgb') {

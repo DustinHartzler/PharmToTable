@@ -20,16 +20,16 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-class PseudoNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class PseudoNode extends AbstractNode
 {
     private $selector;
     private $identifier;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $selector, string $identifier)
+    public function __construct(NodeInterface $selector, string $identifier)
     {
         $this->selector = $selector;
         $this->identifier = \strtolower($identifier);
     }
-    public function getSelector() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getSelector() : NodeInterface
     {
         return $this->selector;
     }
@@ -40,9 +40,9 @@ class PseudoNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\A
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
-        return $this->selector->getSpecificity()->plus(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity(0, 1, 0));
+        return $this->selector->getSpecificity()->plus(new Specificity(0, 1, 0));
     }
     public function __toString() : string
     {

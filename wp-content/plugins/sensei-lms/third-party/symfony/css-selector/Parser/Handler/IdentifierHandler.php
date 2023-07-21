@@ -25,11 +25,11 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class IdentifierHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\HandlerInterface
+class IdentifierHandler implements HandlerInterface
 {
     private $patterns;
     private $escaping;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerPatterns $patterns, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerEscaping $escaping)
+    public function __construct(TokenizerPatterns $patterns, TokenizerEscaping $escaping)
     {
         $this->patterns = $patterns;
         $this->escaping = $escaping;
@@ -37,14 +37,14 @@ class IdentifierHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelec
     /**
      * {@inheritdoc}
      */
-    public function handle(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : bool
+    public function handle(Reader $reader, TokenStream $stream) : bool
     {
         $match = $reader->findPattern($this->patterns->getIdentifierPattern());
         if (!$match) {
             return \false;
         }
         $value = $this->escaping->escapeUnicode($match[0]);
-        $stream->push(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_IDENTIFIER, $value, $reader->getPosition()));
+        $stream->push(new Token(Token::TYPE_IDENTIFIER, $value, $reader->getPosition()));
         $reader->moveForward(\strlen($match[0]));
         return \true;
     }

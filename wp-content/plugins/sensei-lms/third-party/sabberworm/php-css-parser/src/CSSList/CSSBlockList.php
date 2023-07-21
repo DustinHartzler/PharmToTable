@@ -15,7 +15,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList;
  *
  * Most `CSSList`s conform to this category but some at-rules (such as `@keyframes`) do not.
  */
-abstract class CSSBlockList extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList
+abstract class CSSBlockList extends CSSList
 {
     /**
      * @param int $iLineNo
@@ -32,9 +32,9 @@ abstract class CSSBlockList extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CS
     protected function allDeclarationBlocks(array &$aResult)
     {
         foreach ($this->aContents as $mContent) {
-            if ($mContent instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock) {
+            if ($mContent instanceof DeclarationBlock) {
                 $aResult[] = $mContent;
-            } elseif ($mContent instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSBlockList) {
+            } elseif ($mContent instanceof CSSBlockList) {
                 $mContent->allDeclarationBlocks($aResult);
             }
         }
@@ -47,9 +47,9 @@ abstract class CSSBlockList extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CS
     protected function allRuleSets(array &$aResult)
     {
         foreach ($this->aContents as $mContent) {
-            if ($mContent instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet) {
+            if ($mContent instanceof RuleSet) {
                 $aResult[] = $mContent;
-            } elseif ($mContent instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSBlockList) {
+            } elseif ($mContent instanceof CSSBlockList) {
                 $mContent->allRuleSets($aResult);
             }
         }
@@ -64,18 +64,18 @@ abstract class CSSBlockList extends \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CS
      */
     protected function allValues($oElement, array &$aResult, $sSearchString = null, $bSearchInFunctionArguments = \false)
     {
-        if ($oElement instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSBlockList) {
+        if ($oElement instanceof CSSBlockList) {
             foreach ($oElement->getContents() as $oContent) {
                 $this->allValues($oContent, $aResult, $sSearchString, $bSearchInFunctionArguments);
             }
-        } elseif ($oElement instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet) {
+        } elseif ($oElement instanceof RuleSet) {
             foreach ($oElement->getRules($sSearchString) as $oRule) {
                 $this->allValues($oRule, $aResult, $sSearchString, $bSearchInFunctionArguments);
             }
-        } elseif ($oElement instanceof \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule) {
+        } elseif ($oElement instanceof Rule) {
             $this->allValues($oElement->getValue(), $aResult, $sSearchString, $bSearchInFunctionArguments);
-        } elseif ($oElement instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\ValueList) {
-            if ($bSearchInFunctionArguments || !$oElement instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSFunction) {
+        } elseif ($oElement instanceof ValueList) {
+            if ($bSearchInFunctionArguments || !$oElement instanceof CSSFunction) {
                 foreach ($oElement->getListComponents() as $mComponent) {
                     $this->allValues($mComponent, $aResult, $sSearchString, $bSearchInFunctionArguments);
                 }

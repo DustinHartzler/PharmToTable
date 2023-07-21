@@ -26,7 +26,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface;
  *
  * @internal
  */
-class Translator implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\TranslatorInterface
+class Translator implements TranslatorInterface
 {
     private $mainParser;
     /**
@@ -42,10 +42,10 @@ class Translator implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
     private $functionTranslators = [];
     private $pseudoClassTranslators = [];
     private $attributeMatchingTranslators = [];
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface $parser = null)
+    public function __construct(ParserInterface $parser = null)
     {
-        $this->mainParser = $parser ?? new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Parser();
-        $this->registerExtension(new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\NodeExtension())->registerExtension(new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\CombinationExtension())->registerExtension(new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\FunctionExtension())->registerExtension(new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\PseudoClassExtension())->registerExtension(new \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\AttributeMatchingExtension());
+        $this->mainParser = $parser ?? new Parser();
+        $this->registerExtension(new Extension\NodeExtension())->registerExtension(new Extension\CombinationExtension())->registerExtension(new Extension\FunctionExtension())->registerExtension(new Extension\PseudoClassExtension())->registerExtension(new Extension\AttributeMatchingExtension());
     }
     public static function getXpathLiteral(string $element) : string
     {
@@ -78,7 +78,7 @@ class Translator implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
         /** @var SelectorNode $selector */
         foreach ($selectors as $index => $selector) {
             if (null !== $selector->getPseudoElement()) {
-                throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException('Pseudo-elements are not supported.');
+                throw new ExpressionErrorException('Pseudo-elements are not supported.');
             }
             $selectors[$index] = $this->selectorToXPath($selector, $prefix);
         }
@@ -87,14 +87,14 @@ class Translator implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
     /**
      * {@inheritdoc}
      */
-    public function selectorToXPath(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\SelectorNode $selector, string $prefix = 'descendant-or-self::') : string
+    public function selectorToXPath(SelectorNode $selector, string $prefix = 'descendant-or-self::') : string
     {
         return ($prefix ?: '') . $this->nodeToXPath($selector);
     }
     /**
      * @return $this
      */
-    public function registerExtension(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\ExtensionInterface $extension) : self
+    public function registerExtension(Extension\ExtensionInterface $extension) : self
     {
         $this->extensions[$extension->getName()] = $extension;
         $this->nodeTranslators = \array_merge($this->nodeTranslators, $extension->getNodeTranslators());
@@ -107,17 +107,17 @@ class Translator implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
     /**
      * @throws ExpressionErrorException
      */
-    public function getExtension(string $name) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\ExtensionInterface
+    public function getExtension(string $name) : Extension\ExtensionInterface
     {
         if (!isset($this->extensions[$name])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Extension "%s" not registered.', $name));
+            throw new ExpressionErrorException(\sprintf('Extension "%s" not registered.', $name));
         }
         return $this->extensions[$name];
     }
     /**
      * @return $this
      */
-    public function registerParserShortcut(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\ParserInterface $shortcut) : self
+    public function registerParserShortcut(ParserInterface $shortcut) : self
     {
         $this->shortcutParsers[] = $shortcut;
         return $this;
@@ -125,50 +125,50 @@ class Translator implements \Sensei\ThirdParty\Symfony\Component\CssSelector\XPa
     /**
      * @throws ExpressionErrorException
      */
-    public function nodeToXPath(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $node) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function nodeToXPath(NodeInterface $node) : XPathExpr
     {
         if (!isset($this->nodeTranslators[$node->getNodeName()])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Node "%s" not supported.', $node->getNodeName()));
+            throw new ExpressionErrorException(\sprintf('Node "%s" not supported.', $node->getNodeName()));
         }
         return $this->nodeTranslators[$node->getNodeName()]($node, $this);
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function addCombination(string $combiner, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $combinedXpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function addCombination(string $combiner, NodeInterface $xpath, NodeInterface $combinedXpath) : XPathExpr
     {
         if (!isset($this->combinationTranslators[$combiner])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Combiner "%s" not supported.', $combiner));
+            throw new ExpressionErrorException(\sprintf('Combiner "%s" not supported.', $combiner));
         }
         return $this->combinationTranslators[$combiner]($this->nodeToXPath($xpath), $this->nodeToXPath($combinedXpath));
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function addFunction(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\FunctionNode $function) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function addFunction(XPathExpr $xpath, FunctionNode $function) : XPathExpr
     {
         if (!isset($this->functionTranslators[$function->getName()])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Function "%s" not supported.', $function->getName()));
+            throw new ExpressionErrorException(\sprintf('Function "%s" not supported.', $function->getName()));
         }
         return $this->functionTranslators[$function->getName()]($xpath, $function);
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function addPseudoClass(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $pseudoClass) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function addPseudoClass(XPathExpr $xpath, string $pseudoClass) : XPathExpr
     {
         if (!isset($this->pseudoClassTranslators[$pseudoClass])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Pseudo-class "%s" not supported.', $pseudoClass));
+            throw new ExpressionErrorException(\sprintf('Pseudo-class "%s" not supported.', $pseudoClass));
         }
         return $this->pseudoClassTranslators[$pseudoClass]($xpath);
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function addAttributeMatching(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath, string $operator, string $attribute, ?string $value) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function addAttributeMatching(XPathExpr $xpath, string $operator, string $attribute, ?string $value) : XPathExpr
     {
         if (!isset($this->attributeMatchingTranslators[$operator])) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException(\sprintf('Attribute matcher operator "%s" not supported.', $operator));
+            throw new ExpressionErrorException(\sprintf('Attribute matcher operator "%s" not supported.', $operator));
         }
         return $this->attributeMatchingTranslators[$operator]($xpath, $attribute, $value);
     }

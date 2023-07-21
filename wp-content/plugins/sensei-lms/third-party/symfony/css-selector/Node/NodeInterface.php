@@ -23,6 +23,6 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
 interface NodeInterface
 {
     public function getNodeName() : string;
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity;
+    public function getSpecificity() : Specificity;
     public function __toString() : string;
 }

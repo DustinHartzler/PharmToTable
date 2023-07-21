@@ -20,16 +20,16 @@ namespace Sensei\ThirdParty\Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-class HashNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\AbstractNode
+class HashNode extends AbstractNode
 {
     private $selector;
     private $id;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface $selector, string $id)
+    public function __construct(NodeInterface $selector, string $id)
     {
         $this->selector = $selector;
         $this->id = $id;
     }
-    public function getSelector() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\NodeInterface
+    public function getSelector() : NodeInterface
     {
         return $this->selector;
     }
@@ -40,9 +40,9 @@ class HashNode extends \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Abs
     /**
      * {@inheritdoc}
      */
-    public function getSpecificity() : \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity
+    public function getSpecificity() : Specificity
     {
-        return $this->selector->getSpecificity()->plus(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Node\Specificity(1, 0, 0));
+        return $this->selector->getSpecificity()->plus(new Specificity(1, 0, 0));
     }
     public function __toString() : string
     {

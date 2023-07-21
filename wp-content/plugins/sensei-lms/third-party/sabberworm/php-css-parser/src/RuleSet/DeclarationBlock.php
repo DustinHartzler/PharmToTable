@@ -22,7 +22,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Value\Value;
  *
  * Declaration blocks usually appear directly inside a `Document` or another `CSSList` (mostly a `MediaQuery`).
  */
-class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
+class DeclarationBlock extends RuleSet
 {
     /**
      * @var array<int, Selector|string>
@@ -44,10 +44,10 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parse(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, $oList = null)
+    public static function parse(ParserState $oParserState, $oList = null)
     {
         $aComments = [];
-        $oResult = new \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock($oParserState->currentLine());
+        $oResult = new DeclarationBlock($oParserState->currentLine());
         try {
             $aSelectorParts = [];
             $sStringWrapperChar = \false;
@@ -65,7 +65,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             if ($oParserState->comes('{')) {
                 $oParserState->consume(1);
             }
-        } catch (\Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException $e) {
+        } catch (UnexpectedTokenException $e) {
             if ($oParserState->getSettings()->bLenientParsing) {
                 if (!$oParserState->comes('}')) {
                     $oParserState->consumeUntil('}', \false, \true);
@@ -76,7 +76,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             }
         }
         $oResult->setComments($aComments);
-        \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet::parseRuleSet($oParserState, $oResult);
+        RuleSet::parseRuleSet($oParserState, $oResult);
         return $oResult;
     }
     /**
@@ -93,17 +93,17 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             $this->aSelectors = \explode(',', $mSelector);
         }
         foreach ($this->aSelectors as $iKey => $mSelector) {
-            if (!$mSelector instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector) {
-                if ($oList === null || !$oList instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\KeyFrame) {
-                    if (!\Sensei\ThirdParty\Sabberworm\CSS\Property\Selector::isValid($mSelector)) {
-                        throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException("Selector did not match '" . \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector::SELECTOR_VALIDATION_RX . "'.", $mSelector, "custom");
+            if (!$mSelector instanceof Selector) {
+                if ($oList === null || !$oList instanceof KeyFrame) {
+                    if (!Selector::isValid($mSelector)) {
+                        throw new UnexpectedTokenException("Selector did not match '" . Selector::SELECTOR_VALIDATION_RX . "'.", $mSelector, "custom");
                     }
-                    $this->aSelectors[$iKey] = new \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector($mSelector);
+                    $this->aSelectors[$iKey] = new Selector($mSelector);
                 } else {
-                    if (!\Sensei\ThirdParty\Sabberworm\CSS\Property\KeyframeSelector::isValid($mSelector)) {
-                        throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException("Selector did not match '" . \Sensei\ThirdParty\Sabberworm\CSS\Property\KeyframeSelector::SELECTOR_VALIDATION_RX . "'.", $mSelector, "custom");
+                    if (!KeyframeSelector::isValid($mSelector)) {
+                        throw new UnexpectedTokenException("Selector did not match '" . KeyframeSelector::SELECTOR_VALIDATION_RX . "'.", $mSelector, "custom");
                     }
-                    $this->aSelectors[$iKey] = new \Sensei\ThirdParty\Sabberworm\CSS\Property\KeyframeSelector($mSelector);
+                    $this->aSelectors[$iKey] = new KeyframeSelector($mSelector);
                 }
             }
         }
@@ -117,7 +117,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
      */
     public function removeSelector($mSelector)
     {
-        if ($mSelector instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector) {
+        if ($mSelector instanceof Selector) {
             $mSelector = $mSelector->getSelector();
         }
         foreach ($this->aSelectors as $iKey => $oSelector) {
@@ -205,20 +205,20 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             $oRule = $aRules[$sBorderRule];
             $mRuleValue = $oRule->getValue();
             $aValues = [];
-            if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+            if (!$mRuleValue instanceof RuleValueList) {
                 $aValues[] = $mRuleValue;
             } else {
                 $aValues = $mRuleValue->getListComponents();
             }
             foreach ($aValues as $mValue) {
-                if ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Value) {
+                if ($mValue instanceof Value) {
                     $mNewValue = clone $mValue;
                 } else {
                     $mNewValue = $mValue;
                 }
-                if ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Size) {
+                if ($mValue instanceof Size) {
                     $sNewRuleName = $sBorderRule . "-width";
-                } elseif ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Color) {
+                } elseif ($mValue instanceof Color) {
                     $sNewRuleName = $sBorderRule . "-color";
                 } else {
                     if (\in_array($mValue, $aBorderSizes)) {
@@ -227,7 +227,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
                         $sNewRuleName = $sBorderRule . "-style";
                     }
                 }
-                $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sNewRuleName, $oRule->getLineNo(), $oRule->getColNo());
+                $oNewRule = new Rule($sNewRuleName, $oRule->getLineNo(), $oRule->getColNo());
                 $oNewRule->setIsImportant($oRule->getIsImportant());
                 $oNewRule->addValue([$mNewValue]);
                 $this->addRule($oNewRule);
@@ -254,7 +254,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             $oRule = $aRules[$sProperty];
             $mRuleValue = $oRule->getValue();
             $aValues = [];
-            if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+            if (!$mRuleValue instanceof RuleValueList) {
                 $aValues[] = $mRuleValue;
             } else {
                 $aValues = $mRuleValue->getListComponents();
@@ -281,7 +281,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
                     break;
             }
             foreach (['top', 'right', 'bottom', 'left'] as $sPosition) {
-                $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule(\sprintf($sExpanded, $sPosition), $oRule->getLineNo(), $oRule->getColNo());
+                $oNewRule = new Rule(\sprintf($sExpanded, $sPosition), $oRule->getLineNo(), $oRule->getColNo());
                 $oNewRule->setIsImportant($oRule->getIsImportant());
                 $oNewRule->addValue(${$sPosition});
                 $this->addRule($oNewRule);
@@ -307,13 +307,13 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
         $aFontProperties = ['font-style' => 'normal', 'font-variant' => 'normal', 'font-weight' => 'normal', 'font-size' => 'normal', 'line-height' => 'normal'];
         $mRuleValue = $oRule->getValue();
         $aValues = [];
-        if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+        if (!$mRuleValue instanceof RuleValueList) {
             $aValues[] = $mRuleValue;
         } else {
             $aValues = $mRuleValue->getListComponents();
         }
         foreach ($aValues as $mValue) {
-            if (!$mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Value) {
+            if (!$mValue instanceof Value) {
                 $mValue = \mb_strtolower($mValue);
             }
             if (\in_array($mValue, ['normal', 'inherit'])) {
@@ -326,20 +326,20 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
                 $aFontProperties['font-style'] = $mValue;
             } elseif ($mValue == 'small-caps') {
                 $aFontProperties['font-variant'] = $mValue;
-            } elseif (\in_array($mValue, ['bold', 'bolder', 'lighter']) || $mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Size && \in_array($mValue->getSize(), \range(100, 900, 100))) {
+            } elseif (\in_array($mValue, ['bold', 'bolder', 'lighter']) || $mValue instanceof Size && \in_array($mValue->getSize(), \range(100, 900, 100))) {
                 $aFontProperties['font-weight'] = $mValue;
-            } elseif ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList && $mValue->getListSeparator() == '/') {
+            } elseif ($mValue instanceof RuleValueList && $mValue->getListSeparator() == '/') {
                 list($oSize, $oHeight) = $mValue->getListComponents();
                 $aFontProperties['font-size'] = $oSize;
                 $aFontProperties['line-height'] = $oHeight;
-            } elseif ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Size && $mValue->getUnit() !== null) {
+            } elseif ($mValue instanceof Size && $mValue->getUnit() !== null) {
                 $aFontProperties['font-size'] = $mValue;
             } else {
                 $aFontProperties['font-family'] = $mValue;
             }
         }
         foreach ($aFontProperties as $sProperty => $mValue) {
-            $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
+            $oNewRule = new Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
             $oNewRule->addValue($mValue);
             $oNewRule->setIsImportant($oRule->getIsImportant());
             $this->addRule($oNewRule);
@@ -362,17 +362,17 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             return;
         }
         $oRule = $aRules['background'];
-        $aBgProperties = ['background-color' => ['transparent'], 'background-image' => ['none'], 'background-repeat' => ['repeat'], 'background-attachment' => ['scroll'], 'background-position' => [new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(0, '%', null, \false, $this->iLineNo), new \Sensei\ThirdParty\Sabberworm\CSS\Value\Size(0, '%', null, \false, $this->iLineNo)]];
+        $aBgProperties = ['background-color' => ['transparent'], 'background-image' => ['none'], 'background-repeat' => ['repeat'], 'background-attachment' => ['scroll'], 'background-position' => [new Size(0, '%', null, \false, $this->iLineNo), new Size(0, '%', null, \false, $this->iLineNo)]];
         $mRuleValue = $oRule->getValue();
         $aValues = [];
-        if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+        if (!$mRuleValue instanceof RuleValueList) {
             $aValues[] = $mRuleValue;
         } else {
             $aValues = $mRuleValue->getListComponents();
         }
         if (\count($aValues) == 1 && $aValues[0] == 'inherit') {
             foreach ($aBgProperties as $sProperty => $mValue) {
-                $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
+                $oNewRule = new Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
                 $oNewRule->addValue('inherit');
                 $oNewRule->setIsImportant($oRule->getIsImportant());
                 $this->addRule($oNewRule);
@@ -382,18 +382,18 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
         }
         $iNumBgPos = 0;
         foreach ($aValues as $mValue) {
-            if (!$mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Value) {
+            if (!$mValue instanceof Value) {
                 $mValue = \mb_strtolower($mValue);
             }
-            if ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\URL) {
+            if ($mValue instanceof URL) {
                 $aBgProperties['background-image'] = $mValue;
-            } elseif ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Color) {
+            } elseif ($mValue instanceof Color) {
                 $aBgProperties['background-color'] = $mValue;
             } elseif (\in_array($mValue, ['scroll', 'fixed'])) {
                 $aBgProperties['background-attachment'] = $mValue;
             } elseif (\in_array($mValue, ['repeat', 'no-repeat', 'repeat-x', 'repeat-y'])) {
                 $aBgProperties['background-repeat'] = $mValue;
-            } elseif (\in_array($mValue, ['left', 'center', 'right', 'top', 'bottom']) || $mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Size) {
+            } elseif (\in_array($mValue, ['left', 'center', 'right', 'top', 'bottom']) || $mValue instanceof Size) {
                 if ($iNumBgPos == 0) {
                     $aBgProperties['background-position'][0] = $mValue;
                     $aBgProperties['background-position'][1] = 'center';
@@ -404,7 +404,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             }
         }
         foreach ($aBgProperties as $sProperty => $mValue) {
-            $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
+            $oNewRule = new Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
             $oNewRule->setIsImportant($oRule->getIsImportant());
             $oNewRule->addValue($mValue);
             $this->addRule($oNewRule);
@@ -426,14 +426,14 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
         $oRule = $aRules['list-style'];
         $mRuleValue = $oRule->getValue();
         $aValues = [];
-        if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+        if (!$mRuleValue instanceof RuleValueList) {
             $aValues[] = $mRuleValue;
         } else {
             $aValues = $mRuleValue->getListComponents();
         }
         if (\count($aValues) == 1 && $aValues[0] == 'inherit') {
             foreach ($aListProperties as $sProperty => $mValue) {
-                $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
+                $oNewRule = new Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
                 $oNewRule->addValue('inherit');
                 $oNewRule->setIsImportant($oRule->getIsImportant());
                 $this->addRule($oNewRule);
@@ -442,10 +442,10 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             return;
         }
         foreach ($aValues as $mValue) {
-            if (!$mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\Value) {
+            if (!$mValue instanceof Value) {
                 $mValue = \mb_strtolower($mValue);
             }
-            if ($mValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\URL) {
+            if ($mValue instanceof Url) {
                 $aListProperties['list-style-image'] = $mValue;
             } elseif (\in_array($mValue, $aListStyleTypes)) {
                 $aListProperties['list-style-types'] = $mValue;
@@ -454,7 +454,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             }
         }
         foreach ($aListProperties as $sProperty => $mValue) {
-            $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
+            $oNewRule = new Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
             $oNewRule->setIsImportant($oRule->getIsImportant());
             $oNewRule->addValue($mValue);
             $this->addRule($oNewRule);
@@ -479,7 +479,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             if (!$oRule->getIsImportant()) {
                 $mRuleValue = $oRule->getValue();
                 $aValues = [];
-                if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+                if (!$mRuleValue instanceof RuleValueList) {
                     $aValues[] = $mRuleValue;
                 } else {
                     $aValues = $mRuleValue->getListComponents();
@@ -491,7 +491,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             }
         }
         if (\count($aNewValues)) {
-            $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sShorthand, $oRule->getLineNo(), $oRule->getColNo());
+            $oNewRule = new Rule($sShorthand, $oRule->getLineNo(), $oRule->getColNo());
             foreach ($aNewValues as $mValue) {
                 $oNewRule->addValue($mValue);
             }
@@ -554,14 +554,14 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
                     $oRule = $aRules[\sprintf($sExpanded, $sPosition)];
                     $mRuleValue = $oRule->getValue();
                     $aRuleValues = [];
-                    if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+                    if (!$mRuleValue instanceof RuleValueList) {
                         $aRuleValues[] = $mRuleValue;
                     } else {
                         $aRuleValues = $mRuleValue->getListComponents();
                     }
                     $aValues[$sPosition] = $aRuleValues;
                 }
-                $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
+                $oNewRule = new Rule($sProperty, $oRule->getLineNo(), $oRule->getColNo());
                 if ((string) $aValues['left'][0] == (string) $aValues['right'][0]) {
                     if ((string) $aValues['top'][0] == (string) $aValues['bottom'][0]) {
                         if ((string) $aValues['top'][0] == (string) $aValues['left'][0]) {
@@ -608,14 +608,14 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             return;
         }
         $oOldRule = isset($aRules['font-size']) ? $aRules['font-size'] : $aRules['font-family'];
-        $oNewRule = new \Sensei\ThirdParty\Sabberworm\CSS\Rule\Rule('font', $oOldRule->getLineNo(), $oOldRule->getColNo());
+        $oNewRule = new Rule('font', $oOldRule->getLineNo(), $oOldRule->getColNo());
         unset($oOldRule);
         foreach (['font-style', 'font-variant', 'font-weight'] as $sProperty) {
             if (isset($aRules[$sProperty])) {
                 $oRule = $aRules[$sProperty];
                 $mRuleValue = $oRule->getValue();
                 $aValues = [];
-                if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+                if (!$mRuleValue instanceof RuleValueList) {
                     $aValues[] = $mRuleValue;
                 } else {
                     $aValues = $mRuleValue->getListComponents();
@@ -629,7 +629,7 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
         $oRule = $aRules['font-size'];
         $mRuleValue = $oRule->getValue();
         $aFSValues = [];
-        if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+        if (!$mRuleValue instanceof RuleValueList) {
             $aFSValues[] = $mRuleValue;
         } else {
             $aFSValues = $mRuleValue->getListComponents();
@@ -639,13 +639,13 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
             $oRule = $aRules['line-height'];
             $mRuleValue = $oRule->getValue();
             $aLHValues = [];
-            if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+            if (!$mRuleValue instanceof RuleValueList) {
                 $aLHValues[] = $mRuleValue;
             } else {
                 $aLHValues = $mRuleValue->getListComponents();
             }
             if ($aLHValues[0] !== 'normal') {
-                $val = new \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList('/', $this->iLineNo);
+                $val = new RuleValueList('/', $this->iLineNo);
                 $val->addListComponent($aFSValues[0]);
                 $val->addListComponent($aLHValues[0]);
                 $oNewRule->addValue($val);
@@ -656,12 +656,12 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
         $oRule = $aRules['font-family'];
         $mRuleValue = $oRule->getValue();
         $aFFValues = [];
-        if (!$mRuleValue instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList) {
+        if (!$mRuleValue instanceof RuleValueList) {
             $aFFValues[] = $mRuleValue;
         } else {
             $aFFValues = $mRuleValue->getListComponents();
         }
-        $oFFValue = new \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList(',', $this->iLineNo);
+        $oFFValue = new RuleValueList(',', $this->iLineNo);
         $oFFValue->setListComponents($aFFValues);
         $oNewRule->addValue($oFFValue);
         $this->addRule($oNewRule);
@@ -676,18 +676,18 @@ class DeclarationBlock extends \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      *
      * @throws OutputException
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         if (\count($this->aSelectors) === 0) {
             // If all the selectors have been removed, this declaration block becomes invalid
-            throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\OutputException("Attempt to print declaration block with missing selector", $this->iLineNo);
+            throw new OutputException("Attempt to print declaration block with missing selector", $this->iLineNo);
         }
         $sResult = $oOutputFormat->sBeforeDeclarationBlock;
         $sResult .= $oOutputFormat->implode($oOutputFormat->spaceBeforeSelectorSeparator() . ',' . $oOutputFormat->spaceAfterSelectorSeparator(), $this->aSelectors);

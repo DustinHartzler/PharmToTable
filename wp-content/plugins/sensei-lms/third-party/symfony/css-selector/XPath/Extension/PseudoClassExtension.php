@@ -22,7 +22,7 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr;
  *
  * @internal
  */
-class PseudoClassExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\Extension\AbstractExtension
+class PseudoClassExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -31,48 +31,48 @@ class PseudoClassExtension extends \Sensei\ThirdParty\Symfony\Component\CssSelec
     {
         return ['root' => [$this, 'translateRoot'], 'first-child' => [$this, 'translateFirstChild'], 'last-child' => [$this, 'translateLastChild'], 'first-of-type' => [$this, 'translateFirstOfType'], 'last-of-type' => [$this, 'translateLastOfType'], 'only-child' => [$this, 'translateOnlyChild'], 'only-of-type' => [$this, 'translateOnlyOfType'], 'empty' => [$this, 'translateEmpty']];
     }
-    public function translateRoot(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateRoot(XPathExpr $xpath) : XPathExpr
     {
         return $xpath->addCondition('not(parent::*)');
     }
-    public function translateFirstChild(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateFirstChild(XPathExpr $xpath) : XPathExpr
     {
         return $xpath->addStarPrefix()->addNameTest()->addCondition('position() = 1');
     }
-    public function translateLastChild(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateLastChild(XPathExpr $xpath) : XPathExpr
     {
         return $xpath->addStarPrefix()->addNameTest()->addCondition('position() = last()');
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function translateFirstOfType(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateFirstOfType(XPathExpr $xpath) : XPathExpr
     {
         if ('*' === $xpath->getElement()) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException('"*:first-of-type" is not implemented.');
+            throw new ExpressionErrorException('"*:first-of-type" is not implemented.');
         }
         return $xpath->addStarPrefix()->addCondition('position() = 1');
     }
     /**
      * @throws ExpressionErrorException
      */
-    public function translateLastOfType(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateLastOfType(XPathExpr $xpath) : XPathExpr
     {
         if ('*' === $xpath->getElement()) {
-            throw new \Sensei\ThirdParty\Symfony\Component\CssSelector\Exception\ExpressionErrorException('"*:last-of-type" is not implemented.');
+            throw new ExpressionErrorException('"*:last-of-type" is not implemented.');
         }
         return $xpath->addStarPrefix()->addCondition('position() = last()');
     }
-    public function translateOnlyChild(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateOnlyChild(XPathExpr $xpath) : XPathExpr
     {
         return $xpath->addStarPrefix()->addNameTest()->addCondition('last() = 1');
     }
-    public function translateOnlyOfType(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateOnlyOfType(XPathExpr $xpath) : XPathExpr
     {
         $element = $xpath->getElement();
         return $xpath->addCondition(\sprintf('count(preceding-sibling::%s)=0 and count(following-sibling::%s)=0', $element, $element));
     }
-    public function translateEmpty(\Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr $xpath) : \Sensei\ThirdParty\Symfony\Component\CssSelector\XPath\XPathExpr
+    public function translateEmpty(XPathExpr $xpath) : XPathExpr
     {
         return $xpath->addCondition('not(*) and not(string-length())');
     }

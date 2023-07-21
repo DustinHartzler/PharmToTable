@@ -3,7 +3,7 @@
 namespace Sensei\ThirdParty\Sabberworm\CSS\Value;
 
 use Sensei\ThirdParty\Sabberworm\CSS\OutputFormat;
-class CalcRuleValueList extends \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValueList
+class CalcRuleValueList extends RuleValueList
 {
     /**
      * @param int $iLineNo
@@ -15,7 +15,7 @@ class CalcRuleValueList extends \Sensei\ThirdParty\Sabberworm\CSS\Value\RuleValu
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         return $oOutputFormat->implode(' ', $this->aComponents);
     }

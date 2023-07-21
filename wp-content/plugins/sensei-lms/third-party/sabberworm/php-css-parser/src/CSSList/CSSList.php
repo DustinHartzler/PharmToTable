@@ -28,7 +28,7 @@ use Sensei\ThirdParty\Sabberworm\CSS\Value\Value;
  *
  * Also, it may contain `Import` and `Charset` objects stemming from at-rules.
  */
-abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, \Sensei\ThirdParty\Sabberworm\CSS\Comment\Commentable
+abstract class CSSList implements Renderable, Commentable
 {
     /**
      * @var array<array-key, Comment>
@@ -57,11 +57,11 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      * @throws UnexpectedTokenException
      * @throws SourceException
      */
-    public static function parseList(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList $oList)
+    public static function parseList(ParserState $oParserState, CSSList $oList)
     {
-        $bIsRoot = $oList instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\Document;
+        $bIsRoot = $oList instanceof Document;
         if (\is_string($oParserState)) {
-            $oParserState = new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState($oParserState, \Sensei\ThirdParty\Sabberworm\CSS\Settings::create());
+            $oParserState = new ParserState($oParserState, Settings::create());
         }
         $bLenientParsing = $oParserState->getSettings()->bLenientParsing;
         while (!$oParserState->isEnd()) {
@@ -70,7 +70,7 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
             if ($bLenientParsing) {
                 try {
                     $oListItem = self::parseListItem($oParserState, $oList);
-                } catch (\Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException $e) {
+                } catch (UnexpectedTokenException $e) {
                     $oListItem = \false;
                 }
             } else {
@@ -87,7 +87,7 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
             $oParserState->consumeWhiteSpace();
         }
         if (!$bIsRoot && !$bLenientParsing) {
-            throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException("Unexpected end of document", $oParserState->currentLine());
+            throw new SourceException("Unexpected end of document", $oParserState->currentLine());
         }
     }
     /**
@@ -97,37 +97,37 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    private static function parseListItem(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState, \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList $oList)
+    private static function parseListItem(ParserState $oParserState, CSSList $oList)
     {
-        $bIsRoot = $oList instanceof \Sensei\ThirdParty\Sabberworm\CSS\CSSList\Document;
+        $bIsRoot = $oList instanceof Document;
         if ($oParserState->comes('@')) {
             $oAtRule = self::parseAtRule($oParserState);
-            if ($oAtRule instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\Charset) {
+            if ($oAtRule instanceof Charset) {
                 if (!$bIsRoot) {
-                    throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException('@charset may only occur in root document', '', 'custom', $oParserState->currentLine());
+                    throw new UnexpectedTokenException('@charset may only occur in root document', '', 'custom', $oParserState->currentLine());
                 }
                 if (\count($oList->getContents()) > 0) {
-                    throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException('@charset must be the first parseable token in a document', '', 'custom', $oParserState->currentLine());
+                    throw new UnexpectedTokenException('@charset must be the first parseable token in a document', '', 'custom', $oParserState->currentLine());
                 }
                 $oParserState->setCharset($oAtRule->getCharset()->getString());
             }
             return $oAtRule;
         } elseif ($oParserState->comes('}')) {
             if (!$oParserState->getSettings()->bLenientParsing) {
-                throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException('CSS selector', '}', 'identifier', $oParserState->currentLine());
+                throw new UnexpectedTokenException('CSS selector', '}', 'identifier', $oParserState->currentLine());
             } else {
                 if ($bIsRoot) {
                     if ($oParserState->getSettings()->bLenientParsing) {
-                        return \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock::parse($oParserState);
+                        return DeclarationBlock::parse($oParserState);
                     } else {
-                        throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException("Unopened {", $oParserState->currentLine());
+                        throw new SourceException("Unopened {", $oParserState->currentLine());
                     }
                 } else {
                     return null;
                 }
             }
         } else {
-            return \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock::parse($oParserState, $oList);
+            return DeclarationBlock::parse($oParserState, $oList);
         }
     }
     /**
@@ -139,50 +139,50 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    private static function parseAtRule(\Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState $oParserState)
+    private static function parseAtRule(ParserState $oParserState)
     {
         $oParserState->consume('@');
         $sIdentifier = $oParserState->parseIdentifier();
         $iIdentifierLineNum = $oParserState->currentLine();
         $oParserState->consumeWhiteSpace();
         if ($sIdentifier === 'import') {
-            $oLocation = \Sensei\ThirdParty\Sabberworm\CSS\Value\URL::parse($oParserState);
+            $oLocation = URL::parse($oParserState);
             $oParserState->consumeWhiteSpace();
             $sMediaQuery = null;
             if (!$oParserState->comes(';')) {
-                $sMediaQuery = \trim($oParserState->consumeUntil([';', \Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState::EOF]));
+                $sMediaQuery = \trim($oParserState->consumeUntil([';', ParserState::EOF]));
             }
-            $oParserState->consumeUntil([';', \Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState::EOF], \true, \true);
-            return new \Sensei\ThirdParty\Sabberworm\CSS\Property\Import($oLocation, $sMediaQuery ?: null, $iIdentifierLineNum);
+            $oParserState->consumeUntil([';', ParserState::EOF], \true, \true);
+            return new Import($oLocation, $sMediaQuery ?: null, $iIdentifierLineNum);
         } elseif ($sIdentifier === 'charset') {
-            $sCharset = \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString::parse($oParserState);
+            $sCharset = CSSString::parse($oParserState);
             $oParserState->consumeWhiteSpace();
-            $oParserState->consumeUntil([';', \Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState::EOF], \true, \true);
-            return new \Sensei\ThirdParty\Sabberworm\CSS\Property\Charset($sCharset, $iIdentifierLineNum);
+            $oParserState->consumeUntil([';', ParserState::EOF], \true, \true);
+            return new Charset($sCharset, $iIdentifierLineNum);
         } elseif (self::identifierIs($sIdentifier, 'keyframes')) {
-            $oResult = new \Sensei\ThirdParty\Sabberworm\CSS\CSSList\KeyFrame($iIdentifierLineNum);
+            $oResult = new KeyFrame($iIdentifierLineNum);
             $oResult->setVendorKeyFrame($sIdentifier);
             $oResult->setAnimationName(\trim($oParserState->consumeUntil('{', \false, \true)));
-            \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList::parseList($oParserState, $oResult);
+            CSSList::parseList($oParserState, $oResult);
             if ($oParserState->comes('}')) {
                 $oParserState->consume('}');
             }
             return $oResult;
         } elseif ($sIdentifier === 'namespace') {
             $sPrefix = null;
-            $mUrl = \Sensei\ThirdParty\Sabberworm\CSS\Value\Value::parsePrimitiveValue($oParserState);
+            $mUrl = Value::parsePrimitiveValue($oParserState);
             if (!$oParserState->comes(';')) {
                 $sPrefix = $mUrl;
-                $mUrl = \Sensei\ThirdParty\Sabberworm\CSS\Value\Value::parsePrimitiveValue($oParserState);
+                $mUrl = Value::parsePrimitiveValue($oParserState);
             }
-            $oParserState->consumeUntil([';', \Sensei\ThirdParty\Sabberworm\CSS\Parsing\ParserState::EOF], \true, \true);
+            $oParserState->consumeUntil([';', ParserState::EOF], \true, \true);
             if ($sPrefix !== null && !\is_string($sPrefix)) {
-                throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException('Wrong namespace prefix', $sPrefix, 'custom', $iIdentifierLineNum);
+                throw new UnexpectedTokenException('Wrong namespace prefix', $sPrefix, 'custom', $iIdentifierLineNum);
             }
-            if (!($mUrl instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\CSSString || $mUrl instanceof \Sensei\ThirdParty\Sabberworm\CSS\Value\URL)) {
-                throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException('Wrong namespace url of invalid type', $mUrl, 'custom', $iIdentifierLineNum);
+            if (!($mUrl instanceof CSSString || $mUrl instanceof URL)) {
+                throw new UnexpectedTokenException('Wrong namespace url of invalid type', $mUrl, 'custom', $iIdentifierLineNum);
             }
-            return new \Sensei\ThirdParty\Sabberworm\CSS\Property\CSSNamespace($mUrl, $sPrefix, $iIdentifierLineNum);
+            return new CSSNamespace($mUrl, $sPrefix, $iIdentifierLineNum);
         } else {
             // Unknown other at rule (font-face or such)
             $sArgs = \trim($oParserState->consumeUntil('{', \false, \true));
@@ -190,22 +190,22 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
                 if ($oParserState->getSettings()->bLenientParsing) {
                     return null;
                 } else {
-                    throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\SourceException("Unmatched brace count in media query", $oParserState->currentLine());
+                    throw new SourceException("Unmatched brace count in media query", $oParserState->currentLine());
                 }
             }
             $bUseRuleSet = \true;
-            foreach (\explode('/', \Sensei\ThirdParty\Sabberworm\CSS\Property\AtRule::BLOCK_RULES) as $sBlockRuleName) {
+            foreach (\explode('/', AtRule::BLOCK_RULES) as $sBlockRuleName) {
                 if (self::identifierIs($sIdentifier, $sBlockRuleName)) {
                     $bUseRuleSet = \false;
                     break;
                 }
             }
             if ($bUseRuleSet) {
-                $oAtRule = new \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\AtRuleSet($sIdentifier, $sArgs, $iIdentifierLineNum);
-                \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\RuleSet::parseRuleSet($oParserState, $oAtRule);
+                $oAtRule = new AtRuleSet($sIdentifier, $sArgs, $iIdentifierLineNum);
+                RuleSet::parseRuleSet($oParserState, $oAtRule);
             } else {
-                $oAtRule = new \Sensei\ThirdParty\Sabberworm\CSS\CSSList\AtRuleBlockList($sIdentifier, $sArgs, $iIdentifierLineNum);
-                \Sensei\ThirdParty\Sabberworm\CSS\CSSList\CSSList::parseList($oParserState, $oAtRule);
+                $oAtRule = new AtRuleBlockList($sIdentifier, $sArgs, $iIdentifierLineNum);
+                CSSList::parseList($oParserState, $oAtRule);
                 if ($oParserState->comes('}')) {
                     $oParserState->consume('}');
                 }
@@ -328,22 +328,22 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      */
     public function removeDeclarationBlockBySelector($mSelector, $bRemoveAll = \false)
     {
-        if ($mSelector instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock) {
+        if ($mSelector instanceof DeclarationBlock) {
             $mSelector = $mSelector->getSelectors();
         }
         if (!\is_array($mSelector)) {
             $mSelector = \explode(',', $mSelector);
         }
         foreach ($mSelector as $iKey => &$mSel) {
-            if (!$mSel instanceof \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector) {
-                if (!\Sensei\ThirdParty\Sabberworm\CSS\Property\Selector::isValid($mSel)) {
-                    throw new \Sensei\ThirdParty\Sabberworm\CSS\Parsing\UnexpectedTokenException("Selector did not match '" . \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector::SELECTOR_VALIDATION_RX . "'.", $mSel, "custom");
+            if (!$mSel instanceof Selector) {
+                if (!Selector::isValid($mSel)) {
+                    throw new UnexpectedTokenException("Selector did not match '" . Selector::SELECTOR_VALIDATION_RX . "'.", $mSel, "custom");
                 }
-                $mSel = new \Sensei\ThirdParty\Sabberworm\CSS\Property\Selector($mSel);
+                $mSel = new Selector($mSel);
             }
         }
         foreach ($this->aContents as $iKey => $mItem) {
-            if (!$mItem instanceof \Sensei\ThirdParty\Sabberworm\CSS\RuleSet\DeclarationBlock) {
+            if (!$mItem instanceof DeclarationBlock) {
                 continue;
             }
             if ($mItem->getSelectors() == $mSelector) {
@@ -359,12 +359,12 @@ abstract class CSSList implements \Sensei\ThirdParty\Sabberworm\CSS\Renderable, 
      */
     public function __toString()
     {
-        return $this->render(new \Sensei\ThirdParty\Sabberworm\CSS\OutputFormat());
+        return $this->render(new OutputFormat());
     }
     /**
      * @return string
      */
-    public function render(\Sensei\ThirdParty\Sabberworm\CSS\OutputFormat $oOutputFormat)
+    public function render(OutputFormat $oOutputFormat)
     {
         $sResult = '';
         $bIsFirst = \true;

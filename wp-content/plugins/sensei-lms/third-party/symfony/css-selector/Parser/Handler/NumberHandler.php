@@ -24,23 +24,23 @@ use Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class NumberHandler implements \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Handler\HandlerInterface
+class NumberHandler implements HandlerInterface
 {
     private $patterns;
-    public function __construct(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerPatterns $patterns)
+    public function __construct(TokenizerPatterns $patterns)
     {
         $this->patterns = $patterns;
     }
     /**
      * {@inheritdoc}
      */
-    public function handle(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Reader $reader, \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\TokenStream $stream) : bool
+    public function handle(Reader $reader, TokenStream $stream) : bool
     {
         $match = $reader->findPattern($this->patterns->getNumberPattern());
         if (!$match) {
             return \false;
         }
-        $stream->push(new \Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token(\Sensei\ThirdParty\Symfony\Component\CssSelector\Parser\Token::TYPE_NUMBER, $match[0], $reader->getPosition()));
+        $stream->push(new Token(Token::TYPE_NUMBER, $match[0], $reader->getPosition()));
         $reader->moveForward(\strlen($match[0]));
         return \true;
     }
