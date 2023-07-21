@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6eab9727f53200a7246e87f496849472
+class ComposerStaticInit794fbd7b50a02bae2504ba6d3653a205
 {
     public static $files = array (
         '3773ef3f09c37da5478d578e32b03a4b' => __DIR__ . '/..' . '/automattic/jetpack-assets/actions.php',
@@ -276,6 +276,7 @@ class ComposerStaticInit6eab9727f53200a7246e87f496849472
         'WCPay\\MultiCurrency\\FrontendCurrencies' => __DIR__ . '/../..' . '/includes/multi-currency/FrontendCurrencies.php',
         'WCPay\\MultiCurrency\\FrontendPrices' => __DIR__ . '/../..' . '/includes/multi-currency/FrontendPrices.php',
         'WCPay\\MultiCurrency\\Geolocation' => __DIR__ . '/../..' . '/includes/multi-currency/Geolocation.php',
+        'WCPay\\MultiCurrency\\Helpers\\OrderMetaHelper' => __DIR__ . '/../..' . '/includes/multi-currency/Helpers/OrderMetaHelper.php',
         'WCPay\\MultiCurrency\\MultiCurrency' => __DIR__ . '/../..' . '/includes/multi-currency/MultiCurrency.php',
         'WCPay\\MultiCurrency\\Notes\\NoteMultiCurrencyAvailable' => __DIR__ . '/../..' . '/includes/multi-currency/Notes/NoteMultiCurrencyAvailable.php',
         'WCPay\\MultiCurrency\\PaymentMethodsCompatibility' => __DIR__ . '/../..' . '/includes/multi-currency/PaymentMethodsCompatibility.php',
@@ -291,9 +292,9 @@ class ComposerStaticInit6eab9727f53200a7246e87f496849472
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6eab9727f53200a7246e87f496849472::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6eab9727f53200a7246e87f496849472::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6eab9727f53200a7246e87f496849472::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit794fbd7b50a02bae2504ba6d3653a205::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit794fbd7b50a02bae2504ba6d3653a205::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit794fbd7b50a02bae2504ba6d3653a205::$classMap;
 
         }, null, ClassLoader::class);
     }

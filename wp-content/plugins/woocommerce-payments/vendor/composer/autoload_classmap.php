@@ -241,6 +241,7 @@ return array(
     'WCPay\\MultiCurrency\\FrontendCurrencies' => $baseDir . '/includes/multi-currency/FrontendCurrencies.php',
     'WCPay\\MultiCurrency\\FrontendPrices' => $baseDir . '/includes/multi-currency/FrontendPrices.php',
     'WCPay\\MultiCurrency\\Geolocation' => $baseDir . '/includes/multi-currency/Geolocation.php',
+    'WCPay\\MultiCurrency\\Helpers\\OrderMetaHelper' => $baseDir . '/includes/multi-currency/Helpers/OrderMetaHelper.php',
     'WCPay\\MultiCurrency\\MultiCurrency' => $baseDir . '/includes/multi-currency/MultiCurrency.php',
     'WCPay\\MultiCurrency\\Notes\\NoteMultiCurrencyAvailable' => $baseDir . '/includes/multi-currency/Notes/NoteMultiCurrencyAvailable.php',
     'WCPay\\MultiCurrency\\PaymentMethodsCompatibility' => $baseDir . '/includes/multi-currency/PaymentMethodsCompatibility.php',
