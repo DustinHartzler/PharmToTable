@@ -885,7 +885,7 @@ p.dpp a {
                                                          <div class="provider">
                                                             <div class="thumb">
                                                                <img width="150"
-                                                                  src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/jessica.jpg"
+                                                                  src="https://149363157.v2.pressablecdn.com/wp-content/themes/storefront-child-pharm/assets/img/testimonial-standard.png"
                                                                   alt="Testimonial-Image">
                                                             </div>
                                                             <div class="info">
@@ -912,7 +912,7 @@ p.dpp a {
                                                          </div>
                                                          <div class="provider">
                                                             <div class="thumb">
-                                                               <img src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/dpp/marilyn.jpg"
+                                                               <img src="https://149363157.v2.pressablecdn.com/wp-content/themes/storefront-child-pharm/assets/img/testimonial-standard.png"
                                                                   alt="Testimonial-Image">
                                                             </div>
                                                             <div class="info">
@@ -938,7 +938,7 @@ p.dpp a {
                                  <div class="noBorder radius0 bg bgCover vertical inner" data-v-10a911cc="">
                                     <div id="button-s3YlPBxxJz" class="c-button c-wrapper button-s3YlPBxxJz desktop-only" data-v-10a911cc="">
                                        <a href="https://pharmtotable.life/?add-to-cart=5724" target="" class="cbutton-s3YlPBxxJz noBorder radius0 btn-hp-25 button-vp-10" data-v-a552f962="">
-                                          <span class="main-heading-group" data-v-a552f962=""><span class="button-icon-start" data-v-a552f962=""></span><span class="main-heading-button" data-v-a552f962="">JOIN NOW</span><span class="button-icon-end" data-v-a552f962=""></span></span>
+                                          <span class="main-heading-group" data-v-a552f962=""><span class="button-icon-start" data-v-a552f962=""></span><span class="main-heading-button" data-v-a552f962="">JOIN NOW	</span><span class="button-icon-end" data-v-a552f962=""></span></span>
                                        </a>
                                     </div>
                                  </div>
