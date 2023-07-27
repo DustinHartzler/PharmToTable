@@ -140,6 +140,14 @@ h4.dpp {
 p.dpp a {
 	text-decoration: underline;
 }
+@media only screen and (max-width: 600px) {
+  p.dpp, ul.dpp {
+    width: 80%;
+  }
+  ul.dpp {
+	list-style-type: disc;
+}
+}
           /* ---- Section - Clone styles ----- */ 
          :root{--lato:Lato;--poppins:Poppins;--secondary:#188bf6;--black:#000000;--color-25iwhxm513:rgb(255, 255, 255);--color-5pnmsbujwr:rgba(0, 0, 0, 0.33);--color-sumnelv1oo:rgba(255, 255, 255, 0.88);--color-6wavtj1plu:rgb(45, 45, 45)}.hl_page-preview--content .section-2PSFRFO2B8{font-family:var(--contentfont);background-color:var(--color-25iwhxm513);border-color:var(--color-5pnmsbujwr);border-width:3px;padding:100px 45px;border-style:solid}.hl_page-preview--content .row-BKIGAGIEB4{background-color:var(--color-sumnelv1oo);border-width:3px;border-style:solid;padding:45px 0 30px;width:54%}.hl_page-preview--content .col-2PGR1U0G1K{width:100%}.hl_page-preview--content .col-2PGR1U0G1K .inner{border-style:solid;padding-right:0;border-width:3px;padding-left:0;width:100%}.hl_page-preview--content .image-STSOD4ICQF{margin-top:0;text-align:center}.hl_page-preview--content .cimage-STSOD4ICQF{font-family:var(--contentfont);margin-top:0;link-text-color:var(--secondary);icon-color:var(--black);italic-text-color:var(--black);color:var(--black);underline-text-color:var(--black);bold-text-color:var(--black);text-align:center}.hl_page-preview--content .image-EPLMAW1987{text-align:center;margin-top:0}.hl_page-preview--content .cimage-EPLMAW1987{font-family:var(--contentfont);link-text-color:var(--secondary);color:var(--black);bold-text-color:var(--black);margin-top:0;italic-text-color:var(--black);text-align:center;icon-color:var(--black);underline-text-color:var(--black);padding-top:17px;padding-bottom:26px}.hl_page-preview--content .sub-heading-GeqGsdIgCL{text-align:center;margin-top:0}.hl_page-preview--content .csub-heading-GeqGsdIgCL{font-family:var(--poppins);text-align:center;line-height:normal;color:var(--color-6wavtj1plu);icon-color:var(--color-6wavtj1plu);text-shadow:0 0 0 transparent}.hl_page-preview--content .row-HIPP6R2O77{border-style:solid;border-width:3px;padding:20px 10px;width:100%}.hl_page-preview--content .col-81YWIGV39C{width:100%}.hl_page-preview--content .col-81YWIGV39C .inner{width:100%;border-width:3px;border-style:solid;padding:0 10px}#section-2PSFRFO2B8>.inner{max-width:1170px}@media only screen and (min-width:768px){#col-2PGR1U0G1K>.inner{flex-direction:column;justify-content:inherit;align-items:inherit;flex-wrap:nowrap}}.sub-heading-GeqGsdIgCL{font-weight:400}.sub-heading-GeqGsdIgCL strong{font-weight:700}.sub-heading-GeqGsdIgCL em,.sub-heading-GeqGsdIgCL strong,.sub-heading-GeqGsdIgCL u{color:var(--color-6wavtj1plu)!important}.sub-heading-GeqGsdIgCL a,.sub-heading-GeqGsdIgCL a *{color:var(--secondary)!important;text-decoration:none}.sub-heading-GeqGsdIgCL a:hover{text-decoration:underline}@media screen and (min-width:0px) and (max-width:480px){.sub-heading-GeqGsdIgCL h1,.sub-heading-GeqGsdIgCL h2,.sub-heading-GeqGsdIgCL h3,.sub-heading-GeqGsdIgCL h4,.sub-heading-GeqGsdIgCL h5,.sub-heading-GeqGsdIgCL h6,.sub-heading-GeqGsdIgCL ul li,.sub-heading-GeqGsdIgCL.text-output{font-size:22px!important}}@media screen and (min-width:481px) and (max-width:10000px){.sub-heading-GeqGsdIgCL h1,.sub-heading-GeqGsdIgCL h2,.sub-heading-GeqGsdIgCL h3,.sub-heading-GeqGsdIgCL h4,.sub-heading-GeqGsdIgCL h5,.sub-heading-GeqGsdIgCL h6,.sub-heading-GeqGsdIgCL ul li,.sub-heading-GeqGsdIgCL.text-output{font-size:22px!important}}.sub-heading-GeqGsdIgCL.text-output h1:first-child:before,.sub-heading-GeqGsdIgCL.text-output h2:first-child:before,.sub-heading-GeqGsdIgCL.text-output h3:first-child:before,.sub-heading-GeqGsdIgCL.text-output h4:first-child:before,.sub-heading-GeqGsdIgCL.text-output h5:first-child:before,.sub-heading-GeqGsdIgCL.text-output h6:first-child:before,.sub-heading-GeqGsdIgCL.text-output p:first-child:before{color:var(--color-6wavtj1plu);content:'\';
              font-family: '';margin-right:5px;font-weight:700}@media only screen and (min-width:768px){#col-81YWIGV39C>.inner{flex-direction:column;justify-content:inherit;align-items:inherit;flex-wrap:nowrap}} 
@@ -439,6 +447,15 @@ p.dpp a {
                                           </div>
                                        </div>
                                     </div>
+									<div id="col-K-m6mxZTlZ" class="c-column c-wrapper col-K-m6mxZTlZ" data-v-10a911cc="">
+										<div class="none noBorder radius0 none bg bgCover vertical inner" data-v-10a911cc="">
+											<div id="button-b8ZVRw4RsV" class="c-button c-wrapper button-b8ZVRw4RsV" data-v-10a911cc="">
+											<a href="https://pharmtotable.life/?add-to-cart=5724" target="" class="cbutton-b8ZVRw4RsV noBorder radius0 btn-hp-25 button-vp-10" data-v-a552f962="">
+												<span class="main-heading-group" data-v-a552f962=""><span class="button-icon-start" data-v-a552f962=""></span><span class="main-heading-button" data-v-a552f962="">ENROLL NOW</span><span class="button-icon-end" data-v-a552f962=""></span></span>
+											</a>
+											</div>
+										</div>
+									</div>
                                  </div>
                               </div>
                            </div>
