@@ -293,7 +293,7 @@ add_action( 'init', 'provider_metaboxes', 0 );
 # Featured Images in Post List
 #-----------------------------------------------------------------
 add_image_size( 'admin-list-thumb', 80, 80, true );
-add_filter('manage_post_posts_columns', 'new_add_post_thumbnail_column', 7);
+//add_filter('manage_post_posts_columns', 'new_add_post_thumbnail_column', 7);
 add_filter('manage_provider_posts_columns', 'new_add_post_thumbnail_column', 7);
 
 function new_add_post_thumbnail_column($cols){
