@@ -187,15 +187,16 @@
                     <div class="col-md-4 col-sm-6 equal-height">
                         <div class="item">
                             <div class="thumb">
-                                <?php the_post_thumbnail( array( 360, 360 ) ); ?>
+                                <?php the_post_thumbnail( array( 360, 240 ) ); ?>
                                 <div class="overlay">
-                                    <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>"><i class="fas fa-plus"></i></a>
+                                    <a href="<?php the_permalink(); ?>"><i class="fas fa-plus"></i></a>
                                 </div>
                             </div>
                             <div class="info">
                                 <h4><?php the_title();?></h4>
                                 <div class="appoinment-btn">
-                                    <a href="<?php echo esc_url( get_the_permalink( $post_id ) );?>">View Episode</a>
+									<?php $episode = get_post_meta( $post->ID, 'itunes_episode_number', true ); ?>
+                                    <a href="<?php the_permalink(); ?>">View Episode - <?php echo esc_attr( $episode ); ?></a>
                                 </div>
                             </div>
                         </div>

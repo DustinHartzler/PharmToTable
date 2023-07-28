@@ -207,10 +207,12 @@
 		style="background-image: url(assets/img/2440x1578.png);">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-8">
+					<?php $episode = get_post_meta( $post->ID, 'itunes_episode_number', true ); ?>
 					<h1><?php the_title(); ?></h1>
+					<h2 style="font-family:'silver_south_scriptregular'; font-size:50px; padding-top:0;">Episode <?php echo esc_attr( $episode ); ?></h2>
 				</div>
-				<div class="col-md-6 text-right">
+				<div class="col-md-4 text-right">
 					<ul class="breadcrumb">
 						<li><a href="https://pharmtotable.life"><i class="fas fa-home"></i> Home</a></li>
 						<li class="active">Table Talk Podcast</li>
