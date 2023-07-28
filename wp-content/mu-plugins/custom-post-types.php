@@ -300,7 +300,7 @@ function new_add_post_thumbnail_column($cols){
 $cols['new_post_thumb'] = __('Image');
 return $cols;
 }
-add_action('manage_post_posts_custom_column', 'new_display_post_thumbnail_column', 5, 2);
+//add_action('manage_post_posts_custom_column', 'new_display_post_thumbnail_column', 5, 2);
 add_action('manage_provider_posts_custom_column', 'new_display_post_thumbnail_column', 5, 2);
 
 function new_display_post_thumbnail_column($col, $id){
