@@ -255,7 +255,7 @@
                     <div class="col-md-4 col-sm-6 equal-height">
                         <div class="item">
                             <div class="thumb">
-                                <?php the_post_thumbnail( array( 360, 360 ) ); ?>
+                                <?php the_post_thumbnail( array( 400, 400 ) ); ?>
                                 <div class="overlay">
                                     <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>"><i class="fas fa-plus"></i></a>
                                 </div>
@@ -362,7 +362,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>&copy; Copyright 2020. All Rights Reserved by <a href="https://pharmtotable.life">PharmToTable</a></p>
+                        <p>&copy; Copyright 2023. All Rights Reserved by <a href="https://pharmtotable.life">PharmToTable</a></p>
                     </div>
                     <div class="col-md-6 text-right link">
                         <ul>
