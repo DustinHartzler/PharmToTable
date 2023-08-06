@@ -32,8 +32,8 @@
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/product-fgfunnels.css" rel="stylesheet" type="text/css">
     
     
-      <meta name="title" content="PharmToTable 14-Day Reset">
-      <meta property="og:title" content="PharmToTable 14-Day Reset">
+      <meta name="title" content="PharmToTable Thrive">
+      <meta property="og:title" content="PharmToTable Thrive">
       <meta name="author" content="PharmToTable">
       <meta property="og:author" content="PharmToTable">
       <meta name="image" content="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/reset/Add-a-heading-3-.png">
