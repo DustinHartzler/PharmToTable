@@ -149,6 +149,10 @@ class Printful_Admin_Dashboard {
 	 */
 	public static function render_stats_ajax() {
 
+		Printful_Admin::validateAdminAccess();
+
+        check_admin_referer( 'get_printful_stats' );
+
 		$stats = self::instance()->_get_stats();
 
 		if ( ! empty( $stats ) && ! is_wp_error( $stats ) ) {
@@ -164,6 +168,10 @@ class Printful_Admin_Dashboard {
 	 * Ajax response for stats block
 	 */
 	public static function render_orders_ajax() {
+
+		Printful_Admin::validateAdminAccess();
+
+        check_admin_referer( 'get_printful_orders' );
 
 		$orders = self::instance()->_get_orders();
 

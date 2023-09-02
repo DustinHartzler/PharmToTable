@@ -39,7 +39,7 @@
 
         <script type="text/javascript">
             jQuery(document).ready(function () {
-                Printful_Connect.init('<?php echo esc_url( admin_url( 'admin-ajax.php?action=ajax_force_check_connect_status' ) ); ?>');
+                Printful_Connect.init('<?php echo esc_url( admin_url( 'admin-ajax.php?action=ajax_force_check_connect_status' ) ) . '&_wpnonce=' . wp_create_nonce( 'check_connect_status' ); ?>');
             });
         </script>
     </div>

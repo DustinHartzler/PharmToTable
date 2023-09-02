@@ -45,6 +45,10 @@ class Printful_Admin_Support {
 	 */
 	public static function render_status_report_ajax() {
 
+		Printful_Admin::validateAdminAccess();
+
+        check_admin_referer( 'get_printful_status_report' );
+
 		$status_report = self::instance()->generate_report();
 		Printful_Admin::load_template( 'status-report', array( 'status_report' => $status_report ) );
 

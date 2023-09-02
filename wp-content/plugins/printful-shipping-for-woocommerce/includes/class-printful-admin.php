@@ -169,4 +169,10 @@ class Printful_Admin {
 		}
 	}
 
+    public static function validateAdminAccess() {
+        if ( !current_user_can('manage_options') ) {
+            exit;
+        }
+    }
+
 }

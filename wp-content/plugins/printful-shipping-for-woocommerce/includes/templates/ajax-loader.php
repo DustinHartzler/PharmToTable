@@ -6,6 +6,6 @@
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        Printful_Block_Loader.load('<?php echo esc_url(admin_url( 'admin-ajax.php?action=' . $action )); ?>', 'loader-block-<?php echo esc_attr($action); ?>');
+        Printful_Block_Loader.load('<?php echo esc_url(admin_url( 'admin-ajax.php?action=' . $action )) . '&_wpnonce=' . wp_create_nonce($action); ?>', 'loader-block-<?php echo esc_attr($action); ?>');
     });
 </script>

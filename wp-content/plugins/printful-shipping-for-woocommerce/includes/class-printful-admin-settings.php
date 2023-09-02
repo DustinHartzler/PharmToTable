@@ -172,7 +172,7 @@ class Printful_Admin_Settings {
 
 		Printful_Admin::load_template( 'header', array( 'tabs' => Printful_Admin::get_tabs() ) );
 
-		echo '<form method="post" name="printful_settings" action="' . esc_url( admin_url( 'admin-ajax.php?action=save_printful_settings' ) ) . '">';
+		echo '<form method="post" name="printful_settings" action="' . esc_url( admin_url( 'admin-ajax.php?action=save_printful_settings' ) ) . '&_wpnonce=' . wp_create_nonce( 'printful_settings' ) . '">';
 
 		Printful_Admin::load_template('reconnect', ['reconnect_url' => Printful_Admin_Dashboard::instance()->get_connect_url()]);
 
@@ -210,6 +210,9 @@ class Printful_Admin_Settings {
      */
 	public static function render_carriers_ajax() {
 
+		Printful_Admin::validateAdminAccess();
+
+        check_admin_referer( 'get_printful_carriers' );
 		$carrier_settings = self::instance()->setup_carrier_fields();
 		Printful_Admin::load_template( 'setting-group', $carrier_settings );
 		$enable_submit = 'Printful_Settings.enable_submit_btn();';
@@ -322,6 +325,8 @@ class Printful_Admin_Settings {
      * @throws PrintfulException
      */
 	public static function save_printful_settings() {
+
+		Printful_Admin::validateAdminAccess();
 
 		if ( ! empty( $_POST ) ) {
 
