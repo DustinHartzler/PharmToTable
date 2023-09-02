@@ -175,7 +175,7 @@ class License_Manager {
 	 * @return string
 	 */
 	private static function get_domain() {
-		$site_url = is_multisite() ? network_site_url() : site_url();
+		$site_url = network_site_url();
 		$urlparts = wp_parse_url( $site_url );
 		$domain   = $urlparts['host'];
 

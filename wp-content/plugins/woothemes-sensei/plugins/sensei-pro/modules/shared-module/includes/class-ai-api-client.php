@@ -138,7 +138,7 @@ class AI_API_Client {
 		return [
 			'license_type' => 'senseilmscom',
 			'license_key'  => $license['license_key'],
-			'site_url'     => get_site_url(),
+			'site_url'     => network_site_url(),
 		];
 	}
 

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit50c32885f6c5ed40ae9661d67037ef70
+class ComposerStaticInited343600d8d294b6aa695459c0616659
 {
     public static $files = array (
         '7e03bc80976ad8e42da9beffeb3edb01' => __DIR__ . '/../..' . '/includes/sensei-functions.php',
@@ -71,30 +71,52 @@ class ComposerStaticInit50c32885f6c5ed40ae9661d67037ef70
         'Sensei\\Internal\\Emails\\Generators\\Teacher_Message_Reply' => __DIR__ . '/../..' . '/includes/internal/emails/generators/class-teacher-message-reply.php',
         'Sensei\\Internal\\Emails\\Recreate_Emails_Tool' => __DIR__ . '/../..' . '/includes/internal/emails/class-recreate-emails-tool.php',
         'Sensei\\Internal\\Emails\\Settings_Menu' => __DIR__ . '/../..' . '/includes/internal/emails/class-settings-menu.php',
+        'Sensei\\Internal\\Installer\\Installer' => __DIR__ . '/../..' . '/includes/internal/installer/class-installer.php',
+        'Sensei\\Internal\\Installer\\Migration' => __DIR__ . '/../..' . '/includes/internal/installer/class-migration.php',
+        'Sensei\\Internal\\Installer\\Migrations\\Student_Progress_Migration' => __DIR__ . '/../..' . '/includes/internal/installer/migrations/class-student-progress-migration.php',
+        'Sensei\\Internal\\Installer\\Schema' => __DIR__ . '/../..' . '/includes/internal/installer/class-schema.php',
+        'Sensei\\Internal\\Installer\\Updates_Factory' => __DIR__ . '/../..' . '/includes/internal/installer/class-updates-factory.php',
         'Sensei\\Internal\\Quiz_Submission\\Answer\\Models\\Answer' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/answer/models/class-answer.php',
+        'Sensei\\Internal\\Quiz_Submission\\Answer\\Repositories\\Aggregate_Answer_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/answer/repositories/class-aggregate-answer-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Answer\\Repositories\\Answer_Repository_Factory' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/answer/repositories/class-answer-repository-factory.php',
         'Sensei\\Internal\\Quiz_Submission\\Answer\\Repositories\\Answer_Repository_Interface' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/answer/repositories/class-answer-repository-interface.php',
         'Sensei\\Internal\\Quiz_Submission\\Answer\\Repositories\\Comments_Based_Answer_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/answer/repositories/class-comments-based-answer-repository.php',
+        'Sensei\\Internal\\Quiz_Submission\\Answer\\Repositories\\Tables_Based_Answer_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/answer/repositories/class-tables-based-answer-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Grade\\Models\\Grade' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/grade/models/class-grade.php',
+        'Sensei\\Internal\\Quiz_Submission\\Grade\\Repositories\\Aggregate_Grade_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/grade/repositories/class-aggregate-grade-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Grade\\Repositories\\Comments_Based_Grade_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/grade/repositories/class-comments-based-grade-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Grade\\Repositories\\Grade_Repository_Factory' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/grade/repositories/class-grade-repository-factory.php',
         'Sensei\\Internal\\Quiz_Submission\\Grade\\Repositories\\Grade_Repository_Interface' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/grade/repositories/class-grade-repository-interface.php',
+        'Sensei\\Internal\\Quiz_Submission\\Grade\\Repositories\\Tables_Based_Grade_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/grade/repositories/class-tables-based-grade-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Submission\\Models\\Submission' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/submission/models/class-submission.php',
+        'Sensei\\Internal\\Quiz_Submission\\Submission\\Repositories\\Aggregate_Submission_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/submission/repositories/class-aggregate-submission-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Submission\\Repositories\\Comments_Based_Submission_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/submission/repositories/class-comments-based-submission-repository.php',
         'Sensei\\Internal\\Quiz_Submission\\Submission\\Repositories\\Submission_Repository_Factory' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/submission/repositories/class-submission-repository-factory.php',
         'Sensei\\Internal\\Quiz_Submission\\Submission\\Repositories\\Submission_Repository_Interface' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/submission/repositories/class-submission-repository-interface.php',
+        'Sensei\\Internal\\Quiz_Submission\\Submission\\Repositories\\Tables_Based_Submission_Repository' => __DIR__ . '/../..' . '/includes/internal/quiz-submission/submission/repositories/class-tables-based-submission-repository.php',
         'Sensei\\Internal\\Student_Progress\\Course_Progress\\Models\\Course_Progress' => __DIR__ . '/../..' . '/includes/internal/student-progress/course-progress/models/class-course-progress.php',
+        'Sensei\\Internal\\Student_Progress\\Course_Progress\\Repositories\\Aggregate_Course_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/course-progress/repositories/class-aggregate-course-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Course_Progress\\Repositories\\Comments_Based_Course_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/course-progress/repositories/class-comments-based-course-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Course_Progress\\Repositories\\Course_Progress_Repository_Factory' => __DIR__ . '/../..' . '/includes/internal/student-progress/course-progress/repositories/class-course-progress-repository-factory.php',
         'Sensei\\Internal\\Student_Progress\\Course_Progress\\Repositories\\Course_Progress_Repository_Interface' => __DIR__ . '/../..' . '/includes/internal/student-progress/course-progress/repositories/class-course-progress-repository-interface.php',
+        'Sensei\\Internal\\Student_Progress\\Course_Progress\\Repositories\\Tables_Based_Course_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/course-progress/repositories/class-tables-based-course-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Lesson_Progress\\Models\\Lesson_Progress' => __DIR__ . '/../..' . '/includes/internal/student-progress/lesson-progress/models/class-lesson-progress.php',
+        'Sensei\\Internal\\Student_Progress\\Lesson_Progress\\Repositories\\Aggregate_Lesson_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/lesson-progress/repositories/class-aggregate-lesson-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Lesson_Progress\\Repositories\\Comments_Based_Lesson_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/lesson-progress/repositories/class-comments-based-lesson-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Lesson_Progress\\Repositories\\Lesson_Progress_Repository_Factory' => __DIR__ . '/../..' . '/includes/internal/student-progress/lesson-progress/repositories/class-lesson-progress-repository-factory.php',
         'Sensei\\Internal\\Student_Progress\\Lesson_Progress\\Repositories\\Lesson_Progress_Repository_Interface' => __DIR__ . '/../..' . '/includes/internal/student-progress/lesson-progress/repositories/class-lesson-progress-repository-interface.php',
+        'Sensei\\Internal\\Student_Progress\\Lesson_Progress\\Repositories\\Tables_Based_Lesson_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/lesson-progress/repositories/class-tables-based-lesson-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Quiz_Progress\\Models\\Quiz_Progress' => __DIR__ . '/../..' . '/includes/internal/student-progress/quiz-progress/models/class-quiz-progress.php',
+        'Sensei\\Internal\\Student_Progress\\Quiz_Progress\\Repositories\\Aggregate_Quiz_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/quiz-progress/repositories/class-aggregate-quiz-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Quiz_Progress\\Repositories\\Comments_Based_Quiz_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/quiz-progress/repositories/class-comments-based-quiz-progress-repository.php',
         'Sensei\\Internal\\Student_Progress\\Quiz_Progress\\Repositories\\Quiz_Progress_Repository_Factory' => __DIR__ . '/../..' . '/includes/internal/student-progress/quiz-progress/repositories/class-quiz-progress-repository-factory.php',
         'Sensei\\Internal\\Student_Progress\\Quiz_Progress\\Repositories\\Quiz_Progress_Repository_Interface' => __DIR__ . '/../..' . '/includes/internal/student-progress/quiz-progress/repositories/class-quiz-progress-repository-interface.php',
+        'Sensei\\Internal\\Student_Progress\\Quiz_Progress\\Repositories\\Tables_Based_Quiz_Progress_Repository' => __DIR__ . '/../..' . '/includes/internal/student-progress/quiz-progress/repositories/class-tables-based-quiz-progress-repository.php',
+        'Sensei\\Internal\\Student_Progress\\Services\\Course_Deleted_Handler' => __DIR__ . '/../..' . '/includes/internal/student-progress/services/class-course-deleted-handler.php',
+        'Sensei\\Internal\\Student_Progress\\Services\\Lesson_Deleted_Handler' => __DIR__ . '/../..' . '/includes/internal/student-progress/services/class-lesson-deleted-handler.php',
+        'Sensei\\Internal\\Student_Progress\\Services\\Quiz_Deleted_Handler' => __DIR__ . '/../..' . '/includes/internal/student-progress/services/class-quiz-deleted-handler.php',
+        'Sensei\\Internal\\Student_Progress\\Services\\User_Deleted_Handler' => __DIR__ . '/../..' . '/includes/internal/student-progress/services/class-user-deleted-handler.php',
+        'Sensei\\Internal\\Student_Progress\\Tools\\Migration_Tool' => __DIR__ . '/../..' . '/includes/internal/student-progress/tools/class-migration-tool.php',
         'Sensei\\ThirdParty\\Pelago\\Emogrifier\\Caching\\SimpleStringCache' => __DIR__ . '/../..' . '/third-party/pelago/emogrifier/src/Caching/SimpleStringCache.php',
         'Sensei\\ThirdParty\\Pelago\\Emogrifier\\CssInliner' => __DIR__ . '/../..' . '/third-party/pelago/emogrifier/src/CssInliner.php',
         'Sensei\\ThirdParty\\Pelago\\Emogrifier\\Css\\CssDocument' => __DIR__ . '/../..' . '/third-party/pelago/emogrifier/src/Css/CssDocument.php',
@@ -515,7 +537,7 @@ class ComposerStaticInit50c32885f6c5ed40ae9661d67037ef70
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit50c32885f6c5ed40ae9661d67037ef70::$classMap;
+            $loader->classMap = ComposerStaticInited343600d8d294b6aa695459c0616659::$classMap;
 
         }, null, ClassLoader::class);
     }
