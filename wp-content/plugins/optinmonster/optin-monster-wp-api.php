@@ -5,7 +5,7 @@
  * Description: OptinMonster is the best WordPress popup builder plugin that helps you grow your email newsletter list and sales with email popups, exit intent popups, floating bars and more!
  * Author:      OptinMonster Popup Builder Team
  * Author URI:  https://optinmonster.com
- * Version:     2.13.5
+ * Version:     2.13.8
  * Text Domain: optin-monster-api
  * Domain Path: languages
  *
@@ -13,7 +13,9 @@
  * WC tested up to:      7.7
  * Requires at least:    4.7
  * Requires PHP:         5.3
- * Tested up to:         6.2
+ * Tested up to:         6.3
+ *
+ * @package OMAPI
  *
  * OptinMonster is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +50,7 @@ define( 'OMAPI_FILE', __FILE__ );
  * @package OMAPI
  * @author  Thomas Griffin
  */
+#[\AllowDynamicProperties]
 class OMAPI {
 
 	/**
@@ -66,7 +69,7 @@ class OMAPI {
 	 *
 	 * @var string
 	 */
-	public $version = '2.13.5';
+	public $version = '2.13.8';
 
 	/**
 	 * The name of the plugin.
@@ -150,6 +153,9 @@ class OMAPI {
 		// Load the plugin textdomain.
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
+		// Early action for WooCommerce compatibility.
+		add_action( 'before_woocommerce_init', 'OMAPI_WooCommerce::declare_hpos_compat' );
+
 		// Load the plugin widgets.
 		add_action( 'widgets_init', array( $this, 'widgets' ) );
 
@@ -177,6 +183,7 @@ class OMAPI {
 	 */
 	public function load_plugin_textdomain() {
 		$domain = 'optin-monster-api';
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
 		load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
@@ -366,6 +373,7 @@ class OMAPI {
 		$this->welcome       = new OMAPI_Welcome();
 		$this->promos        = new OMAPI_Promos();
 		$this->notifications = new OMAPI_Notifications();
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$this->classicEditor = new OMAPI_ClassicEditor();
 		$this->wordfence     = new OMAPI_Wordfence();
 
@@ -717,8 +725,11 @@ class OMAPI {
 	 * @param  mixed  $data Arbitrary data to be made available to the view file.
 	 *
 	 * @return void
+	 * phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	 */
 	public function output_view( $file, $data = array() ) {
+		// phpcs:enable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+
 		// Potentially use validate_file() (WP function) if we end up needing sub-directories later.
 		require dirname( $this->file ) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . basename( $file );
 	}
@@ -747,7 +758,7 @@ class OMAPI {
 	 * @param  string $file The view file.
 	 * @param  mixed  $data Arbitrary data to be made available to the view file.
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function get_min_css_view_contents( $file, $data = array() ) {
 		$contents = $this->get_view_contents( $file, $data );
@@ -765,7 +776,14 @@ class OMAPI {
 	 * @return void
 	 */
 	public function output_min_css( $file, $data = array() ) {
-		echo $this->get_min_css_view_contents( $file, $data );
+		echo wp_kses(
+			$this->get_min_css_view_contents( $file, $data ),
+			array(
+				'style' => array(
+					'type' => array(),
+				),
+			)
+		);
 	}
 
 	/**
@@ -846,6 +864,7 @@ class OMAPI {
 	public function has_rule_type( $rule_type ) {
 		$data = OMAPI_Api::fetch_me_cached();
 
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		return ! empty( $data->ruleTypes ) && in_array( $rule_type, (array) $data->ruleTypes, true );
 	}
 
@@ -941,16 +960,18 @@ class OMAPI {
 	 *
 	 * @since 2.10.0
 	 *
-	 * @param  strgin $page Page to check. Falls back to $_REQUEST['page'].
+	 * @param string $page Page to check. Falls back to $_REQUEST['page'].
 	 *
 	 * @return boolean Whether given (or current) page is an optinmonster admin page.
 	 */
 	public function is_om_page( $page = null ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( empty( $page ) && ! empty( $_REQUEST['page'] ) ) {
-			$page = $_REQUEST['page'];
+			$page = sanitize_key( wp_unslash( $_REQUEST['page'] ) );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		return ! empty( $page ) && preg_match( '/optin-monster-/', sanitize_key( $page ) );
+		return ! empty( $page ) && preg_match( '/optin-monster-/', $page );
 	}
 
 	/**
@@ -999,6 +1020,11 @@ class OMAPI {
 		}
 	}
 
+	/**
+	 * Checks PHP version.
+	 *
+	 * @return void
+	 */
 	public function check_php_version() {
 
 		// Display for PHP below 5.6.
@@ -1112,7 +1138,7 @@ class OMAPI {
 		}
 
 		if ( ! empty( $timestamp ) ) {
-			$version = date( $format, (int) $timestamp );
+			$version = gmdate( $format, (int) $timestamp );
 		}
 
 		return $version;
@@ -1179,7 +1205,7 @@ class OMAPI {
 	 *
 	 * @since 2.11.2
 	 *
-	 * @param  string $property
+	 * @param string $property The property to retrieve.
 	 *
 	 * @return mixed
 	 */
@@ -1208,7 +1234,15 @@ function optin_monster_api_activation_hook( $network_wide ) {
 	global $wp_version;
 	if ( version_compare( $wp_version, '4.7.0', '<' ) && ! defined( 'OPTINMONSTER_FORCE_ACTIVATION' ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-		wp_die( wp_kses_post( sprintf( __( 'Sorry, but your version of WordPress does not meet OptinMonster\'s required version of <strong>4.7.0</strong> to run properly. The plugin has been deactivated. <a href="%s">Click here to return to the Dashboard</a>.', 'optin-monster-api' ), esc_url( admin_url() ) ) ) );
+		wp_die(
+			wp_kses_post(
+				sprintf(
+					/* translators: %s) admin url */
+					__( 'Sorry, but your version of WordPress does not meet OptinMonster\'s required version of <strong>4.7.0</strong> to run properly. The plugin has been deactivated. <a href="%s">Click here to return to the Dashboard</a>.', 'optin-monster-api' ),
+					esc_url( admin_url() )
+				)
+			)
+		);
 	}
 
 	$instance = OMAPI::get_instance();
@@ -1317,7 +1351,7 @@ if ( ! function_exists( 'optin_monster_tag' ) ) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int  $string The post name of the optin to load.
+	 * @param int  $id     The post name of the optin to load.
 	 * @param bool $return Flag to echo or return the optin HTML.
 	 */
 	function optin_monster_tag( $id, $return = false ) {

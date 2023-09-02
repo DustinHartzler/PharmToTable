@@ -172,10 +172,18 @@ class OMAPI_Menu {
 		);
 		add_action( 'load-' . $hook, array( $this, 'redirect_to_dashboard' ) );
 
-		// Register link under the appearance menu for "Popup Builder".
 		global $submenu;
-		if ( current_user_can( $this->base->access_capability( self::SLUG ) ) && $submenu ) {
-			$submenu['themes.php'][] = array(
+
+		if ( $submenu ) {
+			// Register link under the "Dashboard" menu for "Marketing Education" which directs to the "University".
+			$submenu['index.php'][] = array(  // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+				esc_html__( 'Marketing Education', 'optin-monster-api' ),
+				$this->base->access_capability( self::SLUG ),
+				esc_url_raw( OMAPI_Urls::university() ),
+			);
+
+			// Register link under the appearance menu for "Popup Builder".
+			$submenu['themes.php'][] = array(  // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				esc_html__( 'Popup Builder', 'optin-monster-api' ),
 				$this->base->access_capability( self::SLUG ),
 				esc_url_raw( OMAPI_Urls::templates() ),
@@ -307,7 +315,7 @@ class OMAPI_Menu {
 	 * @return array The links array.
 	 */
 	public function maybe_add_upgrade_link( $links, $file ) {
-		if ( $file === plugin_basename( OMAPI_FILE ) ) {
+		if ( plugin_basename( OMAPI_FILE ) === $file ) {
 
 			// If user upgradeable or not registered yet, let's put an upgrade link.
 			if ( $this->base->can_show_upgrade() ) {
@@ -315,14 +323,14 @@ class OMAPI_Menu {
 					? __( 'Upgrade to Growth', 'optin-monster-api' )
 					: __( 'Upgrade to Pro', 'optin-monster-api' );
 
-				$upgradeLink = sprintf(
+				$upgrade_link = sprintf(
 					'<a class="om-plugin-upgrade-link" href="%s" aria-label="%s" target="_blank" rel="noopener">%s</a>',
 					esc_url_raw( OMAPI_Urls::upgrade( 'plugin_row_meta' ) ),
 					$label,
 					$label
 				);
 
-				array_splice( $links, 1, 0, array( $upgradeLink ) );
+				array_splice( $links, 1, 0, array( $upgrade_link ) );
 			}
 		}
 

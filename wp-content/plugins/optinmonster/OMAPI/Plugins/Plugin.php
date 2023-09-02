@@ -54,6 +54,9 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @param string        $plugin_id The plugin id.
 	 * @param OMAPI_Plugins $plugins   The Plugins object instance.
+	 *
+	 * @return void
+	 * @throws Exception When ID is not found in plugins data.
 	 */
 	protected function __construct( $plugin_id, OMAPI_Plugins $plugins ) {
 		$this->id = $plugin_id;
@@ -73,7 +76,7 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @since 2.10.0
 	 *
-	 * @param  string $id    The plugin ID.
+	 * @param string $id The plugin ID.
 	 *
 	 * @return OMAPI_Plugins_Plugin
 	 */
@@ -95,13 +98,11 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @since 2.10.0
 	 *
-	 * @param  boolean $include_status Whether to include plugin status (installed/activated).
-	 *
 	 * @return array plugin data.
 	 */
 	public function get_data() {
 		if ( ! isset( $this->plugin_data['status'] ) ) {
-			$this->add_status_data( $this->plugin_data );
+			$this->add_status_data();
 		}
 
 		return $this->plugin_data;
@@ -112,16 +113,18 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @since 2.10.0
 	 *
-	 * @return bool
+	 * @return self
 	 */
 	public function add_status_data() {
 		list( $installed, $active, $which ) = $this->exists_checks();
 
-		$this->plugin_data['status'] = $installed ?
-			$active ?
-				__( 'Active', 'optin-monster-api' ) :
-				__( 'Inactive', 'optin-monster-api' )
-			: __( 'Not Installed', 'optin-monster-api' );
+		$this->plugin_data['status'] = ! $installed
+			? __( 'Not Installed', 'optin-monster-api' )
+			: (
+				$active
+					? __( 'Active', 'optin-monster-api' )
+					: __( 'Inactive', 'optin-monster-api' )
+			);
 
 		$this->plugin_data['installed'] = $installed;
 		$this->plugin_data['active']    = $installed && $active;
@@ -135,9 +138,7 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @since 2.10.0
 	 *
-	 * @param  array $plugin Array of plugin data.
-	 *
-	 * @return bool
+	 * @return array
 	 */
 	protected function exists_checks() {
 
@@ -239,6 +240,7 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
 		return isset( $this->plugin_data[ $offset ] );
 	}
@@ -252,44 +254,44 @@ class OMAPI_Plugins_Plugin implements JsonSerializable, ArrayAccess {
 	 *
 	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return isset( $this->plugin_data[ $offset ] ) ? $this->plugin_data[ $offset ] : null;
 	}
 
 	/**
-	 * Assign a value to the specified offset (N/A)
+	 * Assign a value to the specified offset (N/A).
 	 *
 	 * @since 2.10.0
 	 *
-	 * @param  mixed $offset The offset to assign the value to. (N/A)
-	 * @param  mixed $value  The value to set. (N/A)
+	 * @param  mixed $offset The offset to assign the value to (N/A).
+	 * @param  mixed $value  The value to set (N/A).
 	 *
 	 * @return void
 	 */
-	public function offsetSet( $offset, $value ) {
-		return false;
-	}
+	#[\ReturnTypeWillChange]
+	public function offsetSet( $offset, $value ) {}
 
 	/**
 	 * Unset an offset
 	 *
 	 * @since 2.10.0
 	 *
-	 * @param  mixed $offset The offset to unset. (N/A)
+	 * @param  mixed $offset The offset to unset (N/A).
 	 *
 	 * @return void
 	 */
-	public function offsetUnset( $offset ) {
-		return false;
-	}
+	#[\ReturnTypeWillChange]
+	public function offsetUnset( $offset ) {}
 
 	/**
 	 * Specify data which should be serialized to JSON
 	 *
 	 * @since 2.10.0
 	 *
-	 * @return array
+	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->plugin_data;
 	}

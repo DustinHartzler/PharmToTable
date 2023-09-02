@@ -609,20 +609,20 @@ class OMAPI_WooCommerce extends OMAPI_Integrations_Base {
 	 * @return void
 	 */
 	public function maybe_store_revenue_attribution( $order_id = 0, $force = false ) {
+		// Grab the order. If we can't, return early.
+		$order = OMAPI_WooCommerce_Order::get( $order_id );
+		if ( ! $order->is() ) {
+			return;
+		}
+
 		// If we have already stored revenue attribution data before, return early.
-		$stored = get_post_meta( $order_id, '_om_revenue_attribution_complete', true );
+		$stored = $order->get_meta( '_om_revenue_attribution_complete' );
 		if ( $stored ) {
 			return;
 		}
 
-		// Grab the order. If we can't, return early.
-		$order = wc_get_order( $order_id );
-		if ( ! $order ) {
-			return;
-		}
-
 		// Grab some necessary data to send.
-		$data_on_order = get_post_meta( $order_id, '_om_revenue_attribution_data', true );
+		$data_on_order = $order->get_meta( '_om_revenue_attribution_data', true, 'edit' );
 		$data          = wp_parse_args(
 			array(
 				'transaction_id' => absint( $order_id ),
@@ -637,7 +637,7 @@ class OMAPI_WooCommerce extends OMAPI_Integrations_Base {
 		// instances, we need to store the data to be processed
 		// at a later time.
 		if ( ! $order->has_status( 'completed' ) && ! $force ) {
-			update_post_meta( $order_id, '_om_revenue_attribution_data', $data );
+			$order->update_meta_data( '_om_revenue_attribution_data', $data );
 			return;
 		}
 
@@ -649,7 +649,7 @@ class OMAPI_WooCommerce extends OMAPI_Integrations_Base {
 		}
 
 		// Update the payment meta for storing revenue attribution data.
-		update_post_meta( $order_id, '_om_revenue_attribution_complete', time() );
+		$order->update_meta_data( '_om_revenue_attribution_complete', time() );
 	}
 
 	/**
@@ -662,8 +662,12 @@ class OMAPI_WooCommerce extends OMAPI_Integrations_Base {
 	 * @param string $new_status The new order status.
 	 *
 	 * @return void
+	 *
+	 * phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 	 */
 	public function maybe_store_revenue_attribution_on_order_status_change( $order_id, $old_status, $new_status ) {
+		// phpcs:enable Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+
 		// If we don't have the proper new status, return early.
 		if ( 'completed' !== $new_status ) {
 			return;
@@ -736,7 +740,7 @@ class OMAPI_WooCommerce extends OMAPI_Integrations_Base {
 			$cart['cart_items'][ $key ] = array_merge( $item, $item_details );
 		}
 
-		// Save for later use if necessary
+		// Save for later use if necessary.
 		$this->cart = $cart;
 
 		// Send back a response.
@@ -764,6 +768,22 @@ class OMAPI_WooCommerce extends OMAPI_Integrations_Base {
 	public function maybe_init_rest_routes() {
 		if ( self::is_active() ) {
 			$this->rest = new OMAPI_WooCommerce_RestApi( $this->save );
+		}
+	}
+
+	/**
+	 * Declare compatibility with WooCommerce HPOS
+	 *
+	 * @see https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
+	 *
+	 * @since 2.13.8
+	 *
+	 * @return void
+	 */
+	public static function declare_hpos_compat() {
+		if ( class_exists( '\\Automattic\\WooCommerce\\Utilities\\FeaturesUtil' ) ) {
+			$file = OMAPI::get_instance()->file;
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $file, true );
 		}
 	}
 

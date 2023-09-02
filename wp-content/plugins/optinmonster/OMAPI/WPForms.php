@@ -30,6 +30,13 @@ class OMAPI_WPForms extends OMAPI_Integrations_Base {
 	public $rest = null;
 
 	/**
+	 * Holds the instance of OMAPI_WPForms_Save.
+	 *
+	 * @var null|OMAPI_WPForms_Save
+	 */
+	public $save = null;
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 2.9.0
@@ -114,7 +121,7 @@ class OMAPI_WPForms extends OMAPI_Integrations_Base {
 
 		$version = wpforms()->version;
 
-		return $version ?: '0.0.0';
+		return $version ? $version : '0.0.0';
 	}
 
 	/**

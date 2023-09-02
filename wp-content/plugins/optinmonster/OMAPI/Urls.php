@@ -99,6 +99,19 @@ class OMAPI_Urls {
 	}
 
 	/**
+	 * Get the contextual OM university url.
+	 *
+	 * @since 2.13.8
+	 *
+	 * @param  array $args Array of query args.
+	 *
+	 * @return string
+	 */
+	public static function university( $args = array() ) {
+		return self::om_admin( 'university', $args );
+	}
+
+	/**
 	 * Get the campaign output settings edit url.
 	 *
 	 * @since 2.2.0
@@ -204,6 +217,7 @@ class OMAPI_Urls {
 	 * @since 2.4.0
 	 *
 	 * @param  string $utm_medium The utm_medium query param.
+	 * @param  string $feature    The feature to pass to the upgrade page.
 	 * @param  string $return_url Url to return. Will default to wp_get_referer().
 	 * @param  array  $args       Additional query args.
 	 *

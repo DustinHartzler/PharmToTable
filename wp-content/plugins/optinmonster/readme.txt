@@ -2,9 +2,9 @@
 Contributors: optinmonster, griffinjt, smub
 Tags: popup, popups, optin, conversion, marketing, newsletter, popup builder, popup maker, email marketing, exit popup, ecommerce, woocommerce, lightbox
 Requires at least: 4.7.0
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 5.3
-Stable tag: 2.13.5
+Stable tag: 2.13.8
 License: GNU General Public License v2.0 or later
 
 🤩 Make popups & optin forms to get more email newsletter subscribers, leads, and sales - #1 most popular popup builder plugin! 🚀
@@ -172,7 +172,7 @@ Other Powerful Popup Features:
 * <a href="https://optinmonster.com/integrations/aweber/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Infusionsoft (Keap)</a> - Create advanced Infusionsoft popups and lead generation forms.
 * <a href="https://optinmonster.com/integrations/active-campaign/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">ActiveCampaign</a> - Create ActiveCampaign popup and newsletter signup form.
 * <a href="https://optinmonster.com/integrations/convertkit/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">ConvertKit</a> - Easily build ConvertKit popups and email signup forms.
-* <a href="https://optinmonster.com/integrations/sendinblue/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Sendinblue</a> - Create Sendinblue popups and email subscription forms.
+* <a href="https://optinmonster.com/integrations/sendinblue/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Brevo (formerly Sendinblue)</a> - Create Brevo (formerly Sendinblue) popups and email subscription forms.
 * <a href="https://optinmonster.com/integrations/getresponse/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">GetResponse</a> - Make GetResponse forms and popups with just a few clicks.
 * <a href="https://optinmonster.com/integrations/campaign-monitor/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Campaign Monitor</a> - Embed a Campaign Monitor popup and email marketing signup form.
 * <a href="https://optinmonster.com/integrations/conversio/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">CM Commerce (formerly Conversio)</a> - Easily create exit intent popup for CM Commerce / Conversio.
@@ -314,7 +314,7 @@ Here is a list of our popular marketing integrations:
 * HubSpot popup forms
 * Campaign Monitor popup forms
 * GetResponse popup forms
-* Sendinblue popup forms
+* Brevo (formerly Sendinblue) popup forms
 * Infusionsoft (Keap) popup forms
 * Salesforce Pardot popup forms
 * Drip popup forms
@@ -460,6 +460,21 @@ Syed Balkhi
 == Changelog ==
 
 **Most Recent Changes:**
+
+= Popup Builder 2.13.8 =
+* Declares compatibility with WooCommerce High-Performance Order Storage
+* Improvements to campaign template searching and filtering
+* Various improvements and updates to copy
+
+= Popup Builder 2.13.7 =
+* Fixed PHP error with previous release
+
+= Popup Builder 2.13.6 =
+* Improvements to campaign Output Settings page.
+* Transitioned SendInBlue to Brevo to reflect their rebranding.
+* Fixed a scenario where the campaign type filter could switch the a campaign status filter when clearing the field.
+* Improved compatibility with PHP 8.1 and PHP 8.2.
+* Updates to npm packages used to build JS.
 
 = Popup Builder 2.13.5 =
 * Improvements to onboarding flow.

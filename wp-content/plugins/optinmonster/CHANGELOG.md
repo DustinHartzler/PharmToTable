@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 2.13.7 - 2023-07-27
+* Fixed PHP error with previous release
+
+### 2.13.6 - 2023-07-26
+* Improvements to campaign Output Settings page.
+* Transitioned SendInBlue to Brevo to reflect their rebranding.
+* Fixed a scenario where the campaign type filter could switch the a campaign status filter when clearing the field
+* Improved compatibility with PHP 8.1 and PHP 8.2.
+* Updates to npm packages used to build JS.
+
 ### 2.13.5 - 2023-06-22
 * Improvements to onboarding flow.
 * Improvements MemberPress integration.
