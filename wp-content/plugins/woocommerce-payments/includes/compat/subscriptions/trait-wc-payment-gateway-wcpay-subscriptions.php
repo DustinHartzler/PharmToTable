@@ -13,11 +13,12 @@ use WCPay\Core\Server\Request\Get_Intention;
 use WCPay\Exceptions\API_Exception;
 use WCPay\Exceptions\Invalid_Payment_Method_Exception;
 use WCPay\Exceptions\Add_Payment_Method_Exception;
+use WCPay\Exceptions\Order_Not_Found_Exception;
 use WCPay\Logger;
 use WCPay\Payment_Information;
 use WCPay\Constants\Payment_Type;
 use WCPay\Constants\Payment_Initiated_By;
-use WCPay\Constants\Payment_Intent_Status;
+use WCPay\Constants\Intent_Status;
 
 /**
  * Gateway class for WooPayments, with added compatibility with WooCommerce Subscriptions.
@@ -47,6 +48,14 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 	 * @throws Add_Payment_Method_Exception When $0 order processing failed.
 	 */
 	abstract public function process_payment_for_order( $cart, $payment_information, $scheduled_subscription_payment = false );
+
+
+	/**
+	 * Get the payment method to use for the intent.
+	 *
+	 * @return string The payment method to use for the intent (e.g. 'card')
+	 */
+	abstract public function get_payment_method_to_use_for_intent();
 
 	/**
 	 * Saves the payment token to the order.
@@ -249,7 +258,7 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 		$request = Get_Intention::create( $order->get_transaction_id() );
 		$intent  = $request->send( 'wcpay_get_intent_request', $order );
 
-		if ( ! $intent || Payment_Intent_Status::REQUIRES_ACTION !== $intent->get_status() ) {
+		if ( ! $intent || Intent_Status::REQUIRES_ACTION !== $intent->get_status() ) {
 			return false;
 		}
 
@@ -313,7 +322,7 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 		}
 
 		try {
-			$payment_information = new Payment_Information( '', $renewal_order, Payment_Type::RECURRING(), $token, Payment_Initiated_By::MERCHANT() );
+			$payment_information = new Payment_Information( '', $renewal_order, Payment_Type::RECURRING(), $token, Payment_Initiated_By::MERCHANT(), null, null, '', $this->get_payment_method_to_use_for_intent() );
 			$this->process_payment_for_order( null, $payment_information, true );
 		} catch ( API_Exception $e ) {
 			Logger::error( 'Error processing subscription renewal: ' . $e->getMessage() );

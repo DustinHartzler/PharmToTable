@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'woocommerce/payments',
-        'pretty_version' => 'dev-release/6.2.0',
-        'version' => 'dev-release/6.2.0',
-        'reference' => '3d6893117ad6e34e5ac6389b075cce46e1d66cd8',
+        'pretty_version' => 'dev-release/6.4.0',
+        'version' => 'dev-release/6.4.0',
+        'reference' => 'ebf4400bf4786d903d5b27f1ce926fe58bf4bec7',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'automattic/jetpack-assets' => array(
-            'pretty_version' => 'v1.18.4',
-            'version' => '1.18.4.0',
-            'reference' => 'fbb76cd3d88ef31ba65d3fa0d3bfed155c016d05',
+            'pretty_version' => 'v1.18.7',
+            'version' => '1.18.7.0',
+            'reference' => '094d19cc5649b8a9e5d12beecee9371ff0ea4279',
             'type' => 'jetpack-library',
             'install_path' => __DIR__ . '/../automattic/jetpack-assets',
             'aliases' => array(),
@@ -128,9 +128,9 @@
             'dev_requirement' => false,
         ),
         'automattic/jetpack-status' => array(
-            'pretty_version' => 'v1.17.1',
-            'version' => '1.17.1.0',
-            'reference' => '0032ee4bce1d4644722ba46858c702a0afa76cff',
+            'pretty_version' => 'v1.18.0',
+            'version' => '1.18.0.0',
+            'reference' => '98feb85e54ec04ccd2dd37acc4df18ec521249d3',
             'type' => 'jetpack-library',
             'install_path' => __DIR__ . '/../automattic/jetpack-status',
             'aliases' => array(),
@@ -154,6 +154,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'psr/container' => array(
+            'pretty_version' => '1.1.1',
+            'version' => '1.1.1.0',
+            'reference' => '8622567409010282b7aeebe4bb841fe98b58dcaf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/container',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'roundcube/plugin-installer' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -167,9 +176,9 @@
             ),
         ),
         'woocommerce/payments' => array(
-            'pretty_version' => 'dev-release/6.2.0',
-            'version' => 'dev-release/6.2.0',
-            'reference' => '3d6893117ad6e34e5ac6389b075cce46e1d66cd8',
+            'pretty_version' => 'dev-release/6.4.0',
+            'version' => 'dev-release/6.4.0',
+            'reference' => 'ebf4400bf4786d903d5b27f1ce926fe58bf4bec7',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
