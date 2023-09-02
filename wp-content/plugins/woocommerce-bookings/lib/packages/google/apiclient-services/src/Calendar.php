@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * Modified by woocommerce on 14-June-2023 using Strauss.
+ * Modified by woocommerce on 11-August-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -607,6 +607,11 @@ class Calendar extends \Automattic\WooCommerce\Bookings\Vendor\Google\Service
                   'location' => 'query',
                   'type' => 'boolean',
                 ],
+                'eventTypes' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ],
                 'iCalUID' => [
                   'location' => 'query',
                   'type' => 'string',
@@ -815,6 +820,11 @@ class Calendar extends \Automattic\WooCommerce\Bookings\Vendor\Google\Service
                 'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
+                ],
+                'eventTypes' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
                 ],
                 'iCalUID' => [
                   'location' => 'query',

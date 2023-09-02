@@ -442,11 +442,8 @@ class WC_Bookings_Controller {
 
 		$available_slots = array();
 
-		// Get local timezone from existing booking object.
-		$local_timezone = $existing_booking->data['local_timezone'] ?? '';
-
 		// Update existing available blocks availability according to the customer's local timezone.
-		$available_blocks = self::update_booking_availability_for_customers_timezone( $available_blocks, $local_timezone );
+		$available_blocks = self::update_booking_availability_for_customers_timezone( $available_blocks, $timezone_offset );
 
 		foreach ( $available_blocks as $block => $quantity ) {
 			foreach ( $quantity['resources'] as $resource_id => $availability ) {
@@ -471,28 +468,8 @@ class WC_Bookings_Controller {
 					continue;
 				}
 
-				// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-				$date_format = date( $default_date_format, $check_date );
-
-				if (
-					isset( $available_slots[ $booking['res'] ] ) &&
-					in_array( $date_format, $available_slots[ $booking['res'] ], true )
-				) {
-					$booking_type = 'partially_booked_days';
-				} elseif (
-					! empty( $available_slots ) &&
-					! array_key_exists( $booking['res'], $available_slots ) &&
-					$bookable_product->get_resources()
-				) {
-					/**
-					 * Previous booking was made with the resource out of
-					 * currently assigned resources. This might happen if
-					 * a resource was added after previous booking was made.
-					 */
-					$booking_type = 'partially_booked_days';
-				} else {
-					$booking_type = 'fully_booked_days';
-				}
+				$date_format  = date( $default_date_format, $check_date );
+				$booking_type = isset( $available_slots[ $booking['res'] ] ) && in_array( $date_format, $available_slots[ $booking['res'] ], true ) ? 'partially_booked_days' : 'fully_booked_days';
 
 				$booked_day_blocks[ $booking_type ][ $date_format ][ $booking['res'] ] = 1;
 
@@ -523,18 +500,11 @@ class WC_Bookings_Controller {
 	 * @return array Updated available blocks.
 	 * @throws Exception When timezone is not set.
 	 */
-	public static function update_booking_availability_for_customers_timezone( $available_blocks, $timezone = '' ) {
-
-		if ( empty( $timezone ) ) {
-			if ( get_option( 'timezone_string' ) ) {
-				$timezone = wc_timezone_string();
-			} else {
-				// Return if timezone is set as UTC time.
-				return $available_blocks;
-			}
+	public static function update_booking_availability_for_customers_timezone( $available_blocks, $timezone_offset = 0 ) {
+		if ( 'yes' !== WC_Bookings_Timezone_Settings::get( 'use_client_timezone' ) ) {
+			return $available_blocks;
 		}
 
-		$local_timezone           = new DateTimeZone( $timezone );
 		$server_timezone          = wc_booking_get_timezone_string();
 		$updated_available_blocks = array();
 
@@ -542,10 +512,10 @@ class WC_Bookings_Controller {
 			// Create DateTime in server's timezone (otherwise UTC is assumed).
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			$dt = new DateTime( date( 'Y-m-d\TH:i:s', $timestamp ), new DateTimeZone( $server_timezone ) );
-			$dt->setTimezone( $local_timezone );
 
 			// Calling simply `getTimestamp` will not calculate the timezone.
-			$new_timestamp                              = strtotime( $dt->format( 'Y-m-d H:i:s' ) );
+			$new_timestamp = $dt->getTimestamp() + $timezone_offset;
+
 			$updated_available_blocks[ $new_timestamp ] = $block;
 		}
 

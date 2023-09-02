@@ -7,11 +7,88 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-14T17:15:38+00:00\n"
-"PO-Revision-Date: 2023-03-15 22:59:25+0000\n"
+"POT-Creation-Date: 2023-08-11T13:26:31+00:00\n"
+"PO-Revision-Date: 2023-07-12 16:53:56+0000\n"
 "Language: fa\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: includes/booking-form/class-wc-booking-form.php:709
+msgid "left"
+msgstr ""
+
+#: templates/emails/admin-booking-cancelled.php:106
+#: templates/emails/admin-new-booking.php:136
+#: templates/emails/plain/admin-booking-cancelled.php:72
+msgid "Edit booking"
+msgstr "تغییرات در رزور"
+
+#: includes/class-wc-bookings-cost-calculation.php:95
+msgid "It looks like these days are booked and no longer available, please try again with different days."
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:102
+msgid "Create from a blank template"
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:101
+msgid "Start from scratch"
+msgstr ""
+
+#. translators: 1: opening link 2: closing link.
+#: includes/admin/views/html-product-templates-page.php:90
+msgid "Or, if you know your business like we think you do and you are confident in filling in an array of settings, be our guest! We have %1$sdocumentation%2$s to assist you."
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:85
+msgid "Get started from scratch"
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:61
+msgid "Use template"
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:51
+msgid "Booking features utilized"
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:46
+msgid "Scenario"
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:13
+msgid "Choose a template option below and get started quickly with your online bookings. 👇"
+msgstr ""
+
+#: includes/admin/views/html-product-templates-page.php:12
+msgid "Get started quickly with a template"
+msgstr ""
+
+#: includes/admin/class-wc-bookings-templates.php:182
+msgid "Something went wrong, please try again."
+msgstr ""
+
+#: includes/admin/class-wc-bookings-templates.php:106
+#: includes/admin/class-wc-bookings-templates.php:107
+msgid "Add Product"
+msgstr ""
+
+#. translators: 1: Anchor tag open tag html 2: Anchor tag close tag html
+#: includes/admin/class-wc-bookings-templates.php:64
+msgid "Bookings now includes bookable product templates that can be imported to more easily set up new bookable products. %1$sClick here%2$s to learn more about them."
+msgstr ""
+
+#: includes/admin/class-wc-bookings-menus.php:142
+msgid "Notification"
+msgstr ""
+
+#: includes/admin/class-wc-bookings-menus.php:122
+msgid "Create Booking"
+msgstr ""
+
+#: includes/admin/class-wc-bookings-admin.php:340
+msgid "Templates"
+msgstr "قالب‌ها"
 
 #: includes/class-wc-booking-order-manager.php:835
 msgid "View Booking Calendar &rarr;"
@@ -33,13 +110,13 @@ msgstr ""
 msgid "This section will set the availability of your store (e.g. open and closed hours). All bookable products will adopt your store's availability."
 msgstr ""
 
-#: includes/class-wc-bookings-cache.php:237
+#: includes/class-wc-bookings-cache.php:238
 msgid "Error: Resource not found, please try again"
 msgstr ""
 
 #. translators: %1$s - line breaks, %2$s - URL to use as authorised redirect
 #. URI
-#: includes/class-wc-bookings-google-calendar-connection.php:878
+#: includes/class-wc-bookings-google-calendar-connection.php:886
 msgid "Enter the credentials below to use a custom Google Calendar API app. Disconnect existing connection to enter credentials.%1$sAdd %2$s to the Authorized redirect URIs of your Google Cloud App."
 msgstr ""
 
@@ -57,7 +134,7 @@ msgstr "ماه بعد"
 msgid "Previous Month"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:110
+#: includes/booking-form/class-wc-booking-form.php:114
 msgid "Please wait, the latest available slots are being processed in the background."
 msgstr ""
 
@@ -69,34 +146,35 @@ msgstr ""
 msgid "Availability Rules"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:599
+#: includes/admin/class-wc-bookings-ajax.php:602
 msgid "You are not authorized to perform this action"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:214
+#: includes/admin/class-wc-bookings-ajax.php:212
 msgid "No slots available."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:209
+#: includes/admin/class-wc-bookings-ajax.php:207
 #: templates/booking-form/month-picker.php:74
 msgid "This month is unavailable"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:207
+#: includes/admin/class-wc-bookings-ajax.php:205
 #: templates/booking-form/month-picker.php:72
 msgid "This month is fully booked and unavailable"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:205
+#: includes/admin/class-wc-bookings-ajax.php:203
 #: templates/booking-form/month-picker.php:70
 msgid "This month is available"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:166
+#: includes/admin/class-wc-bookings-ajax.php:164
 msgid "Error: The booking product details are missing."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:160
+#: includes/admin/class-wc-bookings-ajax.php:158
+#: includes/admin/class-wc-bookings-templates.php:157
 msgid "Please refresh the page and try again."
 msgstr ""
 
@@ -104,46 +182,46 @@ msgstr ""
 msgid "Sorry, you are not allowed to edit this item."
 msgstr "با عرض پوزش، شما اجازهٔ ویرایش این مورد را ندارید."
 
-#: includes/admin/views/html-booking-export.php:10
+#: includes/admin/views/html-booking-export.php:11
 msgid "Click the \"Export\" button to export this product, it's settings, as well as any applicable resources, persons, and global availability rules. This will create a ZIP file that will then be downloaded to your local device to help WooCommerce support troubleshoot your bookings setup, if needed."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-export.php:201
+#: includes/admin/class-wc-bookings-export.php:208
 msgid "Unable to export!"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-export.php:64
-#: includes/admin/class-wc-bookings-export.php:69
-#: includes/admin/class-wc-bookings-export.php:80
+#: includes/admin/class-wc-bookings-export.php:71
+#: includes/admin/class-wc-bookings-export.php:76
+#: includes/admin/class-wc-bookings-export.php:87
 msgid "This booking product does not exist!"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-export.php:44
+#: includes/admin/class-wc-bookings-export.php:46
 msgid "Unauthorised request, please try again."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:363
-#: includes/admin/views/html-booking-export.php:14
+#: includes/admin/class-wc-bookings-admin.php:378
+#: includes/admin/views/html-booking-export.php:24
 msgid "Export"
 msgstr "خروج"
 
-#: includes/admin/class-wc-bookings-admin.php:657
+#: includes/admin/class-wc-bookings-admin.php:677
 msgid "The booking duration has been set to 24 as a duration greater than 24 hours is not allowed when Availability is \"not-available by default\"."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:656
+#: includes/admin/class-wc-bookings-admin.php:676
 msgid "A duration greater than 24 hours is not allowed when Availability is \"not-available by default\"."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:946
+#: includes/class-wc-bookings-google-calendar-connection.php:954
 msgid "When enabled any changes to the event description must be done from the WooCommerce Bookings event. Any changes made directly to the event description in Google Calendar will be lost when data is synced."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:944
+#: includes/class-wc-bookings-google-calendar-connection.php:952
 msgid "Enable overwrite"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:942
+#: includes/class-wc-bookings-google-calendar-connection.php:950
 msgid "Overwrite Description"
 msgstr ""
 
@@ -159,19 +237,19 @@ msgstr ""
 msgid "WooCommerce Bookings template overrides"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:684
+#: includes/admin/class-wc-bookings-admin.php:704
 msgid "Maximum duration needs to be greater than or equal to the minimum duration."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:683
+#: includes/admin/class-wc-bookings-admin.php:703
 msgid "Minimum duration needs to be less than or equal to maximum duration."
 msgstr ""
 
-#: templates/emails/admin-new-booking.php:99
+#: templates/emails/admin-new-booking.php:116
 msgid "Customer Information"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:655
+#: includes/admin/class-wc-bookings-admin.php:675
 msgid "This setting is being overridden at the resource level."
 msgstr ""
 
@@ -183,7 +261,7 @@ msgstr ""
 msgid "Are you sure you want to cancel your booking?"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:113
+#: includes/booking-form/class-wc-booking-form.php:117
 msgid "We weren't able to get that information. Please contact the store owner for help."
 msgstr ""
 
@@ -197,24 +275,24 @@ msgid "Booked: "
 msgstr ""
 
 #. translators: 1: minimum duration 2: duration unit
-#: includes/data-objects/class-wc-product-booking.php:2463
+#: includes/data-objects/class-wc-product-booking.php:2540
 msgid "The minimum duration is %1$d %2$s"
 msgstr ""
 
 #. translators: 1: maximum duration 2: duration unit
-#: includes/data-objects/class-wc-product-booking.php:2436
+#: includes/data-objects/class-wc-product-booking.php:2513
 msgid "The maximum duration is %1$d %2$s"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:931
+#: includes/class-wc-bookings-google-calendar-connection.php:939
 msgid "Check this to delete an event from Google Calendar when the corresponding store availability is deleted."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:929
+#: includes/class-wc-bookings-google-calendar-connection.php:937
 msgid "Delete Events from Google Calendar"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:927
+#: includes/class-wc-bookings-google-calendar-connection.php:935
 msgid "Deletion Preference"
 msgstr ""
 
@@ -222,69 +300,69 @@ msgstr ""
 msgid "Date should be of the format yyyy-mm-dd and cannot be empty."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:677
+#: includes/admin/class-wc-bookings-admin.php:697
 #: includes/admin/class-wc-bookings-details-meta-box.php:563
 msgid "Start date cannot be greater than end date."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-admin.php:676
+#: includes/admin/class-wc-bookings-admin.php:696
 msgid "\"Start and end date\" should be of the format yyyy-mm-dd and cannot be empty."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1363
+#: includes/class-wc-bookings-google-calendar-connection.php:1371
 msgid "Invalid request!"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1129
+#: includes/class-wc-bookings-google-calendar-connection.php:1137
 msgid "To sync with Google Calendar using an app provided by WooCommerce.com, click the \"Connect with Google\" button below to authorize access to your Google calendar."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1018
+#: includes/class-wc-bookings-google-calendar-connection.php:1026
 msgid "Connect with custom Google app"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1016
+#: includes/class-wc-bookings-google-calendar-connection.php:1024
 msgid "Please fill out all required fields from above and save changes."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:908
+#: includes/class-wc-bookings-google-calendar-connection.php:916
 msgid "Select your Calendar."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:901
+#: includes/class-wc-bookings-google-calendar-connection.php:909
 msgid "Connected Calendar Settings"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:891
+#: includes/class-wc-bookings-google-calendar-connection.php:899
 msgid "Enter the Google Client Secret associated with your Calendar API app."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:889
+#: includes/class-wc-bookings-google-calendar-connection.php:897
 msgid "Client Secret"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:883
+#: includes/class-wc-bookings-google-calendar-connection.php:891
 msgid "Enter the Google Client ID associated with your Calendar API app."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:881
+#: includes/class-wc-bookings-google-calendar-connection.php:889
 msgid "Client ID"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:875
+#: includes/class-wc-bookings-google-calendar-connection.php:883
 msgid "Connect with a custom Google Calendar App"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:223
+#: includes/admin/class-wc-bookings-details-meta-box.php:222
 msgid "Metadata:"
 msgstr ""
 
 #. translators: 1: href link to list of bookings, 2: booking post type link
-#: woocommerce-bookings.php:413
+#: woocommerce-bookings.php:414
 msgid "<a href=\"%1$s\">Add or edit a product</a> to manage bookings in the Product Data section for individual products and then go to the <a href=\"%2$s\" target=\"_blank\">Bookings page</a> to manage them individually."
 msgstr ""
 
-#: woocommerce-bookings.php:411
+#: woocommerce-bookings.php:412
 msgid "Bookings has been activated!"
 msgstr ""
 
@@ -522,7 +600,7 @@ msgstr "ما متاسفیم که می گویند که رزرو خود را نم�
 msgid "Hello %s"
 msgstr "سلام   %s"
 
-#: templates/emails/admin-new-booking.php:110
+#: templates/emails/admin-new-booking.php:127
 #: templates/emails/plain/admin-new-booking.php:91
 msgid "This booking is awaiting your approval. Please check it and inform the customer if the date is available or not."
 msgstr "این رزرو در انتظار تایید شما می باشد. خواهشمندیم بررسی کرده و اگر تاریخ مجاز یا غیرمجاز باشد، خریدار را آگاه کنید."
@@ -540,14 +618,14 @@ msgid "A booking has been made by %s and is awaiting your approval. The details 
 msgstr ""
 
 #. translators: 1: a href to booking
-#: templates/emails/admin-booking-cancelled.php:86
-#: templates/emails/admin-new-booking.php:116
-#: templates/emails/plain/admin-booking-cancelled.php:69
+#: templates/emails/admin-booking-cancelled.php:110
+#: templates/emails/admin-new-booking.php:140
+#: templates/emails/plain/admin-booking-cancelled.php:76
 msgid "You can view and edit this booking in the dashboard here: %s"
 msgstr "شما می توانید این رزرو را در پیشخوان نمایش و ویرایش کنید: %s"
 
-#: templates/emails/admin-booking-cancelled.php:56
-#: templates/emails/admin-new-booking.php:74
+#: templates/emails/admin-booking-cancelled.php:73
+#: templates/emails/admin-new-booking.php:91
 #: templates/emails/customer-booking-cancelled.php:63
 #: templates/emails/customer-booking-confirmed.php:63
 #: templates/emails/customer-booking-notification.php:54
@@ -556,8 +634,8 @@ msgstr "شما می توانید این رزرو را در پیشخوان نما
 msgid "Booking End Date"
 msgstr "تاریخ پایان رزرو"
 
-#: templates/emails/admin-booking-cancelled.php:52
-#: templates/emails/admin-new-booking.php:70
+#: templates/emails/admin-booking-cancelled.php:69
+#: templates/emails/admin-new-booking.php:87
 #: templates/emails/customer-booking-cancelled.php:59
 #: templates/emails/customer-booking-confirmed.php:59
 #: templates/emails/customer-booking-notification.php:50
@@ -566,11 +644,11 @@ msgstr "تاریخ پایان رزرو"
 msgid "Booking Start Date"
 msgstr "تاریخ آغاز رزرو"
 
-#: templates/emails/admin-booking-cancelled.php:26
+#: templates/emails/admin-booking-cancelled.php:31
 msgid "The following booking has been cancelled. The details of the cancelled booking can be found below."
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:45
+#: includes/booking-form/class-wc-booking-form.php:48
 #: templates/booking-form/datetime-picker.php:71
 #: templates/booking-form/datetime-picker.php:76
 msgid "Choose a date above to see available times."
@@ -628,17 +706,17 @@ msgid "night"
 msgid_plural "nights"
 msgstr[0] ""
 
-#: includes/booking-form/class-wc-booking-form.php:311
-#: includes/data-objects/class-wc-product-booking.php:2413
-#: includes/data-objects/class-wc-product-booking.php:2440
+#: includes/booking-form/class-wc-booking-form.php:321
+#: includes/data-objects/class-wc-product-booking.php:2490
+#: includes/data-objects/class-wc-product-booking.php:2517
 #: includes/wc-bookings-functions.php:1280
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "دقیقه"
 
-#: includes/booking-form/class-wc-booking-form.php:313
-#: includes/data-objects/class-wc-product-booking.php:2415
-#: includes/data-objects/class-wc-product-booking.php:2442
+#: includes/booking-form/class-wc-booking-form.php:323
+#: includes/data-objects/class-wc-product-booking.php:2492
+#: includes/data-objects/class-wc-product-booking.php:2519
 #: includes/wc-bookings-functions.php:1277
 msgid "hour"
 msgid_plural "hours"
@@ -649,9 +727,9 @@ msgid "week"
 msgid_plural "weeks"
 msgstr[0] "هفته ها"
 
-#: includes/booking-form/class-wc-booking-form.php:317
-#: includes/data-objects/class-wc-product-booking.php:2419
-#: includes/data-objects/class-wc-product-booking.php:2446
+#: includes/booking-form/class-wc-booking-form.php:327
+#: includes/data-objects/class-wc-product-booking.php:2496
+#: includes/data-objects/class-wc-product-booking.php:2523
 #: includes/wc-bookings-functions.php:1266
 msgid "month"
 msgid_plural "months"
@@ -707,8 +785,8 @@ msgid "Unpaid"
 msgstr ""
 
 #: includes/wc-bookings-functions.php:70
-#: templates/emails/admin-booking-cancelled.php:61
-#: templates/emails/admin-new-booking.php:79
+#: templates/emails/admin-booking-cancelled.php:78
+#: templates/emails/admin-new-booking.php:96
 #: templates/emails/customer-booking-cancelled.php:68
 #: templates/emails/customer-booking-confirmed.php:68
 #: templates/emails/customer-booking-notification.php:59
@@ -1028,88 +1106,88 @@ msgstr ""
 msgid "Booking &ndash; %s"
 msgstr "رزور  &ndash; %s"
 
-#: includes/data-objects/class-wc-product-booking.php:2564
+#: includes/data-objects/class-wc-product-booking.php:2641
 msgid "Sorry, the selected block is not available"
 msgstr "با عرض پوزش اتاق مورد نظر در دسترس نیست"
 
 #. translators: 1: person name 2: minimum persons
-#: includes/data-objects/class-wc-product-booking.php:2545
+#: includes/data-objects/class-wc-product-booking.php:2622
 msgid "The minimum %1$s per group is %2$d"
 msgstr ""
 
 #. translators: 1: person name 2: maximum persons
-#: includes/data-objects/class-wc-product-booking.php:2539
+#: includes/data-objects/class-wc-product-booking.php:2616
 msgid "The maximum %1$s per group is %2$d"
 msgstr ""
 
 #. translators: 1: minimum persons
-#: includes/data-objects/class-wc-product-booking.php:2528
+#: includes/data-objects/class-wc-product-booking.php:2605
 msgid "The minimum persons per group is %d"
 msgstr "حداقل ظرفیت اتاق %d"
 
 #. translators: 1: maximum persons
-#: includes/data-objects/class-wc-product-booking.php:2524
+#: includes/data-objects/class-wc-product-booking.php:2601
 msgid "The maximum persons per group is %d"
 msgstr "حداکثر ظرفیت اتاق %d"
 
-#: includes/data-objects/class-wc-product-booking.php:2514
+#: includes/data-objects/class-wc-product-booking.php:2591
 msgid "Sorry, bookings cannot start on this day."
 msgstr ""
 
 #. translators: 1: maximum date
-#: includes/data-objects/class-wc-product-booking.php:2505
+#: includes/data-objects/class-wc-product-booking.php:2582
 msgid "The latest booking possible is currently %s."
 msgstr "آخرین زمان برای رزرو  %s."
 
 #. translators: 1: minimum date
-#: includes/data-objects/class-wc-product-booking.php:2496
+#: includes/data-objects/class-wc-product-booking.php:2573
 msgid "The earliest booking possible is currently %s."
 msgstr "ولین زمان برای رزرو در حال حاضر  %s."
 
-#: includes/data-objects/class-wc-product-booking.php:2475
-#: includes/data-objects/class-wc-product-booking.php:2478
+#: includes/data-objects/class-wc-product-booking.php:2552
+#: includes/data-objects/class-wc-product-booking.php:2555
 msgid "You must choose a future date and time."
 msgstr "باید یک تاریخ در آینده و زمان را انتخاب کنید."
 
-#: includes/data-objects/class-wc-product-booking.php:2472
+#: includes/data-objects/class-wc-product-booking.php:2549
 msgid "Time is required - please choose one above"
 msgstr "زمان مورد نیاز است - لطفا در بالا یکی را انتخاب کنید"
 
-#: includes/data-objects/class-wc-product-booking.php:2469
+#: includes/data-objects/class-wc-product-booking.php:2546
 msgid "Date is required - please choose one above"
 msgstr "تاریخ لازم است - لطفا در بالا یکی را انتخاب کنید"
 
-#: includes/data-objects/class-wc-product-booking.php:2408
+#: includes/data-objects/class-wc-product-booking.php:2485
 msgid "Duration is required - please enter a duration greater than zero"
 msgstr ""
 
-#: includes/data-objects/class-wc-product-booking.php:2397
+#: includes/data-objects/class-wc-product-booking.php:2474
 msgid "Please choose a resource type"
 msgstr "لطفا یکی از اتاق ها را انتخاب کنید"
 
-#: includes/data-objects/class-wc-product-booking.php:2260
+#: includes/data-objects/class-wc-product-booking.php:2337
 msgid "This block cannot be booked."
 msgstr "این اتاق نمی تواند گذاشته شود."
 
 #. translators: 1: available quantity 2: booking block date
-#: includes/data-objects/class-wc-product-booking.php:1632
-#: includes/data-objects/class-wc-product-booking.php:1639
+#: includes/data-objects/class-wc-product-booking.php:1701
+#: includes/data-objects/class-wc-product-booking.php:1711
 msgid "There is a maximum of %1$d place remaining on %2$s"
 msgid_plural "There are a maximum of %1$d places remaining on %2$s"
 msgstr[0] ""
 
 #. translators: 1: available quantity
-#: includes/data-objects/class-wc-product-booking.php:1626
+#: includes/data-objects/class-wc-product-booking.php:1692
 msgid "There is a maximum of %d place remaining"
 msgid_plural "There are a maximum of %d places remaining"
 msgstr[0] ""
 
-#: includes/data-objects/class-wc-product-booking.php:172
+#: includes/data-objects/class-wc-product-booking.php:179
 msgid "Free"
 msgstr "رایگان"
 
 #. translators: 1: display price
-#: includes/data-objects/class-wc-product-booking.php:167
+#: includes/data-objects/class-wc-product-booking.php:174
 msgid "From: %s"
 msgstr "از  %s"
 
@@ -1212,184 +1290,184 @@ msgid "Enable Bookings Timezone Calculation"
 msgstr ""
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:199
+#: includes/class-wc-bookings-init.php:202
 msgid "In Cart <span class=\"count\">(%s)</span>"
 msgid_plural "In Cart <span class=\"count\">(%s)</span>"
 msgstr[0] "<span class=\"count\">(%s)</span> در سبد خرید"
 
-#: includes/class-wc-bookings-init.php:193
+#: includes/class-wc-bookings-init.php:196
 msgctxt "woocommerce-bookings"
 msgid "In Cart"
 msgstr "در سبد خرید"
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:190
+#: includes/class-wc-bookings-init.php:193
 msgid "Cancelled <span class=\"count\">(%s)</span>"
 msgid_plural "Cancelled <span class=\"count\">(%s)</span>"
 msgstr[0] "لغو <span class=\"count\">(%s)</span>"
 
-#: includes/class-wc-bookings-init.php:184
+#: includes/class-wc-bookings-init.php:187
 msgctxt "woocommerce-bookings"
 msgid "Cancelled"
 msgstr "لغو"
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:181
+#: includes/class-wc-bookings-init.php:184
 msgid "Pending Confirmation <span class=\"count\">(%s)</span>"
 msgid_plural "Pending Confirmation <span class=\"count\">(%s)</span>"
 msgstr[0] "در انتظار تایید  <span class=\"count\">(%s)</span>"
 
-#: includes/class-wc-bookings-init.php:175
+#: includes/class-wc-bookings-init.php:178
 msgctxt "woocommerce-bookings"
 msgid "Pending Confirmation"
 msgstr "در انتظار تایید"
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:172
+#: includes/class-wc-bookings-init.php:175
 msgid "Un-paid <span class=\"count\">(%s)</span>"
 msgid_plural "Un-paid <span class=\"count\">(%s)</span>"
 msgstr[0] "باقی مانده <span class=\"count\">(%s)</span>"
 
-#: includes/class-wc-bookings-init.php:166
+#: includes/class-wc-bookings-init.php:169
 msgctxt "woocommerce-bookings"
 msgid "Un-paid"
 msgstr "باقی مانده"
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:163
+#: includes/class-wc-bookings-init.php:166
 msgid "Confirmed <span class=\"count\">(%s)</span>"
 msgid_plural "Confirmed <span class=\"count\">(%s)</span>"
 msgstr[0] "<span class=\"count\">(%s)</span> تایید شد"
 
-#: includes/class-wc-bookings-init.php:157
+#: includes/class-wc-bookings-init.php:160
 msgctxt "woocommerce-bookings"
 msgid "Confirmed"
 msgstr "تایید"
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:154
+#: includes/class-wc-bookings-init.php:157
 msgid "Paid &amp; Confirmed <span class=\"count\">(%s)</span>"
 msgid_plural "Paid &amp; Confirmed <span class=\"count\">(%s)</span>"
 msgstr[0] "پرداخت &amp; تایید شد <span class=\"count\">(%s)</span>"
 
-#: includes/class-wc-bookings-init.php:148
+#: includes/class-wc-bookings-init.php:151
 msgctxt "woocommerce-bookings"
 msgid "Paid &amp; Confirmed"
 msgstr "پرداخت &amp; تایید شد"
 
 #. translators: 1: count, 2: count
-#: includes/class-wc-bookings-init.php:145
+#: includes/class-wc-bookings-init.php:148
 msgid "Complete <span class=\"count\">(%s)</span>"
 msgid_plural "Complete <span class=\"count\">(%s)</span>"
 msgstr[0] "کامل <span class=\"count\">(%s)</span>"
 
-#: includes/class-wc-bookings-init.php:139
+#: includes/class-wc-bookings-init.php:142
 msgctxt "woocommerce-bookings"
 msgid "Complete"
 msgstr "کامل شده"
 
-#: includes/class-wc-bookings-init.php:116
+#: includes/class-wc-bookings-init.php:119
 msgid "This is where bookings are stored."
 msgstr "این جایی است که رزرو ذخیره می شوند."
 
-#: includes/class-wc-bookings-init.php:114
+#: includes/class-wc-bookings-init.php:117
 msgid "All Bookings"
 msgstr "همه رزرو ها"
 
-#: includes/class-wc-bookings-init.php:113
+#: includes/class-wc-bookings-init.php:116
 msgctxt "Admin menu name"
 msgid "Bookings"
 msgstr "رزرو"
 
-#: includes/class-wc-bookings-init.php:112
+#: includes/class-wc-bookings-init.php:115
 msgid "Parent Bookings"
 msgstr "رزرو پدر و مادر"
 
-#: includes/class-wc-bookings-init.php:111
+#: includes/class-wc-bookings-init.php:114
 msgid "No Bookings found in trash"
 msgstr "رزروی در سطل آشغال یافت نشد"
 
-#: includes/class-wc-bookings-init.php:110
+#: includes/class-wc-bookings-init.php:113
 msgid "No Bookings found"
 msgstr "رزروی یافت نشد"
 
-#: includes/class-wc-bookings-init.php:109
+#: includes/class-wc-bookings-init.php:112
 msgid "Search Bookings"
 msgstr "جسجو در رزرو"
 
-#: includes/class-wc-bookings-init.php:107
-#: includes/class-wc-bookings-init.php:108
+#: includes/class-wc-bookings-init.php:110
+#: includes/class-wc-bookings-init.php:111
 msgid "View Booking"
 msgstr "مشاهده رزرو"
 
-#: includes/class-wc-bookings-init.php:106
+#: includes/class-wc-bookings-init.php:109
 #: includes/emails/class-wc-email-new-booking.php:25
 msgid "New Booking"
 msgstr "افزودن یک رزرو جید "
 
-#: includes/class-wc-bookings-init.php:105
+#: includes/class-wc-bookings-init.php:108
 msgid "Edit Booking"
 msgstr "تغییرات در رزور"
 
-#: includes/class-wc-bookings-init.php:103
+#: includes/class-wc-bookings-init.php:106
 msgid "Add New Booking"
 msgstr "افزودن یک رزرو جید "
 
-#: includes/class-wc-bookings-init.php:76
+#: includes/class-wc-bookings-init.php:79
 msgid "Bookable resources are bookable within a bookings product."
 msgstr "اتاق های رزرو شده"
 
-#: includes/class-wc-bookings-init.php:73
+#: includes/class-wc-bookings-init.php:76
 msgctxt "Admin menu name"
 msgid "Resources"
 msgstr "اتاق ها"
 
-#: includes/class-wc-bookings-init.php:72
+#: includes/class-wc-bookings-init.php:75
 msgid "Parent Resources"
 msgstr "بابت اتاق"
 
-#: includes/class-wc-bookings-init.php:71
+#: includes/class-wc-bookings-init.php:74
 msgid "No Resource found in trash"
 msgstr "اتاقی در سطل زباله پیدا نشد"
 
-#: includes/class-wc-bookings-init.php:70
+#: includes/class-wc-bookings-init.php:73
 msgid "No Resource found"
 msgstr "اتاق مورد نظر پیدا نشد"
 
-#: includes/class-wc-bookings-init.php:69
+#: includes/class-wc-bookings-init.php:72
 msgid "Search Resource"
 msgstr "جستجو در اتاق"
 
-#: includes/class-wc-bookings-init.php:67
-#: includes/class-wc-bookings-init.php:68
+#: includes/class-wc-bookings-init.php:70
+#: includes/class-wc-bookings-init.php:71
 msgid "View Resource"
 msgstr "لیست اتاق"
 
-#: includes/class-wc-bookings-init.php:66
+#: includes/class-wc-bookings-init.php:69
 msgid "New Resource"
 msgstr "اتاق جدید"
 
-#: includes/class-wc-bookings-init.php:65
+#: includes/class-wc-bookings-init.php:68
 msgid "Edit Resource"
 msgstr "تغییر در اتاق"
 
-#: includes/class-wc-bookings-init.php:63
+#: includes/class-wc-bookings-init.php:66
 msgid "Add New Resource"
 msgstr "اضافه کردن اتاق جدید"
 
-#: includes/class-wc-bookings-init.php:62
+#: includes/class-wc-bookings-init.php:65
 msgid "Add Resource"
 msgstr "اضافه کردن اتاق "
 
-#: includes/class-wc-bookings-init.php:61
+#: includes/class-wc-bookings-init.php:64
 msgid "Bookable resource"
 msgstr "اتاق های رزرو شده"
 
-#: includes/class-wc-bookings-init.php:60
+#: includes/class-wc-bookings-init.php:63
 msgid "Bookable resources"
 msgstr "اتاق های رزرو شده"
 
-#: includes/class-wc-bookings-init.php:45
+#: includes/class-wc-bookings-init.php:48
 msgid "Person Type"
 msgstr "هزینه بابت هر نفر"
 
@@ -1402,21 +1480,21 @@ msgstr "شرح رزرو:"
 msgid "Bookings from %s"
 msgstr "رزرو شده توسط  %s"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1500
-#: includes/class-wc-bookings-init.php:98
+#: includes/class-wc-bookings-google-calendar-connection.php:1508
 #: includes/class-wc-bookings-init.php:101
+#: includes/class-wc-bookings-init.php:104
 msgid "Booking"
 msgstr "رزرو کنید"
 
 #. translators: %s URL to edit booking
-#: includes/class-wc-bookings-google-calendar-connection.php:1468
+#: includes/class-wc-bookings-google-calendar-connection.php:1476
 msgid "NOTE: this event cannot be edited in Google Calendar. If you need to make changes, <a href=\"%s\" target=\"_blank\">please edit this booking in WooCommerce</a>."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1452
+#: includes/class-wc-bookings-google-calendar-connection.php:1460
 #: includes/wc-bookings-functions.php:67
-#: templates/emails/admin-booking-cancelled.php:47
-#: templates/emails/admin-new-booking.php:65
+#: templates/emails/admin-booking-cancelled.php:64
+#: templates/emails/admin-new-booking.php:82
 #: templates/emails/customer-booking-cancelled.php:54
 #: templates/emails/customer-booking-confirmed.php:54
 #: templates/emails/customer-booking-notification.php:45
@@ -1425,9 +1503,9 @@ msgstr ""
 msgid "Booking Type"
 msgstr "نوع رزرو"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1451
-#: templates/emails/admin-booking-cancelled.php:37
-#: templates/emails/admin-new-booking.php:55
+#: includes/class-wc-bookings-google-calendar-connection.php:1459
+#: templates/emails/admin-booking-cancelled.php:54
+#: templates/emails/admin-new-booking.php:72
 #: templates/emails/customer-booking-cancelled.php:44
 #: templates/emails/customer-booking-confirmed.php:44
 #: templates/emails/customer-booking-notification.php:35
@@ -1436,101 +1514,96 @@ msgstr "نوع رزرو"
 msgid "Booking ID"
 msgstr "شناسه رزور"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1271
+#: includes/class-wc-bookings-google-calendar-connection.php:1279
 msgid "Failed to connect to your account, please try again, if the problem persists, turn on Debug Log option and see what is happening."
 msgstr "برای اتصال به حساب کاربری خود شکست خورده، لطفا دوباره سعی کنید، اگر مشکل ادامه یابد، به نوبه خود در گزینه اشکال زدایی ورود و ببینید چه اتفاقی می افتد."
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1251
+#: includes/class-wc-bookings-google-calendar-connection.php:1259
 msgid "Account connected successfully!"
 msgstr "کاربری با موفقیت متصل!"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1203
-#: includes/class-wc-bookings-google-calendar-connection.php:1309
-#: includes/class-wc-bookings-google-calendar-connection.php:1322
+#: includes/class-wc-bookings-google-calendar-connection.php:1211
+#: includes/class-wc-bookings-google-calendar-connection.php:1317
+#: includes/class-wc-bookings-google-calendar-connection.php:1330
 msgid "Permission denied!"
 msgstr "مجوز رد شد"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1169
+#: includes/class-wc-bookings-google-calendar-connection.php:1177
 msgid "Account not properly connected, reset successfully!"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1166
+#: includes/class-wc-bookings-google-calendar-connection.php:1174
 msgid "Failed to disconnect to your account, please try again, if the problem persists, turn on Debug Log option and see what is happening."
 msgstr "به قطع به حساب کاربری خود شکست خورده، لطفا دوباره سعی کنید، اگر مشکل ادامه یابد، به نوبه خود در گزینه اشکال زدایی ورود و ببینید چه اتفاقی می افتد."
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1164
+#: includes/class-wc-bookings-google-calendar-connection.php:1172
 msgid "Account disconnected successfully!"
 msgstr "هشدار  با موفقیت تکمیل شد"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1021
-#: includes/class-wc-bookings-google-calendar-connection.php:1117
+#: includes/class-wc-bookings-google-calendar-connection.php:1029
+#: includes/class-wc-bookings-google-calendar-connection.php:1125
 msgid "Disconnect"
 msgstr "قطع اتصال"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1020
-#: includes/class-wc-bookings-google-calendar-connection.php:1116
+#: includes/class-wc-bookings-google-calendar-connection.php:1028
+#: includes/class-wc-bookings-google-calendar-connection.php:1124
 msgid "Successfully authenticated."
 msgstr "موفیت در دریافت اجازه"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1112
+#: includes/class-wc-bookings-google-calendar-connection.php:1120
 msgid "Connect with Google"
 msgstr "اتصال به گوگل"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1036
+#: includes/class-wc-bookings-google-calendar-connection.php:1044
 msgid "Select a calendar from the list"
 msgstr ""
 
 #. translators: 1: log file path
-#: includes/class-wc-bookings-google-calendar-connection.php:939
+#: includes/class-wc-bookings-google-calendar-connection.php:947
 msgid "Log Google Calendar events, such as API requests, inside %s"
 msgstr "ورود به تقویم گوگل با درخواست API در %s"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:936
+#: includes/class-wc-bookings-google-calendar-connection.php:944
 msgid "Enable logging"
 msgstr "فعال کردن ورود به سیستم"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:934
+#: includes/class-wc-bookings-google-calendar-connection.php:942
 msgid "Debug Log"
 msgstr "اشکال‌زدایی"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:921
+#: includes/class-wc-bookings-google-calendar-connection.php:929
 msgid "Manage the sync flow between your Store calendar and Google calendar."
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:919
+#: includes/class-wc-bookings-google-calendar-connection.php:927
 msgid "Sync one way - from Store to Google"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:918
+#: includes/class-wc-bookings-google-calendar-connection.php:926
 msgid "Sync both ways - between Store and Google"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:916
+#: includes/class-wc-bookings-google-calendar-connection.php:924
 msgid "Sync Preference"
 msgstr ""
 
-#: includes/class-wc-bookings-google-calendar-connection.php:871
-#: includes/class-wc-bookings-google-calendar-connection.php:897
+#: includes/class-wc-bookings-google-calendar-connection.php:879
+#: includes/class-wc-bookings-google-calendar-connection.php:905
 msgid "Authorization"
 msgstr "اجازه"
 
-#: includes/class-wc-bookings-google-calendar-connection.php:1164
-#: includes/class-wc-bookings-google-calendar-connection.php:1166
-#: includes/class-wc-bookings-google-calendar-connection.php:1169
-#: includes/class-wc-bookings-google-calendar-connection.php:1239
-#: includes/class-wc-bookings-google-calendar-connection.php:1251
-#: includes/class-wc-bookings-google-calendar-connection.php:1271
+#: includes/class-wc-bookings-google-calendar-connection.php:1172
+#: includes/class-wc-bookings-google-calendar-connection.php:1174
+#: includes/class-wc-bookings-google-calendar-connection.php:1177
+#: includes/class-wc-bookings-google-calendar-connection.php:1247
+#: includes/class-wc-bookings-google-calendar-connection.php:1259
+#: includes/class-wc-bookings-google-calendar-connection.php:1279
 msgid "Google Calendar"
 msgstr "تقویم گوگل"
 
 #: includes/class-wc-bookings-google-calendar-connection.php:330
 msgid "Settings saved."
 msgstr "ذخیره تنظیمات"
-
-#. translators: 1: block duration days
-#: includes/class-wc-bookings-cost-calculation.php:98
-msgid "The duration of this booking must be at least %s days."
-msgstr ""
 
 #: includes/class-wc-booking-privacy.php:139
 msgid "WooCommerce Bookings Data Erased."
@@ -1580,11 +1653,12 @@ msgstr ""
 
 #: includes/admin/class-wc-bookings-details-meta-box.php:563
 #: includes/admin/class-wc-bookings-details-meta-box.php:578
+#: includes/admin/class-wc-bookings-menus.php:117
 #: includes/class-wc-booking-order-manager.php:165
 #: includes/class-wc-booking-order-manager.php:187
 #: includes/class-wc-booking-privacy.php:9
 #: includes/class-wc-booking-privacy.php:62
-#: includes/class-wc-bookings-init.php:100
+#: includes/class-wc-bookings-init.php:103
 #: woocommerce-bookings.php:216
 msgid "Bookings"
 msgstr "رزرو"
@@ -1624,142 +1698,141 @@ msgstr ""
 msgid "A booking for %s has been removed from your cart due to inactivity."
 msgstr "رزرو برای %s از سبد خرید شما به دلیل عدم فعالیت حذف شده است."
 
-#: includes/booking-form/class-wc-booking-form.php:668
+#: includes/booking-form/class-wc-booking-form.php:682
 msgid "End time"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:666
+#: includes/booking-form/class-wc-booking-form.php:680
 msgid "Ends"
 msgstr ""
 
 #. translators: %d: booking duration in hours
-#: includes/booking-form/class-wc-booking-form.php:637
+#: includes/booking-form/class-wc-booking-form.php:652
 msgid "%d Hour"
 msgid_plural "%d Hours"
 msgstr[0] ""
 
 #. translators: %d: booking duration in minutes
-#: includes/booking-form/class-wc-booking-form.php:633
+#: includes/booking-form/class-wc-booking-form.php:648
 msgid "%d Minute"
 msgid_plural "%d Minutes"
 msgstr[0] ""
 
 #. translators: 1: quantity available
-#: includes/booking-form/class-wc-booking-form.php:533
-#: includes/booking-form/class-wc-booking-form.php:718
+#: includes/booking-form/class-wc-booking-form.php:759
 msgid "%d left"
 msgid_plural "%d left"
 msgstr[0] ""
 
-#: includes/booking-form/class-wc-booking-form.php:503
+#: includes/booking-form/class-wc-booking-form.php:524
 msgid "Start time"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:501
+#: includes/booking-form/class-wc-booking-form.php:522
 msgid "Starts"
 msgstr ""
 
 #. translators: 1: block cost 2: duration unit
-#: includes/booking-form/class-wc-booking-form.php:333
+#: includes/booking-form/class-wc-booking-form.php:343
 msgid "+%1$1s per %2$2s"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:315
-#: includes/data-objects/class-wc-product-booking.php:2417
-#: includes/data-objects/class-wc-product-booking.php:2444
+#: includes/booking-form/class-wc-booking-form.php:325
+#: includes/data-objects/class-wc-product-booking.php:2494
+#: includes/data-objects/class-wc-product-booking.php:2521
 #: includes/wc-bookings-functions.php:1270
 msgid "day"
 msgid_plural "days"
 msgstr[0] "روزها"
 
-#: includes/booking-form/class-wc-booking-form.php:319
-#: includes/data-objects/class-wc-product-booking.php:2421
-#: includes/data-objects/class-wc-product-booking.php:2448
+#: includes/booking-form/class-wc-booking-form.php:329
+#: includes/data-objects/class-wc-product-booking.php:2498
+#: includes/data-objects/class-wc-product-booking.php:2525
 msgid "block"
 msgid_plural "blocks"
 msgstr[0] ""
 
 #. translators: %s: product duration in minutes
-#: includes/booking-form/class-wc-booking-form.php:222
+#: includes/booking-form/class-wc-booking-form.php:226
 msgid "&times; %s minutes"
 msgstr "&times; %s دقیقه"
 
 #. translators: %s: product duration in hours
-#: includes/booking-form/class-wc-booking-form.php:214
+#: includes/booking-form/class-wc-booking-form.php:218
 msgid "&times; %s hours"
 msgstr "&times; %s ساعت"
 
-#: includes/booking-form/class-wc-booking-form.php:208
+#: includes/booking-form/class-wc-booking-form.php:212
 msgid "Night(s)"
 msgstr ""
 
 #. translators: %s: product duration in nights
-#: includes/booking-form/class-wc-booking-form.php:206
+#: includes/booking-form/class-wc-booking-form.php:210
 msgid "&times; %s nights"
 msgstr ""
 
 #. translators: %s product duration in days
-#: includes/booking-form/class-wc-booking-form.php:190
+#: includes/booking-form/class-wc-booking-form.php:194
 msgid "&times; %s days"
 msgstr "&times; %s  روزها"
 
 #. translators: %s: product duration in weeks
-#: includes/booking-form/class-wc-booking-form.php:181
-#: includes/booking-form/class-wc-booking-form.php:199
+#: includes/booking-form/class-wc-booking-form.php:185
+#: includes/booking-form/class-wc-booking-form.php:203
 msgid "&times; %s weeks"
 msgstr "&times; %s هفته"
 
 #. translators: %s: product duration in months
-#: includes/booking-form/class-wc-booking-form.php:173
+#: includes/booking-form/class-wc-booking-form.php:177
 msgid "&times; %s Months"
 msgstr "&times; %s ماه"
 
-#: includes/booking-form/class-wc-booking-form.php:120
+#: includes/booking-form/class-wc-booking-form.php:124
 msgid "Store server time: "
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:112
+#: includes/booking-form/class-wc-booking-form.php:116
 msgid "To clear selection, pick a new start date"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:111
+#: includes/booking-form/class-wc-booking-form.php:115
 msgid "Please select the options for your booking and make sure duration rules apply."
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:109
+#: includes/booking-form/class-wc-booking-form.php:113
 msgid "Dates"
 msgstr "تاریخ ها"
 
-#: includes/booking-form/class-wc-booking-form.php:108
+#: includes/booking-form/class-wc-booking-form.php:112
 msgid "Choose an End Date"
 msgstr "گزینش پایان آغاز"
 
-#: includes/booking-form/class-wc-booking-form.php:107
+#: includes/booking-form/class-wc-booking-form.php:111
 msgid "Choose a Start Date"
 msgstr "گزینش تاریخ آغاز"
 
-#: includes/booking-form/class-wc-booking-form.php:106
+#: includes/booking-form/class-wc-booking-form.php:110
 msgid "This date is available"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:105
+#: includes/booking-form/class-wc-booking-form.php:109
 msgid "This date is partially booked - but bookings still remain"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:104
+#: includes/booking-form/class-wc-booking-form.php:108
 msgid "This date is fully booked and unavailable"
 msgstr ""
 
-#: includes/booking-form/class-wc-booking-form.php:103
+#: includes/booking-form/class-wc-booking-form.php:107
 msgid "This date is unavailable"
 msgstr "غیر قابل دسترسی"
 
-#: includes/booking-form/class-wc-booking-form.php:36
+#: includes/booking-form/class-wc-booking-form.php:39
 #: templates/myaccount/bookings.php:93
 msgid "Previous"
 msgstr "قبلی"
 
-#: includes/booking-form/class-wc-booking-form.php:34
+#: includes/booking-form/class-wc-booking-form.php:37
 msgid "Close"
 msgstr "بستن."
 
@@ -2098,7 +2171,7 @@ msgid "You may send an email notification to all customers who have a %1$sfuture
 msgstr ""
 
 #: includes/admin/views/html-create-booking-page.php:72
-#: includes/booking-form/class-wc-booking-form.php:37
+#: includes/booking-form/class-wc-booking-form.php:40
 #: templates/myaccount/bookings.php:97
 msgid "Next"
 msgstr "بعد"
@@ -2195,7 +2268,7 @@ msgstr "زمان‌بندی"
 
 #: includes/admin/views/html-calendar-nav.php:106
 #: includes/admin/views/html-calendar-nav.php:137
-#: includes/booking-form/class-wc-booking-form.php:35
+#: includes/booking-form/class-wc-booking-form.php:38
 msgid "Today"
 msgstr "امروز"
 
@@ -2258,7 +2331,7 @@ msgid "Label"
 msgstr "برچسب نمودار"
 
 #: includes/admin/views/html-booking-resources.php:8
-#: includes/booking-form/class-wc-booking-form.php:345
+#: includes/booking-form/class-wc-booking-form.php:355
 #: includes/wc-bookings-functions.php:981
 #: templates/emails/plain/admin-booking-display.php:55
 #: templates/emails/plain/customer-booking-display.php:54
@@ -2487,7 +2560,7 @@ msgstr "مدت زمان"
 
 #: includes/admin/views/html-booking-data.php:24
 #: includes/admin/views/html-booking-data.php:107
-#: includes/booking-form/class-wc-booking-form.php:224
+#: includes/booking-form/class-wc-booking-form.php:228
 msgid "Minute(s)"
 msgstr "دقیقه"
 
@@ -2580,7 +2653,7 @@ msgstr "در آینده"
 #: includes/admin/views/html-booking-availability.php:45
 #: includes/admin/views/html-booking-data.php:23
 #: includes/admin/views/html-booking-data.php:106
-#: includes/booking-form/class-wc-booking-form.php:216
+#: includes/booking-form/class-wc-booking-form.php:220
 msgid "Hour(s)"
 msgstr "ساعت"
 
@@ -2588,14 +2661,14 @@ msgstr "ساعت"
 #: includes/admin/views/html-booking-availability.php:44
 #: includes/admin/views/html-booking-data.php:22
 #: includes/admin/views/html-booking-data.php:105
-#: includes/booking-form/class-wc-booking-form.php:192
+#: includes/booking-form/class-wc-booking-form.php:196
 msgid "Day(s)"
 msgstr "روز"
 
 #: includes/admin/views/html-booking-availability.php:33
 #: includes/admin/views/html-booking-availability.php:43
-#: includes/booking-form/class-wc-booking-form.php:183
-#: includes/booking-form/class-wc-booking-form.php:196
+#: includes/booking-form/class-wc-booking-form.php:187
+#: includes/booking-form/class-wc-booking-form.php:200
 msgid "Week(s)"
 msgstr "هفته"
 
@@ -2603,7 +2676,7 @@ msgstr "هفته"
 #: includes/admin/views/html-booking-availability.php:42
 #: includes/admin/views/html-booking-data.php:21
 #: includes/admin/views/html-booking-data.php:104
-#: includes/booking-form/class-wc-booking-form.php:175
+#: includes/booking-form/class-wc-booking-form.php:179
 msgid "Month(s)"
 msgstr "ماه"
 
@@ -2981,7 +3054,7 @@ msgstr ""
 
 #: includes/admin/class-wc-bookings-products-export.php:44
 #: includes/admin/class-wc-bookings-products-import.php:45
-#: includes/booking-form/class-wc-booking-form.php:232
+#: includes/booking-form/class-wc-booking-form.php:237
 #: includes/wc-bookings-functions.php:71
 msgid "Duration"
 msgstr "مدت زمان"
@@ -3046,59 +3119,61 @@ msgstr ""
 msgid "Apply_adjacent_buffer"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-menus.php:226
+#: includes/admin/class-wc-bookings-menus.php:311
 msgid "Calendar Connection"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-menus.php:220
+#: includes/admin/class-wc-bookings-menus.php:305
 msgid "Timezones"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-menus.php:196
+#: includes/admin/class-wc-bookings-menus.php:281
 msgid "Store Availability"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-menus.php:162
+#: includes/admin/class-wc-bookings-menus.php:245
 msgid "Notification sent successfully"
 msgstr "هشدار  با موفقیت تکمیل شد"
 
-#: includes/admin/class-wc-bookings-menus.php:140
+#: includes/admin/class-wc-bookings-menus.php:223
 msgid "Please enter a subject"
 msgstr "لطفا موضوع خود را بنویسید"
 
-#: includes/admin/class-wc-bookings-menus.php:136
+#: includes/admin/class-wc-bookings-menus.php:219
 msgid "Please enter a message"
 msgstr "لطفا پیام خود را بنویسید"
 
-#: includes/admin/class-wc-bookings-menus.php:132
+#: includes/admin/class-wc-bookings-menus.php:215
 msgid "Please choose a product"
 msgstr "لطفا اتاق مورد نظرتان را انتخاب کنید"
 
-#: includes/admin/class-wc-bookings-menus.php:72
+#: includes/admin/class-wc-bookings-menus.php:81
+#: includes/admin/class-wc-bookings-menus.php:147
 #: includes/gateways/class-wc-bookings-gateway.php:26
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: includes/admin/class-wc-bookings-menus.php:71
+#: includes/admin/class-wc-bookings-menus.php:80
 #: includes/admin/views/html-notifications-page.php:11
 #: includes/admin/views/html-notifications-page.php:69
 #: woocommerce-bookings.php:206
 msgid "Send Notification"
 msgstr "ارسال هشدار از طریق"
 
-#: includes/admin/class-wc-bookings-menus.php:70
+#: includes/admin/class-wc-bookings-menus.php:79
+#: includes/admin/class-wc-bookings-menus.php:137
 #: includes/admin/views/html-calendar-day.php:2
 #: includes/admin/views/html-calendar-month.php:2
-#: includes/class-wc-bookings-google-calendar-connection.php:906
+#: includes/class-wc-bookings-google-calendar-connection.php:914
 #: woocommerce-bookings.php:196
 msgid "Calendar"
 msgstr "تقویم"
 
-#: includes/admin/class-wc-bookings-menus.php:69
+#: includes/admin/class-wc-bookings-menus.php:78
 #: includes/admin/views/html-create-booking-page-2.php:15
 #: includes/admin/views/html-create-booking-page-2.php:36
 #: includes/admin/views/html-create-booking-page.php:7
-#: includes/class-wc-bookings-init.php:102
+#: includes/class-wc-bookings-init.php:105
 #: woocommerce-bookings.php:185
 msgid "Add Booking"
 msgstr "اضافه کردن رزرو"
@@ -3119,110 +3194,110 @@ msgstr ""
 msgid "You're almost ready to take bookings!"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:416
+#: includes/admin/class-wc-bookings-details-meta-box.php:415
 msgid "End time (local timezone):"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:405
+#: includes/admin/class-wc-bookings-details-meta-box.php:404
 msgid "Start time (local timezone):"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:394
+#: includes/admin/class-wc-bookings-details-meta-box.php:393
 msgid "End time:"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:384
+#: includes/admin/class-wc-bookings-details-meta-box.php:383
 msgid "Start time:"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:376
+#: includes/admin/class-wc-bookings-details-meta-box.php:375
 msgid "Check this box if the booking is for all day."
 msgstr "چک کردن برای تمام روز ها"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:375
+#: includes/admin/class-wc-bookings-details-meta-box.php:374
 msgid "All day booking:"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:365
+#: includes/admin/class-wc-bookings-details-meta-box.php:364
 msgid "End date:"
 msgstr "تاریخ پایان:"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:355
+#: includes/admin/class-wc-bookings-details-meta-box.php:354
 msgid "Start date:"
 msgstr "تاریخ آغاز: "
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:350
+#: includes/admin/class-wc-bookings-details-meta-box.php:349
 msgid "Booking date &amp; time"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:269
+#: includes/admin/class-wc-bookings-details-meta-box.php:268
 msgid "Parent booking ID:"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:260
+#: includes/admin/class-wc-bookings-details-meta-box.php:259
 msgid "Booked product:"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:252
+#: includes/admin/class-wc-bookings-details-meta-box.php:251
 msgid "Booking specification"
 msgstr "اضافه کردن رزرو"
 
 #. translators: 1: full name 2: user id 3: email
-#: includes/admin/class-wc-bookings-details-meta-box.php:206
+#: includes/admin/class-wc-bookings-details-meta-box.php:205
 msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr "%1$s (#%2$s &ndash; %3$s)"
 
 #. translators: 1: guest name
-#: includes/admin/class-wc-bookings-details-meta-box.php:199
+#: includes/admin/class-wc-bookings-details-meta-box.php:198
 msgctxt "Admin booking guest placeholder"
 msgid "Guest (%s)"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:196
+#: includes/admin/class-wc-bookings-details-meta-box.php:195
 #: includes/admin/views/html-create-booking-page.php:21
 msgid "Guest"
 msgstr "مهمان"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:193
+#: includes/admin/class-wc-bookings-details-meta-box.php:192
 msgid "Customer:"
 msgstr "مشتری"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:181
+#: includes/admin/class-wc-bookings-details-meta-box.php:180
 msgid "Booking status:"
 msgstr "وضعیت رزرو"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:177
+#: includes/admin/class-wc-bookings-details-meta-box.php:176
 msgid "m"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:177
+#: includes/admin/class-wc-bookings-details-meta-box.php:176
 msgid "h"
 msgstr "ساعت"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:176
+#: includes/admin/class-wc-bookings-details-meta-box.php:175
 msgid "Date created:"
 msgstr "تاریخ ایجاد"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:168
+#: includes/admin/class-wc-bookings-details-meta-box.php:167
 msgid "Order ID:"
 msgstr "شناسه سفارش"
 
-#: includes/admin/class-wc-bookings-details-meta-box.php:165
+#: includes/admin/class-wc-bookings-details-meta-box.php:164
 msgid "General details"
 msgstr "اطلاعات کلی"
 
 #. translators: 1: bookings addon title
-#: includes/admin/class-wc-bookings-details-meta-box.php:158
+#: includes/admin/class-wc-bookings-details-meta-box.php:157
 msgid "Booking type: %s"
 msgstr ""
 
 #. translators: 1: href to order id
-#: includes/admin/class-wc-bookings-details-meta-box.php:153
+#: includes/admin/class-wc-bookings-details-meta-box.php:152
 msgid "Linked to order %s."
 msgstr ""
 
 #. translators: 1: booking id
-#: includes/admin/class-wc-bookings-details-meta-box.php:146
+#: includes/admin/class-wc-bookings-details-meta-box.php:145
 msgid "Booking #%s details"
 msgstr ""
 
@@ -3253,7 +3328,7 @@ msgid "Phone:"
 msgstr "شماره تماس"
 
 #: includes/admin/class-wc-bookings-customer-meta-box.php:95
-#: templates/emails/admin-new-booking.php:101
+#: templates/emails/admin-new-booking.php:118
 #: templates/emails/plain/admin-new-booking.php:84
 msgid "No billing address set."
 msgstr "آدرس صورت حساب"
@@ -3346,8 +3421,8 @@ msgid "# of Persons"
 msgstr ""
 
 #: includes/admin/class-wc-bookings-cpt.php:213
-#: templates/emails/admin-booking-cancelled.php:32
-#: templates/emails/admin-new-booking.php:51
+#: templates/emails/admin-booking-cancelled.php:37
+#: templates/emails/admin-new-booking.php:56
 #: templates/emails/customer-booking-cancelled.php:40
 #: templates/emails/customer-booking-confirmed.php:40
 #: templates/emails/customer-booking-notification.php:31
@@ -3401,21 +3476,21 @@ msgid "Confirm bookings"
 msgstr "تایید  رزرو آنلاین"
 
 #. translators: 1: person id 2: person name 3: person count
-#: includes/admin/class-wc-bookings-calendar.php:791
+#: includes/admin/class-wc-bookings-calendar.php:792
 msgid "Person #%1$s - %2$s (%3$s)"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-calendar.php:782
+#: includes/admin/class-wc-bookings-calendar.php:783
 #: includes/class-wc-bookings-ics-exporter.php:176
 msgid "Resource #"
 msgstr "اتاق ها #"
 
-#: includes/admin/class-wc-bookings-calendar.php:776
+#: includes/admin/class-wc-bookings-calendar.php:777
 msgid "Booked by"
 msgstr "رزرو شده توسط"
 
 #. translators: 1: person type 2: quantity
-#: includes/admin/class-wc-bookings-calendar.php:655
+#: includes/admin/class-wc-bookings-calendar.php:656
 #: includes/class-wc-bookings-ics-exporter.php:187
 #: templates/emails/plain/admin-booking-cancelled.php:62
 #: templates/emails/plain/admin-new-booking.php:79
@@ -3427,12 +3502,12 @@ msgstr "رزرو شده توسط"
 msgid "%1$s: %2$d"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-calendar.php:653
-#: includes/admin/class-wc-bookings-details-meta-box.php:280
+#: includes/admin/class-wc-bookings-calendar.php:654
+#: includes/admin/class-wc-bookings-details-meta-box.php:279
 #: includes/class-wc-bookings-ics-exporter.php:185
 #: includes/wc-bookings-functions.php:72
-#: templates/emails/admin-booking-cancelled.php:72
-#: templates/emails/admin-new-booking.php:90
+#: templates/emails/admin-booking-cancelled.php:89
+#: templates/emails/admin-new-booking.php:107
 #: templates/emails/customer-booking-cancelled.php:79
 #: templates/emails/customer-booking-confirmed.php:79
 #: templates/emails/customer-booking-notification.php:70
@@ -3449,47 +3524,47 @@ msgid "Person(s)"
 msgstr "شخص"
 
 #. translators: 1: number of bookings that are not displayed on calendar day
-#: includes/admin/class-wc-bookings-calendar.php:367
+#: includes/admin/class-wc-bookings-calendar.php:368
 msgid "%d more"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-calendar.php:215
-#: includes/admin/class-wc-bookings-calendar.php:290
-#: includes/admin/class-wc-bookings-calendar.php:693
+#: includes/admin/class-wc-bookings-calendar.php:216
+#: includes/admin/class-wc-bookings-calendar.php:291
+#: includes/admin/class-wc-bookings-calendar.php:694
 msgid "(From Google Calendar)"
 msgstr ""
 
 #. translators: 1: start time 2: end time
-#: includes/admin/class-wc-bookings-calendar.php:213
-#: includes/admin/class-wc-bookings-calendar.php:663
-#: includes/admin/class-wc-bookings-calendar.php:685
+#: includes/admin/class-wc-bookings-calendar.php:214
+#: includes/admin/class-wc-bookings-calendar.php:664
+#: includes/admin/class-wc-bookings-calendar.php:686
 msgid "%1$s — %2$s"
-msgstr ""
+msgstr "%1$s - %2$s"
 
-#: includes/admin/class-wc-bookings-calendar.php:213
-#: includes/admin/class-wc-bookings-calendar.php:663
-#: includes/admin/class-wc-bookings-calendar.php:671
-#: includes/admin/class-wc-bookings-calendar.php:689
+#: includes/admin/class-wc-bookings-calendar.php:214
+#: includes/admin/class-wc-bookings-calendar.php:664
+#: includes/admin/class-wc-bookings-calendar.php:672
+#: includes/admin/class-wc-bookings-calendar.php:690
 msgid "All Day"
 msgstr "تمام روز ها"
 
-#: includes/admin/class-wc-bookings-ajax.php:373
+#: includes/admin/class-wc-bookings-ajax.php:369
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:356
+#: includes/admin/class-wc-bookings-ajax.php:354
 msgid "No blocks available."
 msgstr "بدونه محدود کردن در دسترسی"
 
-#: includes/admin/class-wc-bookings-ajax.php:307
+#: includes/admin/class-wc-bookings-ajax.php:305
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/admin/class-wc-bookings-ajax.php:271
+#: includes/admin/class-wc-bookings-ajax.php:269
 msgid "Booking cost"
 msgstr "هزینه ی رزرو"
 
-#: includes/admin/class-wc-bookings-ajax.php:238
+#: includes/admin/class-wc-bookings-ajax.php:236
 msgid "This booking is unavailable."
 msgstr "غیر قابل دسترسی"
 
@@ -3509,112 +3584,114 @@ msgstr "اضافه کردن"
 msgid "The resource has already been linked to this product"
 msgstr "شما در حال حاضر این را علاقه مندی کردید"
 
-#: includes/admin/class-wc-bookings-admin.php:708
+#: includes/admin/class-wc-bookings-admin.php:731
 msgid "Enable this if this bookable product has multiple bookable resources, for example room types or instructors."
 msgstr "اگر این محصول دارای اتاق های متعدد هستید می توانید همه اتاق ها را به نمایش بگذارید"
 
-#: includes/admin/class-wc-bookings-admin.php:707
+#: includes/admin/class-wc-bookings-admin.php:730
 msgid "Has resources"
 msgstr "بابت اتاق"
 
-#: includes/admin/class-wc-bookings-admin.php:701
+#: includes/admin/class-wc-bookings-admin.php:724
 msgid "Enable this if this bookable product can be booked by a customer defined number of persons."
 msgstr "اگر این محصول در دسترس بود می توانید ن را برای تعدادی مشتری به نمایش بگذارید."
 
-#: includes/admin/class-wc-bookings-admin.php:700
+#: includes/admin/class-wc-bookings-admin.php:723
 msgid "Has persons"
 msgstr "هر شخص"
 
-#: includes/admin/class-wc-bookings-admin.php:653
+#: includes/admin/class-wc-bookings-admin.php:673
 msgid "Resource"
-msgstr ""
+msgstr "منابع"
 
-#: includes/admin/class-wc-bookings-admin.php:652
+#: includes/admin/class-wc-bookings-admin.php:672
 #: includes/admin/views/html-create-booking-page.php:18
 msgid "Customer"
 msgstr "مشتری"
 
-#: includes/admin/class-wc-bookings-admin.php:651
+#: includes/admin/class-wc-bookings-admin.php:671
 msgid "View details"
 msgstr "دیدن جزئیات"
 
-#: includes/admin/class-wc-bookings-admin.php:646
+#: includes/admin/class-wc-bookings-admin.php:663
 msgid "Enter a name for the new resource"
 msgstr "نام اتاق خود را وارد کنید"
 
-#: includes/admin/class-wc-bookings-admin.php:645
+#: includes/admin/class-wc-bookings-admin.php:662
 msgid "days"
 msgstr "روزها"
 
-#: includes/admin/class-wc-bookings-admin.php:644
+#: includes/admin/class-wc-bookings-admin.php:661
 msgid "hours"
 msgstr "ساعت"
 
-#: includes/admin/class-wc-bookings-admin.php:643
+#: includes/admin/class-wc-bookings-admin.php:660
 msgid "minutes"
 msgstr "دقیقه"
 
-#: includes/admin/class-wc-bookings-admin.php:640
+#: includes/admin/class-wc-bookings-admin.php:657
 msgid "Are you sure you want to remove this resource?"
 msgstr "آیا مطمئن هستید که می خواهید اتاق را حذف کنید؟"
 
-#: includes/admin/class-wc-bookings-admin.php:637
+#: includes/admin/class-wc-bookings-admin.php:654
 msgid "Are you sure you want to remove this person type?"
 msgstr "آیا مطمئن هستید که می خواهید (هزینه بابت هر فرد)را حذف کنید؟"
 
-#: includes/admin/class-wc-bookings-admin.php:538
+#: includes/admin/class-wc-bookings-admin.php:554
 #: includes/class-wc-booking-privacy.php:78
+#: includes/class-wc-bookings-init.php:330
 msgid "Bookable product"
 msgstr "رزرو اتاق"
 
-#: includes/admin/class-wc-bookings-admin.php:444
+#: includes/admin/class-wc-bookings-admin.php:459
 msgid "Booking submitted."
 msgstr "رزرو"
 
-#: includes/admin/class-wc-bookings-admin.php:443
+#: includes/admin/class-wc-bookings-admin.php:458
 msgid "Booking saved."
 msgstr "ذخیره کردن رزرو"
 
-#: includes/admin/class-wc-bookings-admin.php:439
+#: includes/admin/class-wc-bookings-admin.php:454
 msgid "Custom field deleted."
 msgstr "حذف فیلدهای سفارشی شده"
 
-#: includes/admin/class-wc-bookings-admin.php:438
+#: includes/admin/class-wc-bookings-admin.php:453
 msgid "Custom field updated."
 msgstr "بروز رسانی فیلد های سفارشی شده"
 
-#: includes/admin/class-wc-bookings-admin.php:437
-#: includes/admin/class-wc-bookings-admin.php:440
-#: includes/admin/class-wc-bookings-admin.php:442
+#: includes/admin/class-wc-bookings-admin.php:452
+#: includes/admin/class-wc-bookings-admin.php:455
+#: includes/admin/class-wc-bookings-admin.php:457
 msgid "Booking updated."
 msgstr "به روز روسانی رزرو"
 
-#: includes/admin/class-wc-bookings-admin.php:356
-#: includes/admin/class-wc-bookings-admin.php:654
+#: includes/admin/class-wc-bookings-admin.php:371
+#: includes/admin/class-wc-bookings-admin.php:674
 #: includes/admin/views/html-booking-tab.php:4
-#: includes/booking-form/class-wc-booking-form.php:275
-#: includes/class-wc-bookings-google-calendar-connection.php:1453
+#: includes/booking-form/class-wc-booking-form.php:284
+#: includes/class-wc-bookings-google-calendar-connection.php:1461
 #: includes/wc-bookings-functions.php:1243
 msgid "Persons"
 msgstr "هر شخص"
 
-#: includes/admin/class-wc-bookings-admin.php:349
+#: includes/admin/class-wc-bookings-admin.php:364
 #: includes/admin/views/html-booking-tab.php:3
 msgid "Costs"
 msgstr "هزینه"
 
-#: includes/admin/class-wc-bookings-admin.php:342
+#: includes/admin/class-wc-bookings-admin.php:357
 #: includes/admin/class-wc-bookings-products-export.php:32
 #: includes/admin/class-wc-bookings-products-import.php:33
 #: includes/admin/views/html-booking-tab.php:2
 msgid "Availability"
 msgstr "دسترسی"
 
-#: includes/admin/class-wc-bookings-admin.php:335
+#: includes/admin/class-wc-bookings-admin.php:350
+#: includes/admin/class-wc-bookings-menus.php:127
 #: includes/admin/views/html-booking-resources.php:36
 #: includes/admin/views/html-booking-tab.php:1
-#: includes/class-wc-bookings-init.php:58
-#: includes/class-wc-bookings-init.php:74
+#: includes/class-wc-bookings-init.php:61
+#: includes/class-wc-bookings-init.php:77
 msgid "Resources"
 msgstr "اتاق ها"
 
@@ -3702,16 +3779,16 @@ msgid "Resource details"
 msgstr "جزئیات رزرو"
 
 #: includes/admin/class-wc-bookable-resource-cpt.php:98
-#: includes/class-wc-bookings-init.php:64
-#: includes/class-wc-bookings-init.php:104
+#: includes/class-wc-bookings-init.php:67
+#: includes/class-wc-bookings-init.php:107
 msgid "Edit"
 msgstr "ویرایش"
 
 #: includes/admin/class-wc-bookable-resource-cpt.php:91
 #: includes/admin/class-wc-bookings-cpt.php:272
 #: includes/admin/class-wc-bookings-customer-meta-box.php:116
-#: includes/admin/class-wc-bookings-details-meta-box.php:124
-#: includes/admin/class-wc-bookings-details-meta-box.php:169
+#: includes/admin/class-wc-bookings-details-meta-box.php:123
+#: includes/admin/class-wc-bookings-details-meta-box.php:168
 #: includes/emails/class-wc-email-booking-cancelled.php:88
 #: includes/emails/class-wc-email-booking-confirmed.php:86
 #: includes/emails/class-wc-email-booking-notification.php:92
@@ -3741,3 +3818,8 @@ msgstr "نام"
 #: includes/admin/class-wc-bookable-resource-cpt.php:30
 msgid "Bookable resource name"
 msgstr "نام هتل"
+
+#. Plugin Name of the plugin
+#: includes/admin/class-wc-bookings-menus.php:132
+msgid "WooCommerce Bookings"
+msgstr ""

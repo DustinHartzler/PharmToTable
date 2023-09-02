@@ -33,15 +33,22 @@ class WC_Bookings_Single_Export {
 	 * Catches form requests.
 	 */
 	public function catch_export_requests() {
-		if ( ! isset( $_GET['action'] )
-		     || 'export_product_with_global_rules' !== $_GET['action']
-		     || ! isset( $_GET['_wpnonce'] )
-		) {
+		$product_id   = isset( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
+		$nonce_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) . "_$product_id" : '';
+
+		// Check if we are exporting a valid product with a valid nonce action
+		if ( ! $nonce_action || ! $product_id ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'export_product_with_global_rules' ) ) {
+		// Check if the nonce is valid.
+		if ( ! wp_verify_nonce( $_GET['_wpnonce'], $nonce_action ) ) {
 			wp_die( esc_html__( 'Unauthorised request, please try again.', 'woocommerce-bookings' ) );
+		}
+
+		// Check if the user has permission to export the product.
+		if ( ! current_user_can( 'edit_wc_booking', $product_id ) ) {
+			return;
 		}
 
 		// Export Product and Global rules.
@@ -129,7 +136,7 @@ class WC_Bookings_Single_Export {
 
 			$this->trigger_download( $prepared_json, 'booking-product-' . $product_id . '-with-global-rules' );
 		} catch ( Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 	}
 
@@ -154,7 +161,7 @@ class WC_Bookings_Single_Export {
 
 			return $global_rules_json;
 		} catch ( Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 	}
 
