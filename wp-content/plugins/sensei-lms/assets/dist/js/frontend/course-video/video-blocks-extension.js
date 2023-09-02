@@ -6,8 +6,7 @@
 /* harmony export */n.d(t,{
 /* harmony export */K:()=>/* binding */s
 /* harmony export */});
-/* harmony import */var r=n(92694),i=window.sensei.courseVideoSettings,o=i.courseVideoRequired,a=i.courseVideoAutoComplete,u=i.courseVideoAutoPause,d={},s=function(e){var t=e.pauseVideo,n=void 0===t?function(){}:t,i=e.registerVideoEndHandler,u=void 0===i?function(){}:i,s=e.url,f=void 0===s?"":s,m=e.blockElement,h=m.hasAttribute("data-sensei-is-required"),y=m.hasAttribute("data-sensei-is-not-required");
-// Block level setting overwrites the course level setting.
+/* harmony import */var r=n(92694),i=window.sensei.courseVideoSettings,o=i.courseVideoRequired,a=i.courseVideoAutoComplete,u=i.courseVideoAutoPause,d={},s=function(e){var t=e.pauseVideo,n=void 0===t?function(){}:t,i=e.registerVideoEndHandler,u=void 0===i?function(){}:i,s=e.url,f=void 0===s?"":s,m=e.blockElement,h=m.hasAttribute("data-sensei-is-required"),y=m.hasAttribute("data-sensei-is-not-required");// Block level setting overwrites the course level setting.
 (h||o&&!y)&&(
 /**
      * Called when a required video for the current lesson is registered.
@@ -73,8 +72,7 @@ document.addEventListener("visibilitychange",(function(){if(document.hidden)for(
 /* harmony export */n.d(t,{
 /* harmony export */V:()=>/* binding */a
 /* harmony export */});
-/* harmony import */var r=n(24430),i=n(39801),o=function(e){var t=new i/* ["default"] */.Z(e),n="https://vimeo.com/"+e.src.split("?")[0].split("/").pop();
-// iframe.src should be in the format:
+/* harmony import */var r=n(24430),i=n(39801),o=function(e){var t=new i/* ["default"] */.Z(e),n="https://vimeo.com/"+e.src.split("?")[0].split("/").pop();// iframe.src should be in the format:
 // https://player.vimeo.com/video/VIDEO_ID?other-query-parameters=and-their-values
 (0,r/* .registerVideo */.K)({pauseVideo:function(){t.pause()},registerVideoEndHandler:function(e){t.on("ended",e)},url:n,blockElement:e.closest("figure")})},a=function(){document.querySelectorAll(".wp-block-embed-vimeo iframe").forEach(o)};
 /* harmony import */}
@@ -84,8 +82,7 @@ document.addEventListener("visibilitychange",(function(){if(document.hidden)for(
 /* harmony export */n.d(t,{
 /* harmony export */$:()=>/* binding */a
 /* harmony export */});
-/* harmony import */var r=n(24430),i=n(39801),o=function(e){var t=new i/* ["default"] */.Z(e),n="https://www.youtube.com/watch?v="+e.src.split("?")[0].split("/").pop();
-// iframe.src should be in the format:
+/* harmony import */var r=n(24430),i=n(39801),o=function(e){var t=new i/* ["default"] */.Z(e),n="https://www.youtube.com/watch?v="+e.src.split("?")[0].split("/").pop();// iframe.src should be in the format:
 // https://www.youtube.com/embed/VIDEO_ID?other-query-parameters=and-their-values&origin=https://example.com
 (0,r/* .registerVideo */.K)({pauseVideo:function(){t.pause()},registerVideoEndHandler:function(e){t.on("ended",e)},url:n,blockElement:e.closest("figure")})},a=function(){document.querySelectorAll(".wp-block-embed-youtube iframe").forEach(o)};
 /* harmony import */}
@@ -122,8 +119,7 @@ console.error("Video adapter not found",this.element)}
      * Get the video player.
      *
      * @return {Promise<Object|HTMLVideoElement|HTMLIFrameElement>} The video player through a promise.
-     */},{key:"getPlayer",value:function(){var e;this.playerPromise||(this.playerPromise=(null===(e=this.getAdapter())||void 0===e?void 0:e.initializePlayer(this.element,this.w))||
-// A promise that never resolves if it doesn't exist.
+     */},{key:"getPlayer",value:function(){var e;this.playerPromise||(this.playerPromise=(null===(e=this.getAdapter())||void 0===e?void 0:e.initializePlayer(this.element,this.w))||// A promise that never resolves if it doesn't exist.
 Promise.reject(new Error("Failed getting the player")));return this.playerPromise}
 /**
      * Get the video duration.
@@ -234,23 +230,19 @@ isNaN(e.duration)||t(e),e.addEventListener("durationchange",(function(){t(e)}),{
 /**
  * Adapter name.
  */
-var r="videopress",i=/(videopress|video\.wordpress)\.com\/.+/i,o=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:window;return new Promise((function(n){if(e.dataset.duration)n(e);else{
-// eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
+var r="videopress",i=/(videopress|video\.wordpress)\.com\/.+/i,o=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:window;return new Promise((function(n){if(e.dataset.duration)n(e);else{// eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
 t.addEventListener("message",(function(t){if(t.source===e.contentWindow){var r=t.data;"videopress_durationchange"===r.event&&r.durationMs?(
 // Set the duration to a dataset in order to be available later,
 // and consider the initialization done.
-e.dataset.duration=r.durationMs/1e3,
-// If current time didn't return yet, set it to `0`.
+e.dataset.duration=r.durationMs/1e3,// If current time didn't return yet, set it to `0`.
 e.dataset.currentTime||(e.dataset.currentTime=0),n(e)):"videopress_timeupdate"===r.event&&r.currentTimeMs?
 // Set the current time to a dataset in order to be available later.
 e.dataset.currentTime=r.currentTimeMs/1e3:"videopress_play"===r.event&&(
 // Identify that video was already played.
-e.dataset.hasPlayed="has-played")}}))}}))},a=function(e){return new Promise((function(t,n){var r=e.dataset.duration;r||n(new Error("Video duration not found")),t(parseFloat(r))}))},u=function(e){return new Promise((function(t,n){var r=e.dataset.currentTime;r?t(parseFloat(r)):n(new Error("Video current time not found"))}))},d=function(e,t){return new Promise((function(n){var r=function(){e.contentWindow.postMessage({event:"videopress_action_set_currenttime",currentTime:t},"*"),n()};e.dataset.hasPlayed?r():s(e).then((function(){return c(e)})).then(r)}))},s=function(e){return new Promise((function(t){e.contentWindow.postMessage({event:"videopress_action_play"},"*"),t()}))},c=function(e){return new Promise((function(t){e.contentWindow.postMessage({event:"videopress_action_pause"},"*"),t()}))},l=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:window,r=function(n){n.source===e.contentWindow&&"videopress_timeupdate"===n.data.event&&n.data.currentTimeMs&&t(n.data.currentTimeMs/1e3)};
-// eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
+e.dataset.hasPlayed="has-played")}}))}}))},a=function(e){return new Promise((function(t,n){var r=e.dataset.duration;r||n(new Error("Video duration not found")),t(parseFloat(r))}))},u=function(e){return new Promise((function(t,n){var r=e.dataset.currentTime;r?t(parseFloat(r)):n(new Error("Video current time not found"))}))},d=function(e,t){return new Promise((function(n){var r=function(){e.contentWindow.postMessage({event:"videopress_action_set_currenttime",currentTime:t},"*"),n()};e.dataset.hasPlayed?r():s(e).then((function(){return c(e)})).then(r)}))},s=function(e){return new Promise((function(t){e.contentWindow.postMessage({event:"videopress_action_play"},"*"),t()}))},c=function(e){return new Promise((function(t){e.contentWindow.postMessage({event:"videopress_action_pause"},"*"),t()}))},l=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:window,r=function(n){n.source===e.contentWindow&&"videopress_timeupdate"===n.data.event&&n.data.currentTimeMs&&t(n.data.currentTimeMs/1e3)};// eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
 return n.addEventListener("message",r),function(){
 // eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
-n.removeEventListener("message",r)}},f=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:window,r=function(n){n.source===e.contentWindow&&"videopress_ended"===n.data.event&&t()};
-// eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
+n.removeEventListener("message",r)}},f=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:window,r=function(n){n.source===e.contentWindow&&"videopress_ended"===n.data.event&&t()};// eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
 return n.addEventListener("message",r),function(){
 // eslint-disable-next-line @wordpress/no-global-event-listener -- Not in a React context.
 n.removeEventListener("message",r)}};
@@ -275,8 +267,7 @@ n.removeEventListener("message",r)}};
 /**
  * Adapter name.
  */
-var r="vimeo",i=/vimeo\.com\/.+/i,o=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:window,n=new t.Vimeo.Player(e),r=function t(){e.dataset.hasPlayed="has-played",n.off("play",t)};return"has-played"!==e.dataset.hasPlayed&&n.on("play",r),n.ready().then((function(){return n}))},a=function(e){return e.getDuration()},u=function(e){return e.getCurrentTime()},d=function(e,t){return e.element.dataset.hasPlayed?e.setCurrentTime(t):s(e).then((function(){return c(e)})).then((function(){return e.setCurrentTime(t)}));
-// Play the video a first time if it wasn't already played yet.
+var r="vimeo",i=/vimeo\.com\/.+/i,o=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:window,n=new t.Vimeo.Player(e),r=function t(){e.dataset.hasPlayed="has-played",n.off("play",t)};return"has-played"!==e.dataset.hasPlayed&&n.on("play",r),n.ready().then((function(){return n}))},a=function(e){return e.getDuration()},u=function(e){return e.getCurrentTime()},d=function(e,t){return e.element.dataset.hasPlayed?e.setCurrentTime(t):s(e).then((function(){return c(e)})).then((function(){return e.setCurrentTime(t)}));// Play the video a first time if it wasn't already played yet.
 },s=function(e){return e.play()},c=function(e){return e.pause()},l=function(e,t){var n=function(e){t(e.seconds)};return e.on("timeupdate",n),function(){e.off("timeupdate",n)}},f=function(e,t){return e.on("ended",t),function(){e.off("ended",t)}};
 /**
  * The embed pattern to check if it's the respective type.
@@ -301,8 +292,7 @@ var r="vimeo",i=/vimeo\.com\/.+/i,o=function(e){var t=arguments.length>1&&void 0
  */
 var r="youtube",i=/(youtu\.be|youtube\.com)\/.+/i,o=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:window;return new Promise((function(n){t.senseiYouTubeIframeAPIReady.then((function(){var r=t.YT.get(e.id)||new t.YT.Player(e),i=function(){n(r)};r.getDuration?
 // Just in case it's called after the player is ready.
-i():r.addEventListener("onReady",i);
-// Add a dataset to identify if video has played already.
+i():r.addEventListener("onReady",i);// Add a dataset to identify if video has played already.
 "has-played"!==e.dataset.hasPlayed&&r.addEventListener("onStateChange",(function n(i){i.data===t.YT.PlayerState.PLAYING&&(e.dataset.hasPlayed="has-played",r.removeEventListener("onStateChange",n))}))}))}))},a=function(e){return new Promise((function(t){t(e.getDuration())}))},u=function(e){return new Promise((function(t){t(e.getCurrentTime())}))},d=function(e,t){return new Promise((function(n){e.getIframe().dataset.hasPlayed?(e.seekTo(t),n()):s(e).then((function(){return c(e)})).then((function(){e.seekTo(t),n()}))}))},s=function(e){return new Promise((function(t){e.playVideo(),t()}))},c=function(e){return new Promise((function(t){e.pauseVideo(),t()}))},l=function(e,t){var n,r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:window,i=250,o=function(e){n!==e&&(t(e),n=e)},a=setInterval((function(){e.getPlayerState()!==r.YT.PlayerState.ENDED&&o(e.getCurrentTime())}),i),u=function(){e.getPlayerState()===r.YT.PlayerState.ENDED&&o(e.getDuration())};return e.addEventListener("onStateChange",u),function(){clearInterval(a),e.removeEventListener("onStateChange",u)}},f=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:window,r=function(){e.getPlayerState()===n.YT.PlayerState.ENDED&&t()};return e.addEventListener("onStateChange",r),function(){e.removeEventListener("onStateChange",r)}};
 /**
  * The embed pattern to check if it's the respective type.

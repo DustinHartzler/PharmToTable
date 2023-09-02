@@ -18,8 +18,7 @@ return a.createElement("svg",c({viewBox:"0 0 24 24",fill:"none",xmlns:"http://ww
 /* harmony export */});
 /* harmony import */var n=r(69307),o=r(9818),a=r(52175);
 /* harmony import */
-/* harmony default export */const c=function(e){var t=e.attributes,r=e.clientId,c=(0,o.useSelect)((function(e){return e(a.store).__experimentalGetParsedPattern(t.slug)}),[t.slug]),s=(0,o.useDispatch)(a.store),l=s.replaceBlocks,i=s.__unstableMarkNextChangeAsNotPersistent;
-// Run this effect when the component loads.
+/* harmony default export */const c=function(e){var t=e.attributes,r=e.clientId,c=(0,o.useSelect)((function(e){return e(a.store).__experimentalGetParsedPattern(t.slug)}),[t.slug]),s=(0,o.useDispatch)(a.store),l=s.replaceBlocks,i=s.__unstableMarkNextChangeAsNotPersistent;// Run this effect when the component loads.
 // This adds the Pattern's contents to the post.
 // This change won't be saved.
 // It will continue to pull from the pattern file unless changes are made to its respective template part.
@@ -48,8 +47,7 @@ var p=(0,a.useBlockProps)();return(0,n.createElement)("div",p)};
 /* harmony default export */const i=function(e){(0,c.updateCategory)("sensei-lms",{icon:(0,o.createElement)(s/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,r=e.name,o=(0,n/* ["default"] */.Z)(e,l);t&&(
 // Remove the overlapping metadata keys from the settings object to make localization work.
 // This is needed because only the metadata object is localized, but the overlapping keys will be overwritten by the settings object and the localization is lost.
-o=(0,a.omit)(o,Object.keys(t))),
-// The metadata object should be used for the `block.json` strings to be localized.
+o=(0,a.omit)(o,Object.keys(t))),// The metadata object should be used for the `block.json` strings to be localized.
 // See https://github.com/Automattic/sensei/pull/5782 for more details.
 (0,c.registerBlockType)(t||r,o)}))};
 /***/},

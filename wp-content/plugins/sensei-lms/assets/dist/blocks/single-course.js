@@ -171,7 +171,7 @@ e.exports=n(58772)()}
 // Start animation helper using nested requestAnimationFrames
 function f(e){e.forEach((function(e){return cancelAnimationFrame(e)}))}function h(e){return!isNaN(parseFloat(e))&&isFinite(e)}function v(e){
 // Percentage height
-return"string"==typeof e&&e.search("%")===e.length-1&&h(e.substr(0,e.length-1))}function g(e,t){e&&"function"==typeof e&&e(t)}var y=function(e){function t(e){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,t);var n=function(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e));n.animationFrameIDs=[];var r="auto",o="visible";h(e.height)?(
+return"string"==typeof e&&e.search("%")===e.length-1&&h(e.substr(0,e.length-1))}function g(e,t){e&&"function"==typeof e&&e(t)}var E=function(e){function t(e){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,t);var n=function(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e));n.animationFrameIDs=[];var r="auto",o="visible";h(e.height)?(
 // If value is string "0" make sure we convert it to number 0
 r=e.height<0||"0"===e.height?0:e.height,o="hidden"):v(e.height)&&(
 // If value is string "0%" make sure we convert it to number 0
@@ -186,68 +186,68 @@ if(this.contentElement&&c!==e.height){var p;
 // if it was hidden to prevent tabbing into it
 this.showContent(t.height),
 // Cache content height
-this.contentElement.style.overflow="hidden";var y=this.contentElement.offsetHeight;this.contentElement.style.overflow="";
+this.contentElement.style.overflow="hidden";var E=this.contentElement.offsetHeight;this.contentElement.style.overflow="";
 // set total animation time
-var E=a+i,b=null,w={height:null,// it will be always set to either 'auto' or specific number
-overflow:"hidden"},S="auto"===t.height;h(c)?(
+var b=a+i,y=null,S={height:null,// it will be always set to either 'auto' or specific number
+overflow:"hidden"},_="auto"===t.height;h(c)?(
 // If value is string "0" make sure we convert it to number 0
-b=c<0||"0"===c?0:c,w.height=b):v(c)?(
+y=c<0||"0"===c?0:c,S.height=y):v(c)?(
 // If value is string "0%" make sure we convert it to number 0
-b="0%"===c?0:c,w.height=b):(
+y="0%"===c?0:c,S.height=y):(
 // If not, animate to content height
 // and then reset to auto
-b=y,// TODO solve contentHeight = 0
-w.height="auto",w.overflow=null),S&&(
+y=E,// TODO solve contentHeight = 0
+S.height="auto",S.overflow=null),_&&(
 // This is the height to be animated to
-w.height=b,
+S.height=y,
 // If previous height was 'auto'
 // set starting height explicitly to be able to use transition
-b=y);
+y=E);
 // Animation classes
-var _=(0,l.default)((u(p={},this.animationStateClasses.animating,!0),u(p,this.animationStateClasses.animatingUp,"auto"===e.height||c<e.height),u(p,this.animationStateClasses.animatingDown,"auto"===c||c>e.height),u(p,this.animationStateClasses.animatingToHeightZero,0===w.height),u(p,this.animationStateClasses.animatingToHeightAuto,"auto"===w.height),u(p,this.animationStateClasses.animatingToHeightSpecific,w.height>0),p)),k=this.getStaticStateClasses(w.height);
+var w=(0,l.default)((u(p={},this.animationStateClasses.animating,!0),u(p,this.animationStateClasses.animatingUp,"auto"===e.height||c<e.height),u(p,this.animationStateClasses.animatingDown,"auto"===c||c>e.height),u(p,this.animationStateClasses.animatingToHeightZero,0===S.height),u(p,this.animationStateClasses.animatingToHeightAuto,"auto"===S.height),u(p,this.animationStateClasses.animatingToHeightSpecific,S.height>0),p)),k=this.getStaticStateClasses(S.height);
 // Animation classes to be put after animation is complete
 // Set starting height and animating classes
 // We are safe to call set state as it will not trigger infinite loop
 // because of the "height !== prevProps.height" check
 this.setState({// eslint-disable-line react/no-did-update-set-state
-animationStateClasses:_,height:b,overflow:"hidden",
+animationStateClasses:w,height:y,overflow:"hidden",
 // When animating from 'auto' we first need to set fixed height
 // that change should be animated
-shouldUseTransitions:!S}),
+shouldUseTransitions:!_}),
 // Clear timeouts
-clearTimeout(this.timeoutID),clearTimeout(this.animationClassesTimeoutID),S?(
+clearTimeout(this.timeoutID),clearTimeout(this.animationClassesTimeoutID),_?(
 // When animating from 'auto' we use a short timeout to start animation
 // after setting fixed height above
-w.shouldUseTransitions=!0,f(this.animationFrameIDs),this.animationFrameIDs=(n=function(){s.setState(w),
+S.shouldUseTransitions=!0,f(this.animationFrameIDs),this.animationFrameIDs=(n=function(){s.setState(S),
 // ANIMATION STARTS, run a callback if it exists
-g(m,{newHeight:w.height})},(r=[])[0]=requestAnimationFrame((function(){r[1]=requestAnimationFrame((function(){n()}))})),r),
+g(m,{newHeight:S.height})},(r=[])[0]=requestAnimationFrame((function(){r[1]=requestAnimationFrame((function(){n()}))})),r),
 // Set static classes and remove transitions when animation ends
 this.animationClassesTimeoutID=setTimeout((function(){s.setState({animationStateClasses:k,shouldUseTransitions:!1}),
 // ANIMATION ENDS
 // Hide content if height is 0 (to prevent tabbing into it)
-s.hideContent(w.height),
+s.hideContent(S.height),
 // Run a callback if it exists
-g(d,{newHeight:w.height})}),E)):(
+g(d,{newHeight:S.height})}),b)):(
 // ANIMATION STARTS, run a callback if it exists
-g(m,{newHeight:b}),
+g(m,{newHeight:y}),
 // Set end height, classes and remove transitions when animation is complete
-this.timeoutID=setTimeout((function(){w.animationStateClasses=k,w.shouldUseTransitions=!1,s.setState(w),
+this.timeoutID=setTimeout((function(){S.animationStateClasses=k,S.shouldUseTransitions=!1,s.setState(S),
 // ANIMATION ENDS
 // If height is auto, don't hide the content
 // (case when element is empty, therefore height is 0)
 "auto"!==c&&
 // Hide content if height is 0 (to prevent tabbing into it)
-s.hideContent(b),
+s.hideContent(y),
 // Run a callback if it exists
-g(d,{newHeight:b})}),E))}}},{key:"componentWillUnmount",value:function(){f(this.animationFrameIDs),clearTimeout(this.timeoutID),clearTimeout(this.animationClassesTimeoutID),this.timeoutID=null,this.animationClassesTimeoutID=null,this.animationStateClasses=null}},{key:"showContent",value:function(e){0===e&&(this.contentElement.style.display="")}},{key:"hideContent",value:function(e){0===e&&(this.contentElement.style.display="none")}},{key:"getStaticStateClasses",value:function(e){var t;return(0,l.default)((u(t={},this.animationStateClasses.static,!0),u(t,this.animationStateClasses.staticHeightZero,0===e),u(t,this.animationStateClasses.staticHeightSpecific,e>0),u(t,this.animationStateClasses.staticHeightAuto,"auto"===e),t))}},{key:"render",value:function(){var e,t=this,n=this.props,r=n.animateOpacity,o=n.applyInlineTransitions,a=n.children,c=n.className,d=n.contentClassName,f=n.delay,h=n.duration,v=n.easing,g=n.id,y=n.style,E=this.state,b=E.height,w=E.overflow,S=E.animationStateClasses,_=E.shouldUseTransitions,k=s({},y,{height:b,overflow:w||y.overflow});_&&o&&(k.transition="height "+h+"ms "+v+" "+f+"ms",
+g(d,{newHeight:y})}),b))}}},{key:"componentWillUnmount",value:function(){f(this.animationFrameIDs),clearTimeout(this.timeoutID),clearTimeout(this.animationClassesTimeoutID),this.timeoutID=null,this.animationClassesTimeoutID=null,this.animationStateClasses=null}},{key:"showContent",value:function(e){0===e&&(this.contentElement.style.display="")}},{key:"hideContent",value:function(e){0===e&&(this.contentElement.style.display="none")}},{key:"getStaticStateClasses",value:function(e){var t;return(0,l.default)((u(t={},this.animationStateClasses.static,!0),u(t,this.animationStateClasses.staticHeightZero,0===e),u(t,this.animationStateClasses.staticHeightSpecific,e>0),u(t,this.animationStateClasses.staticHeightAuto,"auto"===e),t))}},{key:"render",value:function(){var e,t=this,n=this.props,r=n.animateOpacity,o=n.applyInlineTransitions,a=n.children,c=n.className,d=n.contentClassName,f=n.delay,h=n.duration,v=n.easing,g=n.id,E=n.style,b=this.state,y=b.height,S=b.overflow,_=b.animationStateClasses,w=b.shouldUseTransitions,k=s({},E,{height:y,overflow:S||E.overflow});w&&o&&(k.transition="height "+h+"ms "+v+" "+f+"ms",
 // Include transition passed through styles
-y.transition&&(k.transition=y.transition+", "+k.transition),
+E.transition&&(k.transition=E.transition+", "+k.transition),
 // Add webkit vendor prefix still used by opera, blackberry...
-k.WebkitTransition=k.transition);var x={};r&&(x.transition="opacity "+h+"ms "+v+" "+f+"ms",
+k.WebkitTransition=k.transition);var C={};r&&(C.transition="opacity "+h+"ms "+v+" "+f+"ms",
 // Add webkit vendor prefix still used by opera, blackberry...
-x.WebkitTransition=x.transition,0===b&&(x.opacity=0));var C=(0,l.default)((u(e={},S,!0),u(e,c,c),e)),Z=void 0!==this.props["aria-hidden"]?this.props["aria-hidden"]:0===b;
+C.WebkitTransition=C.transition,0===y&&(C.opacity=0));var x=(0,l.default)((u(e={},_,!0),u(e,c,c),e)),Z=void 0!==this.props["aria-hidden"]?this.props["aria-hidden"]:0===y;
 // Check if user passed aria-hidden prop
-return i.default.createElement("div",s({},p.apply(void 0,[this.props].concat(m)),{"aria-hidden":Z,className:C,id:g,style:k}),i.default.createElement("div",{className:d,style:x,ref:function(e){return t.contentElement=e}},a))}}]),t}(i.default.Component);y.propTypes={"aria-hidden":a.default.bool,animateOpacity:a.default.bool,animationStateClasses:a.default.object,applyInlineTransitions:a.default.bool,children:a.default.any.isRequired,className:a.default.string,contentClassName:a.default.string,delay:a.default.number,duration:a.default.number,easing:a.default.string,height:function(e,t,n){var s=e[t];return"number"==typeof s&&s>=0||v(s)||"auto"===s?null:new TypeError('value "'+s+'" of type "'+(void 0===s?"undefined":r(s))+'" is invalid type for '+t+" in "+n+'. It needs to be a positive number, string "auto" or percentage string (e.g. "15%").')},id:a.default.string,onAnimationEnd:a.default.func,onAnimationStart:a.default.func,style:a.default.object},y.defaultProps={animateOpacity:!1,animationStateClasses:d,applyInlineTransitions:!0,duration:250,delay:0,easing:"ease",style:{}},t.Z=y}
+return i.default.createElement("div",s({},p.apply(void 0,[this.props].concat(m)),{"aria-hidden":Z,className:x,id:g,style:k}),i.default.createElement("div",{className:d,style:C,ref:function(e){return t.contentElement=e}},a))}}]),t}(i.default.Component);E.propTypes={"aria-hidden":a.default.bool,animateOpacity:a.default.bool,animationStateClasses:a.default.object,applyInlineTransitions:a.default.bool,children:a.default.any.isRequired,className:a.default.string,contentClassName:a.default.string,delay:a.default.number,duration:a.default.number,easing:a.default.string,height:function(e,t,n){var s=e[t];return"number"==typeof s&&s>=0||v(s)||"auto"===s?null:new TypeError('value "'+s+'" of type "'+(void 0===s?"undefined":r(s))+'" is invalid type for '+t+" in "+n+'. It needs to be a positive number, string "auto" or percentage string (e.g. "15%").')},id:a.default.string,onAnimationEnd:a.default.func,onAnimationStart:a.default.func,style:a.default.object},E.defaultProps={animateOpacity:!1,animationStateClasses:d,applyInlineTransitions:!0,duration:250,delay:0,easing:"ease",style:{}},t.Z=E}
 /***/,
 /***/67260:
 /***/(e,t,n)=>{"use strict";
@@ -261,13 +261,14 @@ return i.default.createElement("div",s({},p.apply(void 0,[this.props].concat(m))
 /***/1849:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */v:()=>/* binding */c
+/* harmony export */v:()=>/* binding */l
 /* harmony export */});
-/* harmony import */var r=n(11092),s=n(9818),o=n(65736),i=n(23728),a=n(69973),__=o.__,l=function(){return(0,a/* .getFirstBlockByName */.H4)("sensei-lms/course-outline",(0,s.select)("core/block-editor").getBlocks())},c="sensei/course-structure";
-/* harmony import */(0,i/* .registerStructureStore */.x)({storeName:c,getEndpoint:(0,r/* ["default"] */.Z)().mark((function e(){var t;return(0,r/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,s.select)("core/editor").getCurrentPostId();case 2:return t=e.sent,e.abrupt("return","course-structure/".concat(t,"?context=edit"));case 4:case"end":return e.stop()}}),e)})),updateBlock:(0,r/* ["default"] */.Z)().mark((function e(t){var n,o,i,c;return(0,r/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:if(n=l(),o=n.clientId,(i=void 0===o?null:o)&&t&&0!==t.length){e.next=3;break}return e.abrupt("return");case 3:return e.next=5,(0,s.select)("core/block-editor").getBlocks(i);case 5:return c=e.sent,e.next=8,(0,s.dispatch)("core/block-editor").replaceInnerBlocks(i,(0,a/* .syncStructureToBlocks */.pu)(t,c),!1);case 8:case"end":return e.stop()}}),e)})),blockExists:function(){return!!l()},readBlock:function(){var e=l();return e?{structure:(0,a/* .extractStructure */.Vw)(e.innerBlocks)}:null},saveError:(0,r/* ["default"] */.Z)().mark((function e(t){var n;return(0,r/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return n=(0,o.sprintf)(/* translators: Error message. */
-__("Course modules and lessons could not be updated. %s","sensei-lms"),t.message),e.next=3,(0,s.dispatch)("core/notices").createErrorNotice(n,{id:"course-outline-save-error"});case 3:case"end":return e.stop()}}),e)})),clearError:function(){
+/* harmony import */var r=n(9818),s=n(65736),o=n(23728),i=n(69973),__=s.__,a=function(){return(0,i/* .getFirstBlockByName */.H4)("sensei-lms/course-outline",(0,r.select)("core/block-editor").getBlocks())},l="sensei/course-structure";
+/* harmony import */(0,o/* .registerStructureStore */.x)({storeName:l,getEndpoint:regeneratorRuntime.mark((function e(){var t;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,r.select)("core/editor").getCurrentPostId();case 2:return t=e.sent,e.abrupt("return","course-structure/".concat(t,"?context=edit"));case 4:case"end":return e.stop()}}),e)})),updateBlock:regeneratorRuntime.mark((function e(t){var n,s,o,l;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:if(n=a(),s=n.clientId,(o=void 0===s?null:s)&&t&&0!==t.length){e.next=3;break}return e.abrupt("return");case 3:return e.next=5,(0,r.select)("core/block-editor").getBlocks(o);case 5:return l=e.sent,e.next=8,(0,r.dispatch)("core/block-editor").replaceInnerBlocks(o,(0,i/* .syncStructureToBlocks */.pu)(t,l),!1);case 8:case"end":return e.stop()}}),e)})),blockExists:function(){return!!a()},readBlock:function(){var e=a();return e?{structure:(0,i/* .extractStructure */.Vw)(e.innerBlocks)}:null},saveError:regeneratorRuntime.mark((function e(t){var n;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return n=(0,s.sprintf)(
+/* translators: Error message. */
+__("Course modules and lessons could not be updated. %s","sensei-lms"),t.message),e.next=3,(0,r.dispatch)("core/notices").createErrorNotice(n,{id:"course-outline-save-error"});case 3:case"end":return e.stop()}}),e)})),clearError:function(){
 // Clear error notices.
-(0,s.dispatch)("core/notices").removeNotice("course-outline-save-error")},
+(0,r.dispatch)("core/notices").removeNotice("course-outline-save-error")},
 /**
    * Prepend structure in server's response.
    *
@@ -322,10 +323,8 @@ setServerStructure:function(e){return e?{structure:e}:{}}})}
 /* harmony default export */const m=function(e){var t=e.lessonId,n=e.lessonTitle,l=(0,o.useSelect)((function(e){return{isSavingPost:e(a.store).isSavingPost(),isSavingMetaBoxes:e(i.store).isSavingMetaBoxes(),isSavingStructure:e(c/* .COURSE_STORE */.v).getIsSavingStructure()}})),u=l.isSavingPost,m=l.isSavingMetaBoxes,p=l.isSavingStructure,f=(0,o.useDispatch)(a.store).savePost;
 // Determine whether we are currently saving.
 // If we don't have an ID or a title yet, don't render anything.
-if(!t&&!n)return null;
-// Component for the "Save and edit lesson" button.
-var h=(0,r.createElement)(s.ToolbarItem,{as:s.Button,onClick:f},__("Save to edit lesson","sensei-lms")),v=(0,r.createElement)(s.ToolbarItem,{as:s.Spinner}),g=h;
-// Spinner.
+if(!t&&!n)return null;// Component for the "Save and edit lesson" button.
+var h=(0,r.createElement)(s.ToolbarItem,{as:s.Button,onClick:f},__("Save to edit lesson","sensei-lms")),v=(0,r.createElement)(s.ToolbarItem,{as:s.Spinner}),g=h;// Spinner.
 return t?g=(0,r.createElement)(d,{lessonId:t}):(u||p||m)&&(g=v),(0,r.createElement)(s.Toolbar,{className:"components-button"},g)};
 /***/},
 /***/28880:
@@ -336,12 +335,12 @@ return t?g=(0,r.createElement)(d,{lessonId:t}):(u||p||m)&&(g=v),(0,r.createEleme
 /* unused harmony export LessonEdit */
 /* harmony import */var r=n(25773),s=n(69307),o=n(60042),i=n.n(o),a=n(36414),l=n(80454),c=n(23455),u=n(65736),d=n(53112),m=n(26622),p=n(3295),f=n(72469),h=n(95598),v=n(76515),__=u.__;
 /* harmony import */
-/* harmony default export */const g=(0,d/* .withColorSettings */.ku)({backgroundColor:{style:"background-color",label:__("Background color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")}})((function(e){var t=e.className,n=e.attributes,o=n.title,u=n.id,d=n.fontSize,g=n.draft,y=n.preview,E=n.placeholder,b=e.backgroundColor,w=e.textColor,S=e.setAttributes,_=(0,m/* .useKeydownInserter */.V)(e).onKeyDown,k=(0,v/* .useLessonPreviewStatus */.z)(e),x="";
+/* harmony default export */const g=(0,d/* .withColorSettings */.ku)({backgroundColor:{style:"background-color",label:__("Background color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")}})((function(e){var t=e.className,n=e.attributes,o=n.title,u=n.id,d=n.fontSize,g=n.draft,E=n.preview,b=n.placeholder,y=e.backgroundColor,S=e.textColor,_=e.setAttributes,w=(0,m/* .useKeydownInserter */.V)(e).onKeyDown,k=(0,v/* .useLessonPreviewStatus */.z)(e),C="";
 /**
    * Update lesson title.
    *
    * @param {string} value Lesson title.
-   */!u&&o.length?x=__("Unsaved","sensei-lms"):u&&g&&(x=__("Draft","sensei-lms"));var C={className:i()(t,null==b?void 0:b.class,null==w?void 0:w.class,{completed:k.previewStatus===f/* .Status.COMPLETED */.q.COMPLETED,"is-auto-draft":!u&&!o}),style:{backgroundColor:null==b?void 0:b.color,color:null==w?void 0:w.color}};return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(h/* ["default"] */.Z,(0,r/* ["default"] */.Z)({},e,k)),(0,s.createElement)("div",(0,r/* ["default"] */.Z)({},C,{"data-lesson-id":u}),(0,s.createElement)(a/* ["default"] */.Z,{icon:l/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__status"}),(0,s.createElement)(p/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-lesson__input",placeholder:E||__("Add Lesson","sensei-lms"),value:o,onChange:function(e){S({title:e})},onKeyDown:_,style:{fontSize:d}}),y&&(0,s.createElement)("span",{className:"wp-block-sensei-lms-course-outline-lesson__badge"},__("Preview","sensei-lms")),x&&(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-lesson__post-status"},x),(0,s.createElement)(a/* ["default"] */.Z,{icon:c/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__chevron"})))}));
+   */!u&&o.length?C=__("Unsaved","sensei-lms"):u&&g&&(C=__("Draft","sensei-lms"));var x={className:i()(t,null==y?void 0:y.class,null==S?void 0:S.class,{completed:k.previewStatus===f/* .Status.COMPLETED */.q.COMPLETED,"is-auto-draft":!u&&!o}),style:{backgroundColor:null==y?void 0:y.color,color:null==S?void 0:S.color}};return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(h/* ["default"] */.Z,(0,r/* ["default"] */.Z)({},e,k)),(0,s.createElement)("div",(0,r/* ["default"] */.Z)({},x,{"data-lesson-id":u}),(0,s.createElement)(a/* ["default"] */.Z,{icon:l/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__status"}),(0,s.createElement)(p/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-lesson__input",placeholder:b||__("Add Lesson","sensei-lms"),value:o,onChange:function(e){_({title:e})},onKeyDown:w,style:{fontSize:d}}),E&&(0,s.createElement)("span",{className:"wp-block-sensei-lms-course-outline-lesson__badge"},__("Preview","sensei-lms")),C&&(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-lesson__post-status"},C),(0,s.createElement)(a/* ["default"] */.Z,{icon:c/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__chevron"})))}));
 /***/},
 /***/95598:
 /***/(e,t,n)=>{"use strict";
@@ -357,8 +356,7 @@ return t?g=(0,r.createElement)(d,{lessonId:t}):(u||p||m)&&(g=v),(0,r.createEleme
 /* harmony export */n.d(t,{
 /* harmony export */z:()=>/* binding */i
 /* harmony export */});
-/* harmony import */var r=n(9818),s=n(69307),o=n(62993),i=function(e){var t=e.attributes,n=t.isExample,i=t.title,a=e.clientId,l=(0,r.useDispatch)(o/* .COURSE_STATUS_STORE */.o),c=l.setLessonStatus,u=l.trackLesson,d=l.ignoreLesson;
-// If the lesson has a title and it isn't an example, add it to the tracked lessons in the status store.
+/* harmony import */var r=n(9818),s=n(69307),o=n(62993),i=function(e){var t=e.attributes,n=t.isExample,i=t.title,a=e.clientId,l=(0,r.useDispatch)(o/* .COURSE_STATUS_STORE */.o),c=l.setLessonStatus,u=l.trackLesson,d=l.ignoreLesson;// If the lesson has a title and it isn't an example, add it to the tracked lessons in the status store.
 return(0,s.useEffect)((function(){n||(i.length>0?u(a):d(a))}),[a,u,d,i,n]),{setPreviewStatus:function(e){return c(a,e)},previewStatus:(0,r.useSelect)((function(e){return e(o/* .COURSE_STATUS_STORE */.o).getLessonStatus(a)}),[a])}};
 /* harmony import */}
 /***/,
@@ -374,24 +372,24 @@ return(0,s.useEffect)((function(){n||(i.length>0?u(a):d(a))}),[a,u,d,i,n]),{setP
 /***/16811:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>S
+/* harmony export */Z:()=>_
 /* harmony export */});
 /* unused harmony export ModuleEdit */
-/* harmony import */var r=n(66886),s=n(69307),o=n(60042),i=n.n(o),a=n(98286),l=n(52175),c=n(36414),u=n(12585),d=n(94333),m=n(9818),p=n(65736),f=n(22629),h=n(53112),v=n(75245),g=n(51836),y=n(3295),E=n(76774),b=n(36081),__=p.__,w=["sensei-lms/course-outline-lesson"];
+/* harmony import */var r=n(66886),s=n(69307),o=n(60042),i=n.n(o),a=n(98286),l=n(52175),c=n(36414),u=n(12585),d=n(94333),m=n(9818),p=n(65736),f=n(22629),h=n(53112),v=n(75245),g=n(51836),E=n(3295),b=n(76774),y=n(36081),__=p.__,S=["sensei-lms/course-outline-lesson"];
 /* harmony import */
-/* harmony default export */const S=(0,d.compose)((0,h/* .withColorSettings */.ku)({mainColor:{style:"background-color",label:__("Main color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")},borderColor:{style:"border-color",label:__("Border color","sensei-lms"),onChange:function(e){var t=e.clientId,n=e.colorValue;return(0,m.dispatch)("core/block-editor").updateBlockAttributes(t,{borderColorValue:n})}}}),(0,h/* .withDefaultColor */.vD)({defaultMainColor:{style:"background-color",probeKey:"primaryColor"},defaultTextColor:{style:"color",probeKey:"primaryContrastColor"},defaultBorderColor:{style:"border-color",probeKey:"primaryColor"}}))((function(e){var t,n,o=e.clientId,d=e.className,m=e.attributes,p=m.title,h=m.description,S=m.borderedSelected,_=m.borderColorValue,k=m.teacher,x=m.slug,C=e.mainColor,Z=e.defaultMainColor,T=e.textColor,O=e.defaultTextColor,N=e.defaultBorderColor,L=e.setAttributes,B=(0,s.useContext)(g/* .OutlineAttributesContext */.G)||{outlineAttributes:{},outlineClassName:""},I=B.outlineAttributes,P=I.collapsibleModules,R=I.moduleBorder,A=B.outlineClassName;(0,v/* .useAutoInserter */.l)({name:"sensei-lms/course-outline-lesson",isEmptyBlock:function(e){return!e.title}},e);
+/* harmony default export */const _=(0,d.compose)((0,h/* .withColorSettings */.ku)({mainColor:{style:"background-color",label:__("Main color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")},borderColor:{style:"border-color",label:__("Border color","sensei-lms"),onChange:function(e){var t=e.clientId,n=e.colorValue;return(0,m.dispatch)("core/block-editor").updateBlockAttributes(t,{borderColorValue:n})}}}),(0,h/* .withDefaultColor */.vD)({defaultMainColor:{style:"background-color",probeKey:"primaryColor"},defaultTextColor:{style:"color",probeKey:"primaryContrastColor"},defaultBorderColor:{style:"border-color",probeKey:"primaryColor"}}))((function(e){var t,n,o=e.clientId,d=e.className,m=e.attributes,p=m.title,h=m.description,_=m.borderedSelected,w=m.borderColorValue,k=m.teacher,C=m.slug,x=e.mainColor,Z=e.defaultMainColor,T=e.textColor,O=e.defaultTextColor,N=e.defaultBorderColor,B=e.setAttributes,I=(0,s.useContext)(g/* .OutlineAttributesContext */.G)||{outlineAttributes:{},outlineClassName:""},L=I.outlineAttributes,R=L.collapsibleModules,P=L.moduleBorder,A=I.outlineClassName;(0,v/* .useAutoInserter */.l)({name:"sensei-lms/course-outline-lesson",isEmptyBlock:function(e){return!e.title}},e);
 /**
    * Handle update name.
    *
    * @param {string} value Name value.
    */
-var D,M=(0,s.useState)(!0),j=(0,r/* ["default"] */.Z)(M,2),U=j[0],F=j[1],q=/is-style-(\w+)/,V=(null===(t=d.match(q))||void 0===t?void 0:t[1])||(null===(n=A.match(q))||void 0===n?void 0:n[1]),z={default:{background:(null==C?void 0:C.color)||(null==Z?void 0:Z.color),color:(null==T?void 0:T.color)||(null==O?void 0:O.color)},minimal:{color:null==T?void 0:T.color}}[V];
+var D,M=(0,s.useState)(!0),U=(0,r/* ["default"] */.Z)(M,2),j=U[0],q=U[1],V=/is-style-(\w+)/,z=(null===(t=d.match(V))||void 0===t?void 0:t[1])||(null===(n=A.match(V))||void 0===n?void 0:n[1]),F={default:{background:(null==x?void 0:x.color)||(null==Z?void 0:Z.color),color:(null==T?void 0:T.color)||(null==O?void 0:O.color)},minimal:{color:null==T?void 0:T.color}}[z];
 /**
    * Handle update name.
    *
    * @param {string} value Name value.
-   */"minimal"===V&&(D=(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__name__minimal-border",style:{background:(null==C?void 0:C.color)||(null==Z?void 0:Z.color)}})),(0,s.useEffect)((function(){var e=document.querySelector('select[name="sensei-course-teacher-author"]');e&&e.addEventListener("change",(function(e){L({teacherId:e.target.value})}))}),// eslint-disable-next-line react-hooks/exhaustive-deps
-[]);var H=void 0!==S?S:R;return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(b/* ["default"] */.Z,{bordered:H,setBordered:function(e){return L({borderedSelected:e})},customSlug:x,setCustomSlug:function(e){L({slug:e})}}),(0,s.createElement)("section",{className:i()(d,{"wp-block-sensei-lms-course-outline-module-bordered":H}),style:{borderColor:_||(null==N?void 0:N.color)}},(0,s.createElement)("header",{className:"wp-block-sensei-lms-course-outline-module__header",style:z},(0,s.createElement)("h2",{className:"wp-block-sensei-lms-course-outline-module__title"},(0,s.createElement)(y/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-module__title-input",placeholder:__("Module name","sensei-lms"),value:(0,f.decodeEntities)(p),onChange:function(e){L({title:e})}}),x&&(0,s.createElement)(s.Fragment,null,(0,s.createElement)("br",null),(0,s.createElement)("span",{className:"custom-slug"},"(",x,")"))),k&&(0,s.createElement)("span",{className:"teacher-name"},"(",k,")"),(0,s.createElement)(E/* .ModuleStatus */.n,{clientId:o}),P&&(0,s.createElement)("button",{type:"button",className:i()("wp-block-sensei-lms-course-outline__arrow",{"sensei-collapsed":!U}),onClick:function(){return F(!U)}},(0,s.createElement)(c/* ["default"] */.Z,{icon:u/* ["default"] */.Z}),(0,s.createElement)("span",{className:"screen-reader-text"},__("Toggle module content","sensei-lms")))),D,(0,s.createElement)(a/* ["default"] */.Z,{className:"wp-block-sensei-lms-collapsible",duration:500,animateOpacity:!0,height:!P||U?"auto":0},(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__description"},(0,s.createElement)(l.RichText,{className:"wp-block-sensei-lms-course-outline-module__description-input",placeholder:__("Module description","sensei-lms"),value:h,onChange:function(e){L({description:e})}})),(0,s.createElement)("h3",{className:"wp-block-sensei-lms-course-outline-module__lessons-title"},__("Lessons","sensei-lms")),(0,s.createElement)(l.InnerBlocks,{allowedBlocks:w,templateInsertUpdatesSelection:!1,renderAppender:function(){return null}}))))}));
+   */"minimal"===z&&(D=(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__name__minimal-border",style:{background:(null==x?void 0:x.color)||(null==Z?void 0:Z.color)}})),(0,s.useEffect)((function(){var e=document.querySelector('select[name="sensei-course-teacher-author"]');e&&e.addEventListener("change",(function(e){B({teacherId:e.target.value})}))}),// eslint-disable-next-line react-hooks/exhaustive-deps
+[]);var H=void 0!==_?_:P;return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(y/* ["default"] */.Z,{bordered:H,setBordered:function(e){return B({borderedSelected:e})},customSlug:C,setCustomSlug:function(e){B({slug:e})}}),(0,s.createElement)("section",{className:i()(d,{"wp-block-sensei-lms-course-outline-module-bordered":H}),style:{borderColor:w||(null==N?void 0:N.color)}},(0,s.createElement)("header",{className:"wp-block-sensei-lms-course-outline-module__header",style:F},(0,s.createElement)("h2",{className:"wp-block-sensei-lms-course-outline-module__title"},(0,s.createElement)(E/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-module__title-input",placeholder:__("Module name","sensei-lms"),value:(0,f.decodeEntities)(p),onChange:function(e){B({title:e})}}),C&&(0,s.createElement)(s.Fragment,null,(0,s.createElement)("br",null),(0,s.createElement)("span",{className:"custom-slug"},"(",C,")"))),k&&(0,s.createElement)("span",{className:"teacher-name"},"(",k,")"),(0,s.createElement)(b/* .ModuleStatus */.n,{clientId:o}),R&&(0,s.createElement)("button",{type:"button",className:i()("wp-block-sensei-lms-course-outline__arrow",{"sensei-collapsed":!j}),onClick:function(){return q(!j)}},(0,s.createElement)(c/* ["default"] */.Z,{icon:u/* ["default"] */.Z}),(0,s.createElement)("span",{className:"screen-reader-text"},__("Toggle module content","sensei-lms")))),D,(0,s.createElement)(a/* ["default"] */.Z,{className:"wp-block-sensei-lms-collapsible",duration:500,animateOpacity:!0,height:!R||j?"auto":0},(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__description"},(0,s.createElement)(l.RichText,{className:"wp-block-sensei-lms-course-outline-module__description-input",placeholder:__("Module description","sensei-lms"),value:h,onChange:function(e){B({description:e})}})),(0,s.createElement)("h3",{className:"wp-block-sensei-lms-course-outline-module__lessons-title"},__("Lessons","sensei-lms")),(0,s.createElement)(l.InnerBlocks,{allowedBlocks:S,templateInsertUpdatesSelection:!1,renderAppender:function(){return null}}))))}));
 /***/},
 /***/36081:
 /***/(e,t,n)=>{"use strict";
@@ -474,7 +472,7 @@ transform:function(e){var t=e.map((function(e){return(0,r.createBlock)("sensei-l
 /* harmony export */});
 /* harmony import */var r=n(69307),s=n(52175),o=n(94333),i=n(9818),a=n(69384),l=n(53112),c=n(31884),u=n(1849),d=n(31529),m=n(91333),p=n(49650),f=n(9025),h=["sensei-lms/course-outline-module","sensei-lms/course-outline-lesson"],v=(0,r.createContext)();
 /* harmony import */
-/* harmony default export */const g=(0,o.compose)((0,l/* .withDefaultBlockStyle */.WJ)())((function(e){var t=e.clientId,n=e.className,o=e.attributes,l=e.setAttributes,g=(0,i.useDispatch)(u/* .COURSE_STORE */.v).loadStructure,y=(0,f/* ["default"] */.Z)().isActivated;(0,r.useEffect)((function(){o.isPreview||g()}),[o.isPreview,g]);var E=(0,d/* .useBlocksCreator */.g)(t).setBlocks,b=(0,i.useSelect)((function(e){return{isEmpty:!e(s.store).getBlocks(t).length}}),[t]).isEmpty;(0,c/* .useCourseLessonsStatusSync */.X)(t,o.isPreview);var w=(0,r.useCallback)((function(){return(0,r.createElement)(m/* ["default"] */.Z,{clientId:t})}),[t]),S=(0,r.useCallback)((function(){y?window.location.hash="generate-course-outline-using-ai":window.location.href="https://senseilms.com/sensei-pro/"}),[y]);return b?(0,r.createElement)(p/* ["default"] */.Z,{addBlock:function(e){return E([{type:e}],!0)},addBlocks:E,openTailoredModal:S}):(0,r.createElement)(v.Provider,{value:{outlineAttributes:o,outlineSetAttributes:l,outlineClassName:n}},(0,r.createElement)(a/* ["default"] */.Z,e),(0,r.createElement)("section",{className:n},(0,r.createElement)(s.InnerBlocks,{allowedBlocks:h,renderAppender:w})))}));
+/* harmony default export */const g=(0,o.compose)((0,l/* .withDefaultBlockStyle */.WJ)())((function(e){var t=e.clientId,n=e.className,o=e.attributes,l=e.setAttributes,g=(0,i.useDispatch)(u/* .COURSE_STORE */.v).loadStructure,E=(0,f/* ["default"] */.Z)().isActivated;(0,r.useEffect)((function(){o.isPreview||g()}),[o.isPreview,g]);var b=(0,d/* .useBlocksCreator */.g)(t).setBlocks,y=(0,i.useSelect)((function(e){return{isEmpty:!e(s.store).getBlocks(t).length}}),[t]).isEmpty;(0,c/* .useCourseLessonsStatusSync */.X)(t,o.isPreview);var S=(0,r.useCallback)((function(){return(0,r.createElement)(m/* ["default"] */.Z,{clientId:t})}),[t]),_=(0,r.useCallback)((function(){E?window.location.hash="generate-course-outline-using-ai":window.location.href="https://senseilms.com/sensei-pro/"}),[E]);return y?(0,r.createElement)(p/* ["default"] */.Z,{addBlock:function(e){return b([{type:e}],!0)},addBlocks:b,openTailoredModal:_}):(0,r.createElement)(v.Provider,{value:{outlineAttributes:o,outlineSetAttributes:l,outlineClassName:n}},(0,r.createElement)(a/* ["default"] */.Z,e),(0,r.createElement)("section",{className:n},(0,r.createElement)(s.InnerBlocks,{allowedBlocks:h,renderAppender:S})))}));
 /***/},
 /***/49650:
 /***/(e,t,n)=>{"use strict";
@@ -542,9 +540,9 @@ var r={NOT_STARTED:"not-started",IN_PROGRESS:"in-progress",COMPLETED:"completed"
 /***/62993:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */o:()=>/* binding */p
+/* harmony export */o:()=>/* binding */m
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(90228),o=n(11092),i=n(9818),a=n(72469),l=n(23418),c=n(20832),u={
+/* harmony import */var r=n(50189),s=n(90228),o=n(9818),i=n(72469),a=n(23418),l=n(20832),c={
 /**
    * Sets thecreateReducerFromActionMap status of a lesson.
    *
@@ -562,7 +560,7 @@ setLessonStatus:function(e,t){return{type:"SET_LESSON_STATUS",lessonId:e,status:
    *
    * @return {Object} Yields the lesson update actions.
    */
-setModuleStatus:(0,o/* ["default"] */.Z)().mark((function e(t,n){var r,s,i;return(0,o/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,l.select)(p,"getTrackedLessons");case 2:return r=e.sent,e.next=5,(0,l.select)("core/block-editor","getClientIdsOfDescendants",[t]);case 5:if(s=e.sent,0!==(i=s.filter((function(e){return r.includes(e)}))).length){e.next=9;break}return e.abrupt("return");case 9:if(a/* .Status.COMPLETED */.q.COMPLETED!==n&&a/* .Status.NOT_STARTED */.q.NOT_STARTED!==n){e.next=13;break}return e.delegateYield(i.map((function(e){return u.setLessonStatus(e,n)})),"t0",11);case 11:e.next=15;break;case 13:return e.delegateYield(i.slice(1).map((function(e){return u.setLessonStatus(e,a/* .Status.NOT_STARTED */.q.NOT_STARTED)})),"t1",14);case 14:return e.abrupt("return",u.setLessonStatus(i[0],a/* .Status.COMPLETED */.q.COMPLETED));case 15:case"end":return e.stop()}}),e)})),
+setModuleStatus:regeneratorRuntime.mark((function e(t,n){var r,s,o;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,a.select)(m,"getTrackedLessons");case 2:return r=e.sent,e.next=5,(0,a.select)("core/block-editor","getClientIdsOfDescendants",[t]);case 5:if(s=e.sent,0!==(o=s.filter((function(e){return r.includes(e)}))).length){e.next=9;break}return e.abrupt("return");case 9:if(i/* .Status.COMPLETED */.q.COMPLETED!==n&&i/* .Status.NOT_STARTED */.q.NOT_STARTED!==n){e.next=13;break}return e.delegateYield(o.map((function(e){return c.setLessonStatus(e,n)})),"t0",11);case 11:e.next=15;break;case 13:return e.delegateYield(o.slice(1).map((function(e){return c.setLessonStatus(e,i/* .Status.NOT_STARTED */.q.NOT_STARTED)})),"t1",14);case 14:return e.abrupt("return",c.setLessonStatus(o[0],i/* .Status.COMPLETED */.q.COMPLETED));case 15:case"end":return e.stop()}}),e)})),
 /**
    * Creates the action to update state after a possible removal of a lesson.
    *
@@ -586,7 +584,7 @@ trackLesson:function(e){return{type:"TRACK_LESSON",lessonId:e}},
    *
    * @return {Object} The action.
    */
-ignoreLesson:function(e){return{type:"IGNORE_LESSON",lessonId:e}}},d={
+ignoreLesson:function(e){return{type:"IGNORE_LESSON",lessonId:e}}},u={
 /**
    * Get all the lessons that are tracked by the store.
    *
@@ -615,7 +613,7 @@ getLessonCounts:function(e){var t=e.trackedLessons,n=e.completedLessons;return{t
    *
    * @return {string} The lesson status.
    */
-getLessonStatus:function(e,t){return e.completedLessons.includes(t)?a/* .Status.COMPLETED */.q.COMPLETED:a/* .Status.NOT_STARTED */.q.NOT_STARTED},
+getLessonStatus:function(e,t){return e.completedLessons.includes(t)?i/* .Status.COMPLETED */.q.COMPLETED:i/* .Status.NOT_STARTED */.q.NOT_STARTED},
 /**
    * Returns the number of total and completed lessons of a module.
    *
@@ -626,7 +624,7 @@ getLessonStatus:function(e,t){return e.completedLessons.includes(t)?a/* .Status.
    *
    * @return {Object} The module lesson counts.
    */
-getModuleLessonCounts:function(e,t){var n=e.completedLessons,r=e.trackedLessons,s=(0,i.select)("core/block-editor").getClientIdsOfDescendants([t]).filter((function(e){return r.includes(e)}));return{completedLessonsCount:s.filter((function(e){return n.includes(e)})).length,totalLessonsCount:s.length}}},m={
+getModuleLessonCounts:function(e,t){var n=e.completedLessons,r=e.trackedLessons,s=(0,o.select)("core/block-editor").getClientIdsOfDescendants([t]).filter((function(e){return r.includes(e)}));return{completedLessonsCount:s.filter((function(e){return n.includes(e)})).length,totalLessonsCount:s.length}}},d={
 /**
    * Updates the lesson status.
    *
@@ -637,7 +635,7 @@ getModuleLessonCounts:function(e,t){var n=e.completedLessons,r=e.trackedLessons,
    *
    * @return {Object} The new state.
    */
-SET_LESSON_STATUS:function(e,t){var n=e.lessonId,o=e.status,i=(0,s/* ["default"] */.Z)(t.completedLessons);return a/* .Status.COMPLETED */.q.COMPLETED===o?i.includes(n)||i.push(n):i=i.filter((function(e){return e!==n})),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{completedLessons:i})},
+SET_LESSON_STATUS:function(e,t){var n=e.lessonId,o=e.status,a=(0,s/* ["default"] */.Z)(t.completedLessons);return i/* .Status.COMPLETED */.q.COMPLETED===o?a.includes(n)||a.push(n):a=a.filter((function(e){return e!==n})),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{completedLessons:a})},
 /**
    * Removes any lessons that don't exist in list of descendantIds.
    *
@@ -647,8 +645,7 @@ SET_LESSON_STATUS:function(e,t){var n=e.lessonId,o=e.status,i=(0,s/* ["default"]
    *
    * @return {Object} The new state.
    */
-REMOVE_LESSONS:function(e,t){var n=e.descendantIds,s=t.completedLessons.filter((function(e){return n.includes(e)})),o=t.trackedLessons.filter((function(e){return n.includes(e)}));
-// Do not update the state if no lessons were removed.
+REMOVE_LESSONS:function(e,t){var n=e.descendantIds,s=t.completedLessons.filter((function(e){return n.includes(e)})),o=t.trackedLessons.filter((function(e){return n.includes(e)}));// Do not update the state if no lessons were removed.
 return o.length===t.trackedLessons.length&&s.length===t.completedLessons.length?t:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{completedLessons:s,trackedLessons:o})},
 /**
    * Removes a lesson from the arrays of tracked lessons.
@@ -669,8 +666,8 @@ IGNORE_LESSON:function(e,t){var n=e.lessonId,s=t.completedLessons.filter((functi
    *
    * @return {Object} The new state.
    */
-TRACK_LESSON:function(e,t){var n=e.lessonId,o=(0,s/* ["default"] */.Z)(t.trackedLessons);return o.includes(n)?t:(o.push(n),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{trackedLessons:o}))},DEFAULT:function(e,t){return t}},p="sensei/course-status";
-/* harmony import */(0,i.registerStore)(p,{reducer:(0,c/* .createReducerFromActionMap */.lA)(m,{completedLessons:[],trackedLessons:[]}),actions:u,selectors:d,controls:l.controls})}
+TRACK_LESSON:function(e,t){var n=e.lessonId,o=(0,s/* ["default"] */.Z)(t.trackedLessons);return o.includes(n)?t:(o.push(n),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{trackedLessons:o}))},DEFAULT:function(e,t){return t}},m="sensei/course-status";
+/* harmony import */(0,o.registerStore)(m,{reducer:(0,l/* .createReducerFromActionMap */.lA)(d,{completedLessons:[],trackedLessons:[]}),actions:c,selectors:u,controls:a.controls})}
 /***/,
 /***/31884:
 /***/(e,t,n)=>{"use strict";
@@ -698,8 +695,7 @@ TRACK_LESSON:function(e,t){var n=e.lessonId,o=(0,s/* ["default"] */.Z)(t.tracked
 /* harmony default export */const c=function(e){(0,i.updateCategory)("sensei-lms",{icon:(0,s.createElement)(a/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,n=e.name,s=(0,r/* ["default"] */.Z)(e,l);t&&(
 // Remove the overlapping metadata keys from the settings object to make localization work.
 // This is needed because only the metadata object is localized, but the overlapping keys will be overwritten by the settings object and the localization is lost.
-s=(0,o.omit)(s,Object.keys(t))),
-// The metadata object should be used for the `block.json` strings to be localized.
+s=(0,o.omit)(s,Object.keys(t))),// The metadata object should be used for the `block.json` strings to be localized.
 // See https://github.com/Automattic/sensei/pull/5782 for more details.
 (0,i.registerBlockType)(t||n,s)}))};
 /***/},
@@ -802,14 +798,10 @@ entities:{extensions:{}},connected:!1,layout:[],queue:[],error:null}),actions:p,
 /* unused harmony export getProbeStyles */
 /* harmony import */var r=n(66886),s=n(92819),o=n(69307),i=n(9818),a=n(67227),l=window.getComputedStyle,c=function(){var e=(0,i.useSelect)((function(e){return e("core/editor").getEditorSettings().colors}),[]),t=(0,o.useState)({}),n=(0,r/* ["default"] */.Z)(t,2),l=n[0],c=n[1];return(0,o.useEffect)((function(){var t=u(),n={},o=(0,s.mapValues)((0,s.keyBy)(e,(function(e){return(0,a/* .hexToRGB */.$)(e.color)})),"slug");Object.entries(t).forEach((function(e){var t=(0,r/* ["default"] */.Z)(e,2),s=t[0],i=t[1],l=o[(0,a/* .hexToRGB */.$)(i)];l&&(n[s]={slug:l,color:i})})),c(n)}),[e]),l},u=(0,s.memoize)((function(){
 // Create temporary probe elements.
-var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",
-// Set probe position outside the screen to be hidden.
-e.style.position="fixed",e.style.top="-100vh",
-// Add probe to the screen.
-t.appendChild(n),e.appendChild(t),document.body.appendChild(e);
-// Save styles.
-var r={primaryColor:l(n).backgroundColor,primaryContrastColor:l(n).color};
-// Remove probe.
+var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",// Set probe position outside the screen to be hidden.
+e.style.position="fixed",e.style.top="-100vh",// Add probe to the screen.
+t.appendChild(n),e.appendChild(t),document.body.appendChild(e);// Save styles.
+var r={primaryColor:l(n).backgroundColor,primaryContrastColor:l(n).color};// Remove probe.
 return document.body.removeChild(e),r}));
 /* harmony import */}
 /***/,
@@ -821,8 +813,7 @@ return document.body.removeChild(e),r}));
 /* harmony export */,vD:()=>/* binding */h
 /* harmony export */});
 /* unused harmony export ColorSettings */
-/* harmony import */var r=n(90228),s=n(66886),o=n(25773),i=n(50189),a=n(69307),l=n(92819),c=n(52175),u=n(65736),d=n(39359),__=u.__,m=function(e){return function(t){var n=(0,l.mapValues)(e,(function(e){return e.style}));return(0,c.withColors)(n)((function(n){return(0,a.createElement)(a.Fragment,null,(0,a.createElement)(t,n),(0,a.createElement)(p,{colorSettings:e,props:n}))}))}},p=function(e){var t,n,r,s,o=e.colorSettings,u=e.props,d=Object.keys(o).map((function(e){return{value:u[e].color,label:o[e].label,onChange:function(t){u["set".concat((0,l.upperFirst)(e))](t),o[e].onChange&&o[e].onChange((0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},u),{},{colorValue:t}))}}})),m=(null===(t=u.backgroundColor)||void 0===t||null===(n=t.color)||void 0===n?void 0:n.includes("var"))||(null===(r=u.textColor)||void 0===r||null===(s=r.color)||void 0===s?void 0:s.includes("var")),p=u.backgroundColor&&u.textColor&&!m;return(0,a.createElement)(c.InspectorControls,null,(0,a.createElement)(c.PanelColorSettings,{title:__("Color settings","sensei-lms"),initialOpen:!1,colorSettings:d},p&&(0,a.createElement)(c.ContrastChecker,{textColor:u.textColor.color,backgroundColor:u.backgroundColor.color,isLargeText:!1})))},f=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"default";return function(t){return function(n){var r=n.className,s={};r&&r.includes("is-style-")||(r=s.className=[r,"is-style-".concat(e)].join(" "));var i=r.match(/is-style-(\w+)/);return i&&(s.blockStyle=i[1]),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},n,s))}}},h=function(e){return function(t){return function(n){var l=n.setAttributes,u=n.attributes,m=(0,d/* .useColorsByProbe */.o)(),p=(0,a.useState)({}),f=(0,s/* ["default"] */.Z)(p,2),h=f[0],v=f[1],g=Object.keys(e).map((function(e){return u[e]}));return(0,a.useEffect)((function(){var t={};Object.entries(e).forEach((function(e){var n=(0,s/* ["default"] */.Z)(e,2),r=n[0],o=n[1],a=o.style,d=o.probeKey,p=m[d]||{},f=p.slug;if(f&&(t[r]=(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},p),{},{className:(0,c.getColorClassName)(a,f)})),u[r]!==f){var h={};h[r]=f,
-// Border color is not compatible with all themes as className, so the color value is needed.
+/* harmony import */var r=n(90228),s=n(66886),o=n(25773),i=n(50189),a=n(69307),l=n(92819),c=n(52175),u=n(65736),d=n(39359),__=u.__,m=function(e){return function(t){var n=(0,l.mapValues)(e,(function(e){return e.style}));return(0,c.withColors)(n)((function(n){return(0,a.createElement)(a.Fragment,null,(0,a.createElement)(t,n),(0,a.createElement)(p,{colorSettings:e,props:n}))}))}},p=function(e){var t,n,r,s,o=e.colorSettings,u=e.props,d=Object.keys(o).map((function(e){return{value:u[e].color,label:o[e].label,onChange:function(t){u["set".concat((0,l.upperFirst)(e))](t),o[e].onChange&&o[e].onChange((0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},u),{},{colorValue:t}))}}})),m=(null===(t=u.backgroundColor)||void 0===t||null===(n=t.color)||void 0===n?void 0:n.includes("var"))||(null===(r=u.textColor)||void 0===r||null===(s=r.color)||void 0===s?void 0:s.includes("var")),p=u.backgroundColor&&u.textColor&&!m;return(0,a.createElement)(c.InspectorControls,null,(0,a.createElement)(c.PanelColorSettings,{title:__("Color settings","sensei-lms"),initialOpen:!1,colorSettings:d},p&&(0,a.createElement)(c.ContrastChecker,{textColor:u.textColor.color,backgroundColor:u.backgroundColor.color,isLargeText:!1})))},f=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"default";return function(t){return function(n){var r=n.className,s={};r&&r.includes("is-style-")||(r=s.className=[r,"is-style-".concat(e)].join(" "));var i=r.match(/is-style-(\w+)/);return i&&(s.blockStyle=i[1]),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},n,s))}}},h=function(e){return function(t){return function(n){var l=n.setAttributes,u=n.attributes,m=(0,d/* .useColorsByProbe */.o)(),p=(0,a.useState)({}),f=(0,s/* ["default"] */.Z)(p,2),h=f[0],v=f[1],g=Object.keys(e).map((function(e){return u[e]}));return(0,a.useEffect)((function(){var t={};Object.entries(e).forEach((function(e){var n=(0,s/* ["default"] */.Z)(e,2),r=n[0],o=n[1],a=o.style,d=o.probeKey,p=m[d]||{},f=p.slug;if(f&&(t[r]=(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},p),{},{className:(0,c.getColorClassName)(a,f)})),u[r]!==f){var h={};h[r]=f,// Border color is not compatible with all themes as className, so the color value is needed.
 "border-color"===a&&(h["".concat(r,"Value")]=p.color),l(h)}})),v(t)}),[m,l].concat((0,r/* ["default"] */.Z)(g))),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},n,h))}}};
 /* harmony import */}
 /***/,
@@ -855,7 +846,7 @@ return document.body.removeChild(e),r}));
 /* harmony export */n.d(t,{
 /* harmony export */l:()=>/* binding */a
 /* harmony export */});
-/* harmony import */var r=n(4981),s=n(9818),o=n(69307),i=n(92819),a=function(e,t){var n=e.name,a=e.attributes,l=void 0===a?{}:a,c=e.selectFirstBlock,u=void 0!==c&&c,d=e.isEmptyBlock,m=t.clientId,p=(0,s.useDispatch)("core/block-editor"),f=p.__unstableMarkNextChangeAsNotPersistent,h=void 0===f?i.noop:f,v=p.insertBlock,g=(0,s.useSelect)((function(e){return e("core/block-editor").getBlocks(m)})),y=0===g.length,E=(0,o.useCallback)((function(){var e=(0,r.createBlock)(n,l),t=y&&u;h(),v(e,void 0,m,t)}),[h,v,m,n,l,y,u]),b=g.length&&g[g.length-1],w=b&&d(b.attributes);(0,o.useEffect)((function(){w||E()}),[w,E])};
+/* harmony import */var r=n(4981),s=n(9818),o=n(69307),i=n(92819),a=function(e,t){var n=e.name,a=e.attributes,l=void 0===a?{}:a,c=e.selectFirstBlock,u=void 0!==c&&c,d=e.isEmptyBlock,m=t.clientId,p=(0,s.useDispatch)("core/block-editor"),f=p.__unstableMarkNextChangeAsNotPersistent,h=void 0===f?i.noop:f,v=p.insertBlock,g=(0,s.useSelect)((function(e){return e("core/block-editor").getBlocks(m)})),E=0===g.length,b=(0,o.useCallback)((function(){var e=(0,r.createBlock)(n,l),t=E&&u;h(),v(e,void 0,m,t)}),[h,v,m,n,l,E,u]),y=g.length&&g[g.length-1],S=y&&d(y.attributes);(0,o.useEffect)((function(){S||b()}),[S,b])};
 /* harmony import */}
 /***/,
 /***/26622:
@@ -946,9 +937,9 @@ var r=function(e,t){window.sensei_log_event(e,t)};
 /***/23728:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */x:()=>/* binding */d
+/* harmony export */x:()=>/* binding */u
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(11092),o=n(53782),i=n(92819),a=n(23418),l=n(9818),c=n(20832),u=(n(16400),["storeName","getEndpoint","saveError","fetchError","clearError","updateBlock","blockExists","readBlock","setServerStructure"]);
+/* harmony import */var r=n(50189),s=n(53782),o=n(92819),i=n(23418),a=n(9818),l=n(20832),c=(n(16400),["storeName","getEndpoint","saveError","fetchError","clearError","updateBlock","blockExists","readBlock","setServerStructure"]);
 /* harmony import */
 /**
  * External dependencies
@@ -973,21 +964,21 @@ var r=function(e,t){window.sensei_log_event(e,t)};
  * @param {Function} opts.readBlock          Extract structure from block.
  * @param {Function} opts.setServerStructure Set the server structure which is used to track differences.
  */
-function d(e){var t,n,d,m=e.storeName,p=e.getEndpoint,f=e.saveError,h=e.fetchError,v=e.clearError,g=e.updateBlock,y=e.blockExists,E=e.readBlock,b=e.setServerStructure,w=(0,o/* ["default"] */.Z)(e,u),S={
+function u(e){var t,n,u,d=e.storeName,m=e.getEndpoint,p=e.saveError,f=e.fetchError,h=e.clearError,v=e.updateBlock,g=e.blockExists,E=e.readBlock,b=e.setServerStructure,y=(0,s/* ["default"] */.Z)(e,c),S={
 /**
      * Fetch structure data from REST API.
      */
-loadStructure:(0,s/* ["default"] */.Z)().mark((function e(){var t,n;return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.prev=0,e.delegateYield(p(),"t0",2);case 2:return t=e.t0,e.next=5,(0,a.apiFetch)({path:"/sensei-internal/v1/".concat(t),method:"GET"});case 5:return n=e.sent,e.next=8,S.setResult(n);case 8:e.next=14;break;case 10:return e.prev=10,e.t1=e.catch(0),e.next=14,null==h?void 0:h(e.t1);case 14:case"end":return e.stop()}}),e,null,[[0,10]])})),
+loadStructure:regeneratorRuntime.mark((function e(){var t,n;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.prev=0,e.delegateYield(m(),"t0",2);case 2:return t=e.t0,e.next=5,(0,i.apiFetch)({path:"/sensei-internal/v1/".concat(t),method:"GET"});case 5:return n=e.sent,e.next=8,S.setResult(n);case 8:e.next=14;break;case 10:return e.prev=10,e.t1=e.catch(0),e.next=14,null==f?void 0:f(e.t1);case 14:case"end":return e.stop()}}),e,null,[[0,10]])})),
 /**
      * Persist editor's structure to the REST API.
      */
-saveStructure:(0,s/* ["default"] */.Z)().mark((function e(){var t,n,r;return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,l.select)(m).getEditorStructure();case 2:return t=e.sent,e.prev=3,e.delegateYield(p(),"t0",5);case 5:return n=e.t0,e.next=8,(0,a.apiFetch)({path:"/sensei-internal/v1/".concat(n),method:"POST",data:t});case 8:return r=e.sent,e.next=11,S.setResult(r);case 11:e.next=17;break;case 13:return e.prev=13,e.t1=e.catch(3),e.next=17,null==f?void 0:f(e.t1);case 17:case"end":return e.stop()}}),e,null,[[3,13]])})),
+saveStructure:regeneratorRuntime.mark((function e(){var t,n,r;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,a.select)(d).getEditorStructure();case 2:return t=e.sent,e.prev=3,e.delegateYield(m(),"t0",5);case 5:return n=e.t0,e.next=8,(0,i.apiFetch)({path:"/sensei-internal/v1/".concat(n),method:"POST",data:t});case 8:return r=e.sent,e.next=11,S.setResult(r);case 11:e.next=17;break;case 13:return e.prev=13,e.t1=e.catch(3),e.next=17,null==p?void 0:p(e.t1);case 17:case"end":return e.stop()}}),e,null,[[3,13]])})),
 /**
      * Set fetched structure.
      *
      * @param {Array} serverStructure
      */
-setResult:(0,s/* ["default"] */.Z)().mark((function e(t){return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,S.setServerStructure(t);case 2:return e.next=4,g(t);case 4:case"end":return e.stop()}}),e)})),
+setResult:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,S.setServerStructure(t);case 2:return e.next=4,v(t);case 4:case"end":return e.stop()}}),e)})),
 /**
      * Keep last fetched server state for comparison.
      *
@@ -1003,28 +994,27 @@ setEditorStructure:function(e){return{type:"SET_EDITOR_STRUCTURE",editorStructur
 /**
      * Initiate saving the post.
      */
-savePost:(0,s/* ["default"] */.Z)().mark((function e(){return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"SAVE_POST"};case 2:return e.next=4,(0,l.dispatch)("core/editor").savePost();case 4:case"end":return e.stop()}}),e)})),
+savePost:regeneratorRuntime.mark((function e(){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"SAVE_POST"};case 2:return e.next=4,(0,a.dispatch)("core/editor").savePost();case 4:case"end":return e.stop()}}),e)})),
 /**
      * Post is saving. Save the structure too if it has changed.
      */
-startPostSave:(0,s/* ["default"] */.Z)().mark((function e(){var t;return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"START_SAVE"};case 2:return t=E(),e.next=5,S.setEditorStructure(t);case 5:return e.next=7,null==v?void 0:v();case 7:if(t){e.next=9;break}return e.abrupt("return");case 9:if(!(0,l.select)(m).hasUnsavedEditorChanges()){e.next=11;break}return e.delegateYield(S.saveStructure(),"t0",11);case 11:return e.next=13,{type:"FINISH_SAVE"};case 13:case"end":return e.stop()}}),e)})),
+startPostSave:regeneratorRuntime.mark((function e(){var t;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"START_SAVE"};case 2:return t=E(),e.next=5,S.setEditorStructure(t);case 5:return e.next=7,null==h?void 0:h();case 7:if(t){e.next=9;break}return e.abrupt("return");case 9:if(!(0,a.select)(d).hasUnsavedEditorChanges()){e.next=11;break}return e.delegateYield(S.saveStructure(),"t0",11);case 11:return e.next=13,{type:"FINISH_SAVE"};case 13:case"end":return e.stop()}}),e)})),
 /**
      * Finished saving post and structure.
      * Check if either needs to be saved again due to new changes.
      */
-finishPostSave:(0,s/* ["default"] */.Z)().mark((function e(){var t;return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"FINISH_POST_SAVE"};case 2:if(t=(0,l.select)(m),!(0,t.hasUnsavedServerUpdates)()){e.next=5;break}return e.delegateYield(S.savePost(),"t0",5);case 5:case"end":return e.stop()}}),e)})),
+finishPostSave:regeneratorRuntime.mark((function e(){var t;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"FINISH_POST_SAVE"};case 2:if(t=(0,a.select)(d),!(0,t.hasUnsavedServerUpdates)()){e.next=5;break}return e.delegateYield(S.savePost(),"t0",5);case 5:case"end":return e.stop()}}),e)})),
 /**
      * Set linked block.
      *
      * @param {string} clientId Block ID.
      */
-setBlock:(0,s/* ["default"] */.Z)().mark((function e(t){return(0,s/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"SET_BLOCK",clientId:t};case 2:case"end":return e.stop()}}),e)}))},_={SET_SERVER_STRUCTURE:function(e,t){var n=e.serverStructure,s=!t.editorStructure,o=b?b(n):n,a=!s&&!(0,i.isEqual)(o,t.editorStructure);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{serverStructure:o,hasUnsavedServerUpdates:a,hasUnsavedEditorChanges:!1})},SET_EDITOR_STRUCTURE:function(e,t){var n=e.editorStructure,s=!(0,i.isEqual)(t.serverStructure,n);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{editorStructure:n,hasUnsavedEditorChanges:s&&!!n})},START_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!0})},FINISH_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!1})},SAVE_POST:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{hasUnsavedServerUpdates:!1})},SET_BLOCK:function(e,t){var n=e.clientId;return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{clientId:n})},DEFAULT:function(e,t){return t}};return{unsubscribe:(t=!1,n=!1,d=!1,(0,l.subscribe)((function(){var e=(0,l.select)("core/editor"),r=(0,l.select)("core/edit-post");if(e&&r&&y())
-// Check if the block exists.
-{var s=e.isSavingPost()&&!e.isAutosavingPost(),o=(0,l.select)(m).getIsSavingStructure();s&&(n=!0,d=!1),n&&!d&&(d=r.isSavingMetaBoxes()),t||s||!n||!d||r.isSavingMetaBoxes()?t&&!o&&(
+setBlock:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"SET_BLOCK",clientId:t};case 2:case"end":return e.stop()}}),e)}))},_={SET_SERVER_STRUCTURE:function(e,t){var n=e.serverStructure,s=!t.editorStructure,i=b?b(n):n,a=!s&&!(0,o.isEqual)(i,t.editorStructure);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{serverStructure:i,hasUnsavedServerUpdates:a,hasUnsavedEditorChanges:!1})},SET_EDITOR_STRUCTURE:function(e,t){var n=e.editorStructure,s=!(0,o.isEqual)(t.serverStructure,n);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{editorStructure:n,hasUnsavedEditorChanges:s&&!!n})},START_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!0})},FINISH_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!1})},SAVE_POST:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{hasUnsavedServerUpdates:!1})},SET_BLOCK:function(e,t){var n=e.clientId;return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{clientId:n})},DEFAULT:function(e,t){return t}};return{unsubscribe:(t=!1,n=!1,u=!1,(0,a.subscribe)((function(){var e=(0,a.select)("core/editor"),r=(0,a.select)("core/edit-post");if(e&&r&&g())// Check if the block exists.
+{var s=(0,a.select)(d).getIsSavingStructure(),o=e.isSavingPost()&&!e.isAutosavingPost();o&&(n=!0);var i=r.isSavingMetaBoxes();i&&(u=!0),t||o||i||!n||!u?t&&!s&&(
 // Call finishPostSave when structure has finished saving.
-t=!1,(0,l.dispatch)(m).finishPostSave()):(
+t=!1,(0,a.dispatch)(d).finishPostSave()):(
 // Start saving structure when post has finished saving.
-t=!0,n=!1,d=!1,(0,l.dispatch)(m).startPostSave())}}))),store:(0,l.registerStore)(m,{reducer:(0,c/* .createReducerFromActionMap */.lA)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},_),null==w?void 0:w.reducers),{serverStructure:null,editorStructure:null,isSavingStructure:!1,hasUnsavedServerUpdates:!1,hasUnsavedEditorChanges:!1,clientId:null}),actions:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},S),null==w?void 0:w.actions),selectors:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},{hasUnsavedServerUpdates:function(e){return e.hasUnsavedServerUpdates},hasUnsavedEditorChanges:function(e){return e.hasUnsavedEditorChanges},getIsSavingStructure:function(e){return e.isSavingStructure},getServerStructure:function(e){return e.serverStructure},getEditorStructure:function(e){return e.editorStructure},getBlock:function(e){return e.clientId}}),null==w?void 0:w.selectors),controls:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},a.controls),null==w?void 0:w.controls)})}}
+t=!0,n=!1,u=!1,(0,a.dispatch)(d).startPostSave())}}))),store:(0,a.registerStore)(d,{reducer:(0,l/* .createReducerFromActionMap */.lA)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},_),null==y?void 0:y.reducers),{serverStructure:null,editorStructure:null,isSavingStructure:!1,hasUnsavedServerUpdates:!1,hasUnsavedEditorChanges:!1,clientId:null}),actions:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},S),null==y?void 0:y.actions),selectors:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},{hasUnsavedServerUpdates:function(e){return e.hasUnsavedServerUpdates},hasUnsavedEditorChanges:function(e){return e.hasUnsavedEditorChanges},getIsSavingStructure:function(e){return e.isSavingStructure},getServerStructure:function(e){return e.serverStructure},getEditorStructure:function(e){return e.editorStructure},getBlock:function(e){return e.clientId}}),null==y?void 0:y.selectors),controls:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i.controls),null==y?void 0:y.controls)})}}
 /***/},
 /***/99196:
 /***/e=>{"use strict";e.exports=window.React}
@@ -1155,14 +1145,6 @@ t=!0,n=!1,d=!1,(0,l.dispatch)(m).startPostSave())}}))),store:(0,l.registerStore)
 /***/n.d(t,{
 /* harmony export */Z:()=>/* binding */r
 /* harmony export */})},
-/***/11092:
-/***/(e,t,n)=>{"use strict";
-/* harmony export */n.d(t,{
-/* harmony export */Z:()=>/* binding */s
-/* harmony export */});
-/* harmony import */var r=n(33940);function s(){/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-s=function(){return e};var e={},t=Object.prototype,n=t.hasOwnProperty,o=Object.defineProperty||function(e,t,n){e[t]=n.value},i="function"==typeof Symbol?Symbol:{},a=i.iterator||"@@iterator",l=i.asyncIterator||"@@asyncIterator",c=i.toStringTag||"@@toStringTag";function u(e,t,n){return Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}),e[t]}try{u({},"")}catch(e){u=function(e,t,n){return e[t]=n}}function d(e,t,n,r){var s=t&&t.prototype instanceof f?t:f,i=Object.create(s.prototype),a=new Z(r||[]);return o(i,"_invoke",{value:_(e,n,a)}),i}function m(e,t,n){try{return{type:"normal",arg:e.call(t,n)}}catch(e){return{type:"throw",arg:e}}}e.wrap=d;var p={};function f(){}function h(){}function v(){}var g={};u(g,a,(function(){return this}));var y=Object.getPrototypeOf,E=y&&y(y(T([])));E&&E!==t&&n.call(E,a)&&(g=E);var b=v.prototype=f.prototype=Object.create(g);function w(e){["next","throw","return"].forEach((function(t){u(e,t,(function(e){return this._invoke(t,e)}))}))}function S(e,t){function s(o,i,a,l){var c=m(e[o],e,i);if("throw"!==c.type){var u=c.arg,d=u.value;return d&&"object"==(0,r/* ["default"] */.Z)(d)&&n.call(d,"__await")?t.resolve(d.__await).then((function(e){s("next",e,a,l)}),(function(e){s("throw",e,a,l)})):t.resolve(d).then((function(e){u.value=e,a(u)}),(function(e){return s("throw",e,a,l)}))}l(c.arg)}var i;o(this,"_invoke",{value:function(e,n){function r(){return new t((function(t,r){s(e,n,t,r)}))}return i=i?i.then(r,r):r()}})}function _(e,t,n){var r="suspendedStart";return function(s,o){if("executing"===r)throw new Error("Generator is already running");if("completed"===r){if("throw"===s)throw o;return O()}for(n.method=s,n.arg=o;;){var i=n.delegate;if(i){var a=k(i,n);if(a){if(a===p)continue;return a}}if("next"===n.method)n.sent=n._sent=n.arg;else if("throw"===n.method){if("suspendedStart"===r)throw r="completed",n.arg;n.dispatchException(n.arg)}else"return"===n.method&&n.abrupt("return",n.arg);r="executing";var l=m(e,t,n);if("normal"===l.type){if(r=n.done?"completed":"suspendedYield",l.arg===p)continue;return{value:l.arg,done:n.done}}"throw"===l.type&&(r="completed",n.method="throw",n.arg=l.arg)}}}function k(e,t){var n=e.iterator[t.method];if(void 0===n){if(t.delegate=null,"throw"===t.method){if(e.iterator.return&&(t.method="return",t.arg=void 0,k(e,t),"throw"===t.method))return p;t.method="throw",t.arg=new TypeError("The iterator does not provide a 'throw' method")}return p}var r=m(n,e.iterator,t.arg);if("throw"===r.type)return t.method="throw",t.arg=r.arg,t.delegate=null,p;var s=r.arg;return s?s.done?(t[e.resultName]=s.value,t.next=e.nextLoc,"return"!==t.method&&(t.method="next",t.arg=void 0),t.delegate=null,p):s:(t.method="throw",t.arg=new TypeError("iterator result is not an object"),t.delegate=null,p)}function x(e){var t={tryLoc:e[0]};1 in e&&(t.catchLoc=e[1]),2 in e&&(t.finallyLoc=e[2],t.afterLoc=e[3]),this.tryEntries.push(t)}function C(e){var t=e.completion||{};t.type="normal",delete t.arg,e.completion=t}function Z(e){this.tryEntries=[{tryLoc:"root"}],e.forEach(x,this),this.reset(!0)}function T(e){if(e){var t=e[a];if(t)return t.call(e);if("function"==typeof e.next)return e;if(!isNaN(e.length)){var r=-1,s=function t(){for(;++r<e.length;)if(n.call(e,r))return t.value=e[r],t.done=!1,t;return t.value=void 0,t.done=!0,t};return s.next=s}}return{next:O}}function O(){return{value:void 0,done:!0}}return h.prototype=v,o(b,"constructor",{value:v,configurable:!0}),o(v,"constructor",{value:h,configurable:!0}),h.displayName=u(v,c,"GeneratorFunction"),e.isGeneratorFunction=function(e){var t="function"==typeof e&&e.constructor;return!!t&&(t===h||"GeneratorFunction"===(t.displayName||t.name))},e.mark=function(e){return Object.setPrototypeOf?Object.setPrototypeOf(e,v):(e.__proto__=v,u(e,c,"GeneratorFunction")),e.prototype=Object.create(b),e},e.awrap=function(e){return{__await:e}},w(S.prototype),u(S.prototype,l,(function(){return this})),e.AsyncIterator=S,e.async=function(t,n,r,s,o){void 0===o&&(o=Promise);var i=new S(d(t,n,r,s),o);return e.isGeneratorFunction(n)?i:i.next().then((function(e){return e.done?e.value:i.next()}))},w(b),u(b,c,"Generator"),u(b,a,(function(){return this})),u(b,"toString",(function(){return"[object Generator]"})),e.keys=function(e){var t=Object(e),n=[];for(var r in t)n.push(r);return n.reverse(),function e(){for(;n.length;){var r=n.pop();if(r in t)return e.value=r,e.done=!1,e}return e.done=!0,e}},e.values=T,Z.prototype={constructor:Z,reset:function(e){if(this.prev=0,this.next=0,this.sent=this._sent=void 0,this.done=!1,this.delegate=null,this.method="next",this.arg=void 0,this.tryEntries.forEach(C),!e)for(var t in this)"t"===t.charAt(0)&&n.call(this,t)&&!isNaN(+t.slice(1))&&(this[t]=void 0)},stop:function(){this.done=!0;var e=this.tryEntries[0].completion;if("throw"===e.type)throw e.arg;return this.rval},dispatchException:function(e){if(this.done)throw e;var t=this;function r(n,r){return i.type="throw",i.arg=e,t.next=n,r&&(t.method="next",t.arg=void 0),!!r}for(var s=this.tryEntries.length-1;s>=0;--s){var o=this.tryEntries[s],i=o.completion;if("root"===o.tryLoc)return r("end");if(o.tryLoc<=this.prev){var a=n.call(o,"catchLoc"),l=n.call(o,"finallyLoc");if(a&&l){if(this.prev<o.catchLoc)return r(o.catchLoc,!0);if(this.prev<o.finallyLoc)return r(o.finallyLoc)}else if(a){if(this.prev<o.catchLoc)return r(o.catchLoc,!0)}else{if(!l)throw new Error("try statement without catch or finally");if(this.prev<o.finallyLoc)return r(o.finallyLoc)}}}},abrupt:function(e,t){for(var r=this.tryEntries.length-1;r>=0;--r){var s=this.tryEntries[r];if(s.tryLoc<=this.prev&&n.call(s,"finallyLoc")&&this.prev<s.finallyLoc){var o=s;break}}o&&("break"===e||"continue"===e)&&o.tryLoc<=t&&t<=o.finallyLoc&&(o=null);var i=o?o.completion:{};return i.type=e,i.arg=t,o?(this.method="next",this.next=o.finallyLoc,p):this.complete(i)},complete:function(e,t){if("throw"===e.type)throw e.arg;return"break"===e.type||"continue"===e.type?this.next=e.arg:"return"===e.type?(this.rval=this.arg=e.arg,this.method="return",this.next="end"):"normal"===e.type&&t&&(this.next=t),p},finish:function(e){for(var t=this.tryEntries.length-1;t>=0;--t){var n=this.tryEntries[t];if(n.finallyLoc===e)return this.complete(n.completion,n.afterLoc),C(n),p}},catch:function(e){for(var t=this.tryEntries.length-1;t>=0;--t){var n=this.tryEntries[t];if(n.tryLoc===e){var r=n.completion;if("throw"===r.type){var s=r.arg;C(n)}return s}}throw new Error("illegal catch attempt")},delegateYield:function(e,t,n){return this.delegate={iterator:T(e),resultName:t,nextLoc:n},"next"===this.method&&(this.arg=void 0),p}},e
-/***/}},
 /***/66886:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
@@ -1179,12 +1161,6 @@ s=function(){return e};var e={},t=Object.prototype,n=t.hasOwnProperty,o=Object.d
 /* harmony import */var r=n(58138),s=n(55181),o=n(64013),i=n(83314);
 /* harmony import */function a(e){return(0,r/* ["default"] */.Z)(e)||(0,s/* ["default"] */.Z)(e)||(0,o/* ["default"] */.Z)(e)||(0,i/* ["default"] */.Z)()}
 /***/},
-/***/33940:
-/***/(e,t,n)=>{"use strict";
-/* harmony export */function r(e){return r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},r(e)
-/***/}n.d(t,{
-/* harmony export */Z:()=>/* binding */r
-/* harmony export */})},
 /***/64013:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{

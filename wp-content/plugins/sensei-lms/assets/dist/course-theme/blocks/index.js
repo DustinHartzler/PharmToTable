@@ -331,8 +331,7 @@ return(0,r.createElement)("h2",e,__("Course Title","sensei-lms"))};
  *
  * @param {Array} blocks
  */
-function a(e){var t=!1,s=function(s){if(s!==t){t=s;var i=s?n.registerBlockType:n.unregisterBlockType;e.forEach((function(e){var t=e.name,s=(0,r/* ["default"] */.Z)(e,o);i(t,s)}))}};s(!0),
-// TODO Only subscribe when in the post editor.
+function a(e){var t=!1,s=function(s){if(s!==t){t=s;var i=s?n.registerBlockType:n.unregisterBlockType;e.forEach((function(e){var t=e.name,s=(0,r/* ["default"] */.Z)(e,o);i(t,s)}))}};s(!0),// TODO Only subscribe when in the post editor.
 (0,i.subscribe)((function(){var e,t=null===(e=(0,i.select)("core/editor"))||void 0===e?void 0:e.getCurrentPostType(),r=(0,i.select)("core/edit-post");if(t&&r){var n="lesson"===t&&r.isEditingTemplate();s(n)}}))}
 /***/},
 /***/62152:
