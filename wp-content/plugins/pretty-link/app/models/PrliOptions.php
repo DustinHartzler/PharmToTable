@@ -4,6 +4,7 @@ if(!defined('ABSPATH'))
 
 class PrliOptions
 {
+  public $activated_timestamp;
   public $prli_exclude_ips;
   public $whitelist_ips;
   public $filter_robots;
