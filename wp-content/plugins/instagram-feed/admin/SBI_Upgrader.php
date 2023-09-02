@@ -98,7 +98,7 @@ class SBI_Upgrader {
 		if ( SBI_Upgrader::is_dev_url( home_url() ) ) {
 			wp_send_json_success( array(
 				'url' => self::INSTALL_INSTRUCTIONS,
-			) );
+				) );
 		}
 		// Check license key.
 		$license = ! empty( $_POST['license_key'] ) ? sanitize_key( $_POST['license_key'] ) : '';
@@ -127,7 +127,6 @@ class SBI_Upgrader {
 			$body = wp_remote_retrieve_body( $response );
 
 			$check_key_response = json_decode( $body, true );
-
 			if ( empty( $check_key_response['license_data'] ) ) {
 
 				wp_send_json_error( array(
@@ -366,6 +365,11 @@ class SBI_Upgrader {
 	 */
 	public static function get_error_message( $response ) {
 		$message = '';
+		if ( isset( $response['license_data']['license'] )  && $response['license_data']['license'] === 'invalid'){
+			$message = __( 'This license is NOT valid.', 'instagram-feed' );
+		}
+
+
 		if ( isset( $response['error'] ) ) {
 			$error = sanitize_text_field( $response['error'] );
 			switch ( $error ) {

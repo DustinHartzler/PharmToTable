@@ -387,6 +387,9 @@ class SB_Instagram_Settings {
 	 * @return mixed
 	 */
 	public function filter_atts_for_legacy( $atts ) {
+		if ( ! is_array( $atts ) ) {
+			$atts = array();
+		}
 		if ( ! empty( $atts['from_update'] ) ) {
 			unset( $atts['from_update'] );
 			return $atts;

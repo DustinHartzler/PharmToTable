@@ -3,7 +3,7 @@
 Plugin Name: Smash Balloon Instagram Feed
 Plugin URI: https://smashballoon.com/instagram-feed
 Description: Display beautifully clean, customizable, and responsive Instagram feeds.
-Version: 6.1.6
+Version: 6.2.1
 Author: Smash Balloon
 Author URI: https://smashballoon.com/
 License: GPLv2 or later
@@ -32,11 +32,11 @@ if ( ! defined( 'SBI_PLUGIN_NAME' ) ) {
 	define( 'SBI_PLUGIN_NAME', 'Instagram Feed Free' );
 }
 if ( ! defined( 'SBIVER' ) ) {
-	define( 'SBIVER', '6.1.6' );
+	define( 'SBIVER', '6.2.1' );
 }
 // Db version.
 if ( ! defined( 'SBI_DBVERSION' ) ) {
-	define( 'SBI_DBVERSION', '2.1' );
+	define( 'SBI_DBVERSION', '2.2' );
 }
 
 // Upload folder name for local image files for posts
@@ -59,9 +59,6 @@ if ( ! defined( 'SBI_REFRESH_THRESHOLD_OFFSET' ) ) {
 }
 if ( ! defined( 'SBI_MINIMUM_INTERVAL' ) ) {
 	define( 'SBI_MINIMUM_INTERVAL', 600 );
-}
-if ( ! defined( 'SBI_CONNECT_URL' ) ) {
-    define( 'SBI_CONNECT_URL', 'https://connect.smashballoon.com/auth/ig/' );
 }
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -207,6 +204,9 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 		$sbi_about_us			= new InstagramFeed\Admin\SBI_About_Us();
 		$sbi_admin_notices		= new InstagramFeed\Admin\SBI_Admin_Notices();
 		$sbi_tooltip_wizard		= new InstagramFeed\Builder\SBI_Tooltip_Wizard();
+		$sbi_onboarding_wizard	= new InstagramFeed\admin\SBI_Onboarding_wizard();
+
+
 
 	}
 
@@ -339,9 +339,31 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 
 			wp_schedule_event( $six_am_local, 'sbiweekly', 'sbi_notification_update' );
 		}
+
+		$sbi_statuses_option = get_option( 'sbi_statuses', array() );
+		if( !isset( $sbi_statuses_option['wizard_dismissed'] ) || $sbi_statuses_option['wizard_dismissed'] === false){
+			add_option('sbi_plugin_do_activation_redirect', true);
+		}
+
 	}
 
 	register_activation_hook( __FILE__, 'sb_instagram_activate' );
+
+
+	function sbi_activation_plugin_redirect() {
+
+		if( !sbi_current_user_can( 'manage_instagram_feed_options' ) ){
+			return false;
+		}
+
+		if (get_option('sbi_plugin_do_activation_redirect', false)) {
+			delete_option('sbi_plugin_do_activation_redirect');
+			wp_safe_redirect( admin_url( '/admin.php?page=sbi-setup' )  );
+			exit();
+		}
+	}
+
+	add_action('admin_init', 'sbi_activation_plugin_redirect');
 
 	/**
 	 * Stop cron events when deactivated
@@ -772,8 +794,22 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 
 		if ( version_compare( $db_ver, '2.1', '<' ) ) {
 			\InstagramFeed\Builder\SBI_Db::create_tables();
+			$sbi_statuses_option = get_option( 'sbi_statuses', array() );
+			$sbi_statuses_option['wizard_dismissed'] = false;
+			update_option( 'sbi_statuses', $sbi_statuses_option );
 			update_option( 'sbi_db_version', SBI_DBVERSION );
 		}
+
+		if ( version_compare( $db_ver, '2.2', '<' ) ) {
+			$sbi_statuses_option = get_option( 'sbi_statuses', array() );
+			if( !isset($sbi_statuses_option['wizard_dismissed']) ){
+				$sbi_statuses_option['wizard_dismissed'] = true;
+				update_option( 'sbi_statuses', $sbi_statuses_option );
+			}
+			update_option( 'sbi_db_version', SBI_DBVERSION );
+		}
+
+
 	}
 
 	add_action( 'wp_loaded', 'sbi_check_for_db_updates' );

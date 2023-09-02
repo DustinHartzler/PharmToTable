@@ -31,6 +31,8 @@ class SBI_Feed_Saver_Manager {
 		//Detect Leaving the Page
 		add_action( 'wp_ajax_sbi_feed_saver_manager_recache_feed', array( 'InstagramFeed\Builder\SBI_Feed_Saver_Manager', 'recache_feed' ) );
 
+
+
 	}
 
 	/**
@@ -526,7 +528,7 @@ class SBI_Feed_Saver_Manager {
 		}
 		$feeds_data = \SB_Instagram_Feed_Locator::instagram_feed_locator_query( $args );
 
-		if ( count( $feeds_data ) < SBI_Db::get_results_per_page() ) {
+		if ( count( $feeds_data ) < SBI_Db::RESULTS_PER_PAGE ) {
 			$args['html_location'] = array( 'footer', 'sidebar', 'header' );
 			$args['group_by'] = 'html_location';
 			$args['page'] = 1;
@@ -806,5 +808,8 @@ class SBI_Feed_Saver_Manager {
 		echo sbi_json_encode( $response );
 		wp_die();
 	}
+
+
+
 
 }

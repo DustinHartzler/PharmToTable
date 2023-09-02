@@ -65,7 +65,7 @@ class SBI_Source {
 	 * @since 6.0
 	 */
 	public static function builder_update() {
-		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) && ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
+		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
 			wp_send_json_error();
 		}
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
@@ -165,7 +165,7 @@ class SBI_Source {
 	 * @since 6.0
 	 */
 	public static function builder_update_multiple() {
-		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) && ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
+		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
 			wp_send_json_error();
 		}
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
@@ -202,7 +202,7 @@ class SBI_Source {
 	 * @since 6.0
 	 */
 	public static function get_page() {
-		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) && ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
+		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
 			wp_send_json_error();
 		}
 		if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
@@ -244,22 +244,8 @@ class SBI_Source {
 			$user_email = $current_user->user_email;
 		}
 		$user_email = isset( $user_email ) ? $user_email : $admin_email;
-
-		$urls['personal'] = array(
-			'connect'          => SBI_CONNECT_URL,
-			'wordpress_user'   => sanitize_email( $user_email ),
-			'v'                => 'free',
-			'vn'               => SBIVER,
-			'sbi_con'          => $nonce,
-		);
-
-		$urls['business'] = array(
-			'connect'          => SBI_CONNECT_URL,
-			'wordpress_user'   => sanitize_email( $user_email ),
-			'v'                => 'free',
-			'vn'               => SBIVER,
-			'sbi_con'          => $nonce,
-		);
+		$urls['personal']  ='https://connect.smashballoon.com/auth/ig/?wordpress_user=' . sanitize_email( $user_email ) . '&v=free&vn=' . SBIVER . '&sbi_con=' . $nonce . '&state=';
+		$urls['business'] = 'https://connect.smashballoon.com/auth/ig/?wordpress_user=' . sanitize_email( $user_email ) . '&v=free&vn=' . SBIVER . '&sbi_con=' . $nonce . '&state=';
 
 		$urls['stateURL'] = $admin_url_state;
 

@@ -23,7 +23,7 @@ sbiBuilder = new Vue({
 	mixins: [VueClickaway.mixin],
 	data: {
 		nonce: sbi_builder.nonce,
-
+		admin_nonce: sbi_builder.admin_nonce,
 		template: sbi_builder.feedInitOutput,
 		templateRender: false,
 		updatedTimeStamp: new Date().getTime(),
@@ -278,9 +278,19 @@ sbiBuilder = new Vue({
 		//Moderation & Shoppable Mode
 		moderationShoppableMode: false,
 		moderationShoppableModeAjaxDone: false,
-		moderationShoppableModeOffset: 0
+		moderationShoppableModeOffset: 0,
 
-
+		onboardingWizardContent : sbi_builder.onboardingWizardContent,
+		currentOnboardingWizardStep : 0,
+		onboardingWizardStepContent : {},
+		currentOnboardingWizardActiveSettings : {},
+		onboardingSuccessMessages : sbi_builder.onboardingWizardContent.successMessages,
+		onboardingSuccessMessagesDisplay : [],
+		onboardingWizardDone : 'false',
+		isSetupPage : sbi_builder.isSetupPage,
+		setupLicencekey : '',
+		setupLicencekeyError : null,
+		licenseLoading : false
 	},
 	watch: {
 		feedPreviewOutput: function () {
@@ -342,6 +352,12 @@ sbiBuilder = new Vue({
 			}
 		});
 
+		if(self?.onboardingWizardContent !== undefined){
+			self?.onboardingWizardContent.steps.forEach( step => {
+				self.onboardingWizardStepContent[step.id] = step;
+			} );
+			self.checkActiveOnboardingWizardSettings()
+		}
 
 		self.loadingBar = false;
 		/* Onboarding - move elements so the position is in context */
@@ -349,8 +365,15 @@ sbiBuilder = new Vue({
 		setTimeout(function () {
 			self.positionOnboarding();
 		}, 500);
+		if( sbiStorage?.isSetupPage !== 'true' && sbiStorage?.isSetupPage !== true ){
+			self.appLoaded = true;
+		}
 
-		self.appLoaded = true;
+		if(sbiStorage?.setCurrentStep !== undefined){
+			self.currentOnboardingWizardStep = 1;
+			sbiStorage.removeItem("setCurrentStep");
+		}
+
 	},
 	methods: {
 		updateColorValue: function (id) {
@@ -535,7 +558,7 @@ sbiBuilder = new Vue({
 		 */
 		ajaxPost: function (data, callback) {
 			var self = this;
-			data['nonce'] = this.nonce;
+			data['nonce'] = data.nonce ? data.nonce : this.nonce;
 			self.$http.post(self.ajaxHandler, data).then(callback);
 		},
 
@@ -2668,6 +2691,10 @@ sbiBuilder = new Vue({
 					self.feedToDelete = args;
 					heading = heading.replace("#", self.feedToDelete.feed_name);
 					break;
+                case "deleteSource":
+                    self.sourceToDelete = args;
+                   heading = heading.replace("#", self.sourceToDelete.username);
+                    break;
 			}
 			self.dialogBox = {
 				active: true,
@@ -2704,21 +2731,11 @@ sbiBuilder = new Vue({
 				case 'unsavedFeedSources':
 					self.updateFeedTypeAndSourcesCustomizer();
 					break;
+				 case 'deleteSource':
+                    self.deleteSource(self.sourceToDelete);
+                    break;
 			}
 		},
-
-		/*
-		closeConfirmDialog : function(){
-			this.sourceToDelete = {};
-			this.feedToDelete = {};
-			this.dialogBox = {
-				active : false,
-				type : null,
-				heading : null,
-				description : null
-			};
-		},
-		*/
 
 		/**
 		 * Show Tooltip on Hover
@@ -3050,8 +3067,190 @@ sbiBuilder = new Vue({
 			let self = this;
 			self.processNotification('personalAccountUpdated');
 			this.creationProcessNext();
-		}
+		},
 
+		/**
+		 * Next Wizard Step
+		 *
+		 * @since 6.3
+		*/
+		nextWizardStep : function( action = false ){
+			const self = this;
+			if( action === 'submit' ){
+				self.submitWizardData()
+			}
+
+			if( self.currentOnboardingWizardStep <  self.onboardingWizardContent.steps.length ){
+				self.currentOnboardingWizardStep +=1;
+			}
+		},
+
+		//
+		submitWizardData : function(){
+			const self = this,
+				wizardData = {
+					action: 'sbi_feed_saver_manager_process_wizard',
+					data: JSON.stringify(self.currentOnboardingWizardActiveSettings)
+				};
+
+			self.ajaxPost(wizardData, function (_ref) {
+			});
+
+			if( self.sourcesList.length > 0 ){
+				self.onboardingSuccessMessagesDisplay.push( self.onboardingSuccessMessages.connectAccount );
+			}
+			self.onboardingSuccessMessagesDisplay.push( self.onboardingSuccessMessages.setupFeatures );
+
+			const settingsValues = Object.values(self.currentOnboardingWizardActiveSettings),
+					settingsKeys = Object.keys(self.currentOnboardingWizardActiveSettings);
+			settingsValues.map( ( st, stInd ) => {
+				if( st?.plugins && st?.plugins === 'smash' ){
+					self.onboardingSuccessMessagesDisplay.push( self.onboardingSuccessMessages.feedPlugins.replace('#', settingsKeys[stInd])  );
+				}else if( st?.id === 'reviews' ){
+					self.onboardingSuccessMessagesDisplay.push( 'Reviews Feed ' + self.genericText.installed );
+				}else if( st?.type === 'install_plugins' ){
+					self.onboardingSuccessMessagesDisplay.push( '<span class="sb-onboarding-wizard-succes-name"> ' + st?.pluginName + '</span> ' + self.genericText.installed );
+				}
+			} )
+			setTimeout(function(){
+				self.onboardingWizardDone = 'true';
+			}, 100)
+			sbiBuilder.$forceUpdate();
+		},
+
+		/**
+		 * Previous Wizard Step
+		 *
+		 * @since 6.3
+		*/
+		previousWizardStep : function(){
+			const self = this;
+			if( self.currentOnboardingWizardStep >  0 ){
+				self.currentOnboardingWizardStep -=1;
+			}
+		},
+
+		/**
+         * Delete Source Ajax
+         *
+         * @since 4.0
+        */
+        deleteSource: function (sourceToDelete) {
+			var self = this,
+				deleteSourceData = {
+					action: 'sbi_feed_saver_manager_delete_source',
+					source_id: sourceToDelete.id,
+					username : sourceToDelete.username,
+					nonce : self.admin_nonce
+				};
+			self.ajaxPost(deleteSourceData, function (_ref) {
+				var data = _ref.data;
+				self.sourcesList = data;
+			});
+        },
+
+		//Get Source Avatarr
+		getSourceListAvatar: function ( headerData ) {
+			var self = this
+			if (headerData['local_avatar_url'] != false && self.checkNotEmpty(headerData['local_avatar_url'])) {
+				return headerData['local_avatar_url'];
+			} else {
+				if (self.hasOwnNestedProperty(headerData, 'profile_picture')) {
+					return headerData['profile_picture'];
+				} else if (self.hasOwnNestedProperty(headerData, 'profile_picture_url')) {
+					return headerData['profile_picture_url'];
+				} else if (self.hasOwnNestedProperty(headerData, 'user.profile_picture')) {
+					return headerData['user']['profile_picture'];
+				} else if (self.hasOwnNestedProperty(headerData, 'data.profile_picture')) {
+					return headerData['data']['profile_picture'];
+				}
+			}
+			return self.onboardingWizardContent.userIcon;
+		},
+
+		//Switcher Onboarding Wizard Click
+		switcherOnboardingWizardClick : function ( elem ) {
+			const self = this;
+			if( elem?.uncheck === true ){
+				return false;
+			}
+
+			if(self.currentOnboardingWizardActiveSettings[elem?.data?.id] !== undefined){
+				delete self.currentOnboardingWizardActiveSettings[elem.data.id];
+			}else{
+				self.currentOnboardingWizardActiveSettings[elem.data.id] = elem.data;
+			}
+			sbiBuilder.$forceUpdate();
+		},
+
+		switcherOnboardingWizardCheckActive : function ( elem ) {
+			const self = this;
+			if( elem?.uncheck === true ){
+				return elem?.active;
+			}else{
+				return self.currentOnboardingWizardActiveSettings[elem?.data?.id] !== undefined ? 'true' : 'false'
+			}
+
+		},
+
+		checkActiveOnboardingWizardSettings : function (){
+			const self = this,
+				currentStepContentSteps = self.onboardingWizardContent.steps;
+
+				currentStepContentSteps.map( (step, stepId) => {
+					let = currentStepContentValues = Object.values(step),
+						currentStepContentKeys = Object.keys(step);
+						currentStepContentValues.map( (sec, secId) => {
+						if( (self.onboardingWizardContent.saveSettings.includes(currentStepContentKeys[secId])) ){
+							currentStepContentValues[secId].forEach( elem => {
+								if( elem.active === true && elem?.data){
+									self.currentOnboardingWizardActiveSettings[elem.data.id] = elem.data;
+								}
+							} );
+						}
+					});
+				});
+		},
+
+		dismissOnboardingWizard : function(){
+			const self = this,
+				dismissWizardData = {
+					action: 'sbi_feed_saver_manager_dismiss_wizard'
+				};
+
+			self.ajaxPost(dismissWizardData, function (_ref) {
+				window.location = self.builderUrl;
+			});
+			sbiBuilder.$forceUpdate();
+		},
+
+		//One CLick Upgrade
+		runOneClickUpgrade : function(){
+			const self = this,
+			oneClickUpgradeData = {
+				action: 'sbi_maybe_upgrade_redirect',
+				license_key: self.setupLicencekey,
+				nonce : self.admin_nonce
+			};
+			self.setupLicencekeyError = null
+			if( self.checkNotEmpty( self.setupLicencekey ) ){
+				self.licenseLoading = true;
+				self.ajaxPost(oneClickUpgradeData, function (_ref) {
+					var data = _ref.data;
+					if (data.success === false) {
+                        self.licenseLoading = false;
+                        if (typeof data.data !== 'undefined') {
+                            self.setupLicencekeyError = data.data.message
+                        }
+                    }
+                    if (data.success === true) {
+                        window.location.href = data.data.url
+                    }
+
+				});
+			}
+
+		}
 
 	}
 

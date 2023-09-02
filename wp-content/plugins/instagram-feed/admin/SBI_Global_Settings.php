@@ -413,7 +413,7 @@ class SBI_Global_Settings {
 	 * @return SBI_Response
 	 */
 	public function sbi_export_settings_json() {
-		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) && ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
+		if ( ! check_ajax_referer( 'sbi-admin', 'nonce', false ) ) {
 			wp_send_json_error();
 		}
 
@@ -670,8 +670,8 @@ class SBI_Global_Settings {
 			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
 
-		$upgrade_url 	= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', esc_attr( $license_key ) );
-		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', esc_attr( $license_key ), sanitize_key( $sbi_download_id ) );
+		$upgrade_url 	= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', $license_key);
+		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, sanitize_key( $sbi_download_id ) );
 		$learn_more_url = 'https://smashballoon.com/doc/my-license-key-wont-activate/?utm_campaign=instagram-free&utm_source=settings&utm_medium=license&utm_content=learn-more';
 
 		// Check if the license key reached max site installations
@@ -771,9 +771,7 @@ class SBI_Global_Settings {
 		$can_install_automator_plugin = ( version_compare($wp_version,'5.3') >= 0 ) ? true : false;
 
 		$model = $this->get_settings_data();
-		$exported_feeds = \InstagramFeed\Builder\SBI_Db::feeds_query(
-			['all_feeds' => true]
-		);
+		$exported_feeds = \InstagramFeed\Builder\SBI_Db::feeds_query();
 		$feeds = array();
 		foreach( $exported_feeds as $feed_id => $feed ) {
 			$feeds[] = array(
@@ -835,7 +833,7 @@ class SBI_Global_Settings {
 			$has_license_error = true;
 		}
 
-		$upgrade_url			= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', esc_attr( $license_key ));
+		$upgrade_url			= sprintf('https://smashballoon.com/instagram-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=settings&utm_medium=upgrade-license', $license_key);
 	    $footer_upgrade_url		= 'https://smashballoon.com/instagram-feed/demo?utm_campaign=instagram-free&utm_source=settings&utm_medium=footer-banner&utm_content=Try Demo';
 	    $usage_tracking_url 	= 'https://smashballoon.com/instagram-feed/usage-tracking/';
 		$feed_issue_email_url 	= 'https://smashballoon.com/doc/email-report-is-not-in-my-inbox/?instagram';
@@ -1148,7 +1146,7 @@ class SBI_Global_Settings {
 		if ( get_option('sbi_license_key') ) {
 			$license_key = sanitize_key( get_option('sbi_license_key') );
 		}
-		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=balloon&utm_medium=all-access', esc_attr( $license_key ));
+		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?license_key=%s&upgrade=true&utm_campaign=instagram-free&utm_source=balloon&utm_medium=all-access', $license_key);
 
 		return array(
 			'manageLicense' => 'https://smashballoon.com/account/downloads/?utm_campaign=instagram-free&utm_source=settings&utm_medium=manage-license',
