@@ -69,11 +69,11 @@ class TCB_Styledlist_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		$prefix_config  = tcb_selection_root();
-		$default_config = array(
+		$default_config = [
 			'css_suffix' => ' li',
 			'css_prefix' => $prefix_config . ' ',
 			'important'  => true,
-		);
+		];
 
 		$styledlist = array(
 			'styledlist' => array(
@@ -86,46 +86,46 @@ class TCB_Styledlist_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'List Item Spacing', 'thrive-cb' ),
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'margin-bottom',
 						),
 						'extends'    => 'Slider',
 					),
-					'preview'      => array(
-						'config' => array(
+					'preview'      => [
+						'config' => [
 							'sortable' => true,
-						),
-					),
+						],
+					],
 				),
 			),
-			'typography' => array(
-				'disabled_controls' => array(
+			'typography' => [
+				'disabled_controls' => [
 					'[data-value="tcb-typography-line-height"] ',
 					'.tve-advanced-controls',
 					'p_spacing',
 					'h1_spacing',
 					'h2_spacing',
 					'h3_spacing',
-				),
-				'config'            => array(
-					'TextAlign'     => array(
+				],
+				'config'            => [
+					'TextAlign'     => [
 						'css_suffix'   => ' .thrv-styled-list-item',
 						'property'     => 'justify-content',
-						'property_val' => array(
+						'property_val' => [
 							'left'    => 'flex-start',
 							'center'  => 'center',
 							'right'   => 'flex-end',
 							'justify' => 'space-evenly',
-						),
-					),
+						],
+					],
 					'FontColor'     => $default_config,
 					'FontSize'      => $default_config,
 					'TextTransform' => $default_config,
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(),
-			),
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [],
+			],
 		);
 
 		return array_merge( $styledlist, $this->group_component() );
@@ -176,12 +176,12 @@ class TCB_Styledlist_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'styled_list',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425800-how-to-use-the-styled-list-element',
-			),
-		);
+			],
+		];
 	}
 }

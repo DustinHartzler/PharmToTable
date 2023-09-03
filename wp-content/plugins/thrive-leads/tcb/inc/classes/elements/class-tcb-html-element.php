@@ -57,19 +57,19 @@ class TCB_Html_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'html'       => array(
-				'config' => array(),
-			),
-			'typography' => array( 'hidden' => true ),
-			'borders'    => array( 'hidden' => true ),
-			'animation'  => array( 'hidden' => true ),
-			'background' => array( 'hidden' => true ),
-			'shadow'     => array( 'hidden' => true ),
-			'layout'     => array(
-				'disabled_controls' => array(),
-			),
-		);
+		return [
+			'html'       => [
+				'config' => [],
+			],
+			'typography' => [ 'hidden' => true ],
+			'borders'    => [ 'hidden' => true ],
+			'animation'  => [ 'hidden' => true ],
+			'background' => [ 'hidden' => true ],
+			'shadow'     => [ 'hidden' => true ],
+			'layout'     => [
+				'disabled_controls' => [],
+			],
+		];
 	}
 
 	/**
@@ -87,12 +87,12 @@ class TCB_Html_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'custom_html',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425799-how-to-use-the-custom-html-and-google-map-elements',
-			),
-		);
+			],
+		];
 	}
 }

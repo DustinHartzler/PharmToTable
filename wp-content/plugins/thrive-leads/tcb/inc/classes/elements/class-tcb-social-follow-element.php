@@ -52,13 +52,13 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['styles-templates'] = array( 'hidden' => true );
+		$components['styles-templates'] = [ 'hidden' => true ];
 
 		$components['social_follow'] = $components['social'];
 
-		$components['social_follow']['disabled_controls'] = array( 'type', 'has_custom_url', 'custom_url', 'counts', 'total_share', 'CssVarChanger', 'CommonButtonWidth' );
+		$components['social_follow']['disabled_controls'] = [ 'type', 'has_custom_url', 'custom_url', 'counts', 'total_share', 'CssVarChanger', 'CommonButtonWidth' ];
 
-		$styles = array();
+		$styles = [];
 
 		foreach ( range( 1, 8 ) as $i ) {
 			$styles[ 'tve_links_style_' . $i ] = 'Style ' . $i;
@@ -99,13 +99,13 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 				'items' => $styles,
 			),
 		);
-		$components['social_follow']['config']['preview']        = array(
-			'config' => array(
+		$components['social_follow']['config']['preview']        = [
+			'config' => [
 				'sortable'      => true,
 				'settings_icon' => 'pen-regular',
 				'tpl'           => 'controls/preview-check-list-item',
-			),
-		);
+			],
+		];
 		$components['social_follow']['config']['CustomBranding'] = array(
 			'config'  => array(
 				'name'    => '',
@@ -115,18 +115,18 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 			'extends' => 'Switch',
 		);
 
-		$components['social_follow']['config']['SocialFollowPalettes'] = array(
-			'config'    => array(),
+		$components['social_follow']['config']['SocialFollowPalettes'] = [
+			'config'    => [],
 			'extends'   => 'Palettes',
 			'important' => true,
-		);
+		];
 
-		$components['scroll'] = array(
+		$components['scroll'] = [
 			'hidden'            => false,
-			'disabled_controls' => array( '[data-value="parallax"]' ),
-		);
+			'disabled_controls' => [ '[data-value="parallax"]' ],
+		];
 
-		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Overflow', 'ScrollStyle' );
+		$components['layout']['disabled_controls'] = [ 'Width', 'Height', 'Display', 'Overflow', 'ScrollStyle' ];
 
 		unset( $components['social'] );
 
@@ -157,13 +157,13 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'social_follow',
 				'link' => 'https://help.thrivethemes.com/en/articles/4472330-how-to-use-the-social-follow-element',
-			),
-		);
+			],
+		];
 	}
 }
 

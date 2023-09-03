@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control tcb-icon-side-wrapper mt-10" data-view="FormWidth"></div>
 		<hr>
 		<?php esc_html_e( 'Submission action(s)', 'thrive-cb' ); ?>
-		<div class="tve-advanced-controls extend-grey hide-states skip-api no-service controls-login mt-5">
+		<div class="tve-advanced-controls hide-states skip-api no-service controls-login mt-5">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php esc_html_e( 'After successful login', 'thrive-cb' ); ?>
@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					 data-icontooltip="<?php echo esc_attr__( 'Preview success message', 'thrive-cb' ); ?>" data-iconside="top"></div>
 			</div>
 		</div>
-		<div class="tve-advanced-controls extend-grey hide-states skip-api no-service controls-register mt-5">
+		<div class="tve-advanced-controls hide-states skip-api no-service controls-register mt-5">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php esc_html_e( 'After successful registration', 'thrive-cb' ); ?>
@@ -88,7 +88,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<hr class="mt-10">
 
-		<div class="tve-advanced-controls extend-grey hide-states skip-api no-service mt-5">
+		<div class="tve-advanced-controls hide-states skip-api no-service mt-5">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php esc_html_e( 'Advanced', 'thrive-cb' ); ?>

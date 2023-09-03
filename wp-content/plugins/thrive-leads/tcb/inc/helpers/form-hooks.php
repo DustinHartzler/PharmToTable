@@ -11,14 +11,14 @@ use TCB\inc\helpers\FormSettings;
  * @return array map of replacements
  */
 function tve_save_form_settings( $forms, $post_parent ) {
-	$replaced   = array();
+	$replaced   = [];
 	$post_title = 'Form settings' . ( $post_parent ? ' for content ' . $post_parent : '' );
 
 	foreach ( $forms as $form ) {
 		$id       = ! empty( $form['id'] ) ? (int) $form['id'] : 0;
 		$instance = FormSettings::get_one( $form['id'], $post_parent )
 		                        ->set_config( wp_unslash( $form['settings'] ) )
-		                        ->save( $post_title, empty( $post_parent ) ? null : array( 'post_parent' => $post_parent ) );
+		                        ->save( $post_title, empty( $post_parent ) ? null : [ 'post_parent' => $post_parent ] );
 		if ( $instance->ID !== $id ) {
 			$replaced[ $form['id'] ] = $instance->ID;
 		}
@@ -38,7 +38,7 @@ function tve_delete_form_settings( $id ) {
 	}
 
 	if ( ! is_array( $id ) ) {
-		$id = array( $id );
+		$id = [ $id ];
 	}
 
 	foreach ( $id as $form_id ) {
@@ -55,14 +55,14 @@ function tve_delete_form_settings( $id ) {
  * @return void
  */
 function tve_delete_post_form_settings( $post_id ) {
-	$query = new \WP_Query( array(
-			'post_type'      => array(
+	$query = new \WP_Query( [
+			'post_type'      => [
 				FormSettings::POST_TYPE,
-			),
+			],
 			'fields'         => 'ids',
 			'post_parent'    => $post_id,
 			'posts_per_page' => '-1',
-		)
+		]
 	);
 
 	$post_ids = $query->posts;

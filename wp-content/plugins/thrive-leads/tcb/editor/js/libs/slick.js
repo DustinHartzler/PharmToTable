@@ -230,7 +230,9 @@
 	Slick.prototype.animateHeight = function () {
 		var _ = this;
 		if ( _.options.slidesToShow === 1 && _.options.adaptiveHeight === true && _.options.vertical === false ) {
+			_.$slides.eq( _.currentSlide ).removeClass( 'slick-active' );
 			var targetHeight = _.$slides.eq( _.currentSlide ).outerHeight( true );
+			_.$slides.eq( _.currentSlide ).addClass( 'slick-active' );
 			_.$list.animate( {
 				height: targetHeight
 			}, _.options.speed );
@@ -1497,7 +1499,8 @@
 
 		var _ = this;
 		//Dont slide if the cursor is inside the form fields and arrow keys are pressed
-		if ( ! event.target.tagName.match( 'TEXTAREA|INPUT|SELECT' ) ) {
+		//Do not move slides when editing an Image caption and using the left/right keys for navigating
+		if ( ! event.target.tagName.match( 'TEXTAREA|INPUT|SELECT' ) && ! $( event.target ).parents( '.wp-caption-text' ).length ) {
 			if ( event.keyCode === 37 && _.options.accessibility === true ) {
 				_.changeSlide( {
 					data: {

@@ -28,6 +28,7 @@ class TCB_Post_Title_Element extends TCB_Post_List_Sub_Element_Abstract {
 	public function name() {
 		return __( 'Post Title', 'thrive-cb' );
 	}
+
 	/**
 	 * Return icon class needed for display in menu
 	 *
@@ -36,6 +37,7 @@ class TCB_Post_Title_Element extends TCB_Post_List_Sub_Element_Abstract {
 	public function icon() {
 		return 'post-title';
 	}
+
 	/**
 	 * WordPress element identifier
 	 *
@@ -63,11 +65,11 @@ class TCB_Post_Title_Element extends TCB_Post_List_Sub_Element_Abstract {
 		$components = parent::own_components();
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
-			if ( in_array( $control, array( 'css_suffix', 'css_prefix' ) ) ) {
+			if ( in_array( $control, [ 'css_suffix', 'css_prefix' ] ) ) {
 				continue;
 			}
 			/* make sure typography elements apply also on the link inside the title */
-			$components['typography']['config'][ $control ]['css_suffix'] = array( ' a', '' );
+			$components['typography']['config'][ $control ]['css_suffix'] = [ ' a', '' ];
 			$components['typography']['config'][ $control ]['css_prefix'] = '.' . TCB_POST_TITLE_IDENTIFIER;
 		}
 

@@ -85,7 +85,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		$components = array(
-			'carousel'      => array( 'hidden' => false ),
+			'carousel'      => [ 'hidden' => false ],
 			'image_gallery' => array(
 				'config' => array(
 					'GalleryType'            => array(
@@ -155,7 +155,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '10',
 							'label'   => __( 'Images per row', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -164,7 +164,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							'min'   => '0',
 							'max'   => '240',
 							'label' => __( 'Vertical space', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -173,7 +173,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							'min'   => '0',
 							'max'   => '240',
 							'label' => __( 'Horizontal space', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -182,7 +182,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							'min'   => '1',
 							'max'   => '800',
 							'label' => __( 'Column Height', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -191,7 +191,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							'min'   => '0',
 							'max'   => '240',
 							'label' => __( 'Gutter', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -199,10 +199,10 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'name'    => __( 'Click behavior', 'thrive-cb' ),
 							'options' => array(
-								array(
+								[
 									'value' => 'fullscreen',
 									'name'  => 'Open fullscreen lightbox',
-								),
+								],
 								array(
 									'value' => 'none',
 									'name'  => 'None (links can be added in edit mode)',
@@ -214,20 +214,20 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 					'ThumbnailSize'          => array(
 						'config'  => array(
 							'name'    => __( 'Thumbnail size', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'auto',
 									'name'  => 'Automatic',
-								),
-								array(
+								],
+								[
 									'value' => 'medium',
 									'name'  => 'Medium',
-								),
-								array(
+								],
+								[
 									'value' => 'large',
 									'name'  => 'Large',
-								),
-							),
+								],
+							],
 							'info'    => true,
 						),
 						'extends' => 'Select',
@@ -245,35 +245,35 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							'min'   => '1',
 							'max'   => '800',
 							'label' => __( 'Image height', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
 					'FullscreenSize'         => array(
 						'config'  => array(
 							'name'    => __( 'Full screen image size', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'medium',
 									'name'  => 'Medium',
-								),
-								array(
+								],
+								[
 									'value' => 'large',
 									'name'  => 'Large',
-								),
-								array(
+								],
+								[
 									'value' => 'full',
 									'name'  => 'Original',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
 				),
 			),
-			'layout'        => array(
-				'disabled_controls' => array( 'Display' ),
-			),
+			'layout'        => [
+				'disabled_controls' => [ 'Display' ],
+			],
 		);
 
 		$components = array_merge( $components, $this->group_component() );

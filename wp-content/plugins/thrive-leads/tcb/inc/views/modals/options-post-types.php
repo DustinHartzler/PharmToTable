@@ -6,13 +6,16 @@
  */
 
 /* define a list of post types that the user can choose from */
-$all_post_types = apply_filters( 'tve_link_autocomplete_post_types', get_post_types( array(
+$all_post_types = apply_filters( 'tve_link_autocomplete_post_types', get_post_types( [
 	'public'  => true,
 	'show_ui' => true,
-) ) );
+] ) );
 
-$blacklist = apply_filters( 'tve_post_types_blacklist', array( 'tcb_lightbox', TCB_Symbols_Post_Type::SYMBOL_POST_TYPE ) );
-$saved     = maybe_unserialize( get_option( 'tve_hyperlink_settings', apply_filters( 'tve_link_autocomplete_default_post_types', array( 'post', 'page' ) ) ) ); // by default, show posts and pages
+$blacklist = apply_filters( 'tve_post_types_blacklist', [ 'tcb_lightbox', TCB_Symbols_Post_Type::SYMBOL_POST_TYPE ] );
+$saved     = maybe_unserialize( get_option( 'tve_hyperlink_settings', apply_filters( 'tve_link_autocomplete_default_post_types', [ 'post', 'page' ] ) ) ); // by default, show posts and pages
+if ( is_string( $saved ) ) {
+	$saved = [ $saved ];
+}
 
 $all_post_types = array_diff( $all_post_types, $blacklist ); ?>
 <h2 class="tcb-modal-title"><?php esc_html_e( 'Thrive Hyperlink Settings', 'thrive-cb' ) ?></h2>

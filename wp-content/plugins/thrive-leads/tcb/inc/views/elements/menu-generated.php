@@ -26,12 +26,12 @@ $attributes = array(
 	'icon'             => isset( $_POST['icon'] ) ? $_POST['icon'] : new stdClass(), //phpcs:ignore
 	'top_cls'          => isset( $_POST['top_cls'] ) ? $_POST['top_cls'] : new stdClass(), //phpcs:ignore
 	'type'             => isset( $_POST['type'] ) ? sanitize_text_field( $_POST['type'] ) : '',
-	'layout'           => isset( $_POST['layout'] ) ? $_POST['layout'] : array( 'default' => 'grid' ), //phpcs:ignore
-	'mega_desc'        => isset( $_POST['mega_desc'] ) ? $_POST['mega_desc'] : array(), //phpcs:ignore
+	'layout'           => isset( $_POST['layout'] ) ? $_POST['layout'] : [ 'default' => 'grid' ], //phpcs:ignore
+	'mega_desc'        => isset( $_POST['mega_desc'] ) ? $_POST['mega_desc'] : [], //phpcs:ignore
 	'actions'          => isset( $_POST['actions'] ) ? $_POST['actions'] : new stdClass(), //phpcs:ignore
 	'images'           => isset( $_POST['images'] ) ? $_POST['images'] : new stdClass(), //phpcs:ignore
 	'img_settings'     => isset( $_POST['img_settings'] ) ? $_POST['img_settings'] : new stdClass(), //phpcs:ignore
-	'logo'             => isset( $_POST['logo'] ) && $_POST['logo'] !== 'false' ? $_POST['logo'] : array(), //phpcs:ignore
+	'logo'             => isset( $_POST['logo'] ) && $_POST['logo'] !== 'false' ? $_POST['logo'] : [], //phpcs:ignore
 );
 
 if ( ! $attributes['dropdown_icon'] && $attributes['dir'] === 'tve_vertical' ) {

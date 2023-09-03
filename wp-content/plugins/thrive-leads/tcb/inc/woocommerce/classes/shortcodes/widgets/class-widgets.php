@@ -24,25 +24,25 @@ class Widgets {
 	}
 
 	public static function add_actions() {
-		add_action( 'tcb_ajax_before_widget_render', array( __CLASS__, 'tcb_ajax_before_widget_render' ) );
+		add_action( 'tcb_ajax_before_widget_render', [ __CLASS__, 'tcb_ajax_before_widget_render' ] );
 
-		add_action( 'tcb_before_widget_render', array( __CLASS__, 'tcb_before_widget_render' ) );
+		add_action( 'tcb_before_widget_render', [ __CLASS__, 'tcb_before_widget_render' ] );
 	}
 
 	public static function add_filters() {
 		add_filter( 'tve_include_widgets_in_editor', '__return_true' );
 
-		add_filter( 'tcb_editor_widgets', array( __CLASS__, 'tcb_editor_widgets' ), 10 );
+		add_filter( 'tcb_editor_widgets', [ __CLASS__, 'tcb_editor_widgets' ], 10 );
 
-		add_filter( 'tcb_widget_element_category', array( __CLASS__, 'tcb_widget_element_category' ), 10, 2 );
+		add_filter( 'tcb_widget_element_category', [ __CLASS__, 'tcb_widget_element_category' ], 10, 2 );
 
-		add_filter( 'tcb_widget_element_icon', array( __CLASS__, 'tcb_widget_element_icon' ), 10, 2 );
+		add_filter( 'tcb_widget_element_icon', [ __CLASS__, 'tcb_widget_element_icon' ], 10, 2 );
 
-		add_filter( 'tcb_widget_data_widget_woocommerce_widget_cart', array( __CLASS__, 'cart_widget_data' ) );
+		add_filter( 'tcb_widget_data_widget_woocommerce_widget_cart', [ __CLASS__, 'cart_widget_data' ] );
 
-		add_filter( 'sidebars_widgets', array( __CLASS__, 'sidebars_widgets' ) );
+		add_filter( 'sidebars_widgets', [ __CLASS__, 'sidebars_widgets' ] );
 
-		add_filter( 'tcb_element_instances', array( __CLASS__, 'tcb_element_instances' ) );
+		add_filter( 'tcb_element_instances', [ __CLASS__, 'tcb_element_instances' ] );
 	}
 
 	/**
@@ -107,11 +107,11 @@ class Widgets {
 		$woo_cart = wc()->cart->get_cart();
 
 		if ( empty( $woo_cart ) ) {
-			$dummy_products = get_posts( array(
+			$dummy_products = get_posts( [
 				'posts_per_page' => 3,
 				'post_type'      => 'product',
 				'orderby'        => 'rand',
-			) );
+			] );
 
 			foreach ( $dummy_products as $product ) {
 				try {
@@ -183,7 +183,7 @@ class Widgets {
 	public static function sidebars_widgets( $sidebars_widgets ) {
 
 		if ( ! is_admin() && is_product() ) {
-			$sidebars_widgets['dummy-widgets'] = array( 'woocommerce_recently_viewed_products' );
+			$sidebars_widgets['dummy-widgets'] = [ 'woocommerce_recently_viewed_products' ];
 		}
 
 		return $sidebars_widgets;
@@ -209,11 +209,11 @@ class Widgets {
 	 * @return string[]
 	 */
 	public static function get_cached_widget_keys() {
-		return array(
+		return [
 			'widget_woocommerce_products',
 			'widget_woocommerce_top_rated_products',
 			'widget_woocommerce_recent_reviews',
-		);
+		];
 	}
 
 	/**
@@ -224,10 +224,10 @@ class Widgets {
 	public static function tcb_element_instances( $instances ) {
 		require_once __DIR__ . '/class-abstract-sub-element.php';
 
-		$widgets = array_diff( scandir( __DIR__ . '/sub-elements' ), array( '.', '..' ) );
+		$widgets = array_diff( scandir( __DIR__ . '/sub-elements' ), [ '.', '..' ] );
 
 		foreach ( $widgets as $widget ) {
-			$files = array_diff( scandir( __DIR__ . '/sub-elements/' . $widget ), array( '.', '..' ) );
+			$files = array_diff( scandir( __DIR__ . '/sub-elements/' . $widget ), [ '.', '..' ] );
 			foreach ( $files as $file ) {
 				$instance                      = require_once __DIR__ . '/sub-elements/' . $widget . '/' . $file;
 				$instances[ $instance->tag() ] = $instance;

@@ -28,11 +28,11 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	 * Hooks to change the post rest api
 	 */
 	public function hooks() {
-		add_filter( "rest_prepare_{$this->post_type}", array( $this, 'rest_prepare_symbol' ), 10, 2 );
-		add_filter( "rest_insert_{$this->post_type}", array( $this, 'rest_insert_symbol' ), 10, 2 );
-		add_action( "rest_after_insert_{$this->post_type}", array( $this, 'rest_after_insert' ), 10, 2 );
-		add_action( 'rest_delete_' . TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY, array( $this, 'rest_delete_category' ), 10, 1 );
-		add_action( "rest_{$this->post_type}_query", array( $this, 'override_per_page' ), 10, 1 );
+		add_filter( "rest_prepare_{$this->post_type}", [ $this, 'rest_prepare_symbol' ], 10, 2 );
+		add_filter( "rest_insert_{$this->post_type}", [ $this, 'rest_insert_symbol' ], 10, 2 );
+		add_action( "rest_after_insert_{$this->post_type}", [ $this, 'rest_after_insert' ], 10, 2 );
+		add_action( 'rest_delete_' . TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY, [ $this, 'rest_delete_category' ], 10, 1 );
+		add_action( "rest_{$this->post_type}_query", [ $this, 'override_per_page' ], 10, 1 );
 	}
 
 	/**
@@ -59,8 +59,8 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/cloud', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_cloud_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_cloud_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 			),
 		) );
 
@@ -73,8 +73,8 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 			),
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_cloud_item' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_cloud_item' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 			),
 		) );
 	}
@@ -99,12 +99,12 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 
 
 		if ( ! ( $type = $request->get_param( 'type' ) ) ) {
-			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type' ), [ 'status' => 500 ] );
 		}
 
 		/** @var TCB_Cloud_Template_Element_Abstract $element */
 		if ( ! ( $element = tcb_elements()->element_factory( $type ) ) || ! is_a( $element, 'TCB_Cloud_Template_Element_Abstract' ) ) {
-			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type', 'thrive-cb' ) . " ({$type})", array( 'status' => 500 ) );
+			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type', 'thrive-cb' ) . " ({$type})", [ 'status' => 500 ] );
 		}
 
 		$templates = $element->get_cloud_templates();
@@ -126,7 +126,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	 * @return array
 	 */
 	public function prepare_templates_for_response( $templates ) {
-		$results = array();
+		$results = [];
 
 		foreach ( $templates as $template ) {
 			$results[] = $template;
@@ -155,16 +155,16 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	public function get_cloud_item( $request ) {
 
 		if ( ! ( $type = $request->get_param( 'type' ) ) ) {
-			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type', 'thrive-cb' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type', 'thrive-cb' ), [ 'status' => 500 ] );
 		}
 
 		if ( ! ( $id = $request->get_param( 'id' ) ) ) {
-			return new WP_Error( 'invalid_id', __( 'Missing template id', 'thrive-cb' ), array( 'status' => 500 ) );
+			return new WP_Error( 'invalid_id', __( 'Missing template id', 'thrive-cb' ), [ 'status' => 500 ] );
 		}
 
 		/** @var TCB_Cloud_Template_Element_Abstract $element */
 		if ( ! ( $element = tcb_elements()->element_factory( $type ) ) || ! is_a( $element, 'TCB_Cloud_Template_Element_Abstract' ) ) {
-			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type', 'thrive-cb' ) . " ({$type})", array( 'status' => 500 ) );
+			return new WP_Error( 'rest_invalid_element_type', __( 'Invalid element type', 'thrive-cb' ) . " ({$type})", [ 'status' => 500 ] );
 		}
 
 		$data = $element->get_cloud_template_data( $id );
@@ -229,7 +229,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 			$post = get_page_by_title( $post_title, OBJECT, TCB_Symbols_Post_Type::SYMBOL_POST_TYPE );
 
 			if ( $post && $post->post_status !== 'trash' ) {
-				return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create global elements with the same title', 'thrive-cb' ), array( 'status' => 409 ) );
+				return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create global elements with the same title', 'thrive-cb' ), [ 'status' => 409 ] );
 			}
 		}
 
@@ -293,7 +293,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		if ( isset( $request['old_id'] ) ) {
 			$this->ensure_unique_title( $request, $post );
 			if ( ! $this->copy_thumb( $request['old_id'], $post->ID ) ) {
-				return new WP_Error( 'could_not_generate_file', __( 'We were not able to copy the symbol', 'thrive-cb' ), array( 'status' => 500 ) );
+				return new WP_Error( 'could_not_generate_file', __( 'We were not able to copy the symbol', 'thrive-cb' ), [ 'status' => 500 ] );
 			};
 
 			$old_global_data = get_post_meta( $request['old_id'], 'tve_globals', true );
@@ -339,7 +339,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		$upload_dir = wp_upload_dir();
 
 		if ( strpos( $path, 'no-template-preview' ) !== false ) {
-			return new WP_Error( 'could_not_generate_file', __( "The inital thumbnail doesn't exists", 'thrive-cb' ), array( 'status' => 500 ) );
+			return new WP_Error( 'could_not_generate_file', __( "The inital thumbnail doesn't exists", 'thrive-cb' ), [ 'status' => 500 ] );
 		}
 
 		if ( strpos( $path, 'http' ) === false ) {
@@ -525,19 +525,19 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	 * Add custom meta fields for comments to use them with the rest api
 	 */
 	public function register_meta_fields() {
-		register_rest_field( $this->get_object_type(), 'tve_updated_post', array(
-			'get_callback'    => array( $this, 'get_symbol_html' ),
-			'update_callback' => array( $this, 'update_symbol_html' ),
-		) );
+		register_rest_field( $this->get_object_type(), 'tve_updated_post', [
+			'get_callback'    => [ $this, 'get_symbol_html' ],
+			'update_callback' => [ $this, 'update_symbol_html' ],
+		] );
 
-		register_rest_field( $this->get_object_type(), 'tve_custom_css', array(
-			'get_callback'    => array( $this, 'get_symbol_css' ),
-			'update_callback' => array( $this, 'update_symbol_css' ),
-		) );
+		register_rest_field( $this->get_object_type(), 'tve_custom_css', [
+			'get_callback'    => [ $this, 'get_symbol_css' ],
+			'update_callback' => [ $this, 'update_symbol_css' ],
+		] );
 
-		register_rest_field( $this->get_object_type(), 'move_symbol', array(
-			'update_callback' => array( $this, 'move_symbol' ),
-		) );
+		register_rest_field( $this->get_object_type(), 'move_symbol', [
+			'update_callback' => [ $this, 'move_symbol' ],
+		] );
 	}
 
 	/**

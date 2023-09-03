@@ -68,25 +68,25 @@ class TCB_Column_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'name'      => __( 'Vertical position', 'thrive-cb' ),
 							'important' => true,
-							'buttons'   => array(
-								array(
+							'buttons'   => [
+								[
 									'icon'    => 'none',
 									'default' => true,
 									'value'   => '',
-								),
-								array(
+								],
+								[
 									'icon'  => 'top',
 									'value' => 'flex-start',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'flex-end',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'ButtonGroup',
 					),
@@ -114,31 +114,31 @@ class TCB_Column_Element extends TCB_Element_Abstract {
 							'min'         => '30',
 							'max'         => '1500',
 							'label'       => __( 'Width', 'thrive-cb' ),
-							'um'          => array( 'px', '%', ),
+							'um'          => [ 'px', '%', ],
 							'um_disabled' => true,
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'responsive'          => array( 'hidden' => true ),
-			'styles-templates'    => array( 'hidden' => true ),
-			'layout'              => array(
-				'disabled_controls' => array(
+			'responsive'          => [ 'hidden' => true ],
+			'styles-templates'    => [ 'hidden' => true ],
+			'layout'              => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'Width',
 					'Height',
 					'Alignment',
 					'Display',
-				),
-			),
-			'borders'             => array(
-				'config' => array(
-					'Borders' => array(
+				],
+			],
+			'borders'             => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-				),
-			),
+					],
+				],
+			],
 			'conditional-display' => [ 'hidden' => false ],
 		);
 	}

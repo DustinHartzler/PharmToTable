@@ -28,7 +28,7 @@ class TCB_Lead_Generation_Recaptcha_Element extends TCB_Element_Abstract {
 		$components = array(
 			'lead_generation_recaptcha' => array(
 				'config' => array(
-					'CaptchaTheme'        => array(
+					'CaptchaTheme' => array(
 						'config'  => array(
 							'name'    => __( 'Theme', 'thrive-cb' ),
 							'options' => array(
@@ -44,7 +44,7 @@ class TCB_Lead_Generation_Recaptcha_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'CaptchaType'         => array(
+					'CaptchaType'  => array(
 						'config'  => array(
 							'name'    => __( 'Type', 'thrive-cb' ),
 							'options' => array(
@@ -60,7 +60,7 @@ class TCB_Lead_Generation_Recaptcha_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'CaptchaSize'         => array(
+					'CaptchaSize'  => array(
 						'config'  => array(
 							'name'    => __( 'Size', 'thrive-cb' ),
 							'options' => array(
@@ -78,31 +78,31 @@ class TCB_Lead_Generation_Recaptcha_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'layout'                 => array(
-				'disabled_controls' => array(
+			'layout'                    => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'padding',
 					'Display',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'Alignment' => array(
+				],
+				'config'            => [
+					'Alignment' => [
 						'important' => true,
-					),
-				),
-			),
-			'animation'              => array(
+					],
+				],
+			],
+			'animation'                 => [
 				'hidden' => true,
-			),
-			'background'              => array(
+			],
+			'background'                => [
 				'hidden' => true,
-			),
-			'responsive'             => array(
+			],
+			'responsive'                => [
 				'hidden' => true,
-			),
-			'styles-templates' => array( 'hidden' => true ),
-			'typography'       => array( 'hidden' => true ),
+			],
+			'styles-templates'          => [ 'hidden' => true ],
+			'typography'                => [ 'hidden' => true ],
 		);
 
 		return $components;

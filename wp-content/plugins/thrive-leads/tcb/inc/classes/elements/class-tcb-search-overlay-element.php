@@ -37,49 +37,49 @@ class TCB_Search_Overlay_Element extends TCB_ContentBox_Element {
 
 		unset( $components['contentbox'] );
 		unset( $components['shared-styles'] );
-		$components['layout'] = array(
-			'disabled_controls' => array(
+		$components['layout'] = [
+			'disabled_controls' => [
 				'Display',
 				'Float',
 				'Position',
 				'Width',
 				'Alignment',
 				'.tve-advanced-controls',
-			),
-			'config'            => array(
-				'Height' => array(
+			],
+			'config'            => [
+				'Height' => [
 					'important' => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$components['background'] = array(
-			'config' => array(
-				'ColorPicker' => array( 'css_prefix' => $prefix_config ),
-				'PreviewList' => array( 'css_prefix' => $prefix_config ),
+		$components['background'] = [
+			'config' => [
+				'ColorPicker' => [ 'css_prefix' => $prefix_config ],
+				'PreviewList' => [ 'css_prefix' => $prefix_config ],
 				'to'          => $bg_selector,
-			),
-		);
+			],
+		];
 
-		$components['borders'] = array(
-			'config' => array(
-				'Borders' => array(
+		$components['borders'] = [
+			'config' => [
+				'Borders' => [
 					'important' => true,
 					'to'        => $bg_selector,
-				),
-				'Corners' => array(
+				],
+				'Corners' => [
 					'important' => true,
 					'to'        => $bg_selector,
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$components['typography']       = array( 'hidden' => true );
-		$components['scroll']           = array( 'hidden' => true );
-		$components['responsive']       = array( 'hidden' => true );
-		$components['animation']        = array( 'hidden' => true );
-		$components['decoration']       = array( 'hidden' => true );
-		$components['styles-templates'] = array( 'hidden' => true );
+		$components['typography']       = [ 'hidden' => true ];
+		$components['scroll']           = [ 'hidden' => true ];
+		$components['responsive']       = [ 'hidden' => true ];
+		$components['animation']        = [ 'hidden' => true ];
+		$components['decoration']       = [ 'hidden' => true ];
+		$components['styles-templates'] = [ 'hidden' => true ];
 
 		return $components;
 	}

@@ -53,35 +53,35 @@ class TCB_Menu_Dropdown_Element extends TCB_Element_Abstract {
 				'blocked_controls' => array(
 					'Corners' => __( 'This is disabled for the current element because it can have an unpredictable behaviour', 'thrive-cb' ),
 				),
-				'config'           => array(
-					'Borders' => array(
+				'config'           => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
+					],
+				],
 			),
-			'shadow'           => array(
-				'config' => array(
+			'shadow'           => [
+				'config' => [
 					'important'      => true,
 					'default_shadow' => 'none',
-				),
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'margin',
 					'.tve-advanced-controls',
 					'Height',
 					'Width',
 					'Alignment',
 					'Display',
-				),
-			),
-			'typography'       => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
+				],
+			],
+			'typography'       => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
 
 		);
 	}

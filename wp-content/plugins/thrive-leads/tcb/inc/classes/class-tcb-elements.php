@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'post-list/class-tcb-post-list-sub-element-abstract.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-tcb-menu-icon-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-cloud-template-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-lead-generation-element.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-symbol-element-abstract.php';
@@ -60,7 +61,7 @@ class TCB_Elements {
 		/* if there's no recursion, use the root path */
 		$path = ( $path === null ) ? $root_path : $path;
 
-		$items = array_diff( scandir( $path ), array( '.', '..' ) );
+		$items = array_diff( scandir( $path ), [ '.', '..' ] );
 
 		foreach ( $items as $item ) {
 			$item_path = $path . '/' . $item;
@@ -72,7 +73,7 @@ class TCB_Elements {
 
 			/* if the item is a file, include it */
 			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
-				$element = str_replace( array( 'class-tcb-', '-element.php' ), '', $item );
+				$element = str_replace( [ 'class-tcb-', '-element.php' ], '', $item );
 				$element = static::capitalize_class_name( $element );
 
 				$class = 'TCB_' . $element . '_Element';
@@ -99,7 +100,7 @@ class TCB_Elements {
 
 		$this->_instances = apply_filters( 'tcb_element_instances', $this->_instances, '' );
 
-		$order_template   = array(
+		$order_template   = [
 			'text',
 			'image',
 			'button',
@@ -144,7 +145,7 @@ class TCB_Elements {
 			'post_date',
 			'post_categories',
 			'post_tags',
-		);
+		];
 		$this->_instances = array_merge( array_flip( $order_template ), $this->_instances );
 
 		if ( apply_filters( 'tve_include_widgets_in_editor', false ) ) {
@@ -164,7 +165,7 @@ class TCB_Elements {
 		global $wp_widget_factory;
 		$widgets = [];
 		/* these widgets are added by wordpress - we do not add these because the functionality already exists in TVE/TTB elements */
-		$blacklisted_widgets = array(
+		$blacklisted_widgets = [
 			'pages',
 			'calendar',
 			'archives',
@@ -182,7 +183,7 @@ class TCB_Elements {
 			'tag_cloud',
 			'nav_menu',
 			'custom_html',
-		);
+		];
 
 		foreach ( $wp_widget_factory->widgets as $wp_widget ) {
 			if ( ! in_array( $wp_widget->id_base, $blacklisted_widgets, true ) ) {
@@ -388,7 +389,7 @@ class TCB_Elements {
 	 * @return array
 	 */
 	public function menu_components() {
-		$components = array( 'general' );
+		$components = [ 'general' ];
 
 		foreach ( $this->get() as $key => $element ) {
 			$c = $element->components();

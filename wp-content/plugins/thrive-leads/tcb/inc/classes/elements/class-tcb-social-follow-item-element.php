@@ -67,10 +67,10 @@ class TCB_Social_Follow_Item_Element extends TCB_Icon_Element {
 				),
 				'ColorPicker'  => array(
 					'css_prefix' => tcb_selection_root() . ' ',
-					'css_suffix' => array( ' svg.tcb-icon', ' .tve_s_icon .tve_sc_icon' ),
+					'css_suffix' => [ ' svg.tcb-icon', ' .tve_s_icon .tve_sc_icon' ],
 					'config'     => array(
 						'label'   => __( 'Color', 'thrive-cb' ),
-						'options' => array( 'noBeforeInit' => false ),
+						'options' => [ 'noBeforeInit' => false ],
 					),
 				),
 				'Slider'       => array(
@@ -80,26 +80,26 @@ class TCB_Social_Follow_Item_Element extends TCB_Icon_Element {
 						'min'     => '1',
 						'max'     => '60',
 						'label'   => __( 'Size', 'thrive-cb' ),
-						'um'      => array( 'px' ),
+						'um'      => [ 'px' ],
 						'css'     => 'fontSize',
 					),
 				),
 			),
 		);
 
-		$components['scroll'] = array( 'hidden' => true );
+		$components['scroll'] = [ 'hidden' => true ];
 
-		$components['borders']                     = array(
-			'config' => array(
-				'Borders' => array( 'css_prefix' => '.tve_social_items .tve_s_item', 'important' => 'true' ),
-				'Corners' => array( 'css_prefix' => '.tve_social_items .tve_s_item', 'important' => 'true' ),
-			),
-		);
+		$components['borders']                     = [
+			'config' => [
+				'Borders' => [ 'css_prefix' => '.tve_social_items .tve_s_item', 'important' => 'true' ],
+				'Corners' => [ 'css_prefix' => '.tve_social_items .tve_s_item', 'important' => 'true' ],
+			],
+		];
 		$components['background']['config']        = array(
 			'ColorPicker' => array( 'css_prefix' => tcb_selection_root() . ' .thrv_social_follow .tve_social_items ' ),
 			'PreviewList' => array( 'css_prefix' => tcb_selection_root() . ' .thrv_social_follow .tve_social_items ' ),
 		);
-		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Overflow', 'ScrollStyle', 'Alignment' );
+		$components['layout']['disabled_controls'] = [ 'Width', 'Height', 'Display', 'Overflow', 'ScrollStyle', 'Alignment' ];
 
 		unset( $components['icon'] );
 

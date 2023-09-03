@@ -73,36 +73,36 @@ class TCB_Pricing_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function own_components() {
 		return array(
-			'pricing_table' => array(
-				'config' => array(
-					'PricingPalette' => array(
-						'config'  => array(),
+			'pricing_table' => [
+				'config' => [
+					'PricingPalette' => [
+						'config'  => [],
 						'extends' => 'PalettesV2',
-					),
-					'PriceInstances' => array(
-						'config' => array(
+					],
+					'PriceInstances' => [
+						'config' => [
 							'sortable' => true,
-						),
-					),
-				),
-			),
-			'typography'    => array( 'hidden' => true ),
+						],
+					],
+				],
+			],
+			'typography'    => [ 'hidden' => true ],
 			'animation'     => array(
 				'disabled_controls' => array(
 					'.btn-inline:not(.anim-animation)',
 				),
 			),
-			'shadow'        => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'layout'        => array(
-				'disabled_controls' => array(
+			'shadow'        => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'layout'        => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -112,12 +112,12 @@ class TCB_Pricing_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'pricing_table',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425836-how-to-use-the-pricing-table-element',
-			),
-		);
+			],
+		];
 	}
 }

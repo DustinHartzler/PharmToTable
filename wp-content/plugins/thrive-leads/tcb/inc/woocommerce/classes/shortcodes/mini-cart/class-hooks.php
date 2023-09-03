@@ -18,9 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Hooks {
 	public static function add() {
-		add_filter( 'tcb_content_allowed_shortcodes', array( __CLASS__, 'content_allowed_shortcodes_filter' ) );
+		add_filter( 'tcb_content_allowed_shortcodes', [ __CLASS__, 'content_allowed_shortcodes_filter' ] );
 
-		add_filter( 'tcb_element_instances', array( __CLASS__, 'tcb_element_instances' ) );
+		add_filter( 'tcb_element_instances', [ __CLASS__, 'tcb_element_instances' ] );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class Hooks {
 
 		require_once __DIR__ . '/class-abstract-sub-element.php';
 
-		$files = array_diff( scandir( __DIR__ . '/sub-elements' ), array( '.', '..' ) );
+		$files = array_diff( scandir( __DIR__ . '/sub-elements' ), [ '.', '..' ] );
 
 		foreach ( $files as $file ) {
 			$instance                      = require_once __DIR__ . '/sub-elements/' . $file;

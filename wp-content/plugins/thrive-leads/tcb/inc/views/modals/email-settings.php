@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php echo esc_html__( 'Compose Email', 'thrive-cb' ); ?>
 </h2>
 <div class="tve-email-setup">
-	<div class="tve-advanced-controls extend-grey m-0">
+	<div class="tve-advanced-controls m-0">
 		<div class="dropdown-header open" data-prop="primary">
 			<span class="dropdown-title"><?php echo esc_html__( 'Primary Email', 'thrive-cb' ); ?></span>
 		</div>
@@ -64,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 	</div>
-	<div class="tve-advanced-controls extend-grey  m-0 mt-15">
+	<div class="tve-advanced-controls m-0 mt-15">
 		<div class="dropdown-header" data-prop="confirmation">
 			<span class="dropdown-title"><?php echo esc_html__( 'Send confirmation email to user that submitted the form', 'thrive-cb' ); ?></span>
 			<div class="tve-email-enable-confirmation"></div>

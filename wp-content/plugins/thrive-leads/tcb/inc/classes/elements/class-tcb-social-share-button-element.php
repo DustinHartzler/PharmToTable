@@ -48,16 +48,16 @@ class TCB_Social_Share_Button_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		$typography_defaults = array(
+		$typography_defaults = [
 			'css_prefix' => '',
 			'css_suffix' => '',
 			'important'  => true,
-		);
+		];
 
-		$color_typography = array(
+		$color_typography = [
 			'css_suffix' => ' a.tve_s_link .tve_s_text',
 			'important'  => true,
-		);
+		];
 
 		return array(
 			'social_share_button' => array(
@@ -70,9 +70,9 @@ class TCB_Social_Share_Button_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'          => array(
+			'typography'          => [
 				'css_prefix' => '.tve_s_text ',
-				'config'     => array(
+				'config'     => [
 					'FontSize'      => $typography_defaults,
 					'FontColor'     => $color_typography,
 					'LineHeight'    => $typography_defaults,
@@ -81,47 +81,47 @@ class TCB_Social_Share_Button_Element extends TCB_Element_Abstract {
 					'LetterSpacing' => $typography_defaults,
 					'TextTransform' => $typography_defaults,
 					'TextAlign'     => $typography_defaults,
-				),
-			),
-			'styles-templates'    => array( 'hidden' => true ),
-			'shadow'              => array(
-				'config' => array(
+				],
+			],
+			'styles-templates'    => [ 'hidden' => true ],
+			'shadow'              => [
+				'config' => [
 					'css_suffix' => '',
 					'important'  => true,
-				),
-			),
+				],
+			],
 			'background'          => array(
 				'config' => array(
 					'ColorPicker' => array( 'css_prefix' => tcb_selection_root() . ' .tve_social_items ' ),
 					'PreviewList' => array( 'css_prefix' => tcb_selection_root() . ' .tve_social_items ' ),
 				),
 			),
-			'borders'             => array(
-				'config' => array(
-					'Borders' => array(
+			'borders'             => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
-			),
-			'borders'             => array(
-				'config' => array(
-					'Borders' => array(
+					],
+				],
+			],
+			'borders'             => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
-			),
-			'animation'           => array(
-				'disabled_controls' => array( '.btn-inline.anim-link', '.btn-inline.anim-popup' ),
-			),
-			'layout'              => array(
-				'disabled_controls' => array( 'Alignment', 'Display' ),
-			),
+					],
+				],
+			],
+			'animation'           => [
+				'disabled_controls' => [ '.btn-inline.anim-link', '.btn-inline.anim-popup' ],
+			],
+			'layout'              => [
+				'disabled_controls' => [ 'Alignment', 'Display' ],
+			],
 		);
 	}
 }

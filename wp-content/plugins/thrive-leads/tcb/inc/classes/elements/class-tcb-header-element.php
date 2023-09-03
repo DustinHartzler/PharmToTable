@@ -113,7 +113,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 							'min'     => '1',
 							'max'     => '1980',
 							'label'   => __( 'Content width', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'max-width',
 						),
 						'extends'    => 'Slider',
@@ -145,7 +145,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 							'min'     => '1',
 							'max'     => '1000',
 							'label'   => __( 'Content minimum height', 'thrive-cb' ),
-							'um'      => array( 'px', 'vh' ),
+							'um'      => [ 'px', 'vh' ],
 							'css'     => 'min-height',
 						),
 						'to'      => $content_selector,
@@ -163,21 +163,21 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 					'VerticalPosition'   => array(
 						'config'  => array(
 							'name'    => __( 'Vertical position', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'top',
 									'default' => true,
 									'value'   => '',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'flex-end',
-								),
-							),
+								],
+							],
 						),
 						'to'      => $content_selector,
 						'extends' => 'ButtonGroup',
@@ -194,48 +194,48 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 					),
 				),
 			),
-			'background'       => array(
-				'config'            => array(
+			'background'       => [
+				'config'            => [
 					'to' => $background_selector,
-				),
-				'disabled_controls' => array(),
-			),
-			'shadow'           => array(
-				'config' => array(
+				],
+				'disabled_controls' => [],
+			],
+			'shadow'           => [
+				'config' => [
 					'to' => $background_selector,
-				),
-			),
-			'layout'           => array(
-				'disabled_controls' => array( '.tve-advanced-controls', 'Float', 'hr', 'Position', 'PositionFrom', 'zIndex', 'Width', 'Height', 'Alignment', 'Display' ),
-			),
-			'borders'          => array(
-				'config' => array(
-					'Borders'    => array(),
-					'Corners'    => array(),
+				],
+			],
+			'layout'           => [
+				'disabled_controls' => [ '.tve-advanced-controls', 'Float', 'hr', 'Position', 'PositionFrom', 'zIndex', 'Width', 'Height', 'Alignment', 'Display' ],
+			],
+			'borders'          => [
+				'config' => [
+					'Borders'    => [],
+					'Corners'    => [],
 					'css_suffix' => ' .thrive-symbol-shortcode',
-				),
-			),
-			'typography'       => array(
-				'disabled_controls' => array(),
-				'config'            => array(
+				],
+			],
+			'typography'       => [
+				'disabled_controls' => [],
+				'config'            => [
 					'to' => $content_selector,
-				),
-			),
-			'decoration'       => array(
-				'config' => array(
+				],
+			],
+			'decoration'       => [
+				'config' => [
 					'to' => $background_selector,
-				),
-			),
-			'animation'        => array( 'hidden' => true ),
-			'scroll'           => array(
+				],
+			],
+			'animation'        => [ 'hidden' => true ],
+			'scroll'           => [
 				'order'             => 2,
-				'config'            => array(
+				'config'            => [
 					'to' => '.thrive-symbol-shortcode',
-				),
-				'disabled_controls' => array( '[data-value="parallax"]' ),
+				],
+				'disabled_controls' => [ '[data-value="parallax"]' ],
 				'hidden'            => false,
-			),
-			'styles-templates' => array( 'hidden' => true ),
+			],
+			'styles-templates' => [ 'hidden' => true ],
 		);
 
 		$components['layout']['config']['MarginAndPadding']['padding_to'] = $content_selector;

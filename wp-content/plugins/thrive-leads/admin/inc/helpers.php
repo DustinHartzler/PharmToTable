@@ -4,29 +4,29 @@
  */
 global $tve_leads_help_videos;
 $tve_leads_help_videos = array(
-	'Forms'                => '//fast.wistia.net/embed/iframe/3bvkuef0om?popover=true',
+	'Forms'                => 'WprGD8qwBSM',
 	// displayed when creating a new form (in the lightbox)
-	'LeadGroups'           => '//fast.wistia.net/embed/iframe/dzmputa1z3?popover=true',
+	'LeadGroups'           => 'vWEfgUJQ0LU',
 	// displayed when there are no Lead Groups and when adding a new Lead Group
-	'LeadShortcodes'       => '//fast.wistia.net/embed/iframe/0ixjohsmn3?popover=true',
+	'LeadShortcodes'       => '9FRCaY26fPo',
 	// displayed when there are no Lead Shortcodes and when adding a new Lead Shortcode
-	'TwoStepLightbox'      => '//fast.wistia.net/embed/iframe/agm7q743cx?popover=true',
+	'TwoStepLightbox'      => 'd9rgh2e12aM',
 	// displayed when there are no Lead 2-step lightboxes and when adding a new one
-	'AssetGroup'           => '//fast.wistia.net/embed/iframe/agm7q743cx?popover=true',
+	'AssetGroup'           => '6YbgAuOgbwc',
 	// displayed when there are no asset groups and when adding a new one
 	'TriggerSettings'      => '//fast.wistia.net/embed/iframe/cjdd4fw8pu?popover=true',
 	// displayed on the Trigger Settings Lightbox
-	'VariationTest'        => '//fast.wistia.net/embed/iframe/h7qzx5xdlp?popover=true',
+	'VariationTest'        => 'ZG7CEHgKnAI',
 	// displayed when starting a Variation Test (between designs)
-	'GroupTest'            => '//fast.wistia.net/embed/iframe/zsiofuiy1h?popover=true',
+	'GroupTest'            => 'aKvdzw3j_MQ',
 	// displayed when starting a Group-level test (between form-types)
-	'TestChart'            => '//fast.wistia.net/embed/iframe/i8629vqgbj?popover=true',
+	'TestChart'            => 'RT9D5LzCa9U',
 	// displayed in the upper-part of the Chart on the Test View page
-	'TestTableData'        => '//fast.wistia.net/embed/iframe/x4nm5gzrjy?popover=true',
+	'TestTableData'        => 'rK_5eKeigxk',
 	// displayed in the table header (below the chart on test view page)
-	'GroupDisplaySettings' => '//fast.wistia.net/embed/iframe/4c8wg35d58?popover=true',
+	'GroupDisplaySettings' => 'vCJFSfttdnM',
 	// displayed in the Group Targeting options popup
-	'SignupSegue'          => '//fast.wistia.net/embed/iframe/mv9an37krm?popover=true',
+	'SignupSegue'          => '5GdzdRKL7G4',
 	// displayed when there are no Signup Segues and when adding a new one
 );
 

@@ -50,8 +50,8 @@ class TCB_Filter_Dynamic_List_Item_Element extends TCB_Element_Abstract {
 		];
 
 		return [
-			'typography'       => array(
-				'config' => array(
+			'typography'       => [
+				'config' => [
 					'TextStyle'     => $default_config,
 					'FontColor'     => $default_config,
 					'FontSize'      => $default_config,
@@ -59,8 +59,8 @@ class TCB_Filter_Dynamic_List_Item_Element extends TCB_Element_Abstract {
 					'FontFace'      => $default_config,
 					'LineHeight'    => $default_config,
 					'LetterSpacing' => $default_config,
-				),
-			),
+				],
+			],
 			'animation'        => [ 'hidden' => true ],
 			'responsive'       => [ 'hidden' => true ],
 			'styles-templates' => [ 'hidden' => true ],

@@ -42,11 +42,11 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 	 * @return array
 	 */
 	public function own_components() {
-		$typography_defaults = array(
+		$typography_defaults = [
 			'css_prefix' => '',
 			'css_suffix' => '',
 			'important'  => true,
-		);
+		];
 
 		return array(
 			'megamenu_item' => array(
@@ -64,9 +64,9 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 						),
 						'extends' => 'Select',
 					),
-					'ImageSide'    => array(
+					'ImageSide'    => [
 						'extends' => 'ButtonGroup',
-					),
+					],
 					'ColorPicker'  => array(
 						'css_suffix' => ' .m-icon',
 						'config'     => array(
@@ -81,17 +81,17 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 							'min'     => 1,
 							'max'     => 50,
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'fontSize',
 						),
 					),
 				),
 			),
-			'typography'    => array(
-				'disabled_controls' => array(
+			'typography'    => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
+				],
+				'config'            => [
 					'FontColor'     => $typography_defaults,
 					'FontSize'      => $typography_defaults,
 					'FontFace'      => $typography_defaults,
@@ -99,24 +99,24 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 					'LineHeight'    => $typography_defaults,
 					'LetterSpacing' => $typography_defaults,
 					'TextTransform' => $typography_defaults,
-				),
-			),
-			'background'    => array(
-				'config' => array(
-					'ColorPicker' => array(
-						'config' => array(
+				],
+			],
+			'background'    => [
+				'config' => [
+					'ColorPicker' => [
+						'config' => [
 							'important' => false,
-						),
-					),
-				),
-			),
-			'layout'        => array(
-				'disabled_controls' => array(
+						],
+					],
+				],
+			],
+			'layout'        => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'Alignment',
 					'Display',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -126,6 +126,6 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 	 * @return array
 	 */
 	public function get_templates() {
-		return get_option( 'tve_menu_item_templates', array() );
+		return get_option( 'tve_menu_item_templates', [] );
 	}
 }

@@ -80,13 +80,13 @@ class TCB_Tweet_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'ShareUrlInput'    => array(
-						'config'  => array(
+					'ShareUrlInput'    => [
+						'config'  => [
 							'label'       => '',
 							'placeholder' => 'http://',
-						),
+						],
 						'extends' => 'LabelInput',
-					),
+					],
 					'ViaUsername'      => array(
 						'config'  => array(
 							'label' => __( 'Via', 'thrive-cb' ) . '<span class="extra-input-prefix">@</span>',
@@ -95,34 +95,34 @@ class TCB_Tweet_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'  => array(
-				'config' => array(
-					'FontColor' => array(
+			'typography'  => [
+				'config' => [
+					'FontColor' => [
 						'important' => true,
-					),
-				),
-			),
-			'borders'     => array(
-				'disabled_controls' => array( 'Corners', 'hr' ),
-				'config'            => array(),
-			),
-			'background'  => array(
-				'config' => array(
+					],
+				],
+			],
+			'borders'     => [
+				'disabled_controls' => [ 'Corners', 'hr' ],
+				'config'            => [],
+			],
+			'background'  => [
+				'config' => [
 					'css_suffix' => ' .thrv_tw_qs_container',
-				),
-			),
-			'shadow'      => array(
-				'config' => array(
+				],
+			],
+			'shadow'      => [
+				'config' => [
 					'to' => '.thrv_tw_qs_container',
-				),
-			),
-			'animation'   => array( 'hidden' => true ),
-			'layout'      => array(
-				'disabled_controls' => array(
+				],
+			],
+			'animation'   => [ 'hidden' => true ],
+			'layout'      => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -148,12 +148,12 @@ class TCB_Tweet_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'click_to_tweet',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425790-how-to-use-the-click-to-tweet-element',
-			),
-		);
+			],
+		];
 	}
 }

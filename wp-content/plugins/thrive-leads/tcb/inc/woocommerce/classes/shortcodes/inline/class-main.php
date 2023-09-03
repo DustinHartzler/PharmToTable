@@ -40,8 +40,8 @@ class Main {
 
 		Hooks::add();
 
-		add_shortcode( static::META_SHORTCODE, array( __CLASS__, 'render_meta_shortcode' ) );
-		add_shortcode( static::LINK_SHORTCODE, array( __CLASS__, 'render_link_shortcode' ) );
+		add_shortcode( static::META_SHORTCODE, [ __CLASS__, 'render_meta_shortcode' ] );
+		add_shortcode( static::LINK_SHORTCODE, [ __CLASS__, 'render_link_shortcode' ] );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Main {
 	 *
 	 * @return mixed|string
 	 */
-	public static function do_shortcode( $shortcode_id, $attr = array() ) {
+	public static function do_shortcode( $shortcode_id, $attr = [] ) {
 		$content = '';
 
 		if ( array_key_exists( $shortcode_id, Helpers::available_shortcodes() ) ) {
@@ -114,12 +114,12 @@ class Main {
 	 * @return mixed|string
 	 */
 	public static function render_link_shortcode( $attr ) {
-		$attr = shortcode_atts( array(
+		$attr = shortcode_atts( [
 			'id'                   => '',
 			'product-id'           => '',
 			'product-variation-id' => '',
 			'redirect-destination' => '',
-		), $attr );
+		], $attr );
 
 		switch ( $attr['id'] ) {
 			case 'cart_url':
@@ -144,9 +144,9 @@ class Main {
 				if ( $product_id ) {
 					$variation_id = empty( $attr['product-variation-id'] ) ? 0 : $attr['product-variation-id'];
 					$product      = wc_get_product( $product_id );
-					$link         = add_query_arg( array(
+					$link         = add_query_arg( [
 						'add-to-cart' => $variation_id ? $variation_id : $product_id,
-					), $link );
+					], $link );
 
 					if ( $product && $product->get_type() === 'grouped' ) {
 						$children = $product->get_children();

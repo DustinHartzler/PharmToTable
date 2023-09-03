@@ -57,7 +57,7 @@ function tve_compat_has_shortcode( $shortcode, $post_id = null, $use_wp_shortcod
 		return strpos( $content, $shortcode ) !== false;
 	}
 	if ( $post_id ) {
-		return has_shortcode( $content, '[' . str_replace( array( '[', ']' ), '', $shortcode ) . ']' );
+		return has_shortcode( $content, '[' . str_replace( [ '[', ']' ], '', $shortcode ) . ']' );
 	}
 
 	return false;
@@ -86,7 +86,7 @@ function tve_admin_notices() {
 function tve_hooked_in_template_redirect() {
 	include_once ABSPATH . '/wp-admin/includes/plugin.php';
 
-	$hooked_in_template_redirect = array(
+	$hooked_in_template_redirect = [
 		'wishlist-member/wpm.php',
 		'ultimate-coming-soon-page/ultimate-coming-soon-page.php',
 		'easy-pie-coming-soon/easy-pie-coming-soon.php',
@@ -99,7 +99,8 @@ function tve_hooked_in_template_redirect() {
 		'woocommerce/woocommerce.php',
 		'maintenance/maintenance.php',
 		'simply-schedule-appointments/simply-schedule-appointments.php',
-	);
+		'borlabs-cookie/borlabs-cookie.php',
+	];
 
 	foreach ( $hooked_in_template_redirect as $plugin ) {
 		if ( is_plugin_active( $plugin ) ) {
@@ -145,7 +146,7 @@ function tve_fix_plugin_conflicts() {
 	global $yarpp;
 	if ( is_editor_page_raw() ) {
 		if ( $yarpp ) {
-			remove_filter( 'the_content', array( $yarpp, 'the_content' ), 1200 );
+			remove_filter( 'the_content', [ $yarpp, 'the_content' ], 1200 );
 		}
 		/**
 		 * Theretailer theme deregisters the mediaelement for some reason
@@ -444,10 +445,10 @@ function tve_compat_survey_funnel() {
 
 	if ( stristr( $content_updated, '[survey_funnel' ) ) {
 		$is_survey_page = true;
-		wp_script_is( 'survey_funnel_ajax' ) || wp_enqueue_script( 'survey_funnel_ajax', SF_PLUGIN_URL . '/js/ajax.js', array( 'jquery' ), '1.0', false );
-		wp_script_is( 'survey_funnel' ) || wp_enqueue_script( 'survey_funnel', SF_PLUGIN_URL . '/js/survey_funnel.js', array( 'jquery' ), '1.0', false );
+		wp_script_is( 'survey_funnel_ajax' ) || wp_enqueue_script( 'survey_funnel_ajax', SF_PLUGIN_URL . '/js/ajax.js', [ 'jquery' ], '1.0', false );
+		wp_script_is( 'survey_funnel' ) || wp_enqueue_script( 'survey_funnel', SF_PLUGIN_URL . '/js/survey_funnel.js', [ 'jquery' ], '1.0', false );
 		wp_script_is( 'survey_funnel_fancybox' )
-		|| wp_enqueue_script( 'survey_funnel_fancybox', SF_PLUGIN_URL . '/jquery/fancyBox-2.1.5/source/jquery.fancybox.pack.js', array( 'jquery' ), '1.0', false );
+		|| wp_enqueue_script( 'survey_funnel_fancybox', SF_PLUGIN_URL . '/jquery/fancyBox-2.1.5/source/jquery.fancybox.pack.js', [ 'jquery' ], '1.0', false );
 
 		wp_style_is( 'survey_funnel_styles' ) || wp_enqueue_style( 'survey_funnel_styles', SF_PLUGIN_URL . '/css/styles.css' );
 		wp_style_is( 'survey_funnel_client_styles' ) || wp_enqueue_style( 'survey_funnel_client_styles', SF_PLUGIN_URL . '/css/survey_funnel.css' );
@@ -591,7 +592,7 @@ function tve_compat_re_add_template_include_filters() {
 	if ( is_plugin_active( 'maintenance/maintenance.php' ) ) {
 		global $mtnc;
 		if ( ! empty( $mtnc ) ) {
-			add_action( 'template_include', array( $mtnc, 'mtnc_template_include' ), 999999 );
+			add_action( 'template_include', [ $mtnc, 'mtnc_template_include' ], 999999 );
 		}
 	}
 }
@@ -602,7 +603,7 @@ function tve_compat_re_add_template_include_filters() {
 function tve_compat_plugins_loaded_hook() {
 	global $sitepress;
 	if ( ! empty( $sitepress ) && ! empty( $_REQUEST[ TVE_EDITOR_FLAG ] ) ) {
-		remove_action( 'init', array( $sitepress, 'js_load' ), 2 );
+		remove_action( 'init', [ $sitepress, 'js_load' ], 2 );
 	}
 }
 
@@ -866,3 +867,57 @@ function tcb_current_screen() {
 		$title = 'Thrive Architect';
 	}
 }
+
+/**
+ * Returns an array containing shortcode tags, this will be used to whitelist theses shortcodes when saving the plain content
+ *
+ * @return mixed|void
+ */
+function tcb_plain_content_whitelisted_shortcodes() {
+	return apply_filters( 'tcb_plain_content_whitelisted_shortcodes', [ 'mepr-membership-registration-form' ] );
+}
+
+/**
+ * Sometimes we do not want to do shortcodes while saving the playn text content(the one added in post content)
+ * The reason we need to do this for MemberPress is because they only load the shortcode content IF it's shortcode tag is present in post content,
+ * so we cannot do_shortcode on it on save because the shortcode tag will be replaced
+ */
+/**
+ * In the actions bellow we remove the whitelisted shortcodes from the $shortcode_tags global(so they wont be computed on do_shortcode),
+ * and restore the $shortcode_tags after the do_shortcode
+ */
+add_action( 'tcb_plain_content_do_shortcode_before', function () {
+	global $shortcode_tags, $tcb_whitelisted_plain_content_shortcodes;
+
+	if ( ! is_array( $tcb_whitelisted_plain_content_shortcodes ) ) {
+		$tcb_whitelisted_plain_content_shortcodes = [];
+	}
+
+	$whitelisted_shortcodes = tcb_plain_content_whitelisted_shortcodes();
+
+	foreach ( $whitelisted_shortcodes as $tag ) {
+		if ( isset( $shortcode_tags[ $tag ] ) ) {
+			$tcb_whitelisted_plain_content_shortcodes[ $tag ] = $shortcode_tags[ $tag ];
+
+			unset( $shortcode_tags[ $tag ] );
+		}
+	}
+} );
+
+add_action( 'tcb_plain_content_do_shortcode_after', function () {
+	global $shortcode_tags, $tcb_whitelisted_plain_content_shortcodes;
+
+	if ( ! is_array( $tcb_whitelisted_plain_content_shortcodes ) ) {
+		$tcb_whitelisted_plain_content_shortcodes = [];
+	}
+
+	$whitelisted_shortcodes = tcb_plain_content_whitelisted_shortcodes();
+
+	foreach ( $whitelisted_shortcodes as $tag ) {
+		if ( isset( $tcb_whitelisted_plain_content_shortcodes[ $tag ] ) ) {
+			$shortcode_tags[ $tag ] = $tcb_whitelisted_plain_content_shortcodes[ $tag ];
+
+			unset( $tcb_whitelisted_plain_content_shortcodes[ $tag ] );
+		}
+	}
+} );

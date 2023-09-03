@@ -35,56 +35,56 @@ class TCB_Toc_List_Element extends TCB_ContentBox_Element {
 
 	public function own_components() {
 		$prefix_config  = tcb_selection_root() . ' ';
-		$typography_cfg = array( 'css_suffix' => '', 'css_prefix' => '' );
+		$typography_cfg = [ 'css_suffix' => '', 'css_prefix' => '' ];
 		$components     = parent::own_components();
 
 		unset( $components['contentbox'] );
 		unset( $components['shared-styles'] );
-		$components['layout'] = array(
-			'disabled_controls' => array(
+		$components['layout'] = [
+			'disabled_controls' => [
 				'Display',
 				'Float',
 				'Position',
-			),
-			'config'            => array(
-				'Width'  => array(
+			],
+			'config'            => [
+				'Width'  => [
 					'important' => true,
-				),
-				'Height' => array(
+				],
+				'Height' => [
 					'important' => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$components['background'] = array(
-			'config' => array(
-				'ColorPicker' => array( 'css_prefix' => $prefix_config ),
-				'PreviewList' => array( 'css_prefix' => $prefix_config ),
+		$components['background'] = [
+			'config' => [
+				'ColorPicker' => [ 'css_prefix' => $prefix_config ],
+				'PreviewList' => [ 'css_prefix' => $prefix_config ],
 				'to'          => '>.tve-content-box-background',
-			),
-		);
+			],
+		];
 
-		$components['borders'] = array(
-			'config' => array(
-				'Borders' => array(
+		$components['borders'] = [
+			'config' => [
+				'Borders' => [
 					'important' => true,
 					'to'        => '>.tve-content-box-background',
-				),
-				'Corners' => array(
+				],
+				'Corners' => [
 					'important' => true,
 					'to'        => '>.tve-content-box-background',
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$components['typography'] = array(
-			'disabled_controls' => array(
+		$components['typography'] = [
+			'disabled_controls' => [
 				'p_spacing',
 				'h1_spacing',
 				'h2_spacing',
 				'h3_spacing',
-			),
-			'config'            => array(
+			],
+			'config'            => [
 				'to'            => '.tve-toc-heading',
 				'FontSize'      => $typography_cfg,
 				'FontColor'     => $typography_cfg,
@@ -94,11 +94,11 @@ class TCB_Toc_List_Element extends TCB_ContentBox_Element {
 				'FontFace'      => $typography_cfg,
 				'LineHeight'    => $typography_cfg,
 				'LetterSpacing' => $typography_cfg,
-			),
-		);
-		$components['scroll']     = array( 'hidden' => true );
-		$components['responsive'] = array( 'hidden' => true );
-		$components['animation']  = array( 'hidden' => true );
+			],
+		];
+		$components['scroll']     = [ 'hidden' => true ];
+		$components['responsive'] = [ 'hidden' => true ];
+		$components['animation']  = [ 'hidden' => true ];
 
 		return $components;
 	}

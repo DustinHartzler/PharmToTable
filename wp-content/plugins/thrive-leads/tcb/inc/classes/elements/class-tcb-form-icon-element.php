@@ -62,46 +62,46 @@ class TCB_Form_Icon_Element extends TCB_Icon_Element {
 							'min'     => '10',
 							'max'     => '200',
 							'label'   => __( 'Icon size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'fontSize',
 						),
 					),
 				),
 			),
-			'typography' => array(
+			'typography' => [
 				'hidden' => true,
-			),
-			'layout'     => array(
-				'config'            => array(
-					'MarginAndPadding' => array(
+			],
+			'layout'     => [
+				'config'            => [
+					'MarginAndPadding' => [
 						'css_prefix' => $prefix_config . ' ',
-					),
-				),
-				'disabled_controls' => array(
+					],
+				],
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
-				),
-			),
-			'borders'    => array(
-				'config' => array(
-					'Borders' => array(
+				],
+			],
+			'borders'    => [
+				'config' => [
+					'Borders' => [
 						'css_prefix' => $prefix_config . ' ',
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'css_prefix' => $prefix_config . ' ',
-					),
-				),
-			),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'animation'  => array(
+					],
+				],
+			],
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 }

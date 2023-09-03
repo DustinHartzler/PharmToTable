@@ -66,7 +66,7 @@ class TCB_Fillcounter_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '2000',
 							'label'   => __( 'Counter Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -77,25 +77,25 @@ class TCB_Fillcounter_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Fill Percentage', 'thrive-cb' ),
-							'um'      => array( '%' ),
+							'um'      => [ '%' ],
 						),
 						'extends' => 'Slider',
 					),
-					'ExternalFields' => array(
-						'config'  => array(
+					'ExternalFields' => [
+						'config'  => [
 							'key'               => 'number',
 							'shortcode_element' => '.tve_fill_counter_n',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
+					],
 					'FillColor'      => array(
 						'to'      => '.tve_fill_counter_n',
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Fill', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -104,9 +104,9 @@ class TCB_Fillcounter_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Circle', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -115,9 +115,9 @@ class TCB_Fillcounter_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Inner Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -132,22 +132,22 @@ class TCB_Fillcounter_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'layout'      => array(
-				'disabled_controls' => array(
+			'layout'      => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
-			'typography'  => array( 'hidden' => true ),
-			'background'  => array( 'hidden' => true ),
-			'shadow'      => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'animation'   => array( 'hidden' => true ),
+				],
+			],
+			'typography'  => [ 'hidden' => true ],
+			'background'  => [ 'hidden' => true ],
+			'shadow'      => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'animation'   => [ 'hidden' => true ],
 		);
 	}
 
@@ -166,12 +166,12 @@ class TCB_Fillcounter_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'fill_counter',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425789-how-to-use-the-fill-counter-element',
-			),
-		);
+			],
+		];
 	}
 }

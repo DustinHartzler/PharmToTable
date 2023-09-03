@@ -127,16 +127,19 @@ class TVD_Smart_DB {
 				array(
 					'name'       => 'Phone number',
 					'type'       => static::$types['phone'],
+					'data'       => [ 'text' => 'Call', 'url' => '' ],
 					'identifier' => 'phone',
 				),
 				array(
 					'name'       => 'Alternative phone number',
 					'type'       => static::$types['phone'],
+					'data'       => [ 'text' => 'Call', 'url' => '' ],
 					'identifier' => 'alt_phone',
 				),
 				array(
 					'name'       => 'Email address',
 					'type'       => static::$types['email'],
+					'data'       => [ 'text' => 'Email', 'url' => '' ],
 					'identifier' => 'mail',
 				),
 				//				array(

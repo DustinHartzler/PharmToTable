@@ -17,14 +17,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Responses will exist as one of the two Thrive_Dash_Api_AWeber_Response subclasses:
  *  - Thrive_Dash_Api_AWeber_Entry - a single instance of an AWeber resource
  *  - Thrive_Dash_Api_AWeber_Collection - a collection of AWeber resources
- * @uses AWeberAPIBase
+ *
+ * @uses    AWeberAPIBase
  * @package
  * @version $id$
  */
 class Thrive_Dash_Api_AWeber_Response extends Thrive_Dash_Api_AWeber_Base {
 
-	public $adapter = false;
-	public $data = array();
+	public $adapter      = false;
+	public $url          = false;
+	public $type         = false;
+	public $data         = array();
 	public $_dynamicData = array();
 
 	/**
@@ -33,8 +36,8 @@ class Thrive_Dash_Api_AWeber_Response extends Thrive_Dash_Api_AWeber_Base {
 	 * Creates a new AWeberRespones
 	 *
 	 * @param mixed $response Data returned by the API servers
-	 * @param mixed $url URL we hit to get the data
-	 * @param mixed $adapter OAuth adapter used for future interactions
+	 * @param mixed $url      URL we hit to get the data
+	 * @param mixed $adapter  OAuth adapter used for future interactions
 	 */
 	public function __construct( $response, $url, $adapter ) {
 		$this->adapter = $adapter;
@@ -48,7 +51,7 @@ class Thrive_Dash_Api_AWeber_Response extends Thrive_Dash_Api_AWeber_Base {
 	 * Manual re-implementation of __set, allows sub classes to access
 	 * the default behavior by using the parent:: format.
 	 *
-	 * @param mixed $key Key of the attr being set
+	 * @param mixed $key   Key of the attr being set
 	 * @param mixed $value Value being set to the attr
 	 *
 	 * @access public

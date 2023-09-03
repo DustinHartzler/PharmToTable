@@ -59,9 +59,9 @@ class Register_Form_Submit extends \Thrive\Automator\Items\Trigger {
 	 * @return array
 	 * @see Automation::start()
 	 */
-	public function process_params( $params = array() ) {
+	public function process_params( $params = [] ) {
 
-		$data_objects = array();
+		$data_objects = [];
 		$aut_id       = $this->get_automation_id();
 
 		if ( ! empty( $params ) ) {

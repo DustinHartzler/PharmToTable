@@ -56,50 +56,50 @@ class TCB_Contact_Form_Label_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'typography'       => array(
-				'disabled_controls' => array( 'TextAlign', '.tve-advanced-controls' ),
-				'config'            => array(
+		return [
+			'typography'       => [
+				'disabled_controls' => [ 'TextAlign', '.tve-advanced-controls' ],
+				'config'            => [
 					'css_suffix'    => '',
-					'FontSize'      => array(
+					'FontSize'      => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-					'FontColor'     => array(
+					],
+					'FontColor'     => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'LineHeight'    => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'LetterSpacing' => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-					'FontFace'      => array(
+					],
+					'FontFace'      => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'TextTransform' => [
 						'css_suffix' => '',
 						'important'  => true,
-					),
-				),
-			),
-			'animation'        => array(
+					],
+				],
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'responsive'       => array(
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-		);
+			],
+		];
 	}
 }

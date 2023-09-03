@@ -16,7 +16,7 @@ abstract class TCB_Pagination {
 	const LOAD_MORE = 'load_more';
 	const NONE      = 'none';
 
-	public static $all_types = array( TCB_Pagination::NONE, 'numeric', TCB_Pagination::LOAD_MORE );
+	public static $all_types = [ TCB_Pagination::NONE, 'numeric', TCB_Pagination::LOAD_MORE ];
 
 	/**
 	 * The type of this pagination
@@ -37,7 +37,7 @@ abstract class TCB_Pagination {
 	 * @param $type
 	 * @param $attr
 	 */
-	public function __construct( $type, $attr = array() ) {
+	public function __construct( $type, $attr = [] ) {
 		$this->type = empty( $type ) ? static::NONE : $type;
 		$this->attr = $attr;
 	}
@@ -68,7 +68,7 @@ abstract class TCB_Pagination {
 	 */
 	private function get_classes() {
 		/* default classes - identifier, thrive wrapper. we also add a class to hide everything until it loads from JS in the frontend, ( the class is removed there ) */
-		$classes = array( self::IDENTIFIER, THRIVE_WRAPPER_CLASS, 'tcb-permanently-hidden' );
+		$classes = [ self::IDENTIFIER, THRIVE_WRAPPER_CLASS, 'tcb-permanently-hidden' ];
 
 		$attr = $this->get_attr();
 
@@ -114,7 +114,7 @@ abstract class TCB_Pagination {
 	 *
 	 * @return TCB_Pagination|null
 	 */
-	public static function factory( $type, $attr = array() ) {
+	public static function factory( $type, $attr = [] ) {
 		$class_name = "TCB_Pagination_{$type}";
 
 		/* check if the class exists and return an instance */
@@ -132,6 +132,6 @@ abstract class TCB_Pagination {
  *
  * @return TCB_Pagination|null
  */
-function tcb_pagination( $type, $attr = array() ) {
+function tcb_pagination( $type, $attr = [] ) {
 	return TCB_Pagination::factory( $type, $attr );
 }

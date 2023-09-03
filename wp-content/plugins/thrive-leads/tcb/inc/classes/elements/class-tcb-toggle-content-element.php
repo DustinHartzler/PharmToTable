@@ -41,35 +41,35 @@ class TCB_Toggle_Content_Element extends TCB_ContentBox_Element {
 
 		unset( $components['contentbox'] );
 		unset( $components['shared-styles'] );
-		$components['layout']['disabled_controls'] = array(
+		$components['layout']['disabled_controls'] = [
 			'margin',
 			'.tve-advanced-controls',
 			'Height',
 			'Width',
 			'Alignment',
 			'Display',
-		);
-		$components['borders']                     = array(
-			'config' => array(
-				'Borders' => array(
+		];
+		$components['borders']                     = [
+			'config' => [
+				'Borders' => [
 					'important' => true,
-				),
-				'Corners' => array(
+				],
+				'Corners' => [
 					'important' => true,
-				),
-			),
-		);
+				],
+			],
+		];
 		$prefix_config                             = array( 'css_prefix' => tcb_selection_root( false ) . ' .thrv_toggle_content ' );
-		$components['typography']                  = array(
-			'disabled_controls' => array(),
-			'config'            => array(
+		$components['typography']                  = [
+			'disabled_controls' => [],
+			'config'            => [
 				'to'         => '.tve-cb',
 				'FontSize'   => $prefix_config,
 				'FontColor'  => $prefix_config,
 				'LineHeight' => $prefix_config,
 				'FontFace'   => $prefix_config,
-			),
-		);
+			],
+		];
 		unset( $components['scroll'] );
 
 		return $components;

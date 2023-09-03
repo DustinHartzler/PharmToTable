@@ -259,6 +259,32 @@ add_filter( 'tcb_user_has_plugin_edit_cap', 'tve_leads_user_can_use_plugin' );
 add_filter( 'tcb_parse_lead_gen_form_data', 'tve_leads_parse_lead_gen_form_data', 10, 1 );
 
 /**
+ * Overwrite tcb attributes on leads post types
+ */
+add_filter( 'tve_lcns_attributes', static function ( $attributes, $post_type ) {
+	$tag = 'tl';
+	if ( in_array( $post_type, [
+		TVE_LEADS_POST_FORM_TYPE,
+		TVE_LEADS_POST_GROUP_TYPE,
+		TVE_LEADS_POST_SHORTCODE_TYPE,
+		TVE_LEADS_POST_TWO_STEP_LIGHTBOX,
+		TVE_LEADS_POST_ASSET_GROUP,
+		TVE_LEADS_POST_ONE_CLICK_SIGNUP
+	], true ) ) {
+		return [
+			'source'        => $tag,
+			'exp'           => ! TD_TTW_User_Licenses::get_instance()->has_active_license( $tag ),
+			'gp'            => TD_TTW_User_Licenses::get_instance()->is_in_grace_period( $tag ),
+			'show_lightbox' => TD_TTW_User_Licenses::get_instance()->show_gp_lightbox( $tag ),
+			'product'       => 'Thrive Leads',
+			'link'          => tvd_get_individual_plugin_license_link( $tag )
+		];
+	}
+
+	return $attributes;
+}, 10, 2 );
+
+/**
  * Check if the post can be edited by checking access and post type
  *
  * @param bool $has_access
@@ -1881,7 +1907,8 @@ function tve_leads_localize_templates( $data ) {
 	$templates = Thrive_Leads_Template_Manager::get_templates( $form_type, $get_multi_step );
 
 	if ( ! empty( $templates ) ) {
-		$data['tl_templates'] = $templates;
+		$data['tl_templates']       = $templates['templates'];
+		$data['tl_templates_error'] = $templates['error'];
 	}
 
 	return $data;
@@ -1985,8 +2012,8 @@ function tve_leads_forms_config( $config ) {
 		if ( isset( $config[ $key ] ) ) {
 			$config[ $key ]['components'][ $key ]['config']['AssetDelivery'] = array(
 				'config' => array(
-					'label' => __( 'Enable asset delivery', 'thrive-leads' ),
-					'tooltip'       => __( 'Asset delivery requires an email address to be submitted in your form.', 'thrive-leads' ),
+					'label'        => __( 'Enable asset delivery', 'thrive-leads' ),
+					'tooltip'      => __( 'Asset delivery requires an email address to be submitted in your form.', 'thrive-leads' ),
 					'tooltip_side' => 'top',
 				),
 			);

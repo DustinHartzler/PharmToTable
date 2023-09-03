@@ -1,6 +1,6 @@
 <?php /* Display a layout for editing Thrive Lightbox posts */
 global $is_thrive_theme;
-$options = array();
+$options = [];
 if ( $is_thrive_theme ) {
 	$options = thrive_get_options_for_post( get_the_ID() );
 }

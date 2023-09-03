@@ -16,17 +16,17 @@ class TCB_Search_Form {
 	 *
 	 * @var array
 	 */
-	public static $default_post_types = array( 'post' => 'Post', 'page' => 'Page' );
+	public static $default_post_types = [ 'post' => 'Post', 'page' => 'Page' ];
 
 	/**
 	 * TCB_Search_Form constructor.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'init_shortcode' ) );
+		add_action( 'init', [ $this, 'init_shortcode' ] );
 
-		add_filter( 'tcb_content_allowed_shortcodes', array( $this, 'tcb_content_allowed_shortcodes' ) );
+		add_filter( 'tcb_content_allowed_shortcodes', [ $this, 'tcb_content_allowed_shortcodes' ] );
 
-		add_action( 'pre_get_posts', array( $this, 'filter_post_types' ) );
+		add_action( 'pre_get_posts', [ $this, 'filter_post_types' ] );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class TCB_Search_Form {
 			 * Type validation
 			 */
 			if ( ! is_array( $attr ) ) {
-				$attr = array();
+				$attr = [];
 			}
 
 			if ( ! empty( $attr['wrapper-events'] ) && is_string( $attr['wrapper-events'] ) ) {
@@ -112,9 +112,9 @@ class TCB_Search_Form {
 		}
 	}
 
-	public function tcb_content_allowed_shortcodes( $shortcodes = array() ) {
+	public function tcb_content_allowed_shortcodes( $shortcodes = [] ) {
 		if ( is_editor_page_raw( true ) ) {
-			$shortcodes = array_merge( $shortcodes, array( $this->shortcode_tag ) );
+			$shortcodes = array_merge( $shortcodes, [ $this->shortcode_tag ] );
 		}
 
 		return $shortcodes;
@@ -153,7 +153,7 @@ class TCB_Search_Form {
 	 *
 	 * @return string|null
 	 */
-	public static function render( $attr = array() ) {
+	public static function render( $attr = [] ) {
 		return trim( tcb_template( 'search-form/shortcode', $attr, true ) );
 	}
 }

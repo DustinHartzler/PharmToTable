@@ -30,29 +30,29 @@ class TCB_Logo_REST {
 		register_rest_route( static::$namespace, static::$route, array(
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( 'TCB_Logo_REST', 'add' ),
-				'permission_callback' => array( 'TCB_Logo_REST', 'route_permission' ),
+				'callback'            => [ 'TCB_Logo_REST', 'add' ],
+				'permission_callback' => [ 'TCB_Logo_REST', 'route_permission' ],
 			),
 		) );
 
 		register_rest_route( static::$namespace, static::$route . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( 'TCB_Logo_REST', 'update' ),
-				'permission_callback' => array( 'TCB_Logo_REST', 'route_permission' ),
+				'callback'            => [ 'TCB_Logo_REST', 'update' ],
+				'permission_callback' => [ 'TCB_Logo_REST', 'route_permission' ],
 			),
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
-				'callback'            => array( 'TCB_Logo_REST', 'delete' ),
-				'permission_callback' => array( 'TCB_Logo_REST', 'route_permission' ),
+				'callback'            => [ 'TCB_Logo_REST', 'delete' ],
+				'permission_callback' => [ 'TCB_Logo_REST', 'route_permission' ],
 			),
 		) );
 
 		register_rest_route( static::$namespace, static::$route . static::$rename_route . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( 'TCB_Logo_REST', 'rename_logo' ),
-				'permission_callback' => array( 'TCB_Logo_REST', 'route_permission' ),
+				'callback'            => [ 'TCB_Logo_REST', 'rename_logo' ],
+				'permission_callback' => [ 'TCB_Logo_REST', 'route_permission' ],
 			),
 		) );
 	}
@@ -88,14 +88,14 @@ class TCB_Logo_REST {
 		if ( ! isset( $new_logo ) ) {
 			$logo_id = count( $logos );
 
-			$new_logo = array(
+			$new_logo = [
 				'id'            => $logo_id,
 				'attachment_id' => $attachment_id,
 				'name'          => $name,
 				'default'       => $default,
 				'active'        => $active,
 				'scope'         => $scope,
-			);
+			];
 
 			/* add the new logo to the logo array */
 			$logos[] = $new_logo;

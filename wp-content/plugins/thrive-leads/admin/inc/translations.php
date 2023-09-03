@@ -73,52 +73,52 @@ return array(
 	'PHPInsertCode'                    => __( 'PHP Insert Code', 'thrive-leads' ),
 	'MissingAssetFiles'                => __( 'At least a file is required', 'thrive-leads' ),
 	'AddNewFormVideo'                  => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['Forms'],
 		__( 'Creating Forms', 'thrive-leads' )
 	),
 	'AddNewGroupVideo'                 => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['LeadGroups'],
 		__( 'Lead Groups', 'thrive-leads' )
 	),
 	'AddNewShortcodeVideo'             => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['LeadShortcodes'],
 		__( 'Lead Shortcodes', 'thrive-leads' )
 	),
 	'AddNewTwoStepLightboxVideo'       => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['TwoStepLightbox'],
 		__( 'Lead Shortcodes', 'thrive-leads' )
 	),
 	'AddNewAssetGroupVideo'            => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['AssetGroup'],
 		__( 'Asset Groups', 'thrive-leads' )
 	),
 	'AddNewOneClickSignupVideo'        => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['SignupSegue'],
 		__( 'Signup Segue', 'thrive-leads' )
 	),
 	'TriggerSettingsVideo'             => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['TriggerSettings'],
 		__( 'Trigger settings', 'thrive-leads' )
 	),
 	'StartVariationTestVideo'          => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['VariationTest'],
 		__( 'Testing Form Variations', 'thrive-leads' )
 	),
 	'StartGroupTestVideo'              => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['GroupTest'],
 		__( 'Testing Opt-In Form Types', 'thrive-leads' )
 	),
 	'GroupSettingsVideo'               => sprintf(
-		'<a href="%s" title="%s" class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"> </span></a>',
+		'<a data-source="%s" title="%s" class="tl-play-link tvd-open-video"><span class="tvd-icon-play"> </span></a>',
 		$tve_leads_help_videos['GroupDisplaySettings'],
 		__( 'Group settings', 'thrive-leads' )
 	),

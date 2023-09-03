@@ -43,7 +43,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 	 */
 	protected function general_components() {
 		$general_components                                      = parent::general_components();
-		$general_components['animation']['config']['hide_items'] = array( 'animation', 'tooltip', 'link' );
+		$general_components['animation']['config']['hide_items'] = [ 'animation', 'tooltip', 'link' ];
 
 		unset( $general_components['responsive'], $general_components['styles-templates'] );
 
@@ -57,18 +57,18 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 	 */
 	public function own_components() {
 		return array(
-			'menu_item'           => array(
+			'menu_item'  => array(
 				'config' => array(
 					'HoverEffect'  => array(
 						'config'  => array(
 							'name'    => __( 'Hover Effect', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								''            => 'None',
 								'c-underline' => 'Underline',
 								'c-double'    => 'Double line',
 								'c-brackets'  => 'Brackets',
 								'c-thick'     => 'Thick Underline',
-							),
+							],
 						),
 						'extends' => 'Select',
 					),
@@ -108,14 +108,14 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 						),
 						'extends' => 'Select',
 					),
-					'ImageSide'    => array(
+					'ImageSide'    => [
 						'extends' => 'ButtonGroup',
-					),
+					],
 					'ColorPicker'  => array(
 						'css_suffix' => ' > a .m-icon',
 						'config'     => array(
 							'label'   => __( 'Icon Color', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 					),
 					'Slider'       => array(
@@ -125,76 +125,76 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 							'min'     => 1,
 							'max'     => 50,
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'fontSize',
 						),
 					),
 				),
 			),
-			'typography'          => array(
-				'disabled_controls' => array(
+			'typography' => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'FontColor'     => array(
+				],
+				'config'            => [
+					'FontColor'     => [
 						'css_prefix' => '',
 						'css_suffix' => ' > a',
 						'important'  => true,
-					),
-					'FontSize'      => array(
+					],
+					'FontSize'      => [
 						'css_prefix' => '',
 						'css_suffix' => ' > a',
 						'important'  => true,
-					),
-					'FontFace'      => array(
+					],
+					'FontFace'      => [
 						'css_prefix' => '',
 						'css_suffix' => ' > a',
 						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' > a',
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'LineHeight'    => [
 						'css_suffix' => ' > a',
 						'css_prefix' => '',
 						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' > a',
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'TextTransform' => [
 						'css_suffix' => ' > a',
 						'important'  => true,
-					),
-				),
-			),
-			'background'          => array(
-				'config' => array(
-					'ColorPicker' => array(
-						'config' => array(
+					],
+				],
+			],
+			'background' => [
+				'config' => [
+					'ColorPicker' => [
+						'config' => [
 							'important' => false,
-						),
-					),
-				),
-			),
-			'layout'              => array(
-				'disabled_controls' => array(
+						],
+					],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'margin-top',
 					'margin-bottom',
 					'.tve-advanced-controls',
 					'Alignment',
 					'Display',
-				),
-			),
-			'borders'             => array(
-				'config' => array(
-					'Corners' => array(
+				],
+			],
+			'borders'    => [
+				'config' => [
+					'Corners' => [
 						'overflow' => false,
-					),
-				),
-			),
+					],
+				],
+			],
 		);
 	}
 
@@ -204,7 +204,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 	 * @return array
 	 */
 	public function get_templates() {
-		return get_option( 'tve_menu_item_templates', array() );
+		return get_option( 'tve_menu_item_templates', [] );
 	}
 
 	/**

@@ -57,7 +57,7 @@ class TCB_Thrive_Image_Zoom extends TCB_Event_Action_Abstract {
 		 * IF an ID exists in the config array, it means that the attachment with the corresponding id must be opened
 		 * Append it to the body
 		 */
-		$config = ! empty( $data['config'] ) ? $data['config'] : array();
+		$config = ! empty( $data['config'] ) ? $data['config'] : [];
 		if ( empty( $config ) && array_key_exists( 'c', $data ) ) {
 			$config = $data['c'];
 		}

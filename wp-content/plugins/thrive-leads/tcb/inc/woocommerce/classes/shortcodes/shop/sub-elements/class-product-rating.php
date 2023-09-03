@@ -63,7 +63,7 @@ class Product_Rating extends \TCB_Element_Abstract {
 					'config'     => array(
 						'min'   => '1',
 						'max'   => '100',
-						'um'    => array( 'px' ),
+						'um'    => [ 'px' ],
 						'label' => __( 'Size', 'thrive-cb' ),
 					),
 					'extends'    => 'Slider',
@@ -76,7 +76,7 @@ class Product_Rating extends \TCB_Element_Abstract {
 		$components['responsive']['hidden']       = true;
 		$components['styles-templates']['hidden'] = true;
 
-		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Width', 'Height', 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		return $components;
 	}

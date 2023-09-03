@@ -78,7 +78,7 @@ abstract class TCB_Cloud_Template_Element_Abstract extends TCB_Element_Abstract 
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_cloud_templates( $args = array() ) {
+	public function get_cloud_templates( $args = [] ) {
 
 		if ( ! $this->has_cloud_templates() ) {
 			return new WP_Error( 'invalid_element', __( 'Element does not have cloud templates', 'thrive-cb' ) );
@@ -107,7 +107,7 @@ abstract class TCB_Cloud_Template_Element_Abstract extends TCB_Element_Abstract 
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_cloud_template_data( $id, $args = array() ) {
+	public function get_cloud_template_data( $id, $args = [] ) {
 		if ( ! $this->has_cloud_templates() ) {
 			return new WP_Error( 'invalid_element', __( 'Element does not have cloud templates', 'thrive-cb' ) );
 		}
@@ -121,8 +121,9 @@ abstract class TCB_Cloud_Template_Element_Abstract extends TCB_Element_Abstract 
 		return tve_get_cloud_template_data(
 			$this->get_template_tag(),
 			array(
-				'id'   => $id,
-				'type' => $args['type'],
+				'id'      => $id,
+				'type'    => $args['type'],
+				'post_id' => empty( $args['post_id'] ) ? '' : $args['post_id'],
 			)
 		);
 	}

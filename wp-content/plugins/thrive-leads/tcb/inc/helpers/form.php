@@ -21,21 +21,21 @@ class FormSettings {
 
 	const SEP = '__TCB_FORM__';
 
-	protected $config = array();
+	protected $config = [];
 
 	/**
 	 * Default configuration for forms
 	 *
 	 * @var array
 	 */
-	public static $defaults = array(
-		'apis'            => array(),
+	public static $defaults = [
+		'apis'            => [],
 		'captcha'         => 0,
-		'extra'           => array(),
-		'custom_tags'     => array(),
+		'extra'           => [],
+		'custom_tags'     => [],
 		'form_identifier' => '',
-		'inputs'          => array(),
-	);
+		'inputs'          => [],
+	];
 
 	public function __construct( $config ) {
 		$this->set_config( $config );
@@ -107,7 +107,7 @@ class FormSettings {
 
 		if ( empty( $config ) ) {
 			$id     = null;
-			$config = array();
+			$config = [];
 		}
 
 		$instance     = new static( $config );
@@ -136,11 +136,11 @@ class FormSettings {
 		$content = wp_json_encode( $this->config );
 		$content = wp_slash( $content );
 
-		$save_data = array(
+		$save_data = [
 			'post_type'    => static::POST_TYPE,
 			'post_title'   => $post_title,
 			'post_content' => $content,
-		);
+		];
 		if ( is_array( $post_data ) ) {
 			$save_data += $post_data;
 		}
@@ -200,16 +200,16 @@ class FormSettings {
 		$data['_use_captcha'] = (int) $this->captcha;
 
 		/* build custom tags list based on user-submitted values and form settings - these are set for radio, checkbox and dropdown form elements */
-		$taglist = array();
+		$taglist = [];
 		foreach ( $this->custom_tags as $field_name => $all_tags ) {
 			if ( ! isset( $data[ $field_name ] ) ) {
 				/* no POST data has been sent in $field_name - no tag associated*/
 				continue;
 			}
-			$value_as_array = is_array( $data[ $field_name ] ) ? $data[ $field_name ] : array( $data[ $field_name ] );
+			$value_as_array = is_array( $data[ $field_name ] ) ? $data[ $field_name ] : [ $data[ $field_name ] ];
 			foreach ( $value_as_array as $submitted_value ) {
 				if ( isset( $all_tags[ $submitted_value ] ) ) {
-					$taglist[] = str_replace( array( '"', "'" ), '', trim( $all_tags[ $submitted_value ] ) );
+					$taglist[] = str_replace( [ '"', "'" ], '', trim( $all_tags[ $submitted_value ] ) );
 				}
 			}
 		}

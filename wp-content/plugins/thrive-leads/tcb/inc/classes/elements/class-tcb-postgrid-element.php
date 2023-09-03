@@ -26,6 +26,7 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 
 	/**
 	 * We don't use this anymore
+	 *
 	 * @return bool
 	 */
 	public function hide() {
@@ -74,15 +75,15 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	private function get_all_post_types() {
-		$types        = array();
+		$types        = [];
 		$banned_types = TCB_Utils::get_banned_post_types();
 
-		foreach ( get_post_types( array(), 'objects' ) as $type ) {
+		foreach ( get_post_types( [], 'objects' ) as $type ) {
 			if ( ! in_array( $type->name, $banned_types ) ) {
-				$types[] = array(
+				$types[] = [
 					'id'   => $type->name,
 					'text' => $type->label,
-				);
+				];
 			}
 		}
 
@@ -95,17 +96,17 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	private function get_number_of_posts() {
-		$return = array(
-			array(
+		$return = [
+			[
 				'value' => 0,
 				'name'  => 'All',
-			),
-		);
+			],
+		];
 		foreach ( range( 1, 19 ) as $number ) {
-			$return[] = array(
+			$return[] = [
 				'value' => $number,
 				'name'  => $number,
-			);
+			];
 		}
 
 		return $return;
@@ -117,20 +118,20 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public static function get_categories( $term ) {
-		$taxonomies = array( 'category' );
+		$taxonomies = [ 'category' ];
 
 		if ( taxonomy_exists( 'apprentice' ) ) {
 			$taxonomies[] = 'apprentice';
 		}
 
-		$terms = get_terms( $taxonomies, array( 'search' => $term ) );
+		$terms = get_terms( $taxonomies, [ 'search' => $term ] );
 
-		$categories = array();
+		$categories = [];
 		foreach ( $terms as $item ) {
-			$categories[] = array(
+			$categories[] = [
 				'id'   => $item->name,
 				'text' => $item->name,
-			);
+			];
 		}
 
 		return $categories;
@@ -142,22 +143,22 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public static function get_tags( $term ) {
-		$taxonomies = array(
+		$taxonomies = [
 			'post_tag',
-		);
+		];
 
 		if ( taxonomy_exists( 'apprentice' ) ) {
 			$taxonomies[] = 'apprentice-tag';
 		}
 
-		$terms = get_terms( $taxonomies, array( 'search' => $term ) );
+		$terms = get_terms( $taxonomies, [ 'search' => $term ] );
 
-		$tags = array();
+		$tags = [];
 		foreach ( $terms as $item ) {
-			$tags[] = array(
+			$tags[] = [
 				'id'   => $item->name,
 				'text' => $item->name,
-			);
+			];
 		}
 
 		return $tags;
@@ -170,8 +171,8 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 */
 	public static function get_custom_taxonomies( $term ) {
 		$items      = get_taxonomies();
-		$banned     = array( 'category', 'post_tag' );
-		$taxonomies = array();
+		$banned     = [ 'category', 'post_tag' ];
+		$taxonomies = [];
 
 		foreach ( $items as $item ) {
 			if ( in_array( $item, $banned ) ) {
@@ -179,10 +180,10 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 			}
 
 			if ( strpos( $item, $term ) !== false ) {
-				$taxonomies[] = array(
+				$taxonomies[] = [
 					'id'   => $item,
 					'text' => $item,
-				);
+				];
 			}
 		}
 
@@ -195,13 +196,13 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public static function get_authors( $term ) {
-		$users   = get_users( array( 'search' => "*$term*" ) );
-		$authors = array();
+		$users   = get_users( [ 'search' => "*$term*" ] );
+		$authors = [];
 		foreach ( $users as $item ) {
-			$authors[] = array(
+			$authors[] = [
 				'id'   => $item->data->user_nicename,
 				'text' => $item->data->user_nicename,
-			);
+			];
 		}
 
 		return $authors;
@@ -213,20 +214,20 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public static function get_posts_list( $term ) {
-		$args    = array(
+		$args    = [
 			'order_by'    => 'post_title',
-			'post_type'   => array( 'page', 'post' ),
-			'post_status' => array( 'publish' ),
+			'post_type'   => [ 'page', 'post' ],
+			'post_status' => [ 'publish' ],
 			's'           => $term,
-		);
+		];
 		$results = new WP_Query( $args );
 
-		$list = array();
+		$list = [];
 		foreach ( $results->get_posts() as $post ) {
-			$list[] = array(
+			$list[] = [
 				'id'   => $post->ID,
 				'text' => $post->post_title,
-			);
+			];
 		}
 
 		return $list;
@@ -253,39 +254,39 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 							'default'   => 'f00',
 							'label'     => __( 'Text Color', 'thrive-cb' ),
 							'important' => true,
-							'options'   => array( 'allowEmpty' => true ),
+							'options'   => [ 'allowEmpty' => true ],
 						),
 						'extends' => 'ColorPicker',
 					),
-					'img_height'        => array(
-						'config'  => array(
+					'img_height'        => [
+						'config'  => [
 							'default' => '100',
 							'min'     => '10',
 							'max'     => '999',
-							'um'      => array( 'px' ),
-						),
+							'um'      => [ 'px' ],
+						],
 						'extends' => 'Slider',
-					),
-					'title_font_size'   => array(
+					],
+					'title_font_size'   => [
 						'css_suffix' => ' .tve-post-grid-title',
-						'config'     => array(
+						'config'     => [
 							'default' => '16',
 							'min'     => '10',
 							'max'     => '100',
-							'um'      => array( 'px' ),
-						),
+							'um'      => [ 'px' ],
+						],
 						'extends'    => 'Slider',
-					),
-					'title_line_height' => array(
+					],
+					'title_line_height' => [
 						'css_suffix' => ' .tve-post-grid-title',
-						'config'     => array(
+						'config'     => [
 							'default' => '16',
 							'min'     => '10',
 							'max'     => '100',
-							'um'      => array( 'px' ),
-						),
+							'um'      => [ 'px' ],
+						],
 						'extends'    => 'Slider',
-					),
+					],
 					'tabs'              => array(
 						'config' => array(
 							'buttons' => array(
@@ -319,32 +320,32 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 					'display'           => array(
 						'config'  => array(
 							'name'    => __( 'Display', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'grid',
 									'name'  => 'Grid',
-								),
-								array(
+								],
+								[
 									'value' => 'masonry',
 									'name'  => 'Masonry',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
 					'grid_layout'       => array(
 						'config'  => array(
 							'name'    => __( 'Grid Layout', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'horizontal',
 									'name'  => 'Horizontal',
-								),
-								array(
+								],
+								[
 									'value' => 'vertical',
 									'name'  => 'Vertical',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
@@ -383,20 +384,20 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 					'text_type'         => array(
 						'config'  => array(
 							'name'    => __( 'Text type', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'summary',
 									'name'  => 'Summary',
-								),
-								array(
+								],
+								[
 									'value' => 'excerpt',
 									'name'  => 'Excerpt',
-								),
-								array(
+								],
+								[
 									'value' => 'fulltext',
 									'name'  => 'Full text',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
@@ -429,44 +430,44 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 					'order_by'        => array(
 						'config'  => array(
 							'name'    => __( 'Order By', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'date',
 									'name'  => 'Date',
-								),
-								array(
+								],
+								[
 									'value' => 'title',
 									'name'  => 'Title',
-								),
-								array(
+								],
+								[
 									'value' => 'author',
 									'name'  => 'Author',
-								),
-								array(
+								],
+								[
 									'value' => 'comment_count',
 									'name'  => 'Number of Comments',
-								),
-								array(
+								],
+								[
 									'value' => 'rand',
 									'name'  => 'Random',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
 					'order_mode'      => array(
 						'config'  => array(
 							'name'    => __( 'Order', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'DESC',
 									'name'  => 'Descending',
-								),
-								array(
+								],
+								[
 									'value' => 'ASC',
 									'name'  => 'Ascending',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
@@ -559,45 +560,45 @@ class TCB_Postgrid_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'background'      => array(
-				'config' => array(
+			'background'      => [
+				'config' => [
 					'css_suffix' => ' .tve_pg_container',
-				),
-			),
-			'borders'         => array(
-				'config' => array(
-					'Borders'    => array(
+				],
+			],
+			'borders'         => [
+				'config' => [
+					'Borders'    => [
 						'important' => true,
-					),
+					],
 					'css_suffix' => ' .tve_pg_container',
-				),
-			),
-			'typography'      => array(
-				'config'            => array(
-					'FontColor' => array(
-						'css_suffix' => array( ' .tve-post-grid-text', ' .tve-post-grid-title' ),
-					),
-					'FontFace'  => array(
-						'css_suffix' => array( ' .tve-post-grid-text', ' .tve-post-grid-title' ),
-					),
-				),
-				'disabled_controls' => array(
+				],
+			],
+			'typography'      => [
+				'config'            => [
+					'FontColor' => [
+						'css_suffix' => [ ' .tve-post-grid-text', ' .tve-post-grid-title' ],
+					],
+					'FontFace'  => [
+						'css_suffix' => [ ' .tve-post-grid-text', ' .tve-post-grid-title' ],
+					],
+				],
+				'disabled_controls' => [
 					'TextStyle',
 					'TextTransform',
 					'.typography-button-toggle-controls', //Hides FontSize, LineHeight, LetterSpacing
 					'.typography-button-toggle-hr',
 					'.typography-text-transform-hr',
 					'.tve-advanced-controls',
-				),
-			),
-			'layout'          => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'          => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'.tve-advanced-controls',
 					'Alignment',
-				),
-			),
+				],
+			],
 		);
 	}
 

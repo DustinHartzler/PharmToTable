@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<i></i>
 	</div>
 	<div class="dropdown-content">
+		<div class="tve-control" data-view="ShowLabel"></div>
 		<div class="tve-control tcb-icon-side-wrapper" data-key="icon_side" data-icon="true" data-view="ButtonGroup"></div>
 		<div class="tcb-text-center mt-10" data-icon="true">
 			<span class="click clear-format" data-fn="remove_icon">

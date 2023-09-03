@@ -25,9 +25,13 @@ if ( is_ssl() ) {
 		</div>
 		<div class="dropdown-content">
 			<div class="tve-menu-display-control">
-				<div class="tve-control hide-tablet hide-mobile" data-view="MenuDirection"></div>
-				<div class="tve-control" data-view="MenuDisplay"></div>
+				<div class="tve-control" data-view="MenuType"></div>
 			</div>
+
+			<button class="tve-button orange click mt-10 center-text if-hamburger" data-fn="editHamburger">
+				<?php echo esc_html__( 'Edit menu design', 'thrive-cb' ); ?>
+			</button>
+
 			<hr class="mt-10">
 			<div class="tve-control" data-view="MenuSource"></div>
 			<div class="control-grid hide-tablet hide-mobile only-wp">
@@ -51,24 +55,29 @@ if ( is_ssl() ) {
 			<div class="tve-control if-vertical" data-view="ContentAlign"></div>
 			<div class="mb-10 if-vertical"><?php echo esc_html__( 'Menu alignment', 'thrive-cb' ); ?></div>
 			<div class="tve-control if-vertical pt-5 gl-st-button-toggle-2" data-key="Align" data-view="ButtonGroup"></div>
+
+			<div class="if-hamburger-edit-mode">
+				<div class="mt-10"><?php echo esc_html__( 'Menu alignment', 'thrive-cb' ); ?></div>
+				<div class="tve-control pt-5 mb-10 gl-st-button-toggle-2" data-key="HamburgerMenuAlign" data-view="ButtonGroup"></div>
+			</div>
+
 			<div class="tve-control if-vertical gl-st-button-toggle-2" data-view="MenuWidth"></div>
+
 			<div class="mb-10"><?php echo esc_html__( 'Sub menu options', 'thrive-cb' ); ?></div>
+			<div class="tve-control if-hamburger" data-view="MobileSide"></div>
 			<div class="tve-control if-vertical hide-tablet hide-mobile" data-view="DropdownDirection"></div>
 			<div class="tve-control" data-key="DropdownIcon" data-initializer="dropdownIcon"></div>
+
+			<div class="tve-control if-hamburger" data-view="MenuState"></div>
+			<div class="tve-control if-hamburger" data-view="MenuOverlay"></div>
+			<div class="tve-control if-hamburger" data-view="MenuOverlayColor"></div>
+
 			<div class="tve-control if-not-hamburger" data-view="DropdownAnimation"></div>
 			<div class="tve-control hide-tablet hide-mobile if-not-hamburger" data-view="DisableActiveLinks"></div>
-			<div class="if-hamburger">
-				<div class="tve-control" data-view="MobileIcon"></div>
-				<div class="tve-control" data-view="IconColor"></div>
-				<div class="tve-control mb-10" data-view="IconSize"></div>
-			</div>
-			<div class="if-hamburger">
-				<div class="tve-control" data-view="MenuState"></div>
-				<div class="tve-control mb-10" data-view="MobileSide"></div>
-			</div>
+
 			<div class="hide-tablet hide-mobile only-custom">
 				<hr>
-				<div class="tve-advanced-controls extend-grey menu-items">
+				<div class="tve-advanced-controls menu-items">
 					<div class="dropdown-header" data-prop="advanced">
 						<span>
 							<?php echo esc_html__( 'Menu Items', 'thrive-cb' ); ?>

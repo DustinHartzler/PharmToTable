@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control full-width" data-view="ClickBehavior"></div>
 		<div class="tve-control" data-view="ShowCaptionsInLightbox"></div>
 		<div class="tve-control full-width" data-view="FullscreenSize"></div>
-		<div class="tve-advanced-controls extend-grey tve-carousel-controls">
+		<div class="tve-advanced-controls tve-carousel-controls">
 		</div>
 	</div>
 </div>

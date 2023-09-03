@@ -30,7 +30,7 @@ class TCB_Logo {
 	const DELETED_PLACEHOLDER_SRC = 'editor/css/images/logo_deleted_placeholder.png';
 
 	/* list of devices that can have their own logo images ( desktop, tablet, mobile were shortened like this in order to work with mediaAttr() in JS ) */
-	private static $all_devices = array( 'd', 't', 'm' );
+	private static $all_devices = [ 'd', 't', 'm' ];
 
 	/**
 	 * TCB_Logo constructor.
@@ -43,10 +43,10 @@ class TCB_Logo {
 	 * Add actions and filters.
 	 */
 	private function hooks() {
-		add_action( 'init', array( $this, 'init_shortcode' ) );
+		add_action( 'init', [ $this, 'init_shortcode' ] );
 
-		add_filter( 'tcb_main_frame_localize', array( $this, 'add_localize_params' ) );
-		add_filter( 'tcb_content_allowed_shortcodes', array( $this, 'tcb_content_allowed_shortcodes' ) );
+		add_filter( 'tcb_main_frame_localize', [ $this, 'add_localize_params' ] );
+		add_filter( 'tcb_content_allowed_shortcodes', [ $this, 'tcb_content_allowed_shortcodes' ] );
 	}
 
 	/**
@@ -96,15 +96,17 @@ class TCB_Logo {
 	 *
 	 * @return string
 	 */
-	public static function render_logo( $attr = array(), $render_fallback = false ) {
+	public static function render_logo( $attr = [], $render_fallback = false ) {
 		/* if the desktop logo ID is not set, use id = 0 as default and set it in the attr */
 		if ( ! isset( $attr['data-id-d'] ) ) {
 			$attr['data-id-d'] = 0;
 		}
 		$desktop_id = (int) $attr['data-id-d'];
 
+		$logos = static::get_logos();
+
 		/* set the desktop source as a fallback; get only the src here, since this is an all-browser compatible version */
-		$fallback_data = static::get_attachment_data( $desktop_id, static::get_logos()[ $desktop_id ] );
+		$fallback_data = static::get_attachment_data( $desktop_id, isset( $logos[ $desktop_id ] ) ? $logos[ $desktop_id ] : null );
 
 		/* If we do not have alt in attr, we read it from fallback data */
 		if ( empty( $attr['data-alt'] ) ) {
@@ -198,9 +200,9 @@ class TCB_Logo {
 			if ( isset( $attr[ 'data-id-' . $device ] ) ) {
 				$id = (int) $attr[ 'data-id-' . $device ];
 
-				$media_attr = array(
+				$media_attr = [
 					'srcset' => static::get_srcset( $id ),
-				);
+				];
 
 				/* add media rules to restrict where each source is displayed */
 				switch ( $device ) {
@@ -237,9 +239,7 @@ class TCB_Logo {
 	 *
 	 * @return array
 	 */
-	public static function get_attachment_data(
-		$id, $logo = null
-	) {
+	public static function get_attachment_data( $id, $logo = null ) {
 		$attachment_id = static::get_attachment_id( $id );
 
 		if ( empty( $attachment_id ) ) {
@@ -346,10 +346,10 @@ class TCB_Logo {
 	 * @return array
 	 */
 	public static function get_placeholder_data( $id, $logo = null ) {
-		$data            = array(
+		$data            = [
 			'height' => '',
 			'width'  => '',
-		);
+		];
 		$is_default_logo = ! empty( $logo ) && isset( $logo['scope'] ) && $logo['scope'] === 'tva';
 
 		if ( $id === 0 || ( $is_default_logo && $logo['name'] === 'Dark' ) ) {
@@ -385,22 +385,22 @@ class TCB_Logo {
 	 * @return array
 	 */
 	public static function initialize_default_logos() {
-		$logos = array(
-			0 => array(
+		$logos = [
+			0 => [
 				'id'            => 0,
 				'attachment_id' => '',
 				'active'        => 1,
 				'default'       => 1,
 				'name'          => 'Dark',
-			),
-			1 => array(
+			],
+			1 => [
 				'id'            => 1,
 				'attachment_id' => '',
 				'active'        => 1,
 				'default'       => 1,
 				'name'          => 'Light',
-			),
-		);
+			],
+		];
 		/* update inside the DB */
 		update_option( static::OPTION_NAME, $logos );
 
@@ -440,7 +440,7 @@ class TCB_Logo {
 	 * @return string
 	 */
 	private static function get_classes( $attr ) {
-		$class = array( static::IDENTIFIER, THRIVE_WRAPPER_CLASS );
+		$class = [ static::IDENTIFIER, THRIVE_WRAPPER_CLASS ];
 
 		/* set responsive/animation classes, if they are present */
 		if ( ! empty( $attr['class'] ) ) {
@@ -497,7 +497,7 @@ class TCB_Logo {
 	 */
 	public function tcb_content_allowed_shortcodes( $shortcodes ) {
 		if ( is_editor_page_raw( true ) ) {
-			$shortcodes = array_merge( $shortcodes, array( static::SHORTCODE_TAG ) );
+			$shortcodes = array_merge( $shortcodes, [ static::SHORTCODE_TAG ] );
 		}
 
 		return $shortcodes;

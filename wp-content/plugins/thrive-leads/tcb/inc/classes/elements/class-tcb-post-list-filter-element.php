@@ -35,6 +35,15 @@ class TCB_Post_List_Filter_Element extends TCB_Element_Abstract {
 		return '.tcb-post-list-filter';
 	}
 
+	/**
+	 * Hide this element in the places where it doesn't make sense, but show it on posts, pages, custom post types, etc.
+	 *
+	 * @return bool
+	 */
+	public function hide() {
+		return TCB_Utils::should_hide_element_on_blacklisted_post_types();
+	}
+
 	public function own_components() {
 		$default_filter_option = array(
 			'author'   => __( 'Author', 'thrive-cb' ),
@@ -42,7 +51,7 @@ class TCB_Post_List_Filter_Element extends TCB_Element_Abstract {
 			'tag'      => __( 'Tag', 'thrive-cb' ),
 		);
 
-		$filter_options = array_merge( $default_filter_option, self::get_filter_options() );
+		$filter_options = array_merge( $default_filter_option, static::get_filter_options() );
 		/* add the post list filter control */
 		$components['post_list_filter'] = array(
 			'config' => array(
@@ -90,7 +99,7 @@ class TCB_Post_List_Filter_Element extends TCB_Element_Abstract {
 						'min'   => 0,
 						'max'   => 200,
 						'label' => __( 'Vertical space', 'thrive-cb' ),
-						'um'    => array( 'px' ),
+						'um'    => [ 'px' ],
 					),
 					'extends' => 'Slider',
 				),
@@ -99,7 +108,7 @@ class TCB_Post_List_Filter_Element extends TCB_Element_Abstract {
 						'min'   => 0,
 						'max'   => 200,
 						'label' => __( 'Horizontal space', 'thrive-cb' ),
-						'um'    => array( 'px' ),
+						'um'    => [ 'px' ],
 					),
 					'extends' => 'Slider',
 				),
@@ -137,7 +146,7 @@ class TCB_Post_List_Filter_Element extends TCB_Element_Abstract {
 				'DefaultValue'       => array(
 					'config'  => array(
 						'name'    => __( 'Default value', 'thrive-cb' ),
-						'options' => array(),
+						'options' => [],
 					),
 					'extends' => 'Select',
 				),
@@ -198,12 +207,12 @@ class TCB_Post_List_Filter_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'post_list_filter',
 				'link' => 'https://help.thrivethemes.com/en/articles/6533678-how-to-use-the-post-list-filter-element',
-			),
-		);
+			],
+		];
 	}
 }

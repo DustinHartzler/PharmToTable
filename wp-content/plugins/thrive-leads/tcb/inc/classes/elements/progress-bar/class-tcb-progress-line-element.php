@@ -34,7 +34,7 @@ class TCB_Progress_Line_Element extends TCB_Element_Abstract {
 					'ColorPicker' => array(
 						'config' => array(
 							'label'   => __( 'Color', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 					),
 					'Candy'       => array(
@@ -47,24 +47,24 @@ class TCB_Progress_Line_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'background'    => array( 'hidden' => true ),
-			'typography'    => array( 'hidden' => true ),
-			'layout'        => array( 'hidden' => true ),
-			'responsive'    => array( 'hidden' => true ),
-			'borders'       => array(
-				'disabled_controls' => array(),
-				'config'            => array(
-					'Corners' => array(
+			'background'    => [ 'hidden' => true ],
+			'typography'    => [ 'hidden' => true ],
+			'layout'        => [ 'hidden' => true ],
+			'responsive'    => [ 'hidden' => true ],
+			'borders'       => [
+				'disabled_controls' => [],
+				'config'            => [
+					'Corners' => [
 						'overflow' => false,
-					),
-				),
-			),
-			'animation'     => array( 'hidden' => true ),
-			'shadow'        => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
+					],
+				],
+			],
+			'animation'     => [ 'hidden' => true ],
+			'shadow'        => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
 		);
 	}
 }

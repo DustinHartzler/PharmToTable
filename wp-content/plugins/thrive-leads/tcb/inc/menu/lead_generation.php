@@ -107,7 +107,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div id="api-controls" class="mt-10">
 
-			<div class="no-api tve-advanced-controls extend-grey">
+			<div class="no-api tve-advanced-controls">
 				<div class="dropdown-header" data-prop="advanced">
 					<span>
 						<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>

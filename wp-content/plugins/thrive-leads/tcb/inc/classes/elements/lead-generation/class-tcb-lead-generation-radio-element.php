@@ -49,7 +49,7 @@ class TCB_Lead_Generation_Radio_Element extends TCB_Element_Abstract {
 							'max'     => '5',
 							'limit'   => '5',
 							'label'   => __( 'Columns', 'thrive-cb' ),
-							'um'      => array(),
+							'um'      => [],
 						),
 						'extends' => 'Slider',
 					),
@@ -60,7 +60,7 @@ class TCB_Lead_Generation_Radio_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '300',
 							'label'   => __( 'Vertical Space', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => '--v-gutter',
 						),
 						'extends' => 'Slider',
@@ -72,7 +72,7 @@ class TCB_Lead_Generation_Radio_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Horizontal Space', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => '--h-gutter',
 						),
 						'extends' => 'Slider',
@@ -87,7 +87,7 @@ class TCB_Lead_Generation_Radio_Element extends TCB_Element_Abstract {
 							'marked_field'  => 'default',
 						),
 					),
-					'AnswerTag'        => array(
+					'AnswerTag'       => array(
 						'config'  => array(
 							'default' => false,
 							'label'   => __( 'Send answer as tag', 'thrive-cb' ),
@@ -97,37 +97,37 @@ class TCB_Lead_Generation_Radio_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'            => array(
+			'typography'            => [
 				'hidden' => true,
-			),
-			'layout'                => array(
-				'disabled_controls' => array(
+			],
+			'layout'                => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
 					'hr',
-				),
-				'config'            => array(),
-			),
-			'borders'               => array(
-				'config' => array(),
-			),
-			'animation'             => array(
+				],
+				'config'            => [],
+			],
+			'borders'               => [
+				'config' => [],
+			],
+			'animation'             => [
 				'hidden' => true,
-			),
-			'background'            => array(
-				'config' => array(),
-			),
-			'shadow'                => array(
+			],
+			'background'            => [
+				'config' => [],
+			],
+			'shadow'                => [
 				'hidden' => true,
-			),
-			'styles-templates'      => array(
-				'config' => array(),
-			),
-			'responsive'            => array(
+			],
+			'styles-templates'      => [
+				'config' => [],
+			],
+			'responsive'            => [
 				'hidden' => true,
-			),
+			],
 		);
 
 		return array_merge( $components, $this->group_component() );

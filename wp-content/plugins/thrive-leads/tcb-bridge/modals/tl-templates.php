@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 ?>
-
+<div class="error-container"></div>
 <div class="modal-sidebar">
 	<div class="lp-search">
 		<?php tcb_icon( 'search-regular' ); ?>

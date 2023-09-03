@@ -91,7 +91,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'forceMin' => '5',
 							'max'      => '1024',
 							'label'    => __( 'Size', 'thrive-cb' ),
-							'um'       => array( 'px', '%' ),
+							'um'       => [ 'px', '%' ],
 							'css'      => 'width',
 						),
 						'extends' => 'Slider',
@@ -102,7 +102,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '5',
 							'max'     => '300',
 							'label'   => __( 'Height', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'height',
 						),
 						'extends' => 'Slider',
@@ -124,19 +124,19 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'default' => 'no_style',
 						),
 					),
-					'ImageTitle'    => array(
+					'ImageTitle'     => array(
 						'config'  => array(
 							'label' => __( 'Title', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
-					'ImageAltText'  => array(
+					'ImageAltText'   => array(
 						'config'  => array(
 							'label' => __( 'Alt text', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
-					'ImageCaption'  => array(
+					'ImageCaption'   => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Add caption text', 'thrive-cb' ),
@@ -144,7 +144,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'ImageLoading'  => array(
+					'ImageLoading'   => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Lazy-load image', 'thrive-cb' ),
@@ -152,7 +152,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'ImageFullSize' => array(
+					'ImageFullSize'  => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Open full size image on click', 'thrive-cb' ),
@@ -162,7 +162,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'background'    => array( 'hidden' => true ),
+			'background'    => [ 'hidden' => true ],
 			'image-effects' => array(
 				'config' => array(
 					'css_suffix'         => ' img',
@@ -172,7 +172,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Greyscale', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -183,7 +183,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Opacity', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'opacity',
 						),
 						'extends' => 'Slider',
@@ -194,7 +194,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '20',
 							'label'   => __( 'Blur', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -205,7 +205,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '300',
 							'label'   => __( 'Brightness', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -216,7 +216,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '300',
 							'label'   => __( 'Contrast', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -227,7 +227,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Sepia', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -238,7 +238,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Invert', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -249,7 +249,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '300',
 							'label'   => __( 'Saturate', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Slider',
@@ -260,7 +260,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '359',
 							'label'   => __( 'Hue rotate', 'thrive-cb' ),
-							'um'      => array( 'deg' ),
+							'um'      => [ 'deg' ],
 							'css'     => 'filter',
 						),
 						'extends' => 'Knob',
@@ -284,30 +284,30 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'    => array(
+			'typography'    => [
 				'hidden' => true,
-			),
-			'animation'     => array(
-				'config' => array(
+			],
+			'animation'     => [
+				'config' => [
 					'to' => 'img',
-				),
-			),
-			'layout'        => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'        => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
-			'shadow'        => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'scroll'        => array(
+				],
+			],
+			'shadow'        => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'scroll'        => [
 				'hidden' => false,
-			),
+			],
 		);
 	}
 
@@ -333,12 +333,12 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'image_element',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425765-how-to-use-the-image-element',
-			),
-		);
+			],
+		];
 	}
 }

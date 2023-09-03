@@ -25,7 +25,7 @@ class TCB_Post_List_REST {
 		register_rest_route( static::$namespace, static::$route, array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_posts' ),
+				'callback'            => [ $this, 'get_posts' ],
 				'permission_callback' => '__return_true',
 			),
 		) );
@@ -36,7 +36,7 @@ class TCB_Post_List_REST {
 				 * Because of the really long URL string, there were 414 errors for some users because the server can block requests like these.
 				 * As a solution, we changed this to CREATABLE ( POST ) so the data is added inside the request */
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'get_html' ),
+				'callback'            => [ $this, 'get_html' ],
 				'permission_callback' => '__return_true',
 			),
 		) );
@@ -44,24 +44,24 @@ class TCB_Post_List_REST {
 		register_rest_route( static::$namespace, static::$route . '/terms', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_terms' ),
-				'permission_callback' => array( $this, 'route_permission' ),
+				'callback'            => [ $this, 'get_terms' ],
+				'permission_callback' => [ $this, 'route_permission' ],
 			),
 		) );
 
 		register_rest_route( static::$namespace, static::$route . '/authors', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_authors' ),
-				'permission_callback' => array( $this, 'route_permission' ),
+				'callback'            => [ $this, 'get_authors' ],
+				'permission_callback' => [ $this, 'route_permission' ],
 			),
 		) );
 
 		register_rest_route( static::$namespace, static::$route . '/taxonomies', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_taxonomies' ),
-				'permission_callback' => array( $this, 'route_permission' ),
+				'callback'            => [ $this, 'get_taxonomies' ],
+				'permission_callback' => [ $this, 'route_permission' ],
 			),
 		) );
 	}
@@ -134,10 +134,10 @@ class TCB_Post_List_REST {
 			$all = get_terms( $args );
 
 			$terms = array_map( function ( $item ) {
-				return array(
+				return [
 					'value' => $item->term_id,
 					'label' => $item->name,
-				);
+				];
 			}, $all );
 		}
 
@@ -183,10 +183,10 @@ class TCB_Post_List_REST {
 		$all = apply_filters( 'tcb_filter_rest_products', $all, $request );
 
 		$posts = array_map( function ( $item ) {
-			return array(
+			return [
 				'value' => $item->ID,
 				'label' => $item->post_title,
-			);
+			];
 		}, $all );
 
 		$posts = array_values( $posts );
@@ -223,10 +223,10 @@ class TCB_Post_List_REST {
 		$all = get_users( $args );
 
 		$authors = array_map( function ( $item ) {
-			return array(
+			return [
 				'value' => $item->ID,
 				'label' => $item->display_name,
-			);
+			];
 		}, $all );
 
 		$authors = array_values( $authors );
@@ -251,17 +251,17 @@ class TCB_Post_List_REST {
 			$all = get_object_taxonomies( $post_type, 'object' );
 
 			$taxonomies = array_map( function ( $item ) {
-				return array(
+				return [
 					'value' => $item->name,
 					'label' => $item->label,
-				);
+				];
 			}, $all );
 
 			$taxonomies = array_filter( $taxonomies, function ( $taxonomy ) {
-				$terms = get_terms( array(
+				$terms = get_terms( [
 					'taxonomy'   => $taxonomy['value'],
 					'hide_empty' => false,
-				) );
+				] );
 
 				/* we only return taxonomies that have terms inside them */
 
@@ -293,9 +293,9 @@ class TCB_Post_List_REST {
 
 		$args = array_merge(
 			array(
-				'attr'       => array(
+				'attr'       => [
 					'total_sticky_count' => 0,
-				),
+				],
 				'query'      => [],
 				'identifier' => '',
 			),

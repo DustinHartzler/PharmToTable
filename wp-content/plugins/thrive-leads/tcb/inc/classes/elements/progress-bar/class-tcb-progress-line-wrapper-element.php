@@ -28,13 +28,13 @@ class TCB_Progress_Line_Wrapper_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'typography' => array( 'hidden' => true ),
-			'responsive' => array( 'hidden' => true ),
-			'animation'  => array( 'hidden' => true ),
-			'layout'     => array(
-				'disabled_controls' => array( 'Alignment', 'Display', '.tve-advanced-controls', 'Width' ),
-			),
-		);
+		return [
+			'typography' => [ 'hidden' => true ],
+			'responsive' => [ 'hidden' => true ],
+			'animation'  => [ 'hidden' => true ],
+			'layout'     => [
+				'disabled_controls' => [ 'Alignment', 'Display', '.tve-advanced-controls', 'Width' ],
+			],
+		];
 	}
 }

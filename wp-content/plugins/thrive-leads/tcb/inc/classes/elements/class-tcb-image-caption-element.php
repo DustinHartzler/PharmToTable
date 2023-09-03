@@ -85,21 +85,21 @@ class TCB_Image_Caption_Element extends TCB_Text_Element {
 		$components['text']['config']['CaptionVerticalPosition'] = array(
 			'config'  => array(
 				'name'    => __( 'Vertical position', 'thrive-cb' ),
-				'buttons' => array(
-					array(
+				'buttons' => [
+					[
 						'icon'    => 'top',
 						'default' => true,
 						'value'   => 'top',
-					),
-					array(
+					],
+					[
 						'icon'  => 'vertical',
 						'value' => 'center',
-					),
-					array(
+					],
+					[
 						'icon'  => 'bot',
 						'value' => 'bottom',
-					),
-				),
+					],
+				],
 			),
 			'extends' => 'ButtonGroup',
 		);
@@ -108,29 +108,29 @@ class TCB_Image_Caption_Element extends TCB_Text_Element {
 		$components['text']['config']['TextAlign'] = array(
 			'config'  => array(
 				'name'    => __( 'Alignment', 'thrive-cb' ),
-				'buttons' => array(
-					array(
+				'buttons' => [
+					[
 						'icon'    => 'format-align-left',
 						'text'    => '',
 						'value'   => 'left',
 						'default' => true,
-					),
-					array(
+					],
+					[
 						'icon'  => 'format-align-center',
 						'text'  => '',
 						'value' => 'center',
-					),
-					array(
+					],
+					[
 						'icon'  => 'format-align-right',
 						'text'  => '',
 						'value' => 'right',
-					),
-					array(
+					],
+					[
 						'icon'  => 'format-align-justify',
 						'text'  => '',
 						'value' => 'justify',
-					),
-				),
+					],
+				],
 			),
 			'extends' => 'ButtonGroup',
 		);
@@ -138,7 +138,7 @@ class TCB_Image_Caption_Element extends TCB_Text_Element {
 
 		unset( $components['text'], $components['layout'], $components['borders'], $components['animation'], $components['background'], $components['responsive'], $components['styles-templates'] );
 
-		$components['scroll'] = array( 'hidden' => true );
+		$components['scroll'] = [ 'hidden' => true ];
 
 		return $components;
 	}

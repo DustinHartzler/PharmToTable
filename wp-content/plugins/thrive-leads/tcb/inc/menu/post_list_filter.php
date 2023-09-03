@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="FilterType"></div>
 		<div class="tve-control" data-view="FilterOption"></div>
 		<div class="tve-control" data-view="MultipleSelections"></div>
-		<div class="tve-advanced-controls extend-grey tve-option-selection-control mb-10">
+		<div class="tve-advanced-controls tve-option-selection-control mb-10">
 			<div class="dropdown-header" data-prop="advanced">
 				<span class="options-type"></span>
 			</div>

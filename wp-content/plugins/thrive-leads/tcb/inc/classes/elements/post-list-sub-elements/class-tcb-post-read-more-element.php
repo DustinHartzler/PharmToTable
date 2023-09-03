@@ -16,7 +16,7 @@ class TCB_Post_Read_More_Element extends TCB_Button_Element {
 	public function __construct( $tag = '' ) {
 		parent::__construct( $tag );
 
-		add_filter( 'tcb_element_' . $this->tag() . '_config', array( $this, 'add_config' ) );
+		add_filter( 'tcb_element_' . $this->tag() . '_config', [ $this, 'add_config' ] );
 	}
 
 	/**
@@ -83,14 +83,14 @@ class TCB_Post_Read_More_Element extends TCB_Button_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['button']['disabled_controls']    = array( '.tcb-button-link-container' );
-		$components['animation']['disabled_controls'] = array( '.btn-inline.anim-link' );
+		$components['button']['disabled_controls']    = [ '.tcb-button-link-container' ];
+		$components['animation']['disabled_controls'] = [ '.btn-inline.anim-link' ];
 
-		$components['scroll'] = array( 'hidden' => true );
+		$components['scroll'] = [ 'hidden' => true ];
 
 		$components = array_merge( $components, $this->shared_styles_component() );
 		/* hide the Save button */
-		$components['shared-styles']['disabled_controls'] = array( '.save-as-global-style' );
+		$components['shared-styles']['disabled_controls'] = [ '.save-as-global-style' ];
 
 		return $components;
 	}

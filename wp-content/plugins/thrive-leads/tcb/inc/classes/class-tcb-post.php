@@ -143,11 +143,16 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 			$tcb_content = tcb_clean_frontend_content( $tcb_content );
 
 			/* Make sure WP shortcode element is decoded before saving it */
-			$tcb_content = preg_replace_callback( '#___TVE_SHORTCODE_RAW__(.+?)__TVE_SHORTCODE_RAW___#s', array( $this, 'plain_text_decode_content' ), $tcb_content );
+			$tcb_content = preg_replace_callback( '#___TVE_SHORTCODE_RAW__(.+?)__TVE_SHORTCODE_RAW___#s', [ $this, 'plain_text_decode_content' ], $tcb_content );
 
 			$tcb_content = wp_unslash( $tcb_content );
 			$tcb_content = tve_thrive_shortcodes( $tcb_content );
+
+			do_action( 'tcb_plain_content_do_shortcode_before' );
+
 			$tcb_content = do_shortcode( $tcb_content );
+
+			do_action( 'tcb_plain_content_do_shortcode_after' );
 
 			$tcb_content = preg_replace( '/<script(.*?)>(.*?)<\/script>/is', '', $tcb_content );
 			$tcb_content = preg_replace( '/<style(.*?)>(.*?)<\/style>/is', '', $tcb_content );
@@ -163,7 +168,7 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 			$tcb_content = preg_replace( '/{!--/is', '<!--', $tcb_content );
 			$tcb_content = preg_replace( '/--}/is', '-->', $tcb_content );
 
-			$tcb_content = str_replace( array( "\n", "\r", "\t" ), '', $tcb_content );
+			$tcb_content = str_replace( [ "\n", "\r", "\t" ], '', $tcb_content );
 			/* re-add the <!--more--> tag to the text, if it was present before */
 			$tcb_content = str_replace( 'TCB_WP_MORE_TAG', '<!--more-->', $tcb_content );
 
@@ -171,10 +176,10 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 			$tcb_content = preg_replace( '/(\s+)?data-css="([^"]+)"/is', '', $tcb_content );
 			$tcb_content = preg_replace( '/(\s+)?data-tcb-events="__TCB_EVENT_(.+?)_TNEVE_BCT__"/is', '', $tcb_content );
 
-			wp_update_post( array(
+			wp_update_post( [
 				'ID'           => $this->post->ID,
 				'post_content' => $tcb_content,
-			) );
+			] );
 
 			return $this;
 		}

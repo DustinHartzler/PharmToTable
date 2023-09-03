@@ -43,10 +43,10 @@ class TCB_Filter_Checkbox_Element extends TCB_Lead_Generation_Checkbox_Option_El
 
 		$components['filter_checkbox'] = $components['lead_generation_checkbox_option'];
 
-		$components['filter_checkbox']['config']['CheckboxPalettes'] = array(
-			'config'  => array(),
+		$components['filter_checkbox']['config']['CheckboxPalettes'] = [
+			'config'  => [],
 			'extends' => 'PalettesV2',
-		);
+		];
 
 		unset( $components['lead_generation_checkbox_option'] );
 

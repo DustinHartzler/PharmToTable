@@ -200,7 +200,7 @@ class TCB_LP_Palettes {
 			$palettes                = $this->get_smart_lp_palettes_v2();
 			$active_id               = (int) $palettes['active_id'];
 			$master_variable         = $palettes['palettes'][ $active_id ]['modified_hsl'];
-			$general_master_variable = tve_prepare_master_variable( array( 'hsl' => $master_variable ) );
+			$general_master_variable = tve_prepare_master_variable( [ 'hsl' => $master_variable ] );
 			$theme_master_variable   = str_replace( '--tcb-main-master', '--tcb-theme-main-master', $general_master_variable );
 
 			$data .= $general_master_variable;

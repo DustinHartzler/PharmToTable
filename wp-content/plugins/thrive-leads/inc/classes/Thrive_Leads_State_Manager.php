@@ -157,12 +157,14 @@ class Thrive_Leads_State_Manager extends Thrive_Leads_Request_Handler {
 		/**
 		 * javascript global page data (that will overwrite parts of the global tve_path_params variable)
 		 */
+		$templates       = Thrive_Leads_Template_Manager::get_templates( $form_type, $get_multi_step );
 		$javascript_data = array(
-			'tl_templates'     => Thrive_Leads_Template_Manager::get_templates( $form_type, $get_multi_step ),
-			'custom_post_data' => array(
+			'tl_templates'       => $templates['templates'],
+			'tl_templates_error' => $templates['error'],
+			'custom_post_data'   => array(
 				'_key' => $current_variation['key'],
 			),
-			'tve_globals'      => isset( $variation[ TVE_LEADS_FIELD_GLOBALS ] ) ? $variation[ TVE_LEADS_FIELD_GLOBALS ] : array( 'e' => 1 ),
+			'tve_globals'        => isset( $variation[ TVE_LEADS_FIELD_GLOBALS ] ) ? $variation[ TVE_LEADS_FIELD_GLOBALS ] : array( 'e' => 1 ),
 		);
 
 		/**
@@ -200,7 +202,13 @@ class Thrive_Leads_State_Manager extends Thrive_Leads_Request_Handler {
 		return array(
 			'current_variation'   => $current_variation['key'],
 			'state_bar'           => $state_bar,
-			'needs_tt_wrapper'    => in_array( $form_type, array( 'lightbox', 'in_content', 'post_footer', 'widget', 'shortcode' ) ),
+			'needs_tt_wrapper'    => in_array( $form_type, array(
+				'lightbox',
+				'in_content',
+				'post_footer',
+				'widget',
+				'shortcode'
+			) ),
 			'main_page_content'   => trim( $this->render_ajax_content( $current_variation ) ),
 			'custom_css'          => $custom_css,
 			'global_css'          => tve_get_shared_styles( '', '', false ),

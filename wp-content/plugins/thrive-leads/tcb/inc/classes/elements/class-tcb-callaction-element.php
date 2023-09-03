@@ -48,7 +48,7 @@ class TCB_Callaction_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -66,12 +66,12 @@ class TCB_Callaction_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'call_to_action',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425745-adding-a-call-to-action-element-with-thrive-architect',
-			),
-		);
+			],
+		];
 	}
 }

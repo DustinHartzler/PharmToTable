@@ -63,10 +63,10 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 		$toggle = array(
 			'toggle'     => array(
 				'config' => array(
-					'TogglePalettes' => array(
-						'config'  => array(),
+					'TogglePalettes' => [
+						'config'  => [],
 						'extends' => 'Palettes',
-					),
+					],
 					'ColumnNumber'   => array(
 						'config'  => array(
 							'default' => '1',
@@ -74,7 +74,7 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 							'max'     => '5',
 							'limit'   => '5',
 							'label'   => __( 'Columns', 'thrive-cb' ),
-							'um'      => array(),
+							'um'      => [],
 
 						),
 						'extends' => 'Slider',
@@ -84,7 +84,7 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 							'default' => '1024',
 							'min'     => '100',
 							'label'   => __( 'Max width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'max-width',
 
 						),
@@ -98,7 +98,7 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '0',
 							'max'     => '300',
 							'label'   => __( 'Vertical Space', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'margin-top',
 
 						),
@@ -110,7 +110,7 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '0',
 							'max'     => '300',
 							'label'   => __( 'Horizontal Space', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -165,29 +165,29 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'List'              => array(
-						'config' => array(
+					'List'              => [
+						'config' => [
 							'sortable'      => true,
 							'settings_icon' => 'pen-light',
-						),
-					),
+						],
+					],
 
 				),
 			),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'borders'    => array(
-				'disabled_controls' => array( 'Corners', 'hr' ),
-				'config'            => array(),
-			),
-			'typography' => array( 'hidden' => true ),
-			'animation'  => array( 'hidden' => true ),
-			'layout'     => array(
-				'disabled_controls' => array(),
-			),
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'borders'    => [
+				'disabled_controls' => [ 'Corners', 'hr' ],
+				'config'            => [],
+			],
+			'typography' => [ 'hidden' => true ],
+			'animation'  => [ 'hidden' => true ],
+			'layout'     => [
+				'disabled_controls' => [],
+			],
 		);
 
 		return array_merge( $toggle, $this->group_component() );
@@ -241,12 +241,12 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'toggle',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425878-how-to-use-the-toggle-element',
-			),
-		);
+			],
+		];
 	}
 }

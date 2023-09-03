@@ -42,10 +42,10 @@ class TCB_Filter_Radio_Element extends TCB_Lead_Generation_Radio_Option_Element 
 
 		$components['filter_radio'] = $components['lead_generation_radio_option'];
 
-		$components['filter_radio']['config']['RadioPalettes'] = array(
-			'config'  => array(),
+		$components['filter_radio']['config']['RadioPalettes'] = [
+			'config'  => [],
 			'extends' => 'PalettesV2',
-		);
+		];
 
 		unset( $components['lead_generation_radio_option'] );
 

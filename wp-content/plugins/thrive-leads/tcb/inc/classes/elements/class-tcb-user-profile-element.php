@@ -68,17 +68,17 @@ class TCB_User_Profile_Element extends TCB_Cloud_Template_Element_Abstract {
 		$components = array(
 			'user_profile'     => array(
 				'config' => array(
-					'UserProfilePalette' => array(
-						'config'  => array(),
+					'UserProfilePalette' => [
+						'config'  => [],
 						'extends' => 'PalettesV2',
-					),
-					'FieldsControl'      => array(
-						'config' => array(
+					],
+					'FieldsControl'      => [
+						'config' => [
 							'sortable'       => true,
 							'settings_icon'  => 'pen-light',
 							'default_fields' => TCB_User_Profile_Handler::DEFAULT_FIELDS,
-						),
-					),
+						],
+					],
 					'FieldsLabel'        => array(
 						'config'  => array(
 							'name'    => __( 'Field label location', 'thrive-cb' ),
@@ -106,22 +106,22 @@ class TCB_User_Profile_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '10',
 							'max'     => '500',
 							'label'   => __( 'Input column width', 'thrive-cb' ),
-							'um'      => array( '%', 'px' ),
+							'um'      => [ '%', 'px' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'layout'           => array(
-				'disabled_controls' => array(
+			'layout'           => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
-			'styles-templates' => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'typography'       => array( 'hidden' => true ),
+				],
+			],
+			'styles-templates' => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'typography'       => [ 'hidden' => true ],
 		);
 
 		return array_merge(

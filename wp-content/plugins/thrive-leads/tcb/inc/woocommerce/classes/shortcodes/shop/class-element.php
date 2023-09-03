@@ -69,18 +69,18 @@ class Element extends \TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function own_components() {
 		$components = array(
-			'typography'       => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'shadow'           => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
+			'typography'       => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'shadow'           => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
 			'shop'             => array(
 				'config' => array(
 					'Limit'                       => array(
 						'config'  => array(
 							'min'   => '1',
 							'max'   => '24',
-							'um'    => array(),
+							'um'    => [],
 							'label' => __( 'Products per page', 'thrive-cb' ),
 						),
 						'extends' => 'Slider',
@@ -89,7 +89,7 @@ class Element extends \TCB_Cloud_Template_Element_Abstract {
 						'config'  => array(
 							'min'   => '1',
 							'max'   => '8',
-							'um'    => array(),
+							'um'    => [],
 							'label' => __( 'Columns', 'thrive-cb' ),
 						),
 						'extends' => 'Slider',
@@ -246,7 +246,7 @@ class Element extends \TCB_Cloud_Template_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Image Size', 'thrive-cb' ),
-							'um'      => array( '%' ),
+							'um'      => [ '%' ],
 							'css'     => 'width',
 						),
 						'extends' => 'Slider',
@@ -333,9 +333,9 @@ class Element extends \TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'layout'           => array(
-				'disabled_controls' => array(),
-			),
+			'layout'           => [
+				'disabled_controls' => [],
+			],
 		);
 
 		return $components;

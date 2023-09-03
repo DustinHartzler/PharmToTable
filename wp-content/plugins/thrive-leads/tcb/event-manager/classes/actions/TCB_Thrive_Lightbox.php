@@ -22,7 +22,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 		 *
 		 * @var array
 		 */
-		private static $loaded_lightboxes = array();
+		private static $loaded_lightboxes = [];
 
 		/**
 		 * holds all lightbox ids that have been parsed for events configuration - this is to not create an infinite loop in case of
@@ -30,7 +30,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 		 *
 		 * @var array
 		 */
-		private static $lightboxes_events_parsed = array();
+		private static $lightboxes_events_parsed = [];
 
 		/**
 		 * Should return the user-friendly name for this Action
@@ -160,7 +160,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 			}
 
 			if ( tve_get_post_meta( $lightbox_id, 'tve_has_masonry' ) ) {
-				wp_script_is( 'jquery-masonry' ) || wp_enqueue_script( 'jquery-masonry', array( 'jquery' ) );
+				wp_script_is( 'jquery-masonry' ) || wp_enqueue_script( 'jquery-masonry', [ 'jquery' ] );
 			}
 
 			$lightbox_content = get_post_meta( $lightbox_id, 'tve_updated_post', true );
@@ -186,7 +186,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 			$globals = tve_get_post_meta( $lightbox_id, 'tve_globals' );
 			if ( ! empty( $globals['js_sdk'] ) ) {
 				foreach ( $globals['js_sdk'] as $handle ) {
-					wp_script_is( 'tve_js_sdk_' . $handle ) || wp_enqueue_script( 'tve_js_sdk_' . $handle, tve_social_get_sdk_link( $handle ), array(), false );
+					wp_script_is( 'tve_js_sdk_' . $handle ) || wp_enqueue_script( 'tve_js_sdk_' . $handle, tve_social_get_sdk_link( $handle ), [], false );
 				}
 			}
 		}
@@ -215,12 +215,12 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 			$post_id               = get_the_ID();
 			$landing_page_template = tve_post_is_landing_page( $post_id );
 
-			$all_lightboxes = get_posts( array(
+			$all_lightboxes = get_posts( [
 				'posts_per_page' => - 1,
 				'post_type'      => 'tcb_lightbox',
-			) );
+			] );
 
-			$data['lightboxes'] = array();
+			$data['lightboxes'] = [];
 			foreach ( $all_lightboxes as $lightbox ) {
 				if ( (int) $lightbox->ID === (int) $post_id ) { // makes no sense to open the same lightbox from within itself
 					continue;

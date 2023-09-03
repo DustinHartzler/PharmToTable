@@ -63,10 +63,10 @@ class TCB_Tabs_Element extends TCB_Cloud_Template_Element_Abstract {
 		return array_merge( array(
 			'tabs'       => array(
 				'config' => array(
-					'TabPalettes'      => array(
-						'config'  => array(),
+					'TabPalettes'      => [
+						'config'  => [],
 						'extends' => 'Palettes',
-					),
+					],
 					'ContentAnimation' => array(
 						'config'  => array(
 							'name'    => __( 'Content Switch Animation', 'thrive-cb' ),
@@ -110,33 +110,33 @@ class TCB_Tabs_Element extends TCB_Cloud_Template_Element_Abstract {
 					'HoverEffect'      => array(
 						'config'  => array(
 							'name'    => __( 'Hover Effect', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								''            => 'None',
 								'c-underline' => 'Underline',
 								'c-double'    => 'Double line',
 								'c-brackets'  => 'Brackets',
 								'c-thick'     => 'Thick Underline',
-							),
+							],
 						),
 						'extends' => 'Select',
 					),
 					'DefaultTab'       => array(
 						'config'  => array(
 							'name'    => __( 'Default Tab', 'thrive-cb' ),
-							'options' => array(),
+							'options' => [],
 						),
 						'extends' => 'Select',
 					),
 				),
 			),
-			'typography' => array( 'hidden' => true ),
-			'animation'  => array( 'hidden' => true ),
-			'scroll'     => array(
+			'typography' => [ 'hidden' => true ],
+			'animation'  => [ 'hidden' => true ],
+			'scroll'     => [
 				'hidden' => false,
-			),
-			'layout'     => array(
-				'disabled_controls' => array(),
-			),
+			],
+			'layout'     => [
+				'disabled_controls' => [],
+			],
 		), $this->group_component() );
 	}
 
@@ -179,12 +179,12 @@ class TCB_Tabs_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'tabs',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425806-how-to-use-the-tabs-element',
-			),
-		);
+			],
+		];
 	}
 }

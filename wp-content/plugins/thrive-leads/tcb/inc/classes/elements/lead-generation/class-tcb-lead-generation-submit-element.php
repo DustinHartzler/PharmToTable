@@ -25,10 +25,10 @@ class TCB_Lead_Generation_Submit_Element extends TCB_Element_Abstract {
 
 	public function own_components() {
 		$prefix_config           = tcb_selection_root();
-		$controls_default_config = array(
+		$controls_default_config = [
 			'css_suffix' => ' button',
 			'css_prefix' => $prefix_config . ' ',
-		);
+		];
 
 		$submit = array(
 			'lead_generation_submit' => array(
@@ -57,7 +57,7 @@ class TCB_Lead_Generation_Submit_Element extends TCB_Element_Abstract {
 							'min'     => '10',
 							'max'     => '100',
 							'label'   => __( 'Button width', 'thrive-cb' ),
-							'um'      => array( '%' ),
+							'um'      => [ '%' ],
 							'css'     => 'width',
 						),
 						'extends'    => 'Slider',
@@ -65,29 +65,29 @@ class TCB_Lead_Generation_Submit_Element extends TCB_Element_Abstract {
 					'ButtonAlign' => array(
 						'config'  => array(
 							'name'    => __( 'Button Align', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'a_left',
 									'text'    => '',
 									'value'   => 'left',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => 'a_center',
 									'text'  => '',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'a_right',
 									'text'  => '',
 									'value' => 'right',
-								),
-								array(
+								],
+								[
 									'icon'  => 'a_full-width',
 									'text'  => '',
 									'value' => 'justify',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'ButtonGroup',
 					),
@@ -96,14 +96,14 @@ class TCB_Lead_Generation_Submit_Element extends TCB_Element_Abstract {
 						'css_prefix' => $prefix_config . ' ',
 						'config'     => array(
 							'label'   => __( 'Style', 'thrive-cb' ),
-							'items'   => array(),
+							'items'   => [],
 							'default' => 'default',
 						),
 					),
 				),
 			),
-			'typography'             => array(
-				'config' => array(
+			'typography'             => [
+				'config' => [
 					'FontSize'      => $controls_default_config,
 					'FontColor'     => $controls_default_config,
 					'TextAlign'     => $controls_default_config,
@@ -112,45 +112,45 @@ class TCB_Lead_Generation_Submit_Element extends TCB_Element_Abstract {
 					'FontFace'      => $controls_default_config,
 					'LineHeight'    => $controls_default_config,
 					'LetterSpacing' => $controls_default_config,
-				),
-			),
-			'layout'                 => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'                 => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
+				],
+				'config'            => [
 					'MarginAndPadding' => $controls_default_config,
-				),
-			),
-			'borders'                => array(
-				'config' => array(
+				],
+			],
+			'borders'                => [
+				'config' => [
 					'Borders' => $controls_default_config,
 					'Corners' => $controls_default_config,
-				),
-			),
-			'animation'              => array(
+				],
+			],
+			'animation'              => [
 				'hidden' => true,
-			),
-			'background'             => array(
-				'config' => array(
+			],
+			'background'             => [
+				'config' => [
 					'ColorPicker' => $controls_default_config,
 					'PreviewList' => $controls_default_config,
-				),
-			),
-			'shadow'                 => array(
+				],
+			],
+			'shadow'                 => [
 				'config' => $controls_default_config,
-			),
-			'styles-templates'       => array(
-				'config' => array(
+			],
+			'styles-templates'       => [
+				'config' => [
 					'to' => 'button',
-				),
-			),
-			'responsive'             => array(
+				],
+			],
+			'responsive'             => [
 				'hidden' => true,
-			),
+			],
 		);
 
 		return $submit;

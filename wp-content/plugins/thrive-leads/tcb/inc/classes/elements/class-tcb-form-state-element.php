@@ -21,25 +21,25 @@ class TCB_Form_State_Element extends TCB_Element_Abstract {
 
 	public function own_components() {
 
-		return array(
-			'typography' => array( 'hidden' => true, ),
-			'animation'  => array( 'hidden' => true, ),
-			'responsive' => array( 'hidden' => true, ),
-			'background' => array(
-				'config' => array(),
-			),
-			'shadow'     => array(
-				'config' => array(),
-			),
-			'layout'     => array(
-				'disabled_controls' => array( 'Width', 'Height', 'Display', 'Alignment', 'Float', 'Position', 'PositionFrom' ),
-			),
-			'borders'    => array(
-				'config' => array(
-					'Borders' => array(),
-					'Corners' => array(),
-				),
-			),
-		);
+		return [
+			'typography' => [ 'hidden' => true, ],
+			'animation'  => [ 'hidden' => true, ],
+			'responsive' => [ 'hidden' => true, ],
+			'background' => [
+				'config' => [],
+			],
+			'shadow'     => [
+				'config' => [],
+			],
+			'layout'     => [
+				'disabled_controls' => [ 'Width', 'Height', 'Display', 'Alignment', 'Float', 'Position', 'PositionFrom' ],
+			],
+			'borders'    => [
+				'config' => [
+					'Borders' => [],
+					'Corners' => [],
+				],
+			],
+		];
 	}
 }

@@ -37,7 +37,6 @@ class Thrive_Dash_List_Manager {
 	public static $AVAILABLE = [
 		'email'                => 'Thrive_Dash_List_Connection_Email',
 		'activecampaign'       => 'Thrive_Dash_List_Connection_ActiveCampaign',
-		'arpreach'             => 'Thrive_Dash_List_Connection_ArpReach',
 		'aweber'               => 'Thrive_Dash_List_Connection_AWeber',
 		'campaignmonitor'      => 'Thrive_Dash_List_Connection_CampaignMonitor',
 		'constantcontact'      => 'Thrive_Dash_List_Connection_ConstantContact',
@@ -57,10 +56,8 @@ class Thrive_Dash_List_Manager {
 		'mailerlite'           => 'Thrive_Dash_List_Connection_MailerLite',
 		'mailpoet'             => 'Thrive_Dash_List_Connection_MailPoet',
 		'mailrelay'            => 'Thrive_Dash_List_Connection_MailRelay',
-		'mautic'               => 'Thrive_Dash_List_Connection_Mautic',
 		'ontraport'            => 'Thrive_Dash_List_Connection_Ontraport',
 		'recaptcha'            => 'Thrive_Dash_List_Connection_ReCaptcha',
-		'sendreach'            => 'Thrive_Dash_List_Connection_Sendreach',
 		'sendgrid'             => 'Thrive_Dash_List_Connection_SendGrid',
 		'sendinblue'           => 'Thrive_Dash_List_Connection_SendinblueV3',
 		'sendy'                => 'Thrive_Dash_List_Connection_Sendy',
@@ -84,7 +81,6 @@ class Thrive_Dash_List_Manager {
 		'sparkpost'            => 'Thrive_Dash_List_Connection_SparkPost',
 		'sendowl'              => 'Thrive_Dash_List_Connection_SendOwl',
 		'sendlane'             => 'Thrive_Dash_List_Connection_Sendlane',
-		'zoom'                 => 'Thrive_Dash_List_Connection_Zoom',
 		'everwebinar'          => 'Thrive_Dash_List_Connection_EverWebinar',
 
 		/* integrations services */
@@ -96,7 +92,7 @@ class Thrive_Dash_List_Manager {
 
 		/* Collaboration */
 		'slack'                => 'Thrive_Dash_List_Connection_Slack',
-//		'facebookpixel'        => 'Thrive_Dash_List_Connection_FacebookPixel',
+		'facebookpixel'        => 'Thrive_Dash_List_Connection_FacebookPixel',
 	];
 
 	private static $_available      = [];
@@ -137,9 +133,9 @@ class Thrive_Dash_List_Manager {
 	 * This has to stay because we changed the parameters of the function and this is called from the other plugins ( as long as they're not updated ).
 	 * This is also called from TTW, so it can't be deleted for now.
 	 *
-	 * @param bool $only_connected
+	 * @param bool  $only_connected
 	 * @param array $exclude_types
-	 * @param bool $only_names
+	 * @param bool  $only_names
 	 *
 	 * @return array
 	 * @deprecated
@@ -155,7 +151,7 @@ class Thrive_Dash_List_Manager {
 	}
 
 	/**
-	 * @param bool $only_connected
+	 * @param bool  $only_connected
 	 * @param array $api_filter
 	 *
 	 * @return array
@@ -186,7 +182,7 @@ class Thrive_Dash_List_Manager {
 	}
 
 	/**
-	 * @param string $key
+	 * @param string                               $key
 	 * @param Thrive_Dash_List_Connection_Abstract $instance
 	 *
 	 * @return bool
@@ -197,7 +193,7 @@ class Thrive_Dash_List_Manager {
 
 	/**
 	 * @param Thrive_Dash_List_Connection_Abstract $instance
-	 * @param array $api_filter
+	 * @param array                                $api_filter
 	 *
 	 * @return bool
 	 */
@@ -242,7 +238,7 @@ class Thrive_Dash_List_Manager {
 		$apis          = static::get_available_apis( true, [ 'exclude_types' => [ 'email', 'social' ] ] );
 
 		/**
-		 * @var string $api_name
+		 * @var string                               $api_name
 		 * @var Thrive_Dash_List_Connection_Abstract $api
 		 */
 		foreach ( $apis as $api_name => $api ) {
@@ -259,7 +255,6 @@ class Thrive_Dash_List_Manager {
 	 * @return array
 	 */
 	public static function getCustomFieldsMapper( $default = false ) {
-
 		$mapper = [];
 		$apis   = static::get_available_apis( true, [ 'exclude_types' => [ 'email', 'social', 'collaboration' ] ] );
 
@@ -267,7 +262,13 @@ class Thrive_Dash_List_Manager {
 		 * @var Thrive_Dash_List_Connection_Abstract $api
 		 */
 		foreach ( $apis as $api ) {
-			$mapper[ $api->get_key() ] = $default ? $api->get_default_fields_mapper() : $api->get_custom_fields_mapping();
+			if ( $default ) {
+				if ( method_exists( $api, 'get_default_fields_mapper' ) ) {
+					$mapper[ $api->get_key() ] = $api->get_default_fields_mapper();
+				}
+			} else if ( method_exists( $api, 'get_custom_fields_mapping' ) ) {
+				$mapper[ $api->get_key() ] = $api->get_custom_fields_mapping();
+			}
 		}
 
 		return $mapper;
@@ -278,7 +279,7 @@ class Thrive_Dash_List_Manager {
 	 * get a list of all available APIs by type
 	 * todo: this is deprecated ( moved to get_available_apis() ), get rid of it after 2-3 releases
 	 *
-	 * @param bool $onlyConnected if true, it will return only APIs that are already connected
+	 * @param bool         $onlyConnected if true, it will return only APIs that are already connected
 	 * @param string|array $include_types exclude connection by their type
 	 *
 	 * @return array Thrive_Dash_List_Connection_Abstract[]

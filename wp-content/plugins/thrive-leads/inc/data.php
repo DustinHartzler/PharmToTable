@@ -12,7 +12,7 @@
  *                         Optional. Arguments to retrieve lead groups. Available options:
  *
  * @type bool   $full_data - whether to retrieve or not the full data (including form_types)
- * }
+ *                         }
  * @return array list of all saved groups
  */
 function tve_leads_get_groups( $filter = array() ) {
@@ -116,7 +116,7 @@ function tve_leads_get_group_ids() {
  *                         Optional. Arguments to retrieve lead groups. Available options:
  *
  * @type bool   $full_data - whether to retrieve or not the full data (including form_types)
- * }
+ *                         }
  * @return WP_Post|null
  */
 function tve_leads_get_group( $id, $filter = array() ) {
@@ -1643,14 +1643,14 @@ function tve_leads_get_list_growth( $filter, $cumulative = false ) {
 		'id'    => $cumulative ? 1 : 2, //this is more or less useless
 		'name'  => $cumulative ? __( 'Total conversions since start date', 'thrive-leads' ) : __( 'Conversions Growth', 'thrive-leads' ),
 		'color' => $tve_leads_chart_colors[0], //we just use the first color
-		'data'  => array_fill( 0, count( $data['chart_x_axis'] ), 0 ) //fill array with 0
+		'data'  => array_fill( 0, count( $data['chart_x_axis'] ), 0 ), //fill array with 0
 	);
 
 	$lead_data = array(
 		'id'    => $cumulative ? 3 : 4, //just to differentiate between the data series for the chart
 		'name'  => $cumulative ? __( 'Total leads since start date', 'thrive-leads' ) : __( 'Lead Growth', 'thrive-leads' ),
 		'color' => $tve_leads_chart_colors[1], //we use the second color
-		'data'  => array_fill( 0, count( $data['chart_x_axis'] ), 0 ) //fill array with 0
+		'data'  => array_fill( 0, count( $data['chart_x_axis'] ), 0 ), //fill array with 0
 	);
 
 	foreach ( $data['chart_data'] as $group ) {
@@ -2956,111 +2956,38 @@ function tve_leads_reset_variation_tracking_data( $variation ) {
 }
 
 /**
- * Send email with the contact
- *
- * @param     $contact_id
- * @param     $email
- * @param int $save
- *
- * @return array
- */
-function tve_send_contacts_email( $contact_id, $email, $save = 0 ) {
-	global $tvedb;
-
-	if ( empty( $email ) || ! is_email( $email ) ) {
-		return array(
-			'response' => __( 'Invalid Email.', 'thrive-leads' ),
-			'type'     => 'error',
-		);
-	}
-	if ( $save ) {
-		tve_leads_update_option( 'contacts_send_email', $email );
-	} else {
-		tve_leads_update_option( 'contacts_send_email', '' );
-	}
-
-	$contact                = $tvedb->tve_get_contact( 'id', $contact_id );
-	$contact->custom_fields = json_decode( $contact->custom_fields, true );
-
-	$subject = __( 'You have a New Signup', 'thrive-leads' );
-
-	ob_start();
-	include dirname( dirname( __FILE__ ) ) . '/admin/views/contacts/email_template.php';
-	$message = ob_get_contents();
-	ob_end_clean();
-
-	$subject = apply_filters( 'tve_leads_new_contact_body_subject', $subject, $contact );
-	$message = apply_filters( 'tve_leads_new_contact_email_body', $message, $contact );
-
-	$result = wp_mail( $email, $subject, $message );
-
-	if ( $result ) {
-		$return = array(
-			'response' => __( 'Email sent successfully!', 'thrive-leads' ),
-			'type'     => 'success',
-		);
-	} else {
-		$return = array(
-			'response' => __( 'An error occurred while sending the email!', 'thrive-leads' ),
-			'type'     => 'error',
-		);
-	}
-
-	return $return;
-}
-
-/**
  * Prepare the file for download.
  *
- * @param $source
  * @param $type
- * @param $params
+ * @param $filters
  *
- * @return array|mixed|object
+ * @return array|void
  */
-function tve_leads_process_contact_download( $source, $type, $params ) {
-	require_once dirname( dirname( __FILE__ ) ) . '/admin/inc/classes/Thrive_Leads_Export.php';
-
-	$upload_dir          = wp_upload_dir();
-	$contact_upload_path = $upload_dir['basedir'] . "/thrive-contacts";
-	$contact_upload_url  = $upload_dir['baseurl'] . "/thrive-contacts";
-
-	/* if we can't create a thrive contact folder, we just use the uploads one */
-	if ( ! wp_mkdir_p( $contact_upload_path ) ) {
-		$contact_upload_path = $upload_dir['basedir'];
-		$contact_upload_url  = $upload_dir['baseurl'];
-	}
+function tve_leads_process_contact_download( $type, $filters ) {
+	require_once dirname( __FILE__, 2 ) . '/admin/inc/classes/Thrive_Leads_Export.php';
 
 	$filename = "contacts-export-" . date( 'Y-m-d_H-i-s' );
-
 	switch ( $type ) {
 		case 'excel':
-			$filename .= ".xls";
-			$exporter = new ThriveLeadsExportDataExcel( 'file', $contact_upload_path . '/' . $filename );
+			$exporter = new ThriveLeadsExportDataExcel( 'browser', "$filename.xls" );
 			break;
 
 		case 'csv':
-			$filename .= ".csv";
-			$exporter = new ThriveLeadsExportDataCSV( 'file', $contact_upload_path . '/' . $filename );
+			$exporter = new ThriveLeadsExportDataCSV( 'browser', "$filename.csv" );
 			break;
-
-		default:
-			$filename = $exporter = '';
 	}
 
-	$exporter->initialize();
-
-	if ( empty( $filename ) || empty( $exporter ) ) {
+	if ( empty( $exporter ) ) {
 		return array(
 			'response' => __( 'Invalid export type.', 'thrive-leads' ),
 		);
 	}
 
+	$exporter->initialize();
+
 	global $tvedb;
 	/* get contacts needed for export */
-	$contacts = $tvedb->tve_leads_get_contacts_stored( $source, $params );
-	/* store the download in the database */
-	$id = $tvedb->tve_leads_write_contact_download( $source, $contact_upload_url . '/' . $filename, $params );
+	$contacts = $tvedb->tve_leads_get_contacts_stored( $filters );
 
 	/* build file header with custom fields */
 	$contacts_header = array(
@@ -3094,17 +3021,8 @@ function tve_leads_process_contact_download( $source, $type, $params ) {
 	}
 
 	$exporter->finalize();
-	/* mark the download as completed */
-	$tvedb->tve_leads_update_contacts_download_status( $id, 'complete' );
 
-	$result = array(
-		'status'   => 'complete',
-		'response' => __( 'Export Completed', 'thrive-leads' ),
-		'link'     => $contact_upload_url . '/' . $filename,
-		'id'       => $id,
-	);
-
-	return $result;
+	wp_die();
 }
 
 /**

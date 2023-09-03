@@ -55,9 +55,9 @@ class TCB_Toggle_Old_Element extends TCB_Element_Abstract {
 						'config'     => array(
 							'default' => '000',
 							'label'   => __( 'Hover Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends'    => 'ColorPicker',
 					),
@@ -68,9 +68,9 @@ class TCB_Toggle_Old_Element extends TCB_Element_Abstract {
 						'config'          => array(
 							'default' => '000',
 							'label'   => __( 'Hover Text Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends'         => 'ColorPicker',
 					),
@@ -80,27 +80,27 @@ class TCB_Toggle_Old_Element extends TCB_Element_Abstract {
 						'config'          => array(
 							'default' => '000',
 							'label'   => __( 'Text Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends'         => 'ColorPicker',
 					),
-					'Toggle'          => array(),
+					'Toggle'          => [],
 				),
 			),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'borders'    => array(
-				'disabled_controls' => array( 'Corners', 'hr' ),
-				'config'            => array(),
-			),
-			'typography' => array( 'hidden' => true ),
-			'background' => array( 'hidden' => true ),
-			'animation'  => array( 'hidden' => true ),
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'borders'    => [
+				'disabled_controls' => [ 'Corners', 'hr' ],
+				'config'            => [],
+			],
+			'typography' => [ 'hidden' => true ],
+			'background' => [ 'hidden' => true ],
+			'animation'  => [ 'hidden' => true ],
 		);
 	}
 

@@ -50,8 +50,8 @@ class TCB_Carousel_Dots_Element extends TCB_Icon_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['icon']['disabled_controls']   = array( 'ToggleURL', 'link', 'RotateIcon' );
-		$components['layout']['disabled_controls'] = array(
+		$components['icon']['disabled_controls']   = [ 'ToggleURL', 'link', 'RotateIcon' ];
+		$components['layout']['disabled_controls'] = [
 			'Width',
 			'Height',
 			'Display',
@@ -60,19 +60,19 @@ class TCB_Carousel_Dots_Element extends TCB_Icon_Element {
 			'Alignment',
 			'Position',
 			'Float',
-		);
-		$components['scroll']                      = array( 'hidden' => true );
-		$components['animation']                   = array( 'hidden' => true );
-		$components['styles-templates']            = array( 'hidden' => true );
+		];
+		$components['scroll']                      = [ 'hidden' => true ];
+		$components['animation']                   = [ 'hidden' => true ];
+		$components['styles-templates']            = [ 'hidden' => true ];
 
-		$components['carousel_dots']                              = $components['icon'];
+		$components['carousel_dots']                                       = $components['icon'];
 		$components['carousel_dots']['config']['ColorPicker']['important'] = true;
-		$components['carousel_dots']['config']['HorizontalSpace'] = array(
+		$components['carousel_dots']['config']['HorizontalSpace']          = array(
 			'config'  => array(
 				'min'   => '0',
 				'max'   => '100',
 				'label' => __( 'Horizontal space', 'thrive-cb' ),
-				'um'    => array( 'px', '%' ),
+				'um'    => [ 'px', '%' ],
 			),
 			'extends' => 'Slider',
 		);

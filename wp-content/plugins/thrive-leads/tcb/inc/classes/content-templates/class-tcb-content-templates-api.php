@@ -25,7 +25,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 	 *
 	 * @return array
 	 */
-	public function add_extra_allowed_style_css( $allowed_style_css = array() ) {
+	public function add_extra_allowed_style_css( $allowed_style_css = [] ) {
 		if ( ! in_array( 'display', $allowed_style_css ) ) {
 			$allowed_style_css[] = 'display';
 		}
@@ -44,7 +44,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 	 *
 	 * @throws Exception
 	 */
-	public function get_all( $type = null, $args = array() ) {
+	public function get_all( $type = null, $args = [] ) {
 		$params = wp_parse_args(
 			$args,
 			array(
@@ -89,7 +89,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 	public function getTemplateList() {
 		$args = func_get_args();
 		if ( ! count( $args ) ) {
-			$args = array( 'testimonial' );
+			$args = [ 'testimonial' ];
 		}
 
 		return $this->get_all( array_shift( $args ) );
@@ -104,12 +104,12 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 	 */
 	public function get_post_for_content_template( $id ) {
 
-		$maybe = get_posts( array(
+		$maybe = get_posts( [
 			'post_type'      => TCB_CT_POST_TYPE,
 			'meta_key'       => 'tcb_ct_id',
 			'meta_value'     => $id,
 			'posts_per_page' => 1,
-		) );
+		] );
 
 		return $maybe ? $maybe[0] : null;
 	}
@@ -151,9 +151,9 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			'head_css'    => $head_css,
 			'custom_css'  => $meta['custom_css'],
 			'v'           => (int) ( isset( $meta['v'] ) ? $meta['v'] : 0 ),
-			'config'      => isset( $meta['config'] ) ? $meta['config'] : array(),
-			'tve_globals' => isset( $meta['tve_globals'] ) ? $meta['tve_globals'] : array(),
-			'thumb'       => isset( $meta['thumb'] ) ? $meta['thumb'] : array(),
+			'config'      => isset( $meta['config'] ) ? $meta['config'] : [],
+			'tve_globals' => isset( $meta['tve_globals'] ) ? $meta['tve_globals'] : [],
+			'thumb'       => isset( $meta['thumb'] ) ? $meta['thumb'] : [],
 		);
 
 		return apply_filters( 'tcb_alter_cloud_template_meta', $data, $meta, $do_shortcode );
@@ -170,12 +170,13 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 	 * @throws Exception
 	 *
 	 */
-	public function download( $id, $args = array(), $do_shortcode = true ) {
+	public function download( $id, $args = [], $do_shortcode = true ) {
 		/**
 		 * This needs to always be a string
 		 */
-		$id   = (string) $id;
-		$type = (string) $args['type'];
+		$id        = (string) $id;
+		$type      = (string) $args['type'];
+		$post_type = get_post_type( $args['post_id'] );
 
 		/**
 		 * first make sure we can save the downloaded template
@@ -193,6 +194,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 		$params = array(
 			'route'       => 'download',
 			'type'        => $type,
+			'post_type'   => $post_type,
 			'tar_version' => TVE_VERSION,
 			'ct'          => md5( time() ),
 			'id'          => $id,
@@ -202,10 +204,10 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 
 		$body = $this->_request( $params );
 
-		$control = array(
+		$control = [
 			'auth' => $this->request['headers']['X-Thrive-Authenticate'],
 			'id'   => $id,
-		);
+		];
 
 		/**
 		 * this means an error -> error message is json_encoded
@@ -231,20 +233,20 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 		$template_data = $this->process_zip( $zip_path );
 
 		$post = $this->get_post_for_content_template( $id );
-		$data = array(
+		$data = [
 			'post_title'   => $template_data['name'],
 			'post_content' => $template_data['content'],
 			'post_type'    => TCB_CT_POST_TYPE,
 			'post_status'  => 'publish',
-		);
+		];
 
-		add_filter( 'safe_style_css', array( $this, 'add_extra_allowed_style_css' ) );
+		add_filter( 'safe_style_css', [ $this, 'add_extra_allowed_style_css' ] );
 
 		/*
 		 * This filter causes serious issues on some of our header / footer templates, for which the html
 		 * is a bit more than WordPress can handle - especially in cases where we have html code inside element attributes
 		 */
-		remove_filter('content_save_pre', 'wp_filter_post_kses');
+		remove_filter( 'content_save_pre', 'wp_filter_post_kses' );
 
 		if ( ! $post ) {
 			$post_id = wp_insert_post( $data );
@@ -254,7 +256,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			$post_id = $post->ID;
 		}
 
-		remove_filter( 'safe_style_css', array( $this, 'add_extra_allowed_style_css' ) );
+		remove_filter( 'safe_style_css', [ $this, 'add_extra_allowed_style_css' ] );
 
 		update_post_meta( $post_id, 'tcb_ct_id', $id );
 		update_post_meta( $post_id, 'tcb_ct_meta', apply_filters( 'tcb_alter_cloud_template_meta', array(
@@ -262,9 +264,9 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			'type'        => $template_data['type'],
 			'head_css'    => $template_data['head_css'],
 			'custom_css'  => $template_data['custom_css'],
-			'config'      => isset( $template_data['config'] ) ? $template_data['config'] : array(),
-			'tve_globals' => isset( $template_data['tve_globals'] ) ? $template_data['tve_globals'] : array(),
-			'thumb'       => isset( $template_data['thumb'] ) ? $template_data['thumb'] : array(),
+			'config'      => isset( $template_data['config'] ) ? $template_data['config'] : [],
+			'tve_globals' => isset( $template_data['tve_globals'] ) ? $template_data['tve_globals'] : [],
+			'thumb'       => isset( $template_data['thumb'] ) ? $template_data['thumb'] : [],
 		), $template_data, $do_shortcode ) );
 
 		return $id;

@@ -1170,6 +1170,7 @@ class Thrive_Leads_DB {
 
 		return $state;
 	}
+
 	/**
 	 * check if  already_subscribed state for a form
 	 *
@@ -1183,7 +1184,6 @@ class Thrive_Leads_DB {
 
 		return ! empty( $state );
 	}
-
 
 
 	/**
@@ -1275,154 +1275,37 @@ class Thrive_Leads_DB {
 	/**
 	 *  Get the contacts for contact storage download manager
 	 *
-	 * @param $source  string
 	 * @param $filters array
 	 *
 	 * @return mixed
 	 */
-	public function tve_leads_get_contacts_stored( $source, $filters = array() ) {
+	public function tve_leads_get_contacts_stored( $filters = array() ) {
 		$table_name = tve_leads_table_name( 'contacts' );
 		$sql        = "SELECT * FROM {$table_name} ";
 		$params     = array();
-		switch ( $source ) {
-			case 'last_download':
-				$latest_download = $this->tve_leads_get_contacts_last_download_date();
-				$sql             .= " WHERE date > %s ORDER BY date";
-				$params[]        = $latest_download->date;
 
-				break;
-			case 'current_report':
-				if ( $filters['source'] > 0 ) {
-					$sql      .= " AS `contacts` JOIN " . tve_leads_table_name( 'event_log' ) . " `logs` ON `logs`.id=`contacts`.`log_id` WHERE `logs`.`main_group_id`=%s ";
-					$params[] = $filters['source'];
-				} else {
-					$sql .= " AS `contacts` WHERE 1";
-				}
+		if ( empty( $filters ) ) {
+			$sql .= " ORDER BY date DESC;";
+		} else {
+			if ( $filters['source'] > 0 ) {
+				$sql      .= " AS `contacts` JOIN " . tve_leads_table_name( 'event_log' ) . " `logs` ON `logs`.id=`contacts`.`log_id` WHERE `logs`.`main_group_id`=%s ";
+				$params[] = $filters['source'];
+			} else {
+				$sql .= " AS `contacts` WHERE 1";
+			}
 
-				if ( ! empty( $filters['start_date'] ) && ! empty( $filters['end_date'] ) ) {
-					$sql       .= " AND `contacts`.`date` BETWEEN %s AND %s ";
-					$params [] = $filters['start_date'];
-					$params [] = $filters['end_date'] . ' 23:59:59';
-				}
+			if ( ! empty( $filters['start_date'] ) && ! empty( $filters['end_date'] ) ) {
+				$sql       .= " AND `contacts`.`date` BETWEEN %s AND %s ";
+				$params [] = $filters['start_date'];
+				$params [] = $filters['end_date'] . ' 23:59:59';
+			}
 
-				$sql .= " ORDER BY `contacts`.date DESC";
-
-				break;
-			case 'all':
-			default:
-				$sql .= " ORDER BY date DESC;";
+			$sql .= " ORDER BY `contacts`.date DESC";
 		}
 
 		ini_set( 'memory_limit', '1024M' );
 
 		return $this->wpdb->get_results( $this->prepare( $sql, $params ) );
-	}
-
-	/**
-	 *  Get the the date of the last download
-	 *
-	 * @return mixed
-	 */
-
-	public function tve_leads_get_contacts_last_download_date() {
-		$table_name = tve_leads_table_name( 'contact_download' );
-		$sql        = "SELECT MAX(date) AS date FROM {$table_name}";
-
-		return $this->wpdb->get_row( $sql );
-	}
-
-	/**
-	 * Insert new download for the contacts
-	 *
-	 * @param $source
-	 * @param $file_url
-	 * @param $params array
-	 *
-	 * @return int
-	 */
-	function tve_leads_write_contact_download( $source, $file_url, $params = array() ) {
-		switch ( $source ) {
-			case 'all':
-				$data['type'] = __( 'All Contacts in Database', 'thrive-leads' );
-				break;
-			case 'last_download':
-				$latest_download = $this->tve_leads_get_contacts_last_download_date();
-				$data['type']    = __( 'All Contacts since ', 'thrive-leads' ) . $latest_download->date;
-				break;
-			case 'current_report':
-				$source_name = $params['source'] > 0 ? __( 'in ', 'thrive-leads' ) . get_the_title( $params['source'] ) : '';
-
-				$data['type'] = __( 'All Contacts ', 'thrive-leads' ) . $source_name . ' ' .
-				                __( 'from', 'thrive-leads' ) . ' ' . date( 'd M, Y', strtotime( $params['start_date'] ) ) . ' ' .
-				                __( 'to', 'thrive-leads' ) . ' ' . date( 'd M, Y', strtotime( $params['end_date'] ) );
-
-				break;
-		}
-
-		$data['status']        = 'pending';
-		$data['date']          = date( 'Y-m-d H:i:s' );
-		$data['download_link'] = $file_url;
-
-		$this->wpdb->insert( tve_leads_table_name( 'contact_download' ), $data );
-
-		return $this->wpdb->insert_id;
-	}
-
-	/**
-	 * Update download status
-	 *
-	 * @param        $id
-	 * @param string $status
-	 *
-	 * @return false|int
-	 */
-	function tve_leads_update_contacts_download_status( $id, $status = 'pending' ) {
-		return $this->wpdb->update( tve_leads_table_name( 'contact_download' ), array( 'status' => $status ), array( 'id' => $id ) );
-	}
-
-	/**
-	 * Gets the list of downloads that have been generated
-	 *
-	 * @return array
-	 */
-	public function tve_leads_get_download_list() {
-		$table_name = tve_leads_table_name( 'contact_download' );
-		$sql        = "SELECT * FROM {$table_name} ORDER BY date DESC";
-
-		$downloads = $this->wpdb->get_results( $sql );
-
-		foreach ( $downloads as $d ) {
-			/* If 10 minutes have passed since the download was started and the download still has status pending, then something wrong happened so we change the status. */
-			if ( time() - strtotime( $d->date ) > 60 * 10 && $d->status == 'pending' ) {
-				$this->tve_leads_update_contacts_download_status( $d->id, 'error' );
-				$d->status = 'error';
-			}
-
-			switch ( $d->status ) {
-				case 'complete':
-					$d->status_title = __( 'Complete', 'thrive-leads' );
-					break;
-				case 'pending':
-					$d->status_title = __( 'Pending', 'thrive-leads' );
-					break;
-				case 'error':
-					$d->status_title = __( 'An error occurred while trying to prepare the download.', 'thrive-leads' );
-					break;
-			}
-		}
-
-		return $downloads;
-	}
-
-	/**
-	 * Delete a download item
-	 *
-	 * @param $id
-	 *
-	 * @return false|int
-	 */
-	public function tve_leads_delete_download_item( $id ) {
-		return $this->wpdb->delete( tve_leads_table_name( 'contact_download' ), array( 'id' => $id ) );
 	}
 
 	/*

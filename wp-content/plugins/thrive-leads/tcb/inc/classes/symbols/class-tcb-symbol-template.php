@@ -58,7 +58,7 @@ class TCB_Symbol_Template {
 	 *
 	 * @var string[]
 	 */
-	public static $symbol_with_states = array( 'header' );
+	public static $symbol_with_states = [ 'header' ];
 
 	/**
 	 * Render the symbol content
@@ -68,7 +68,7 @@ class TCB_Symbol_Template {
 	 *
 	 * @return mixed|string
 	 */
-	public static function render_content( $config = array(), $do_shortcodes = false ) {
+	public static function render_content( $config = [], $do_shortcodes = false ) {
 		static::enter_symbol_render();
 
 		$symbol_id = ( ! empty( $config ) && isset( $config['id'] ) ) ? $config['id'] : get_the_ID();
@@ -115,6 +115,9 @@ class TCB_Symbol_Template {
 			$yoast_seo_active = is_plugin_active( 'wordpress-seo/wp-seo.php' );
 
 			$content = tve_get_shared_styles( $content, '', true, ! $yoast_seo_active ) . $content;
+
+			//Removes the color palette configuration code from the symbol in frontend
+			$content = tcb_clean_frontend_content( $content );
 
 			//if it has custom icons make sure that font family is loaded
 			if ( tve_get_post_meta( $symbol_id, 'thrive_icon_pack' ) ) {
@@ -314,16 +317,16 @@ class TCB_Symbol_Template {
 			$type = substr( $type, 0, - 1 );
 		}
 
-		return array(
+		return [
 			'css_class' => $is_hf ? 'thrv_' . $type : '',
 			'type'      => $type,
-		);
+		];
 	}
 
 	public static function data_attr( $symbol_id ) {
 		$globals = get_post_meta( $symbol_id, 'tve_globals', true );
 		if ( empty( $globals ) ) {
-			$globals = array();
+			$globals = [];
 		}
 		/**
 		 * backwards compat stuff
@@ -332,10 +335,10 @@ class TCB_Symbol_Template {
 			$scroll_behaviour = get_post_meta( $symbol_id, 'tcb_scroll_behaviour', true );
 			if ( $scroll_behaviour ) {
 				if ( $scroll_behaviour !== 'static' ) {
-					$globals['data-tve-scroll'] = json_encode( array(
-						'disabled' => array(),
+					$globals['data-tve-scroll'] = json_encode( [
+						'disabled' => [],
 						'mode'     => $scroll_behaviour === 'scroll_up' ? 'appear' : 'sticky',
-					) );
+					] );
 					update_post_meta( $symbol_id, 'tve_globals', $globals );
 				}
 				delete_post_meta( $symbol_id, 'tcb_scroll_behaviour' );

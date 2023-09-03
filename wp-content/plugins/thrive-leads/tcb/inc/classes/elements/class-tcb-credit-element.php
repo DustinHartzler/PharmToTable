@@ -75,11 +75,11 @@ class TCB_Credit_Element extends TCB_Element_Abstract {
 							'min'     => '10',
 							'max'     => '150',
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 					),
 					'monochrome_background' => array(
-						'css_suffix' => array(
+						'css_suffix' => [
 							' .visa-style-4-st0',
 							' .masterCard-style-4-st0',
 							' .americanExpress-style-4-st0',
@@ -88,7 +88,7 @@ class TCB_Credit_Element extends TCB_Element_Abstract {
 							' .bitcoin-style-4-st0',
 							' .googlePay-style-4-st0',
 							' .applePay-style-4-st0',
-						),
+						],
 						'config'     => array(
 							'default' => '#595E60',
 							'label'   => __( 'Color', 'thrive-cb' ),
@@ -109,22 +109,22 @@ class TCB_Credit_Element extends TCB_Element_Abstract {
 							'label' => __( 'Change cards', 'thrive-cb' ),
 						),
 					),
-					'preview'               => array(
-						'config' => array(
+					'preview'               => [
+						'config' => [
 							'sortable' => true,
-						),
-					),
+						],
+					],
 				),
 				'order'  => 1,
 			),
-			'typography' => array( 'hidden' => true ),
-			'shadow'     => array( 'hidden' => true ),
-			'layout'     => array(
-				'disabled_controls' => array(
+			'typography' => [ 'hidden' => true ],
+			'shadow'     => [ 'hidden' => true ],
+			'layout'     => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -143,12 +143,12 @@ class TCB_Credit_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'credit_card',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425794-how-to-use-the-credit-card-element',
-			),
-		);
+			],
+		];
 	}
 }

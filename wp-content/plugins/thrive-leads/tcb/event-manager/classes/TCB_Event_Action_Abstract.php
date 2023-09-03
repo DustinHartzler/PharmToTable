@@ -24,7 +24,7 @@ abstract class TCB_Event_Action_Abstract {
 	 *
 	 * @var array
 	 */
-	protected $config = array();
+	protected $config = [];
 
 	protected $flag_available = null;
 
@@ -226,7 +226,7 @@ abstract class TCB_Event_Action_Abstract {
 	}
 
 	public function get_options() {
-		return array();
+		return [];
 	}
 
 	public function set_is_available( $flag ) {

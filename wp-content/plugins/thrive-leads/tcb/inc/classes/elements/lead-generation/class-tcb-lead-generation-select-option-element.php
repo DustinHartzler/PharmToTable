@@ -66,66 +66,66 @@ class TCB_Lead_Generation_Select_Option_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'CustomAnswerInput' => array(
-						'config'  => array(
+					'CustomAnswerInput' => [
+						'config'  => [
 							'full-width' => true,
-						),
+						],
 						'extends' => 'LabelInput',
-					),
+					],
 				),
 			),
 
-			'typography' => array(
-				'config' => array(
-					'FontColor'     => array(
+			'typography' => [
+				'config' => [
+					'FontColor'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'important'  => true,
-					),
-					'TextAlign'     => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'css_prefix' => $prefix_config,
-						'important'  => true,
-					),
-					'FontSize'      => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => ' .tve-input-option-text',
 						'important'  => true,
-					),
-					'FontFace'      => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'LineHeight'    => [
+						'css_suffix' => ' .tve-input-option-text',
+						'important'  => true,
+					],
+					'FontFace'      => [
+						'css_suffix' => ' .tve-input-option-text',
+						'important'  => true,
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+					],
+					'TextTransform' => [
+						'css_suffix' => ' .tve-input-option-text',
+						'css_prefix' => $prefix_config,
+						'important'  => true,
+					],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'margin',
 					'.tve-advanced-controls',
 					'Alignment',
 					'Display',
-				),
-			),
-			'animation'  => array(
+				],
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 }

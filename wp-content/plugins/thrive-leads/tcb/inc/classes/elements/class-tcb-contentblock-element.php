@@ -24,9 +24,9 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	public function __construct( $tag = '' ) {
 		parent::__construct( $tag );
 
-		add_filter( 'tcb_alter_cloud_template_meta', array( $this, 'alter_tpl_meta' ), 10, 2 );
+		add_filter( 'tcb_alter_cloud_template_meta', [ $this, 'alter_tpl_meta' ], 10, 2 );
 
-		add_filter( 'tcb_filter_cloud_template_data', array( $this, 'filter_tpl_data' ), 10, 2 );
+		add_filter( 'tcb_filter_cloud_template_data', [ $this, 'filter_tpl_data' ], 10, 2 );
 	}
 
 	/**
@@ -50,7 +50,7 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	 *
 	 * @return array
 	 */
-	public function alter_tpl_meta( $return = array(), $template_data = array() ) {
+	public function alter_tpl_meta( $return = [], $template_data = [] ) {
 
 		if ( $template_data['type'] === $this->_tag ) {
 			$return['pack'] = $template_data['pack'];
@@ -69,7 +69,7 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	 *
 	 * @return array
 	 */
-	public function filter_tpl_data( $return = array(), $tag = '' ) {
+	public function filter_tpl_data( $return = [], $tag = '' ) {
 		if ( $tag === $this->_tag ) {
 			$return = $return['tpls'];
 		}
@@ -84,18 +84,18 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_lp_cloud_templates( $args = array() ) {
-		$args   = wp_parse_args( $args, array(
+	public function get_lp_cloud_templates( $args = [] ) {
+		$args   = wp_parse_args( $args, [
 			'nocache' => false,
-		) );
-		$return = array();
+		] );
+		$return = [];
 
 
 		if ( empty( $args['lp_set'] ) ) {
 			return $return;
 		}
 
-		$pack = sanitize_title( 'lp-set-' . strval( $args['lp_set'] ) );
+		$pack = sanitize_title( 'lp-set-' . (string) $args['lp_set'] );
 
 		$do_not_use_cache = ( defined( 'TCB_TEMPLATE_DEBUG' ) && TCB_TEMPLATE_DEBUG ) || $args['nocache'];
 
@@ -108,13 +108,13 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 		$return['categories'] = get_transient( $transient_categories );
 
 		if ( $do_not_use_cache || empty( $return['tpls'] ) || empty( $return['packs'] ) || empty( $return['categories'] ) ) {
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'content-templates/class-tcb-content-templates-api.php';
+			require_once plugin_dir_path( __DIR__ ) . 'content-templates/class-tcb-content-templates-api.php';
 
 			try {
-				$return = tcb_content_templates_api()->get_all( $this->tag(), array( 'pack' => $pack ) );
+				$return = tcb_content_templates_api()->get_all( $this->tag(), [ 'pack' => $pack ] );
 
 				if ( is_wp_error( $return ) ) {
-					$return = array();
+					return new WP_Error( 'tcb_error', $return->getMessage(), 501 );
 				}
 
 				if ( is_array( $return ) && ! empty( $return['tpls'] ) && ! empty( $return['packs'] ) && ! empty( $return['categories'] ) ) {
@@ -139,18 +139,18 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return array
 	 */
 	public function get_blocks( $nocache = false ) {
-		$blocks = array(
-			'packs' => array(),
-			'tpls'  => array(),
-		);
+		$blocks = [
+			'packs' => [],
+			'tpls'  => [],
+		];
 
 		$special_block_set = apply_filters( 'tcb_get_special_blocks_set', '' );
 
 		if ( ! empty( $special_block_set ) ) {
-			$special_blocks = $this->get_lp_cloud_templates( array(
+			$special_blocks = $this->get_lp_cloud_templates( [
 				'nocache' => $nocache,
 				'lp_set'  => $special_block_set,
-			) );
+			] );
 
 			if ( ! empty( $special_blocks ) && is_array( $special_blocks ) && ! empty( $special_blocks['packs'] ) && ! empty( $special_blocks['tpls'] ) ) {
 				$blocks['packs'] = array_merge( $blocks['packs'], $special_blocks['packs'] );
@@ -158,20 +158,17 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 			}
 		}
 
-		$content_blocks = $this->get_all_contentblocks_templates( array(
+		$content_blocks = $this->get_all_contentblocks_templates( [
 			'nocache' => $nocache,
-		) );
+		] );
 
 		if ( is_wp_error( $content_blocks ) ) {
-			/**
-			 * TODO: REVISE THIS
-			 */
-			$content_blocks = array();
+			return new WP_Error( 'tcb_api_error', $content_blocks->get_error_message() );
 		}
 
 		$blocks['tpls'] = array_merge( $blocks['tpls'], $content_blocks );
 		if ( empty( $blocks['packs'] ) ) {
-			$blocks['packs'][] = array( 'name' => 'Content Blocks' );
+			$blocks['packs'][] = [ 'name' => 'Content Blocks' ];
 		}
 
 		return $blocks;
@@ -185,10 +182,10 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_all_contentblocks_templates( $args = array() ) {
-		$args = wp_parse_args( $args, array(
+	public function get_all_contentblocks_templates( $args = [] ) {
+		$args = wp_parse_args( $args, [
 			'nocache' => false,
-		) );
+		] );
 
 		$do_not_use_cache    = ( defined( 'TCB_TEMPLATE_DEBUG' ) && TCB_TEMPLATE_DEBUG ) || $args['nocache'];
 		$templates_transient = 'tcb_cloud_templates_' . $this->tag() . '_all_templates';
@@ -197,10 +194,10 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 
 		if ( $do_not_use_cache || empty( $templates ) ) {
 
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'content-templates/class-tcb-content-templates-api.php';
+			require_once plugin_dir_path( __DIR__ ) . 'content-templates/class-tcb-content-templates-api.php';
 
 			try {
-				$templates = tcb_content_templates_api()->get_all( $this->tag(), array( 'pack' => 'tcb.get.all.c.blocks.templates' ) );
+				$templates = tcb_content_templates_api()->get_all( $this->tag(), [ 'pack' => 'tcb.get.all.c.blocks.templates' ] );
 
 				set_transient( $templates_transient, $templates, 8 * HOUR_IN_SECONDS );
 			} catch ( Exception $exception ) {
@@ -220,13 +217,13 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return array|WP_Error
 	 * @deprecated available only for backwards compatible: people who have content blocks saved in the content
 	 */
-	public function get_cloud_templates( $args = array() ) {
-		$args = wp_parse_args( $args, array(
+	public function get_cloud_templates( $args = [] ) {
+		$args = wp_parse_args( $args, [
 			'nocache' => false,
-		) );
+		] );
 
 		$pack_id = isset( $_GET['pack'] ) ? sanitize_text_field( $_GET['pack'] ) : '';
-		$return  = array();
+		$return  = [];
 
 		$do_not_use_cache = ( defined( 'TCB_TEMPLATE_DEBUG' ) && TCB_TEMPLATE_DEBUG ) || $args['nocache'];
 
@@ -241,10 +238,10 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 
 		if ( $do_not_use_cache || empty( $return['tpls'] ) || empty( $return['packs'] ) || empty( $return['categories'] ) || empty( $pack_id ) ) {
 
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'content-templates/class-tcb-content-templates-api.php';
+			require_once plugin_dir_path( __DIR__ ) . 'content-templates/class-tcb-content-templates-api.php';
 
 			try {
-				$return = tcb_content_templates_api()->get_all( $this->tag(), array( 'pack' => $pack_id ) );
+				$return = tcb_content_templates_api()->get_all( $this->tag(), [ 'pack' => $pack_id ] );
 
 				if ( empty( $pack_id ) ) {
 					$transient_tpls .= $return['from_pack'];
@@ -263,9 +260,9 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 		/**
 		 * Favorites Blocks
 		 */
-		$favorites = get_option( 'thrv_fav_content_blocks', array() );
+		$favorites = get_option( 'thrv_fav_content_blocks', [] );
 		foreach ( $return['tpls'] as $index => $tpl ) {
-			$return['tpls'][ $index ]['fav'] = intval( ! empty( $favorites[ $pack_id ] ) && is_array( $favorites[ $pack_id ] ) && in_array( $tpl['id'], $favorites[ $pack_id ] ) );
+			$return['tpls'][ $index ]['fav'] = (int) ( ! empty( $favorites[ $pack_id ] ) && is_array( $favorites[ $pack_id ] ) && in_array( $tpl['id'], $favorites[ $pack_id ] ) );
 		}
 
 		return $return;

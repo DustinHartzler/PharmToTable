@@ -80,11 +80,11 @@ class TCB_Post_List_Content {
 			 * @param string $post_content
 			 * @param string $content
 			 */
-			return apply_filters( 'tcb_get_post_content', TCB_Post_List_Shortcodes::before_wrap( array(
+			return apply_filters( 'tcb_get_post_content', TCB_Post_List_Shortcodes::before_wrap( [
 				'content' => $content,
 				'tag'     => 'section',
 				'class'   => $element_class,
-			), $attr ), trim( $content ) );
+			], $attr ), trim( $content ) );
 		}
 
 		$attr = array_merge( static::default_attr(), $attr );
@@ -102,7 +102,7 @@ class TCB_Post_List_Content {
 		add_filter( 'tcb_force_excerpt', '__return_true' );
 
 		/* remove the 'Continue reading' text added by the TAr more tag */
-		add_filter( 'the_content_more_link', array( __CLASS__, 'the_content_more_link_filter' ) );
+		add_filter( 'the_content_more_link', [ __CLASS__, 'the_content_more_link_filter' ] );
 
 		$is_rest = TCB_Utils::is_rest();
 
@@ -136,15 +136,15 @@ class TCB_Post_List_Content {
 		}
 
 		remove_filter( 'tcb_force_excerpt', '__return_true' );
-		remove_filter( 'the_content_more_link', array( __CLASS__, 'the_content_more_link_filter' ) );
+		remove_filter( 'the_content_more_link', [ __CLASS__, 'the_content_more_link_filter' ] );
 
 		$classes = 'tcb-post-content ' . TCB_SHORTCODE_CLASS . ( $is_editor_page ? ' tcb-post-content-placeholder' : '' );
 
-		return TCB_Post_List_Shortcodes::before_wrap( array(
+		return TCB_Post_List_Shortcodes::before_wrap( [
 			'content' => $content,
 			'tag'     => 'section',
 			'class'   => $classes,
-		), $attr );
+		], $attr );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class TCB_Post_List_Content {
 	 */
 	public static function get_excerpt( $tcb_read_more_link ) {
 		/* we add this filter so functions will use our read more text and we remove it later */
-		add_filter( 'excerpt_more', array( __CLASS__, 'excerpt_more_filter' ) );
+		add_filter( 'excerpt_more', [ __CLASS__, 'excerpt_more_filter' ] );
 
 		$content = TCB_Post_List_Shortcodes::shortcode_function_content( 'the_excerpt' );
 
@@ -191,7 +191,7 @@ class TCB_Post_List_Content {
 		$content = static::filter_content( $content );
 
 		/* replace these manually in case preg_replace only found the start or the end _config_ */
-		$content = str_replace( array( '___TVE_SHORTCODE_RAW__', '__TVE_SHORTCODE_RAW___' ), '', $content );
+		$content = str_replace( [ '___TVE_SHORTCODE_RAW__', '__TVE_SHORTCODE_RAW___' ], '', $content );
 
 		$content = strip_shortcodes( $content );
 
@@ -210,7 +210,7 @@ class TCB_Post_List_Content {
 			}
 		}
 
-		remove_filter( 'excerpt_more', array( __CLASS__, 'excerpt_more_filter' ) );
+		remove_filter( 'excerpt_more', [ __CLASS__, 'excerpt_more_filter' ] );
 		$tcb_read_more_link = null;
 
 		return $content;
@@ -224,7 +224,7 @@ class TCB_Post_List_Content {
 	 * @return string
 	 */
 	public static function get_full_content( $attr ) {
-		$content = TCB_Post_List_Shortcodes::shortcode_function_content( 'the_content', array( $attr['read_more'] ) );
+		$content = TCB_Post_List_Shortcodes::shortcode_function_content( 'the_content', [ $attr['read_more'] ] );
 
 		$content_text = trim( str_replace( $attr['read_more'], '', strip_tags( $content ) ) );
 		if ( empty( $content_text ) ) {
@@ -348,11 +348,11 @@ class TCB_Post_List_Content {
 	 * @return mixed|void
 	 */
 	private static function default_attr() {
-		return apply_filters( 'tcb_post_list_content_default_attr', array(
+		return apply_filters( 'tcb_post_list_content_default_attr', [
 			'size'      => 'words',
 			'read_more' => static::$default_read_more,
 			'words'     => 12,
-		) );
+		] );
 	}
 
 }

@@ -41,61 +41,61 @@ class TCB_Dynamic_Dropdown_Option_Element extends TCB_Element_Abstract {
 		$prefix_config = tcb_selection_root() . ' ';
 		$suffix        = ' .tve-input-option-text';
 
-		return array(
+		return [
 
-			'typography'       => array(
-				'config' => array(
-					'FontColor'     => array(
+			'typography'       => [
+				'config' => [
+					'FontColor'     => [
 						'css_suffix' => $suffix,
 						'important'  => true,
-					),
-					'TextAlign'     => array(
-						'css_suffix' => $suffix,
-						'css_prefix' => $prefix_config,
-						'important'  => true,
-					),
-					'FontSize'      => array(
-						'css_suffix' => $suffix,
-						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => $suffix,
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => $suffix,
 						'important'  => true,
-					),
-					'FontFace'      => array(
-						'css_suffix' => $suffix,
-						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => $suffix,
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'LineHeight'    => [
+						'css_suffix' => $suffix,
+						'important'  => true,
+					],
+					'FontFace'      => [
+						'css_suffix' => $suffix,
+						'important'  => true,
+					],
+					'LetterSpacing' => [
 						'css_suffix' => $suffix,
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-				),
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+					],
+					'TextTransform' => [
+						'css_suffix' => $suffix,
+						'css_prefix' => $prefix_config,
+						'important'  => true,
+					],
+				],
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'margin',
 					'.tve-advanced-controls',
 					'Alignment',
 					'Display',
-				),
-			),
-			'animation'        => array(
+				],
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'styles-templates' => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-		);
+			],
+			'styles-templates' => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+		];
 	}
 }

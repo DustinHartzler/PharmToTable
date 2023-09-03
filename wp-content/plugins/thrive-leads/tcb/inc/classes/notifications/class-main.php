@@ -232,6 +232,6 @@ class Main {
 		$default_html_content = static::get_default_content( 'custom' );
 		$default_css_content  = static::get_notification_default_style();
 
-		return array( 'html' => $default_html_content, 'css' => $default_css_content );
+		return [ 'html' => $default_html_content, 'css' => $default_css_content ];
 	}
 }

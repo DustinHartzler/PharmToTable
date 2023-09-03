@@ -29,7 +29,6 @@ class TD_TTW_Messages_Manager {
 			add_action( 'admin_notices', array( __CLASS__, 'inactive_membership' ) );
 		}
 	}
-
 	/**
 	 * Render a message from templates/messages/ directory
 	 * First param should be template name

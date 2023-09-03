@@ -21,7 +21,7 @@ class Tcb_Scripts {
 	/**
 	 * All types of scripts that can be saved for a post
 	 */
-	const ALL = array( self::HEAD_SCRIPT, self::BODY_SCRIPT, self::FOOTER_SCRIPT );
+	const ALL = [ self::HEAD_SCRIPT, self::BODY_SCRIPT, self::FOOTER_SCRIPT ];
 
 	/**
 	 * Option name where we are saving the scripts ( the same as the one from TAR )
@@ -89,7 +89,7 @@ class Tcb_Scripts {
 	 */
 	public function get_all( $type = '' ) {
 		$scripts = $this->post->meta( static::OPTION_NAME );
-		$all     = array();
+		$all     = [];
 
 		foreach ( static::ALL as $value ) {
 			$all[ $value ] = isset( $scripts[ $value ] ) ? $scripts[ $value ] : '';
@@ -111,7 +111,7 @@ class Tcb_Scripts {
 	 * @param $data
 	 */
 	public function save( $data ) {
-		$scripts = array();
+		$scripts = [];
 
 		foreach ( static::ALL as $value ) {
 			$key               = "thrive_{$value}_scripts";

@@ -57,7 +57,7 @@ class Product_Price extends \TCB_Element_Abstract {
 
 		$components['typography'] = Main::get_general_typography_config();
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) ) {

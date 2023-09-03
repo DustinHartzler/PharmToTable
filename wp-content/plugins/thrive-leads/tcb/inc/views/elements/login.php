@@ -9,13 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-$dynamic_links = array(
-	'register'    => array( 'label' => 'Register' ),
-	'login'       => array( 'label' => 'Log In' ),
-	'logout'      => array( 'label' => 'Logout' ),
-	'bk_to_login' => array( 'label' => 'Back to Login' ),
-	'pass_reset'  => array( 'label' => 'Password Reset' ),
-);
+$dynamic_links = [
+	'register'    => [ 'label' => 'Register' ],
+	'login'       => [ 'label' => 'Log In' ],
+	'logout'      => [ 'label' => 'Logout' ],
+	'bk_to_login' => [ 'label' => 'Back to Login' ],
+	'pass_reset'  => [ 'label' => 'Password Reset' ],
+];
 
 foreach ( $dynamic_links as $key => $dynamic_link ) {
 	$_link = tcb_get_dynamic_link( $dynamic_link['label'], 'Login Form' );
@@ -57,7 +57,7 @@ foreach ( $dynamic_links as $key => $dynamic_link ) {
 							</div>
 						</div>
 						<div class="tve-login-form-item tcb-remember-me-item tcb-no-delete tcb-no-clone tcb-no-save">
-							<?php tcb_template( 'controls/lead-generation/lg-gdpr.phtml', array( 'remember_me' => true ), false, 'backbone' ); ?>
+							<?php tcb_template( 'controls/lead-generation/lg-gdpr.phtml', [ 'remember_me' => true ], false, 'backbone' ); ?>
 						</div>
 					</div>
 

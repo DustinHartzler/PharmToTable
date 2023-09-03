@@ -15,7 +15,7 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 
 	protected $title = 'Thrive Architect';
 
-	protected $productIds = array();
+	protected $productIds = [];
 
 	protected $type = 'plugin';
 
@@ -62,7 +62,7 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 		return current_user_can( 'edit_post', $post_id ) && apply_filters( 'tcb_user_has_post_access', static::has_access() );
 	}
 
-	public function __construct( $data = array() ) {
+	public function __construct( $data = [] ) {
 		parent::__construct( $data );
 
 		$this->logoUrl      = tve_editor_css( 'images/thrive-architect-logo.png' );
@@ -72,10 +72,9 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 
 		$this->button = array(
 			'label'   => __( 'View Video Tutorial', 'thrive-cb' ),
-			'url'     => '//fast.wistia.net/embed/iframe/4m07jw6fmj?popover=true',
+			'data-source' => 'NgZO13Am6XA',
 			'active'  => true,
-			'target'  => '_bank',
-			'classes' => 'wistia-popover[height=450,playerColor=2bb914,width=800]',
+			'classes' => 'tvd-open-video',
 		);
 
 		$this->moreLinks = array(
@@ -122,14 +121,14 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 			wp_delete_post( $id, true );
 		}
 
-		$options = array(
+		$options = [
 			'tve_display_save_notification',
 			'tve_social_fb_app_id',
 			'tve_comments_disqus_shortname',
 			'tve_comments_facebook_admins',
 			'tve_fa_kit',
 			TCB\UserTemplates\Template::OPTION_KEY,
-		);
+		];
 
 		foreach ( $options as $option ) {
 			delete_option( $option );

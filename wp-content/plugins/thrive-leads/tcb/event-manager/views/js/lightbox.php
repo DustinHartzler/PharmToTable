@@ -1,5 +1,5 @@
 <?php
-$animationClasses = array();
+$animationClasses = [];
 foreach ( array_keys( $this->_animations ) as $animation ) {
 	$animationClasses [] = 'tve_lb_anim_' . $animation;
 }

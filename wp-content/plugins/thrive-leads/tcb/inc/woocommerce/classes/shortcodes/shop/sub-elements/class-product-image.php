@@ -49,20 +49,20 @@ class Product_Image extends \TCB_Element_Abstract {
 
 	public function own_components() {
 		/* only the layout, borders and shadows are visible */
-		$components = array(
-			'typography'       => array( 'hidden' => true ),
-			'background'       => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'shadow'           => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-		);
+		$components = [
+			'typography'       => [ 'hidden' => true ],
+			'background'       => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
+			'shadow'           => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+		];
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		$components['borders']['config']['Borders']['important'] = true;
 		$components['borders']['config']['Corners']['important'] = true;

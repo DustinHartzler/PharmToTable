@@ -8,38 +8,37 @@ class TCB_Thrive_Tooltip extends TCB_Event_Action_Abstract {
 	 *
 	 * @var array
 	 */
-	protected $_positions = array(
-			'top'          => 'Top',
-			'top_right'    => 'Top right',
-			'right'        => 'Right',
-			'bottom_right' => 'Bottom right',
-			'bottom'       => 'Bottom',
-			'bottom_left'  => 'Bottom left',
-			'left'         => 'Left',
-			'top_left'     => 'Top left',
-		);
+	protected $_positions = [
+		'top'          => 'Top',
+		'top_right'    => 'Top right',
+		'right'        => 'Right',
+		'bottom_right' => 'Bottom right',
+		'bottom'       => 'Bottom',
+		'bottom_left'  => 'Bottom left',
+		'left'         => 'Left',
+		'top_left'     => 'Top left',
+	];
 
 	/**
 	 * available tooltip styles
 	 *
 	 * @var array
 	 */
-	protected $_styles = array(
-			'light' => 'Light',
-			'dark'  => 'Dark',
-		);
+	protected $_styles = [
+		'light' => 'Light',
+		'dark'  => 'Dark',
+	];
 
 	/**
 	 * available tooltip text decorations
 	 *
 	 * @var array
 	 */
-	protected $_decorations	= array(
-			'solid'  => 'Solid',
-			'dotted' => 'Dotted',
-			'dashed' => 'Dashed',
-
-		);
+	protected $_decorations = [
+		'solid'  => 'Solid',
+		'dotted' => 'Dotted',
+		'dashed' => 'Dashed',
+	];
 
 	/**
 	 * Should return the user-friendly name for this Action
@@ -70,10 +69,10 @@ class TCB_Thrive_Tooltip extends TCB_Event_Action_Abstract {
 	}
 
 	public function render_editor_settings() {
-		tcb_template( 'actions/tooltip', array(
+		tcb_template( 'actions/tooltip', [
 			'positions' => $this->_positions,
 			'styles'    => $this->_styles,
-		) );
+		] );
 	}
 
 	/**

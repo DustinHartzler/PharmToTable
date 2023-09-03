@@ -95,12 +95,12 @@ class TCB_Countdownevergreen_Element extends TCB_Element_Abstract {
 							'default'             => 'f00',
 							'label'               => __( 'Color', 'thrive-cb' ),
 							'important'           => true,
-							'options'             => array( 'noBeforeInit' => false ),
-							'style_default_color' => array(
-								'.tve_countdown_2 .t-digits [class*="part-"]' => array( 'color' => '' ),
-								'.tve_countdown_2 .tve_t_part'                => array( 'border-color' => '' ),
-								'.tve_countdown_3 .t-digits'                  => array( 'background' => '' ),
-							),
+							'options'             => [ 'noBeforeInit' => false ],
+							'style_default_color' => [
+								'.tve_countdown_2 .t-digits [class*="part-"]' => [ 'color' => '' ],
+								'.tve_countdown_2 .tve_t_part'                => [ 'border-color' => '' ],
+								'.tve_countdown_3 .t-digits'                  => [ 'background' => '' ],
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -168,20 +168,20 @@ class TCB_Countdownevergreen_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'         => array(
+			'typography'         => [
 				'hidden' => true,
-			),
-			'shadow'             => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'layout'             => array(
-				'disabled_controls' => array(
+			],
+			'shadow'             => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'layout'             => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 	}
 

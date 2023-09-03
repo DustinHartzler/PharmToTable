@@ -66,12 +66,12 @@ class TCB_Default_Typography_Element extends TCB_Element_Abstract {
 			'layout'             => array_merge(
 				$components['layout'],
 				array(
-					'disabled_controls' => array( 'Width', 'Height', 'hr', 'Alignment', 'Display', '.tve-advanced-controls' ),
-					'config'            => array(
-						'MarginAndPadding' => array(
+					'disabled_controls' => [ 'Width', 'Height', 'hr', 'Alignment', 'Display', '.tve-advanced-controls' ],
+					'config'            => [
+						'MarginAndPadding' => [
 							'important' => false,
-						),
-					),
+						],
+					],
 				)
 			),
 			'background'         => $components['background'],
@@ -79,9 +79,9 @@ class TCB_Default_Typography_Element extends TCB_Element_Abstract {
 			'shadow'             => array_merge(
 				$components['shadow'],
 				array(
-					'config' => array(
-						'disabled_controls' => array( 'inner', 'drop' ),
-					),
+					'config' => [
+						'disabled_controls' => [ 'inner', 'drop' ],
+					],
 				)
 			),
 		);

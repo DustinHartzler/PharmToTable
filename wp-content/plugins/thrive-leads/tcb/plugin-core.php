@@ -55,7 +55,7 @@ global $tve_thrive_shortcodes;
  * list of shortcode identifier => callback function
  * the callback function will be called with an array of attributes and must return a html code to be inserted into the DOM
  */
-$tve_thrive_shortcodes = array(
+$tve_thrive_shortcodes = [
 	'post_symbol'                         => 'tcb_symbol_shortcode',
 	'optin'                               => 'tve_do_optin_shortcode',
 	'posts_list'                          => 'tve_do_posts_list_shortcode',
@@ -70,7 +70,7 @@ $tve_thrive_shortcodes = array(
 	'ultimatum_shortcode'                 => 'tve_ult_render_shortcode',
 	'quiz_shortcode'                      => 'tqb_render_shortcode',
 	'thrive_widget'                       => 'thrive_widget_render',
-);
+];
 
 /**
  * If a file called .flag-staging-templates exists, turn off caching of cloud templates
@@ -145,6 +145,7 @@ require_once TVE_TCB_ROOT_PATH . 'landing-page/inc/class-tcb-landing-page.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-lightbox.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-login-element-handler.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-user-profile-handler.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-menu-settings.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/form.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/file-upload.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/form-hooks.php';
@@ -207,8 +208,9 @@ function tve_get_seo_content() {
 	}
 
 	wp_send_json( array(
-		'post_id' => $id,
-		'content' => $content,
+		'post_id'            => $id,
+		'content'            => $content,
+		'is_edited_with_tar' => (int) get_post_meta( $id, 'tcb_editor_enabled', true ),
 	) );
 }
 
@@ -361,6 +363,8 @@ add_action( 'init', function () {
 	\TCB\ConditionalDisplay\Main::init();
 
 	\TCB\UserTemplates\Main::init();
+
+	TCB_Menu_Settings::init();
 } );
 
 \TCB\Lightspeed\Main::init();
@@ -403,12 +407,12 @@ add_filter( 'tcb_custom_css', 'tcb_custom_css' );
 /**
  *Replaces element type with post_list if the type is post_list_featured
  */
-add_filter( 'tcb_cloud_templates_replace_featured_type', array( 'TCB_Post_List', 'featured_type_replace' ) );
+add_filter( 'tcb_cloud_templates_replace_featured_type', [ 'TCB_Post_List', 'featured_type_replace' ] );
 
 /**
  *Replaces element tag with post_list_featured if the type is post_list_featured
  */
-add_filter( 'tcb_cloud_templates_replace_featured_tag', array( 'TCB_Post_List', 'post_list_tag_replace' ), 10, 2 );
+add_filter( 'tcb_cloud_templates_replace_featured_tag', [ 'TCB_Post_List', 'post_list_tag_replace' ], 10, 2 );
 
 /**
  * Checks if the post type is not blacklisted
@@ -469,7 +473,7 @@ function tve_minify_css( $css = '' ) {
 	$css = preg_replace( '/\s{2,}/m', '', $css );
 
 	/* remove spaces before and after , : and ; */
-	$css = preg_replace_callback( '/\s*([,;:{}])(?!:)\s*/m', static function ( $match ) {
+	$css = preg_replace_callback( '/\s*([,;{}])(?!:)\s*/m', static function ( $match ) {
 		return $match[1];
 	}, $css );
 
@@ -507,17 +511,17 @@ if ( ! function_exists( 'tve_page_events' ) ) {
 			}
 			/** @var TCB_Event_Action_Abstract $action */
 			$action                = $actions[ $event_config['a'] ];
-			$registered_actions [] = array(
+			$registered_actions [] = [
 				'class'        => $action,
 				'event_config' => $event_config,
-			);
+			];
 
 			/** @var TCB_Event_Trigger_Abstract $trigger */
 			$trigger                = $triggers[ $event_config['t'] ];
-			$registered_triggers [] = array(
+			$registered_triggers [] = [
 				'class'        => $trigger,
 				'event_config' => $event_config,
-			);
+			];
 
 			if ( ! isset( $javascript_callbacks[ $event_config['a'] ] ) ) {
 				$javascript_callbacks[ $event_config['a'] ] = $action->getJsActionCallback();

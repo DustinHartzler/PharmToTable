@@ -60,13 +60,13 @@ class TCB_Gmap_Element extends TCB_Element_Abstract {
 		return array(
 			'gmap'       => array(
 				'config' => array(
-					'ExternalFields' => array(
-						'config'  => array(
+					'ExternalFields' => [
+						'config'  => [
 							'key'               => 'map',
 							'shortcode_element' => 'iframe',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
+					],
 					'address'        => array(
 						'config'  => array(
 							'label'       => __( 'Address', 'thrive-cb' ),
@@ -97,7 +97,7 @@ class TCB_Gmap_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '2000',
 							'label'   => __( 'Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%', 'vh', 'vw' ),
+							'um'      => [ 'px', '%', 'vh', 'vw' ],
 							'css'     => 'width',
 						),
 						'extends' => 'Slider',
@@ -108,32 +108,32 @@ class TCB_Gmap_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '2000',
 							'label'   => __( 'Height', 'thrive-cb' ),
-							'um'      => array( 'px', 'vh' ),
+							'um'      => [ 'px', 'vh' ],
 							'css'     => 'height',
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'background' => array(
+			'background' => [
 				'hidden' => true,
-			),
-			'typography' => array(
+			],
+			'typography' => [
 				'hidden' => true,
-			),
-			'animation'  => array(
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+			],
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -152,12 +152,12 @@ class TCB_Gmap_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'google_map',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425799-how-to-use-the-custom-html-and-google-map-elements',
-			),
-		);
+			],
+		];
 	}
 }

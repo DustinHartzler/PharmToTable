@@ -143,11 +143,17 @@ class Thrive_Dash_Api_Mailchimp {
 
 		$options      = $this->getOptions( $method, $arguments );
 		$query_string = '';
-		$body         = array();
+
+		$args = array(
+			'timeout'   => 15,
+			'headers'   => $options['headers'],
+			'sslverify' => false,
+		);
 		switch ( $method ) {
 			case 'get':
 				$fn           = 'tve_dash_api_remote_get';
 				$body         = isset( $options['query'] ) ? $options['query'] : '';
+				$args['body'] = $body;
 				$query_string = isset( $options['query'] ) ? '?' . http_build_query( $options['query'] ) : '';
 				break;
 			case 'delete':
@@ -156,23 +162,13 @@ class Thrive_Dash_Api_Mailchimp {
 				$no_body = true;
 				break;
 			default:
+
+				$args['method'] = $method;
 				$fn                                 = 'tve_dash_api_remote_post';
 				$body                               = json_encode( $options['json'] );
 				$options['headers']['Content-type'] = 'application/json';
+				$args['body'] = $body;
 				break;
-		}
-
-		$args = array(
-			'body'      => $body,
-			'timeout'   => 15,
-			'headers'   => $options['headers'],
-			'sslverify' => false,
-			'method'    => $method,
-		);
-
-		// Mailchimp returns 404 sometimes on GET requests with body params
-		if ( in_array( strtolower( $method ), array( 'get', 'delete' ) ) && $no_body ) {
-			unset( $args['body'] );
 		}
 
 		$url      = $this->endpoint . $resource . $query_string;

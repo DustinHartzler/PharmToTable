@@ -56,7 +56,7 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 		return array(
 			'link'   => array(
 				'config' => array(
-					'ToggleColor'  => array(
+					'ToggleColor'         => array(
 						'config'  => array(
 							'name'    => __( 'Color', 'thrive-cb' ),
 							'buttons' => array(
@@ -66,23 +66,57 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Tabs',
 					),
-					'FontColor'    => array(
-						'config'  => array(
+					'FontColor'           => [
+						'config'  => [
 							'default' => '000',
 							'label'   => ' ',
-							'options' => array(
+							'options' => [
 								'output' => 'object',
+							],
+						],
+						'extends' => 'ColorPicker',
+					],
+					'ToggleColorControls' => array(
+						'config'  => array(
+							'name'    => __( 'Color type', 'thrive-cb' ),
+							'buttons' => array(
+								array( 'value' => 'tcb-text-solid-color', 'text' => __( 'Solid', 'thrive-cb' ) ),
+								array( 'value' => 'tcb-text-gradient-color', 'text' => __( 'Gradient', 'thrive-cb' ) ),
 							),
 						),
-						'extends' => 'ColorPicker',
+						'extends' => 'ButtonGroup',
 					),
+					'FontGradient'        => [
+						'config'  => [
+							'default' => '000',
+							'label'   => __( 'Gradient', 'thrive-cb' ),
+							'options' => [
+								'output' => 'object',
+								'hasInput' => true,
+							],
+						],
+						'extends' => 'GradientPicker',
+					],
+					'FontBaseColor'       => [
+						'css_prefix' => '.thrv_text_element ',
+						'config'     => [
+							'default' => '000',
+							'label'   => __( 'Base color', 'thrive-cb' ),
+							'info'    => true,
+							'options' => [
+								'output' => 'object',
+							],
+						],
+						'extends'    => 'ColorPicker',
+					],
+
 					'BgColor'      => array(
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Highlight', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -96,13 +130,13 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Tabs',
 					),
-					'FontFace'     => array(
-						'config' => array(
+					'FontFace'     => [
+						'config' => [
 							'label'    => ' ',
 							'template' => 'controls/font-manager',
 							'inline'   => true,
-						),
-					),
+						],
+					],
 					'ToggleSize'   => array(
 						'config'  => array(
 							'name'    => __( 'Size', 'thrive-cb' ),
@@ -113,30 +147,30 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Tabs',
 					),
-					'FontSize'     => array(
-						'config'  => array(
+					'FontSize'     => [
+						'config'  => [
 							'default' => '16',
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => '',
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'fontSize',
-						),
+						],
 						'extends' => 'FontSize',
-					),
-					'TextStyle'    => array(
-						'config' => array(
+					],
+					'TextStyle'    => [
+						'config' => [
 							'important' => true,
-							'buttons'   => array(
-								'underline'    => array(
-									'data' => array( 'style' => 'text-decoration-line' ),
-								),
-								'line-through' => array(
-									'data' => array( 'style' => 'text-decoration-line' ),
-								),
-							),
-						),
-					),
+							'buttons'   => [
+								'underline'    => [
+									'data' => [ 'style' => 'text-decoration-line' ],
+								],
+								'line-through' => [
+									'data' => [ 'style' => 'text-decoration-line' ],
+								],
+							],
+						],
+					],
 					'Effect'       => array(
 						'config'  => array(
 							'label' => __( 'Effect', 'thrive-cb' ),
@@ -152,10 +186,10 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 					'EffectColor'  => array(
 						'config'  => array(
 							'label'   => __( 'Effect Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output'      => 'object',
 								'showGlobals' => false,
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -167,19 +201,19 @@ class TCB_Link_Element extends TCB_Element_Abstract {
 							'step'    => '0.05',
 							'max'     => '1',
 							'label'   => __( 'Speed', 'thrive-cb' ),
-							'um'      => array( 's' ),
+							'um'      => [ 's' ],
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'shadow' => array(
+			'shadow' => [
 				'order'  => 140,
-				'config' => array(
-					'disabled_controls' => array( 'drop', 'inner' ),
+				'config' => [
+					'disabled_controls' => [ 'drop', 'inner' ],
 					'with_froala'       => true,
-				),
-			),
+				],
+			],
 		);
 	}
 }

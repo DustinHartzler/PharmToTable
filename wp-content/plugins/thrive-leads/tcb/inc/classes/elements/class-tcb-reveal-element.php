@@ -86,7 +86,7 @@ class TCB_Reveal_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'animation' => array( 'hidden' => true ),
+			'animation' => [ 'hidden' => true ],
 		);
 	}
 
@@ -105,12 +105,12 @@ class TCB_Reveal_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'content_reveal',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425778-how-to-use-the-content-reveal-element',
-			),
-		);
+			],
+		];
 	}
 }

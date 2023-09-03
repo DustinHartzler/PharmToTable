@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="color_scheme"></div>
 		<div class="tve-control" data-view="order_by"></div>
 		<div class="tve-control" data-view="nr_of_comments"></div>
-		<div class="tve-advanced-controls extend-grey">
+		<div class="tve-advanced-controls">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php echo esc_html__( 'Comments Moderators', 'thrive-cb' ); ?>

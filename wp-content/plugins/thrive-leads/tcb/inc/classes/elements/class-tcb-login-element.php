@@ -68,7 +68,7 @@ class TCB_Login_Element extends TCB_Cloud_Template_Element_Abstract {
 	public function html() {
 		return
 			'<div class="element">' . $this->html_placeholder( 'Insert Login & Registration Form' ) . '</div>' .
-			'<div class="template">' . tcb_template( 'elements/login.php', array(), true ) . '</div>';
+			'<div class="template">' . tcb_template( 'elements/login.php', [], true ) . '</div>';
 	}
 
 	/**
@@ -80,29 +80,29 @@ class TCB_Login_Element extends TCB_Cloud_Template_Element_Abstract {
 		$login = array(
 			'login'            => array(
 				'config' => array(
-					'Palettes'         => array(
-						'config'  => array(),
+					'Palettes'         => [
+						'config'  => [],
 						'extends' => 'PalettesV2',
-					),
+					],
 					'formType'         => array(
 						'config' => array(
 							'name'       => __( 'Type', 'thrive-cb' ),
 							'full-width' => true,
-							'buttons'    => array(
-								array(
+							'buttons'    => [
+								[
 									'text'    => 'Login',
 									'default' => true,
 									'value'   => 'login',
-								),
-								array(
+								],
+								[
 									'text'  => 'Register',
 									'value' => 'register',
-								),
-								array(
+								],
+								[
 									'text'  => 'Both',
 									'value' => 'both',
-								),
-							),
+								],
+							],
 						),
 					),
 					'defaultState'     => array(
@@ -165,32 +165,32 @@ class TCB_Login_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '10',
 							'max'     => '1080',
 							'label'   => __( 'Form width', 'thrive-cb' ),
-							'um'      => array( '%', 'px' ),
+							'um'      => [ '%', 'px' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'typography'       => array(
+			'typography'       => [
 				'hidden' => true,
-			),
-			'animation'        => array(
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
-				'config' => array(
-					'ID' => array(
+			],
+			'styles-templates' => [
+				'config' => [
+					'ID' => [
 						'hidden' => true,
-					),
-				),
-			),
-			'scroll'           => array(
+					],
+				],
+			],
+			'scroll'           => [
 				'hidden' => false,
-			),
-			'layout'           => array(
-				'disabled_controls' => array(),
-			),
+			],
+			'layout'           => [
+				'disabled_controls' => [],
+			],
 		);
 
 		return array_merge( $login, $this->group_component() );
@@ -211,12 +211,12 @@ class TCB_Login_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'login_registration',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425883-how-to-use-the-login-registration-form-element',
-			),
-		);
+			],
+		];
 	}
 }

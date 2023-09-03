@@ -21,7 +21,7 @@
 					<input type="text" id="filter_groups" class="keyup" data-fn-keyup="filter_groups" placeholder="<?php echo esc_html__( 'Filter Blocks...', 'thrive-cb' ); ?>">
 					<span>
 						<?php tcb_icon( 'search-regular', false, 'sidebar', 'cb-search-icon' ); ?>
-						<?php tcb_icon( 'times-regular', false, 'sidebar', 'cb-clear-search click', array( 'data-fn' => 'dom_clear_groups_search' ) ); ?>
+						<?php tcb_icon( 'times-regular', false, 'sidebar', 'cb-clear-search click', [ 'data-fn' => 'dom_clear_groups_search' ] ); ?>
 					</span>
 				</div>
 

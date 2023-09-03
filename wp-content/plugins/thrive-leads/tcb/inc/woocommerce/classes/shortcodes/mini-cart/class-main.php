@@ -23,7 +23,7 @@ class Main {
 	const SHORTCODE = 'tcb_woo_mini_cart';
 
 	public static function init() {
-		add_shortcode( static::SHORTCODE, array( __CLASS__, 'render' ) );
+		add_shortcode( static::SHORTCODE, [ __CLASS__, 'render' ] );
 
 		require_once __DIR__ . '/class-hooks.php';
 
@@ -38,7 +38,7 @@ class Main {
 	 *
 	 * @return string
 	 */
-	public static function render( $attr = array(), $content = '' ) {
+	public static function render( $attr = [], $content = '' ) {
 
 		/* the woocommerce hooks and the cart functionality are not initialized during REST / ajax requests, so we do it manually */
 		if ( \TCB_Utils::is_rest() || wp_doing_ajax() ) {
@@ -52,27 +52,27 @@ class Main {
 		}
 
 		if ( ! is_array( $attr ) ) {
-			$attr = array();
+			$attr = [];
 		}
 
 		$attr = array_map( static function ( $v ) {
-			return str_replace( array( '|{|', '|}|' ), array( '[', ']' ), esc_attr( $v ) );
+			return str_replace( [ '|{|', '|}|' ], [ '[', ']' ], esc_attr( $v ) );
 		}, $attr );
 
 		/* ensure default values */
-		$attr = array_merge( array(
+		$attr = array_merge( [
 			'data-type'          => 'icon',
 			'data-align'         => 'left',
 			'data-trigger'       => 'click',
 			'data-direction'     => 'under',
 			'data-text'          => 'Cart',
 			'data-icon-position' => 'left',
-		), $attr );
+		], $attr );
 
 		$id = empty( $attr['data-id'] ) ? '' : $attr['data-id'];
 		unset( $attr['data-id'] );
 
-		$classes = array( 'tcb-woo-mini-cart', THRIVE_WRAPPER_CLASS );
+		$classes = [ 'tcb-woo-mini-cart', THRIVE_WRAPPER_CLASS ];
 
 		if ( ! empty( $attr['data-class'] ) ) {
 			$classes = array_merge( $classes, explode( ' ', $attr['data-class'] ) );
@@ -126,10 +126,10 @@ class Main {
 		$content = ob_get_clean();
 
 		if ( $in_editor ) {
-			$classes = array( 'tcb-woo-mini-cart-items' );
+			$classes = [ 'tcb-woo-mini-cart-items' ];
 		} else {
 			/* so it won't be synchronized very fast */
-			$classes = array( 'widget_shopping_cart_content' );
+			$classes = [ 'widget_shopping_cart_content' ];
 		}
 
 		return \TCB_Utils::wrap_content( $content, 'div', '', $classes );
@@ -144,7 +144,7 @@ class Main {
 	 */
 	public static function get_cart_items_count( $in_editor ) {
 		$count = 0;
-		$class = array( 'tcb-woo-mini-cart-count' );
+		$class = [ 'tcb-woo-mini-cart-count' ];
 
 		if ( $in_editor ) {
 			$class[] = 'tcb-selector-not_editable';
@@ -197,11 +197,11 @@ class Main {
 	 * @param $products_per_page
 	 */
 	public static function generate_dummy_cart( $products_per_page = 4 ) {
-		$dummy_products = get_posts( array(
+		$dummy_products = get_posts( [
 			'posts_per_page' => $products_per_page,
 			'post_type'      => 'product',
 			'orderby'        => 'rand',
-		) );
+		] );
 
 		add_filter( 'woocommerce_is_purchasable', '__return_true' );
 

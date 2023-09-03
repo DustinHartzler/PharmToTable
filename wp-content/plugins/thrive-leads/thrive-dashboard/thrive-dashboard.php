@@ -59,6 +59,9 @@ require_once TVE_DASH_PATH . '/inc/smart-site/classes/endpoints/class-tvd-groups
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/endpoints/class-tvd-fields-controller.php';
 require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-access-manager.php';
 require_once TVE_DASH_PATH . '/inc/marketing/functions.php';
+require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-magic-methods.php';
+require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-ttw-utils.php';
+require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-connection.php';
 require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-update-manager.php';
 require_once TVE_DASH_PATH . '/inc/automator/class-main.php';
 require_once TVE_DASH_PATH . '/inc/design-packs/class-main.php';

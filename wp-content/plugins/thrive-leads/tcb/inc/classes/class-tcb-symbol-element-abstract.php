@@ -90,13 +90,13 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 
 		/* If the title is not set, just throw the error */
 		if ( ! isset( $args['post_title'] ) ) {
-			return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create symbols without title' ), array( 'status' => 409 ) );
+			return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create symbols without title' ), [ 'status' => 409 ] );
 		}
 
 		$post = get_page_by_title( $args['post_title'], OBJECT, TCB_Symbols_Post_Type::SYMBOL_POST_TYPE );
 
 		if ( $post && $post->post_status !== 'trash' ) {
-			return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create global elements with the same title' ), array( 'status' => 409 ) );
+			return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create global elements with the same title' ), [ 'status' => 409 ] );
 		}
 
 		return true;
@@ -107,11 +107,11 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 */
 	public function get_all( $args, $is_localize = false ) {
 		$result   = [];
-		$defaults = array(
+		$defaults = [
 			'post_type'      => TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
 			'posts_per_page' => - 1,
 			'post_status'    => 'publish',
-		);
+		];
 
 		//get symbols from a specific category
 		if ( isset( $args['category_name'] ) ) {
@@ -156,7 +156,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 
 		ob_start(); // some plugins echo output through shortcodes causing the ajax request to be misshaped
 		foreach ( $symbols as $symbol ) {
-			$result['local'][ $symbol->ID ] = $this->prepare_symbol( $symbol, $is_localize ) + array( 'is_local' => 1 );
+			$result['local'][ $symbol->ID ] = $this->prepare_symbol( $symbol, $is_localize ) + [ 'is_local' => 1 ];
 		}
 		ob_end_clean();
 
@@ -268,16 +268,16 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	public function edit_symbol( $symbol_data ) {
 
 		if ( ! isset( $symbol_data['id'] ) ) {
-			return new WP_Error( 'id_is_not_set', __( 'Missing symbol id', 'thrive-cb' ), array( 'status' => 500 ) );
+			return new WP_Error( 'id_is_not_set', __( 'Missing symbol id', 'thrive-cb' ), [ 'status' => 500 ] );
 		}
 
 		/**
 		 * Added some defaults
 		 */
-		$symbol_data = array_merge( array(
+		$symbol_data = array_merge( [
 			'has_icons' => 0,
 			'class'     => '',
-		), $symbol_data );
+		], $symbol_data );
 
 		/**
 		 * update CSS text to reflect new symbol id ( replace cloud id placeholder with local id in css text)
@@ -292,7 +292,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 
 		$symbol = get_post( $symbol_data['id'] );
 
-		return array( 'symbol' => $symbol );
+		return [ 'symbol' => $symbol ];
 	}
 
 	/**
@@ -303,13 +303,13 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 * @return array|int|WP_Error
 	 */
 	public function create_symbol( $symbol_data ) {
-		$create_symbol_defaults = array(
+		$create_symbol_defaults = [
 			'post_type'   => TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
 			'post_status' => 'publish',
-		);
+		];
 
 		$post_title         = str_replace( '\\', '', $symbol_data['symbol_title'] );
-		$create_symbol_args = wp_parse_args( array( 'post_title' => $post_title ), $create_symbol_defaults );
+		$create_symbol_args = wp_parse_args( [ 'post_title' => $post_title ], $create_symbol_defaults );
 
 		/**
 		 * Add the possibility for other plugins to change the arguments for creating a symbol
@@ -354,12 +354,12 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		/**
 		 * Added some defaults
 		 */
-		$symbol_data = array_merge( array(
+		$symbol_data = array_merge( [
 			'has_icons' => 0,
-		), $symbol_data );
+		], $symbol_data );
 
 		//if we are sending the category than assign the symbol to it
-		$terms = isset( $symbol_data['term_id'] ) ? array( $symbol_data['term_id'] ) : [];
+		$terms = isset( $symbol_data['term_id'] ) ? [ $symbol_data['term_id'] ] : [];
 		wp_set_post_terms( $post_id, $terms, TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY );
 
 		/**
@@ -430,14 +430,14 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	public function save_extra_css( $data ) {
 
 		if ( ! isset( $data['id'] ) ) {
-			return new WP_Error( 'id_is_not_set', __( 'Missing symbol id', 'thrive-cb' ), array( 'status' => 500 ) );
+			return new WP_Error( 'id_is_not_set', __( 'Missing symbol id', 'thrive-cb' ), [ 'status' => 500 ] );
 		}
 
 		update_post_meta( $data['id'], 'tve_custom_css', $data['css'] );
 
 		$symbol = get_post( $data['id'] );
 
-		return array( 'symbol' => $symbol );
+		return [ 'symbol' => $symbol ];
 	}
 
 	/**
@@ -450,20 +450,20 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 */
 	public function generate_preview( $post_id, $element_type = 'symbol' ) {
 
-		add_filter( 'upload_dir', array( $this, 'upload_dir' ) );
+		add_filter( 'upload_dir', [ $this, 'upload_dir' ] );
 		$preview_file = ! empty( $_FILES['preview_file'] ) ? $_FILES['preview_file'] : []; // phpcs:ignore
-		$moved_file   = wp_handle_upload( $preview_file, array(
+		$moved_file   = wp_handle_upload( $preview_file, [
 			'action'                   => TCB_Editor_Ajax::ACTION,
-			'unique_filename_callback' => array( $this, 'get_preview_filename' ),
-		) );
+			'unique_filename_callback' => [ $this, 'get_preview_filename' ],
+		] );
 
-		remove_filter( 'upload_dir', array( $this, 'upload_dir' ) );
+		remove_filter( 'upload_dir', [ $this, 'upload_dir' ] );
 
 		if ( empty( $moved_file['url'] ) ) {
-			return new WP_Error( 'file_not_saved', __( 'The file could not be saved', 'thrive-cb' ), array( 'status' => 500 ) );
+			return new WP_Error( 'file_not_saved', __( 'The file could not be saved', 'thrive-cb' ), [ 'status' => 500 ] );
 		}
 
-		$new_width = in_array( $element_type, array( 'header', 'footer' ) ) ? 600 : 300;
+		$new_width = in_array( $element_type, [ 'header', 'footer' ] ) ? 600 : 300;
 		$preview   = wp_get_image_editor( $moved_file['file'] );
 		if ( ! is_wp_error( $preview ) ) {
 			$preview->resize( $new_width, null );
@@ -475,11 +475,11 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 
 		$dimensions = $editor->get_size();
 
-		$thumb = array(
+		$thumb = [
 			'url' => $moved_file['url'],
 			'h'   => $dimensions['height'],
 			'w'   => $dimensions['width'],
-		);
+		];
 
 		TCB_Utils::save_thumbnail_data( $post_id, $thumb );
 

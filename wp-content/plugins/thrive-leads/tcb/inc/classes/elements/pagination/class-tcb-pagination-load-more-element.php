@@ -49,16 +49,16 @@ class TCB_Pagination_Load_More_Element extends TCB_Button_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['button']['disabled_controls']    = array( '.tcb-button-link-container-divider', '#tcb-button-link-search-control', '.tcb-button-link-options-container', '.tcb-button-link-container', 'DynamicLink' );
-		$components['animation']['disabled_controls'] = array( '.btn-inline.anim-link', '.btn-inline.anim-popup' );
+		$components['button']['disabled_controls']    = [ '.tcb-button-link-container-divider', '#tcb-button-link-search-control', '.tcb-button-link-options-container', '.tcb-button-link-container', 'DynamicLink' ];
+		$components['animation']['disabled_controls'] = [ '.btn-inline.anim-link', '.btn-inline.anim-popup' ];
 
-		$components['scroll']     = array( 'hidden' => true );
-		$components['responsive'] = array( 'hidden' => true );
+		$components['scroll']     = [ 'hidden' => true ];
+		$components['responsive'] = [ 'hidden' => true ];
 
 		$components = array_merge( $components, $this->shared_styles_component() );
 
 		/* hide the Save button */
-		$components['shared-styles']['disabled_controls'] = array( '.save-as-global-style' );
+		$components['shared-styles']['disabled_controls'] = [ '.save-as-global-style' ];
 
 		return $components;
 	}

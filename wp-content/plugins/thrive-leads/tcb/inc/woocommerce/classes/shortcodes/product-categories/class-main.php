@@ -25,7 +25,7 @@ class Main {
 	const IDENTIFIER = '.tcb-woo-product-categories';
 
 	public static function init() {
-		add_shortcode( static::SHORTCODE, array( __CLASS__, 'render' ) );
+		add_shortcode( static::SHORTCODE, [ __CLASS__, 'render' ] );
 
 		require_once __DIR__ . '/class-hooks.php';
 
@@ -37,7 +37,7 @@ class Main {
 	 *
 	 * @return string
 	 */
-	public static function render( $attr = array() ) {
+	public static function render( $attr = [] ) {
 		/* the woocommerce hooks are not initialized during REST / ajax requests, so we do it manually */
 		if ( \TCB_Utils::is_rest() || wp_doing_ajax() ) {
 			Main_Woo::init_frontend_woo_functionality();
@@ -57,15 +57,15 @@ class Main {
 			$classes[] = 'tcb-selector-no_save tcb-child-selector-no_icons';
 		} else {
 			/* only keep a few attributes on the frontend */
-			$attr = array_intersect_key( $attr, array(
+			$attr = array_intersect_key( $attr, [
 				'align-items'   => '',
 				'text-layout'   => '',
 				'text-position' => '',
 				'css'           => '',
-			) );
+			] );
 		}
 
-		$data = array();
+		$data = [];
 
 		foreach ( $attr as $key => $value ) {
 			$data[ 'data-' . $key ] = esc_attr( $value );
@@ -81,7 +81,7 @@ class Main {
 	 * @param $in_editor
 	 */
 	public static function before_render( &$attr, $in_editor ) {
-		$attr = array_merge( array(
+		$attr = array_merge( [
 			'limit'         => 4,
 			'columns'       => 4,
 			'hide_empty'    => 1,
@@ -92,7 +92,7 @@ class Main {
 			'align-items'   => 'center',
 			'text-layout'   => 'text_on_image',
 			'text-position' => 'center',
-		), is_array( $attr ) ? $attr : array() );
+		], is_array( $attr ) ? $attr : [] );
 
 		/*
 		 * Fix for an earlier mistake, or maybe something that WooCommerce changed since then:
@@ -109,14 +109,14 @@ class Main {
 		}
 
 		/* add our custom text wrapper through woo actions */
-		add_action( 'woocommerce_before_subcategory_title', array( __CLASS__, 'open_thrive_text_wrapper' ) );
-		add_action( 'woocommerce_after_subcategory_title', array( __CLASS__, 'close_thrive_text_wrapper' ), 12 );
+		add_action( 'woocommerce_before_subcategory_title', [ __CLASS__, 'open_thrive_text_wrapper' ] );
+		add_action( 'woocommerce_after_subcategory_title', [ __CLASS__, 'close_thrive_text_wrapper' ], 12 );
 
 		/* remove the default product category count, ( we are adding a custom implementation through the next filter ) */
-		add_filter( 'woocommerce_subcategory_count_html', array( __CLASS__, 'remove_default_product_count' ) );
+		add_filter( 'woocommerce_subcategory_count_html', [ __CLASS__, 'remove_default_product_count' ] );
 
 		if ( $in_editor || empty( $attr['hide-product-number'] ) ) {
-			add_action( 'woocommerce_after_subcategory_title', array( __CLASS__, 'add_thrive_product_count' ), 11 );
+			add_action( 'woocommerce_after_subcategory_title', [ __CLASS__, 'add_thrive_product_count' ], 11 );
 		}
 	}
 
@@ -131,15 +131,15 @@ class Main {
 		}
 
 		/* remove our custom text wrapper */
-		remove_action( 'woocommerce_before_subcategory_title', array( __CLASS__, 'open_thrive_text_wrapper' ) );
-		remove_action( 'woocommerce_after_subcategory_title', array( __CLASS__, 'close_thrive_text_wrapper' ), 12 );
+		remove_action( 'woocommerce_before_subcategory_title', [ __CLASS__, 'open_thrive_text_wrapper' ] );
+		remove_action( 'woocommerce_after_subcategory_title', [ __CLASS__, 'close_thrive_text_wrapper' ], 12 );
 
 		/* remove our 'product count removal' filter */
-		remove_filter( 'woocommerce_subcategory_count_html', array( __CLASS__, 'remove_default_product_count' ) );
+		remove_filter( 'woocommerce_subcategory_count_html', [ __CLASS__, 'remove_default_product_count' ] );
 
 		if ( $in_editor || empty( $attr['hide-product-number'] ) ) {
 			/* remove our custom product count implementation */
-			remove_action( 'woocommerce_after_subcategory_title', array( __CLASS__, 'add_thrive_product_count' ), 11 );
+			remove_action( 'woocommerce_after_subcategory_title', [ __CLASS__, 'add_thrive_product_count' ], 11 );
 		}
 	}
 
@@ -188,10 +188,10 @@ class Main {
 		);
 
 		$select_options = array_map( static function ( $item ) {
-			return array(
+			return [
 				'name'  => $item->name,
 				'value' => $item->term_id,
-			);
+			];
 		}, $product_categories );
 
 		return array_values( $select_options );

@@ -40,29 +40,29 @@ class TCB_Countdown_Separator_Element extends TCB_Element_Abstract {
 
 	public function own_components() {
 		return array(
-			'countdown_separator' => array(
-				'config' => array(
-					'Separator' => array(
-						'config'  => array(
+			'countdown_separator' => [
+				'config' => [
+					'Separator' => [
+						'config'  => [
 							'label' => 'Tile separator',
-						),
+						],
 						'extends' => 'LabelInput',
-					),
-				),
-			),
-			'typography'          => array(
-				'disabled_controls' => array( '.tve-advanced-controls', '[data-value="tcb-typography-letter-spacing"]', 'TextAlign', 'TextTransform', 'FontBackground' ),
-				'config'            => array(
-					'FontSize'   => array(
+					],
+				],
+			],
+			'typography'          => [
+				'disabled_controls' => [ '.tve-advanced-controls', '[data-value="tcb-typography-letter-spacing"]', 'TextAlign', 'TextTransform', 'FontBackground' ],
+				'config'            => [
+					'FontSize'   => [
 						'css_suffix' => ' .tcb-plain-text',
-					),
-					'LineHeight' => array(
+					],
+					'LineHeight' => [
 						'css_suffix' => ' .tcb-plain-text',
-					),
-				),
-			),
+					],
+				],
+			],
 			'layout'              => array(
-				'disabled_controls' => array( 'Display', 'Alignment', '.tve-advanced-controls', 'Height' ),
+				'disabled_controls' => [ 'Display', 'Alignment', '.tve-advanced-controls', 'Height' ],
 				'config'            => array(
 					'MarginAndPadding' => array(
 						'padding_suffix' => ' span',
@@ -72,12 +72,12 @@ class TCB_Countdown_Separator_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'responsive'          => array(
+			'responsive'          => [
 				'hidden' => true,
-			),
-			'animation'           => array(
+			],
+			'animation'           => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 }

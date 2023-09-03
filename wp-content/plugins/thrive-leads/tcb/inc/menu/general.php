@@ -134,7 +134,7 @@
 			</span>
 		</div>
 
-		<div class="tve-advanced-controls extend-grey hide-states">
+		<div class="tve-advanced-controls hide-states">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>
@@ -291,8 +291,7 @@
 			<div class="tve-control fill no-space" data-view="preview"></div>
 			<div class="tve-control pl-10" data-view="ButtonToggle"></div>
 		</div>
-		<hr>
-		<div class="tcb-text-center">
+		<div class="tcb-text-center sep-top exit-group-styling">
 			<a href="javascript:void(0);" class="click clear-format"
 			   data-fn="close_group_options"><?php tcb_icon( 'exit-to-app' ); ?><?php echo esc_html__( 'Exit Group Styling', 'thrive-cb' ); ?></a>
 		</div>

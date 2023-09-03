@@ -18,12 +18,12 @@ class TCB_Pagination_Numeric extends TCB_Pagination {
 	const PREV_NEXT_BUTTON_CLASS  = 'tcb-pagination-prev-next-button';
 	const FIRST_LAST_BUTTON_CLASS = 'tcb-pagination-first-last-button';
 
-	private $default_attr = array(
+	private $default_attr = [
 		'hide_page_numbers' => false,
 		'hide_prev_next'    => false,
 		'hide_first_last'   => false,
 		'hide_label'        => false,
-	);
+	];
 
 	/**
 	 * Get the content for numeric pagination.
@@ -65,8 +65,8 @@ class TCB_Pagination_Numeric extends TCB_Pagination {
 	 * @return string
 	 */
 	private function get_button( $type ) {
-		$attr    = array();
-		$classes = array( static::BUTTON_CLASS, THRIVE_WRAPPER_CLASS, 'tcb-pagination-' . $type );
+		$attr    = [];
+		$classes = [ static::BUTTON_CLASS, THRIVE_WRAPPER_CLASS, 'tcb-pagination-' . $type ];
 		$icon    = tcb_template( 'pagination/' . $type . '-icon.php', null, true );
 
 		$name = ucfirst( $type );
@@ -93,7 +93,7 @@ class TCB_Pagination_Numeric extends TCB_Pagination {
 		}
 
 		/* 'Next' and 'Last' have their icons on the right by default */
-		if ( in_array( $type, array( 'next', 'last' ) ) ) {
+		if ( in_array( $type, [ 'next', 'last' ] ) ) {
 			$classes[] = 'tcb-flip';
 		}
 
@@ -108,7 +108,7 @@ class TCB_Pagination_Numeric extends TCB_Pagination {
 	}
 
 	private function get_navigation_label() {
-		$classes = array( 'tcb-pagination-label', THRIVE_WRAPPER_CLASS, 'tve_no_drag' );
+		$classes = [ 'tcb-pagination-label', THRIVE_WRAPPER_CLASS, 'tve_no_drag' ];
 
 		$content = tcb_template( 'pagination/label-pages.php', null, true );
 

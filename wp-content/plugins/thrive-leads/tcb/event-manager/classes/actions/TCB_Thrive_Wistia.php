@@ -8,7 +8,7 @@ if ( ! class_exists( 'TCB_Thrive_Wistia' ) ) {
 	 * Class TCB_Thrive_Wistia
 	 */
 	class TCB_Thrive_Wistia extends TCB_Event_Action_Abstract {
-		private static $_loaded_videos = array();
+		private static $_loaded_videos = [];
 
 		/**
 		 * Should return the user-friendly name for this Action
@@ -105,7 +105,7 @@ if ( ! class_exists( 'TCB_Thrive_Wistia' ) ) {
 		public function mainPostCallback( $data ) {
 			$videoUrl = $data['config']['event_video_url'];
 			if ( ! is_editor_page() && isset( $videoUrl ) && $videoUrl != '' ) {
-				wp_script_is( 'tl-wistia-popover' ) || wp_enqueue_script( 'tl-wistia-popover', '//fast.wistia.com/assets/external/E-v1.js', array(), '', true );
+				wp_script_is( 'tl-wistia-popover' ) || wp_enqueue_script( 'tl-wistia-popover', '//fast.wistia.com/assets/external/E-v1.js', [], '', true );
 			}
 		}
 

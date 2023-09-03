@@ -53,14 +53,14 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 		$components = parent::general_components();
 		unset( $components['typography'], $components['animation'], $components['responsive'], $components['styles-templates'], $components['scroll'] );
 
-		$components['layout']['disabled_controls'] = array(
+		$components['layout']['disabled_controls'] = [
 			'margin',
 			'.tve-advanced-controls',
 			'Height',
 			'Width',
 			'Alignment',
 			'Display',
-		);
+		];
 
 		$components['megamenu_dropdown'] = array(
 			'order'  => 1,
@@ -69,19 +69,19 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 					'config'  => array(
 						'default' => 'grid',
 						'name'    => __( 'Display Type', 'thrive-cb' ),
-						'buttons' => array(
-							array(
+						'buttons' => [
+							[
 								'icon'    => '',
 								'text'    => 'GRID',
 								'value'   => 'grid',
 								'default' => true,
-							),
-							array(
+							],
+							[
 								'icon'  => '',
 								'text'  => 'MASONRY',
 								'value' => 'masonry',
-							),
-						),
+							],
+						],
 					),
 					'extends' => 'ButtonGroup',
 				),
@@ -91,7 +91,7 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 						'min'     => '2',
 						'max'     => '10',
 						'label'   => __( 'Number of Columns', 'thrive-cb' ),
-						'um'      => array( '' ),
+						'um'      => [ '' ],
 					),
 					'extends' => 'Slider',
 				),
@@ -101,7 +101,7 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 						'min'   => '0',
 						'max'   => '150',
 						'label' => __( 'Horizontal Spacing', 'thrive-cb' ),
-						'um'    => array( 'px' ),
+						'um'    => [ 'px' ],
 					),
 					'extends' => 'Slider',
 				),
@@ -111,7 +111,7 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 						'min'   => '0',
 						'max'   => '150',
 						'label' => __( 'Vertical Spacing', 'thrive-cb' ),
-						'um'    => array( 'px' ),
+						'um'    => [ 'px' ],
 					),
 					'extends' => 'Slider',
 				),
@@ -120,7 +120,7 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 						'min'   => '0',
 						'max'   => '2000',
 						'label' => __( 'Dropdown max width', 'thrive-cb' ),
-						'um'    => array( '%', 'px' ),
+						'um'    => [ '%', 'px' ],
 						'css'   => 'max-width',
 					),
 					'extends' => 'Slider',

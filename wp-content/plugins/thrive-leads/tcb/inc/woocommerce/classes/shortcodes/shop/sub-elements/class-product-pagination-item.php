@@ -57,7 +57,7 @@ class Product_Pagination_Item extends \TCB_Element_Abstract {
 		$components['typography'] = Main::get_general_typography_config();
 
 		$components['typography']['config']['css_suffix'] = '';
-		$components['typography']['disabled_controls']    = array( 'TextTransform', 'TextAlign', '.tve-advanced-controls' );
+		$components['typography']['disabled_controls']    = [ 'TextTransform', 'TextAlign', '.tve-advanced-controls' ];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) ) {
@@ -68,7 +68,7 @@ class Product_Pagination_Item extends \TCB_Element_Abstract {
 		$components['typography']['config']['FontColor']['important'] = true;
 		$components['typography']['config']['FontSize']['important']  = true;
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		$components['borders']['config']['Corners']['important'] = true;
 

@@ -65,12 +65,12 @@ class TCB_Countdownevergreen_Template_Element extends TCB_Countdown_Element {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'countdown_evergreen',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425793-how-to-use-the-countdown-elements',
-			),
-		);
+			],
+		];
 	}
 }

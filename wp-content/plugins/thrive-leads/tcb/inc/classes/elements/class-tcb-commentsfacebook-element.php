@@ -66,7 +66,7 @@ class TCB_Commentsfacebook_Element extends TCB_Element_Abstract {
 							'add_button_text' => __( 'Add New Moderator', 'thrive-cb' ),
 							'list_label'      => 'ID',
 							'remove_title'    => __( 'Remove Moderator', 'thrive-cb' ),
-							'list_items'      => array(),
+							'list_items'      => [],
 						),
 						'extends' => 'InputMultiple',
 					),
@@ -84,53 +84,53 @@ class TCB_Commentsfacebook_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '200',
 							'label'   => __( 'Number of comments', 'thrive-cb' ),
-							'um'      => array(),
+							'um'      => [],
 						),
 						'extends' => 'Slider',
 					),
 					'color_scheme'   => array(
 						'config'  => array(
 							'name'    => __( 'Color Scheme', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'light',
 									'name'  => 'Light',
-								),
-								array(
+								],
+								[
 									'value' => 'dark',
 									'name'  => 'Dark',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
 					'order_by'       => array(
 						'config'  => array(
 							'name'    => __( 'Order By', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => 'social',
 									'name'  => 'Social Popularity',
-								),
-								array(
+								],
+								[
 									'value' => 'time',
 									'name'  => 'Oldest First',
-								),
-								array(
+								],
+								[
 									'value' => 'reverse_time',
 									'name'  => 'Newest first',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
 				),
 			),
-			'typography'       => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'background'       => array( 'hidden' => true ),
-			'shadow'           => array( 'hidden' => true ),
-			'layout'           => array( 'disabled_controls' => array( 'Height', 'Width', 'Alignment', 'Overflow', 'ScrollStyle' ) ),
+			'typography'       => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'background'       => [ 'hidden' => true ],
+			'shadow'           => [ 'hidden' => true ],
+			'layout'           => [ 'disabled_controls' => [ 'Height', 'Width', 'Alignment', 'Overflow', 'ScrollStyle' ] ],
 		);
 	}
 
@@ -149,12 +149,12 @@ class TCB_Commentsfacebook_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'facebook_comments',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425808-how-to-add-facebook-disqus-comments-in-thrive-architect',
-			),
-		);
+			],
+		];
 	}
 }

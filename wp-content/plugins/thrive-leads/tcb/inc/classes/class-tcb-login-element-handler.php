@@ -13,16 +13,16 @@ class TCB_Login_Element_Handler {
 
 	public function hooks() {
 		if ( wp_doing_ajax() ) {
-			add_action( 'wp_ajax_nopriv_tve_login_submit', array( $this, 'submit' ) );
-			add_action( 'wp_ajax_tve_login_submit', array( $this, 'submit' ) );
+			add_action( 'wp_ajax_nopriv_tve_login_submit', [ $this, 'submit' ] );
+			add_action( 'wp_ajax_tve_login_submit', [ $this, 'submit' ] );
 		}
 
-		add_action( 'tcb_login_action_login', array( $this, 'action_login' ) );
-		add_action( 'tcb_login_action_register', array( $this, 'action_register' ) );
-		add_action( 'tcb_login_action_recover_password', array( $this, 'action_recover_password' ) );
-		add_filter( 'tcb_dynamiclink_data', array( $this, 'dynamiclink_data' ), 100 );
+		add_action( 'tcb_login_action_login', [ $this, 'action_login' ] );
+		add_action( 'tcb_login_action_register', [ $this, 'action_register' ] );
+		add_action( 'tcb_login_action_recover_password', [ $this, 'action_recover_password' ] );
+		add_filter( 'tcb_dynamiclink_data', [ $this, 'dynamiclink_data' ], 100 );
 
-		add_shortcode( 'thrive_login_form_shortcode', array( $this, 'login_form_shortcode' ) );
+		add_shortcode( 'thrive_login_form_shortcode', [ $this, 'login_form_shortcode' ] );
 	}
 
 	/**
@@ -35,7 +35,7 @@ class TCB_Login_Element_Handler {
 		$is_wl = class_exists( 'WishListMember3', false ) && $WishListMemberInstance instanceof WishListMember3;
 
 		if ( true === $is_wl ) {
-			remove_action( 'template_redirect', array( $WishListMemberInstance, 'Process' ), 1 );
+			remove_action( 'template_redirect', [ $WishListMemberInstance, 'Process' ], 1 );
 		}
 	}
 
@@ -56,7 +56,7 @@ class TCB_Login_Element_Handler {
 			do_action( 'tcb_login_action_' . $data['custom_action'], $data );
 		}
 
-		wp_send_json( array( 'error' => 'ERROR!! No handler provided for the request' ) );
+		wp_send_json( [ 'error' => 'ERROR!! No handler provided for the request' ] );
 	}
 
 	/**
@@ -80,7 +80,7 @@ class TCB_Login_Element_Handler {
 		$user = wp_signon( $args );
 
 		$data['success'] = $user instanceof WP_User;
-		$data['errors']  = $user instanceof WP_Error ? $user->get_error_messages() : array();
+		$data['errors']  = $user instanceof WP_Error ? $user->get_error_messages() : [];
 
 		/**
 		 * Allow other plugins to manipulate the response
@@ -104,10 +104,10 @@ class TCB_Login_Element_Handler {
 	 * @param array $data
 	 */
 	public function action_recover_password( $data ) {
-		$response   = array(
+		$response   = [
 			'success' => true,
-			'errors'  => array(),
-		);
+			'errors'  => [],
+		];
 		$user_login = sanitize_text_field( $data['login'] );
 
 		$result = retrieve_password( $user_login );
@@ -172,7 +172,7 @@ class TCB_Login_Element_Handler {
 		$result['logged_in'] = $logged_in;
 
 		/* WordPress API already successfully registered the user */
-		wp_send_json( array( 'wordpress' => true ) + $result );
+		wp_send_json( [ 'wordpress' => true ] + $result );
 	}
 
 	/**
@@ -193,10 +193,10 @@ class TCB_Login_Element_Handler {
 	 */
 	public function get_user( $data ) {
 
-		$response = array();
+		$response = [];
 
 		$response['user']   = '';
-		$response['errors'] = array();
+		$response['errors'] = [];
 
 		if ( empty( $data ) || ! is_string( $data ) ) {
 			$response['errors']['empty_username'] = __( 'Enter a username or email address.', 'thrive-cb' );
@@ -291,20 +291,20 @@ class TCB_Login_Element_Handler {
 		$data['Login Form'] = array(
 			'links'     => array(
 				0 => array(
-					'bk_to_login' => array(
+					'bk_to_login' => [
 						'name' => 'Back to Login',
 						'url'  => '',
 						'show' => 1,
 						'id'   => 'bk_to_login',
 						'type' => 'login',
-					),
-					'pass_reset'  => array(
+					],
+					'pass_reset'  => [
 						'name' => 'Password Reset',
 						'url'  => '',
 						'show' => 1,
 						'id'   => 'forgot_password',
 						'type' => 'login',
-					),
+					],
 					'logout'      => array(
 						'name' => 'Logout',
 						'url'  => wp_logout_url(),
@@ -312,20 +312,20 @@ class TCB_Login_Element_Handler {
 						'id'   => 'logout',
 						'type' => [ 'login', 'register' ],
 					),
-					'login'       => array(
+					'login'       => [
 						'name' => 'Log In',
 						'url'  => '',
 						'show' => 1,
 						'id'   => 'login',
 						'type' => 'login',
-					),
-					'register'    => array(
+					],
+					'register'    => [
 						'name' => 'Register',
 						'url'  => '',
 						'show' => 1,
 						'id'   => 'register',
 						'type' => 'register',
-					),
+					],
 				),
 			),
 			'shortcode' => 'thrive_login_form_shortcode',
@@ -351,7 +351,7 @@ class TCB_Login_Element_Handler {
 		switch ( $args['id'] ) {
 			case 'logout':
 				global $wp;
-				$data = wp_logout_url( home_url( add_query_arg( array(), $wp->request ) ) );
+				$data = wp_logout_url( home_url( add_query_arg( [], $wp->request ) ) );
 				break;
 			default;
 				break;
@@ -376,24 +376,24 @@ class TCB_Login_Element_Handler {
 	}
 
 	public static function get_default_settings() {
-		return array(
+		return [
 			'submit_action'                        => 'refresh',
 			'redirect_url'                         => '',
 			'success_message'                      => 'Success',
 			'post_register_action'                 => 'refresh',
 			'post_register_action.success_message' => 'Success',
 			'post_register_action.redirect_url'    => '',
-		);
+		];
 	}
 
 	public static function get_registration_form_default_settings() {
-		return array(
+		return [
 			'v'       => 1,
-			'apis'    => array(
+			'apis'    => [
 				'wordpress' => 'subscriber',
-			),
+			],
 			'captcha' => 0,
-		);
+		];
 	}
 
 	/**

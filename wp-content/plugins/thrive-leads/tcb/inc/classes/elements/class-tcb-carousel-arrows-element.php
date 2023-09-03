@@ -50,8 +50,8 @@ class TCB_Carousel_Arrows_Element extends TCB_Icon_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['icon']['disabled_controls']              = array( 'ToggleURL', 'link', 'RotateIcon' );
-		$components['layout']['disabled_controls']            = array(
+		$components['icon']['disabled_controls']              = [ 'ToggleURL', 'link', 'RotateIcon' ];
+		$components['layout']['disabled_controls']            = [
 			'margin-bottom',
 			'Width',
 			'Height',
@@ -61,11 +61,11 @@ class TCB_Carousel_Arrows_Element extends TCB_Icon_Element {
 			'Alignment',
 			'Position',
 			'Float',
-		);
+		];
 		$components['icon']['config']['Slider']['css_prefix'] = tcb_selection_root() . ' .tcb-carousel-arrow';
 
-		$components['scroll']    = array( 'hidden' => true );
-		$components['animation'] = array( 'hidden' => false );
+		$components['scroll']    = [ 'hidden' => true ];
+		$components['animation'] = [ 'hidden' => false ];
 
 		$components['carousel_arrows'] = $components['icon'];
 		unset( $components['icon'] );

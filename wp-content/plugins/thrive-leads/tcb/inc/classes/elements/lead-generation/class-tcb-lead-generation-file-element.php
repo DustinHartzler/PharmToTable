@@ -63,9 +63,9 @@ class TCB_Lead_Generation_File_Element extends TCB_ContentBox_Element {
 		       array(
 			       'lead_generation_file' => array(
 				       'order'   => 0,
-				       'options' => array(
+				       'options' => [
 					       'default_config' => FileUploadConfig::$defaults,
-				       ),
+				       ],
 				       'config'  => array(
 					       'required'   => array(
 						       'config'  => array(
@@ -74,7 +74,7 @@ class TCB_Lead_Generation_File_Element extends TCB_ContentBox_Element {
 						       ),
 						       'extends' => 'Switch',
 					       ),
-					       'ShowLabel'   => array(
+					       'ShowLabel'  => array(
 						       'config'  => array(
 							       'name'    => '',
 							       'label'   => __( 'Show label', 'thrive-cb' ),
@@ -98,7 +98,7 @@ class TCB_Lead_Generation_File_Element extends TCB_ContentBox_Element {
 						       'config' => array(
 							       'name'      => __( 'Max file size', 'thrive-cb' ),
 							       'maxlength' => 3,
-							       'um'        => array( 'MB' ),
+							       'um'        => [ 'MB' ],
 							       'min'       => 0,
 							       'max'       => wp_max_upload_size() / 1024 / 1024,
 							       'size'      => 'medium',

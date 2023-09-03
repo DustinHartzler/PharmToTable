@@ -34,27 +34,27 @@ class TCB_Countdown_Tile_Element extends TCB_Element_Abstract {
 	}
 
 	public function own_components() {
-		$cfg = array( 'css_prefix' => tcb_selection_root( false ), 'css_suffix' => array( ' span', ' .tcb-editable-label', ' .tcb-plain-text' ) );
+		$cfg = array( 'css_prefix' => tcb_selection_root( false ), 'css_suffix' => [ ' span', ' .tcb-editable-label', ' .tcb-plain-text' ] );
 
-		return array(
-			'layout'     => array(
-				'disabled_controls' => array( 'Display', 'Alignment', '.tve-advanced-controls', 'Width', 'Height' ),
-			),
-			'typography' => array(
-				'disabled_controls' => array( '.tve-advanced-controls', '.typography-button-toggle-controls', 'TextAlign' ),
-				'config'            => array(
+		return [
+			'layout'     => [
+				'disabled_controls' => [ 'Display', 'Alignment', '.tve-advanced-controls', 'Width', 'Height' ],
+			],
+			'typography' => [
+				'disabled_controls' => [ '.tve-advanced-controls', '.typography-button-toggle-controls', 'TextAlign' ],
+				'config'            => [
 					'TextStyle' => $cfg,
 					'FontColor' => $cfg,
 					'FontFace'  => $cfg,
-				),
-			),
-			'responsive' => array(
+				],
+			],
+			'responsive' => [
 				'hidden' => true,
-			),
-			'animation'  => array(
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
-		);
+			],
+		];
 	}
 
 

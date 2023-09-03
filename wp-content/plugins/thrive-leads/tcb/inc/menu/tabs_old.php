@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control" data-view="EditTabs"></div>
 			<div class="tve-control" data-view="TabBackground"></div>
 			<div class="tve-control" data-view="TabBorder"></div>
-			<div class="tve-advanced-controls extend-grey">
+			<div class="tve-advanced-controls">
 				<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>

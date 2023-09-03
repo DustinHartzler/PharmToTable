@@ -48,9 +48,9 @@ class Thrive_Leads_Cloud_Templates_APi extends TCB_Landing_Page_Cloud_Templates_
 	/**
 	 * get the template list
 	 *
+	 * @return array
 	 * @throws Exception if response data and success properties does not have expected values
 	 *
-	 * @return array
 	 */
 	public function getTemplateList( $exclude_multi_step = false ) {
 
@@ -64,16 +64,18 @@ class Thrive_Leads_Cloud_Templates_APi extends TCB_Landing_Page_Cloud_Templates_
 			'exclude_multi_step' => $exclude_multi_step ? '1' : '0',
 		);
 
+		$params = array_merge( $params, TD_TTW_Connection::get_instance()->get_connection_data() );
+
 		$response = $this->_request( $params, 2 );
 
 		$data = json_decode( $response, true );
 
 		if ( empty( $data['success'] ) ) {
-			throw new Exception( $data['error_message'] );
+			return [ 'error' => $data['error_message'] ];
 		}
 
 		if ( ! isset( $data['data'] ) ) {
-			throw new Exception( 'Could not fetch templates.' );
+			return [ 'error' => 'Could not fetch templates.' ];
 		}
 
 		$this->_validateReceivedHeader( $data );
@@ -149,6 +151,7 @@ class Thrive_Leads_Cloud_Templates_APi extends TCB_Landing_Page_Cloud_Templates_
 			'form_type'  => $this->form_type,
 			'multi_step' => (string) $this->multi_step,
 		);
+		$params = array_merge( $params, TD_TTW_Connection::get_instance()->get_connection_data() );
 
 		$body = $this->_request( $params, 2 );
 

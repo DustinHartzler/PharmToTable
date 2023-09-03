@@ -56,10 +56,10 @@ class Product_Result_Count extends \TCB_Element_Abstract {
 		$components['styles-templates']['hidden'] = true;
 
 		$components['typography'] = Main::get_general_typography_config();
-		
-		$components['typography']['disabled_controls'] = array_merge( $components['typography']['disabled_controls'], array( 'Alignment' ) );
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['typography']['disabled_controls'] = array_merge( $components['typography']['disabled_controls'], [ 'Alignment' ] );
+
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) ) {

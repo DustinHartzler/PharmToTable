@@ -68,7 +68,7 @@ class Form_Identifier_Data_Field extends \Thrive\Automator\Items\Data_Field {
 						$config['form_identifier'] = $form_identifier;
 						$post_title                = 'Form settings' . ( $lg->post_parent ? ' for content ' . $lg->post_parent : '' );
 						$lg_post->set_config( $config )
-						        ->save( $post_title, array( 'post_parent' => $lg->post_parent ) );
+						        ->save( $post_title, [ 'post_parent' => $lg->post_parent ] );
 					}
 
 					$form_id         = $lg_post->form_identifier;

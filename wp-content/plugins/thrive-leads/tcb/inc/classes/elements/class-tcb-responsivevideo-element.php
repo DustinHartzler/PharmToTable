@@ -83,13 +83,13 @@ class TCB_Responsivevideo_Element extends TCB_Element_Abstract {
 							'default' => 'rv_style_none',
 						),
 					),
-					'ExternalFields'  => array(
-						'config'  => array(
+					'ExternalFields'  => [
+						'config'  => [
 							'key'               => 'video',
 							'shortcode_element' => '.tcb-responsive-video',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
+					],
 					'performance'     => array(
 						'config'  => array(
 							'name'  => '',
@@ -125,24 +125,66 @@ class TCB_Responsivevideo_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-				),
-			),
-			'typography'      => array( 'hidden' => true ),
-			'background'      => array( 'hidden' => true ),
-			'shadow'          => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'animation'       => array( 'hidden' => true ),
-			'layout'          => array(
-				'config'            => array(
-					'Width' => array(
-						'important' => true,
+					'responsive'       => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Responsive', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
+					),
+					'autoplay'       => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Autoplay', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
+					),
+					'preload'       => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Preload', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
+					),
+					'loop'       => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Loop', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
+					),
+					'muted'       => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Muted', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
+					),
+					'lazy_load'       => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Lazy load', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
 					),
 				),
-				'disabled_controls' => array( 'Overflow', 'ScrollStyle' ),
 			),
+			'typography'      => [ 'hidden' => true ],
+			'background'      => [ 'hidden' => true ],
+			'shadow'          => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'animation'       => [ 'hidden' => true ],
+			'layout'          => [
+				'config'            => [
+					'Width' => [
+						'important' => true,
+					],
+				],
+				'disabled_controls' => [ 'Overflow', 'ScrollStyle' ],
+			],
 		);
 	}
 
@@ -161,12 +203,12 @@ class TCB_Responsivevideo_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'video_element',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425782-how-to-use-the-video-element',
-			),
-		);
+			],
+		];
 	}
 }

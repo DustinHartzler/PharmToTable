@@ -68,7 +68,7 @@ class TCB_Post_Date_Element extends TCB_Post_List_Sub_Element_Abstract {
 		$components['typography']['config']['FontColor']['css_prefix'] = $prefix_config . ' ';
 		$components['typography']['config']['FontSize']['css_prefix']  = $prefix_config . ' ';
 
-		$components['responsive'] = array( 'hidden' => true );
+		$components['responsive'] = [ 'hidden' => true ];
 
 		$date_format_options = TCB_Utils::get_post_date_format_options( 'date' );
 		$time_format_options = TCB_Utils::get_post_date_format_options( 'time' );
@@ -101,13 +101,13 @@ class TCB_Post_Date_Element extends TCB_Post_List_Sub_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'DateFormatInput'  => array(
-						'config'  => array(
+					'DateFormatInput'  => [
+						'config'  => [
 							'label'       => '' /* declared in the component html */,
 							'extra_attrs' => '',
-						),
+						],
 						'extends' => 'LabelInput',
-					),
+					],
 					'ShowTimeFormat'   => array(
 						'config'  => array(
 							'name'    => '',
@@ -124,13 +124,13 @@ class TCB_Post_Date_Element extends TCB_Post_List_Sub_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'TimeFormatInput'  => array(
-						'config'  => array(
+					'TimeFormatInput'  => [
+						'config'  => [
 							'label'       => '' /* declared in the component html */,
 							'extra_attrs' => '',
-						),
+						],
 						'extends' => 'LabelInput',
-					),
+					],
 				),
 			),
 		) );

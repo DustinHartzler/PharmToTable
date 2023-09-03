@@ -67,25 +67,25 @@ class TCB_Contact_Form_Input_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		$prefix_config           = tcb_selection_root();
-		$controls_default_config = array(
-			'css_suffix' => array(
+		$controls_default_config = [
+			'css_suffix' => [
 				' input',
 				' input::placeholder',
 				' textarea',
 				' textarea::placeholder',
-			),
-		);
+			],
+		];
 
-		$tag_default_config = array(
-			'css_suffix' => array(
+		$tag_default_config = [
+			'css_suffix' => [
 				' input',
 				' textarea',
-			),
-		);
+			],
+		];
 
 		return array(
-			'typography'       => array(
-				'config' => array(
+			'typography'       => [
+				'config' => [
 					'FontSize'      => $controls_default_config,
 					'FontColor'     => $controls_default_config,
 					'TextAlign'     => $controls_default_config,
@@ -94,44 +94,44 @@ class TCB_Contact_Form_Input_Element extends TCB_Element_Abstract {
 					'FontFace'      => $controls_default_config,
 					'LineHeight'    => $controls_default_config,
 					'LetterSpacing' => $controls_default_config,
-				),
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'Display',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
+				],
+				'config'            => [
 					'MarginAndPadding' => $tag_default_config,
-				),
-			),
+				],
+			],
 			'borders'          => array(
 				'config' => array(
-					'Borders' => array_merge( array( 'css_prefix' => $prefix_config . ' ' ), $tag_default_config ),
-					'Corners' => array_merge( array( 'css_prefix' => $prefix_config . ' ' ), $tag_default_config ),
+					'Borders' => array_merge( [ 'css_prefix' => $prefix_config . ' ' ], $tag_default_config ),
+					'Corners' => array_merge( [ 'css_prefix' => $prefix_config . ' ' ], $tag_default_config ),
 				),
 			),
-			'animation'        => array(
+			'animation'        => [
 				'hidden' => true,
-			),
-			'background'       => array(
-				'config' => array(
+			],
+			'background'       => [
+				'config' => [
 					'ColorPicker' => $tag_default_config,
 					'PreviewList' => $tag_default_config,
-				),
-			),
-			'shadow'           => array(
+				],
+			],
+			'shadow'           => [
 				'config' => $tag_default_config,
-			),
-			'responsive'       => array(
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 }

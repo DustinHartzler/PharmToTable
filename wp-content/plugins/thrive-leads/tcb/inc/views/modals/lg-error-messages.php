@@ -21,7 +21,7 @@
 	</div>
 	<div class="control-grid" id="tcb-lg-signup-error-editor" style="display: none;">
 		<div>
-			<?php wp_editor( '', 'tcb_lg_error', array( 'quicktags' => false, 'media_buttons' => false ) ); ?>
+			<?php wp_editor( '', 'tcb_lg_error', [ 'quicktags' => false, 'media_buttons' => false ] ); ?>
 		</div>
 	</div>
 </div>

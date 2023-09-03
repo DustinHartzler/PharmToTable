@@ -39,7 +39,7 @@ class TCB_Logo_Element extends TCB_Image_Element {
 	 */
 	public function html() {
 		/* by default, when added to the page, the logo has id = 0 ( which is the first default placeholder ) */
-		return TCB_Logo::render_logo( array( 'data-id-d' => 0 ) );
+		return TCB_Logo::render_logo( [ 'data-id-d' => 0 ] );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class TCB_Logo_Element extends TCB_Image_Element {
 		unset( $components['image-effects'] );
 
 		/* remove hyperlink */
-		$components['animation'] = array( 'hidden' => true );
+		$components['animation'] = [ 'hidden' => true ];
 
 		/* add the logo control */
 		$components[ TCB_Logo::COMPONENT ] = array(
@@ -65,7 +65,7 @@ class TCB_Logo_Element extends TCB_Image_Element {
 						'min'       => '20',
 						'max'       => '1024',
 						'label'     => __( 'Size', 'thrive-cb' ),
-						'um'        => array( 'px', '%' ),
+						'um'        => [ 'px', '%' ],
 						'css'       => 'width',
 						'important' => true,
 					),
@@ -103,10 +103,10 @@ class TCB_Logo_Element extends TCB_Image_Element {
 					'extends' => 'LabelInput',
 				),
 			),
-			'disabled_controls' => array(
+			'disabled_controls' => [
 				'Overflow',
 				'ScrollStyle',
-			),
+			],
 		);
 
 		return $components;
@@ -118,12 +118,12 @@ class TCB_Logo_Element extends TCB_Image_Element {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'logo',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425848-how-to-use-the-logo-element',
-			),
-		);
+			],
+		];
 	}
 }

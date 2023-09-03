@@ -60,7 +60,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 		$prefix_config = array( 'css_prefix' => tcb_selection_root( false ) . ' .thrv-content-box ' );
 
 		$content_box = array(
-			'contentbox' => array(
+			'contentbox'          => array(
 				'config' => array(
 					'ContentPalettes'  => [
 						'config'  => [],
@@ -149,7 +149,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'borders'    => [
+			'borders'             => [
 				'config' => [
 					'Borders' => [
 						'to'        => '>.tve-content-box-background',
@@ -160,7 +160,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 					],
 				],
 			],
-			'layout'     => [
+			'layout'              => [
 				'config'            => [
 					'Position' => [
 						'important'          => true,
@@ -173,22 +173,22 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 				],
 				'disabled_controls' => [],
 			],
-			'background' => [
+			'background'          => [
 				'config' => [
 					'to' => '>.tve-content-box-background',
 				],
 			],
-			'shadow'     => [
+			'shadow'              => [
 				'config' => [
 					'to' => '>.tve-content-box-background',
 				],
 			],
-			'decoration' => [
+			'decoration'          => [
 				'config' => [
 					'to' => '>.tve-content-box-background',
 				],
 			],
-			'typography' => [
+			'typography'          => [
 				'disabled_controls' => [],
 				'config'            => [
 					'to'             => '> .tve-cb',
@@ -199,7 +199,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 					'ParagraphStyle' => [ 'hidden' => false ],
 				],
 			],
-			'scroll'     => [
+			'scroll'              => [
 				'hidden' => false,
 			],
 			'conditional-display' => [

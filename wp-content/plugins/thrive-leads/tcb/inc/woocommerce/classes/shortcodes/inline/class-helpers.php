@@ -28,11 +28,49 @@ class Helpers {
 	 * @return string
 	 */
 	public static function render_price( $price_type, $product, $attr ) {
-		$price = (float) call_user_func( array( $product, "get_{$price_type}_price" ) );
+		$add_currency  = ! empty( $attr[ Main::PRICE_INCLUDE_CURRENCY_SYMBOL ] );
+		$show_decimals = ! empty( $attr[ Main::PRICE_SHOW_DECIMALS ] );
 
-		$price = static::get_formatted_price( $price, ! empty( $attr[ Main::PRICE_SHOW_DECIMALS ] ) );
+		if ( $product instanceof \WC_Product_Variable ) {
+			$prices = $product->get_variation_prices();
 
-		if ( ! empty( $attr[ Main::PRICE_INCLUDE_CURRENCY_SYMBOL ] ) ) {
+			if ( empty( $prices["{$price_type}_price"] ) ) {
+				$price = '';
+			} else {
+				$min_price = min( $prices["{$price_type}_price"] );
+				$max_price = max( $prices["{$price_type}_price"] );
+
+				if ( $min_price === $max_price ) {
+					$price = static::prepare_price( $min_price, $add_currency, $show_decimals );
+				} else {
+					$price = static::prepare_price( $min_price, $add_currency, $show_decimals ) . ' – ' .
+					         static::prepare_price( $max_price, $add_currency, $show_decimals );
+				}
+			}
+		} else {
+			$price = call_user_func( [ $product, "get_{$price_type}_price" ] );
+
+			$price = static::prepare_price( $price, $add_currency, $show_decimals );
+		}
+
+		return $price;
+	}
+
+	/**
+	 * Prepare price for display - add currency and maybe show decimals
+	 *
+	 * @param $price
+	 * @param $add_currency
+	 * @param $show_decimals
+	 *
+	 * @return string
+	 */
+	private static function prepare_price( $price, $add_currency = true, $show_decimals = true ) {
+		$price = (float) $price;
+
+		$price = static::get_formatted_price( $price, $show_decimals );
+
+		if ( $add_currency ) {
 			$price = static::add_currency_symbol( $price );
 		}
 
@@ -104,39 +142,39 @@ class Helpers {
 		return array(
 			'product_description' => array(
 				'name'     => __( 'Product short description', 'thrive-cb' ),
-				'controls' => array(),
+				'controls' => [],
 				'type'     => '',
 			),
 			'product_category'    => array(
 				'name'     => __( 'Product category', 'thrive-cb' ),
-				'controls' => array(),
+				'controls' => [],
 				'type'     => '',
 			),
 			'product_tags'        => array(
 				'name'     => __( 'Product tags', 'thrive-cb' ),
-				'controls' => array(),
+				'controls' => [],
 				'type'     => '',
 			),
 			'_sale_price'         => array(
 				'name'     => __( 'Product sale price', 'thrive-cb' ),
-				'controls' => static::get_control_config( array(
+				'controls' => static::get_control_config( [
 					Main::PRICE_INCLUDE_CURRENCY_SYMBOL,
 					Main::PRICE_SHOW_DECIMALS,
-				) ),
+				] ),
 				'type'     => 'price',
 			),
 			'_regular_price'      => array(
 				'name'     => __( 'Product regular price', 'thrive-cb' ),
-				'controls' => static::get_control_config( array(
+				'controls' => static::get_control_config( [
 					Main::PRICE_ON_SALE_EFFECT,
 					Main::PRICE_INCLUDE_CURRENCY_SYMBOL,
 					Main::PRICE_SHOW_DECIMALS,
-				) ),
+				] ),
 				'type'     => 'price',
 			),
 			'_wc_average_rating'  => array(
 				'name'     => __( 'Product average rating', 'thrive-cb' ),
-				'controls' => array(),
+				'controls' => [],
 				'type'     => '',
 			),
 		);
@@ -150,7 +188,7 @@ class Helpers {
 	 * @return array
 	 */
 	public static function get_control_config( $shortcode_keys ) {
-		$config = array();
+		$config = [];
 
 		foreach ( $shortcode_keys as $shortcode_key ) {
 			switch ( $shortcode_key ) {

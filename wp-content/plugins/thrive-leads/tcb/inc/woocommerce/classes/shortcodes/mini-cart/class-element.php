@@ -80,7 +80,7 @@ class Element extends \TCB_Element_Abstract {
 						'config'  => array(
 							'min'   => '10',
 							'max'   => '100',
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 							'label' => __( 'Size', 'thrive-cb' ),
 						),
 						'extends' => 'Slider',
@@ -174,9 +174,9 @@ class Element extends \TCB_Element_Abstract {
 					),
 				),
 			),
-			'styles-templates' => array( 'hidden' => true ),
-			'layout'           => array( 'disabled_controls' => array( 'Alignment', 'Display', 'Overflow', 'ScrollStyle' ) ),
-			'animation'        => array( 'disabled_controls' => array( '.anim-popup', '.anim-link' ) ),
+			'styles-templates' => [ 'hidden' => true ],
+			'layout'           => [ 'disabled_controls' => [ 'Alignment', 'Display', 'Overflow', 'ScrollStyle' ] ],
+			'animation'        => [ 'disabled_controls' => [ '.anim-popup', '.anim-link' ] ],
 		);
 
 		$general_components = $this->general_components();
@@ -184,11 +184,11 @@ class Element extends \TCB_Element_Abstract {
 		$components['typography'] = $general_components['typography'];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
-			if ( in_array( $control, array( 'css_suffix', 'css_prefix' ) ) ) {
+			if ( in_array( $control, [ 'css_suffix', 'css_prefix' ] ) ) {
 				continue;
 			}
 
-			$components['typography']['config'][ $control ]['css_suffix'] = array( ' .tcb-woo-mini-cart-amount', ' .tcb-woo-mini-cart-text' );
+			$components['typography']['config'][ $control ]['css_suffix'] = [ ' .tcb-woo-mini-cart-amount', ' .tcb-woo-mini-cart-text' ];
 		}
 
 		return $components;

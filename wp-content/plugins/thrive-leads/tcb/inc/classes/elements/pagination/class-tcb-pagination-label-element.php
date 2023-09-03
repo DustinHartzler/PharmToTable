@@ -44,17 +44,17 @@ class TCB_Pagination_Label_Element extends TCB_Element_Abstract {
 				'Format' => array(
 					'config'  => array(
 						'name'    => __( 'Format', 'thrive-cb' ),
-						'options' => array(
+						'options' => [
 							'pages' => 'Page 1 of 8',
 							'posts' => 'Showing 1-15 of 365',
-						),
+						],
 					),
 					'extends' => 'Select',
 				),
 			),
 		);
 
-		$pagination_label_class = 'tcb-pagination-label-content';
+		$pagination_label_class                           = 'tcb-pagination-label-content';
 		$components['typography']['config']['css_suffix'] = ' .' . $pagination_label_class;
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
@@ -74,11 +74,11 @@ class TCB_Pagination_Label_Element extends TCB_Element_Abstract {
 		$components['shadow']['config']['css_prefix'] = $prefix_config;
 		$components['shadow']['config']['important']  = true;
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment' ];
 
-		$components['animation']        = array( 'hidden' => true );
-		$components['responsive']       = array( 'hidden' => true );
-		$components['styles-templates'] = array( 'hidden' => true );
+		$components['animation']        = [ 'hidden' => true ];
+		$components['responsive']       = [ 'hidden' => true ];
+		$components['styles-templates'] = [ 'hidden' => true ];
 
 		return $components;
 	}

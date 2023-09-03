@@ -36,12 +36,12 @@ class TCB_Pagination_Navigation_Container_Element extends TCB_Element_Abstract {
 	public function own_components() {
 		$components = parent::general_components();
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment' ];
 
-		$components['typography']       = array( 'hidden' => true );
-		$components['animation']        = array( 'hidden' => true );
-		$components['responsive']       = array( 'hidden' => true );
-		$components['styles-templates'] = array( 'hidden' => true );
+		$components['typography']       = [ 'hidden' => true ];
+		$components['animation']        = [ 'hidden' => true ];
+		$components['responsive']       = [ 'hidden' => true ];
+		$components['styles-templates'] = [ 'hidden' => true ];
 
 		return $components;
 	}

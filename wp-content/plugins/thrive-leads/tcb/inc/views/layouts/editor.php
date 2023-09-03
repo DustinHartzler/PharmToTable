@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</span>
 		<?php endif; ?>
 
-		<div id="tcb-top-nav-list" class="<?php echo in_array( get_post_type(), array( 'post', 'page' ) ) ? 'tve-has-post-options' : '' ?>"></div>
+		<div id="tcb-top-nav-list" class="<?php echo in_array( get_post_type(), [ 'post', 'page' ] ) ? 'tve-has-post-options' : '' ?>"></div>
 	</div>
 
 	<div class="tcb-relative">

@@ -42,7 +42,7 @@ class TCB_Countdown_Label_Element extends TCB_Element_Abstract {
 
 		return array(
 			'text'       => array(
-				'disabled_controls' => array( '.tve-advanced-controls', ),
+				'disabled_controls' => [ '.tve-advanced-controls', ],
 				'config'            => array(
 					'FontSize'       => array(
 						'config'  => array(
@@ -50,16 +50,16 @@ class TCB_Countdown_Label_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Font Size', 'thrive-cb' ),
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'fontSize',
 						),
 						'extends' => 'Slider',
 					),
 					'TextStyle'      => array(
 						'css_prefix' => tcb_selection_root() . ' ',
-						'config'     => array(
+						'config'     => [
 							'important' => true,
-						),
+						],
 					),
 					'LineHeight'     => array(
 						'config'  => array(
@@ -67,7 +67,7 @@ class TCB_Countdown_Label_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Line Height', 'thrive-cb' ),
-							'um'      => array( 'em', 'px' ),
+							'um'      => [ 'em', 'px' ],
 							'css'     => 'lineHeight',
 						),
 						'extends' => 'Slider',
@@ -78,7 +78,7 @@ class TCB_Countdown_Label_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Letter Spacing', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'letterSpacing',
 						),
 						'extends' => 'Slider',
@@ -87,9 +87,9 @@ class TCB_Countdown_Label_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Font Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -97,28 +97,28 @@ class TCB_Countdown_Label_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Font Highlight', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
-					'FontFace'       => array(
-						'config'  => array(
+					'FontFace'       => [
+						'config'  => [
 							'template' => 'controls/font-manager',
 							'inline'   => true,
-						),
+						],
 						'extends' => 'FontManager',
-					),
+					],
 				),
 			),
-			'typography' => array( 'hidden' => true ),
-			'animation'  => array(
+			'typography' => [ 'hidden' => true ],
+			'animation'  => [
 				'hidden' => true,
-			),
-			'layout'     => array(
-				'disabled_controls' => array( 'Display', 'Alignment', '.tve-advanced-controls', 'Height' ),
-			),
+			],
+			'layout'     => [
+				'disabled_controls' => [ 'Display', 'Alignment', '.tve-advanced-controls', 'Height' ],
+			],
 		);
 	}
 }

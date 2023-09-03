@@ -1344,3 +1344,14 @@ function tve_dash_delete_support_user() {
 		wp_delete_user( $user->ID );
 	}
 }
+
+/**
+ * Get the max upload size in MB
+ *
+ * @param $with_suffix
+ *
+ * @return string
+ */
+function tve_get_max_upload_size( $with_suffix = false ) {
+	return number_format_i18n( wp_max_upload_size() / MB_IN_BYTES ) . ( $with_suffix ? 'MB' : '' );
+}

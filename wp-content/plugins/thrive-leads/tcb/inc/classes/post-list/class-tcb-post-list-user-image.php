@@ -46,7 +46,7 @@ class TCB_Post_List_User_Image {
 
 		if ( ! empty( $this->user_id ) ) {
 
-			$avatar_data = get_avatar_data( $this->user_id, array( 'size' => 256 ) );
+			$avatar_data = get_avatar_data( $this->user_id, [ 'size' => 256 ] );
 
 			if ( ! empty( $avatar_data['url'] ) && ! is_wp_error( $avatar_data['url'] ) ) {
 				$url = $avatar_data['url'];
@@ -87,16 +87,16 @@ class TCB_Post_List_User_Image {
 			preg_match( '/src=\'([^\']*)\'/m', $avatar, $matches );
 
 			if ( empty( $matches[1] ) ) {
-				$avatar_url = get_avatar_url( $this->user_id, array( 'size' => 256 ) );
+				$avatar_url = get_avatar_url( $this->user_id, [ 'size' => 256 ] );
 			} else {
 				$avatar_url = html_entity_decode( $matches[1] );
 			}
 
 			/* if we're in the editor, append a dynamic flag at the end so we can recognize that the URL is dynamic */
 			if ( TCB_Utils::in_editor_render( true ) ) {
-				$avatar_url = add_query_arg( array(
+				$avatar_url = add_query_arg( [
 					'dynamic_user' => 1,
-				), $avatar_url );
+				], $avatar_url );
 			}
 		}
 

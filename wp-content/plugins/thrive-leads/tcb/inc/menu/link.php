@@ -21,7 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control" data-view="ToggleColor" data-css_class=""></div>
 			<div class="color-target">
 				<div></div>
-				<div class="tve-control pb-10" data-view="FontColor"></div>
+				<div class="tve-control btn-group-light hide-states" data-view="ToggleColorControls"></div>
+				<div class="tve-control tcb-color-toggle-element tcb-text-solid-color pb-10" data-view="FontColor"></div>
+				<div class="tve-control tcb-color-toggle-element tcb-text-gradient-color" data-view="FontGradient"></div>
+				<div class="tve-control tcb-color-toggle-element tcb-text-gradient-color pb-10" data-view="FontBaseColor"></div>
 			</div>
 			<div class="tve-control" data-view="BgColor"></div>
 			<div class="tve-control" data-view="ToggleFont" data-css_class=""></div>
@@ -35,12 +38,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="tve-control tcb-size-set tcb-text-font-size pb-10" data-view="FontSize"></div>
 			</div>
 			<div class="tve-control" data-view="TextStyle"></div>
-			<hr>
-			<div class="tve-control hide-states" data-view="Effect"></div>
-			<div class="tve-control scrolled" data-key="EffectPicker" data-initializer="effectPicker"></div>
-			<div class="eff-settings">
-				<div class="tve-control hide-states eff-setting eff-color" data-view="EffectColor"></div>
-				<div class="tve-control hide-states pb-10 eff-setting eff-speed" data-view="EffectSpeed"></div>
+			<div class="tcb-effect-wrapper">
+				<hr>
+				<div class="tve-control hide-states" data-view="Effect"></div>
+				<div class="tve-control scrolled" data-key="EffectPicker" data-initializer="effectPicker"></div>
+				<div class="eff-settings">
+					<div class="tve-control hide-states eff-setting eff-color" data-view="EffectColor"></div>
+					<div class="tve-control hide-states pb-10 eff-setting eff-speed" data-view="EffectSpeed"></div>
+				</div>
 			</div>
 			<hr class="hide-states">
 			<div class="tcb-text-center hide-states">

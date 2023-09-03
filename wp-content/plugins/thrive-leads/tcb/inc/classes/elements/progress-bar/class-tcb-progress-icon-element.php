@@ -54,7 +54,7 @@ class TCB_Progress_Icon_Element extends TCB_Icon_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['icon']['disabled_controls'] = array( 'ToggleURL', 'link' );
+		$components['icon']['disabled_controls'] = [ 'ToggleURL', 'link' ];
 
 		return $components;
 	}

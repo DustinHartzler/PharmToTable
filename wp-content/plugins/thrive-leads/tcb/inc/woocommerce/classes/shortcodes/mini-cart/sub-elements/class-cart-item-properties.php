@@ -38,11 +38,11 @@ class Cart_Item_Properties extends Abstract_Sub_Element {
 		$components = $this->_components();
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
-			if ( in_array( $control, array( 'css_suffix', 'css_prefix' ) ) ) {
+			if ( in_array( $control, [ 'css_suffix', 'css_prefix' ] ) ) {
 				continue;
 			}
 			/* make sure typography elements also apply on the link inside the tag */
-			$components['typography']['config'][ $control ]['css_suffix'] = array( '', ' dt', 'span', 'p' );
+			$components['typography']['config'][ $control ]['css_suffix'] = [ '', ' dt', 'span', 'p' ];
 		}
 
 		return $components;

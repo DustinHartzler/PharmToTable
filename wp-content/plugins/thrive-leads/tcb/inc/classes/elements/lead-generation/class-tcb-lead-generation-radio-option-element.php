@@ -50,12 +50,12 @@ class TCB_Lead_Generation_Radio_Option_Element extends TCB_Element_Abstract {
 		return array(
 			'lead_generation_radio_option' => array(
 				'config' => array(
-					'RadioPalettes' => array(
-						'config'  => array(),
-						'extends' => 'Palettes',
-						'important'  => apply_filters( 'tcb_lg_color_inputs_important', true ),
+					'RadioPalettes'     => array(
+						'config'    => [],
+						'extends'   => 'Palettes',
+						'important' => apply_filters( 'tcb_lg_color_inputs_important', true ),
 					),
-					'LabelAsValue'     => array(
+					'LabelAsValue'      => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Use label as value', 'thrive-cb' ),
@@ -64,13 +64,13 @@ class TCB_Lead_Generation_Radio_Option_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'InputValue'       => array(
+					'InputValue'        => array(
 						'config'  => array(
 							'label' => __( 'Value', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
-					'SetAsDefault'     => array(
+					'SetAsDefault'      => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Set as default', 'thrive-cb' ),
@@ -78,27 +78,27 @@ class TCB_Lead_Generation_Radio_Option_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'RadioSize'        => array(
+					'RadioSize'         => array(
 						'css_suffix' => ' .tve-checkmark',
 						'config'     => array(
 							'default' => '20',
 							'min'     => '0',
 							'max'     => '30',
 							'label'   => __( 'Radio Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'extends'    => 'Slider',
 					),
-					'StyleChange'      => array(
+					'StyleChange'       => array(
 						'config' => array(
 							'label'   => __( 'Radio Style', 'thrive-cb' ),
-							'preview' => array(
+							'preview' => [
 								'key'   => '',
 								'label' => 'default',
-							),
+							],
 						),
 					),
-					'RadioStylePicker' => array(
+					'RadioStylePicker'  => array(
 						'config' => array(
 							'label'   => __( 'Choose radio style', 'thrive-cb' ),
 							'items'   => array(
@@ -114,66 +114,66 @@ class TCB_Lead_Generation_Radio_Option_Element extends TCB_Element_Abstract {
 							'default' => 'no_style',
 						),
 					),
-					'CustomAnswerInput' => array(
-						'config'  => array(
-							'full-width'  => true,
-						),
+					'CustomAnswerInput' => [
+						'config'  => [
+							'full-width' => true,
+						],
 						'extends' => 'LabelInput',
-					),
+					],
 				),
 			),
 
-			'typography' => array(
-				'config' => array(
-					'FontColor'     => array(
+			'typography' => [
+				'config' => [
+					'FontColor'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'important'  => true,
-					),
-					'TextAlign'     => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'css_prefix' => $prefix_config,
-						'important'  => true,
-					),
-					'FontSize'      => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => ' .tve-input-option-text',
 						'important'  => true,
-					),
-					'FontFace'      => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'LineHeight'    => [
+						'css_suffix' => ' .tve-input-option-text',
+						'important'  => true,
+					],
+					'FontFace'      => [
+						'css_suffix' => ' .tve-input-option-text',
+						'important'  => true,
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+					],
+					'TextTransform' => [
+						'css_suffix' => ' .tve-input-option-text',
+						'css_prefix' => $prefix_config,
+						'important'  => true,
+					],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'margin',
 					'.tve-advanced-controls',
 					'Alignment',
 					'Display',
-				),
-			),
-			'animation'  => array(
+				],
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 }

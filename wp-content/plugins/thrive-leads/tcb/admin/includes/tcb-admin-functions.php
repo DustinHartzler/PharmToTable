@@ -12,7 +12,7 @@
 function tcb_admin_get_localization() {
 	/** @var TCB_Symbols_Taxonomy $tcb_symbol_taxonomy */
 	global $tcb_symbol_taxonomy;
-	$terms = get_terms( array( 'slug' => array( 'headers', 'footers' ) ) );
+	$terms = get_terms( [ 'slug' => [ 'headers', 'footers' ] ] );
 	$terms = array_map( function ( $term ) {
 		return $term->term_id;
 	}, $terms );
@@ -33,7 +33,7 @@ function tcb_admin_get_localization() {
 		'symbols_tax_terms'  => $tcb_symbol_taxonomy->get_symbols_tax_terms(),
 		'sections_tax_terms' => $tcb_symbol_taxonomy->get_symbols_tax_terms( true ),
 		'default_terms'      => $tcb_symbol_taxonomy->get_default_terms(),
-		'symbols_number'     => count( tcb_elements()->element_factory( 'symbol' )->get_all( array( 'category__not_in' => $terms ) ) ),
+		'symbols_number'     => count( tcb_elements()->element_factory( 'symbol' )->get_all( [ 'category__not_in' => $terms ] ) ),
 		'symbols_dash'       => admin_url( 'admin.php?page=tcb_admin_dashboard&tab_selected=symbol#templatessymbols' ),
 	);
 }

@@ -26,10 +26,10 @@ $widgets = tcb_elements()->get_external_widgets();
 		<?php foreach ( $widgets as $widget ) : ?>
 			<div id="<?php echo esc_attr( 'widget_' . $widget->id_base ); ?>" class="widget-form" data-name="<?php echo esc_attr( $widget->name ); ?>">
 				<?php
-				echo tcb_template( 'widget-form.php', array( // phpcs:ignore
+				echo tcb_template( 'widget-form.php', [ // phpcs:ignore
 					'widget'    => $widget,
-					'form_data' => array(),
-				), true );
+					'form_data' => [],
+				], true );
 				?>
 			</div>
 		<?php endforeach; ?>

@@ -59,24 +59,24 @@ class TCB_Button_Group_Item_Element extends TCB_Button_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['button']['disabled_controls']               = array(
+		$components['button']['disabled_controls']               = [
 			'.tve-control[data-key="style"]',
 			'.tcb-button-link-container',
-		);
-		$components['animation']                                 = array(
+		];
+		$components['animation']                                 = [
 			'hidden' => true,
-		);
-		$components['shared-styles']                             = array(
+		];
+		$components['shared-styles']                             = [
 			'hidden' => true,
-		);
-		$components['layout']['disabled_controls']               = array(
+		];
+		$components['layout']['disabled_controls']               = [
 			'Alignment',
 			'.tve-advanced-controls',
 			'hr',
-		);
+		];
 		$components['borders']['config']['Borders']['important'] = true;
 		$components['borders']['config']['Corners']['important'] = true;
-		$components['scroll'] = [ 'hidden' => true ];
+		$components['scroll']                                    = [ 'hidden' => true ];
 
 		return $components;
 	}

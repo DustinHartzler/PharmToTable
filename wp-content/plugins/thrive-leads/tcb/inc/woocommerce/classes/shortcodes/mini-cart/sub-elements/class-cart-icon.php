@@ -51,7 +51,7 @@ class Cart_Icon extends Abstract_Sub_Element {
 					'config'     => array(
 						'min'   => '1',
 						'max'   => '100',
-						'um'    => array( 'px' ),
+						'um'    => [ 'px' ],
 						'label' => __( 'Size', 'thrive-cb' ),
 					),
 					'extends'    => 'Slider',

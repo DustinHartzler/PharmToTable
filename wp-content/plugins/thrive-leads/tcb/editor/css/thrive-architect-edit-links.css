@@ -102,3 +102,10 @@
     width: 30px;
     height: 30px;
 }
+.tve-license-warning .thrive-architect-admin-icon {
+    background: url('../../thrive-dashboard/css/images/circle-orange-transparent.png') 0 center / 30px no-repeat;
+}
+
+.tve-license-warning-red .thrive-architect-admin-icon {
+    background: url('../../thrive-dashboard/css/images/circle-red-transparent.png') 0 center / 30px no-repeat;
+}

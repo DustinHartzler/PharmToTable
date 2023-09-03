@@ -65,11 +65,11 @@ class TCB_Post_Tags_Element extends TCB_Post_List_Sub_Element_Abstract {
 		$components = parent::own_components();
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
-			if ( in_array( $control, array( 'css_suffix', 'css_prefix' ) ) ) {
+			if ( in_array( $control, [ 'css_suffix', 'css_prefix' ] ) ) {
 				continue;
 			}
 			/* make sure typography elements also apply on the link inside the tag */
-			$components['typography']['config'][ $control ]['css_suffix'] = array( ' a', '' );
+			$components['typography']['config'][ $control ]['css_suffix'] = [ ' a', '' ];
 		}
 
 		return $components;

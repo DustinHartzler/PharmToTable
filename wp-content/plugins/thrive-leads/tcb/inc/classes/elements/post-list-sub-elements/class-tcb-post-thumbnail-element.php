@@ -60,24 +60,24 @@ class TCB_Post_Thumbnail_Element extends TCB_Post_List_Sub_Element_Abstract {
 	 */
 	public function own_components() {
 		return array(
-			'animation'        => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'shadow'           => array(
-				'config' => array(
+			'animation'        => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
+			'shadow'           => [
+				'config' => [
 					/* only the drop-shadow makes sense for images, disable the rest */
-					'disabled_controls' => array( 'inner', 'text' ),
+					'disabled_controls' => [ 'inner', 'text' ],
 					/* apply shadows on the image and not on the container */
 					'css_suffix'        => ' img',
-				),
-			),
-			'borders'          => array(
-				'config' => array(
+				],
+			],
+			'borders'          => [
+				'config' => [
 					/* apply borders on the image and not on the container */
 					'css_suffix' => ' img',
-				),
-			),
-			'typography'       => array( 'hidden' => true ),
-			'background'       => array( 'hidden' => true ),
+				],
+			],
+			'typography'       => [ 'hidden' => true ],
+			'background'       => [ 'hidden' => true ],
 			'post_thumbnail'   => array(
 				'config' => array(
 					'type_url'     => array(
@@ -148,7 +148,7 @@ class TCB_Post_Thumbnail_Element extends TCB_Post_List_Sub_Element_Abstract {
 							'min'     => '20',
 							'max'     => '1024',
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'width',
 						),
 					),
@@ -163,15 +163,15 @@ class TCB_Post_Thumbnail_Element extends TCB_Post_List_Sub_Element_Abstract {
 	 * @return array
 	 */
 	public static function get_size_options() {
-		$labels = array();
+		$labels = [];
 
 		$sizes = TCB_Post_List_Featured_Image::filter_available_sizes();
 
 		foreach ( $sizes as $key => $size ) {
-			$labels[] = array(
+			$labels[] = [
 				'name'  => $size,
 				'value' => $key,
-			);
+			];
 		}
 
 		return $labels;

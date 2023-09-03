@@ -20,7 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control tve-choose-icon gl-st-icon-toggle-2" data-view="IconPicker"></div>
 			<div class="tve-control" data-view="StylePicker" data-initializer="style"></div>
 		</div>
-		<div class="tve-control no-space gl-st-icon-toggle-1" data-view="ColorPicker"></div>
+		<div class="tve-control btn-group-light hide-states" data-view="ToggleColorControls"></div>
+		<div class="tve-control no-space gl-st-icon-toggle-1 tcb-color-toggle-element tcb-icon-solid-color" data-view="ColorPicker"></div>
+		<div class="tve-control tcb-color-toggle-element tcb-icon-gradient-color" data-view="GradientPicker"></div>
+		<div class="tve-control tcb-color-toggle-element tcb-icon-gradient-color" data-view="StyleColor"></div>
 		<div class="hide-states pt-10">
 			<div class="tve-control gl-st-icon-toggle-1" data-view="Slider"></div>
 			<div class="tve-control" data-view="RotateIcon"></div>

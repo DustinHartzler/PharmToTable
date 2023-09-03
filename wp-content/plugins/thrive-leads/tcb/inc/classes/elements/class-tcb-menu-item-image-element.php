@@ -68,15 +68,15 @@ class TCB_Menu_Item_Image_Element extends TCB_Image_Element {
 			$components['styles-templates'],
 			$components['responsive']
 		);
-		$components['layout']['disabled_controls']           = array(
+		$components['layout']['disabled_controls']           = [
 			'Width',
 			'Height',
 			'.tve-advanced-controls',
 			'Display',
 			'Alignment',
 			'padding',
-		);
-		$components['shadow']['config']['disabled_controls'] = array( 'text' );
+		];
+		$components['shadow']['config']['disabled_controls'] = [ 'text' ];
 		$components['menu_item_image']['config']             = array(
 			'ImagePicker'    => array(
 				'config' => array(
@@ -104,7 +104,7 @@ class TCB_Menu_Item_Image_Element extends TCB_Image_Element {
 					'forceMin' => '5',
 					'max'      => '200',
 					'label'    => __( 'Size', 'thrive-cb' ),
-					'um'       => array( 'px' ),
+					'um'       => [ 'px' ],
 				),
 				'extends' => 'Slider',
 			),
@@ -114,7 +114,7 @@ class TCB_Menu_Item_Image_Element extends TCB_Image_Element {
 					'min'     => '20',
 					'max'     => '200',
 					'label'   => __( 'Height', 'thrive-cb' ),
-					'um'      => array( 'px' ),
+					'um'      => [ 'px' ],
 					'css'     => 'width',
 				),
 				'extends' => 'Slider',
@@ -131,6 +131,6 @@ class TCB_Menu_Item_Image_Element extends TCB_Image_Element {
 	}
 
 	public function own_components() {
-		return array();
+		return [];
 	}
 }

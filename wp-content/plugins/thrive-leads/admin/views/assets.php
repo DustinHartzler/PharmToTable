@@ -81,6 +81,7 @@
 				</div>
 			</div>
 		</div>
+		<?php echo tvd_get_individual_plugin_license_message( new TL_Product() ); ?>
 		<div
 			id="asset-delivery-table-wrapper" <?php if ( ( $assets_data['wizard']['proprieties']['connections'] == 0 || $assets_data['wizard']['proprieties']['files'] == 0 || $assets_data['wizard']['proprieties']['template'] == 0 ) && $wizard == false ) {
 			echo 'style="display: none"';
@@ -100,8 +101,8 @@
 				<p>
 					<?php echo __( "You don't have any Asset Groups created yet. Click the 'Add new' button to create one.", 'thrive-leads' ) ?>
 				</p>
-				<a href="//fast.wistia.net/embed/iframe/09t999mxbt?popover=true"
-				   class="wistia-popover[height=450,playerColor=2bb914,width=800]"><img
+				<a data-source="6YbgAuOgbwc"
+				   class="tvd-open-video"><img
 						src="<?php echo TVE_LEADS_ADMIN_URL . "img/video-thumb-asset-groups.jpg" ?>"
 						alt=""/></a>
 			</div>
@@ -231,8 +232,8 @@
 						<p><?php echo __( 'Congratulations! Asset Delivery is now ready to go on this website.', 'thrive-leads' ); ?></p>
 						<div class="tvd-row">
 							<div class="tvd-col tvd-l8 tvd-offset-l2 tvd-m10 tvd-offset-m1">
-								<a class="tl-play-link wistia-popover[height=450,playerColor=2bb914,width=800] tvd-btn-flat tvd-btn-flat-blue tve-leads-asset-opt-in tvd-waves-effect"
-								   href="//fast.wistia.net/embed/iframe/t1r77tjnee?popover=true"><?php echo __( "Show Me How to Add Assets to Opt-in Forms", "thrive-cb" ) ?></a>
+								<a class="tl-play-link tvd-open-video tvd-btn-flat tvd-btn-flat-blue tve-leads-asset-opt-in tvd-waves-effect"
+								   data-source="yRQYt4JDJ-c"><?php echo __( "Show Me How to Add Assets to Opt-in Forms", "thrive-cb" ) ?></a>
 								<div class="tvd-v-spacer"></div>
 								<button
 									class="tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tve-leads-asset-dashboard"><?php echo __( "Continue to the Asset Delivery Dashboard", "thrive-cb" ) ?></button>

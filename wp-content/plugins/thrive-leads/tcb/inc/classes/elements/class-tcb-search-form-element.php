@@ -77,16 +77,16 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 		return array(
 			'search_form'      => array(
 				'config' => array(
-					'SearchPalette'  => array(
-						'config'  => array(),
+					'SearchPalette'  => [
+						'config'  => [],
 						'extends' => 'PalettesV2',
-					),
-					'PostTypes'      => array(
-						'config' => array(
+					],
+					'PostTypes'      => [
+						'config' => [
 							'sortable'  => false,
 							'clickable' => false,
-						),
-					),
+						],
+					],
 					'ButtonLayout'   => array(
 						'config'  => array(
 							'buttons' => array(
@@ -166,7 +166,7 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 							'default' => '1024',
 							'min'     => '100',
 							'label'   => __( 'Search field width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
@@ -177,7 +177,7 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '10',
 							'max'     => '150',
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'font-size',
 						),
 						'css_prefix' => tcb_selection_root() . ' ',
@@ -193,34 +193,34 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'shadow'           => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'typography'       => array(
+			'shadow'           => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'typography'       => [
 				'hidden' => true,
-			),
-			'animation'        => array(
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'padding-left',
 					'padding-right',
-				),
-			),
-			'borders'          => array(
-				'disabled_controls' => array(),
-				'config'            => array(
-					'Corners' => array(
+				],
+			],
+			'borders'          => [
+				'disabled_controls' => [],
+				'config'            => [
+					'Corners' => [
 						'overflow' => false,
-					),
-				),
-			),
+					],
+				],
+			],
 		);
 	}
 
@@ -230,13 +230,13 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'search_element',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425871-how-to-use-the-search-element',
-			),
-		);
+			],
+		];
 	}
 }
 

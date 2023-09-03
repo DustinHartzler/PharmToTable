@@ -83,7 +83,11 @@ class Css {
 			$css = '';
 		}
 
+		/* we want to keep the encoded open/close tag characters (they might be part of background SVGs) */
+		$css = str_replace( [ '%3C', '%3E' ], [ '[tcb-encoded-open-tag]', '[tcb-encoded-close-tag]' ], $css );
 		$css = sanitize_text_field( $css );
+		/* restore the encoded tag characters */
+		$css = str_replace( [ '[tcb-encoded-open-tag]', '[tcb-encoded-close-tag]' ], [ '%3C', '%3E' ], $css );
 
 		$css = tve_minify_css( $css );
 
@@ -392,7 +396,8 @@ class Css {
 		}, $css );
 
 		$css = preg_replace_callback( '/inset:([^;]*);/m', static function ( $matches ) {
-			$matched_values = explode( ' ', $matches[1] );
+			/* there are cases where 'inset:' comes with a space after ':' */
+			$matched_values = explode( ' ', ltrim( $matches[1] ) );
 
 			switch ( count( $matched_values ) ) {
 				case 4:

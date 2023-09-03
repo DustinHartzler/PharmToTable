@@ -56,7 +56,7 @@ class Product_Category_Text_Wrapper extends \TCB_Element_Abstract {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment' ];
 
 		$components['animation']['hidden']        = true;
 		$components['responsive']['hidden']       = true;

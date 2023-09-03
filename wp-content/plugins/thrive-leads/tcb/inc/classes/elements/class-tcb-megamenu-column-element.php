@@ -53,14 +53,14 @@ class TCB_Megamenu_Column_Element extends TCB_Element_Abstract {
 	public function general_components() {
 		$components = parent::general_components();
 		unset( $components['animation'], $components['typography'], $components['responsive'], $components['styles-templates'], $components['scroll'] );
-		$components['layout']['disabled_controls'] = array(
+		$components['layout']['disabled_controls'] = [
 			'margin',
 			'.tve-advanced-controls',
 			'Width',
 			'Height',
 			'Alignment',
 			'Display',
-		);
+		];
 
 		$components['megamenu_column'] = array(
 			'config' => array(

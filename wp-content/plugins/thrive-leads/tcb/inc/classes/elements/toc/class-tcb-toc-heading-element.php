@@ -46,6 +46,7 @@ class TCB_Toc_Heading_Element extends TCB_Element_Abstract {
 	public function expanded_state_apply_inline() {
 		return true;
 	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -66,34 +67,34 @@ class TCB_Toc_Heading_Element extends TCB_Element_Abstract {
 			$config['css_suffix'] = $config['css_prefix'] = '';
 		}
 
-		$components['typography']['disabled_controls'] = array(
+		$components['typography']['disabled_controls'] = [
 			'p_spacing',
 			'h1_spacing',
 			'h2_spacing',
 			'h3_spacing',
-		);
+		];
 
-		$components['typography']['config']['TextAlign'] = array_merge($components['typography']['config']['TextAlign'], array(
+		$components['typography']['config']['TextAlign'] = array_merge( $components['typography']['config']['TextAlign'], [
 			'property'     => 'justify-content',
-			'property_val' => array(
+			'property_val' => [
 				'left'    => 'flex-start',
 				'center'  => 'center',
 				'right'   => 'flex-end',
 				'justify' => 'space-evenly',
-			),
-		) );
+			],
+		] );
 
 		return array(
 			'toc_heading' => $components['typography'],
 			'layout'      => array_merge(
 				$components['layout'],
 				array(
-					'disabled_controls' => array( 'Width', 'Height', 'hr', 'Alignment', 'Display', '.tve-advanced-controls' ),
-					'config'            => array(
-						'MarginAndPadding' => array(
+					'disabled_controls' => [ 'Width', 'Height', 'hr', 'Alignment', 'Display', '.tve-advanced-controls' ],
+					'config'            => [
+						'MarginAndPadding' => [
 							'important' => true,
-						),
-					),
+						],
+					],
 				)
 			),
 			'background'  => $components['background'],
@@ -101,9 +102,9 @@ class TCB_Toc_Heading_Element extends TCB_Element_Abstract {
 			'shadow'      => array_merge(
 				$components['shadow'],
 				array(
-					'config' => array(
-						'disabled_controls' => array( 'inner' ),
-					),
+					'config' => [
+						'disabled_controls' => [ 'inner' ],
+					],
 				)
 			),
 		);

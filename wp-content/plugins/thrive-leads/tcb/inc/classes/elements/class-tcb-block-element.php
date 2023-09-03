@@ -66,7 +66,7 @@ class TCB_Block_Element extends TCB_Section_Element {
 	 */
 	public function own_components() {
 		$components = parent::own_components();
-		$components = array_merge( array( 'block' => $components['section'] ), $components );
+		$components = array_merge( [ 'block' => $components['section'] ], $components );
 
 		unset( $components['section'] );
 		unset( $components['shared-styles'] );
@@ -80,12 +80,12 @@ class TCB_Block_Element extends TCB_Section_Element {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'block',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425843-how-to-use-the-block-element',
-			),
-		);
+			],
+		];
 	}
 }

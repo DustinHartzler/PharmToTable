@@ -71,19 +71,19 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 				'items' => array(
 					'slide_top'    => array(
 						'title'   => __( 'Slide, top', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 					'slide_bottom' => array(
 						'title'   => __( 'Slide, bottom', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 					'slide_right'  => array(
 						'title'   => __( 'Slide, right', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 					'slide_left'   => array(
 						'title'   => __( 'Slide, left', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 				),
 			),
@@ -92,11 +92,11 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 				'items' => array(
 					'appear'   => array(
 						'title'   => __( 'Zoom in', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 					'zoom_out' => array(
 						'title'   => __( 'Zoom out', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 				),
 			),
@@ -105,71 +105,71 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 				'items' => array(
 					'grow'              => array(
 						'title'   => __( 'Grow', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport', 'mouseover' ),
+						'trigger' => [ 'tve-viewport', 'mouseover' ],
 					),
 					'shrink'            => array(
 						'title'   => __( 'Shrink', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport', 'mouseover' ),
+						'trigger' => [ 'tve-viewport', 'mouseover' ],
 					),
 					'pulse'             => array(
 						'title'   => __( 'Pulse', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'pulse_grow'        => array(
 						'title'   => __( 'Pulse Grow', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'pulse_shrink'      => array(
 						'title'   => __( 'Pulse Shrink', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'push'              => array(
 						'title'   => __( 'Push', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'pop'               => array(
 						'title'   => __( 'Pop', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bounce_in'         => array(
 						'title'   => __( 'Bounce In', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bounce_out'        => array(
 						'title'   => __( 'Bounce Out', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bob'               => array(
 						'title'   => __( 'Bob', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'hang'              => array(
 						'title'   => __( 'Hang', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'wobble_horizontal' => array(
 						'title'   => __( 'Wobble Horizontal', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'wobble_vertical'   => array(
 						'title'   => __( 'Wobble Vertical', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'buzz'              => array(
 						'title'   => __( 'Buzz', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'buzz_out'          => array(
 						'title'   => __( 'Buzz Out', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'forward'           => array(
 						'title'   => __( 'Forward', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'backward'          => array(
 						'title'   => __( 'Backward', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 				),
 			),
@@ -178,59 +178,59 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 				'items' => array(
 					'sweep_to_right'         => array(
 						'title'   => __( 'Sweep to right', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'sweep_to_left'          => array(
 						'title'   => __( 'Sweep to left', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'sweep_to_bottom'        => array(
 						'title'   => __( 'Sweep to bottom', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'sweep_to_top'           => array(
 						'title'   => __( 'Sweep to top', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bounce_to_right'        => array(
 						'title'   => __( 'Bounce to right', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bounce_to_left'         => array(
 						'title'   => __( 'Bounce to left', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bounce_to_bottom'       => array(
 						'title'   => __( 'Bounce to bottom', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'bounce_to_top'          => array(
 						'title'   => __( 'Bounce to top', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'radial_out'             => array(
 						'title'   => __( 'Radial out', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'radial_in'              => array(
 						'title'   => __( 'Radial in', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'rectangle_in'           => array(
 						'title'   => __( 'Rectangle in', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'rectangle_out'          => array(
 						'title'   => __( 'Rectangle out', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'shutter_out_horizontal' => array(
 						'title'   => __( 'Shutter out horizontal', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 					'shutter_out_vertical'   => array(
 						'title'   => __( 'Shutter out vertical', 'thrive-cb' ),
-						'trigger' => array( 'mouseover' ),
+						'trigger' => [ 'mouseover' ],
 					),
 				),
 			),
@@ -239,15 +239,15 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 				'items' => array(
 					'fade_in' => array(
 						'title'   => __( 'Fade in', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 					'rotate'  => array(
 						'title'   => __( 'Rotate', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 					'roll_in' => array(
 						'title'   => __( 'Roll in', 'thrive-cb' ),
-						'trigger' => array( 'tve-viewport' ),
+						'trigger' => [ 'tve-viewport' ],
 					),
 				),
 			),
@@ -308,10 +308,10 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 	}
 
 	public function get_options() {
-		$labels   = array(
+		$labels   = [
 			'__config_key' => 'anim',
-		);
-		$triggers = array();
+		];
+		$triggers = [];
 		foreach ( self::get_config() as $item ) {
 			foreach ( $item['items'] as $key => $data ) {
 				$labels[ $key ]   = $data['title'];
@@ -319,9 +319,9 @@ class TCB_Thrive_CSS_Animation extends TCB_Event_Action_Abstract {
 			}
 		}
 
-		return array(
+		return [
 			'labels'   => $labels,
 			'triggers' => $triggers,
-		);
+		];
 	}
 }

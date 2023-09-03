@@ -27,13 +27,13 @@ class FileUploadConfig extends FormSettings {
 	 *
 	 * @var array
 	 */
-	public static $defaults = array(
+	public static $defaults = [
 		'max_files'         => 1,
 		'max_size'          => 1, // in MB
-		'file_types'        => array( 'documents' ),
-		'custom_file_types' => array(),
+		'file_types'        => [ 'documents' ],
+		'custom_file_types' => [],
 		'name'              => '{match}', // by default, match the filename with the one uploaded by the visitor
-	);
+	];
 
 	/**
 	 * Get a list of each file group, it's title, icon and associated extensions
@@ -45,27 +45,27 @@ class FileUploadConfig extends FormSettings {
 			'documents' => array(
 				'name'       => __( 'Documents', 'thrive-cb' ),
 				'icon'       => 'file',
-				'extensions' => array( 'pdf', 'doc', 'docx', 'ppt', 'pptx', 'pps', 'ppsx', 'odt', 'xls', 'xlsx', 'psd', 'txt' ),
+				'extensions' => [ 'pdf', 'doc', 'docx', 'ppt', 'pptx', 'pps', 'ppsx', 'odt', 'xls', 'xlsx', 'psd', 'txt' ],
 			),
 			'images'    => array(
 				'name'       => __( 'Images', 'thrive-cb' ),
 				'icon'       => 'image2',
-				'extensions' => array( 'jpg', 'jpeg', 'png', 'gif', 'ico' ),
+				'extensions' => [ 'jpg', 'jpeg', 'png', 'gif', 'ico' ],
 			),
 			'audio'     => array(
 				'name'       => __( 'Audio files', 'thrive-cb' ),
 				'icon'       => 'audio',
-				'extensions' => array( 'mp3', 'm4a', 'ogg', 'wav' ),
+				'extensions' => [ 'mp3', 'm4a', 'ogg', 'wav' ],
 			),
 			'video'     => array(
 				'name'       => __( 'Video files', 'thrive-cb' ),
 				'icon'       => 'video',
-				'extensions' => array( 'mp4', 'm4v', 'mov', 'wmv', 'avi', 'mpg', 'ogv', '3gp', '3g2' ),
+				'extensions' => [ 'mp4', 'm4v', 'mov', 'wmv', 'avi', 'mpg', 'ogv', '3gp', '3g2' ],
 			),
 			'zip'       => array(
 				'name'       => __( 'Zip archives', 'thrive-cb' ),
 				'icon'       => 'archive',
-				'extensions' => array( 'zip', 'tar', 'gzip', 'gz' ),
+				'extensions' => [ 'zip', 'tar', 'gzip', 'gz' ],
 			),
 			'custom'    => array(
 				'name' => __( 'Custom', 'thrive-cb' ),
@@ -147,14 +147,14 @@ class FileUploadConfig extends FormSettings {
 	public function get_allowed_extensions() {
 		$file_types = $this->file_types;
 		if ( ! is_array( $file_types ) ) {
-			$file_types = array();
+			$file_types = [];
 		}
-		$extensions = array();
+		$extensions = [];
 		if ( is_array( $this->custom_file_types ) && in_array( 'custom', $file_types, true ) ) {
 			$extensions = $this->custom_file_types;
 		}
 
-		$extension_groups = array( $extensions );
+		$extension_groups = [ $extensions ];
 		foreach ( static::get_allowed_file_groups() as $key => $group ) {
 			if ( isset( $group['extensions'] ) && in_array( $key, $file_types, true ) ) {
 				$extension_groups [] = $group['extensions'];
@@ -240,7 +240,7 @@ class FileUploadConfig extends FormSettings {
 	 */
 	public function validate_form_submit( $data ) {
 
-		$files      = ! empty( $data['_tcb_files'] ) && is_array( $data['_tcb_files'] ) ? $data['_tcb_files'] : array();
+		$files      = ! empty( $data['_tcb_files'] ) && is_array( $data['_tcb_files'] ) ? $data['_tcb_files'] : [];
 		$min_files  = $this->required ? 1 : 0;
 		$file_count = count( $files );
 		$result     = true;
@@ -277,7 +277,7 @@ class FileUploadConfig extends FormSettings {
 	 * @return array
 	 */
 	public static function get_extensions_blacklist() {
-		return array(
+		return [
 			'0xe',
 			'a6p',
 			'action',
@@ -342,7 +342,7 @@ class FileUploadConfig extends FormSettings {
 			'xbe',
 			'xex',
 			'xys',
-		);
+		];
 	}
 }
 

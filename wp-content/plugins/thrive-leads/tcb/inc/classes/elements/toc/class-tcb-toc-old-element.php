@@ -70,52 +70,52 @@ class TCB_Toc_Old_Element extends TCB_Element_Abstract {
 					'Headings'       => array(
 						'config'  => array(
 							'name'   => __( 'Headings', 'thrive-cb' ),
-							'inputs' => array(
-								array(
+							'inputs' => [
+								[
 									'name'  => 'h1',
 									'label' => 'H1',
-								),
-								array(
+								],
+								[
 									'name'  => 'h2',
 									'label' => 'H2',
-								),
-								array(
+								],
+								[
 									'name'  => 'h3',
 									'label' => 'H3',
-								),
-								array(
+								],
+								[
 									'name'  => 'h4',
 									'label' => 'H4',
-								),
-								array(
+								],
+								[
 									'name'  => 'h5',
 									'label' => 'H5',
-								),
-								array(
+								],
+								[
 									'name'  => 'h6',
 									'label' => 'H6',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'MultipleCheckbox',
 					),
 					'Columns'        => array(
 						'config'  => array(
 							'name'    => __( 'Columns', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'value' => '1',
 									'name'  => '1',
-								),
-								array(
+								],
+								[
 									'value' => '2',
 									'name'  => '2',
-								),
-								array(
+								],
+								[
 									'value' => '3',
 									'name'  => '3',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
@@ -133,65 +133,65 @@ class TCB_Toc_Old_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '2000',
 							'label'   => __( 'Minimum Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'min-width',
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'background' => array(
-				'config' => array(
+			'background' => [
+				'config' => [
 					'to' => '.tve_contents_table',
-				),
-			),
-			'borders'    => array(
-				'config' => array(
+				],
+			],
+			'borders'    => [
+				'config' => [
 					'css_suffix' => ' .tve_contents_table',
-					'Borders'    => array(),
-					'Corners'    => array(),
-				),
-			),
-			'animation'  => array(
+					'Borders'    => [],
+					'Corners'    => [],
+				],
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
-			'typography' => array(
-				'config' => array(
+			],
+			'typography' => [
+				'config' => [
 					'to'            => '.tve_ct_content',
-					'FontColor'     => array(
+					'FontColor'     => [
 						'css_suffix' => ' .ct_column a',
-					),
-					'TextAlign'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => ' .ct_column',
-					),
-					'FontSize'      => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => ' .ct_column a',
-					),
-					'TextStyle'     => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' .ct_column a',
-					),
-					'LineHeight'    => array(
+					],
+					'LineHeight'    => [
 						'css_suffix' => ' .ct_column a',
-					),
-					'FontFace'      => array(
+					],
+					'FontFace'      => [
 						'css_suffix' => ' .ct_column a',
-					),
-					'LetterSpacing' => array(
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' .ct_column a',
-					),
-					'TextTransform' => array(
+					],
+					'TextTransform' => [
 						'css_suffix' => ' .ct_column a',
-					),
-				),
-			),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner' ),
-				),
-			),
-			'scroll'     => array(
+					],
+				],
+			],
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'inner' ],
+				],
+			],
+			'scroll'     => [
 				'hidden' => false,
-			),
+			],
 		);
 	}
 

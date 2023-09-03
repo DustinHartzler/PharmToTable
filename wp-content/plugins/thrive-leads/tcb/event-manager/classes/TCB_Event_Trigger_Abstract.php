@@ -128,6 +128,6 @@ abstract class TCB_Event_Trigger_Abstract {
 	}
 
 	public function get_options() {
-		return array();
+		return [];
 	}
 }

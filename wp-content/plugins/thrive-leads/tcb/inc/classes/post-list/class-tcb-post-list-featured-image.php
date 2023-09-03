@@ -45,7 +45,7 @@ class TCB_Post_List_Featured_Image {
 	 * @return array
 	 */
 	public static function get_sizes( $post_id ) {
-		$sizes = array();
+		$sizes = [];
 
 		if ( has_post_thumbnail( $post_id ) ) {
 			$post_thumbnail_id = get_post_thumbnail_id( $post_id );
@@ -64,7 +64,7 @@ class TCB_Post_List_Featured_Image {
 	 * @return array
 	 */
 	public static function get_image_sizes( $thumb_id ) {
-		$sizes        = array();
+		$sizes        = [];
 		$filter_sizes = static::filter_available_sizes();
 
 		$post_thumbnail        = get_post( $thumb_id );
@@ -140,7 +140,7 @@ class TCB_Post_List_Featured_Image {
 	 * @return array
 	 */
 	public static function get_registered_image_subsizes() {
-		$sizes = array();
+		$sizes = [];
 
 		if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
 			$sizes = wp_get_registered_image_subsizes();
@@ -148,11 +148,11 @@ class TCB_Post_List_Featured_Image {
 			$additional_sizes = wp_get_additional_image_sizes();
 
 			foreach ( get_intermediate_image_sizes() as $size_name ) {
-				$size_data = array(
+				$size_data = [
 					'width'  => 0,
 					'height' => 0,
 					'crop'   => false,
-				);
+				];
 
 				if ( isset( $additional_sizes[ $size_name ]['width'] ) ) {
 					// For sizes added by plugins and themes.

@@ -59,7 +59,7 @@ class TCB_Color_Manager {
 	 *
 	 * @param array $colors
 	 */
-	public function update_list( $colors = array() ) {
+	public function update_list( $colors = [] ) {
 		if ( $this->is_multisite ) {
 			update_site_option( $this->option_name, $colors );
 		} else {
@@ -75,9 +75,9 @@ class TCB_Color_Manager {
 	public function get_list() {
 
 		if ( $this->is_multisite ) {
-			$colors = get_site_option( $this->option_name, array() );
+			$colors = get_site_option( $this->option_name, [] );
 		} else {
-			$colors = get_option( $this->option_name, array() );
+			$colors = get_option( $this->option_name, [] );
 		}
 
 		/**

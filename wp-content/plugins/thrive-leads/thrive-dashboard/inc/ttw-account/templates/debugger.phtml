@@ -17,7 +17,7 @@
 			<select id="tpm-debug-server">
 				<?php foreach ( $urls as $name => $url ) : ?>
 					<option <?php echo $url === TD_TTW_Connection::get_ttw_url() ? 'selected="selected"' : '' ?>
-							value="<?php echo $url ?>"><?php echo $name ?></option>
+						value="<?php echo $url ?>"><?php echo $name ?></option>
 				<?php endforeach; ?>
 			</select>
 		</li>
@@ -30,9 +30,11 @@
 			   target="_blank"><?php echo TD_TTW_Connection::get_ttw_url() ?></a>
 		</li>
 		<li>
-			<b>License details fetched from TTW:</b>
+			<p><strong>License details fetched from TTW:</strong></p>
 			<pre>
-					<?php echo print_r( TD_TTW_User_Licenses::get_instance()->get(), true ); ?>
+				<?php foreach ( TD_TTW_User_Licenses::get_instance()->get_all() as $license ) : ?>
+					<?php print_r( $license->get_data() ); ?>
+				<?php endforeach; ?>
 			</pre>
 		</li>
 		<li>

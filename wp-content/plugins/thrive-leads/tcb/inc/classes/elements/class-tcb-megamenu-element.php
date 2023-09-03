@@ -53,7 +53,7 @@ class TCB_Megamenu_Element extends TCB_Menu_Element {
 			'select_values' => array(
 				array(
 					'value'    => 'top_level',
-					'selector' => '.thrive-shortcode-html > ul > li',
+					'selector' => '.thrive-shortcode-html ul.tve_w_menu > li',
 					'element'  => '.thrive-shortcode-html li',
 					'name'     => __( 'Top Level Items', 'thrive-cb' ),
 					/* Translators: %s represents index of the unlocked item */

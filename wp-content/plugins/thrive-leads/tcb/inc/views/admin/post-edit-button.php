@@ -1,10 +1,18 @@
-<?php if ( ! empty( $data['show_migrate_button'] ) ) : ?>
+<?php
+$license_warning_class='';
+if ( TD_TTW_User_Licenses::get_instance()->is_in_grace_period( 'tcb' ) ) {
+	$license_warning_class = 'tve-license-warning';
+}elseif ( ! TD_TTW_User_Licenses::get_instance()->has_active_license( 'tcb' ) ) {
+	$license_warning_class = 'tve-license-warning-red';
+}
+if ( ! empty( $data['show_migrate_button'] ) ) :
+	?>
 	<br>
 	<div class="postbox" style="text-align: center;">
 		<div class="inside thrive-architect">
 			<?php echo esc_html__( 'You can upgrade this post / page to Thrive Architect. Upgrading the content will disable the default WP editor for this post and activate the Thrive Architect editor for it. This will allow you to have your content (text and images) saved if you want to disable Thrive Architect for this post. You will not lose any content during this action - all of your current WP editor content will get saved as a "WordPress Content" element and appended to the end of the Thrive Architect content', 'thrive-cb' ); ?>
 			<br><br>
-			<a class="thrive-architect-edit-link" href="javascript:void(0)" data-edit="<?php echo esc_attr( $data['edit_url'] ); ?>" id="tcb2-migrate-post">
+			<a class="thrive-architect-edit-link <?php echo $license_warning_class; ?>" href="javascript:void(0)" data-edit="<?php echo esc_attr( $data['edit_url'] ); ?>" id="tcb2-migrate-post">
 				<div class="thrive-architect-admin-icon-holder">
 					<div class="thrive-architect-admin-icon"></div>
 				</div>
@@ -30,7 +38,7 @@
 				<?php echo esc_html__( 'You can continue editing with Thrive Architect or return to the default WordPress editor', 'thrive-cb' ); ?>
 			</p>
 			<br>
-			<a class="thrive-architect-edit-link tcb-enable-editor" data-id="<?php echo esc_attr( $data['post_id'] ); ?>" href="<?php echo esc_url( $data['edit_url'] ); ?>"
+			<a class="thrive-architect-edit-link tcb-enable-editor <?php echo $license_warning_class; ?>" data-id="<?php echo esc_attr( $data['post_id'] ); ?>" href="<?php echo esc_url( $data['edit_url'] ); ?>"
 			   id="thrive_preview_button" target="_blank">
 				<div class="thrive-architect-admin-icon-holder">
 					<div class="thrive-architect-admin-icon"></div>
@@ -60,7 +68,7 @@
 				<?php echo esc_html__( 'You can continue editing with Thrive Architect or revert to your theme template', 'thrive-cb' ); ?>
 			</p>
 			<br>
-			<a class="thrive-architect-edit-link tcb-enable-editor" data-id="<?php echo esc_attr( $data['post_id'] ); ?>" href="<?php echo esc_url( $data['edit_url'] ); ?>"
+			<a class="thrive-architect-edit-link tcb-enable-editor <?php echo $license_warning_class; ?>" data-id="<?php echo esc_attr( $data['post_id'] ); ?>" href="<?php echo esc_url( $data['edit_url'] ); ?>"
 			   id="thrive_preview_button" target="_blank">
 				<div class="thrive-architect-admin-icon-holder">
 					<div class="thrive-architect-admin-icon"></div>
@@ -76,7 +84,7 @@
 		</div>
 	</div>
 <?php else : ?>
-	<a class="thrive-architect-edit-link tcb-enable-editor" data-id="<?php echo esc_attr( $data['post_id'] ); ?>" href="<?php echo esc_url( $data['edit_url'] ); ?>"
+	<a class="thrive-architect-edit-link tcb-enable-editor <?php echo $license_warning_class; ?>" data-id="<?php echo esc_attr( $data['post_id'] ); ?>" href="<?php echo esc_url( $data['edit_url'] ); ?>"
 	   id="thrive_preview_button" target="_blank">
 		<div class="thrive-architect-admin-icon-holder">
 			<div class="thrive-architect-admin-icon"></div>

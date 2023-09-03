@@ -37,7 +37,7 @@ class TCB_Pagination_Number_Current_Element extends TCB_Element_Abstract {
 		$components = parent::general_components();
 
 		$components['typography']['config']['css_suffix'] = '';
-		$components['typography']['disabled_controls']    = array( 'TextTransform', 'TextAlign', '.tve-advanced-controls', '[data-value="tcb-typography-line-height"]' );
+		$components['typography']['disabled_controls']    = [ 'TextTransform', 'TextAlign', '.tve-advanced-controls', '[data-value="tcb-typography-line-height"]' ];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) ) {
@@ -48,11 +48,11 @@ class TCB_Pagination_Number_Current_Element extends TCB_Element_Abstract {
 		$components['typography']['config']['FontColor']['important'] = true;
 		$components['typography']['config']['FontSize']['important']  = true;
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
-		$components['animation']        = array( 'hidden' => true );
-		$components['responsive']       = array( 'hidden' => true );
-		$components['styles-templates'] = array( 'hidden' => true );
+		$components['animation']        = [ 'hidden' => true ];
+		$components['responsive']       = [ 'hidden' => true ];
+		$components['styles-templates'] = [ 'hidden' => true ];
 
 		return $components;
 	}

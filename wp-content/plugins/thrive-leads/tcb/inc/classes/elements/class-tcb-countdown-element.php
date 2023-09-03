@@ -84,23 +84,23 @@ class TCB_Countdown_Element extends TCB_Cloud_Template_Element_Abstract {
 		$components = array(
 			'countdown'  => array(
 				'config' => array(
-					'CountdownPalette' => array(
-						'config'  => array(),
+					'CountdownPalette' => [
+						'config'  => [],
 						'extends' => 'PalettesV2',
-					),
+					],
 					'EndDate'          => array(
 						'config'  => array(
 							'label' => __( 'End date', 'thrive-cb' ),
 						),
 						'extends' => 'DatePicker',
 					),
-					'ExternalFields'   => array(
-						'config'  => array(
+					'ExternalFields'   => [
+						'config'  => [
 							'key'               => 'countdown',
 							'shortcode_element' => '.thrv_countdown_timer',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
+					],
 					'Day'              => array(
 						'config'  => array(
 							'inline'    => true,
@@ -186,34 +186,34 @@ class TCB_Countdown_Element extends TCB_Cloud_Template_Element_Abstract {
 					'Size'             => array(
 						'config'  => array(
 							'default' => '100',
-							'min'     => '30',
+							'min'     => '20',
 							'max'     => '350',
 							'label'   => __( 'Tile Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'typography' => array(
+			'typography' => [
 				'hidden' => true,
-			),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+			],
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
 					'Display',
 					'Width',
 					'Height',
 					'Float',
-				),
-			),
+				],
+			],
 		);
 
 		return array_merge(
@@ -270,12 +270,12 @@ class TCB_Countdown_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'countdown',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425793-how-to-use-the-countdown-elements',
-			),
-		);
+			],
+		];
 	}
 }

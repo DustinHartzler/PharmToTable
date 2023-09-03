@@ -34,9 +34,9 @@ class TCB_Button_Group_Element extends TCB_Element_Abstract {
 	 * When element is selected in editor this identifier
 	 * establishes element _type
 	 *
+	 * @return string
 	 * @see TVE.main.element_selected() TVE._type()
 	 *
-	 * @return string
 	 */
 	public function identifier() {
 
@@ -49,17 +49,17 @@ class TCB_Button_Group_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'button_group' => array(
-				'config' => array(),
-			),
-			'typography'   => array( 'hidden' => true ),
-			'animation'    => array( 'hidden' => true ),
-			'shadow'       => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-		);
+		return [
+			'button_group' => [
+				'config' => [],
+			],
+			'typography'   => [ 'hidden' => true ],
+			'animation'    => [ 'hidden' => true ],
+			'shadow'       => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+		];
 	}
 }

@@ -56,38 +56,38 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'audio'      => array(
-				'config' => array(
-					'ExternalFields' => array(
-						'config'  => array(
+		return [
+			'audio'      => [
+				'config' => [
+					'ExternalFields' => [
+						'config'  => [
 							'key'               => 'audio',
 							'shortcode_element' => 'audio.tcb-audio',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
-				),
-			),
-			'typography' => array( 'hidden' => true ),
-			'background' => array( 'hidden' => true ),
-			'shadow'     => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'animation'  => array( 'hidden' => true ),
-			'layout'     => array(
-				'config'            => array(
-					'Width'  => array(
+					],
+				],
+			],
+			'typography' => [ 'hidden' => true ],
+			'background' => [ 'hidden' => true ],
+			'shadow'     => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'animation'  => [ 'hidden' => true ],
+			'layout'     => [
+				'config'            => [
+					'Width'  => [
 						'important' => true,
-					),
-					'Height' => array(
-						'css_suffix' => array( ' iframe', ' > :first-child' ),
-					),
-				),
-				'disabled_controls' => array( 'Overflow', 'ScrollStyle' ),
-			),
-		);
+					],
+					'Height' => [
+						'css_suffix' => [ ' iframe', ' > :first-child' ],
+					],
+				],
+				'disabled_controls' => [ 'Overflow', 'ScrollStyle' ],
+			],
+		];
 	}
 
 	/**
@@ -105,12 +105,12 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'audio_element',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425842-how-to-use-the-audio-element',
-			),
-		);
+			],
+		];
 	}
 }

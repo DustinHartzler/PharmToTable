@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tcb-text-center hide-tablet hide-mobile mb-10">
 				<button class="tve-button blue long click" data-fn="manage_cells"><?php echo esc_html__( 'Manage Cells', 'thrive-cb' ) ?></button>
 			</div>
-			<div class="tve-advanced-controls extend-grey">
+			<div class="tve-advanced-controls">
 				<div class="dropdown-header" data-prop="advanced">
 				<span>
 					<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>

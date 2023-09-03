@@ -97,19 +97,19 @@ class TCB_Toggle_Title_Element extends TCB_Element_Abstract {
 					'DefaultState'     => array(
 						'config'  => array(
 							'name'    => __( 'Default State', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => '',
 									'text'    => 'Collapsed',
 									'value'   => 'collapsed',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => '',
 									'text'  => 'Expanded',
 									'value' => 'expanded',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'ButtonGroup',
 					),
@@ -123,7 +123,7 @@ class TCB_Toggle_Title_Element extends TCB_Element_Abstract {
 						'css_suffix' => ' .tve_toggle',
 						'config'     => array(
 							'label'   => __( 'Icon color', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 						'important'  => true,
 						'extends'    => 'ColorPicker',
@@ -131,19 +131,19 @@ class TCB_Toggle_Title_Element extends TCB_Element_Abstract {
 					'IconPlacement'    => array(
 						'config'  => array(
 							'name'    => __( 'Placement', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => '',
 									'text'    => 'Left',
 									'value'   => 'left',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => '',
 									'text'  => 'Right',
 									'value' => 'right',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'ButtonGroup',
 					),
@@ -153,7 +153,7 @@ class TCB_Toggle_Title_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Icon Size', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'font-size',
 
 						),
@@ -168,68 +168,68 @@ class TCB_Toggle_Title_Element extends TCB_Element_Abstract {
 							'default' => '0',
 							'min'     => '-180',
 							'max'     => '180',
-							'um'      => array( ' Deg' ),
+							'um'      => [ ' Deg' ],
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'typography'   => array(
-				'config' => array(
-					'FontColor'     => array(
+			'typography'   => [
+				'config' => [
+					'FontColor'     => [
 						'css_suffix' => ' .tve-toggle-text',
 						'important'  => true,
-					),
-					'TextAlign'     => array(
-						'css_suffix' => ' .tve-toggle-text',
-						'css_prefix' => $prefix_config,
-						'important'  => true,
-					),
-					'FontSize'      => array(
-						'css_suffix' => ' .tve-toggle-text',
-						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => ' .tve-toggle-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => ' .tve-toggle-text',
 						'important'  => true,
-					),
-					'FontFace'      => array(
-						'css_suffix' => ' .tve-toggle-text',
-						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' .tve-toggle-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'LineHeight'    => [
+						'css_suffix' => ' .tve-toggle-text',
+						'important'  => true,
+					],
+					'FontFace'      => [
+						'css_suffix' => ' .tve-toggle-text',
+						'important'  => true,
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' .tve-toggle-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-				),
-			),
-			'animation'    => array( 'hidden' => true ),
-			'layout'       => array(
-				'disabled_controls' => array(
+					],
+					'TextTransform' => [
+						'css_suffix' => ' .tve-toggle-text',
+						'css_prefix' => $prefix_config,
+						'important'  => true,
+					],
+				],
+			],
+			'animation'    => [ 'hidden' => true ],
+			'layout'       => [
+				'disabled_controls' => [
 					'margin',
 					'Width',
 					'Height',
 					'Alignment',
 					'Display',
 					'.tve-advanced-controls',
-				),
-			),
-			'shadow'       => array(
-				'config' => array(
-					'disabled_controls' => array( 'drop' ),
-				),
-			),
+				],
+			],
+			'shadow'       => [
+				'config' => [
+					'disabled_controls' => [ 'drop' ],
+				],
+			],
 		);
 	}
 

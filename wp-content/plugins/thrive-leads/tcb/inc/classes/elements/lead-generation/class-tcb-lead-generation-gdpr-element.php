@@ -53,7 +53,7 @@ class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 				'config' => array(
 					'CheckboxPalettes'    => array(
 						'to'        => '.tve_lg_checkbox_wrapper',
-						'config'    => array(),
+						'config'    => [],
 						'extends'   => 'Palettes',
 						'important' => apply_filters( 'tcb_lg_color_inputs_important', true ),
 					),
@@ -71,7 +71,7 @@ class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '30',
 							'label'   => __( 'Checkbox Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'extends'    => 'Slider',
 					),
@@ -79,10 +79,10 @@ class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 						'to'     => '.tve_lg_checkbox_wrapper',
 						'config' => array(
 							'label'   => __( 'Checkbox Style', 'thrive-cb' ),
-							'preview' => array(
+							'preview' => [
 								'key'   => '',
 								'label' => 'default',
-							),
+							],
 						),
 					),
 					'CheckboxStylePicker' => array(
@@ -104,78 +104,78 @@ class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'           => array(
-				'config' => array(
+			'typography'           => [
+				'config' => [
 					'to'            => '.tve_lg_checkbox_wrapper',
-					'FontColor'     => array(
+					'FontColor'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'important'  => true,
-					),
-					'TextAlign'     => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'css_prefix' => $prefix_config,
-						'important'  => true,
-					),
-					'FontSize'      => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'LineHeight'    => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => ' .tve-input-option-text',
 						'important'  => true,
-					),
-					'FontFace'      => array(
-						'css_suffix' => ' .tve-input-option-text',
-						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'LineHeight'    => [
+						'css_suffix' => ' .tve-input-option-text',
+						'important'  => true,
+					],
+					'FontFace'      => [
+						'css_suffix' => ' .tve-input-option-text',
+						'important'  => true,
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' .tve-input-option-text',
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-				),
-			),
-			'layout'               => array(
-				'disabled_controls' => array(
+					],
+					'TextTransform' => [
+						'css_suffix' => ' .tve-input-option-text',
+						'css_prefix' => $prefix_config,
+						'important'  => true,
+					],
+				],
+			],
+			'layout'               => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
 					'hr',
-				),
-			),
-			'borders'              => array(
-				'config' => array(
+				],
+			],
+			'borders'              => [
+				'config' => [
 					'to' => '.tve_lg_checkbox_wrapper',
-				),
-			),
-			'animation'            => array(
+				],
+			],
+			'animation'            => [
 				'hidden' => true,
-			),
-			'background'           => array(
-				'config' => array(
+			],
+			'background'           => [
+				'config' => [
 					'to' => '.tve_lg_checkbox_wrapper',
-				),
-			),
-			'shadow'               => array(
+				],
+			],
+			'shadow'               => [
 				'hidden' => true,
-			),
-			'styles-templates'     => array(
-				'config' => array(),
-			),
-			'responsive'           => array(
+			],
+			'styles-templates'     => [
+				'config' => [],
+			],
+			'responsive'           => [
 				'hidden' => true,
-			),
+			],
 		);
 
 		return array_merge( $components, $this->group_component() );

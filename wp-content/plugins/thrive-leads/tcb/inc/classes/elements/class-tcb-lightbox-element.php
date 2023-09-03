@@ -105,44 +105,44 @@ class TCB_Lightbox_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'borders'          => array(
-				'config' => array(
-					'Borders' => array(
+			'borders'          => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
-			),
-			'shadow'           => array(
-				'config' => array(
+					],
+				],
+			],
+			'shadow'           => [
+				'config' => [
 					'important' => true,
-				),
-			),
-			'animation'        => array(
+				],
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'typography'       => array(
+			],
+			'typography'       => [
 				'hidden' => true,
-			),
-			'responsive'       => array(
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-			'layout'           => array(
-				'config'            => array(
-					'Width' => array(
+			],
+			'layout'           => [
+				'config'            => [
+					'Width' => [
 						'important' => true,
-					),
-				),
-				'disabled_controls' => array(
+					],
+				],
+				'disabled_controls' => [
 					'Alignment',
 					'.tve-advanced-controls',
-				),
-			),
+				],
+			],
 		);
 	}
 }

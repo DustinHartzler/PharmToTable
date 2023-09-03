@@ -59,70 +59,57 @@ class TCB_Post_List_Filter_Rest {
 	}
 
 	/**
-	 * @param \WP_REST_Request
+	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_REST_Response
 	 */
 	public static function get_filter_options( $request ) {
-		$categories       = [];
+		$options          = [];
 		$filter_option    = sanitize_text_field( $request->get_param( 'filter_option' ) );
 		$searched_keyword = sanitize_text_field( $request->get_param( 'search' ) );
 		$selected_values  = $request->get_param( 'values' );
 		$length           = sanitize_text_field( $request->get_param( 'length' ) );
 
-		$attr = [];
-
-		if ( ! empty( $length ) ) {
-			$attr['number'] = (int) $length;
-		}
+		$attr = self::compute_filter_attr( $selected_values, $searched_keyword, (int) $length );
 
 		switch ( $filter_option ) {
 			case 'category':
 				foreach ( get_categories( $attr ) as $category ) {
-					if ( static::filter_options( $category->term_id, $category->name, $selected_values, $searched_keyword ) ) {
-						$categories[] = [
-							'value' => (string) $category->term_id,
-							'label' => $category->name,
-						];
-					}
+					$options[] = [
+						'value' => (string) $category->term_id,
+						'label' => $category->name,
+					];
 				}
 				break;
 			case 'tag':
 				foreach ( get_tags( $attr ) as $tag ) {
-					if ( static::filter_options( $tag->term_id, $tag->name, $selected_values, $searched_keyword ) ) {
-						$categories[] = [
-							'value' => (string) $tag->term_id,
-							'label' => $tag->name,
-						];
-					}
+					$options[] = [
+						'value' => (string) $tag->term_id,
+						'label' => $tag->name,
+					];
 				}
 				break;
 			case 'author':
 				foreach ( get_users( $attr ) as $user ) {
-					if ( static::filter_options( $user->ID, $user->display_name, $selected_values, $searched_keyword ) ) {
-						$categories[] = [
-							'value' => (string) $user->ID,
-							'label' => $user->display_name,
-						];
-					}
+					$options[] = [
+						'value' => (string) $user->ID,
+						'label' => $user->display_name,
+					];
 				}
 				break;
 			default:
 				$attr['taxonomy'] = $filter_option;
-				$terms            = get_terms( $attr );
 
-				foreach ( $terms as $term ) {
-					if ( static::filter_options( $term->term_id, $term->name, $selected_values, $searched_keyword ) ) {
-						$categories[] = [
-							'value' => (string) $term->term_id,
-							'label' => $term->name,
-						];
-					}
+				foreach ( get_terms( $attr ) as $term ) {
+					$options[] = [
+						'value' => (string) $term->term_id,
+						'label' => $term->name,
+					];
 				}
 		}
 
 
-		return new \WP_REST_Response( $categories );
+		return new \WP_REST_Response( $options );
 	}
 
 	/**
@@ -146,7 +133,7 @@ class TCB_Post_List_Filter_Rest {
 		$dropdown_animation   = $request->get_param( 'dropdown_animation' );
 		$dropdown_placeholder = $request->get_param( 'dropdown_placeholder' );
 
-		$filter_option_selection = json_decode( str_replace( array( '|{|', '|}|' ), array( '[', ']' ), $request->get_param( 'filter-option-selection' ) ), true );
+		$filter_option_selection = json_decode( str_replace( [ '|{|', '|}|' ], [ '[', ']' ], $request->get_param( 'filter-option-selection' ) ), true );
 
 		/* Add the 'All' option */
 		if ( $filter_all_option ) {
@@ -171,19 +158,27 @@ class TCB_Post_List_Filter_Rest {
 	}
 
 	/**
-	 * Return the filtered options based on selected values and/or search keyword
+	 * Compute the filter attributes based on the selected values and/or search keyword
 	 *
-	 * @param        $id
-	 * @param        $label
-	 * @param array  $selected_values
-	 * @param string $searched_keyword
+	 * @param $selected_values
+	 * @param $attr
 	 *
-	 * @return bool
+	 * @return mixed
 	 */
-	public static function filter_options( $id, $label, $selected_values = [], $searched_keyword = '' ) {
-		return
-			( empty( $selected_values ) || in_array( $id, $selected_values ) ) && /* if there are pre-selected values, only return the options for those */
-			( empty( $searched_keyword ) || stripos( $label, $searched_keyword ) !== false ); /* if there is a searched keyword, only return the options that match it */
+	public static function compute_filter_attr( $selected_values, $searched_keyword, $length ) {
+		$attr = [];
+
+		// already selected values can be retrieved via the 'include' argument - which expects a non-empty list of ints
+		if ( ! empty( $selected_values ) && is_array( $selected_values ) && array_filter( $selected_values ) ) {
+			$attr['include'] = array_map( 'intval', $selected_values );
+		} else {
+			// keyword search - WP will automatically select best columns to search in
+			$attr['search'] = $searched_keyword;
+			// make sure there's always a limit set to the returned number of results
+			$attr['number'] = empty( $length ) ? 50 : $length;
+		}
+
+		return $attr;
 	}
 
 	/**

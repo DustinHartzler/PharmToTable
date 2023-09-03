@@ -57,9 +57,9 @@ class TCB_Lightbox extends TCB_Post {
 				'class'        => '',
 				'custom_color' => ! empty( $config['close_css'] ) ? ' data-css="' . $config['close_css'] . '"' : '',
 			),
-			'inner'   => array(
+			'inner'   => [
 				'css' => '',
-			),
+			],
 		);
 	}
 
@@ -87,14 +87,14 @@ class TCB_Lightbox extends TCB_Post {
 				'class'        => empty( $config['l_ccls'] ) ? '' : ' ' . $config['l_ccls'],
 				'css'          => '',
 			),
-			'inner'   => array(
+			'inner'   => [
 				'css' => '',
-			),
-			'close'   => array(
+			],
+			'close'   => [
 				'custom_color' => '',
 				'class'        => '',
 				'css'          => '',
-			),
+			],
 		);
 
 		if ( ! empty( $config['l_cimg'] ) ) { // background image
@@ -133,7 +133,7 @@ class TCB_Lightbox extends TCB_Post {
 
 		/**
 		 * Fix added by Paul McCarthy 16th October 2014 - added to solve THesis Child themes not loading CSS in Thrive lightboxes
-		 * Thesis v 2.1.9 loads style sheets for their child themes with this:- add_filter('template_include', array($this, '_skin'));
+		 * Thesis v 2.1.9 loads style sheets for their child themes with this:- add_filter('template_include', [$this, '_skin']);
 		 * The filter isn't applied when the content builder lightbox is loaded because of our template_redirect filter
 		 * This function checks if the theme is Thesis, if so it checks for the existance of the css.css file that all Thesis child themes should have
 		 * If the file is found, it enqueuest the stylesheet in both editor and front end mode.
@@ -161,9 +161,9 @@ class TCB_Lightbox extends TCB_Post {
 			}
 		}
 
-		tcb_template( 'layouts/editor-lightbox', array(
+		tcb_template( 'layouts/editor-lightbox', [
 			'lightbox' => $this,
-		) );
+		] );
 	}
 
 	/**
@@ -176,15 +176,15 @@ class TCB_Lightbox extends TCB_Post {
 	 *
 	 * @return int the saved lightbox id
 	 */
-	public static function create( $title = '', $tcb_content = '', $tve_globals = array(), $extra_meta_data = array() ) {
+	public static function create( $title = '', $tcb_content = '', $tve_globals = [], $extra_meta_data = [] ) {
 		/* just to make sure that our content filter does not get applied when inserting a (possible) new lightbox */
 		$GLOBALS['TVE_CONTENT_SKIP_ONCE'] = true;
-		$lightbox_id                      = wp_insert_post( array(
+		$lightbox_id                      = wp_insert_post( [
 			'post_content' => '',
 			'post_title'   => $title,
 			'post_status'  => 'publish',
 			'post_type'    => 'tcb_lightbox',
-		) );
+		] );
 		foreach ( $extra_meta_data as $meta_key => $meta_value ) {
 			update_post_meta( $lightbox_id, $meta_key, $meta_value );
 		}
@@ -208,18 +208,18 @@ class TCB_Lightbox extends TCB_Post {
 	 *
 	 * @return int the saved lightbox id
 	 */
-	public static function update( $lightbox_id, $title = '', $tcb_content = '', $tve_globals = array(), $extra_meta_data = array() ) {
+	public static function update( $lightbox_id, $title = '', $tcb_content = '', $tve_globals = [], $extra_meta_data = [] ) {
 
 		/* just to make sure that our content filter does not get applied when inserting a (possible) new lightbox */
 		$GLOBALS['TVE_CONTENT_SKIP_ONCE'] = true;
 
-		$post_data = array(
+		$post_data = [
 			'post_content' => '',
 			'post_title'   => $title,
 			'post_status'  => 'publish',
 			'post_type'    => 'tcb_lightbox',
 			'ID'           => $lightbox_id,
-		);
+		];
 
 		wp_update_post( $post_data );
 

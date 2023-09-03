@@ -60,7 +60,7 @@ class TCB_Pagination_Element extends TCB_Cloud_Template_Element_Abstract {
 							/* if this is the control from the post list, change the name a bit */
 							'name'    => __( 'Type', 'thrive-cb' ),
 							/* the option list is populated in JS */
-							'options' => array(),
+							'options' => [],
 						),
 						'extends' => 'Select',
 					),
@@ -76,7 +76,7 @@ class TCB_Pagination_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '0',
 							'max'     => '10',
 							'label'   => __( 'Pages Displayed Near Current Page', 'thrive-cb' ),
-							'um'      => array( '' ),
+							'um'      => [ '' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -104,7 +104,7 @@ class TCB_Pagination_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Page Number Spacing', 'thrive-cb' ),
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'margin-left',
 						),
 						'extends' => 'Slider',
@@ -113,36 +113,36 @@ class TCB_Pagination_Element extends TCB_Cloud_Template_Element_Abstract {
 						'config'  => array(
 							'default' => 'space-between',
 							'name'    => __( 'Alignment', 'thrive-cb' ),
-							'options' => array(
-								array(
+							'options' => [
+								[
 									'name'  => 'Centered',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'name'  => 'Left',
 									'value' => 'flex-start',
-								),
-								array(
+								],
+								[
 									'name'  => 'Right',
 									'value' => 'flex-end',
-								),
-								array(
+								],
+								[
 									'name'  => 'Space Between',
 									'value' => 'space-between',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'Select',
 					),
 				),
 			),
-			'layout'           => array(
-				'disabled_controls' => array( 'Display' ),
-			),
-			'animation'        => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'scroll'           => array( 'hidden' => true ),
-			'typography'       => array( 'hidden' => true ),
+			'layout'           => [
+				'disabled_controls' => [ 'Display' ],
+			],
+			'animation'        => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
+			'scroll'           => [ 'hidden' => true ],
+			'typography'       => [ 'hidden' => true ],
 		);
 
 		return array_merge( $components, $this->group_component() );

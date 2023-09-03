@@ -71,8 +71,8 @@ class TCB_Post_Element extends TCB_Element_Abstract {
 							),
 						),
 					),
-					'PublishOptions'    => array(),
-					'UnpublishOptions'  => array(),
+					'PublishOptions'    => [],
+					'UnpublishOptions'  => [],
 				),
 			),
 		);
@@ -82,32 +82,32 @@ class TCB_Post_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		$post_config = array(
-			'typography'       => array(
+		$post_config = [
+			'typography'       => [
 				'hidden' => true,
-			),
-			'layout'           => array(
+			],
+			'layout'           => [
 				'hidden' => true,
-			),
-			'borders'          => array(
+			],
+			'borders'          => [
 				'hidden' => true,
-			),
-			'animation'        => array(
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'background'       => array(
+			],
+			'background'       => [
 				'hidden' => true,
-			),
-			'shadow'           => array(
+			],
+			'shadow'           => [
 				'hidden' => true,
-			),
-			'responsive'       => array(
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-		);
+			],
+		];
 
 		$post_config = $this->post_main_option() + $post_config;
 

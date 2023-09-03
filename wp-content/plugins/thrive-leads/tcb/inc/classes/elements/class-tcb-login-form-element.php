@@ -61,21 +61,21 @@ class TCB_Login_Form_Element extends TCB_Element_Abstract {
 		return array(
 			'login_form' => array(
 				'config' => array(
-					'FieldsControl' => array(
-						'config' => array(
+					'FieldsControl'   => [
+						'config' => [
 							'sortable'      => false,
 							'settings_icon' => 'edit',
-						),
-					),
-					'AddRemoveLabels'  => array(
-						'config'     => array(
+						],
+					],
+					'AddRemoveLabels' => array(
+						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Show labels', 'thrive-cb' ),
 							'default' => true,
 						),
-						'extends'    => 'Switch',
+						'extends' => 'Switch',
 					),
-					'RememberMe'       => array(
+					'RememberMe'      => array(
 						'config'     => array(
 							'name'    => '',
 							'label'   => __( 'Remember me', 'thrive-cb' ),

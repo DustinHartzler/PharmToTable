@@ -21,13 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Hooks {
 
 	public static function add() {
-		add_filter( 'tcb_inline_shortcodes', array( __CLASS__, 'tcb_inline_shortcodes' ), 100 );
+		add_filter( 'tcb_inline_shortcodes', [ __CLASS__, 'tcb_inline_shortcodes' ], 100 );
 
-		add_filter( 'tcb_post_list_post_info', array( __CLASS__, 'shortcode_real_data' ), 10, 2 );
+		add_filter( 'tcb_post_list_post_info', [ __CLASS__, 'shortcode_real_data' ], 10, 2 );
 
-		add_filter( 'tcb_content_allowed_shortcodes', array( __CLASS__, 'content_allowed_shortcodes_filter' ) );
+		add_filter( 'tcb_content_allowed_shortcodes', [ __CLASS__, 'content_allowed_shortcodes_filter' ] );
 
-		add_filter( 'tcb_dynamiclink_data', array( __CLASS__, 'dynamiclink_data_filter' ) );
+		add_filter( 'tcb_dynamiclink_data', [ __CLASS__, 'dynamiclink_data_filter' ] );
 	}
 
 	/**
@@ -40,14 +40,14 @@ class Hooks {
 	public static function tcb_inline_shortcodes( $shortcodes ) {
 		foreach ( Helpers::available_shortcodes() as $shortcode_id => $config ) {
 			/* each shortcode config has a hidden ID field */
-			$shortcode_id_config = array(
-				'id' => array(
-					'extra_options' => array(),
+			$shortcode_id_config = [
+				'id' => [
+					'extra_options' => [],
 					'real_data'     => $config['name'],
 					'type'          => 'hidden',
 					'value'         => $shortcode_id,
-				),
-			);
+				],
+			];
 
 			$shortcodes['Post'][] = array(
 				'name'        => $config['name'],
@@ -73,7 +73,7 @@ class Hooks {
 
 		if ( get_post_type( $post_id ) === Woo_Main::POST_TYPE ) {
 			foreach ( Helpers::available_shortcodes() as $shortcode_id => $config ) {
-				$attr = array();
+				$attr = [];
 
 				/* if the shortcode is a 'price' shortcode, make sure we get the full price ( including decimals ) at the start */
 				if ( $config['type'] === 'price' ) {
@@ -81,9 +81,9 @@ class Hooks {
 				}
 
 				$shortcode_value = Main::do_shortcode( $shortcode_id, $attr );
-				$shortcode_data  = array(
+				$shortcode_data  = [
 					'value' => $shortcode_value,
-				);
+				];
 
 				if ( $config['type'] === 'price' ) {
 					$shortcode_data['price_without_decimals'] = Helpers::get_price_without_decimals( $shortcode_value );

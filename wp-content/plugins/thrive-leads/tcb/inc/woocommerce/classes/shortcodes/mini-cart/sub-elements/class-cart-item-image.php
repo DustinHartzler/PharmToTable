@@ -37,15 +37,15 @@ class Cart_Item_Image extends Abstract_Sub_Element {
 	public function own_components() {
 		$components = $this->_components( true );
 
-		$components['shadow']     = array(
-			'config' => array(
+		$components['shadow']     = [
+			'config' => [
 				/* sometimes the 'box-shadow' set from woo can be stronger than this, so we give it an '!important' to help it */
 				'important'         => true,
 				/* only the drop-shadow makes sense for images, disable the rest */
-				'disabled_controls' => array( 'inner', 'text' ),
-			),
-		);
-		$components['background'] = array( 'hidden' => true );
+				'disabled_controls' => [ 'inner', 'text' ],
+			],
+		];
+		$components['background'] = [ 'hidden' => true ];
 
 		return $components;
 	}

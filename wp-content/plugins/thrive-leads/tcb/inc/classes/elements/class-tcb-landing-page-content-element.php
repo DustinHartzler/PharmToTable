@@ -60,37 +60,37 @@ class TCB_Landing_Page_Content_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'typography'       => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'layout'           => array(
-				'disabled_controls' => array(
+		return [
+			'typography'       => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
+			'layout'           => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'Width' => array(
+				],
+				'config'            => [
+					'Width' => [
 						'important' => true,
-					),
-				),
-			),
-			'borders'          => array(
-				'config' => array(
-					'Borders' => array(
+					],
+				],
+			],
+			'borders'          => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
-			),
-			'shadow'           => array(
-				'config' => array(
+					],
+				],
+			],
+			'shadow'           => [
+				'config' => [
 					'important'      => true,
 					'default_shadow' => 'none',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

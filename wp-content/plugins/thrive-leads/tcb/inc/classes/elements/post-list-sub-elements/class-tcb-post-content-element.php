@@ -67,10 +67,10 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 	 * @return string
 	 */
 	public function html() {
-		$default_attr = array(
+		$default_attr = [
 			'data-size'      => 'words',
 			'data-read_more' => TCB_Post_List_Content::$default_read_more,
-		);
+		];
 
 		return TCB_Utils::wrap_content( '', 'section', '', 'tcb-post-content' . ' ' . THRIVE_WRAPPER_CLASS . ' ' . TCB_SHORTCODE_CLASS, $default_attr );
 	}
@@ -83,7 +83,7 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$elements = array( ' p', ' a', ' ul', ' ul > li', ' ol', ' ol > li', ' h1', ' h2', ' h3', ' h4', ' h5', ' h6', ' blockquote > p', ' pre' );
+		$elements = [ ' p', ' a', ' ul', ' ul > li', ' ol', ' ol > li', ' h1', ' h2', ' h3', ' h4', ' h5', ' h6', ' blockquote > p', ' pre' ];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) ) {
@@ -100,24 +100,24 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 				'ContentSize'  => array(
 					'config'  => array(
 						'name'    => __( 'Content', 'thrive-cb' ),
-						'buttons' => array(
-							array(
+						'buttons' => [
+							[
 								'icon'  => '',
 								'text'  => 'Full',
 								'value' => 'content',
-							),
-							array(
+							],
+							[
 								'icon'  => '',
 								'text'  => 'Excerpt',
 								'value' => 'excerpt',
-							),
-							array(
+							],
+							[
 								'icon'    => '',
 								'text'    => 'Words',
 								'value'   => 'words',
 								'default' => true,
-							),
-						),
+							],
+						],
 					),
 					'extends' => 'ButtonGroup',
 				),

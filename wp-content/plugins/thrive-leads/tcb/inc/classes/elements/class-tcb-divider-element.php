@@ -63,13 +63,34 @@ class TCB_Divider_Element extends TCB_Element_Abstract {
 				'config' => array(
 					'divider_color' => array(
 						'config'  => array(
-							'label'   => __( 'Fill', 'thrive-cb' ),
-							'options' => array(
+							'label'   => __( 'Color', 'thrive-cb' ),
+							'options' => [
 								'showGlobals' => false,
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
+					'ToggleColorControls'        => [
+						'config'  => [
+							'name'    => __( 'Fill type', 'thrive-cb' ),
+							'buttons' => [
+								[ 'value' => 'tcb-divider-solid-color', 'text' => __( 'Solid', 'thrive-cb' ) ],
+								[ 'value' => 'tcb-divider-gradient-color', 'text' => __( 'Gradient', 'thrive-cb' ) ],
+							],
+						],
+						'extends' => 'ButtonGroup',
+					],
+					'DividerGradient'               => [
+						'config'  => [
+							'default' => '000',
+							'label'   => __( 'Gradient', 'thrive-cb' ),
+							'options' => [
+								'output'   => 'object',
+								'hasInput' => true,
+							],
+						],
+						'extends' => 'GradientPicker',
+					],
 					'thickness'     => array(
 						'css_prefix' => apply_filters( 'tcb_divider_prefix', '' ),
 						'config'     => array(
@@ -77,7 +98,7 @@ class TCB_Divider_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Thickness', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'extends'    => 'Slider',
 					),
@@ -111,17 +132,17 @@ class TCB_Divider_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography' => array( 'hidden' => true ),
-			'borders'    => array( 'hidden' => true ),
-			'animation'  => array( 'hidden' => true ),
-			'background' => array( 'hidden' => true ),
-			'shadow'     => array( 'hidden' => true ),
-			'layout'     => array(
-				'disabled_controls' => array(
+			'typography' => [ 'hidden' => true ],
+			'borders'    => [ 'hidden' => true ],
+			'animation'  => [ 'hidden' => true ],
+			'background' => [ 'hidden' => true ],
+			'shadow'     => [ 'hidden' => true ],
+			'layout'     => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'hr',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -140,12 +161,12 @@ class TCB_Divider_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'divider',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425791-how-to-use-the-divider-and-star-rating-elements',
-			),
-		);
+			],
+		];
 	}
 }

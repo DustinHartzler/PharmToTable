@@ -41,7 +41,7 @@ class Product_Pagination_Next extends Product_Pagination_Item {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['typography']['disabled_controls'] = array_merge( $components['typography']['disabled_controls'], array( 'TextStyle' ) );
+		$components['typography']['disabled_controls'] = array_merge( $components['typography']['disabled_controls'], [ 'TextStyle' ] );
 
 		return $components;
 	}

@@ -25,14 +25,14 @@ class TCB_Lead_Generation_Input_Element extends TCB_Element_Abstract {
 
 	public function own_components() {
 		$prefix_config                = tcb_selection_root();
-		$controls_default_config      = array(
-			'css_suffix' => array( ' input', ' textarea' ),
+		$controls_default_config      = [
+			'css_suffix' => [ ' input', ' textarea' ],
 			'css_prefix' => $prefix_config . ' ',
-		);
-		$controls_default_config_text = array(
-			'css_suffix' => array( ' input', ' textarea', ' ::placeholder' ),
+		];
+		$controls_default_config_text = [
+			'css_suffix' => [ ' input', ' textarea', ' ::placeholder' ],
 			'css_prefix' => $prefix_config . ' ',
-		);
+		];
 
 		return array(
 			'lead_generation_input' => array(
@@ -79,7 +79,7 @@ class TCB_Lead_Generation_Input_Element extends TCB_Element_Abstract {
 			'typography'            => array(
 				'config' => array(
 					'FontSize'      => $controls_default_config_text,
-					'FontColor'     => array_merge( array( 'important' => true ), $controls_default_config_text ),
+					'FontColor'     => array_merge( [ 'important' => true ], $controls_default_config_text ),
 					'FontFace'      => $controls_default_config_text,
 					'LetterSpacing' => $controls_default_config_text,
 					'LineHeight'    => $controls_default_config_text,
@@ -88,48 +88,48 @@ class TCB_Lead_Generation_Input_Element extends TCB_Element_Abstract {
 					'TextTransform' => $controls_default_config_text,
 				),
 			),
-			'layout'                => array(
-				'disabled_controls' => array(
+			'layout'                => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
 					'hr',
-				),
-				'config'            => array(
-					'MarginAndPadding' => array(
+				],
+				'config'            => [
+					'MarginAndPadding' => [
 						'margin_suffix'  => '',
-						'padding_suffix' => array(' input', ' textarea'),
-						'css_prefix' => $prefix_config . ' ',
-					),
-				),
-			),
-			'borders'               => array(
-				'config' => array(
+						'padding_suffix' => [ ' input', ' textarea' ],
+						'css_prefix'     => $prefix_config . ' ',
+					],
+				],
+			],
+			'borders'               => [
+				'config' => [
 					'Borders' => $controls_default_config,
 					'Corners' => $controls_default_config,
-				),
-			),
-			'animation'             => array(
+				],
+			],
+			'animation'             => [
 				'hidden' => true,
-			),
-			'background'            => array(
-				'config' => array(
+			],
+			'background'            => [
+				'config' => [
 					'ColorPicker' => $controls_default_config,
 					'PreviewList' => $controls_default_config,
-				),
-			),
+				],
+			],
 			'shadow'                => array(
-				'config' => array_merge( $controls_default_config, array( 'default_shadow' => 'none' ) ),
+				'config' => array_merge( $controls_default_config, [ 'default_shadow' => 'none' ] ),
 			),
-			'styles-templates'      => array(
-				'config' => array(
+			'styles-templates'      => [
+				'config' => [
 					'to' => 'input',
-				),
-			),
-			'responsive'            => array(
+				],
+			],
+			'responsive'            => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 

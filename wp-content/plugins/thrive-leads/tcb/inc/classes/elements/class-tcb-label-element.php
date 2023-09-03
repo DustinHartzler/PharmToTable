@@ -72,7 +72,7 @@ class TCB_Label_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Font Size', 'thrive-cb' ),
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'fontSize',
 						),
 						'extends' => 'Slider',
@@ -83,7 +83,7 @@ class TCB_Label_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Line Height', 'thrive-cb' ),
-							'um'      => array( 'em', 'px' ),
+							'um'      => [ 'em', 'px' ],
 							'css'     => 'lineHeight',
 						),
 						'extends' => 'Slider',
@@ -94,7 +94,7 @@ class TCB_Label_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Letter Spacing', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'letterSpacing',
 						),
 						'extends' => 'Slider',
@@ -103,9 +103,9 @@ class TCB_Label_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Font Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -113,34 +113,34 @@ class TCB_Label_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Font Highlight', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
-					'FontFace'       => array(
-						'config'  => array(
+					'FontFace'       => [
+						'config'  => [
 							'template' => 'controls/font-manager',
 							'inline'   => true,
-						),
+						],
 						'extends' => 'FontManager',
-					),
+					],
 				),
 			),
-			'typography'       => array( 'hidden' => true ),
-			'layout'           => array( 'hidden' => true ),
-			'borders'          => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'background'       => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'shadow'           => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner', 'drop' ),
+			'typography'       => [ 'hidden' => true ],
+			'layout'           => [ 'hidden' => true ],
+			'borders'          => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'background'       => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
+			'shadow'           => [
+				'config' => [
+					'disabled_controls' => [ 'inner', 'drop' ],
 					'with_froala'       => true,
-				),
-			),
+				],
+			],
 		);
 	}
 }

@@ -38,15 +38,15 @@ class TCB_Social_Share_Count_Label_Element extends TCB_Element_Abstract {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$typography_defaults = array(
+		$typography_defaults = [
 			'css_prefix' => '',
 			'css_suffix' => '',
 			'important'  => true,
-		);
+		];
 
-		$components['typography']                  = array(
-			'disabled_controls' => array( '.tve-advanced-controls', ),
-			'config'            => array(
+		$components['typography']                  = [
+			'disabled_controls' => [ '.tve-advanced-controls', ],
+			'config'            => [
 				'FontSize'      => $typography_defaults,
 				'FontColor'     => $typography_defaults,
 				'LineHeight'    => $typography_defaults,
@@ -54,12 +54,12 @@ class TCB_Social_Share_Count_Label_Element extends TCB_Element_Abstract {
 				'TextStyle'     => $typography_defaults,
 				'LetterSpacing' => $typography_defaults,
 				'TextTransform' => $typography_defaults,
-			),
-		);
-		$components['layout']['disabled_controls'] = array(
+			],
+		];
+		$components['layout']['disabled_controls'] = [
 			'Alignment',
 			'Display',
-		);
+		];
 
 		return $components;
 	}

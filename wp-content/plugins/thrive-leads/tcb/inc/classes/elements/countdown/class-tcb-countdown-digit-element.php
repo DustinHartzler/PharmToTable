@@ -34,39 +34,39 @@ class TCB_Countdown_Digit_Element extends TCB_Element_Abstract {
 	}
 
 	public function own_components() {
-		$digit_cfg   = array( 'css_prefix' => tcb_selection_root() . ' ', 'css_suffix' => array( ' span', ' span::before' ), 'important' => true );
+		$digit_cfg   = array( 'css_prefix' => tcb_selection_root() . ' ', 'css_suffix' => [ ' span', ' span::before' ], 'important' => true );
 		$wrapper_cfg = array( 'css_prefix' => tcb_selection_root() . ' ', 'css_suffix' => ' .t-digit-part' );
 
 		return array(
 			'countdown_digit' => array(
 				'config' => array(
-					'FontColor'   => array_merge( $digit_cfg, array(
-							'config'  => array(
+					'FontColor'   => array_merge( $digit_cfg, [
+							'config'  => [
 								'default' => '000',
 								'label'   => 'Color',
-								'options' => array(
+								'options' => [
 									'output' => 'object',
-								),
-							),
+								],
+							],
 							'extends' => 'ColorPicker',
-						)
+						]
 					),
 					'TextStyle'   => $digit_cfg,
 					'FontFace'    =>
-						array_merge( $digit_cfg, array(
-								'config' => array(
+						array_merge( $digit_cfg, [
+								'config' => [
 									'template' => 'controls/font-manager',
 									'inline'   => false,
-								),
-							)
+								],
+							]
 						),
 					'BorderColor' => array(
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Divider color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 
@@ -76,7 +76,7 @@ class TCB_Countdown_Digit_Element extends TCB_Element_Abstract {
 							'min'   => '0',
 							'max'   => '12',
 							'step'  => '0.5',
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 							'label' => __( 'Divider size', 'thrive-cb' ),
 						),
 						'extends' => 'Slider',
@@ -95,38 +95,38 @@ class TCB_Countdown_Digit_Element extends TCB_Element_Abstract {
 				),
 			),
 			'layout'          => array(
-				'disabled_controls' => array( 'Display', 'Alignment', '.tve-advanced-controls', 'Width', 'Height' ),
+				'disabled_controls' => [ 'Display', 'Alignment', '.tve-advanced-controls', 'Width', 'Height' ],
 				'config'            => array(
 					'MarginAndPadding' => array(
 						'css_prefix'     => tcb_selection_root() . ' ',
 						'important'      => true,
-						'padding_suffix' => array( ' .t-digit-part > span' ),
+						'padding_suffix' => [ ' .t-digit-part > span' ],
 					),
 				),
 			),
-			'typography'      => array(
+			'typography'      => [
 				'hidden' => true,
-			),
-			'background'      => array(
-				'config' => array(
+			],
+			'background'      => [
+				'config' => [
 					'ColorPicker' => $digit_cfg,
 					'PreviewList' => $digit_cfg,
-				),
-			),
+				],
+			],
 			'borders'         => array(
 				'config' => array(
 					'Borders' => $wrapper_cfg,
-					'Corners' => array_merge( $wrapper_cfg, array( 'overflow' => false ) ),
+					'Corners' => array_merge( $wrapper_cfg, [ 'overflow' => false ] ),
 
 				),
 			),
-			'responsive'      => array(
+			'responsive'      => [
 				'hidden' => true,
-			),
-			'shadow'          => array( 'config' => $wrapper_cfg ),
-			'animation'       => array(
+			],
+			'shadow'          => [ 'config' => $wrapper_cfg ],
+			'animation'       => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 

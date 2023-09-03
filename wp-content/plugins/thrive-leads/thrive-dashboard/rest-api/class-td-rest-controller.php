@@ -61,6 +61,14 @@ class TD_REST_Controller extends WP_REST_Controller {
 				'permission_callback' => '__return_true',
 			),
 		) );
+
+		register_rest_route( $this->namespace, $this->rest_base . '/license_warning', array(
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'license_warning' ),
+				'permission_callback' => array( $this, 'permission_callback_license_warning' ),
+			),
+		) );
 	}
 
 	/**
@@ -77,6 +85,16 @@ class TD_REST_Controller extends WP_REST_Controller {
 				},
 			),
 		);
+	}
+
+	public static function license_warning( $request ) {
+		$product = $request->get_param( 'product' );
+
+		$transient = 'tve_license_warning_lightbox_' . $product;
+
+		set_transient( $transient, true, DAY_IN_SECONDS );
+
+		return $product;
 	}
 
 	/**
@@ -140,6 +158,17 @@ class TD_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Verifies each call to TD REST API
+	 *
+	 * @param $request
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function permission_callback_license_warning( $request ) {
+		return $this->validate_license_warning( $request->get_param( 'product' ) );
+	}
+
+	/**
 	 * Checks if the api_key sent as parameter is the same with the one generated in DB
 	 *
 	 * @param $api_key
@@ -159,6 +188,41 @@ class TD_REST_Controller extends WP_REST_Controller {
 				__( 'Provided API Key is wrong', 'thrive-dash' ),
 				array(
 					'api_key' => $api_key,
+				)
+			);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Checks if the product is sent as parameter
+	 *
+	 * @param $api_key
+	 *
+	 * @return bool|WP_Error
+	 */
+	protected function validate_license_warning( $product = '' ) {
+
+		$result   = true;
+		$products = [
+			'tcb',
+			'tl',
+			'tu',
+			'tvo',
+			'tqb',
+			'tcm',
+			'tva',
+			'tab',
+			'ttb'
+		];
+		if ( empty( $product ) || ! in_array( $product, $products, true ) ) {
+
+			$result = new WP_Error(
+				'no_product_provided',
+				__( 'No product identifier provided', 'thrive-dash' ),
+				array(
+					'product' => $product,
 				)
 			);
 		}

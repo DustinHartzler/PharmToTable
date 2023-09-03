@@ -19,7 +19,7 @@ if ( ! defined( 'TVE_EXTERNAL_ARCHITECT_ACTIONS' ) ) {
 		}
 
 		/* get all the architect versions from the other plugins that have architect included */
-		$external_architect = apply_filters( 'tve_external_architect', array() );
+		$external_architect = apply_filters( 'tve_external_architect', [] );
 
 		uksort( $external_architect, 'version_compare' );
 
@@ -58,10 +58,10 @@ add_filter( 'tve_external_architect', function ( $versions ) use ( $current_arch
 
 	$version = include $dir_path . '/version.php';
 
-	$versions[ $version ] = array(
+	$versions[ $version ] = [
 		'path' => $dir_path,
 		'url'  => $dir_url,
-	);
+	];
 
 	return $versions;
 } );

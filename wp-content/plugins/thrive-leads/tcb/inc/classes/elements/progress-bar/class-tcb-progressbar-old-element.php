@@ -70,26 +70,26 @@ class TCB_Progressbar_Old_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Fill Percentage', 'thrive-cb' ),
-							'um'      => array( '%' ),
+							'um'      => [ '%' ],
 							'css'     => 'width',
 						),
 						'extends' => 'Slider',
 					),
-					'ExternalFields'  => array(
-						'config'  => array(
+					'ExternalFields'  => [
+						'config'  => [
 							'key'               => 'number',
 							'shortcode_element' => '.tve_progress_bar_fill_wrapper',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
+					],
 					'FillColor'       => array(
 						'to'      => '.tve_progress_bar_fill',
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Fill', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -98,9 +98,9 @@ class TCB_Progressbar_Old_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Label Color', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -109,9 +109,9 @@ class TCB_Progressbar_Old_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Background', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -126,28 +126,28 @@ class TCB_Progressbar_Old_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'shadow'          => array(
-				'config' => array(
+			'shadow'          => [
+				'config' => [
 					'to'                => '.tve-progress-bar',
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-			'borders'         => array(
-				'config' => array(
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+			'borders'         => [
+				'config' => [
 					'to'      => '.tve-progress-bar',
-					'Borders' => array(),
-					'Corners' => array(),
-				),
-			),
-			'typography'      => array( 'hidden' => true ),
-			'background'      => array( 'hidden' => true ),
-			'animation'       => array( 'hidden' => true ),
-			'layout'          => array(
-				'disabled_controls' => array(
+					'Borders' => [],
+					'Corners' => [],
+				],
+			],
+			'typography'      => [ 'hidden' => true ],
+			'background'      => [ 'hidden' => true ],
+			'animation'       => [ 'hidden' => true ],
+			'layout'          => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 	}
 

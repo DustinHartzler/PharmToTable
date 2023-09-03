@@ -203,7 +203,7 @@ class TCB_Post_List {
 			}
 		}
 
-		$content = static::prepare_carousel( $content,  $this->attr );
+		$content = static::prepare_carousel( $content, $this->attr );
 
 		/* render the shared styles just before the post list wrapper */
 		$content = $shared_styles . TCB_Post_List_Shortcodes::before_wrap(
@@ -610,7 +610,7 @@ class TCB_Post_List {
 					}
 				}
 
-				$query_args['post_type'] = get_post_type( $queried_object );
+				$query_args['post_type'] = get_post_type( $queried_object->ID );
 
 			} elseif ( ! empty( $queried_object->taxonomy ) ) {
 
@@ -1141,7 +1141,7 @@ class TCB_Post_List {
 		'featured-list',
 		'template-id',
 		'styled-scrollbar',
-		'dynamic_filter'
+		'dynamic_filter',
 	];
 
 	/**

@@ -26,7 +26,7 @@ class TCB_Content_Handler extends TCB_Landing_Page_Transfer {
 	 *
 	 * @var array
 	 */
-	private $import_config = array();
+	private $import_config = [];
 	/**
 	 * holds the current WP Page (or landing page)
 	 *

@@ -134,28 +134,28 @@ class TCB_Widget_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		return array(
-			'widget'           => array(
-				'config' => array(),
-			),
-			'styles-templates' => array( 'hidden' => true ),
-			'typography'       => array( 'hidden' => true ),
+			'widget'           => [
+				'config' => [],
+			],
+			'styles-templates' => [ 'hidden' => true ],
+			'typography'       => [ 'hidden' => true ],
 			'animation'        => array(
 				'disabled_controls' =>
 					array( '.btn-inline.anim-link', '.btn-inline.anim-popup' ),
 			),
-			'layout'           => array(
-				'disabled_controls' => array(),
-			),
-			'borders'          => array(
-				'config' => array(
-					'Borders' => array(
+			'layout'           => [
+				'disabled_controls' => [],
+			],
+			'borders'          => [
+				'config' => [
+					'Borders' => [
 						'important' => true,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important' => true,
-					),
-				),
-			),
+					],
+				],
+			],
 		);
 	}
 }

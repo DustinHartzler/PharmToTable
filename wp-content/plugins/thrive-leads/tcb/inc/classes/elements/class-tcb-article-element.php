@@ -72,10 +72,10 @@ class TCB_Article_Element extends TCB_Post_List_Sub_Element_Abstract {
 		$components['responsive']['hidden'] = true;
 		$components['typography']['hidden'] = true;
 
-		$components['animation']['disabled_controls'] = array( '.anim-popup', '.anim-link' );
+		$components['animation']['disabled_controls'] = [ '.anim-popup', '.anim-link' ];
 
 		$components['layout']['disabled_controls'] =
-			array(
+			[
 				'margin-right',
 				'margin-bottom',
 				'margin-left',
@@ -84,7 +84,7 @@ class TCB_Article_Element extends TCB_Post_List_Sub_Element_Abstract {
 				'Alignment',
 				'hr',
 				'Display',
-			);
+			];
 
 		return $components;
 	}

@@ -60,14 +60,14 @@ class TCB_Search_Form_Submit_Element extends TCB_Element_Abstract {
 	public function own_components() {
 		$prefix = tcb_selection_root( false ) . ' ';
 
-		$controls_default_config = array(
+		$controls_default_config = [
 			'css_suffix' => ' button',
 			'css_prefix' => $prefix,
-		);
+		];
 
-		return array(
-			'typography'         => array(
-				'config' => array(
+		return [
+			'typography'       => [
+				'config' => [
 					'FontSize'      => $controls_default_config,
 					'FontColor'     => $controls_default_config,
 					'TextAlign'     => $controls_default_config,
@@ -76,45 +76,45 @@ class TCB_Search_Form_Submit_Element extends TCB_Element_Abstract {
 					'FontFace'      => $controls_default_config,
 					'LineHeight'    => $controls_default_config,
 					'LetterSpacing' => $controls_default_config,
-				),
-			),
-			'layout'             => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'Display',
 					'margin',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
+				],
+				'config'            => [
 					'MarginAndPadding' => $controls_default_config,
-				),
-			),
-			'borders'            => array(
-				'config' => array(
+				],
+			],
+			'borders'          => [
+				'config' => [
 					'Borders' => $controls_default_config,
 					'Corners' => $controls_default_config,
-				),
-			),
-			'animation'          => array(
+				],
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'responsive'         => array(
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'background'         => array(
-				'config' => array(
+			],
+			'background'       => [
+				'config' => [
 					'ColorPicker' => $controls_default_config,
 					'PreviewList' => $controls_default_config,
-				),
-			),
-			'shadow'             => array(
+				],
+			],
+			'shadow'           => [
 				'config' => $controls_default_config,
-			),
-			'styles-templates'   => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-		);
+			],
+		];
 	}
 }

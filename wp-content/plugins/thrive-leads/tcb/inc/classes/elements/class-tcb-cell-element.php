@@ -66,7 +66,7 @@ class TCB_Cell_Element extends TCB_Element_Abstract {
 							'min'   => 50,
 							'max'   => 500,
 							'label' => __( 'Column Width', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -75,60 +75,60 @@ class TCB_Cell_Element extends TCB_Element_Abstract {
 							'min'   => 10,
 							'max'   => 200,
 							'label' => __( 'Row Height', 'thrive-cb' ),
-							'um'    => array( 'px' ),
+							'um'    => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
 					'valign' => array(
 						'config'  => array(
 							'name'    => __( 'Vertical Align', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'none',
 									'default' => true,
 									'value'   => '',
-								),
-								array(
+								],
+								[
 									'icon'  => 'top',
 									'value' => 'top',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'middle',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'bottom',
-								),
-							),
+								],
+							],
 						),
 						'extends' => 'ButtonGroup',
 					),
 				),
 			),
-			'borders'          => array(
+			'borders'          => [
 				'hidden' => true,
-			),
-			'animation'        => array(
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'layout'           => array(
+			],
+			'layout'           => [
 				'hidden' => true,
-			),
-			'typography'       => array(
+			],
+			'typography'       => [
 				'hidden' => true,
-			),
-			'shadow'           => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
-			'responsive'       => array(
+			],
+			'shadow'           => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 }

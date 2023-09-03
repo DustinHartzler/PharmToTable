@@ -685,7 +685,7 @@ function tve_leads_register_conversion( $group, $form_type, $variation, $test_mo
 	);
 	$event_log = array_merge( $event_log, $current_screen );
 
-	$referrer = isset( $post_data['http_referrer'] ) ? $post_data['http_referrer'] : '';
+	$referrer = isset( $post_data['http_referrer'] ) ? filter_var( $post_data['http_referrer'], FILTER_SANITIZE_URL ) : '';
 
 	if ( $referrer ) {
 		$trimmed = preg_replace( '#http(s)?://#', '', trim( $referrer, '/' ) );
@@ -853,6 +853,7 @@ function tve_leads_process_conversion( $post_data ) {
 		'form_type_id'  => ! empty( $post_data['tl_data']['form_type_id'] ) ? $post_data['tl_data']['form_type_id'] : 0,
 		'custom_fields' => ! empty( $post_data['custom_fields'] ) ? $post_data['custom_fields'] : array(),
 		'tve_labels'    => ! empty( $post_data['tve_labels'] ) ? $post_data['tve_labels'] : array(),
+		'http_referrer' => ! empty( $post_data['get_data']['http_referrer'] ) ? $post_data['get_data']['http_referrer'] : array(),
 	);
 
 	//add referrer and utm data from post

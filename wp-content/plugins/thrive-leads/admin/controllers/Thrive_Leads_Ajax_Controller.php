@@ -530,14 +530,14 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 					$model['post_title'] = ( strpos( $model['post_title'], $copy_of ) === false ? $copy_of . ' ' : '' ) . $model['post_title'];
 
 					/* We need to save the form settings from the clone */
-					if ( method_exists(  FormSettings::class,'save_form_settings_from_duplicated_content' ) ) {
+					if ( method_exists( FormSettings::class, 'save_form_settings_from_duplicated_content' ) ) {
 						$model['content'] = FormSettings::save_form_settings_from_duplicated_content( $model['content'], $model['post_parent'] );
 					}
 
 					/* We also need to save settings from child states */
-					if ( ! empty( $model['form_child_states'] ) && method_exists( FormSettings::class,'save_form_settings_from_duplicated_content' ) ) {
+					if ( ! empty( $model['form_child_states'] ) && method_exists( FormSettings::class, 'save_form_settings_from_duplicated_content' ) ) {
 						foreach ( $model['form_child_states'] as $key => $state ) {
-							$model['form_child_states'][ $key ]['content'] =  FormSettings::save_form_settings_from_duplicated_content( $state['content'], $state['post_parent'] );
+							$model['form_child_states'][ $key ]['content'] = FormSettings::save_form_settings_from_duplicated_content( $state['content'], $state['post_parent'] );
 						}
 					}
 				} else {
@@ -918,7 +918,7 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 	 * display inboundLink Builder lightbox
 	 */
 	public function displayInboundLinkBuilderAction() {
-		include dirname( dirname( __FILE__ ) ) . '/views/inbound_link_builder.php';
+		include dirname( __FILE__, 2 ) . '/views/inbound_link_builder.php';
 		die;
 	}
 
@@ -977,30 +977,17 @@ class Thrive_Leads_Ajax_Controller extends Thrive_Leads_Request_Handler {
 	 * @return array
 	 */
 	public function contactsAction() {
-		switch ( $this->param( 'actionType' ) ) {
-			case 'send-email':
-				$data = $this->param( 'data' );
+		$result = '';
 
-				$result = tve_send_contacts_email( $data['id'], $data['email_address'], $data['save_email'] );
-				break;
+		if ( $this->param( 'actionType' ) === 'download' ) {
+			$type   = $this->param( 'type' );
+			$params = [
+				'start_date' => $this->param( 'start_date' ),
+				'end_date'   => $this->param( 'end_date' ),
+				'source'     => $this->param( 'source' ),
+			];
 
-			case 'delete-download':
-				global $tvedb;
-				$id = $this->param( 'id' );
-
-				$result = $tvedb->tve_leads_delete_download_item( $id );
-				break;
-
-			case 'download':
-				$source = $this->param( 'source' );
-				$type   = $this->param( 'type' );
-				$params = $this->param( 'params' );
-
-				$result = tve_leads_process_contact_download( $source, $type, $params );
-				break;
-
-			default:
-				$result = '';
+			$result = tve_leads_process_contact_download( $type, $params );
 		}
 
 		return $result;

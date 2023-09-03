@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="icons-input">
 				<?php tcb_icon( 'search-regular' ); ?>
 				<input type="text" class="tve-search-icon keyup click" data-fn="searchIcon" data-fn-click="focusSearch" data-source="search" placeholder="<?php echo esc_html__( 'Search', 'thrive-cb' ); ?>"/>
-				<?php tcb_icon( 'close2', false, 'sidebar', 'click tcb-hidden', array( 'data-fn' => 'domClearSearch' ) ); ?>
+				<?php tcb_icon( 'close2', false, 'sidebar', 'click tcb-hidden', [ 'data-fn' => 'domClearSearch' ] ); ?>
 			</div>
 		</div>
 		<div class="icons-menu-wrapper">
@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="pt-10 pb-10 icons-wrapper">
 					<?php tcb_icon( 'cog-light' ); ?>
 					<span class="icons-label"><?php echo esc_html__( 'Manage icon packs', 'thrive-cb' ) ?></span>
-					<?php tcb_icon( 'exclamation-circle-solid', false, 'sidebar', 'kit-warning', array( "data-tooltip" => "Something is wrong with your Font Awesome setup, click here to resolve", "data-side" => "top", "data-width" => "15%" ) ); ?>
+					<?php tcb_icon( 'exclamation-circle-solid', false, 'sidebar', 'kit-warning', [ "data-tooltip" => "Something is wrong with your Font Awesome setup, click here to resolve", "data-side" => "top", "data-width" => "15%" ] ); ?>
 				</div>
 				<hr>
 			</div>
@@ -77,9 +77,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<a href="https://thrivethemes.com/tkb_item/how-to-add-font-awesome-pro-icons-in-thrive-architect/" target="_blank" class="mt-15 mb-35"><?php echo esc_html__( 'Learn how to use Font Awesome Pro here', 'thrive-cb' ); ?></a>
 				<div class="icons-input white tve-fa-input pr-0">
 					<input type="text" class="change input tve-fa-kit" data-fn="toggleProSettings" placeholder="<?php echo esc_html__( 'Add your Font Awesome Pro Kit', 'thrive-cb' ); ?>">
-					<?php tcb_icon( 'check-regular', false, 'sidebar', 'click tcb-hidden kit-action', array( 'data-fn' => 'handlePro' ) ); ?>
-					<?php tcb_icon( 'sync-regular', false, 'sidebar', 'click tcb-hidden kit-action', array( 'data-fn' => 'handlePro' ) ); ?>
-					<?php tcb_icon( 'trash-alt-light', false, 'sidebar', 'click tcb-hidden kit-action', array( 'data-fn' => 'toggleDeletePro' ) ); ?>
+					<?php tcb_icon( 'check-regular', false, 'sidebar', 'click tcb-hidden kit-action', [ 'data-fn' => 'handlePro' ] ); ?>
+					<?php tcb_icon( 'sync-regular', false, 'sidebar', 'click tcb-hidden kit-action', [ 'data-fn' => 'handlePro' ] ); ?>
+					<?php tcb_icon( 'trash-alt-light', false, 'sidebar', 'click tcb-hidden kit-action', [ 'data-fn' => 'toggleDeletePro' ] ); ?>
 				</div>
 				<div class="icons-input tve-fa-warning tcb-hidden pr-0">
 					<span><?php echo esc_html__( 'Are you sure you want to delete your kit?', 'thrive-cb' ); ?></span>

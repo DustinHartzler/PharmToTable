@@ -82,7 +82,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 *
 	 * @var array
 	 */
-	protected $icons = array();
+	protected $icons = [];
 
 	protected $positional_selectors = false;
 
@@ -101,7 +101,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	protected $current_item_index = 0;
 
 	public function __construct() {
-		$icons                      = $this->get_config( 'icon', array() );
+		$icons                      = $this->get_config( 'icon', [] );
 		$this->positional_selectors = tcb_custom_menu_positional_selectors();
 
 		$template = tcb_template( 'elements/menu-item-icon.phtml', null, true, 'backbone' );
@@ -168,7 +168,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 * @since 3.0.0
 	 *
 	 */
-	public function start_lvl( &$output, $depth = 0, $args = array() ) {
+	public function start_lvl( &$output, $depth = 0, $args = [] ) {
 		if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
 			$t = '';
 			$n = '';
@@ -179,7 +179,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$indent = str_repeat( $t, $depth );
 
 		// Default class.
-		$classes = $this->get_menu_type() === 'regular' ? array( 'sub-menu' ) : array();
+		$classes = $this->get_menu_type() === 'regular' ? [ 'sub-menu' ] : [];
 
 		/**
 		 * Filters the CSS class(es) applied to a menu list element.
@@ -199,11 +199,11 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$wrap_start = '';
 
 		if ( 0 === $depth && $this->get_menu_type() === 'mega' ) {
-			$drop_classes = array(
+			$drop_classes = [
 				'tcb-mega-drop-inner',
 				'thrv_wrapper',
 				'menu-item-' . $this->current_item->ID . '-drop',
-			);
+			];
 			if ( $this->is_out_of_group_editing( $this->current_item->ID, self::UNLINKED_DROP ) ) {
 				$drop_classes [] = self::CLS_UNLINKED;
 			}
@@ -225,7 +225,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$output .= "{$wrap_start}{$n}{$indent}<ul$class_names>{$n}";
 	}
 
-	public function end_lvl( &$output, $depth = 0, $args = array() ) {
+	public function end_lvl( &$output, $depth = 0, $args = [] ) {
 		parent::end_lvl( $output, $depth, $args );
 		if ( 0 === $depth && $this->get_menu_type() === 'mega' ) {
 			$output .= '</div></div>';
@@ -266,7 +266,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	/**
 	 * @inheritDoc
 	 */
-	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+	public function start_el( &$output, $item, $depth = 0, $args = [], $id = 0 ) {
 		if ( $depth === 0 ) {
 			$this->current_item_index ++;
 		}
@@ -286,9 +286,9 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		}
 
 		$indent       = ( $depth ) ? str_repeat( $t, $depth ) : '';
-		$classes      = empty( $item->classes ) ? array() : (array) $item->classes;
-		$link_attr    = array();
-		$link_classes = 'mega' === $menu_type && $depth > 0 ? array( "menu-item menu-item-{$item->ID} menu-item-{$item->ID}-a" ) : array();
+		$classes      = empty( $item->classes ) ? [] : (array) $item->classes;
+		$link_attr    = [];
+		$link_classes = 'mega' === $menu_type && $depth > 0 ? [ "menu-item menu-item-{$item->ID} menu-item-{$item->ID}-a" ] : [];
 		if ( 0 !== $depth && 'mega' === $menu_type && $this->is_editor_page() ) {
 			$link_classes[] = 'thrv_wrapper';
 		}
@@ -296,7 +296,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 			$link_classes [] = self::CLS_UNLINKED;
 		}
 		/* Add the responsive classes on the menu item */
-		$responsive_attributes = (array) $this->get_config( 'responsive_attributes', array() );
+		$responsive_attributes = (array) $this->get_config( 'responsive_attributes', [] );
 
 		$parent_field = $this->db_fields['parent'];
 		$item_id      = '.menu-item-' . $item->ID;
@@ -317,7 +317,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$responsive_attrs = '';
 		/* Build the responsive data attributes */
 		if ( ! empty( $responsive_attributes[ $itemKey ] ) ) {
-			$devices = array( 'desktop', 'tablet', 'mobile' );
+			$devices = [ 'desktop', 'tablet', 'mobile' ];
 			foreach ( $devices as $device ) {
 				if ( ! empty( $responsive_attributes[ $itemKey ][ $device ] ) ) {
 					$responsive_attrs .= 'data-item-display-' . $device . '="' . $responsive_attributes[ $itemKey ][ $device ] . '"';
@@ -327,8 +327,8 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 
 		/* handle link classes for menu images */
 		if ( 'mega' === $menu_type || 'regular' === $menu_type ) {
-			$item_image        = $this->get_config( "images/{$item->ID}", array() );
-			$image_placeholder = (array) $this->get_config( 'img_settings', array() );
+			$item_image        = $this->get_config( "images/{$item->ID}", [] );
+			$image_placeholder = (array) $this->get_config( 'img_settings', [] );
 			$container_class   = 'mega' === $menu_type && 1 === $depth ? 'tcb-mm-container' : 'tcb-menu-item-container';
 			$place             = $this->get_image_placement( $item, $depth );
 			if ( ! empty( $item_image ) ) {
@@ -389,10 +389,10 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 			$classes [] = self::CLS_UNLINKED;
 		}
 
-		$top_cls = (array) $this->get_config( 'top_cls', array() );
+		$top_cls = (array) $this->get_config( 'top_cls', [] );
 		if ( ! empty( $top_cls ) ) {
 			$unlinked_key = ! empty( $item->_tcb_pos_selector ) ? $item->_tcb_pos_selector : '.menu-item-' . $item->ID;
-			$is_unlinked  = ! empty( $this->get_config( "unlinked/$unlinked_key", array() ) );
+			$is_unlinked  = ! empty( $this->get_config( "unlinked/$unlinked_key", [] ) );
 
 			if ( isset( $top_cls[ $unlinked_key ] ) && $is_unlinked ) {
 				$classes [] = $top_cls[ $unlinked_key ];
@@ -456,7 +456,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		 * @type string    $target    Target attribute.
 		 * @type string    $rel       The rel attribute.
 		 * @type string    $href      The href attribute.
-		 * }
+		 *                            }
 		 *
 		 * @param WP_Post  $item      The current menu item.
 		 * @param stdClass $args      An object of wp_nav_menu() arguments.
@@ -712,7 +712,8 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	public function get_logo_html() {
 		$html = '';
 		$logo = $this->get_config( 'logo' );
-		if ( $logo ) {
+
+		if ( $logo && is_array( $logo ) ) {
 			$html = sprintf(
 				'<li class="tcb-menu-logo-wrap %s tcb-selector-no_highlight menu-item--1" data-id="-1">%s</li>',
 				static::CLS_UNLINKED,

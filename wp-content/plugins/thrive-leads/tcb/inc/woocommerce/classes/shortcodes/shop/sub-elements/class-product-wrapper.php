@@ -59,7 +59,7 @@ class Product_Wrapper extends \TCB_Element_Abstract {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		$components['animation']['hidden']        = true;
 		$components['responsive']['hidden']       = true;

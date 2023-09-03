@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 
 $is_gutenberg_preview = isset( $_GET['tve_block_preview'] );
-$content              = TCB_Symbol_Template::render_content( array(), true );
+$content              = TCB_Symbol_Template::render_content( [], true );
 
 /**
  * on gutenberg preview display a placeholder
@@ -25,12 +25,12 @@ if ( $is_gutenberg_preview ) {
 	 */
 	$symbol_content = TCB_Symbol_Template::content( $symbol_id );
 	if ( empty( $symbol_content ) ) {
-		$content = tcb_template( 'elements/no-symbol-content.php', array(), true );
+		$content = tcb_template( 'elements/no-symbol-content.php', [], true );
 	}
 }
 
 if ( empty( $content ) ) {
-	$content = tcb_template( 'elements/block.php', array(), true );
+	$content = tcb_template( 'elements/block.php', [], true );
 }
 
 

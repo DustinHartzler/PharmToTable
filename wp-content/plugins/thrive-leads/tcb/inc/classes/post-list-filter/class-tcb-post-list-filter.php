@@ -23,13 +23,13 @@ class TCB_Post_List_Filter {
 	 *
 	 * @return string
 	 */
-	public static function render_filter( $attr = array() ) {
+	public static function render_filter( $attr = [] ) {
 		$filter_type       = $attr['data-filter-type'];
 		$filter_option     = $attr['data-filter-option'];
 		$filter_all_option = $attr['data-all-option'] === 'true';
 
 		$content                        = '';
-		$attr['data-options-selection'] = str_replace( array( '|{|', '|}|' ), array( '[', ']' ), $attr['data-options-selection'] );
+		$attr['data-options-selection'] = str_replace( [ '|{|', '|}|' ], [ '[', ']' ], $attr['data-options-selection'] );
 		$filter_options_selection       = json_decode( $attr['data-options-selection'], true );
 
 		/* Add the 'All' option */
@@ -129,7 +129,7 @@ class TCB_Post_List_Filter {
 
 		if ( $filter_type !== 'search' ) {
 			foreach ( $filter_options_selection as $filter_option_id ) {
-				$filter_option_name = self::get_option_name( $filter_option, $filter_option_id, $all_label );
+				$filter_option_name = static::get_option_name( $filter_option, $filter_option_id, $all_label );
 
 				$template_attributes = [
 					'id'      => $filter_option_id,
@@ -196,8 +196,9 @@ class TCB_Post_List_Filter {
 	/**
 	 * Return the option name according to its id and type
 	 *
-	 * @param $filter_option
-	 * @param $filter_option_id
+	 * @param        $filter_option
+	 * @param        $filter_option_id
+	 * @param string $all_label
 	 *
 	 * @return string|WP_Error
 	 */
@@ -233,7 +234,7 @@ class TCB_Post_List_Filter {
 	 * @return string
 	 */
 	private static function get_classes( $attr ) {
-		$class = array( static::IDENTIFIER, THRIVE_WRAPPER_CLASS );
+		$class = [ static::IDENTIFIER, THRIVE_WRAPPER_CLASS ];
 
 		/* set responsive/animation classes, if they are present */
 		if ( ! empty( $attr['class'] ) ) {

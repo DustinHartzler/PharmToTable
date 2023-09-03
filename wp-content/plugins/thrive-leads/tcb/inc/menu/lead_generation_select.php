@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-key="DropdownIcon" data-initializer="dropdownIcon"></div>
 		<div class="tve-control if-not-hamburger" data-view="DropdownAnimation"></div>
 		<div class="tve-control" data-view="AnswerTag"></div>
-		<div class="tve-advanced-controls extend-grey">
+		<div class="tve-advanced-controls">
 			<div class="dropdown-header" data-prop="advanced">
 				<span><?php echo esc_html__( 'Manage multiple options', 'thrive-cb' ); ?></span>
 			</div>

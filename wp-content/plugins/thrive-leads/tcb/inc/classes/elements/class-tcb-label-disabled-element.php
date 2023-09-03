@@ -61,39 +61,39 @@ class TCB_Label_Disabled_Element extends TCB_Label_Element {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'typography' => array(
-				'disabled_controls' => array(
+		return [
+			'typography' => [
+				'disabled_controls' => [
 					'TextTransform',
 					'typography-text-transform-hr',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'FontColor'  => array(
+				],
+				'config'            => [
+					'FontColor'  => [
 						'css_suffix' => ' .tcb-numbered-list-index',
-					),
-					'FontSize'   => array(
+					],
+					'FontSize'   => [
 						'css_suffix' => ' .tcb-numbered-list-index',
-					),
-					'FontFace'   => array(
+					],
+					'FontFace'   => [
 						'css_suffix' => ' .tcb-numbered-list-index',
-					),
-					'TextStyle'  => array(
+					],
+					'TextStyle'  => [
 						'css_suffix' => ' .tcb-numbered-list-index',
-					),
-					'LineHeight' => array(
+					],
+					'LineHeight' => [
 						'css_suffix' => ' .tcb-numbered-list-index',
-					),
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+					],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'Width',
 					'Height',
 					'Alignment',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

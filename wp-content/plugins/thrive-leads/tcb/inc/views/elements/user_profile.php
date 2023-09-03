@@ -1,18 +1,18 @@
 <?php $palette = array(
 	'active_palette' => 0,
-	'config'         => array(
-		'colors'    => array(
-			'cf6ff' => array(
+	'config'         => [
+		'colors'    => [
+			'cf6ff' => [
 				'name'   => 'Main Color',
 				'parent' => - 1,
-			),
-			'73c8d' => array(
+			],
+			'73c8d' => [
 				'name'   => 'Dark Accent',
 				'parent' => 'cf6ff',
-			),
-		),
-		'gradients' => array(),
-	),
+			],
+		],
+		'gradients' => [],
+	],
 	'palettes'       => array(
 		array(
 			'name'  => 'Default',
@@ -20,22 +20,22 @@
 				'colors'    => array(
 					'cf6ff' => array(
 						'val' => 'rgb(20, 115, 210)',
-						'hsl' => array(
+						'hsl' => [
 							'h' => 210,
 							's' => 0.82,
 							'l' => 0.45,
-						),
+						],
 					),
 					'73c8d' => array(
 						'val'                   => 'rgb(21, 89, 162)',
-						'hsl_parent_dependency' => array(
+						'hsl_parent_dependency' => [
 							'h' => 211,
 							's' => 0.77,
 							'l' => 0.35,
-						),
+						],
 					),
 				),
-				'gradients' => array(),
+				'gradients' => [],
 			),
 		),
 	),

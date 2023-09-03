@@ -71,7 +71,7 @@ class Form_Identifier extends \Thrive\Automator\Items\Trigger_Field {
 						$config['form_identifier'] = $form_identifier;
 						$post_title                = 'Form settings' . ( $lg->post_parent ? ' for content ' . $lg->post_parent : '' );
 						$lg_post->set_config( $config )
-						        ->save( $post_title, array( 'post_parent' => $lg->post_parent ) );
+						        ->save( $post_title, [ 'post_parent' => $lg->post_parent ] );
 					}
 					$inputs     = $lg_post->inputs;
 					if ( ! empty( $inputs ) ) {

@@ -3,12 +3,12 @@
 <div class="pt-10" id="tve_tinymce_shortcode_mce_holder">
 	<?php
 	tcb_remove_tinymce_conflicts();
-	wp_editor( '', 'tve_tinymce_shortcode', array(
+	wp_editor( '', 'tve_tinymce_shortcode', [
 		'dfw'               => true,
 		'tabfocus_elements' => 'insert-media-button,save-post',
 		'editor_height'     => 260,
 		'textarea_rows'     => 15,
-	) );
+	] );
 	?>
 </div>
 

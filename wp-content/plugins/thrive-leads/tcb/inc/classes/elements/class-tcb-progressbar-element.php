@@ -81,10 +81,10 @@ class TCB_Progressbar_Element extends TCB_Cloud_Template_Element_Abstract {
 		$components = array(
 			'progressbar' => array(
 				'config' => array(
-					'ProgressPalette'  => array(
-						'config'  => array(),
+					'ProgressPalette'  => [
+						'config'  => [],
 						'extends' => 'PalettesV2',
-					),
+					],
 					'Type'             => array(
 						'config'  => array(
 							'name'    => __( 'Type', 'thrive-cb' ),
@@ -104,12 +104,12 @@ class TCB_Progressbar_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 						'extends' => 'ButtonGroup',
 					),
-					'NodesControl'     => array(
-						'config' => array(
+					'NodesControl'     => [
+						'config' => [
 							'sortable' => true,
 							'tpl'      => 'controls/preview-list-inline-item',
-						),
-					),
+						],
+					],
 					'LabelPosition'    => array(
 						'config'  => array(
 							'name'    => __( 'Progress label position', 'thrive-cb' ),
@@ -162,7 +162,7 @@ class TCB_Progressbar_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => __( 'Bar height', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'extends' => 'Slider',
 					),
@@ -236,27 +236,27 @@ class TCB_Progressbar_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => __( 'Start at', 'thrive-cb' ),
-							'um'      => array( '%' ),
+							'um'      => [ '%' ],
 						),
 						'extends' => 'Slider',
 					),
 				),
 			),
-			'borders'     => array(
-				'config' => array(
-					'Borders' => array(),
-					'Corners' => array(),
-				),
-			),
-			'typography'  => array( 'hidden' => true ),
-			'animation'   => array( 'hidden' => true ),
-			'layout'      => array(
-				'disabled_controls' => array(
+			'borders'     => [
+				'config' => [
+					'Borders' => [],
+					'Corners' => [],
+				],
+			],
+			'typography'  => [ 'hidden' => true ],
+			'animation'   => [ 'hidden' => true ],
+			'layout'      => [
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
 					'Height',
-				),
-			),
+				],
+			],
 		);
 
 		return array_merge(
@@ -341,12 +341,12 @@ class TCB_Progressbar_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'progress_bar',
 				'link' => 'https://help.thrivethemes.com/en/articles/4790886-how-to-use-the-progress-bar-element',
-			),
-		);
+			],
+		];
 	}
 }

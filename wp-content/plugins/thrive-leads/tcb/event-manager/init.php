@@ -20,21 +20,21 @@ require_once dirname( __FILE__ ) . '/classes/TCB_Event_Trigger_Abstract.php';
  */
 function tve_get_event_triggers( $scope = '' ) {
 	/* make sure these will not get overwritten */
-	$tcb_triggers = array(
-		''     => array(
+	$tcb_triggers = [
+		''     => [
 			'click'        => 'TCB_Event_Trigger_Click',
 			'mouseover'    => 'TCB_Event_Trigger_Mouseover',
 			'mouseenter'   => 'TCB_Event_Trigger_Mouseover',
 			'tve-viewport' => 'TCB_Event_Trigger_Viewport',
-		),
-		'page' => array(
+		],
+		'page' => [
 			'exit'  => 'TCB_Event_Trigger_Exit_Intent',
 			'timer' => 'TCB_Event_Trigger_Timer',
-		),
-	);
+		],
+	];
 	$tcb_triggers = $tcb_triggers[ $scope ];
 
-	$api_triggers = apply_filters( 'tcb_event_triggers', array(), array( 'scope' => $scope ) );
+	$api_triggers = apply_filters( 'tcb_event_triggers', [], [ 'scope' => $scope ] );
 
 	if ( is_array( $api_triggers ) ) {
 		foreach ( $api_triggers as $key => $class_name ) {
@@ -46,7 +46,7 @@ function tve_get_event_triggers( $scope = '' ) {
 		}
 	}
 
-	$triggers = array();
+	$triggers = [];
 	foreach ( $tcb_triggers as $key => $class ) {
 		$triggers[ $key ] = TCB_Event_Trigger_Abstract::triggerFactory( $class );
 	}
@@ -60,14 +60,14 @@ function tve_get_event_triggers( $scope = '' ) {
  * @return array
  */
 function tcb_get_all_action_classes() {
-	$classes = array(
+	$classes = [
 		'thrive_lightbox'  => 'TCB_Thrive_Lightbox',
 		'close_lightbox'   => 'TCB_Thrive_LightboxClose',
 		'thrive_animation' => 'TCB_Thrive_CSS_Animation',
 		'thrive_zoom'      => 'TCB_Thrive_Image_Zoom',
 		'thrive_video'     => 'TCB_Thrive_Video_Popup',
 		'thrive_tooltip'   => 'TCB_Thrive_Tooltip',
-	);
+	];
 
 	/**
 	 * Allow adding php classes to the available Actions
@@ -113,43 +113,43 @@ function tve_get_event_actions( $scope = '' ) {
  */
 function tve_get_event_actions_old( $scope = '' ) {
 	$post_id           = empty( $_POST['post_id'] ) ? get_the_ID() : absint( $_POST['post_id'] );
-	$tcb_event_actions = array(
-		''     => array(
-			'thrive_lightbox'  => array(
+	$tcb_event_actions = [
+		''     => [
+			'thrive_lightbox'  => [
 				'class' => 'TCB_Thrive_Lightbox',
 				'order' => 10,
-			),
-			'thrive_animation' => array(
+			],
+			'thrive_animation' => [
 				'class' => 'TCB_Thrive_CSS_Animation',
 				'order' => 30,
-			),
-			'thrive_zoom'      => array(
+			],
+			'thrive_zoom'      => [
 				'class' => 'TCB_Thrive_Image_Zoom',
 				'order' => 40,
-			),
-			'thrive_wistia'    => array(
+			],
+			'thrive_wistia'    => [
 				'class' => 'TCB_Thrive_Wistia',
 				'order' => 50,
-			),
-			'thrive_tooltip'   => array(
+			],
+			'thrive_tooltip'   => [
 				'class' => 'TCB_Thrive_Tooltip',
 				'order' => 60,
-			),
-		),
-		'page' => array(
-			'thrive_lightbox' => array(
+			],
+		],
+		'page' => [
+			'thrive_lightbox' => [
 				'class' => 'TCB_Thrive_Lightbox',
 				'order' => 10,
-			),
-		),
-	);
+			],
+		],
+	];
 
 	$tcb_event_actions = $tcb_event_actions[ $scope ];
 	$tcb_event_actions = apply_filters( 'tcb_event_actions', $tcb_event_actions, $scope, $post_id );
 
 	uasort( $tcb_event_actions, 'tcb_event_manager_sort_actions' );
 
-	$actions = array();
+	$actions = [];
 	foreach ( $tcb_event_actions as $key => $data ) {
 		$class           = $data['class'];
 		$actions[ $key ] = TCB_Event_Action_Abstract::actionFactory( $class );
@@ -181,49 +181,49 @@ function tcb_get_editor_actions() {
 			'title'     => __( 'CSS Animation', 'thrive-cb' ),
 			'icon'      => 'animation2',
 			'class'     => $actions['thrive_animation'],
-			'on_states' => array( 'default', 'hover' ),
+			'on_states' => [ 'default', 'hover' ],
 		),
 		'popup'     => array(
 			'title'     => __( 'Popups', 'thrive-cb' ),
 			'trigger'   => 'click',
 			'icon'      => 'open-lightbox2',
-			'on_states' => array( 'default' ),
-			'actions'   => array(
-				'thrive_lightbox' => array(
+			'on_states' => [ 'default' ],
+			'actions'   => [
+				'thrive_lightbox' => [
 					'class' => $actions['thrive_lightbox'],
 					'order' => 10,
-				),
-				'thrive_zoom'     => array(
+				],
+				'thrive_zoom'     => [
 					'class' => $actions['thrive_zoom'],
 					'order' => 30,
-				),
-				'thrive_video'    => array(
+				],
+				'thrive_video'    => [
 					'class' => $actions['thrive_video'],
 					'order' => 40,
-				),
-				'close_lightbox'  => array(
+				],
+				'close_lightbox'  => [
 					'class' => $actions['close_lightbox'],
 					'order' => 50,
-				),
-			),
+				],
+			],
 		),
 		'tooltip'   => array(
 			'title'     => __( 'Display tooltip', 'thrive-cb' ),
 			'trigger'   => 'mouseover',
 			'icon'      => 'tooltip-text',
 			'class'     => $actions['thrive_tooltip'],
-			'on_states' => array( 'hover' ),
+			'on_states' => [ 'hover' ],
 		),
 		'link'      => array(
 			'title'     => __( 'Create hyperlink', 'thrive-cb' ),
 			'icon'      => 'link-variant2',
-			'on_states' => array( 'default' ),
+			'on_states' => [ 'default' ],
 		),
 		'custom'    => array(
 			'title'     => __( 'Custom integrations', 'thrive-cb' ),
 			'icon'      => 't-lightbox',
-			'actions'   => array(),
-			'on_states' => array( 'default' ),
+			'actions'   => [],
+			'on_states' => [ 'default' ],
 		),
 	);
 	$action_tabs = apply_filters( 'tcb_event_manager_action_tabs', $action_tabs );
@@ -265,7 +265,7 @@ function tcb_get_editor_actions() {
 function tcb_event_manager_config() {
 	$tabs = tcb_get_editor_actions();
 	/** @var TCB_Event_Action_Abstract[] $actions */
-	$config = $actions = array();
+	$config = $actions = [];
 	foreach ( $tabs as $k => $tab ) {
 		/** @var TCB_Event_Action_Abstract[] $tab */
 		if ( isset( $tab['class'] ) ) {
@@ -278,7 +278,7 @@ function tcb_event_manager_config() {
 		}
 		$config['tabs'][ $k ]['visible'] = isset( $tab['visible'] ) ? $tab['visible'] : true;
 		//tabs will be toggled based on state
-		$config['tabs'][ $k ]['on_states'] = isset( $tab['on_states'] ) ? $tab['on_states'] : array();
+		$config['tabs'][ $k ]['on_states'] = isset( $tab['on_states'] ) ? $tab['on_states'] : [];
 	}
 
 	$triggers = tve_get_event_triggers();

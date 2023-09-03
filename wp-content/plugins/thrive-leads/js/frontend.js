@@ -1132,6 +1132,11 @@ TL_Front.open_lightbox = function ( $target, TargetEvent ) {
 
 	/* trigger a custom event after we opened the lightbox */
 	TCB_Front.$window.trigger( 'tl_after_lightbox_open', $target );
+
+	/* make sure that its trigger after the animation is done too */
+	setTimeout( () => {
+		TCB_Front.$window.trigger( 'tve_after_content_toggle', [ $target ] );
+	}, 500 );
 };
 
 TL_Front.open_two_step_lightbox = TL_Front.open_lightbox;

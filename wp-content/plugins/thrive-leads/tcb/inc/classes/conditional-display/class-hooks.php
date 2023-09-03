@@ -20,7 +20,7 @@ class Hooks {
 
 		add_filter( 'tcb_lazy_load_data', [ __CLASS__, 'load_display_groups' ], 10, 3 );
 
-		add_filter( 'tve_frontend_options_data', array( __CLASS__, 'tve_frontend_data' ) );
+		add_filter( 'tve_frontend_options_data', [ __CLASS__, 'tve_frontend_data' ] );
 
 		add_filter( 'tve_dash_frontend_ajax_response', [ __CLASS__, 'lazy_load_response' ] );
 

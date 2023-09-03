@@ -29,27 +29,27 @@ class TCB_Admin {
 
 	public function __construct() {
 
-		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'init', [ $this, 'includes' ] );
 
-		add_filter( 'tve_dash_admin_product_menu', array( $this, 'add_to_dashboard_menu' ) );
+		add_filter( 'tve_dash_admin_product_menu', [ $this, 'add_to_dashboard_menu' ] );
 
 		/**
 		 * Add admin scripts and styles
 		 */
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
-		add_filter( 'tve_dash_features', array( $this, 'dashboard_add_features' ) );
+		add_filter( 'tve_dash_features', [ $this, 'dashboard_add_features' ] );
 
-		add_action( 'admin_footer', array( $this, 'admin_page_loader' ) );
+		add_action( 'admin_footer', [ $this, 'admin_page_loader' ] );
 
 		/* admin TCB edit button */
-		add_action( 'edit_form_after_title', array( $this, 'admin_edit_button' ) );
+		add_action( 'edit_form_after_title', [ $this, 'admin_edit_button' ] );
 
-		add_action( 'admin_footer', array( $this, 'tcb_architect_gutenberg_switch' ) );
+		add_action( 'admin_footer', [ $this, 'tcb_architect_gutenberg_switch' ] );
 
-		add_filter( 'admin_body_class', array( $this, 'wp_editor_body_class' ), 10, 4 );
+		add_filter( 'admin_body_class', [ $this, 'wp_editor_body_class' ], 10, 4 );
 
-		add_action( 'save_post', array( $this, 'maybe_disable_tcb_editor' ) );
+		add_action( 'save_post', [ $this, 'maybe_disable_tcb_editor' ] );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class TCB_Admin {
 	 *
 	 * @return array
 	 */
-	public function add_to_dashboard_menu( $menus = array() ) {
+	public function add_to_dashboard_menu( $menus = [] ) {
 		$cap = tcb_has_external_cap( true );
 
 		if ( $cap ) {
@@ -91,7 +91,7 @@ class TCB_Admin {
 				'menu_title'  => __( 'Content Templates', 'thrive-cb' ),
 				'capability'  => $cap,
 				'menu_slug'   => 'tcb_admin_dashboard',
-				'function'    => array( $this, 'dashboard' ),
+				'function'    => [ $this, 'dashboard' ],
 			);
 		}
 
@@ -106,10 +106,10 @@ class TCB_Admin {
 	}
 
 	public function enqueue_scripts( $hook ) {
-		$accepted_hooks = apply_filters( 'tcb_admin_accepted_admin_pages', array(
+		$accepted_hooks = apply_filters( 'tcb_admin_accepted_admin_pages', [
 			'thrive-dashboard_page_tcb_admin_dashboard',  // Visible in Thrive Dashboard side menu
 			'admin_page_tcb_admin_dashboard',  // Not visible in Thrive Dashboard side menu
-		) );
+		] );
 
 		/* if classic editor plugin is activated ( `should_load_blocks()` => false ), load styles on post.php and post-new.php */
 		$should_load = tve_should_load_blocks() || $hook === 'post.php' || $hook === 'post-new.php';
@@ -139,17 +139,17 @@ class TCB_Admin {
 		 * Specific admin styles
 		 */
 		tve_enqueue_style( 'tcb-admin-style', $this->admin_url( 'assets/css/tcb-admin-styles.css' ) );
-		tve_enqueue_script( 'tcb-admin-js', $this->admin_url( 'assets/js/tcb-admin' . $js_suffix ), array(
+		tve_enqueue_script( 'tcb-admin-js', $this->admin_url( 'assets/js/tcb-admin' . $js_suffix ), [
 			'jquery',
 			'backbone',
-		) );
+		] );
 
 		wp_localize_script( 'tcb-admin-js', 'TVE_Admin', tcb_admin_get_localization() );
 
 		/**
 		 * Output the main templates for backbone views used in dashboard.
 		 */
-		add_action( 'admin_print_footer_scripts', array( $this, 'render_backbone_templates' ) );
+		add_action( 'admin_print_footer_scripts', [ $this, 'render_backbone_templates' ] );
 	}
 
 	/**
@@ -328,7 +328,7 @@ class TCB_Admin {
 		) );
 		echo '</script>';
 		$js_suffix = TCB_Utils::get_js_suffix();
-		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_js( '/gutenberg' . $js_suffix ), array( 'jquery' ) );
+		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_js( '/gutenberg' . $js_suffix ), [ 'jquery' ] );
 	}
 
 	/**
@@ -384,7 +384,7 @@ class TCB_Admin {
 	 *
 	 * @return string
 	 */
-	public function tcm_get_route_url( $endpoint, $id = 0, $args = array() ) {
+	public function tcm_get_route_url( $endpoint, $id = 0, $args = [] ) {
 
 		$url = get_rest_url() . self::TCB_REST_NAMESPACE . '/' . $endpoint;
 

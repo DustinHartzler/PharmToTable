@@ -41,21 +41,21 @@ class Abstract_Sub_Element extends \TCB_Element_Abstract {
 	public function _components( $hide_typography = false, $important_border = false ) {
 		$components = $this->general_components();
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
-		$components['animation']        = array( 'hidden' => true );
-		$components['responsive']       = array( 'hidden' => true );
-		$components['styles-templates'] = array( 'hidden' => true );
+		$components['animation']        = [ 'hidden' => true ];
+		$components['responsive']       = [ 'hidden' => true ];
+		$components['styles-templates'] = [ 'hidden' => true ];
 
 		if ( $hide_typography ) {
-			$components['typography'] = array( 'hidden' => true );
+			$components['typography'] = [ 'hidden' => true ];
 		} else {
 			foreach ( $components['typography']['config'] as $control => $config ) {
-				if ( in_array( $control, array( 'css_suffix', 'css_prefix' ) ) ) {
+				if ( in_array( $control, [ 'css_suffix', 'css_prefix' ] ) ) {
 					continue;
 				}
 				/* typography should apply only on the current element */
-				$components['typography']['config'][ $control ]['css_suffix'] = array( '' );
+				$components['typography']['config'][ $control ]['css_suffix'] = [ '' ];
 			}
 		}
 
@@ -63,7 +63,7 @@ class Abstract_Sub_Element extends \TCB_Element_Abstract {
 			$components['borders']['config']['Borders']['important'] = true;
 		}
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		return $components;
 	}

@@ -135,6 +135,9 @@ class TCB_Thrive_Video_Popup extends TCB_Event_Action_Abstract {
 				return new TCB_Video_Custom( $config );
 			case 'vooplayer':
 				return new TCB_Video_VooPlayer( $config );
+			case 'bunnynet':
+
+				return new TCB_Video_BunnyNet( $config );
 			default:
 				return null;
 		}
@@ -144,7 +147,7 @@ class TCB_Thrive_Video_Popup extends TCB_Event_Action_Abstract {
 class TCB_Video_Base {
 	protected $params;
 
-	public function __construct( $params = array() ) {
+	public function __construct( $params = [] ) {
 		$this->params = $params;
 	}
 
@@ -170,7 +173,7 @@ class TCB_Video_Base {
 	public function has_autoplay() {
 		$autoplay = $this->_get( 'a' );
 
-		return ! empty( $autoplay ) && in_array( $autoplay, array( 1, 'true' ) );
+		return ! empty( $autoplay ) && in_array( $autoplay, [ 1, 'true' ] );
 	}
 
 	public function get_id() {
@@ -212,7 +215,7 @@ class TCB_Video_Youtube extends TCB_Video_Base {
 		), $url );
 
 		if ( $this->has_autoplay() ) {
-			$url = add_query_arg( array( 'mute' => 1 ), $url );
+			$url = add_query_arg( [ 'mute' => 1 ], $url );
 		}
 
 		return $url;
@@ -224,9 +227,9 @@ class TCB_Video_Vimeo extends TCB_Video_Base {
 		$url = 'https://player.vimeo.com/video/' . $this->get_id();
 
 		if ( ! empty( $this->params['hash'] ) ) {
-			$url = add_query_arg( array(
-				'h'    =>  $this->params['hash'],
-			), $url );
+			$url = add_query_arg( [
+				'h' => $this->params['hash'],
+			], $url );
 		}
 
 		$url = add_query_arg( array(
@@ -240,7 +243,7 @@ class TCB_Video_Vimeo extends TCB_Video_Base {
 		), $url );
 
 		if ( $this->has_autoplay() ) {
-			$url = add_query_arg( array( 'muted' => 1 ), $url );
+			$url = add_query_arg( [ 'muted' => 1 ], $url );
 		}
 
 		return $url;
@@ -283,7 +286,7 @@ class TCB_Video_Wistia extends TCB_Video_Base {
 	}
 
 	public function main_post_callback() {
-		wp_script_is( 'tl-wistia-popover' ) || wp_enqueue_script( 'tl-wistia-popover', '//fast.wistia.com/assets/external/E-v1.js', array(), '', true );
+		wp_script_is( 'tl-wistia-popover' ) || wp_enqueue_script( 'tl-wistia-popover', '//fast.wistia.com/assets/external/E-v1.js', [], '', true );
 		ob_start(); ?>
 		<script type="text/javascript">window._wq = window._wq || [];
 			window.tcb_w_videos = window.tcb_w_videos || {};
@@ -317,14 +320,14 @@ class TCB_Video_Custom extends TCB_Video_Base {
 	 *
 	 * @var array
 	 */
-	protected $video_attr = array();
+	protected $video_attr = [];
 
 	public function wp_video_shortcode( $output, $atts ) {
 		if ( empty( $this->video_attr['width'] ) || empty( $this->video_attr['height'] ) || empty( $atts['width'] ) || empty( $atts['height'] ) ) {
 			return $output;
 		}
 
-		$replace = array();
+		$replace = [];
 		if ( $atts['width'] != $this->video_attr['width'] ) {
 			$replace[ 'width:' . $atts['width'] ]    = 'width:' . $this->video_attr['width'];
 			$replace[ 'width: ' . $atts['width'] ]   = 'width: ' . $this->video_attr['width'];
@@ -336,7 +339,7 @@ class TCB_Video_Custom extends TCB_Video_Base {
 			$output = str_replace( array_keys( $replace ), array_values( $replace ), $output );
 		}
 
-		remove_filter( 'wp_video_shortcode', array( $this, 'wp_video_shortcode' ) );
+		remove_filter( 'wp_video_shortcode', [ $this, 'wp_video_shortcode' ] );
 
 		return $output;
 	}
@@ -348,7 +351,7 @@ class TCB_Video_Custom extends TCB_Video_Base {
 			return $html;
 		}
 
-		$attr = array();
+		$attr = [];
 		if ( empty( $this->params['url'] ) ) { //This is a WordPress saved video
 
 			$metadata = wp_get_attachment_metadata( $this->get_id() );
@@ -367,7 +370,7 @@ class TCB_Video_Custom extends TCB_Video_Base {
 		$attr['class']    = 'tcb-video-shortcode';
 		$attr['autoplay'] = false;
 		$this->video_attr = $attr;
-		add_filter( 'wp_video_shortcode', array( $this, 'wp_video_shortcode' ), 10, 2 );
+		add_filter( 'wp_video_shortcode', [ $this, 'wp_video_shortcode' ], 10, 2 );
 
 		return sprintf(
 			'<div class="tcb-video-popup tcb-custom-video" style="position:fixed;visibility:hidden;left: -5000px;max-width: 100%%" id="tcb-video-popup-%s">%s</div>',
@@ -387,5 +390,23 @@ class TCB_Video_Custom extends TCB_Video_Base {
 class TCB_Video_VooPlayer extends TCB_Video_Base {
 	public function get_url() {
 		return $this->params['url'];
+	}
+}
+
+class TCB_Video_BunnyNet extends TCB_Video_Base {
+	public function get_url() {
+		$changed_url = '';
+
+		if ( ! empty( $this->params['url'] ) ) {
+			$pattern = '/\/([^\/]+\/[^\/]+)$/';
+			preg_match( $pattern, $this->params['url'], $matches );
+
+			if ( ! empty( $matches[1] ) ) {
+				$library_video_id = $matches[1];
+				$changed_url      = 'https://iframe.mediadelivery.net/embed/' . $library_video_id;
+			}
+		}
+
+		return $changed_url;
 	}
 }

@@ -25,49 +25,49 @@ class TCB_Toc_Number_Element extends TCB_Label_Disabled_Element {
 	}
 
 	public function own_components() {
-		return array(
-			'toc_number' => array(
-				'config' => array(
-					'NumberSuffix' => array(
-						'config'  => array(
+		return [
+			'toc_number' => [
+				'config' => [
+					'NumberSuffix' => [
+						'config'  => [
 							'label' => 'Suffix',
-						),
+						],
 						'extends' => 'LabelInput',
-					),
-				),
-			),
-			'typography' => array(
-				'disabled_controls' => array(
+					],
+				],
+			],
+			'typography' => [
+				'disabled_controls' => [
 					'TextTransform',
 					'typography-text-transform-hr',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'FontColor'  => array(
+				],
+				'config'            => [
+					'FontColor'  => [
 						'css_suffix' => ' .tve-toc-disabled',
-					),
-					'FontSize'   => array(
+					],
+					'FontSize'   => [
 						'css_suffix' => ' .tve-toc-disabled',
-					),
-					'FontFace'   => array(
+					],
+					'FontFace'   => [
 						'css_suffix' => ' .tve-toc-disabled',
-					),
-					'TextStyle'  => array(
+					],
+					'TextStyle'  => [
 						'css_suffix' => ' .tve-toc-disabled',
-					),
-					'LineHeight' => array(
+					],
+					'LineHeight' => [
 						'css_suffix' => ' .tve-toc-disabled',
-					),
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+					],
+				],
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'Width',
 					'Height',
 					'Alignment',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

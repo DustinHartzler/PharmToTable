@@ -18,7 +18,7 @@ class TCB_Admin_Ajax {
 	 * Init the object, during the AJAX request. Adds ajax handlers and verifies nonces
 	 */
 	public function init() {
-		add_action( 'wp_ajax_' . self::ACTION, array( $this, 'handle' ) );
+		add_action( 'wp_ajax_' . self::ACTION, [ $this, 'handle' ] );
 	}
 
 	/**
@@ -361,7 +361,7 @@ class TCB_Admin_Ajax {
 		$post    = tcb_post( $post_id );
 		$post->migrate();
 
-		return array( 'success' => true );
+		return [ 'success' => true ];
 	}
 
 	/**
@@ -370,7 +370,7 @@ class TCB_Admin_Ajax {
 	public function enable_tcb_action() {
 		tcb_post( $this->param( 'post_id' ) )->enable_editor();
 
-		return array( 'success' => true );
+		return [ 'success' => true ];
 	}
 
 	/**
@@ -379,7 +379,7 @@ class TCB_Admin_Ajax {
 	public function disable_tcb_action() {
 		tcb_post( $this->param( 'post_id' ) )->disable_editor();
 
-		return array( 'success' => true );
+		return [ 'success' => true ];
 	}
 
 	/**
@@ -395,7 +395,7 @@ class TCB_Admin_Ajax {
 			wp_update_post( $post );
 		}
 
-		return array( 'success' => true );
+		return [ 'success' => true ];
 	}
 }
 

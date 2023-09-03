@@ -28,51 +28,51 @@ class Main {
 	/**
 	 * Hooks used by WooCommerce for displaying various components on the shop page
 	 */
-	public static $shop_content_hooks = array(
-		'sale-flash'       => array(
+	public static $shop_content_hooks = [
+		'sale-flash'       => [
 			'tag'      => 'woocommerce_before_shop_loop_item_title',
 			'callback' => 'woocommerce_show_product_loop_sale_flash',
 			'priority' => 10,
-		),
-		'result-count'     => array(
+		],
+		'result-count'     => [
 			'tag'      => 'woocommerce_before_shop_loop',
 			'callback' => 'woocommerce_result_count',
 			'priority' => 20,
-		),
-		'catalog-ordering' => array(
+		],
+		'catalog-ordering' => [
 			'tag'      => 'woocommerce_before_shop_loop',
 			'callback' => 'woocommerce_catalog_ordering',
 			'priority' => 30,
-		),
-		'title'            => array(
+		],
+		'title'            => [
 			'tag'      => 'woocommerce_shop_loop_item_title',
 			'callback' => 'woocommerce_template_loop_product_title',
 			'priority' => 10,
-		),
-		'rating'           => array(
+		],
+		'rating'           => [
 			'tag'      => 'woocommerce_after_shop_loop_item_title',
 			'callback' => 'woocommerce_template_loop_rating',
 			'priority' => 5,
-		),
-		'price'            => array(
+		],
+		'price'            => [
 			'tag'      => 'woocommerce_after_shop_loop_item_title',
 			'callback' => 'woocommerce_template_loop_price',
 			'priority' => 10,
-		),
-		'cart'             => array(
+		],
+		'cart'             => [
 			'tag'      => 'woocommerce_after_shop_loop_item',
 			'callback' => 'woocommerce_template_loop_add_to_cart',
 			'priority' => 10,
-		),
-		'pagination'       => array(
+		],
+		'pagination'       => [
 			'tag'      => 'woocommerce_after_shop_loop',
 			'callback' => 'woocommerce_pagination',
 			'priority' => 10,
-		),
-	);
+		],
+	];
 
 	public static function init() {
-		add_shortcode( static::SHORTCODE, array( __CLASS__, 'render' ) );
+		add_shortcode( static::SHORTCODE, [ __CLASS__, 'render' ] );
 
 		require_once __DIR__ . '/class-hooks.php';
 
@@ -84,9 +84,9 @@ class Main {
 	 *
 	 * @return string
 	 */
-	public static function render( $attr = array() ) {
+	public static function render( $attr = [] ) {
 
-		$classes = array( 'tcb-woo-shop', THRIVE_WRAPPER_CLASS );
+		$classes = [ 'tcb-woo-shop', THRIVE_WRAPPER_CLASS ];
 
 		static::before_render( $attr );
 
@@ -127,13 +127,13 @@ class Main {
 			$classes[] = 'tcb-selector-no_save tcb-child-selector-no_icons';
 		} else {
 			/* only keep a few attributes on the frontend */
-			$attr = array_intersect_key( $attr, array(
+			$attr = array_intersect_key( $attr, [
 				'align-items' => '',
 				'css'         => '',
-			) );
+			] );
 		}
 
-		$data = array();
+		$data = [];
 
 		foreach ( $attr as $key => $value ) {
 			$data[ 'data-' . $key ] = esc_attr( $value );
@@ -176,7 +176,7 @@ class Main {
 			'align-items'           => 'center',
 			'ct'                    => 'shop-0',
 			'ct-name'               => esc_html__( 'Original Shop', 'thrive-cb' ),
-		), is_array( $attr ) ? $attr : array() );
+		), is_array( $attr ) ? $attr : [] );
 
 		if ( ! empty( $attr['taxonomy'] ) ) {
 			$attr['attribute'] = $attr['taxonomy'];
@@ -185,7 +185,7 @@ class Main {
 		/* the 'tag' attribute accepts only tag slugs instead of IDs, so we temporarily change the format */
 		if ( ! empty( $attr['tag'] ) ) {
 			$attr['temp_tag'] = $attr['tag'];
-			$tag_slugs        = array();
+			$tag_slugs        = [];
 
 			foreach ( explode( ',', $attr['tag'] ) as $tag ) {
 				$term = get_term( $tag );
@@ -239,20 +239,20 @@ class Main {
 		$all = get_object_taxonomies( Woo_Main::POST_TYPE, 'object' );
 
 		$taxonomies = array_map( static function ( $item ) {
-			return array(
+			return [
 				'name'  => $item->label,
 				'value' => $item->name,
-			);
+			];
 		}, $all );
 
 		$taxonomies = array_filter( $taxonomies, function ( $taxonomy ) {
 			/* we only return attribute-taxonomies ( they are prefixed with 'pa_' ) */
 			$is_attribute_taxonomy = strpos( $taxonomy['value'], 'pa_' ) !== false;
 
-			$terms = get_terms( array(
+			$terms = get_terms( [
 				'taxonomy'   => $taxonomy['value'],
 				'hide_empty' => false,
-			) );
+			] );
 
 			return $is_attribute_taxonomy && ( count( $terms ) > 0 ); /* we only return taxonomies that have terms inside them */
 		} );
@@ -302,54 +302,54 @@ class Main {
 	 * @return array[]
 	 */
 	public static function get_general_typography_config() {
-		return array(
-			'disabled_controls' => array(
+		return [
+			'disabled_controls' => [
 				'.tve-advanced-controls',
 				'p_spacing',
 				'h1_spacing',
 				'h2_spacing',
 				'h3_spacing',
-			),
-			'config'            => array(
+			],
+			'config'            => [
 				'css_suffix'    => '',
 				'css_prefix'    => '',
-				'TextShadow'    => array(
+				'TextShadow'    => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'FontColor'     => array(
+				],
+				'FontColor'     => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'FontSize'      => array(
+				],
+				'FontSize'      => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'TextStyle'     => array(
+				],
+				'TextStyle'     => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'LineHeight'    => array(
+				],
+				'LineHeight'    => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'FontFace'      => array(
+				],
+				'FontFace'      => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'LetterSpacing' => array(
+				],
+				'LetterSpacing' => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'TextAlign'     => array(
+				],
+				'TextAlign'     => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-				'TextTransform' => array(
+				],
+				'TextTransform' => [
 					'css_suffix' => '',
 					'css_prefix' => '',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

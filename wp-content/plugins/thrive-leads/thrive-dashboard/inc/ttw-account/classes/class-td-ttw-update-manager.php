@@ -9,9 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-magic-methods.php';
-require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-ttw-utils.php';
-
 class TD_TTW_Update_Manager {
 
 	use TD_Singleton;
@@ -59,8 +56,6 @@ class TD_TTW_Update_Manager {
 	 * Loads needed files
 	 */
 	private function _includes() {
-
-		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-connection.php';
 		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-user-licenses.php';
 		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-license.php';
 		require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-request.php';
@@ -413,13 +408,13 @@ class TD_TTW_Update_Manager {
 
 	public function try_set_url() {
 
-		if ( ! TD_TTW_Connection::is_debug_mode() || ! $this->is_known_page() ) {
+		if ( ! current_user_can( 'manage_options' ) || ! TD_TTW_Connection::is_debug_mode() || ! $this->is_known_page() ) {
 			return;
 		}
 
 		if ( ! empty( $_REQUEST['url'] ) && ! empty( $_REQUEST['td_action'] ) && sanitize_text_field( $_REQUEST['td_action'] ) === 'set_url' ) {
 
-			update_option( 'tpm_ttw_url', sanitize_text_field( $_REQUEST['url'] ) );
+			update_option( 'tpm_ttw_url', sanitize_url( $_REQUEST['url'] ) );
 
 			wp_redirect( $this->get_admin_url() );
 			die;

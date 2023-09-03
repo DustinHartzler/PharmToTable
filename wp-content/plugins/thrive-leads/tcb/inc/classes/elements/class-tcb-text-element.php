@@ -57,20 +57,20 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
-			'text'                => array(
-				'config' => array(
-					'ToggleControls' => array(
-						'config'  => array(
-							'buttons' => array(
-								array( 'value' => 'tcb-text-font-size', 'text' => __( 'Font Size', 'thrive-cb' ), 'default' => true ),
-								array( 'value' => 'tcb-text-line-height', 'text' => __( 'Line Height', 'thrive-cb' ) ),
-								array( 'value' => 'tcb-text-letter-spacing', 'text' => __( 'Letter Spacing', 'thrive-cb' ) ),
-							),
-						),
+		return [
+			'text'                => [
+				'config' => [
+					'ToggleControls'             => [
+						'config'  => [
+							'buttons' => [
+								[ 'value' => 'tcb-text-font-size', 'text' => __( 'Font Size', 'thrive-cb' ), 'default' => true ],
+								[ 'value' => 'tcb-text-line-height', 'text' => __( 'Line Height', 'thrive-cb' ) ],
+								[ 'value' => 'tcb-text-letter-spacing', 'text' => __( 'Letter Spacing', 'thrive-cb' ) ],
+							],
+						],
 						'extends' => 'ButtonGroup',
-					),
-					'FontSize'       => [
+					],
+					'FontSize'                   => [
 						'config'  => [
 							'default' => '16',
 							'min'     => '1',
@@ -81,7 +81,7 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 						],
 						'extends' => 'FontSize',
 					],
-					'LineHeight'     => array(
+					'LineHeight'                 => [
 						'css_prefix' => tcb_selection_root() . ' ',
 						'config'     => [
 							'default' => '1',
@@ -92,8 +92,8 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 							'css'     => 'lineHeight',
 						],
 						'extends'    => 'LineHeight',
-					),
-					'LetterSpacing'  => [
+					],
+					'LetterSpacing'              => [
 						'config'  => [
 							'default' => 'auto',
 							'min'     => '0',
@@ -104,40 +104,166 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 						],
 						'extends' => 'Slider',
 					],
-					'FontColor'      => [
+					'ToggleColorControls'        => [
+						'config'  => [
+							'name'    => __( 'Color type', 'thrive-cb' ),
+							'buttons' => [
+								[ 'value' => 'tcb-text-solid-color', 'text' => __( 'Solid', 'thrive-cb' ) ],
+								[ 'value' => 'tcb-text-gradient-color', 'text' => __( 'Gradient', 'thrive-cb' ) ],
+							],
+						],
+						'extends' => 'ButtonGroup',
+					],
+					'FontColor'                  => [
 						'config'  => [
 							'default' => '000',
-							'label'   => 'Color',
+							'label'   => __( 'Color', 'thrive-cb' ),
 							'options' => [
 								'output' => 'object',
 							],
 						],
 						'extends' => 'ColorPicker',
 					],
-					'FontBackground' => [
+					'FontGradient'               => [
 						'config'  => [
 							'default' => '000',
-							'label'   => 'Highlight',
+							'label'   => __( 'Gradient', 'thrive-cb' ),
+							'options' => [
+								'output'   => 'object',
+								'hasInput' => true,
+							],
+						],
+						'extends' => 'GradientPicker',
+					],
+					'FontBaseColor'              => [
+						'css_prefix' => '.thrv_text_element ',
+						'config'     => [
+							'default' => '000',
+							'label'   => __( 'Effect color', 'thrive-cb' ),
+							'info'    => true,
+							'options' => [
+								'output' => 'object',
+							],
+						],
+						'extends'    => 'ColorPicker',
+					],
+					'FontBackground'             => [
+						'config'  => [
+							'default' => '000',
+							'label'   => __( 'Highlight', 'thrive-cb' ),
 							'options' => [
 								'output' => 'object',
 							],
 						],
 						'extends' => 'ColorPicker',
 					],
-					'FontFace'       => array(
+					'HighlightType'              => [
+						'config'  => [
+							'name'    => __( 'Type', 'thrive-cb' ),
+							'options' => [
+								'none'              => __( 'None', 'thrive-cb' ),
+								''                  => __( 'Basic', 'thrive-cb' ),
+								'brush'             => __( 'Brush stroke', 'thrive-cb' ),
+								'bubble'            => __( 'Bubble', 'thrive-cb' ),
+								'circle'            => __( 'Circle', 'thrive-cb' ),
+								'crossed-lines'     => __( 'Crossed lines', 'thrive-cb' ),
+								'divergent'         => __( 'Divergent', 'thrive-cb' ),
+								'double-line'       => __( 'Double underline', 'thrive-cb' ),
+								'wavy'              => __( 'Fluid wave', 'thrive-cb' ),
+								'marker-background' => __( 'Marker highlight', 'thrive-cb' ),
+								'line'              => __( 'Underline', 'thrive-cb' ),
+								'wavy-2'            => __( 'Unruly wave', 'thrive-cb' ),
+								'marker-zig-zag'    => __( 'Zig zag', 'thrive-cb' ),
+							],
+						],
+						'extends' => 'Select',
+					],
+					'HighlightWidth'             => [
+						'config'  => [
+							'min'   => '1',
+							'max'   => '10',
+							'label' => __( 'Stroke Width', 'thrive-cb' ),
+							'um'    => [ 'px' ],
+						],
+						'extends' => 'Slider',
+					],
+					'HighlightPosition'          => [
+						'config'  => [
+							'name'  => '',
+							'label' => __( 'Display Over Text' ),
+						],
+						'extends' => 'Switch',
+					],
+					'DeviceHighlightStatus'      => [
+						'config'  => [
+							'name'     => __( 'Visible on', 'thrive-cb' ),
+							'checkbox' => true,
+							'buttons'  => [
+								[
+									'value'   => 'desktop',
+									'icon'    => 'desktop',
+									'default' => true,
+								],
+								[
+									'value'   => 'tablet',
+									'icon'    => 'tablet2',
+									'default' => true,
+								],
+								[
+									'value'   => 'mobile',
+									'icon'    => 'mobile',
+									'default' => true,
+								],
+							],
+						],
+						'extends' => 'ButtonGroup',
+					],
+					'HighlightAnimation'         => [
+						'config'  => [
+							'name'    => __( 'Animation', 'thrive-cb' ),
+							'options' => [
+								''                => __( 'None', 'thrive-cb' ),
+								'viewport_once'   => __( 'Once', 'thrive-cb' ),
+								'viewport_repeat' => __( 'Repeat on entry', 'thrive-cb' ),
+								'loop'            => __( 'Loop', 'thrive-cb' ),
+							],
+						],
+						'extends' => 'Select',
+					],
+					'HighlightAnimationDuration' => [
+						'config'  => [
+							'default' => '3000',
+							'min'     => '1',
+							'max'     => '10000',
+							'label'   => __( 'Animation Duration', 'thrive-cb' ),
+							'um'      => [ 'ms' ],
+						],
+						'extends' => 'Slider',
+					],
+					'HighlightAnimationDelay'    => [
+						'config'  => [
+							'default' => '1',
+							'min'     => '1',
+							'max'     => '10000',
+							'label'   => __( 'Time before repeating', 'thrive-cb' ),
+							'um'      => [ 'ms' ],
+						],
+						'extends' => 'Slider',
+					],
+					'FontFace'                   => [
 						'css_prefix' => tcb_selection_root() . ' ',
 						'config'     => [
 							'template' => 'controls/font-manager',
 							'inline'   => true,
 						],
-					),
-					'TextStyle'      => array(
+					],
+					'TextStyle'                  => [
 						'css_prefix' => tcb_selection_root() . ' ',
 						'config'     => [
 							'important' => true,
 						],
-					),
-					'TextTransform'  => [
+					],
+					'TextTransform'              => [
 						'config'  => [
 							'name'    => 'Transform',
 							'buttons' => [
@@ -166,32 +292,32 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 						],
 						'extends' => 'ButtonGroup',
 					],
-					'LineSpacing'    => array(
+					'LineSpacing'                => [
 						'css_prefix' => tcb_selection_root() . ' ',
 						'config'     => [
 							'important' => true,
 						],
-					),
-					'HeadingToggle'  => array(
-						'config'  => array(
+					],
+					'HeadingToggle'              => [
+						'config'  => [
 							'label' => __( 'Include heading in table of contents element (if eligible)', 'thrive-cb' ),
-						),
+						],
 						'extends' => 'Switch',
-					),
-					'HeadingRename'  => array(
-						'config'  => array(
+					],
+					'HeadingRename'              => [
+						'config'  => [
 							'label' => __( 'Customize heading label', 'thrive-cb' ),
-						),
+						],
 						'extends' => 'Switch',
-					),
-					'HeadingAltText' => array(
-						'config'  => array(
+					],
+					'HeadingAltText'             => [
+						'config'  => [
 							'placeholder' => __( 'Enter heading to be displayed', 'thrive-cb' ),
-						),
+						],
 						'extends' => 'LabelInput',
-					),
-				),
-			),
+					],
+				],
+			],
 			'layout'              => [
 				'config'            => [
 					'MarginAndPadding' => [],
@@ -223,11 +349,11 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 			'typography'          => [
 				'hidden' => true,
 			],
-			'animation'           => array(
-				'disabled_controls' => array(
+			'animation'           => [
+				'disabled_controls' => [
 					'.btn-inline:not(.anim-animation)',
-				),
-			),
+				],
+			],
 			'scroll'              => [
 				'hidden'            => false,
 				'disabled_controls' => [ '[data-value="sticky"]' ],
@@ -235,7 +361,7 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 			'conditional-display' => [
 				'hidden' => false,
 			],
-		);
+		];
 	}
 
 	/**

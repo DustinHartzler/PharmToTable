@@ -252,11 +252,6 @@ class Thrive_Leads_Contacts_List extends WP_List_Table {
 		$delete_nonce = wp_create_nonce( 'tl_delete_contact' );
 
 		$actions = array(
-			'email'  => sprintf( '<a class="tve-email tvd-btn-icon tvd-btn-icon-blue" href="javascript:void(0)" data-contact-id="%s" title="%s"><span class="tvd-icon-email"></span>%s</a>',
-				$item->id,
-				__( 'Email', "thrive-leads" ),
-				__( 'Email', "thrive-leads" )
-			),
 			'delete' => sprintf( '<a class="tvd-delete tvd-btn-icon tvd-btn-icon-red" href="?page=thrive_leads_contacts&action=%s&contact=%s&paged=%s&_wpnonce=%s" title="%s"><span class="tvd-icon-trash-o"></span>%s</a>',
 				'delete',
 				$item->id,
@@ -276,7 +271,7 @@ class Thrive_Leads_Contacts_List extends WP_List_Table {
 		$source     = $this->get_contact_filter( 'source' );
 		$per_page   = $this->get_contact_filter( 'per-page' );
 
-		include dirname( dirname( dirname( __FILE__ ) ) ) . '/views/contacts/contacts_filters.php';
+		include dirname( dirname( __DIR__ ) ) . '/views/contacts/contacts_filters.php';
 	}
 
 	/**

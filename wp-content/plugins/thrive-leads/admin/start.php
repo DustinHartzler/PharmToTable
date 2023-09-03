@@ -136,7 +136,14 @@ function tve_leads_admin_enqueue( $hook ) {
 			'last_12_months'    => TVE_LAST_12_MONTHS,
 			'custom_date_range' => TVE_CUSTOM_DATE_RANGE,
 		),
-		'api_connections' => Thrive_List_Manager::get_available_apis( true, [ 'exclude_types' => [ 'captcha', 'email', 'social' ] ] ),
+		'api_connections'                       => Thrive_List_Manager::get_available_apis( true, [ 'exclude_types' => [ 'captcha', 'email', 'social' ] ] ),
+		'license'                               => [
+			'exp'           => ! TD_TTW_User_Licenses::get_instance()->has_active_license( 'tl' ),
+			'gp'            => TD_TTW_User_Licenses::get_instance()->is_in_grace_period( 'tl' ),
+			'show_lightbox' => TD_TTW_User_Licenses::get_instance()->show_gp_lightbox( 'tl' ),
+			'grace_time'    => TD_TTW_User_Licenses::get_instance()->get_grace_period_left( 'tl' ),
+			'link'          => tvd_get_individual_plugin_license_link( 'tl' )
+		]
 	);
 
 	/**
@@ -493,7 +500,7 @@ function thrive_leads_contacts() {
 		return tve_leads_tcb_version_warning();
 	}
 
-	require_once dirname( __FILE__ ) . '/inc/classes/Thrive_Leads_Contacts_List.php';
+	require_once __DIR__ . '/inc/classes/Thrive_Leads_Contacts_List.php';
 
 	$dashboard_data = array(
 		'global_settings' => array(
@@ -503,15 +510,10 @@ function thrive_leads_contacts() {
 		'groups'          => tve_leads_get_groups(),
 	);
 
-	$saved_email   = tve_leads_get_option( 'contacts_send_email' );
 	$contacts_list = new Thrive_Leads_Contacts_List( array( 'ajax' => false ) );
 	$contacts_list->prepare_items();
-	$upload = wp_upload_dir();
 
-	global $tvedb;
-	$download_list = $tvedb->tve_leads_get_download_list();
-
-	include dirname( __FILE__ ) . '/views/contacts/contacts.php';
+	include __DIR__ . '/views/contacts/contacts.php';
 }
 
 /* hook to remove http_referrer and wpnonce from the url when performing actions */

@@ -21,23 +21,23 @@ class TCB_Symbols_Taxonomy {
 	}
 
 	public function init() {
-		add_action( 'init', array( $this, 'register_symbols_tax' ) );
-		add_filter( 'tcb_main_frame_localize', array( $this, 'terms_localization' ) );
+		add_action( 'init', [ $this, 'register_symbols_tax' ] );
+		add_filter( 'tcb_main_frame_localize', [ $this, 'terms_localization' ] );
 	}
 
 	public function register_symbols_tax() {
 		$tax_labels = $this->get_labels();
 
-		register_taxonomy( self::SYMBOLS_TAXONOMY, array( TCB_Symbols_Post_Type::SYMBOL_POST_TYPE ), array(
+		register_taxonomy( self::SYMBOLS_TAXONOMY, [ TCB_Symbols_Post_Type::SYMBOL_POST_TYPE ], [
 			'hierarchical'      => true,
 			'labels'            => $tax_labels,
 			'show_ui'           => true,
 			'show_in_nav_menus' => false,
 			'show_admin_column' => true,
 			'query_var'         => true,
-			'rewrite'           => array( 'slug' => 'tcb_symbol' ),
+			'rewrite'           => [ 'slug' => 'tcb_symbol' ],
 			'show_in_rest'      => true,
-		) );
+		] );
 
 		register_taxonomy_for_object_type( self::SYMBOLS_TAXONOMY, TCB_Symbols_Post_Type::SYMBOL_POST_TYPE );
 		$this->insert_default_terms();
@@ -45,7 +45,7 @@ class TCB_Symbols_Taxonomy {
 	}
 
 	public function insert_default_terms() {
-		$terms = array( 'Headers', 'Footers', 'Gutenberg block' );
+		$terms = [ 'Headers', 'Footers', 'Gutenberg block' ];
 
 		foreach ( $terms as $term ) {
 			$exists = term_exists( $term, self::SYMBOLS_TAXONOMY );
@@ -100,18 +100,18 @@ class TCB_Symbols_Taxonomy {
 	 * @return array|int|WP_Error
 	 */
 	public function get_symbols_tax_terms( $show_tax_terms = false ) {
-		$result        = array();
-		$section_terms = array();
+		$result        = [];
+		$section_terms = [];
 
-		$terms = get_terms( array(
+		$terms = get_terms( [
 			'order'      => 'DESC',
 			'orderby'    => 'term_id',
 			'taxonomy'   => self::SYMBOLS_TAXONOMY,
 			'hide_empty' => false,
-		) );
+		] );
 
 		foreach ( $terms as $key => $term ) {
-			if ( ! in_array( $term->name, array( 'Headers', 'Footers' ) ) ) {
+			if ( ! in_array( $term->name, [ 'Headers', 'Footers' ] ) ) {
 				$result[] = $term;
 			} else {
 				$section_terms[] = $term;
@@ -185,7 +185,7 @@ class TCB_Symbols_Taxonomy {
 	 */
 	public static function add_to_tax( $id, $tax_slug ) {
 		$term_id = static::get_term_id( $tax_slug );
-		wp_set_post_terms( $id, array( $term_id ), TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY );
+		wp_set_post_terms( $id, [ $term_id ], TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY );
 	}
 }
 

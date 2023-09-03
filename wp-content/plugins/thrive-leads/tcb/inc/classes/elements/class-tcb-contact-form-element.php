@@ -137,23 +137,23 @@ class TCB_Contact_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'typography'   => array(
+			'typography'   => [
 				'hidden' => true,
-			),
-			'animation'    => array(
+			],
+			'animation'    => [
 				'hidden' => true,
-			),
-			'layout'       => array(
-				'config'            => array(
-					'Width' => array(
+			],
+			'layout'       => [
+				'config'            => [
+					'Width' => [
 						'important' => true,
-					),
-				),
-				'disabled_controls' => array(
+					],
+				],
+				'disabled_controls' => [
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 
 		return array_merge( $contact_form, $this->group_component() );
@@ -200,12 +200,12 @@ class TCB_Contact_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'contact_form',
 				'link' => 'https://help.thrivethemes.com/en/articles/4430139-how-to-use-the-contact-form-element',
-			),
-		);
+			],
+		];
 	}
 }

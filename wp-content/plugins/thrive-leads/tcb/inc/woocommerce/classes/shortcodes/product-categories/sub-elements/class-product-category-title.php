@@ -53,7 +53,7 @@ class Product_Category_Title extends \TCB_Element_Abstract {
 		$components['responsive']['hidden']       = true;
 		$components['styles-templates']['hidden'] = true;
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		$components['typography'] = Main::get_general_typography_config();
 

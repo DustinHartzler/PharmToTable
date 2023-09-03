@@ -38,7 +38,7 @@ class TCB_Post_Grid {
 	 *
 	 * @param $config
 	 */
-	public function __construct( $config = array() ) {
+	public function __construct( $config = [] ) {
 
 		$config = stripslashes_deep( $config );
 
@@ -51,31 +51,31 @@ class TCB_Post_Grid {
 			'image-height'     => '',
 			'font-size'        => '', //Backwards Compatibility: Title Font Size
 			'text-line-height' => '', //Backwards Compatibility: Title Line Height
-			'teaser_layout'    => array(
+			'teaser_layout'    => [
 				'featured_image' => 'true',
 				'title'          => 'true',
 				'text'           => 'true',
 				'read_more'      => 'true',
-			),
-			'layout'           => array(
+			],
+			'layout'           => [
 				'featured_image',
 				'title',
 				'text',
 				'read_more',
-			),
+			],
 			'orderby'          => 'date',
 			'order'            => 'DESC',
 			'recent_days'      => '0',
 			'posts_start'      => '0',
 			'posts_per_page'   => '6',
-			'content_types'    => array( 'post' ),
-			'filters'          => array(
-				'category' => array(),
-				'tag'      => array(),
-				'tax'      => array(),
-				'author'   => array(),
-				'posts'    => array(),
-			),
+			'content_types'    => [ 'post' ],
+			'filters'          => [
+				'category' => [],
+				'tag'      => [],
+				'tax'      => [],
+				'author'   => [],
+				'posts'    => [],
+			],
 		);
 
 		/**
@@ -83,7 +83,7 @@ class TCB_Post_Grid {
 		 * This can be removed after users update a while when users update their post grids and the post_types variable is removed from the config array
 		 */
 		if ( ! empty( $config['post_types'] ) && is_array( $config['post_types'] ) && empty( $config['content_types'] ) ) {
-			$config['content_types'] = array();
+			$config['content_types'] = [];
 			foreach ( $config['post_types'] as $type => $checked ) {
 				if ( $checked === 'true' ) {
 					$config['content_types'][] = $type;
@@ -122,7 +122,7 @@ class TCB_Post_Grid {
 		}
 
 		foreach ( $posts as $key => $post ) {
-			$html .= tcb_template( $this->_template, array( 'cls' => $this, 'index' => $index, 'post' => $post, 'count' => $count ), true );
+			$html .= tcb_template( $this->_template, [ 'cls' => $this, 'index' => $index, 'post' => $post, 'count' => $count ], true );
 			$index ++;
 		}
 
@@ -162,7 +162,7 @@ class TCB_Post_Grid {
 			'order'          => $this->_config['order'],
 			'orderby'        => $this->_config['orderby'],
 			'post_status'    => 'publish',
-			'post__not_in'   => array( $this->_config['exclude'] ),
+			'post__not_in'   => [ $this->_config['exclude'] ],
 		);
 
 		if ( ! empty( $this->_config['filters']['category'] ) ) {
@@ -194,7 +194,7 @@ class TCB_Post_Grid {
 			//Backwards compatibility:
 			if ( is_string( $this->_config['filters']['tag'] ) ) {
 				$tags                            = explode( ',', trim( $this->_config['filters']['tag'], ',' ) );
-				$tags                            = empty( $tags ) ? array() : $tags;
+				$tags                            = empty( $tags ) ? [] : $tags;
 				$this->_config['filters']['tag'] = array_unique( $tags );
 			}
 			$query_tags = array(
@@ -215,10 +215,10 @@ class TCB_Post_Grid {
 			if ( ! empty( $this->_config['filters']['category'] ) ) {
 				$args['tax_query'][] = $query_tags;
 			} else {
-				$args['tax_query'] = array(
+				$args['tax_query'] = [
 					'relation' => 'AND',
 					$query_tags,
-				);
+				];
 			}
 		}
 
@@ -226,26 +226,26 @@ class TCB_Post_Grid {
 			//Backwards compatibility:
 			if ( is_string( $this->_config['filters']['tax'] ) ) {
 				$tax_parts                       = explode( ',', trim( $this->_config['filters']['tax'], ',' ) );
-				$tax_parts                       = empty( $tax_parts ) ? array() : $tax_parts;
+				$tax_parts                       = empty( $tax_parts ) ? [] : $tax_parts;
 				$this->_config['filters']['tax'] = array_unique( $tax_parts );
 			}
 			$tax_names = $this->_config['filters']['tax']; //array_unique( $tax_names );
-			$tax_query = array();
+			$tax_query = [];
 			//foreach taxonomy name get all its terms and build tax_query for it
 			foreach ( $tax_names as $tax_name ) {
 				$terms_obj = get_terms( $tax_name );
 				if ( empty( $terms_obj ) || $terms_obj instanceof WP_Error ) {
 					continue;
 				}
-				$tax_terms = array();
+				$tax_terms = [];
 				foreach ( $terms_obj as $term ) {
 					$tax_terms[] = $term->slug;
 				}
-				$tax_query[] = array(
+				$tax_query[] = [
 					'taxonomy' => $tax_name,
 					'field'    => 'slug',
 					'terms'    => $tax_terms,
-				);
+				];
 			}
 			if ( ! empty( $tax_query ) ) {
 				$tax_query['relation'] = 'OR';
@@ -259,7 +259,7 @@ class TCB_Post_Grid {
 				$this->_config['filters']['author'] = array_unique( explode( ',', trim( $this->_config['filters']['author'], ',' ) ) );
 			}
 			$author_names = $this->_config['filters']['author']; //array_unique( $author_names );
-			$author_ids   = array();
+			$author_ids   = [];
 			foreach ( $author_names as $name ) {
 				$author = get_user_by( 'slug', $name );
 				if ( $author ) {
@@ -310,7 +310,7 @@ class TCB_Post_Grid {
 		foreach ( $this->_config['layout'] as $layout ) {
 			if ( ! empty( $this->_config['teaser_layout'][ $layout ] ) && $this->_config['teaser_layout'][ $layout ] === 'true' ) {
 				$function_name = '_display_post_' . $layout;
-				$html          .= call_user_func( array( $this, $function_name ), $post );
+				$html          .= call_user_func( [ $this, $function_name ], $post );
 			}
 		}
 

@@ -30,11 +30,11 @@ function tve_replace_cloud_template_global_selector( $data, $meta ) {
  *
  * @return array|mixed|WP_Error
  */
-function tve_get_cloud_content_templates( $tag, $args = array() ) {
+function tve_get_cloud_content_templates( $tag, $args = [] ) {
 
-	$args = wp_parse_args( $args, array(
+	$args = wp_parse_args( $args, [
 		'nocache' => false,
-	) );
+	] );
 
 	$do_not_use_cache = ( defined( 'TCB_TEMPLATE_DEBUG' ) && TCB_TEMPLATE_DEBUG ) || $args['nocache'];
 
@@ -78,7 +78,7 @@ function tve_get_cloud_content_templates( $tag, $args = array() ) {
  *
  * @return mixed
  */
-function tve_get_cloud_template_data( $tag, $args = array() ) {
+function tve_get_cloud_template_data( $tag, $args = [] ) {
 
 	if ( isset( $args['id'] ) ) {
 		$id = $args['id'];
@@ -87,9 +87,10 @@ function tve_get_cloud_template_data( $tag, $args = array() ) {
 		return new WP_Error( 'tcb_download_err', __( 'Invalid template id.', 'thrive-cb' ) );
 	}
 
-	$args = wp_parse_args( $args, array(
+	$args = wp_parse_args( $args, [
 		'nocache' => false,
-	) );
+		'post_id' => null,
+	] );
 
 	$args = apply_filters( 'tcb_filter_cloud_template_data_args', $args, $tag );
 
@@ -144,7 +145,7 @@ function tve_get_cloud_template_data( $tag, $args = array() ) {
  *
  * @return string
  */
-function tve_get_cloud_templates_transient_name( $filters = array() ) {
+function tve_get_cloud_templates_transient_name( $filters = [] ) {
 	$transient_name = 'tcb_lp';
 	if ( ! empty( $filters ) ) {
 		$transient_name .= '_' . md5( serialize( $filters ) );
@@ -174,12 +175,12 @@ function tve_get_cloud_templates_transient_name( $filters = array() ) {
  *
  * @return array
  */
-function tve_get_cloud_templates( $filters = array(), $args = array() ) {
+function tve_get_cloud_templates( $filters = [], $args = [] ) {
 	$transient_name = tve_get_cloud_templates_transient_name( $filters );
 
-	$args = wp_parse_args( $args, array(
+	$args = wp_parse_args( $args, [
 		'nocache' => false,
-	) );
+	] );
 
 	if ( ( defined( 'TCB_CLOUD_DEBUG' ) && TCB_CLOUD_DEBUG ) || $args['nocache'] ) {
 		delete_transient( $transient_name );
@@ -196,7 +197,7 @@ function tve_get_cloud_templates( $filters = array(), $args = array() ) {
 		} catch ( Exception $e ) {
 			/* save the error message to display it in the LP modal */
 			$GLOBALS['tcb_lp_cloud_error'] = $e->getMessage();
-			$templates                     = array();
+			$templates                     = [];
 		}
 	}
 
@@ -245,10 +246,10 @@ function tve_get_cloud_template_config( $lp_template, $validate = true ) {
 
 	$base_folder = tcb_get_cloud_base_path();
 
-	$required_files = array(
+	$required_files = [
 		'templates/' . $lp_template . '.tpl', // html contents
 		'templates/css/' . $lp_template . '.css', // css file
-	);
+	];
 
 	foreach ( $required_files as $file ) {
 		if ( ! is_readable( $base_folder . $file ) ) {

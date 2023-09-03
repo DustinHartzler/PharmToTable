@@ -19,6 +19,7 @@ class TCB_Post_Author_Name_Element extends TCB_Post_List_Sub_Element_Abstract {
 	public function hide() {
 		return false;
 	}
+
 	/**
 	 * Return icon class needed for display in menu
 	 *
@@ -27,6 +28,7 @@ class TCB_Post_Author_Name_Element extends TCB_Post_List_Sub_Element_Abstract {
 	public function icon() {
 		return 'author-name';
 	}
+
 	/**
 	 * Name of the element
 	 *
@@ -64,11 +66,11 @@ class TCB_Post_Author_Name_Element extends TCB_Post_List_Sub_Element_Abstract {
 		$components    = parent::own_components();
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
-			if ( in_array( $control, array( 'css_suffix', 'css_prefix' ) ) ) {
+			if ( in_array( $control, [ 'css_suffix', 'css_prefix' ] ) ) {
 				continue;
 			}
 			/* make sure typography elements also apply on the link inside the tag */
-			$components['typography']['config'][ $control ]['css_suffix'] = array( ' a', '' );
+			$components['typography']['config'][ $control ]['css_suffix'] = [ ' a', '' ];
 		}
 
 		$components['typography']['config']['FontColor']['css_prefix'] = $prefix_config . ' ';

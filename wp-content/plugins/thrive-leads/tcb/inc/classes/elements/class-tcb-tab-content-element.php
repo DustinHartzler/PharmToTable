@@ -37,57 +37,57 @@ class TCB_Tab_Content_Element extends TCB_ContentBox_Element {
 
 		unset( $components['contentbox'] );
 		unset( $components['shared-styles'] );
-		$components['layout'] = array(
-			'disabled_controls' => array(
+		$components['layout'] = [
+			'disabled_controls' => [
 				'Display',
 				'Float',
 				'Position',
-			),
-			'config'            => array(
-				'Width'  => array(
+			],
+			'config'            => [
+				'Width'  => [
 					'important' => true,
-				),
-				'Height' => array(
+				],
+				'Height' => [
 					'important' => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$components['background'] = array(
-			'config' => array(
-				'ColorPicker' => array( 'css_prefix' => $prefix_config ),
-				'PreviewList' => array( 'css_prefix' => $prefix_config ),
+		$components['background'] = [
+			'config' => [
+				'ColorPicker' => [ 'css_prefix' => $prefix_config ],
+				'PreviewList' => [ 'css_prefix' => $prefix_config ],
 				'to'          => '>.tve-content-box-background',
-			),
-		);
+			],
+		];
 
-		$components['borders'] = array(
-			'config' => array(
-				'Borders' => array(
+		$components['borders'] = [
+			'config' => [
+				'Borders' => [
 					'important' => true,
 					'to'        => '>.tve-content-box-background',
-				),
-				'Corners' => array(
+				],
+				'Corners' => [
 					'important' => true,
 					'to'        => '>.tve-content-box-background',
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$prefix_config_text       = array( 'css_prefix' => $prefix_config . '.tve_tab_content ' );
-		$components['typography'] = array(
-			'disabled_controls' => array(),
-			'config'            => array(
+		$prefix_config_text       = [ 'css_prefix' => $prefix_config . '.tve_tab_content ' ];
+		$components['typography'] = [
+			'disabled_controls' => [],
+			'config'            => [
 				'to'         => '.tve-cb',
 				'FontSize'   => $prefix_config_text,
 				'FontColor'  => $prefix_config_text,
 				'LineHeight' => $prefix_config_text,
 				'FontFace'   => $prefix_config_text,
-			),
-		);
-		$components['scroll']     = array( 'hidden' => true );
-		$components['responsive'] = array( 'hidden' => true );
-		$components['animation']  = array( 'hidden' => true );
+			],
+		];
+		$components['scroll']     = [ 'hidden' => true ];
+		$components['responsive'] = [ 'hidden' => true ];
+		$components['animation']  = [ 'hidden' => true ];
 
 		return $components;
 	}

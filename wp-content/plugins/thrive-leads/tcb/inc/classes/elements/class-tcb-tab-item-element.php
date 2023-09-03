@@ -106,7 +106,7 @@ class TCB_Tab_Item_Element extends TCB_Element_Abstract {
 					'ColorPicker'      => array(
 						'config'     => array(
 							'label'   => __( 'Icon Color', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 						'css_suffix' => ' .tve-tab-icon',
 					),
@@ -116,7 +116,7 @@ class TCB_Tab_Item_Element extends TCB_Element_Abstract {
 							'min'     => 1,
 							'max'     => 100,
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 							'css'     => 'fontSize',
 						),
 						'extends'    => 'Slider',
@@ -125,84 +125,84 @@ class TCB_Tab_Item_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography' => array(
-				'config'            => array(
-					'FontColor'     => array(
+			'typography' => [
+				'config'            => [
+					'FontColor'     => [
 						'css_suffix' => $suffix,
 						'important'  => true,
-					),
-					'FontSize'      => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => $suffix,
 						'important'  => true,
-					),
-					'TextStyle'     => array(
-						'css_suffix' => $suffix,
-						'css_prefix' => $prefix_config,
-						'important'  => true,
-					),
-					'LineHeight'    => array(
-						'css_suffix' => $suffix,
-						'important'  => true,
-					),
-					'FontFace'      => array(
-						'css_suffix' => $suffix,
-						'important'  => true,
-					),
-					'LetterSpacing' => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => $suffix,
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'TextTransform' => array(
+					],
+					'LineHeight'    => [
+						'css_suffix' => $suffix,
+						'important'  => true,
+					],
+					'FontFace'      => [
+						'css_suffix' => $suffix,
+						'important'  => true,
+					],
+					'LetterSpacing' => [
+						'css_suffix' => $suffix,
+						'css_prefix' => $prefix_config,
+						'important'  => true,
+					],
+					'TextTransform' => [
 						'css_suffix' => $suffix,
 
 						'important' => true,
-					),
-				),
-				'disabled_controls' => array( 'TextAlign', '.tve-advanced-controls' ),
-			),
-			'animation'  => array( 'hidden' => true ),
-			'layout'     => array(
-				'disabled_controls' => array(
+					],
+				],
+				'disabled_controls' => [ 'TextAlign', '.tve-advanced-controls' ],
+			],
+			'animation'  => [ 'hidden' => true ],
+			'layout'     => [
+				'disabled_controls' => [
 					'Alignment',
 					'Display',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'MarginAndPadding' => array(
+				],
+				'config'            => [
+					'MarginAndPadding' => [
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'Width'            => array(
+					],
+					'Width'            => [
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-					'Height'           => array(
+					],
+					'Height'           => [
 						'css_prefix' => $prefix_config,
 						'important'  => true,
-					),
-				),
-			),
-			'background' => array(
-				'config' => array(
-					'ColorPicker' => array( 'css_prefix' => $prefix_config ),
-					'PreviewList' => array( 'css_prefix' => $prefix_config ),
-				),
-			),
-			'borders'    => array(
-				'config' => array(
-					'Borders' => array(
+					],
+				],
+			],
+			'background' => [
+				'config' => [
+					'ColorPicker' => [ 'css_prefix' => $prefix_config ],
+					'PreviewList' => [ 'css_prefix' => $prefix_config ],
+				],
+			],
+			'borders'    => [
+				'config' => [
+					'Borders' => [
 						'important'  => true,
 						'css_prefix' => $prefix_config,
-					),
-					'Corners' => array(
+					],
+					'Corners' => [
 						'important'  => true,
 						'css_prefix' => $prefix_config,
-					),
-				),
-			),
-			'shadow'     => array( 'config' => array( 'css_prefix' => $prefix_config ) ),
-			'responsive' => array( 'hidden' => true ),
+					],
+				],
+			],
+			'shadow'     => [ 'config' => [ 'css_prefix' => $prefix_config ] ],
+			'responsive' => [ 'hidden' => true ],
 		);
 	}
 

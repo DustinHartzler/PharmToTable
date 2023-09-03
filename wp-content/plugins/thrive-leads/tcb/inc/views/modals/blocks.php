@@ -5,7 +5,7 @@
 		<div class="lp-search">
 			<?php tcb_icon( 'search-regular' ); ?>
 			<input type="text" data-source="search" class="keydown" data-fn="filter" placeholder="<?php echo esc_html__( 'Search', 'thrive-cb' ); ?>"/>
-			<?php tcb_icon( 'close2', false, 'sidebar', 'click', array( 'data-fn' => 'domClearSearch' ) ); ?>
+			<?php tcb_icon( 'close2', false, 'sidebar', 'click', [ 'data-fn' => 'domClearSearch' ] ); ?>
 		</div>
 		<div class="lp-menu-wrapper">
 			<div id="block-source-select-wrapper">

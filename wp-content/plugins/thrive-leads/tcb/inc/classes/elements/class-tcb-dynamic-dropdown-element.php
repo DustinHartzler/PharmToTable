@@ -46,7 +46,7 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 
 	public function own_components() {
 		$dropdown_svg   = $this->get_icon_styles();
-		$dropdown_icons = array();
+		$dropdown_icons = [];
 		foreach ( $dropdown_svg as $key => & $dropdown_icon ) {
 			$dropdown_icons[ $key ] = $dropdown_icon['label'];
 			unset( $dropdown_icon['label'] );
@@ -61,19 +61,19 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 		$components = array(
 			'dynamic_dropdown' => array(
 				'config' => array(
-					'PlaceholderInput'  => array(
-						'config'  => array(
+					'PlaceholderInput'  => [
+						'config'  => [
 							'label' => 'Placeholder',
-						),
+						],
 						'extends' => 'LabelInput',
-					),
+					],
 					'StyleChange'       => array(
 						'config' => array(
 							'label'   => __( 'Dropdown style', 'thrive-cb' ),
-							'preview' => array(
+							'preview' => [
 								'key'   => '',
 								'label' => 'default',
-							),
+							],
 						),
 					),
 					'Width'             => array(
@@ -82,7 +82,7 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 							'min'     => '10',
 							'max'     => '500',
 							'label'   => __( 'Width', 'thrive-cb' ),
-							'um'      => array( '%', 'px' ),
+							'um'      => [ '%', 'px' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
@@ -164,9 +164,9 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'       => array(
-				'disabled_controls' => array( 'TextAlign' ),
-				'config'            => array(
+			'typography'       => [
+				'disabled_controls' => [ 'TextAlign' ],
+				'config'            => [
 					'FontSize'      => $controls_default_config,
 					'FontColor'     => $controls_default_config,
 					'FontFace'      => $controls_default_config,
@@ -175,27 +175,27 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 					'TextAlign'     => $controls_default_config,
 					'TextStyle'     => $controls_default_config,
 					'TextTransform' => $controls_default_config,
-				),
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
-				),
-			),
-			'animation'        => array(
+				],
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
-				'config' => array(
+			],
+			'styles-templates' => [
+				'config' => [
 					'to' => 'select',
-				),
-			),
-			'responsive'       => array(
+				],
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
+			],
 			'borders'          => array(
 				'config' => array(
 					'Borders' => array(
@@ -221,27 +221,27 @@ class TCB_Dynamic_Dropdown_Element extends TCB_Element_Abstract {
 	}
 
 	public function get_icon_styles() {
-		return array(
-			'style_1' => array(
+		return [
+			'style_1' => [
 				'label' => 'Angle',
 				'up'    => '<path d="M151.5 347.8L3.5 201c-4.7-4.7-4.7-12.3 0-17l19.8-19.8c4.7-4.7 12.3-4.7 17 0L160 282.7l119.7-118.5c4.7-4.7 12.3-4.7 17 0l19.8 19.8c4.7 4.7 4.7 12.3 0 17l-148 146.8c-4.7 4.7-12.3 4.7-17 0z"/>',
 				'box'   => '0 0 320 512',
-			),
-			'style_2' => array(
+			],
+			'style_2' => [
 				'label' => 'Chevron',
 				'up'    => '<path d="M443.5 162.6l-7.1-7.1c-4.7-4.7-12.3-4.7-17 0L224 351 28.5 155.5c-4.7-4.7-12.3-4.7-17 0l-7.1 7.1c-4.7 4.7-4.7 12.3 0 17l211 211.1c4.7 4.7 12.3 4.7 17 0l211-211.1c4.8-4.7 4.8-12.3.1-17z"/>',
 				'box'   => '0 0 448 512',
-			),
-			'style_3' => array(
+			],
+			'style_3' => [
 				'label' => 'Caret',
 				'up'    => '<path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/>',
 				'box'   => '0 0 320 512',
-			),
-			'style_4' => array(
+			],
+			'style_4' => [
 				'label' => 'Triangle',
 				'up'    => '<path d="M272 160H48.1c-42.6 0-64.2 51.7-33.9 81.9l111.9 112c18.7 18.7 49.1 18.7 67.9 0l112-112c30-30.1 8.7-81.9-34-81.9zM160 320L48 208h224L160 320z"/>',
 				'box'   => '0 0 320 512',
-			),
-		);
+			],
+		];
 	}
 }

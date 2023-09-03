@@ -78,7 +78,7 @@ class TCB_Number_Counter_Element extends TCB_Element_Abstract {
 						'default' => '0',
 						'min'     => '0',
 						'max'     => '3',
-						'um'      => array( '' ),
+						'um'      => [ '' ],
 					],
 					'extends' => 'Slider',
 				],
@@ -232,12 +232,12 @@ class TCB_Number_Counter_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'number_counter',
 				'link' => 'https://help.thrivethemes.com/en/articles/5579404-how-to-use-the-number-counter-element',
-			),
-		);
+			],
+		];
 	}
 }

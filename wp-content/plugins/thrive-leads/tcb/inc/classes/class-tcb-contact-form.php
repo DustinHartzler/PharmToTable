@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TCB_Contact_Form {
 
-	private $posted_data       = array();
+	private $posted_data       = [];
 	private $empty_posted_data = true;
-	private $invalid_fields    = array();
-	private $types             = array();
+	private $invalid_fields    = [];
+	private $types             = [];
 
 	private $config_parsing_error;
 	private $blog_name;
@@ -40,24 +40,24 @@ class TCB_Contact_Form {
 	 *
 	 * @var array
 	 */
-	private $security = array();
+	private $security = [];
 
 	/**
 	 * Used on Zapier CF element connection
 	 *
 	 * @var array
 	 */
-	private $_excluded_inputs = array(
+	private $_excluded_inputs = [
 		'zapier_send_ip',
 		'zapier_tags',
-	);
+	];
 
 	/**
 	 * TCB_Contact_Form constructor.
 	 *
 	 * @param array $data
 	 */
-	public function __construct( $data = array() ) {
+	public function __construct( $data = [] ) {
 		$data       = $this->sanitize_posted_data( $data );
 		$has_config = $this->setup_config( $data );
 
@@ -67,7 +67,7 @@ class TCB_Contact_Form {
 			$this->permalink = get_permalink( $this->post_id );
 
 			if ( tve_is_code_debug() ) {
-				add_action( 'wp_mail_failed', array( $this, 'mail_error' ) );
+				add_action( 'wp_mail_failed', [ $this, 'mail_error' ] );
 			}
 		}
 	}
@@ -77,7 +77,7 @@ class TCB_Contact_Form {
 	 *
 	 * @param array $data
 	 */
-	private function setup_posted_data( $data = array() ) {
+	private function setup_posted_data( $data = [] ) {
 		$this->post_id = $data['post_id'];
 		$this->types   = static::get_types();
 
@@ -96,7 +96,7 @@ class TCB_Contact_Form {
 	 *
 	 * @return bool
 	 */
-	private function setup_config( $data = array() ) {
+	private function setup_config( $data = [] ) {
 		if ( empty( $data['config'] ) ) {
 			$this->config_parsing_error = __( 'ERROR: Empty Config', 'thrive-cb' );
 
@@ -139,7 +139,7 @@ class TCB_Contact_Form {
 			return false;
 		}
 
-		$this->config = wp_array_slice_assoc( $this->config, array( 'to_email', 'submit' ) );
+		$this->config = wp_array_slice_assoc( $this->config, [ 'to_email', 'submit' ] );
 
 		return true;
 	}
@@ -151,10 +151,10 @@ class TCB_Contact_Form {
 	 */
 	public function submit() {
 
-		$return = array(
-			'errors'  => array(),
+		$return = [
+			'errors'  => [],
 			'success' => 0,
-		);
+		];
 
 		// Form connected to Zapier
 		if ( ( isset( $this->posted_data['zapier_send_ip'] ) || isset( $this->posted_data['zapier_tags'] ) ) && class_exists( 'Thrive_Dash_List_Manager', false ) ) {
@@ -175,10 +175,10 @@ class TCB_Contact_Form {
 			$return['errors'][] = $zapier_subscribe;
 
 			if ( true === filter_var( $zapier_subscribe, FILTER_VALIDATE_BOOLEAN ) ) {
-				$return = array(
-					'errors'  => array(),
+				$return = [
+					'errors'  => [],
 					'success' => 1,
-				);
+				];
 			}
 
 			return $return;
@@ -271,7 +271,7 @@ class TCB_Contact_Form {
 				'remoteip' => ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '',
 			);
 
-			$request_captcha = tve_dash_api_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array( 'body' => $_captcha_params ) );
+			$request_captcha = tve_dash_api_remote_post( 'https://www.google.com/recaptcha/api/siteverify', [ 'body' => $_captcha_params ] );
 			$response        = json_decode( wp_remote_retrieve_body( $request_captcha ) );
 			if ( empty( $response ) || false === $response->success ) {
 				return true;
@@ -297,20 +297,20 @@ class TCB_Contact_Form {
 				'to'      => $this->posted_data['email'],
 				'subject' => ! empty( $this->config['submit']['confirmation_subject'] ) ? $this->config['submit']['confirmation_subject'] : __( '[%s] Contact Form submission confirmation', 'thrive-cb' ),
 				'message' => $this->get_user_email_message(),
-				'headers' => array( 'Content-Type: text/html; charset=UTF-8' ),
+				'headers' => [ 'Content-Type: text/html; charset=UTF-8' ],
 			);
 
 			if ( $this->config['submit']['sender_personalized'] ) {
-				add_filter( 'wp_mail_from', array( $this, 'user_from_mail' ) );
-				add_filter( 'wp_mail_from_name', array( $this, 'user_from_mail_name' ) );
+				add_filter( 'wp_mail_from', [ $this, 'user_from_mail' ] );
+				add_filter( 'wp_mail_from_name', [ $this, 'user_from_mail_name' ] );
 
 				$user_email['headers'][] = 'reply-to: ' . $this->config['submit']['reply_to'];
 			}
 
 			wp_mail( $user_email['to'], sprintf( $user_email['subject'], $this->blog_name ), $user_email['message'], $user_email['headers'] );
 
-			remove_filter( 'wp_mail_from', array( $this, 'user_from_mail' ) );
-			remove_filter( 'wp_mail_from_name', array( $this, 'user_from_mail_name' ) );
+			remove_filter( 'wp_mail_from', [ $this, 'user_from_mail' ] );
+			remove_filter( 'wp_mail_from_name', [ $this, 'user_from_mail_name' ] );
 
 			/**
 			 * Added action after the contact form is submitted to capture the user details that is being sent
@@ -324,12 +324,12 @@ class TCB_Contact_Form {
 		 * We send an email to the admin informing him that the contact form has been submitted by a user
 		 */
 		$admin_email_data = $this->get_admin_email_data();
-		$admin_email      = array(
+		$admin_email      = [
 			'to'      => $this->config['to_email']['to'],
 			'subject' => $admin_email_data['subject'],
 			'message' => $admin_email_data['message'],
-			'headers' => array( 'Content-Type: text/html; charset=UTF-8' ),
-		);
+			'headers' => [ 'Content-Type: text/html; charset=UTF-8' ],
+		];
 
 		if ( ! empty( $this->posted_data['email'] ) ) {
 			$admin_email['headers'][] = 'reply-to: ' . $this->posted_data['email'];
@@ -374,7 +374,7 @@ class TCB_Contact_Form {
 	 */
 	private function sanitize_posted_data( $value ) {
 		if ( is_array( $value ) ) {
-			$value = array_map( array( $this, 'sanitize_posted_data' ), $value );
+			$value = array_map( [ $this, 'sanitize_posted_data' ], $value );
 		} elseif ( is_string( $value ) ) {
 			$value = wp_check_invalid_utf8( $value );
 			$value = wp_kses_no_null( $value );
@@ -402,7 +402,7 @@ class TCB_Contact_Form {
 		);
 		foreach ( $this->posted_data as $type => $value ) {
 
-			if ( in_array( $type, array( 'g-recaptcha-response' ) ) ) {
+			if ( in_array( $type, [ 'g-recaptcha-response' ] ) ) {
 				/**
 				 * We have done this to ensure some info is left out of the admin email.
 				 * Example: google reCaptcha code
@@ -436,10 +436,10 @@ class TCB_Contact_Form {
 
 		$message = nl2br( $message );
 
-		return array(
+		return [
 			'subject' => $subject,
 			'message' => $message,
-		);
+		];
 	}
 
 	/**

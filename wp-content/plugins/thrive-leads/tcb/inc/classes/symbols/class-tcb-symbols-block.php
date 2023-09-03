@@ -29,7 +29,7 @@ class TCB_Symbols_Block {
 
 	static public function hooks() {
 		global $wp_version;
-		add_filter( version_compare( $wp_version, '5.7.9', '>' ) ? 'block_categories_all' : 'block_categories', array( __CLASS__, 'register_block_category' ), 10, 2 );
+		add_filter( version_compare( $wp_version, '5.7.9', '>' ) ? 'block_categories_all' : 'block_categories', [ __CLASS__, 'register_block_category' ], 10, 2 );
 	}
 
 	static public function register_block() {
@@ -58,9 +58,9 @@ class TCB_Symbols_Block {
 	static public function render_block( $attributes ) {
 		if ( isset( $attributes['selectedBlock'] ) && ! is_admin() ) {
 
-			return TCB_Symbol_Template::symbol_render_shortcode( array(
+			return TCB_Symbol_Template::symbol_render_shortcode( [
 				'id' => $attributes['selectedBlock'],
-			), true );
+			], true );
 
 		}
 

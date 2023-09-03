@@ -26,19 +26,19 @@ class TCB_Lead_Generation_Textarea_Element extends TCB_Element_Abstract {
 	public function own_components() {
 		$prefix_config = tcb_selection_root();
 
-		$controls_default_config      = array(
-			'css_suffix' => array( ' input', ' textarea' ),
+		$controls_default_config      = [
+			'css_suffix' => [ ' input', ' textarea' ],
 			'css_prefix' => $prefix_config . ' ',
-		);
-		$controls_default_config_text = array(
-			'css_suffix' => array(
+		];
+		$controls_default_config_text = [
+			'css_suffix' => [
 				' input',
 				' textarea',
 				' input::placeholder',
 				' textarea::placeholder',
-			),
+			],
 			'css_prefix' => $prefix_config . ' ',
-		);
+		];
 
 		return array(
 			'lead_generation_textarea' => array(
@@ -107,8 +107,8 @@ class TCB_Lead_Generation_Textarea_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'               => array(
-				'config' => array(
+			'typography'               => [
+				'config' => [
 					'FontSize'      => $controls_default_config_text,
 					'FontColor'     => $controls_default_config_text,
 					'FontFace'      => $controls_default_config_text,
@@ -117,47 +117,47 @@ class TCB_Lead_Generation_Textarea_Element extends TCB_Element_Abstract {
 					'TextAlign'     => $controls_default_config_text,
 					'TextStyle'     => $controls_default_config_text,
 					'TextTransform' => $controls_default_config_text,
-				),
-			),
-			'layout'                   => array(
-				'disabled_controls' => array(
+				],
+			],
+			'layout'                   => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'.tve-advanced-controls',
-				),
-				'config'            => array(
-					'MarginAndPadding' => array(
+				],
+				'config'            => [
+					'MarginAndPadding' => [
 						'margin_suffix'  => '',
-						'padding_suffix' => array( ' input', ' textarea' ),
+						'padding_suffix' => [ ' input', ' textarea' ],
 						'css_prefix'     => $prefix_config . ' ',
-					),
-				),
-			),
-			'borders'                  => array(
-				'config' => array(
+					],
+				],
+			],
+			'borders'                  => [
+				'config' => [
 					'Borders' => $controls_default_config,
 					'Corners' => $controls_default_config,
-				),
-			),
-			'animation'                => array(
+				],
+			],
+			'animation'                => [
 				'hidden' => true,
-			),
-			'background'               => array(
-				'config' => array(
+			],
+			'background'               => [
+				'config' => [
 					'ColorPicker' => $controls_default_config,
 					'PreviewList' => $controls_default_config,
-				),
-			),
-			'shadow'                   => array(
+				],
+			],
+			'shadow'                   => [
 				'config' => $controls_default_config,
-			),
-			'styles-templates'         => array(
-				'config' => array(),
-			),
-			'responsive'               => array(
+			],
+			'styles-templates'         => [
+				'config' => [],
+			],
+			'responsive'               => [
 				'hidden' => true,
-			),
+			],
 		);
 	}
 

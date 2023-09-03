@@ -58,9 +58,9 @@ class Product_Catalog_Ordering extends \TCB_Element_Abstract {
 
 		$components['typography'] = Main::get_general_typography_config();
 
-		$components['typography']['disabled_controls'] = array_merge( $components['typography']['disabled_controls'], array( 'Alignment' ) );
+		$components['typography']['disabled_controls'] = array_merge( $components['typography']['disabled_controls'], [ 'Alignment' ] );
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) ) {
@@ -74,11 +74,11 @@ class Product_Catalog_Ordering extends \TCB_Element_Abstract {
 		$components['typography']['config']['css_suffix'] = '';
 		$components['typography']['config']['css_prefix'] = '';
 
-		$components['borders'] = array(
-			'config' => array(
+		$components['borders'] = [
+			'config' => [
 				'css_suffix' => ' select',
-			),
-		);
+			],
+		];
 
 		return $components;
 	}

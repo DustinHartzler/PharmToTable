@@ -66,7 +66,7 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function own_components() {
 
-		$texts      = array(
+		$texts      = [
 			' p',
 			' li',
 			' blockquote',
@@ -79,20 +79,20 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 			' h4',
 			' h5',
 			' h6',
-		);
+		];
 		$css_prefix = tcb_selection_root() . ' ';
 
 		$table_components = array(
 			'table'        => array(
 				'config' => array(
 					'cellpadding'         => array(
-						'css_suffix' => array( ' .tve_table td', ' .tve_table th' ),
+						'css_suffix' => [ ' .tve_table td', ' .tve_table th' ],
 						'config'     => array(
 							'min'     => 0,
 							'max'     => 60,
 							'default' => '',
 							'label'   => __( 'Cell padding', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 					),
 					'sortable'            => array(
@@ -146,59 +146,59 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 					),
 					'valign'              => array(
-						'css_suffix' => array( ' .tve_table td', ' .tve_table th' ),
+						'css_suffix' => [ ' .tve_table td', ' .tve_table th' ],
 						'css_prefix' => $css_prefix,
 						'config'     => array(
 							'name'    => __( 'Vertical Align', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'none',
 									'default' => true,
 									'value'   => '',
-								),
-								array(
+								],
+								[
 									'icon'  => 'top',
 									'value' => 'top',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'middle',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'bottom',
-								),
-							),
+								],
+							],
 						),
 						'extends'    => 'ButtonGroup',
 					),
 					'TextAlign'           => array(
-						'css_suffix' => array( ' .tve_table td', ' .tve_table th' ),
+						'css_suffix' => [ ' .tve_table td', ' .tve_table th' ],
 						'config'     => array(
 							'name'    => __( 'Text Align', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'format-align-left',
 									'text'    => '',
 									'value'   => 'left',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-align-center',
 									'text'  => '',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-align-right',
 									'text'  => '',
 									'value' => 'right',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-align-justify',
 									'text'  => '',
 									'value' => 'justify',
-								),
-							),
+								],
+							],
 						),
 						'extends'    => 'ButtonGroup',
 					),
@@ -214,7 +214,7 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '10',
 							'max'     => '90',
 							'label'   => __( 'Mobile header width', 'thrive-cb' ),
-							'um'      => array( '%' ),
+							'um'      => [ '%' ],
 						),
 					),
 				),
@@ -222,12 +222,12 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 			'tableborders' => array(
 				'config' => array(
 					'to'           => '> .tve_table',
-					'Borders'      => array(
+					'Borders'      => [
 						/**
 						 * We've done this to set the css_prefix to the Table Borders - > Simple Borders Control
 						 */
 						'css_prefix' => $css_prefix,
-					),
+					],
 					'InnerBorders' => array(
 						'config'  => array(
 							'label' => __( 'Apply inner border', 'thrive-cb' ),
@@ -251,24 +251,24 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 				),
 				'order'  => 10,
 			),
-			'borders'      => array(
+			'borders'      => [
 				'hidden' => true,
-			),
-			'typography'   => array(
+			],
+			'typography'   => [
 				'hidden' => true,
-			),
-			'animation'    => array(
+			],
+			'animation'    => [
 				'hidden' => true,
-			),
-			'shadow'       => array(
-				'config' => array(
-					'disabled_controls' => array( 'inner' ),
-				),
-			),
-			'background'   => array( 'hidden' => true ),
-			'layout'       => array(
-				'disabled_controls' => array(),
-			),
+			],
+			'shadow'       => [
+				'config' => [
+					'disabled_controls' => [ 'inner' ],
+				],
+			],
+			'background'   => [ 'hidden' => true ],
+			'layout'       => [
+				'disabled_controls' => [],
+			],
 		);
 
 		return array_merge( $table_components, $this->group_component() );
@@ -313,12 +313,12 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'table',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425798-how-to-use-the-table-element',
-			),
-		);
+			],
+		];
 	}
 }

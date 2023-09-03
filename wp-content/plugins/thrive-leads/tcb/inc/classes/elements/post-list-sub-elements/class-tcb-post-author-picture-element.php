@@ -16,7 +16,7 @@ class TCB_Post_Author_Picture_Element extends TCB_Image_Element {
 	public function __construct( $tag = '' ) {
 		parent::__construct( $tag );
 
-		add_filter( 'tcb_element_' . $this->tag() . '_config', array( $this, 'add_config' ) );
+		add_filter( 'tcb_element_' . $this->tag() . '_config', [ $this, 'add_config' ] );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class TCB_Post_Author_Picture_Element extends TCB_Image_Element {
 	}
 
 	public function html() {
-		return tcb_template( 'post-list-sub-elements/author-image.php', array(), true );
+		return tcb_template( 'post-list-sub-elements/author-image.php', [], true );
 	}
 
 	/**

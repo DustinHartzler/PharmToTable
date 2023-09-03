@@ -83,11 +83,11 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'CssVariablesChanger',
 					),
-					'SocialSharePalettes' => array(
-						'config'    => array(),
+					'SocialSharePalettes' => [
+						'config'    => [],
 						'extends'   => 'Palettes',
 						'important' => true,
-					),
+					],
 					'style'               => array(
 						'config' => array(
 							'label' => __( 'Style', 'thrive-cb' ),
@@ -96,7 +96,7 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 					'stylePicker'         => array(
 						'config' => array(
 							'label' => __( 'Change style', 'thrive-cb' ),
-							'items' => array(
+							'items' => [
 								'tve_style_6'  => 'Style 1',
 								'tve_style_7'  => 'Style 2',
 								'tve_style_8'  => 'Style 3',
@@ -115,7 +115,7 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 								'tve_style_3'  => 'Style 16',
 								'tve_style_4'  => 'Style 17',
 								'tve_style_5'  => 'Style 18',
-							),
+							],
 						),
 					),
 					'type'                => array(
@@ -144,7 +144,7 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '60',
 							'label'   => __( 'Size and Align', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 					),
 					'Align'               => array(
@@ -182,13 +182,13 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'preview'             => array(
-						'config' => array(
+					'preview'             => [
+						'config' => [
 							'sortable'      => true,
 							'settings_icon' => 'pen-regular',
 							'tpl'           => 'controls/preview-check-list-item',
-						),
-					),
+						],
+					],
 					'has_custom_url'      => array(
 						'config' => array(
 							'label' => __( 'Custom share URL' ),
@@ -199,13 +199,13 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 							'placeholder' => __( 'http://', 'thrive-cb' ),
 						),
 					),
-					'counts'              => array(
-						'config' => array(
+					'counts'              => [
+						'config' => [
 							'min'     => 0,
 							'max'     => 2000,
 							'default' => 0,
-						),
-					),
+						],
+					],
 					'total_share'         => array(
 						'config' => array(
 							'label' => __( 'Show share count', 'thrive-cb' ),
@@ -214,21 +214,21 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 				),
 				'order'  => 1,
 			),
-			'shadow'     => array( 'hidden' => true ),
-			'typography' => array(
+			'shadow'     => [ 'hidden' => true ],
+			'typography' => [
 				'hidden' => true,
-			),
-			'animation'  => array(
+			],
+			'animation'  => [
 				'hidden' => true,
-			),
-			'layout'     => array(
-				'disabled_controls' => array(
+			],
+			'layout'     => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
+				],
+			],
 		);
 
 		return array_merge( $components, $this->group_component() );
@@ -273,12 +273,12 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'social_share',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425796-how-to-use-the-social-share-element',
-			),
-		);
+			],
+		];
 	}
 }

@@ -34,7 +34,7 @@ class Main {
 	public static function __callStatic( $name, $arguments ) {
 
 		if ( method_exists( __CLASS__, $name ) ) {
-			return call_user_func_array( array( __CLASS__, $name ), $arguments );
+			return call_user_func_array( [ __CLASS__, $name ], $arguments );
 		}
 
 		if ( function_exists( $name ) && static::active() ) {
@@ -95,9 +95,9 @@ class Main {
 	public static function get_localized_data() {
 		$is_active = static::active();
 
-		$data = array(
+		$data = [
 			'is_active' => $is_active ? 1 : 0,
-		);
+		];
 
 		/* localize the rest of the data only if woo is active */
 		if ( $is_active ) {

@@ -77,18 +77,18 @@ class TCB_Commentsdisqus_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography'     => array( 'hidden' => true ),
-			'animation'      => array( 'hidden' => true ),
-			'background'     => array( 'hidden' => true ),
-			'shadow'         => array( 'hidden' => true ),
-			'layout'         => array(
-				'disabled_controls' => array(
+			'typography'     => [ 'hidden' => true ],
+			'animation'      => [ 'hidden' => true ],
+			'background'     => [ 'hidden' => true ],
+			'shadow'         => [ 'hidden' => true ],
+			'layout'         => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'Width',
 					'Height',
 					'Alignment',
-				),
-			),
+				],
+			],
 		);
 	}
 
@@ -107,12 +107,12 @@ class TCB_Commentsdisqus_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'disqus_comments',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425808-how-to-add-facebook-disqus-comments-in-thrive-architect',
-			),
-		);
+			],
+		];
 	}
 }

@@ -22,7 +22,7 @@ abstract class TCB_Post_List_Sub_Element_Abstract extends TCB_Element_Abstract {
 	public function __construct( $tag = '' ) {
 		parent::__construct( $tag );
 
-		add_filter( 'tcb_element_' . $this->tag() . '_config', array( $this, 'add_config' ) );
+		add_filter( 'tcb_element_' . $this->tag() . '_config', [ $this, 'add_config' ] );
 	}
 
 	public function add_config( $config ) {
@@ -67,58 +67,58 @@ abstract class TCB_Post_List_Sub_Element_Abstract extends TCB_Element_Abstract {
 	public function own_components() {
 		$prefix = tcb_selection_root() . ' ';
 
-		return array(
-			'styles-templates' => array( 'hidden' => true ),
-			'animation'        => array( 'disabled_controls' => array( '.btn-inline.anim-link' ) ),
-			'typography'       => array(
-				'disabled_controls' => array(
+		return [
+			'styles-templates' => [ 'hidden' => true ],
+			'animation'        => [ 'disabled_controls' => [ '.btn-inline.anim-link' ] ],
+			'typography'       => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'p_spacing',
 					'h1_spacing',
 					'h2_spacing',
 					'h3_spacing',
-				),
-				'config'            => array(
+				],
+				'config'            => [
 					'css_suffix'    => '',
 					'css_prefix'    => '',
-					'TextShadow'    => array(
+					'TextShadow'    => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'FontColor'     => array(
+					],
+					'FontColor'     => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'FontSize'      => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'TextStyle'     => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'LineHeight'    => array(
+					],
+					'LineHeight'    => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'FontFace'      => array(
+					],
+					'FontFace'      => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'LetterSpacing' => array(
+					],
+					'LetterSpacing' => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'TextAlign'     => array(
+					],
+					'TextAlign'     => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-					'TextTransform' => array(
+					],
+					'TextTransform' => [
 						'css_suffix' => '',
 						'css_prefix' => $prefix,
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 	}
 }

@@ -68,20 +68,20 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 		return array(
 			'rating'           => array(
 				'config' => array(
-					'ratingValue'    => array(
-						'config' => array(
+					'ratingValue'    => [
+						'config' => [
 							'default_value' => 2.5,
 							'default_max'   => 5,
 							'max_size'      => 10,
-						),
-					),
-					'ExternalFields' => array(
-						'config'  => array(
+						],
+					],
+					'ExternalFields' => [
+						'config'  => [
 							'key'               => 'number',
 							'shortcode_element' => '.thrv-rating',
-						),
+						],
 						'extends' => 'CustomFields',
-					),
+					],
 					'style'          => array(
 						'config' => array(
 							'label' => __( 'Style', 'thrive-cb' ),
@@ -98,52 +98,52 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 							'min'     => '10',
 							'max'     => '150',
 							'label'   => __( 'Size', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 					),
 					'background'     => array(
 						'config' => array(
 							'label'   => __( 'Background', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 					),
 					'fill'           => array(
 						'config' => array(
 							'label'   => __( 'Fill', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 					),
 					'outline'        => array(
 						'config' => array(
 							'label'   => __( 'Outline', 'thrive-cb' ),
-							'options' => array( 'noBeforeInit' => false ),
+							'options' => [ 'noBeforeInit' => false ],
 						),
 					),
 				),
 				'order'  => 1,
 			),
-			'typography'       => array(
+			'typography'       => [
 				'hidden' => true,
-			),
-			'animation'        => array(
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
-			'shadow'           => array(
-				'config' => array(
-					'disabled_controls' => array( 'text' ),
-				),
-			),
+				],
+			],
+			'shadow'           => [
+				'config' => [
+					'disabled_controls' => [ 'text' ],
+				],
+			],
 		);
 	}
 
@@ -169,12 +169,12 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'star_rating',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425791-how-to-use-the-divider-and-star-rating-elements',
-			),
-		);
+			],
+		];
 	}
 }

@@ -47,23 +47,23 @@ class Product_Category_Image extends \TCB_Element_Abstract {
 
 	public function own_components() {
 		/* only the layout, borders and shadows are visible */
-		$components = array(
-			'typography'       => array( 'hidden' => true ),
-			'background'       => array( 'hidden' => true ),
-			'animation'        => array( 'hidden' => true ),
-			'responsive'       => array( 'hidden' => true ),
-			'styles-templates' => array( 'hidden' => true ),
-			'shadow'           => array(
-				'config' => array(
+		$components = [
+			'typography'       => [ 'hidden' => true ],
+			'background'       => [ 'hidden' => true ],
+			'animation'        => [ 'hidden' => true ],
+			'responsive'       => [ 'hidden' => true ],
+			'styles-templates' => [ 'hidden' => true ],
+			'shadow'           => [
+				'config' => [
 					/* sometimes the 'box-shadow' set from woo can be stronger than this, so we give this an '!important' to help it */
 					'important'         => true,
 					/* only the drop-shadow makes sense for images, disable the rest */
-					'disabled_controls' => array( 'inner', 'text' ),
-				),
-			),
-		);
+					'disabled_controls' => [ 'inner', 'text' ],
+				],
+			],
+		];
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment', '.tve-advanced-controls' ];
 
 		return $components;
 	}

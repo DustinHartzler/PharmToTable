@@ -88,10 +88,10 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 		$button = array(
 			'button'     => array(
 				'config' => array(
-					'ButtonPalettes' => array(
-						'config'  => array(),
+					'ButtonPalettes' => [
+						'config'  => [],
 						'extends' => 'Palettes',
-					),
+					],
 					'icon_side'      => array(
 						'config' => array(
 							'name'    => __( 'Icon side', 'thrive-cb' ),
@@ -114,10 +114,10 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 							'default'             => '000',
 							'label'               => __( 'Master Color', 'thrive-cb' ),
 							'important'           => true,
-							'affected_components' => array( 'shadow', 'background', 'borders' ),
-							'options'             => array(
+							'affected_components' => [ 'shadow', 'background', 'borders' ],
+							'options'             => [
 								'showGlobals' => false,
-							),
+							],
 						),
 					),
 					'SecondaryText'  => array(
@@ -137,48 +137,48 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 							'buttons'    => array(
 								array(
 									'value'      => 's',
-									'properties' => array(
+									'properties' => [
 										'padding'     => '12px 15px',
 										'font-size'   => '18px',
 										'line-height' => '1.2em',
-									),
+									],
 									'text'       => 'S',
 									'default'    => true,
 								),
 								array(
 									'value'      => 'm',
-									'properties' => array(
+									'properties' => [
 										'padding'     => '14px 22px',
 										'font-size'   => '24px',
 										'line-height' => '1.2em',
-									),
+									],
 									'text'       => 'M',
 								),
 								array(
 									'value'      => 'l',
-									'properties' => array(
+									'properties' => [
 										'padding'     => '18px 30px',
 										'font-size'   => '32px',
 										'line-height' => '1.2em',
-									),
+									],
 									'text'       => 'L',
 								),
 								array(
 									'value'      => 'xl',
-									'properties' => array(
+									'properties' => [
 										'padding'     => '22px 40px',
 										'font-size'   => '38px',
 										'line-height' => '1.1em',
-									),
+									],
 									'text'       => 'XL',
 								),
 								array(
 									'value'      => 'xxl',
-									'properties' => array(
+									'properties' => [
 										'padding'     => '32px 50px',
 										'font-size'   => '52px',
 										'line-height' => '1.1em',
-									),
+									],
 									'text'       => 'XXL',
 								),
 							),
@@ -217,7 +217,7 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 							'min'     => '10',
 							'max'     => '1080',
 							'label'   => __( 'Button width', 'thrive-cb' ),
-							'um'      => array( '%', 'px' ),
+							'um'      => [ '%', 'px' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
@@ -226,80 +226,80 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 						'css_suffix' => ' .tcb-button-link',
 						'config'     => array(
 							'label'         => __( 'Button Styles', 'thrive-cb' ),
-							'items'         => array(),
+							'items'         => [],
 							'default_label' => __( 'Template Button', 'thrive-cb' ),
 							'default'       => 'default',
 						),
 					),
 				),
 			),
-			'animation'  => array(
-				'config' => array(
+			'animation'  => [
+				'config' => [
 					'to' => '.tcb-button-link',
-				),
-			),
-			'background' => array(
-				'config' => array(
+				],
+			],
+			'background' => [
+				'config' => [
 					'css_suffix' => ' .tcb-button-link',
-				),
-			),
-			'borders'    => array(
-				'config' => array(
+				],
+			],
+			'borders'    => [
+				'config' => [
 					'css_suffix' => ' .tcb-button-link',
-				),
-			),
-			'typography' => array(
-				'config' => array(
+				],
+			],
+			'typography' => [
+				'config' => [
 					'css_suffix'    => ' .tcb-button-link',
-					'FontColor'     => array(
+					'FontColor'     => [
 						'css_suffix' => ' .tcb-button-link span',
-					),
-					'FontSize'      => array(
+					],
+					'FontSize'      => [
 						'css_suffix' => ' .tcb-button-link',
 						'important'  => true,
-					),
-					'TextStyle'     => array(
+					],
+					'TextStyle'     => [
 						'css_suffix' => ' .tcb-button-link span',
-					),
-					'LineHeight'    => array(
+					],
+					'LineHeight'    => [
 						'css_suffix' => ' .tcb-button-link',
-					),
-					'FontFace'      => array(
+					],
+					'FontFace'      => [
 						'css_suffix' => ' .tcb-button-link',
-					),
-					'TextTransform' => array(
+					],
+					'TextTransform' => [
 						'css_suffix' => ' .tcb-button-link span',
-					),
-					'LetterSpacing' => array(
+					],
+					'LetterSpacing' => [
 						'css_suffix' => ' .tcb-button-link',
-					),
-				),
-			),
-			'shadow'     => array(
-				'config' => array(
+					],
+				],
+			],
+			'shadow'     => [
+				'config' => [
 					'css_suffix'     => ' .tcb-button-link',
 					'default_shadow' => 'none',
-				),
-			),
-			'layout'     => array(
-				'config'            => array(
-					'MarginAndPadding' => array(
+				],
+			],
+			'layout'     => [
+				'config'            => [
+					'MarginAndPadding' => [
 						'padding_suffix' => ' .tcb-button-link',
-					),
-					'Height'           => array(
+					],
+					'Height'           => [
 						'css_suffix' => ' .tcb-button-link',
-					),
-				),
-				'disabled_controls' => array(
+					],
+				],
+				'disabled_controls' => [
 					'Display',
 					'Alignment',
 					'Overflow',
 					'ScrollStyle',
-				),
-			),
-			'scroll'     => array(
+				],
+			],
+			'scroll'     => [
 				'hidden' => false,
-			),
+			],
 		);
 
 		return array_merge( $button, $this->shared_styles_component() );
@@ -336,12 +336,12 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'button',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425768-how-to-use-the-button-element',
-			),
-		);
+			],
+		];
 	}
 }

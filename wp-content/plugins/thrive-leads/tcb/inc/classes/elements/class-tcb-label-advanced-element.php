@@ -49,15 +49,15 @@ class TCB_Label_Advanced_Element extends TCB_Label_Element {
 	public function own_components() {
 		$components = parent::own_components();
 
-		$components['layout'] = array(
-			'disabled_controls' => array(
+		$components['layout'] = [
+			'disabled_controls' => [
 				'Width',
 				'Height',
 				'Alignment',
 				'.tve-advanced-controls',
-			),
-			'config'            => array(),
-		);
+			],
+			'config'            => [],
+		];
 
 		/**
 		 * We remove all this indexes from the components array.

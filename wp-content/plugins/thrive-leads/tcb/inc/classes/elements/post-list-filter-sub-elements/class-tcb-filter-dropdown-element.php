@@ -36,10 +36,10 @@ class TCB_Filter_Dropdown_Element extends TCB_Dynamic_Dropdown_Element {
 
 		$components['filter_dropdown'] = $components['dynamic_dropdown'];
 
-		$components['filter_dropdown']['config']['DropdownPalettes'] = array(
-			'config'  => array(),
+		$components['filter_dropdown']['config']['DropdownPalettes'] = [
+			'config'  => [],
 			'extends' => 'PalettesV2',
-		);
+		];
 
 		unset( $components['dynamic_dropdown'] );
 

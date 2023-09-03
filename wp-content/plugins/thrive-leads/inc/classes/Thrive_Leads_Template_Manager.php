@@ -8,7 +8,7 @@
  */
 class Thrive_Leads_Template_Manager extends Thrive_Leads_Request_Handler {
 
-	const OPTION_TPL_META = 'tve_leads_saved_tpl_meta';
+	const OPTION_TPL_META    = 'tve_leads_saved_tpl_meta';
 	const OPTION_TPL_CONTENT = 'tve_leads_saved_tpl';
 	public static $file_name = null;
 	/**
@@ -105,8 +105,13 @@ class Thrive_Leads_Template_Manager extends Thrive_Leads_Request_Handler {
 		/**
 		 * set all templates in one array
 		 */
-		$assoc_templates = array_merge( $local_templates, $cloud_templates );
-
+		$error_templates = [];
+		if ( empty( $cloud_templates['error'] ) ) {
+			$assoc_templates = array_merge( $local_templates, $cloud_templates );
+		}else {
+			$assoc_templates = $local_templates;
+			$error_templates = $cloud_templates;
+		}
 		$templates = array();
 
 		if ( ! empty( $assoc_templates ) ) {
@@ -116,7 +121,7 @@ class Thrive_Leads_Template_Manager extends Thrive_Leads_Request_Handler {
 			}
 		}
 
-		return $templates;
+		return [ 'templates'=> $templates, 'error'=> $error_templates ];
 	}
 
 	/**

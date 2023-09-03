@@ -67,20 +67,20 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 				'State'         => array(
 					'config'  => array(
 						'name'    => __( 'State', 'thrive-cb' ),
-						'buttons' => array(
-							array(
+						'buttons' => [
+							[
 								'icon'    => '',
 								'text'    => 'Expanded',
 								'value'   => 'expanded',
 								'default' => true,
-							),
-							array(
+							],
+							[
 								'icon'  => '',
 								'text'  => 'Collapsed',
 								'value' => 'collapsed',
 
-							),
-						),
+							],
+						],
 					),
 					'extends' => 'ButtonGroup',
 				),
@@ -94,7 +94,7 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 					'css_suffix' => ' .tve-toc-title-icon',
 					'config'     => array(
 						'label'   => __( 'Icon color', 'thrive-cb' ),
-						'options' => array( 'noBeforeInit' => false ),
+						'options' => [ 'noBeforeInit' => false ],
 					),
 					'important'  => true,
 					'extends'    => 'ColorPicker',
@@ -102,19 +102,19 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 				'IconPlacement' => array(
 					'config'  => array(
 						'name'    => __( 'Placement', 'thrive-cb' ),
-						'buttons' => array(
-							array(
+						'buttons' => [
+							[
 								'icon'    => '',
 								'text'    => 'Left',
 								'value'   => 'left',
 								'default' => true,
-							),
-							array(
+							],
+							[
 								'icon'  => '',
 								'text'  => 'Right',
 								'value' => 'right',
-							),
-						),
+							],
+						],
 					),
 					'extends' => 'ButtonGroup',
 				),
@@ -124,7 +124,7 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 						'min'     => '0',
 						'max'     => '100',
 						'label'   => __( 'Icon Size', 'thrive-cb' ),
-						'um'      => array( 'px', '%' ),
+						'um'      => [ 'px', '%' ],
 						'css'     => 'font-size',
 
 					),
@@ -139,7 +139,7 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 						'default' => '0',
 						'min'     => '-180',
 						'max'     => '180',
-						'um'      => array( ' Deg' ),
+						'um'      => [ ' Deg' ],
 					),
 					'extends' => 'Slider',
 				),
@@ -148,60 +148,60 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 
 		unset( $components['contentbox'] );
 		unset( $components['shared-styles'] );
-		$components['layout'] = array(
-			'disabled_controls' => array(
+		$components['layout'] = [
+			'disabled_controls' => [
 				'Display',
 				'Float',
 				'Position',
-			),
-			'config'            => array(
-				'Width'  => array(
+			],
+			'config'            => [
+				'Width'  => [
 					'important' => true,
-				),
-				'Height' => array(
+				],
+				'Height' => [
 					'important' => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
-		$components['background'] = array(
-			'config' => array(
-				'ColorPicker' => array( 'css_prefix' => $prefix_config ),
-				'PreviewList' => array( 'css_prefix' => $prefix_config ),
+		$components['background'] = [
+			'config' => [
+				'ColorPicker' => [ 'css_prefix' => $prefix_config ],
+				'PreviewList' => [ 'css_prefix' => $prefix_config ],
 				'css_suffix'  => ' > .tve-content-box-background',
-			),
-		);
+			],
+		];
 
-		$components['borders']                         = array(
-			'config' => array(
-				'Borders' => array(
+		$components['borders']                         = [
+			'config' => [
+				'Borders'    => [
 					'important' => true,
-				),
-				'Corners' => array(
+				],
+				'Corners'    => [
 					'important' => true,
-				),
-				'css_suffix'  => ' > .tve-content-box-background',
-			),
-		);
-		$components['typography']['config']            = array(
-			'FontSize'       => array( 'css_prefix' => $prefix_config ),
-			'FontColor'      => array( 'css_prefix' => $prefix_config ),
-			'LineHeight'     => array( 'css_prefix' => $prefix_config ),
-			'FontFace'       => array( 'css_prefix' => $prefix_config ),
-			'ParagraphStyle' => array( 'hidden' => false ),
-		);
-		$components['typography']['disabled_controls'] = array(
+				],
+				'css_suffix' => ' > .tve-content-box-background',
+			],
+		];
+		$components['typography']['config']            = [
+			'FontSize'       => [ 'css_prefix' => $prefix_config ],
+			'FontColor'      => [ 'css_prefix' => $prefix_config ],
+			'LineHeight'     => [ 'css_prefix' => $prefix_config ],
+			'FontFace'       => [ 'css_prefix' => $prefix_config ],
+			'ParagraphStyle' => [ 'hidden' => false ],
+		];
+		$components['typography']['disabled_controls'] = [
 			'.tve-advanced-controls',
 			'p_spacing',
 			'h1_spacing',
 			'h2_spacing',
 			'h3_spacing',
 
-		);
+		];
 
-		$components['scroll']     = array( 'hidden' => true );
-		$components['responsive'] = array( 'hidden' => true );
-		$components['animation']  = array( 'hidden' => true );
+		$components['scroll']     = [ 'hidden' => true ];
+		$components['responsive'] = [ 'hidden' => true ];
+		$components['animation']  = [ 'hidden' => true ];
 
 		return $components;
 	}

@@ -24,16 +24,16 @@ class Rest_Api {
 		register_rest_route( static::$namespace, static::$route . '/render_shop', array(
 			array(
 				'methods'             => \WP_REST_Server::EDITABLE,
-				'callback'            => array( __CLASS__, 'render_shop' ),
-				'permission_callback' => array( __CLASS__, 'route_permission' ),
+				'callback'            => [ __CLASS__, 'render_shop' ],
+				'permission_callback' => [ __CLASS__, 'route_permission' ],
 			),
 		) );
 
 		register_rest_route( static::$namespace, static::$route . '/render_product_categories', array(
 			array(
 				'methods'             => \WP_REST_Server::EDITABLE,
-				'callback'            => array( __CLASS__, 'render_product_categories' ),
-				'permission_callback' => array( __CLASS__, 'route_permission' ),
+				'callback'            => [ __CLASS__, 'render_product_categories' ],
+				'permission_callback' => [ __CLASS__, 'route_permission' ],
 			),
 		) );
 
@@ -77,7 +77,7 @@ class Rest_Api {
 
 		$content = Shortcodes\Shop\Main::render( $args );
 
-		return new \WP_REST_Response( array( 'content' => $content ), 200 );
+		return new \WP_REST_Response( [ 'content' => $content ], 200 );
 	}
 
 	/**
@@ -92,7 +92,7 @@ class Rest_Api {
 
 		$content = Shortcodes\Product_Categories\Main::render( $args );
 
-		return new \WP_REST_Response( array( 'content' => $content ), 200 );
+		return new \WP_REST_Response( [ 'content' => $content ], 200 );
 	}
 
 	/**
@@ -136,6 +136,6 @@ class Rest_Api {
 			$variations = [];
 		}
 
-		return new \WP_REST_Response( array( 'variation' => $variations ), 200 );
+		return new \WP_REST_Response( [ 'variation' => $variations ], 200 );
 	}
 }

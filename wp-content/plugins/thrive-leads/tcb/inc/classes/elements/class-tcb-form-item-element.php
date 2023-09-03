@@ -31,29 +31,29 @@ class TCB_Form_Item_Element extends TCB_Element_Abstract {
 
 	public function own_components() {
 
-		return array(
-			'typography'       => array(
+		return [
+			'typography'       => [
 				'hidden' => true,
-			),
-			'layout'           => array(
-				'disabled_controls' => array(
+			],
+			'layout'           => [
+				'disabled_controls' => [
 					'Width',
 					'Height',
 					'Alignment',
 					'Display',
 					'.tve-advanced-controls',
-				),
-			),
-			'animation'        => array(
+				],
+			],
+			'animation'        => [
 				'hidden' => true,
-			),
-			'responsive'       => array(
+			],
+			'responsive'       => [
 				'hidden' => true,
-			),
-			'styles-templates' => array(
+			],
+			'styles-templates' => [
 				'hidden' => true,
-			),
-		);
+			],
+		];
 	}
 }
 

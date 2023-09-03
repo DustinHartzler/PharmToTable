@@ -55,9 +55,9 @@ class Submit_Form extends \Thrive\Automator\Items\Trigger {
 	 * @return array
 	 * @see Automation::start()
 	 */
-	public function process_params( $params = array() ) {
+	public function process_params( $params = [] ) {
 
-		$data_objects = array();
+		$data_objects = [];
 		$aut_id       = 0;
 		if ( method_exists( Submit_Form::class, 'get_automation_id' ) ) {
 			$aut_id = $this->get_automation_id();

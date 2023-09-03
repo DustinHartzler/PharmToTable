@@ -60,7 +60,7 @@ $items = array(
 			<?php if ( $item['title'] == 'Knowledge Base' ): ?>
 				<div class="kb-search">
 					<input type="text" class="kb-input-search keyup-enter" data-fn="searchKB" placeholder="Search knowledge base" autocomplete="off">
-					<?php tcb_icon( 'search-regular', false, 'sidebar', 'click', array( 'data-fn' => 'searchKB' ) ) ?>
+					<?php tcb_icon( 'search-regular', false, 'sidebar', 'click', [ 'data-fn' => 'searchKB' ] ) ?>
 				</div>
 			<?php endif ?>
 		</div>

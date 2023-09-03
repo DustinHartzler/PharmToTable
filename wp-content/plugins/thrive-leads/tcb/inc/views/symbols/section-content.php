@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php $symbol_id = get_the_ID(); ?>
 <?php $symbol_title = get_the_title(); ?>
-<?php $content = TCB_Symbol_Template::render_content( array(), true ); ?>
+<?php $content = TCB_Symbol_Template::render_content( [], true ); ?>
 <?php $symbol_vars = TCB_Symbol_Template::get_edit_symbol_vars(); ?>
 <?php $type = ucfirst( $symbol_vars['type'] ); ?>
 <?php $data_attr = TCB_Symbol_Template::data_attr( $symbol_id ); ?>

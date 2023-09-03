@@ -21,7 +21,7 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 	 *
 	 * @var array
 	 */
-	private $post_components = array();
+	private $post_components = [];
 
 	/**
 	 * TCB_Landing_page_Element constructor.
@@ -82,7 +82,7 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 	 * @return array
 	 */
 	public function own_components() {
-		return array();
+		return [];
 	}
 
 	protected function general_components() {
@@ -96,7 +96,7 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 							'min'     => '100',
 							'max'     => '2400',
 							'label'   => __( 'Content Maximum Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
@@ -108,7 +108,7 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 							'min'     => '100',
 							'max'     => '2400',
 							'label'   => __( 'Layout Maximum Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'max-width',
 						),
 						'extends' => 'Slider',
@@ -123,34 +123,34 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 					),
 				),
 			),
-			'lpfonts'          => array( 'order' => 90 ),
-			'background'       => array(
+			'lpfonts'          => [ 'order' => 90 ],
+			'background'       => [
 				'order'             => 110,
-				'config'            => array(
-					'ColorPicker'       => array(
-						'config' => array(
+				'config'            => [
+					'ColorPicker'       => [
+						'config' => [
 							'icon'      => true,
 							'important' => true,
-						),
-					),
-					'PreviewFilterList' => array(
-						'config' => array(
+						],
+					],
+					'PreviewFilterList' => [
+						'config' => [
 							'sortable'    => false,
 							'extra_class' => 'tcb-preview-list-white',
-						),
-					),
-					'PreviewList'       => array(
-						'config' => array(
+						],
+					],
+					'PreviewList'       => [
+						'config' => [
 							'sortable' => true,
-						),
-					),
-				),
-				'disabled_controls' => array(
+						],
+					],
+				],
+				'disabled_controls' => [
 					'video',
-				),
-			),
-			'lp-advanced'      => array(),
-			'scripts_settings' => array( 'order' => 752 ),
+				],
+			],
+			'lp-advanced'      => [],
+			'scripts_settings' => [ 'order' => 752 ],
 		);
 
 		$lp_config = array_merge( $this->post_components + $lp, $this->group_component() );

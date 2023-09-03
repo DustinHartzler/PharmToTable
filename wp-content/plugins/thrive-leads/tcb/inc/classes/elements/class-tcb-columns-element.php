@@ -70,7 +70,7 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 							'min'     => '0',
 							'max'     => '200',
 							'label'   => __( 'Gutter width', 'thrive-cb' ),
-							'um'      => array( 'px' ),
+							'um'      => [ 'px' ],
 						),
 						'to'         => '> .tcb-flex-row',
 						'css_suffix' => ' > .tcb-flex-col',
@@ -88,21 +88,21 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 					'VerticalPosition' => array(
 						'config'  => array(
 							'name'    => __( 'Vertical position', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'top',
 									'default' => true,
 									'value'   => 'flex-start',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'flex-end',
-								),
-							),
+								],
+							],
 							'info'    => true,
 						),
 						'to'      => ' > .tcb-flex-row',
@@ -125,7 +125,7 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 							'label'      => __( 'Column breakpoint', 'thrive-cb' ),
 							'info'       => true,
 							'info_hover' => true,
-							'um'         => array( 'PX' ),
+							'um'         => [ 'PX' ],
 						),
 						'to'      => ' > .tcb-flex-row',
 						'extends' => 'Slider',
@@ -144,7 +144,7 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '1000',
 							'label'   => __( 'Minimum height', 'thrive-cb' ),
-							'um'      => array( 'px', 'vh' ),
+							'um'      => [ 'px', 'vh' ],
 							'css'     => 'min-height',
 						),
 						'to'         => ' > .tcb-flex-row',
@@ -153,29 +153,29 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'layout'     => array(
-				'config'            => array(
-					'MarginAndPadding' => array(
+			'layout'     => [
+				'config'            => [
+					'MarginAndPadding' => [
 						'margin_to'  => '',
 						'padding_to' => ' > .tcb-flex-row',
-					),
-					'Height'           => array(
+					],
+					'Height'           => [
 						'to'         => ' > .tcb-flex-row',
 						'css_suffix' => ' > .tcb-flex-col > .tcb-col',
-					),
-				),
-				'disabled_controls' => array(),
-			),
-			'typography' => array(
-				'disabled_controls' => array(),
-				'config'            => array(
-					'ParagraphStyle' => array( 'hidden' => false ),
-				),
-			),
-			'animation'  => array( 'hidden' => true ),
-			'scroll'     => array(
+					],
+				],
+				'disabled_controls' => [],
+			],
+			'typography' => [
+				'disabled_controls' => [],
+				'config'            => [
+					'ParagraphStyle' => [ 'hidden' => false ],
+				],
+			],
+			'animation'  => [ 'hidden' => true ],
+			'scroll'     => [
 				'hidden' => false,
-			),
+			],
 		);
 	}
 
@@ -194,12 +194,12 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'columns',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425769-how-to-use-the-columns-element',
-			),
-		);
+			],
+		];
 	}
 }

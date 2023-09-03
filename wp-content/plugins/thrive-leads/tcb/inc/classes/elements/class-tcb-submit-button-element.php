@@ -45,19 +45,19 @@ class TCB_Submit_Button_Element extends TCB_Button_Element {
 
 		$parent_components = parent::own_components();
 
-		$parent_components['button']['disabled_controls']                     = array( '.tcb-button-link-container' );
+		$parent_components['button']['disabled_controls']                     = [ '.tcb-button-link-container' ];
 		$parent_components['button']['config']['ButtonPalettes']['important'] = apply_filters( 'tcb_lg_color_inputs_important', true );
 
 		$parent_components['submit_button'] = $parent_components['button'];
 		unset( $parent_components['button'] );
 		unset( $parent_components['scroll'] );
 
-		$parent_components['animation']  = array(
+		$parent_components['animation']  = [
 			'hidden' => true,
-		);
-		$parent_components['responsive'] = array(
+		];
+		$parent_components['responsive'] = [
 			'hidden' => true,
-		);
+		];
 
 		return array_merge( $parent_components, $this->shared_styles_component() );
 	}

@@ -77,7 +77,7 @@ class TCB_Tabs_Old_Element extends TCB_Element_Abstract {
 							'min'     => '100',
 							'max'     => '1000',
 							'label'   => __( 'Tabs Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'width',
 						),
 						'extends' => 'Slider',
@@ -85,7 +85,7 @@ class TCB_Tabs_Old_Element extends TCB_Element_Abstract {
 					'DefaultTab'    => array(
 						'config'  => array(
 							'name'    => __( 'Default Tab', 'thrive-cb' ),
-							'options' => array(),
+							'options' => [],
 						),
 						'extends' => 'Select',
 					),
@@ -111,9 +111,9 @@ class TCB_Tabs_Old_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Background', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -121,9 +121,9 @@ class TCB_Tabs_Old_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Border', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -131,9 +131,9 @@ class TCB_Tabs_Old_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Background', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
@@ -141,23 +141,23 @@ class TCB_Tabs_Old_Element extends TCB_Element_Abstract {
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Border', 'thrive-cb' ),
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
+							],
 						),
 						'extends' => 'ColorPicker',
 					),
 				),
 			),
-			'typography' => array(
-				'config' => array(
-					'TextStyle' => array(
+			'typography' => [
+				'config' => [
+					'TextStyle' => [
 						'css_suffix' => ' .tve_scT .thrv-inline-text, .tve_scT p',
-					),
-				),
-			),
-			'animation'  => array( 'hidden' => true ),
-			'background' => array( 'hidden' => true ),
+					],
+				],
+			],
+			'animation'  => [ 'hidden' => true ],
+			'background' => [ 'hidden' => true ],
 		);
 	}
 

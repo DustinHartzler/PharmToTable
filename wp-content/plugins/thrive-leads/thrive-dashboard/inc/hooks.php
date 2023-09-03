@@ -398,20 +398,24 @@ function tve_dash_enqueue_vue() {
 	remove_filter( 'mce_external_plugins', 'activecampaign_add_buttons' );
 }
 
-/**
- * enqueue the dashboard CSS and javascript files
- */
-function tve_dash_enqueue() {
-	$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
+function tve_dash_enqueue_licensing_assets() {
+	add_action( 'admin_print_footer_scripts', static function () {
+		tve_dash_output_backbone_templates( [ 'license-modal' => TVE_DASH_PATH . '/templates/backbone/license-modal.phtml' ] );
+	} );
 
-	tve_dash_enqueue_script( 'tve-dash-main-js', TVE_DASH_URL . '/js/dist/tve-dash' . $js_suffix, array(
+	tve_dash_enqueue_style( 'tve-dash-licensing-css', TVE_DASH_URL . '/css/licensing.css' );
+
+	tve_dash_enqueue_script( 'tve-dash-main-js', TVE_DASH_URL . '/js/dist/tve-dash' . ( tve_dash_is_debug_on() ? '.js' : '.min.js' ), array(
 		'jquery',
 		'backbone',
 	) );
-	wp_enqueue_script( 'jquery-zclip', TVE_DASH_URL . '/js/util/jquery.zclip.1.1.1/jquery.zclip.min.js', array( 'jquery' ) );
-	tve_dash_enqueue_style( 'tve-dash-styles-css', TVE_DASH_URL . '/css/styles.css' );
-	wp_enqueue_script( 'tve-dash-api-wistia-popover', '//fast.wistia.com/assets/external/popover-v1.js', array(), '', true );
+	wp_localize_script( 'tve-dash-main-js', 'TVE_Dash_Const', tve_dash_get_dash_const_options() );
+}
 
+/**
+ * js localized options
+ */
+function tve_dash_get_dash_const_options() {
 	$options = array(
 		'nonce'              => wp_create_nonce( 'tve-dash' ),
 		'dash_url'           => TVE_DASH_URL,
@@ -461,6 +465,7 @@ function tve_dash_enqueue() {
 		),
 		'is_polylang_active' => tve_dash_is_plugin_active( 'polylang' ),
 		'tvd_fa_kit'         => get_option( 'tvd_fa_kit', '' ),
+		'license_rest_url'   => get_rest_url() . 'td/v1/license_warning',
 	);
 
 
@@ -468,9 +473,23 @@ function tve_dash_enqueue() {
 	 * Allow vendors to hook into this
 	 * TVE_Dash is the output js object
 	 */
-	$options = apply_filters( 'tve_dash_localize', $options );
+	return apply_filters( 'tve_dash_localize', $options );
+}
+/**
+ * enqueue the dashboard CSS and javascript files
+ */
+function tve_dash_enqueue() {
+	$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
-	wp_localize_script( 'tve-dash-main-js', 'TVE_Dash_Const', $options );
+	tve_dash_enqueue_script( 'tve-dash-main-js', TVE_DASH_URL . '/js/dist/tve-dash' . $js_suffix, array(
+		'jquery',
+		'backbone',
+	) );
+
+	wp_enqueue_script( 'jquery-zclip', TVE_DASH_URL . '/js/util/jquery.zclip.1.1.1/jquery.zclip.min.js', array( 'jquery' ) );
+	tve_dash_enqueue_style( 'tve-dash-styles-css', TVE_DASH_URL . '/css/styles.css' );
+
+	wp_localize_script( 'tve-dash-main-js', 'TVE_Dash_Const', tve_dash_get_dash_const_options() );
 	tve_dash_enqueue_script( 'tvd-fa-kit', get_option( 'tvd_fa_kit', '' ) );
 
 	/**
@@ -563,9 +582,10 @@ function tve_dash_load_text_domain() {
  *
  */
 function tve_dash_backbone_templates() {
-	$templates = tve_dash_get_backbone_templates( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/backbone', 'backbone' );
+	$templates       = tve_dash_get_backbone_templates( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/backbone', 'backbone' );
+	$templates_modal = tve_dash_get_backbone_templates( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/modal', 'templates' );
 
-	tve_dash_output_backbone_templates( $templates );
+	tve_dash_output_backbone_templates( array_merge( $templates, $templates_modal ) );
 }
 
 /**
@@ -678,7 +698,7 @@ function tve_dash_frontend_enqueue() {
 	tve_dash_enqueue_script( 'tve-dash-frontend', TVE_DASH_URL . '/js/dist/frontend.min.js', array( 'jquery' ), false, true );
 
 	$captcha_api    = Thrive_Dash_List_Manager::credentials( 'recaptcha' );
-	$show_recaptcha = ! empty( $captcha_api ) && ! empty( $captcha_api['connection'] ) && $captcha_api['connection']['version'] === 'v3' && ! empty( $captcha_api['connection']['browsing_history'] );
+	$show_recaptcha = ! empty( $captcha_api['connection']['version'] ) && $captcha_api['connection']['version'] === 'v3' && ! empty( $captcha_api['connection']['browsing_history'] );
 
 	if ( apply_filters( 'thrive_dashboard_show_recaptcha', $show_recaptcha ) ) {
 		tve_dash_enqueue_script( 'tve-dash-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . $captcha_api['site_key'] );
@@ -963,6 +983,184 @@ function tvd_rocket_exclude_js( $excluded_js ) {
 }
 
 add_action( 'admin_notices', 'tve_dash_incompatible_tar_version' );
+add_action( 'admin_head', 'dashboard_license_notifications_styles' );
+
+function dashboard_license_notifications_styles() {
+	include_once TVE_DASH_PATH . '/css/images/licensing/licensing-icons.svg';
+	?>
+	<style>
+		<?php include_once TVE_DASH_PATH . '/css/dashboard-notifications.css'; ?>
+	</style>
+	<?php
+}
+
+add_action( 'wp_loaded', 'tve_dash_expired_license_notices' );
+
+function tve_dash_expired_license_notices() {
+
+	tvd_register_admin_license_notices( tve_dash_expired_license_count( false ), false );
+	tvd_register_admin_license_notices( tve_dash_expired_license_count( true ), true );
+
+}
+
+function tve_dash_expired_license_count( $check_grace_period = true ) {
+	$installed_products = tve_dash_get_products( false );
+
+	$count          = 0;
+	$single_product = null;
+	foreach ( $installed_products as $product ) {
+		$should = false;
+		if ( $product->get_tag() !== 'tap' ) {
+			if ( $check_grace_period ) {
+				$should = TD_TTW_User_Licenses::get_instance()->is_in_grace_period( $product->get_tag() );
+			} else {
+				$should = ! TD_TTW_User_Licenses::get_instance()->has_active_license( $product->get_tag() ) && ! TD_TTW_User_Licenses::get_instance()->is_in_grace_period( $product->get_tag() );
+			}
+		}
+
+		if ( $should ) {
+			++ $count;
+			$single_product = $product;
+		}
+	}
+
+	$response = null;
+	if ( $count && TD_TTW_User_Licenses::get_instance()->has_membership() ) {
+		$response = 'suite';
+	} elseif ( $count === 1 ) {
+		$response = $single_product;
+	} elseif ( $count > 1 ) {
+		$response = 'multiple';
+	}
+
+	return $response;
+}
+
+function tve_get_grace_period( $product_type = 'suite' ) {
+	if ( $product_type === 'multiple' ) {
+		$installed_products = tve_dash_get_products( false );
+
+		$shortest_grace_period = null;
+		foreach ( $installed_products as $product ) {
+			if ( $product->get_tag() !== 'tap' ) {
+				$should = TD_TTW_User_Licenses::get_instance()->is_in_grace_period( $product->get_tag() );
+				if ( $should ) {
+					if ( $shortest_grace_period === null ) {
+						$shortest_grace_period = TD_TTW_User_Licenses::get_instance()->get_grace_period_left( $product->get_tag() );
+					} else {
+						$current_grace_period  = TD_TTW_User_Licenses::get_instance()->get_grace_period_left( $product->get_tag() );
+						$shortest_grace_period = $shortest_grace_period > $current_grace_period ? $current_grace_period : $shortest_grace_period;
+					}
+				}
+			}
+		}
+
+		return $shortest_grace_period;
+	} else {
+		return TD_TTW_User_Licenses::get_instance()->get_grace_period_left( '' );
+	}
+
+}
+
+function tve_get_admin_license_notice( $product, $grace_period = false ) {
+	$message = '';
+	if ( $grace_period ) {
+		$classes    = ' is-dismissible';
+		$extra_text = __( 'You may close this lightbox and continue using your software during your grace period for another <b>' . tve_get_grace_period( $product ) . '</b> days.', 'thrive-dash' );
+	} else {
+		$classes    = ' tvd-expired';
+		$extra_text = '';
+	}
+
+	switch ( $product ) {
+		case 'suite':
+			ob_start();
+			include TVE_DASH_PATH . '/inc/ttw-account/templates/licences/suite-message.phtml';
+			$message = ob_get_clean();
+			break;
+		case 'multiple':
+			ob_start();
+			include TVE_DASH_PATH . '/inc/ttw-account/templates/licences/multiple-message.phtml';
+			$message = ob_get_clean();
+			break;
+		default:
+			$message = tvd_get_individual_plugin_license_message( $product, false );
+
+			break;
+	}
+
+	return $message;
+}
+
+function tvd_get_individual_plugin_license_link( $tag = false ) {
+	if ( empty( $tag ) ) {
+		return 'https://thrivethemes.com/suite/';
+	}
+	$products = [
+		'tcb' => 'https://thrivethemes.com/architect/',
+		'tl'  => 'https://thrivethemes.com/leads/',
+		'tu'  => 'https://thrivethemes.com/ultimatum/',
+		'tvo' => 'https://thrivethemes.com/ovation/',
+		'tqb' => 'https://thrivethemes.com/quizbuilder/',
+		'tcm' => 'https://thrivethemes.com/comments/',
+		'tva' => 'https://thrivethemes.com/apprentice/',
+		'tab' => 'https://thrivethemes.com/optimize/',
+		'ttb' => 'https://thrivethemes.com/themebuilder/',
+	];
+
+	return $products[ $tag ];
+}
+
+function tvd_get_individual_plugin_license_message( $product, $inner = true ) {
+	$message = '';
+	if ( is_a( $product, 'TVE_Dash_Product_Abstract' ) ) {
+		$tag          = $product->get_tag();
+		$expired      = ! TD_TTW_User_Licenses::get_instance()->has_active_license( $tag );
+		$grace_period = TD_TTW_User_Licenses::get_instance()->is_in_grace_period( $tag );
+
+		if ( $expired || $grace_period ) {
+			if ( $grace_period ) {
+				$classes = ' is-dismissible';
+				$text    = 'An active license is needed to access your software and manage your content. You’ll also get access to new features, updates, security improvements, templates and support. Your website visitors can continue to access your content. You may close this notification and continue using your software for another <b>' . TD_TTW_User_Licenses::get_instance()->get_grace_period_left( $tag ) . '</b> days.';
+			} else {
+				$classes = ' tvd-expired';
+				$text    = 'An active license is needed to access your software and manage your content. You’ll also get access to new features, updates, security improvements, templates and support.';
+			}
+			if ( $inner ) {
+				$classes .= ' tvd-inner-dashboard';
+			}
+
+			$message = sprintf( '<div class="notice error tve-dashboard-license-message tvd-license' . $classes . ' %s">
+                    <svg class="td-icon"><use xlink:href="#icon-%s"></use></svg>
+                    <h4>Heads up! Your %s license has expired.</h4>
+                    <p>' . __( $text, 'thrive-dash' ) . '</p>
+                    <div>
+                        <a href="https://help.thrivethemes.com/en/articles/8223498-what-happens-when-your-thrive-product-license-expires" target="_blank">' . __( 'Learn more', 'thrive-dash' ) . '</a>
+                        <a class="tve-license-link" target="_blank" href="' . tvd_get_individual_plugin_license_link( $tag ) . '">' . __( 'Renew now', 'thrive-dash' ) . '</a>
+                    </div>
+                </div>', $tag, $tag, $product->get_title() );
+		}
+
+	}
+
+	return $message;
+}
+
+
+function tvd_register_admin_license_notices( $product, $grace_period = false ) {
+
+	if ( $product ) {
+		$message = tve_get_admin_license_notice( $product, $grace_period );
+
+		if ( ! empty( $message ) ) {
+			add_action( 'admin_notices', static function () use ( $message ) {
+				echo $message;
+			} );
+		}
+	}
+
+}
+
 
 /**
  * Unify all alerts that inform the users that certain products are not compatible with TAR version

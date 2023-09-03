@@ -85,10 +85,10 @@ class Dashboard {
 		if ( ! empty( $screen ) && $screen === 'admin_page_tve_lightspeed' ) {
 			tve_dash_enqueue();
 
-			tve_dash_enqueue_script( 'tcb-admin-lightspeed', tve_editor_url( 'admin/assets/js/lightspeed.min.js' ), array(
+			tve_dash_enqueue_script( 'tcb-admin-lightspeed', tve_editor_url( 'admin/assets/js/lightspeed.min.js' ), [
 				'jquery',
 				'backbone',
-			), TVE_VERSION, true );
+			], TVE_VERSION, true );
 
 			tve_dash_enqueue_style( 'tcb-admin-lightspeed', tve_editor_url( 'admin/assets/css/admin-lightspeed.css' ) );
 

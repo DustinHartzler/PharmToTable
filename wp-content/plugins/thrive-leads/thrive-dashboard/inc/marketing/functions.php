@@ -53,7 +53,7 @@ function thrv_update_tags( $connection, $data = array() ) {
  * @param array  $data       Add Custom Fields Data (required) [href = #customfieldsdata]
  *
  * @return int|boolean
- *          - SendInBlue, MailerLite, Drip, ConverKit, ActiveCampaign and Aweber will return an int representing the subscriber_id </br>
+ *          - Brevo (SendInBlue), MailerLite, Drip, ConverKit, ActiveCampaign and Aweber will return an int representing the subscriber_id </br>
  *          - Campaign Monitor, Zoho and Infusionsoft will return: </br>
  *              &emsp; - true if the custom fields are added successfully; </br>
  *              &emsp; - false if the process fails (exceptions thrown by autoresponders) or the parameters don’t pass the validations </br>

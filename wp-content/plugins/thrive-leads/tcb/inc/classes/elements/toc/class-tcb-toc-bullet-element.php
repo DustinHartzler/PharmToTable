@@ -36,7 +36,7 @@ class TCB_Toc_Bullet_Element extends TCB_Icon_Element {
 					'css_suffix' => ' > :first-child',
 					'config'     => array(
 						'label'   => __( 'Color', 'thrive-cb' ),
-						'options' => array( 'noBeforeInit' => false ),
+						'options' => [ 'noBeforeInit' => false ],
 					),
 				),
 				'Slider'      => array(
@@ -45,15 +45,15 @@ class TCB_Toc_Bullet_Element extends TCB_Icon_Element {
 						'min'     => '6',
 						'max'     => '100',
 						'label'   => __( 'Size', 'thrive-cb' ),
-						'um'      => array( 'px' ),
+						'um'      => [ 'px' ],
 						'css'     => 'fontSize',
 					),
 				),
 			),
 		);
-		$components['scroll']     = array( 'hidden' => true );
-		$components['responsive'] = array( 'hidden' => true );
-		$components['animation']  = array( 'hidden' => true );
+		$components['scroll']     = [ 'hidden' => true ];
+		$components['responsive'] = [ 'hidden' => true ];
+		$components['animation']  = [ 'hidden' => true ];
 
 		return $components;
 	}

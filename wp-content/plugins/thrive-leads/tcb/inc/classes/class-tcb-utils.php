@@ -24,7 +24,7 @@ class TCB_Utils {
 	 *
 	 * @return string
 	 */
-	public static function wrap_content( $content, $tag = '', $id = '', $class = '', $attr = array() ) {
+	public static function wrap_content( $content, $tag = '', $id = '', $class = '', $attr = [] ) {
 		$class = is_array( $class ) ? trim( implode( ' ', $class ) ) : $class;
 
 		if ( empty( $tag ) && ! ( empty( $id ) && empty( $class ) ) ) {
@@ -54,7 +54,7 @@ class TCB_Utils {
 	 * @return mixed|void
 	 */
 	public static function get_banned_post_types() {
-		$banned_types = array(
+		$banned_types = [
 			'attachment',
 			'revision',
 			'nav_menu_item',
@@ -78,7 +78,7 @@ class TCB_Utils {
 			TCB_CT_POST_TYPE,
 			'tcb_symbol',
 			'td_nm_notification',
-		);
+		];
 
 		/**
 		 * Filter that other plugins can hook to add / remove ban types from post grid
@@ -107,7 +107,7 @@ class TCB_Utils {
 	 * @return array
 	 */
 	public static function get_pagination_localized_data() {
-		$localized_data = array();
+		$localized_data = [];
 
 		/* Apply a filter in case we want to add more pagination types from elsewhere. */
 		$all_pagination_types = apply_filters( 'tcb_post_list_pagination_types', TCB_Pagination::$all_types );
@@ -143,10 +143,10 @@ class TCB_Utils {
 		$all_controls = array_keys( $components['pagination_button']['config'] );
 
 		/* disable all the controls except the ones that we want to be enabled */
-		$disabled_controls = array_diff( $all_controls, array( 'MasterColor', 'icon_side' ) );
+		$disabled_controls = array_diff( $all_controls, [ 'MasterColor', 'icon_side' ] );
 
 		/* we have to add this manually */
-		$disabled_controls = array_merge( $disabled_controls, array( '.tcb-button-link-container' ) );
+		$disabled_controls = array_merge( $disabled_controls, [ '.tcb-button-link-container' ] );
 
 		$components['pagination_button']['disabled_controls']     = array_values( $disabled_controls );
 		$components['pagination_button']['config']['icon_layout'] = array(
@@ -173,16 +173,16 @@ class TCB_Utils {
 			'extends' => 'ButtonGroup',
 		);
 
-		$components['animation']['disabled_controls'] = array( '.btn-inline.anim-link', '.btn-inline.anim-popup' );
+		$components['animation']['disabled_controls'] = [ '.btn-inline.anim-link', '.btn-inline.anim-popup' ];
 
 		/* add the root prefix in order to make this more specific than paragraph spacing settings from containers */
 		$components['layout']['config']['MarginAndPadding']['css_prefix'] = tcb_selection_root() . ' ';
 
-		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment' );
+		$components['layout']['disabled_controls'] = [ 'Display', 'Alignment' ];
 
-		$components['scroll']        = array( 'hidden' => true );
-		$components['responsive']    = array( 'hidden' => true );
-		$components['shared-styles'] = array( 'hidden' => true );
+		$components['scroll']        = [ 'hidden' => true ];
+		$components['responsive']    = [ 'hidden' => true ];
+		$components['shared-styles'] = [ 'hidden' => true ];
 
 		return $components;
 	}
@@ -230,10 +230,10 @@ class TCB_Utils {
 				);
 			}, $formats );
 
-			$options[] = array(
+			$options[] = [
 				'name'  => $custom_option_name,
 				'value' => '',
-			);
+			];
 		}
 
 		return $options;
@@ -460,7 +460,7 @@ class TCB_Utils {
 	 * @return array|mixed
 	 */
 	public static function get_supported_post_formats() {
-		$post_formats = array();
+		$post_formats = [];
 
 		if ( current_theme_supports( 'post-formats' ) ) {
 			$post_formats = get_theme_support( 'post-formats' );
@@ -483,7 +483,7 @@ class TCB_Utils {
 	 *
 	 * @return array|mixed
 	 */
-	public static function get_thumb_data( $post_id, $sub_path, $placeholder_data = array() ) {
+	public static function get_thumb_data( $post_id, $sub_path, $placeholder_data = [] ) {
 
 		$upload_dir = wp_upload_dir();
 		$path       = $sub_path . '/' . $post_id . '.png';
@@ -499,19 +499,19 @@ class TCB_Utils {
 			if ( file_exists( $thumb_path ) && ini_get( 'allow_url_fopen' ) ) {
 				list( $width, $height ) = getimagesize( $thumb_path );
 
-				$thumb_data = array(
+				$thumb_data = [
 					'url' => $thumb_url,
 					'h'   => $height,
 					'w'   => $width,
-				);
+				];
 			} else {
 				/* if no file is found and no placeholder is provided, return all the values set to blank */
 				if ( empty( $placeholder_data ) ) {
-					$thumb_data = array(
+					$thumb_data = [
 						'url' => '',
 						'h'   => '',
 						'w'   => '',
-					);
+					];
 				} else {
 					/* if a placeholder is provided, use it */
 					$thumb_data = $placeholder_data;
@@ -531,7 +531,7 @@ class TCB_Utils {
 	 *
 	 * @return string
 	 */
-	public static function get_uploads_path( $path = '', $upload_dir = array() ) {
+	public static function get_uploads_path( $path = '', $upload_dir = [] ) {
 		if ( empty( $upload_dir ) ) {
 			$upload_dir = wp_upload_dir();
 		}
@@ -631,7 +631,7 @@ class TCB_Utils {
 	 * @return array
 	 */
 	public static function parse_css_imports( $imports ) {
-		$data = array();
+		$data = [];
 		foreach ( array_unique( $imports ) as $import ) {
 			$font = static::parse_css_import( $import );
 			if ( ! isset( $data[ $font['family'] ] ) ) {
@@ -653,12 +653,12 @@ class TCB_Utils {
 	 * @return array
 	 */
 	public static function parse_css_import( $import ) {
-		$data   = array(
+		$data   = [
 			'base_url' => '',
 			'family'   => '',
-			'weights'  => array(),
-			'query'    => array(),
-		);
+			'weights'  => [],
+			'query'    => [],
+		];
 		$import = str_replace( array( '"', "'", '@import url(', ')', ';' ), '', $import );
 
 		$result = parse_url( $import );
@@ -896,5 +896,18 @@ class TCB_Utils {
 			'h'   => '120',
 			'w'   => '250',
 		];
+	}
+
+	/**
+	 * Used to hide elements on certain post types, called in hide() method from element classes
+	 *
+	 * @return bool
+	 */
+	public static function should_hide_element_on_blacklisted_post_types() {
+		$blacklisted_post_types = static::get_banned_post_types();
+
+		$blacklisted_post_types = array_diff( $blacklisted_post_types, [ 'tcb_symbol' ] );
+
+		return in_array( get_post_type( get_the_ID() ), $blacklisted_post_types );
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 $post_id        = get_the_ID();
-$revisions      = wp_get_post_revisions( $post_id, array('numberposts' => 10) );
+$revisions      = wp_get_post_revisions( $post_id, ['numberposts' => 10] );
 $first_revision = reset( $revisions );
 ?>
 <h2 class="tcb-modal-title ml-0"><?php echo esc_html__( 'Revision Manager', 'thrive-cb' ) ?></h2>
@@ -11,7 +11,7 @@ $first_revision = reset( $revisions );
 		<?php if ( empty( $first_revision ) ) : ?>
 			<?php echo esc_html__( 'The current post has no revisions!', 'thrive-cb' ); ?>
 		<?php else : ?>
-			<a href="<?php echo esc_url(add_query_arg( array( 'revision' => $first_revision->ID ), admin_url( 'revision.php' ) )); ?>"
+			<a href="<?php echo esc_url(add_query_arg( [ 'revision' => $first_revision->ID ], admin_url( 'revision.php' ) )); ?>"
 			   class="tcb-modal-lnk blue"
 			   target="_blank"><?php tcb_icon( 'revision' ); ?>&nbsp;<?php echo esc_html__( 'Show the default Wordpress Revision Manager', 'thrive-cb' ); ?></a>
 		<?php endif; ?>

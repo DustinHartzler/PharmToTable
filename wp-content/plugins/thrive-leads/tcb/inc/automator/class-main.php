@@ -48,11 +48,11 @@ class Main {
 		static::load_actions();
 		static::load_trigger_fields();
 		static::load_triggers();
-		add_action( 'tap_output_extra_svg', array( 'TCB\Integrations\Automator\Main', 'display_icons' ) );
+		add_action( 'tap_output_extra_svg', [ 'TCB\Integrations\Automator\Main', 'display_icons' ] );
 
-		add_filter( 'tvd_automator_api_data_sets', array( 'TCB\Integrations\Automator\Main', 'dashboard_sets' ), 1, 1 );
+		add_filter( 'tvd_automator_api_data_sets', [ 'TCB\Integrations\Automator\Main', 'dashboard_sets' ], 1, 1 );
 
-		add_filter( 'tve_automator_should_use_form', array( 'TCB\Integrations\Automator\Main', 'filter_lgs' ), 10, 4 );
+		add_filter( 'tve_automator_should_use_form', [ 'TCB\Integrations\Automator\Main', 'filter_lgs' ], 10, 4 );
 	}
 
 	public static function load_apps() {
@@ -104,7 +104,7 @@ class Main {
 	public static function load_files( $type ) {
 		$integration_path = static::get_integration_path( $type );
 
-		$local_classes = array();
+		$local_classes = [];
 		foreach ( glob( $integration_path . '/*.php' ) as $file ) {
 			require_once $file;
 			$class = 'TCB\Integrations\Automator\\' . static::get_class_name_from_filename( $file );

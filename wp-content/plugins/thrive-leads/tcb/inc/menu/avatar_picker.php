@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<i></i>
 	</div>
 	<div class="dropdown-content">
-		<div class="extend-grey">
+		<div>
 			<div class="tve-control" data-view="GoogleApi"></div>
 			<div class="tve-control" data-view="FacebookApi"></div>
 			<div class="tve-control" data-view="Gravatar"></div>
