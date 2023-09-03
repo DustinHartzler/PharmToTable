@@ -53,7 +53,7 @@ msgstr ""
 msgid "Changing capability failed"
 msgstr ""
 
-#: ../classes/AjaxController.php:492, ../inc/hooks.php:446
+#: ../classes/AjaxController.php:492, ../inc/hooks.php:450
 msgid "You are not allowed to remove this capability!"
 msgstr ""
 
@@ -245,51 +245,59 @@ msgstr ""
 msgid "Switch to stable version"
 msgstr ""
 
-#: ../inc/hooks.php:439
+#: ../inc/hooks.php:443
 msgid "Unknown error"
 msgstr ""
 
-#: ../inc/hooks.php:440
+#: ../inc/hooks.php:444
 msgid "Deleting..."
 msgstr ""
 
-#: ../inc/hooks.php:441
+#: ../inc/hooks.php:445
 msgid "Testing..."
 msgstr ""
 
-#: ../inc/hooks.php:442
+#: ../inc/hooks.php:446
 msgid "Loading..."
 msgstr ""
 
-#: ../inc/hooks.php:443
+#: ../inc/hooks.php:447
 msgid "Connection works!"
 msgstr ""
 
-#: ../inc/hooks.php:444
+#: ../inc/hooks.php:448
 msgid "Connection failed!"
 msgstr ""
 
-#: ../inc/hooks.php:445
+#: ../inc/hooks.php:449
 msgid "Unlimited"
 msgstr ""
 
-#: ../inc/hooks.php:449
+#: ../inc/hooks.php:453
 msgid "Kit successfully imported"
 msgstr ""
 
-#: ../inc/hooks.php:450
+#: ../inc/hooks.php:454
 msgid "Kit removed"
 msgstr ""
 
-#: ../inc/hooks.php:459
+#: ../inc/hooks.php:463
 msgid "Individual product"
 msgstr ""
 
-#: ../inc/hooks.php:460
+#: ../inc/hooks.php:464
 msgid "Full membership"
 msgstr ""
 
-#: ../inc/hooks.php:1024
+#: ../inc/hooks.php:1138, ../inc/coming-soon/views/admin.php:20, ../inc/login-editor/views/admin.php:36, ../inc/auto-responder/views/setup/awsses.php:48, ../inc/auto-responder/views/setup/hubspot.php:36, ../inc/auto-responder/views/setup/mailchimp.php:48, ../inc/auto-responder/views/setup/mailgun.php:41, ../inc/auto-responder/views/setup/mandrill.php:46, ../inc/auto-responder/views/setup/postmark.php:36, ../inc/auto-responder/views/setup/sendinblueemail.php:19, ../inc/auto-responder/views/setup/sparkpost.php:36, ../inc/ttw-account/templates/licences/multiple-message.phtml:11, ../inc/ttw-account/templates/licences/suite-message.phtml:11, ../templates/backbone/license-modal.phtml:21, ../templates/settings/general_settings.phtml:77
+msgid "Learn more"
+msgstr ""
+
+#: ../inc/hooks.php:1139, ../inc/ttw-account/templates/licences/multiple-message.phtml:12, ../inc/ttw-account/templates/licences/suite-message.phtml:12, ../templates/backbone/license-modal.phtml:22
+msgid "Renew now"
+msgstr ""
+
+#: ../inc/hooks.php:1221
 msgid "Manage plugins"
 msgstr ""
 
@@ -429,11 +437,11 @@ msgstr ""
 msgid "Facebook event response"
 msgstr ""
 
-#: ../inc/db-manager/class-td-db-manager.php:244
+#: ../inc/db-manager/class-td-db-manager.php:250
 msgid "There was an error while updating the database tables%s. Detailed error message: %s. If you continue seeing this message, please contact %s"
 msgstr ""
 
-#: ../inc/db-manager/class-td-db-manager.php:247
+#: ../inc/db-manager/class-td-db-manager.php:253
 msgid "Thrive Themes Support"
 msgstr ""
 
@@ -1232,10 +1240,6 @@ msgstr ""
 
 #: ../inc/coming-soon/views/admin.php:18
 msgid "If you activate this feature, you will be able to set up a \"Coming Soon\" page, that your visitors will be redirected to, while you build your website. However, the logged in users will still be able to see your website."
-msgstr ""
-
-#: ../inc/coming-soon/views/admin.php:20, ../inc/login-editor/views/admin.php:36, ../inc/auto-responder/views/setup/awsses.php:48, ../inc/auto-responder/views/setup/hubspot.php:36, ../inc/auto-responder/views/setup/mailchimp.php:48, ../inc/auto-responder/views/setup/mailgun.php:41, ../inc/auto-responder/views/setup/mandrill.php:46, ../inc/auto-responder/views/setup/postmark.php:36, ../inc/auto-responder/views/setup/sendinblueemail.php:19, ../inc/auto-responder/views/setup/sparkpost.php:36, ../templates/settings/general_settings.phtml:77
-msgid "Learn more"
 msgstr ""
 
 #: ../inc/coming-soon/views/admin.php:27, ../inc/login-editor/views/admin.php:42
@@ -3607,6 +3611,18 @@ msgstr ""
 msgid "Renew license"
 msgstr ""
 
+#: ../inc/ttw-account/templates/licences/multiple-message.phtml:5
+msgid "Multiple thrive subscriptions have expired."
+msgstr ""
+
+#: ../inc/ttw-account/templates/licences/multiple-message.phtml:7, ../inc/ttw-account/templates/licences/suite-message.phtml:7, ../templates/backbone/license-modal.phtml:9
+msgid "An active license is needed to access your software or edit your content. You’ll also get access to new features, updates, security improvements, templates and support. Your visitors will still be able to access any content you've created."
+msgstr ""
+
+#: ../inc/ttw-account/templates/licences/suite-message.phtml:5
+msgid "Your Thrive Suite subscription has expired."
+msgstr ""
+
 #: ../inc/ttw-account/templates/messages/error.phtml:20, ../inc/ttw-account/templates/messages/plugin/disconnected.phtml:23, ../inc/ttw-account/templates/messages/plugin/license-expired.phtml:23, ../inc/ttw-account/templates/messages/plugin/membership-expired.phtml:23, ../inc/ttw-account/templates/messages/plugin/no-license-found.phtml:23, ../inc/ttw-account/templates/messages/theme/disconnected.phtml:13, ../inc/ttw-account/templates/messages/theme/license-expired.phtml:13, ../inc/ttw-account/templates/messages/theme/membership-expired.phtml:13, ../inc/ttw-account/templates/messages/theme/no-license-found.phtml:8, ../inc/ttw-account/templates/messages/theme/update.phtml:8
 msgid "View version %s details"
 msgstr ""
@@ -4504,8 +4520,12 @@ msgstr ""
 msgid "To:"
 msgstr ""
 
-#: ../rest-api/class-td-rest-controller.php:159
+#: ../rest-api/class-td-rest-controller.php:188
 msgid "Provided API Key is wrong"
+msgstr ""
+
+#: ../rest-api/class-td-rest-controller.php:223
+msgid "No product identifier provided"
 msgstr ""
 
 #: ../rest-api/class-td-rest-hook-controller.php:125
@@ -4588,6 +4608,22 @@ msgstr ""
 msgid "This usually occurs when your kit was deleted or you do not have an active subscription. Please check your Font Awesome account and update the above kit details as required."
 msgstr ""
 
+#: ../templates/backbone/license-modal.phtml:5
+msgid "Heads up! Your "
+msgstr ""
+
+#: ../templates/backbone/license-modal.phtml:7
+msgid " license has expired"
+msgstr ""
+
+#: ../templates/backbone/license-modal.phtml:14
+msgid "You may close this lightbox and continue using your software during your grace period for another %s."
+msgstr ""
+
+#: ../templates/backbone/license-modal.phtml:14, ../templates/backbone/support-token.phtml:22
+msgid "days"
+msgstr ""
+
 #: ../templates/backbone/no-icons.phtml:3
 msgid "No results found"
 msgstr ""
@@ -4610,10 +4646,6 @@ msgstr ""
 
 #: ../templates/backbone/support-token.phtml:14
 msgid "Give access for"
-msgstr ""
-
-#: ../templates/backbone/support-token.phtml:22
-msgid "days"
 msgstr ""
 
 #: ../templates/backbone/support-token.phtml:38

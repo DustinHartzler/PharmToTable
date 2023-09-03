@@ -32,9 +32,23 @@ class TD_TTW_User_Licenses {
 
 	private $_licenses_instances = array();
 
+	/**
+	 * @var TD_TTW_License[]
+	 */
+	private $_active_licenses = array();
+	/**
+	 * @var TD_TTW_License[]
+	 */
+	private $_in_grace_period_licenses = array();
+	/**
+	 * @var TD_TTW_License[]
+	 */
+	private $_all_license_instances = array();
+
 	private function __construct() {
 
-		$this->_data = thrive_get_transient( self::NAME );
+		$transient   = thrive_get_transient( self::NAME );
+		$this->_data = $transient === false ? array() : $transient;
 
 		$this->_init_licenses_instances();
 
@@ -45,7 +59,22 @@ class TD_TTW_User_Licenses {
 
 	private function _init_licenses_instances() {
 
+		$this->_all_license_instances = array();
+
 		foreach ( (array) $this->_data as $item ) {
+
+			$license = new TD_TTW_License( $item );
+
+			$this->_all_license_instances[] = $license;
+
+			if ( $license->is_active() ) {
+				$this->_push( $license, 'active' );
+			} else if ( $license->is_in_grace_period() ) {
+				$this->_push( $license, 'in_grace_period' );
+			} else {
+				$this->_push( $license, 'expired' );
+			}
+
 			if ( ! empty( $item['tags'] ) && is_array( $item['tags'] ) ) {
 				foreach ( $item['tags'] as $tag ) {
 					/**
@@ -59,6 +88,37 @@ class TD_TTW_User_Licenses {
 				}
 			}
 		}
+
+		//membership license should be first in the list
+		usort( $this->_all_license_instances, static function ( $a, $b ) {
+			if ( $a->is_membership() && $b->is_membership() ) {
+				return 0;
+			}
+
+			return $a->is_membership() ? - 1 : 1;
+		} );
+	}
+
+	/**
+	 * Push the license into a list
+	 *
+	 * @param TD_TTW_License $license
+	 * @param string         $list - expired, active, in_grace_period
+	 *
+	 * @return void
+	 */
+	private function _push( TD_TTW_License $license, string $list ) {
+
+		$allowed_lists = array( 'expired', 'active', 'in_grace_period' );
+
+		if ( ! in_array( $list, $allowed_lists, true ) ) {
+			$list = 'expired';
+		}
+		$arr = $this->{'_' . $list . '_licenses'};
+		foreach ( $license->tags as $tag ) {
+			$arr[ $tag ] = $license;
+		}
+		$this->{'_' . $list . '_licenses'} = $arr;
 	}
 
 	/**
@@ -74,11 +134,32 @@ class TD_TTW_User_Licenses {
 	/**
 	 * Get available licenses
 	 *
-	 * @return array
+	 * @return TD_TTW_License[]
 	 */
 	public function get() {
 
 		return $this->_licenses_instances;
+	}
+
+	/**
+	 * Returns all licenses
+	 *
+	 * @return TD_TTW_License[]
+	 */
+	public function get_all(): array {
+		return $this->_all_license_instances;
+	}
+
+	/**
+	 * Get all licenses that are expired or in grace period
+	 *
+	 * @return array
+	 */
+	public function get_inactive(): array {
+		return array_filter( $this->_all_license_instances, static function ( $license ) {
+			/** @var $license TD_TTW_License */
+			return $license->is_expired() || $license->is_in_grace_period();
+		} );
 	}
 
 	/**
@@ -88,7 +169,7 @@ class TD_TTW_User_Licenses {
 	 *
 	 * @return bool
 	 */
-	public function has_license( $tag ) {
+	public function has_license( $tag ): bool {
 
 		return isset( $this->_licenses_instances[ $tag ] );
 	}
@@ -98,7 +179,7 @@ class TD_TTW_User_Licenses {
 	 *
 	 * @return bool
 	 */
-	public function has_membership() {
+	public function has_membership(): bool {
 
 		return $this->has_license( TD_TTW_License::MEMBERSHIP_TAG );
 	}
@@ -111,6 +192,33 @@ class TD_TTW_User_Licenses {
 	public function get_membership() {
 
 		return $this->get_license( TD_TTW_License::MEMBERSHIP_TAG );
+	}
+
+	/**
+	 * Checks if active licenses array has a [all] tag license
+	 * @return TD_TTW_License|null
+	 */
+	public function get_active_membership_license() {
+
+		if ( ! empty( $this->_active_licenses['all'] ) && $this->_active_licenses['all'] instanceof TD_TTW_License ) {
+			return $this->_active_licenses['all'];
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Checks if in grace period licenses array has a [all] tag license
+	 * @return TD_TTW_License|null
+	 */
+	public function get_in_grace_period_membership() {
+
+		if ( ! empty( $this->_in_grace_period_licenses['all'] ) && $this->_in_grace_period_licenses['all'] instanceof TD_TTW_License ) {
+			return $this->_in_grace_period_licenses['all'];
+		}
+
+		return null;
 	}
 
 	/**
@@ -289,5 +397,125 @@ class TD_TTW_User_Licenses {
 	public function can_update_ttb() {
 
 		return $this->get_license( self::TTB_TAG ) && $this->get_license( self::TTB_TAG )->can_update();
+	}
+
+	public function get_active_license( $tag ) {
+
+		$license = false;
+
+		foreach ( $this->_active_licenses as $active_license ) {
+			if ( $active_license->has_tag( $tag ) ) {
+				$license = $active_license;
+				break;
+			}
+		}
+
+		return $license;
+	}
+
+	/**
+	 * Checks is there is a license that allows user to user the product
+	 * - firstly it looks for a membership active license
+	 * - secondly it looks for a specific plugin active license
+	 *
+	 * @param string $tag plugin tag
+	 *
+	 * @return bool - plugin has/has not active license (will check membership tag also)
+	 */
+	public function has_active_license( string $tag ) {
+
+		$has      = false;
+		$licenses = thrive_get_transient( self::NAME );
+		if ( empty( $licenses ) && ! is_array( $licenses ) ) {
+			return true;
+		}
+		$active_membership = $this->get_active_membership_license();
+		if ( $active_membership ) {
+			$has = true;
+		}
+
+		if ( ! $has ) {
+			foreach ( $this->_active_licenses as $license ) {
+				if ( $license->has_tag( $tag ) ) {
+					$has = true;
+					break;
+				}
+			}
+		}
+		return $has;
+	}
+
+	/**
+	 * Check if a plugin tag has a license which is in grace period
+	 *
+	 * @param string $tag //plugin representation for which we check license
+	 *
+	 * @return bool - plugin is/is not in grace period (will check membership tag also)
+	 */
+	public function is_in_grace_period( string $tag ) {
+
+		$is = false;
+
+		if ( ! $this->has_active_license( $tag ) ) {
+			$in_grace_period_membership = $this->get_in_grace_period_membership();
+			if ( $in_grace_period_membership ) {
+				return true;
+			}
+
+			foreach ( $this->_in_grace_period_licenses as $license ) {
+				if ( $license->has_tag( $tag ) && $license->is_in_grace_period() ) {
+					$is = true;
+					break;
+				}
+			}
+		}
+
+		return $is;
+	}
+
+	public function show_gp_lightbox( string $tag ) {
+		$transient = 'tve_license_warning_lightbox_' . $tag;
+
+		return empty( get_transient( $transient ) );
+	}
+
+	/**
+	 * Check if a plugin tag has a license which is in grace period
+	 * and calculate the number of days left in grace period
+	 *
+	 * @param string $tag
+	 *
+	 * @return int - number of days left in grace period
+	 *               -1 if there is no license in grace period
+	 */
+	public function get_grace_period_left( string $tag ) {
+
+		if ( ! $this->is_in_grace_period( $tag ) ) {
+			return 0;
+		}
+
+		try {
+
+			$membership = $this->get_in_grace_period_membership();
+			$single     = ! empty( $this->_in_grace_period_licenses[ $tag ] ) ? $this->_in_grace_period_licenses[ $tag ] : null;
+
+			$membership_days = 0;
+			$single_days     = 0;
+
+			if ( $membership ) {
+				$membership_days = (int) $membership->get_remaining_grace_period()->format( '%a' ) + 1;
+			}
+
+			if ( $single ) {
+				$single_days = (int) $single->get_remaining_grace_period()->format( '%a' ) + 1;
+			}
+
+			$days = max( $membership_days, $single_days );
+
+		} catch ( Exception $e ) {
+			$days = 0;
+		}
+
+		return $days;
 	}
 }

@@ -142,7 +142,8 @@ class TVD_SM_Admin_Helper {
 	 * @return array|mixed
 	 */
 	public function tvd_sm_update_option( $option_name, $value ) {
-		if ( empty( $option_name ) ) {
+		/* allow only specific options to be saved */
+		if ( empty( $option_name ) || ! in_array( $option_name, [ 'global_lp_scripts' ] ) ) {
 			return false;
 		}
 

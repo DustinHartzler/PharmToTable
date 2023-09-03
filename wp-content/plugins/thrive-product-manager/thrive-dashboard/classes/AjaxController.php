@@ -108,7 +108,7 @@ class TVE_Dash_AjaxController {
 	 * it will first search the POST array
 	 *
 	 * @param string $key
-	 * @param mixed $default
+	 * @param mixed  $default
 	 *
 	 * @return mixed
 	 */
@@ -147,7 +147,7 @@ class TVE_Dash_AjaxController {
 			wp_send_json( 'You do not have access', 403 );
 		}
 
-		update_option( sanitize_text_field( $_POST['option_name'] ), sanitize_text_field( $_POST['option_value'] ) );
+		update_option( 'tvd_fa_kit', sanitize_text_field( $_POST['option_value'] ) );
 
 		wp_send_json( 'success', 200 );
 	}

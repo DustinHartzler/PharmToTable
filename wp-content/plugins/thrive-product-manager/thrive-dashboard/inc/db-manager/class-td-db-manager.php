@@ -91,8 +91,14 @@ class TD_DB_Manager {
 		if ( is_dir( $path ) === false ) {
 			throw new Exception( 'Path to migrations is invalid' );
 		}
-		$this->_migrations_path    = trailingslashit( $path );
-		$this->_option_name        = $option_name;
+
+		if ( strpos( $option_name, '_db' ) !== false ) {
+			$this->_option_name = $option_name;
+		} else {
+			throw new Exception( 'Unknown option name' );
+		}
+
+		$this->_migrations_path = trailingslashit( $path );
 		$this->_required_version   = $required_version;
 		$this->_current_version    = $this->_get_current_version();
 		$this->_product_name       = $product_name;

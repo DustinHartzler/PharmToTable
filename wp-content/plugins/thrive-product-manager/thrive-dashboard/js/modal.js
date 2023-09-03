@@ -370,6 +370,7 @@ TVE_Dash.views = TVE_Dash.views || {};
 			return this;
 		}
 	} );
+
 	$( document ).ready( function () {
 		if ( ! TVE_Dash.views.VideoModal ) {
 			TVE_Dash.views.VideoModal = TVE_Dash.views.Modal.extend( {

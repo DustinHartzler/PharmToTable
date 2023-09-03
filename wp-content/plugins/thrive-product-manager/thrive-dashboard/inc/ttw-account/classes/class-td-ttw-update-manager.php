@@ -408,13 +408,13 @@ class TD_TTW_Update_Manager {
 
 	public function try_set_url() {
 
-		if ( ! TD_TTW_Connection::is_debug_mode() || ! $this->is_known_page() ) {
+		if ( ! current_user_can( 'manage_options' ) || ! TD_TTW_Connection::is_debug_mode() || ! $this->is_known_page() ) {
 			return;
 		}
 
 		if ( ! empty( $_REQUEST['url'] ) && ! empty( $_REQUEST['td_action'] ) && sanitize_text_field( $_REQUEST['td_action'] ) === 'set_url' ) {
 
-			update_option( 'tpm_ttw_url', sanitize_text_field( $_REQUEST['url'] ) );
+			update_option( 'tpm_ttw_url', sanitize_url( $_REQUEST['url'] ) );
 
 			wp_redirect( $this->get_admin_url() );
 			die;

@@ -24,7 +24,7 @@ var TVD_SS = TVD_SS || {};
 			if ( link && link.value === '1' ) {
 				content = '<a href="#">' + content + '</a>'
 			}
-		} else if ( shortcodeData.key === 'thrive_global_fields' && shortcodeData.extra_key === '1' ) {
+		} else if ( shortcodeData.key === 'thrive_global_fields' ) {
 			if ( ! content.includes( 'thrive-shortcode-notice' ) ) {
 				const call = shortcodeData.configOptions.find( opt => opt.key === 'enable_call' );
 				const mail = shortcodeData.configOptions.find( opt => opt.key === 'enable_email' );

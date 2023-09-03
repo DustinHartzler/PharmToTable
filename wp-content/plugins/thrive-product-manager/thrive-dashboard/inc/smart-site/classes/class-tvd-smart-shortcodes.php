@@ -82,17 +82,12 @@ final class TVD_Smart_Shortcodes {
 
 			if ( ! empty( $field['data'] ) ) {
 				$field_data = maybe_unserialize( $field['data'] );
-
-				switch ( $field['identifier'] ) {
-					case 'alt_phone':
-					case 'phone':
-						$data = 'tel:' . $field_data['phone'];
-						break;
-					case 'mail':
-						$data = 'mailto:' . $field_data['email'];
-						break;
-					default:
-						$data = $field_data['url'];
+				if ( isset( $field_data['phone'] ) ) {
+					$data = 'tel:' . $field_data['phone'];
+				} elseif ( isset( $field_data['email'] ) ) {
+					$data = 'mailto:' . $field_data['email'];
+				} else {
+					$data = $field_data['url'];
 				}
 
 			}

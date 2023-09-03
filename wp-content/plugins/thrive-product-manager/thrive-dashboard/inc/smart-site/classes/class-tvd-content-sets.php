@@ -399,4 +399,4 @@ function tvd_content_sets() {
 	return TVD_Content_Sets::get_instance();
 }
 
-add_action( 'init', 'tvd_content_sets', 9 );
+add_action( 'init', 'tvd_content_sets', 8 );

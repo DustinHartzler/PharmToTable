@@ -269,6 +269,6 @@ class TVE_Dash_Product_LicenseManager {
 			'thrive-product-manager' => static::TPM_TAG,
 		);
 
-		return isset( $mapping[ $text_domain ] ) ? $mapping[ $text_domain ] : '';
+		return $mapping[ $text_domain ] ?? '';
 	}
 }
