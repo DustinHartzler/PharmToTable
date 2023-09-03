@@ -46,6 +46,23 @@ class Integration_ActiveCampaign extends Integration {
 		$this->debug   = $debug;
 	}
 
+	/**
+	 * Test the current API key to confirm that AutomateWoo can communicate with the ActiveCampaign API
+	 *
+	 * @return bool
+	 */
+	public function test_integration(): bool {
+		return $this->get_sdk()->credentials_test();
+	}
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool {
+		return (bool) Options::activecampaign_enabled();
+	}
 
 	/**
 	 * @return array

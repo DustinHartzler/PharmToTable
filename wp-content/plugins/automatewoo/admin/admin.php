@@ -234,11 +234,6 @@ class Admin {
 			'order' => 7,
 		];
 
-		$sub_menu['events'] = [
-		   'title' => __( 'Events', 'automatewoo' ),
-		   'function' => [ __CLASS__, 'load_controller' ],
-		   'display'  => WCAdminConnectPages::PAGE_DISPLAY_HIDDEN,
-		];
 
 		$sub_menu['preview'] = [
 			'title' => __( 'Preview', 'automatewoo' ),
@@ -497,7 +492,6 @@ class Admin {
 		$ids[] = "$prefix-queue";
 		$ids[] = "$prefix-guests";
 		$ids[] = "$prefix-opt-ins";
-		$ids[] = "$prefix-events";
 		$ids[] = "$prefix-preview";
 		$ids[] = 'aw_workflow';
 		$ids[] = 'edit-aw_workflow';

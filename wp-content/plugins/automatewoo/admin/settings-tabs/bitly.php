@@ -2,6 +2,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Notifications\BitlyCheck;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -51,6 +53,23 @@ class Settings_Tab_Bitly extends Admin_Settings_Tab_Abstract {
 		);
 
 		$this->section_end( 'bitly' );
+	}
+
+	/**
+	 * Save settings.
+	 *
+	 * @param array $fields Which fields to save. If empty, all fields will be saved.
+	 *
+	 * @return void
+	 */
+	public function save( $fields = array() ): void {
+		parent::save( $fields );
+
+		$bitly = Integrations::get_bitly();
+		if ( $bitly && $bitly->test_integration() ) {
+			// If a notification exists relating to a Bitly integration error, delete it.
+			BitlyCheck::possibly_delete_note();
+		}
 	}
 }
 

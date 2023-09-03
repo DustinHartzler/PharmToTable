@@ -416,7 +416,7 @@ abstract class Trigger {
 		$field->set_title( __('Recheck status before run', 'automatewoo' ) );
 		$field->default_to_checked = true;
 		$field->set_description(
-			__( "This is useful for Workflows that are not run immediately as it ensures the status of the order hasn't changed since initial trigger." ,
+			__( "This is useful for Workflows that are not run immediately as it ensures the status hasn't changed since initial trigger." ,
 				'automatewoo'  ) );
 
 		$this->add_field( $field );

@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
@@ -17,11 +16,14 @@ abstract class Integration {
 	/** @var bool */
 	public $log_errors = true;
 
-
 	/**
-	 * @param $message
+	 * Add a log entry.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
 	 */
-	public function log( $message ) {
+	public function log( $message ): void {
 		if ( ! $this->log_errors ) {
 			return;
 		}
@@ -31,24 +33,40 @@ abstract class Integration {
 
 
 	/**
-	 * @param Remote_Request $request
+	 * Maybe log the results of a request.
+	 *
+	 * @param Remote_Request $request The request object to maybe log.
+	 *
+	 * @return void
 	 */
-	public function maybe_log_request_errors( $request ) {
+	public function maybe_log_request_errors( $request ): void {
 		if ( ! $this->log_errors ) {
 			return;
 		}
 
 		if ( $request->is_http_error() ) {
 			$this->log( $request->get_http_error_message() );
-		}
-		elseif ( $request->is_api_error() ) {
+		} elseif ( $request->is_api_error() ) {
 			$this->log(
 				$request->get_response_code() . ' ' . $request->get_response_message()
 				. '. Method: ' . $request->method
 				. '. Endpoint: ' . $request->url
-				. '. Response body: ' . print_r( $request->get_body(), true )
+				. '. Response body: ' . print_r( $request->get_body(), true )  // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 			);
 		}
 	}
 
+	/**
+	 * Test if the current API config is valid.
+	 *
+	 * @return bool True if the integration can communicate with external API or false otherwise
+	 */
+	abstract public function test_integration(): bool;
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool True if the integration is enabled.
+	 */
+	abstract public function is_enabled(): bool;
 }

@@ -244,5 +244,48 @@ class Options extends Options_API {
 	static function mailchimp_api_key() {
 		return trim( Clean::string( Options::get( 'mailchimp_api_key' ) ) );
 	}
-}
 
+	/**
+	 * Get active_campaign_integration_enabled option.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @return bool
+	 */
+	static public function activecampaign_enabled(): bool {
+		return (bool) Options::get( 'active_campaign_integration_enabled' );
+	}
+
+	/**
+	 * Get twilio_integration_enabled option.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @return bool
+	 */
+	static public function twilio_enabled(): bool {
+		return (bool) Options::get( 'twilio_integration_enabled' );
+	}
+
+	/**
+	 * Get bitly_shorten_sms_links option.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @return bool
+	 */
+	static public function bitly_enabled(): bool {
+		return (bool) Options::get( 'bitly_shorten_sms_links' );
+	}
+
+	/**
+	 * Get campaign_monitor_enabled option.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @return bool
+	 */
+	static public function campaign_monitor_enabled(): bool {
+		return (bool) Options::get( 'campaign_monitor_enabled' );
+	}
+}

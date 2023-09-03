@@ -28,8 +28,6 @@ class Carts {
 	static function init() {
 		$self = __CLASS__; /** @var $self Carts (for IDE) */
 
-		add_action( 'automatewoo_two_days_worker', [ $self, 'clean_stored_carts' ] );
-
 		add_action( 'woocommerce_cart_emptied', [ $self, 'cart_emptied' ] );
 
 		// Clear customer's cart when order status changes from cancelled, failed or pending

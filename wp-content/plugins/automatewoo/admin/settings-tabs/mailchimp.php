@@ -2,6 +2,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Notifications\MailchimpCheck;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -63,6 +65,9 @@ class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 			parent::save( array( 'automatewoo_mailchimp_integration_enabled' ) );
 		} else {
 			$mailchimp = Integrations::mailchimp();
+
+			// If a notification exists relating to a Mailchimp integration error, delete it.
+			MailchimpCheck::possibly_delete_note();
 
 			if ( $mailchimp ) {
 				$mailchimp->clear_cache_data();

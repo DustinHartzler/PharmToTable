@@ -59,14 +59,19 @@ class AsyncActionRunner {
 	}
 
 	/**
-	 * Dispatches an async queue runner request if various conditions are met.
+	 * Dispatches an async queue runner if the following conditions are met:
 	 *
-	 * Note: This is a temporary solution. In the future (probably ActionScheduler 3.2) we should use the filter
-	 * added in https://github.com/woocommerce/action-scheduler/pull/628.
+	 * - Not running in the admin context (ActionScheduler will dispatch a queue runner in that instance)
+	 * - The filter `automatewoo_disable_async_runner` doesn't return true
+	 * - The async runner is not currently locked
 	 */
 	public function maybe_dispatch_async_request() {
 		if ( is_admin() ) {
 			// ActionScheduler will dispatch an async runner request on it's own.
+			return;
+		}
+
+		if ( apply_filters( 'automatewoo_disable_async_runner', false ) ) {
 			return;
 		}
 

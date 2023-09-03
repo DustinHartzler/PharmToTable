@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  * @class WooCommerce_Payments_Integration
  * @since 5.5.12
  */
-class WooCommerce_Payments_Integration extends Integration {
+class WooCommerce_Payments_Integration {
 
 	/**
 	 * WooCommerce_Payments_Integration constructor.

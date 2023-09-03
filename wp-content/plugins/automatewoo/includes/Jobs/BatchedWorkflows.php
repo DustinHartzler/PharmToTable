@@ -130,7 +130,7 @@ class BatchedWorkflows extends AbstractBatchedActionSchedulerJob {
 	/**
 	 * Validate the workflow.
 	 *
-	 * It must exist, be active and its trigger should be an instance of Trigger_Background_Processed_Abstract.
+	 * It must exist, be active and its trigger should be an instance of BatchedWorkflowInterface.
 	 *
 	 * @param Workflow|false $workflow
 	 *

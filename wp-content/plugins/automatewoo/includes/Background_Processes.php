@@ -32,14 +32,7 @@ class Background_Processes extends Registry {
 	 * @return array
 	 */
 	public static function load_includes() {
-		$includes = [
-			'events'                => Background_Processes\Event_Runner::class,
-			'wishlist_item_on_sale' => Background_Processes\Wishlist_Item_On_Sale::class,
-			'workflows'             => Background_Processes\Workflows::class,
-			'tools'                 => Background_Processes\Tools::class,
-		];
-
-		return apply_filters( 'automatewoo/background_processes/includes', $includes );
+		return apply_filters_deprecated( 'automatewoo/background_processes/includes', [ [] ], '6.0.0', '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 	}
 
 	/**

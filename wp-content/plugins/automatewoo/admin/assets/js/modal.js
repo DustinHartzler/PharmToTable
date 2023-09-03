@@ -21,8 +21,12 @@ jQuery( function ( $ ) {
 	Object.assign( AutomateWoo.Modal, {
 		init() {
 			const $body = $( document.body );
-			$body.on( 'click', `.${ this.triggerClasses.close }`, this.close );
-			$body.on( 'click', '.automatewoo-modal-overlay', this.close );
+			$body.on( 'click', `.${ this.triggerClasses.close }`, () => {
+				this.close( 'dismiss' );
+			} );
+			$body.on( 'click', '.automatewoo-modal-overlay', () => {
+				this.close( 'dismiss' );
+			} );
 			$body.on(
 				'click',
 				`.${ this.triggerClasses.openLink }`,
@@ -31,7 +35,7 @@ jQuery( function ( $ ) {
 
 			$( document ).on( 'keydown', function ( e ) {
 				if ( e.keyCode === 27 ) {
-					AutomateWoo.Modal.close();
+					AutomateWoo.Modal.close( 'dismiss' );
 				}
 			} );
 		},
@@ -78,19 +82,21 @@ jQuery( function ( $ ) {
 		/**
 		 * Closes modal, by changin classes on `document.body` and removing modal elements.
 		 *
+		 * @param {string} [closedBy=''] - Identifier for what closed the modal which will be included in the event detail.
+		 *
 		 * @fires awmodal-close on the `document.body`.
 		 */
-		close() {
+		close( closedBy = '' ) {
 			document.body.classList.remove(
 				'automatewoo-modal-open',
 				'automatewoo-modal-loading'
 			);
 			$( '.automatewoo-modal-container' ).remove();
 
-			// Fallback to Event in the browser does not support CustomEvent, like IE.
-			const eventCtor =
-				typeof CustomEvent === 'undefined' ? Event : CustomEvent;
-			document.body.dispatchEvent( new eventCtor( 'awmodal-close' ) );
+			const detail = { closedBy };
+			const modalClose = new CustomEvent( 'awmodal-close', { detail } );
+
+			document.body.dispatchEvent( modalClose );
 		},
 	} );
 

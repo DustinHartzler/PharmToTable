@@ -34,6 +34,23 @@ class Integration_Twilio extends Integration {
 		$this->api_root = 'https://api.twilio.com/2010-04-01/Accounts/' . $this->account_sid;
 	}
 
+	/**
+	 * Test the current API key to confirm that AutomateWoo can communicate with the Twilio API
+	 *
+	 * @return bool
+	 */
+	public function test_integration(): bool {
+		return $this->request( 'GET', '/' )->is_successful();
+	}
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool {
+		return (bool) Options::twilio_enabled();
+	}
 
 	/**
 	 * @return string

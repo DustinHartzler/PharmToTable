@@ -53,9 +53,6 @@ class UpdateNote {
 			return;
 		}
 
-		// Remove Welcome note if present.
-		WelcomeNote::possibly_delete_note();
-
 		// Remove older Update notes if present.
 		self::possibly_delete_older_update_notes();
 

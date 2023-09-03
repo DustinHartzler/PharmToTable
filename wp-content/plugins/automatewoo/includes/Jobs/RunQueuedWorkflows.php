@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class RunQueuedWorkflows extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
+class RunQueuedWorkflows extends AbstractRecurringBatchedActionSchedulerJob {
 
 	use ValidateItemAsIntegerId;
 
@@ -30,12 +30,13 @@ class RunQueuedWorkflows extends AbstractBatchedActionSchedulerJob implements St
 	}
 
 	/**
-	 * Get the name of an action to attach the job's start method to.
+	 * Return the recurring job's interval in seconds.
 	 *
-	 * @return string
+	 * @since 6.0.0
+	 * @return int The interval for the action in seconds
 	 */
-	public function get_start_hook() {
-		return Cron::TWO_MINUTE_WORKER;
+	public function get_interval(): int {
+		return JobService::TWO_MINUTE_INTERVAL;
 	}
 
 	/**

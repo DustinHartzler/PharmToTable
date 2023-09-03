@@ -111,13 +111,14 @@ abstract class Query_Abstract {
 
 
 	/**
-	 * @param string $column
-	 * @param string $order
+	 * @param string $column The column to order_by the query
+	 * @param string $order The ordering direction (ASC or DESC)
+	 * @param array  $valid_sortable_columns The allowed sortable columns. By default, empty array (all allowed)
 	 * @return $this
 	 */
-	function set_ordering( $column, $order = 'DESC' ) {
-		$this->orderby = Clean::string( $column );
-		$this->order = Clean::string( $order );
+	function set_ordering( $column, $order = 'DESC', $valid_sortable_columns = [] ) {
+		$this->orderby = Clean::order_by( $column, $valid_sortable_columns );
+		$this->order = Clean::order( $order );
 		return $this;
 	}
 

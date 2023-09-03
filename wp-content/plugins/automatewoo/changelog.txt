@@ -1,5 +1,66 @@
 *** AutomateWoo Changelog ***
 
+2023-08-29 - version 6.0.3
+* Dev - Add Action for Hooks Documentation Generator.
+* Dev - Fetch WooCommerce and WordPress versions for our tests.
+* Dev - Override vulnerability packages: xmlhttprequest-ssl and ws.
+* Fix - {{ order.items }} variable does not return the correct variation if attributes are set to "Any...".
+* Tweak - Apply consistent admin theme colors to common UI components.
+* Tweak - Auto update the database if the filter woocommerce_enable_auto_update_db returns true.
+
+2023-08-15 - version 6.0.2
+* Dev - Remove local subscription helper.
+* Dev - Use `merge-trunk-develop-pr` action.
+* Fix - Email actions not imported with WP Importer.
+* Update - Bump minimum PHP version to 7.3.
+
+2023-08-08 - version 6.0.1
+* Add - Filter to disable Async queue runner.
+* Fix - Recording guest data when using checkout blocks.
+* Fix - Resolve critical error in the send email action preview.
+* Tweak -  Refactor Order and Order by Clean calls.
+* Tweak - Add Status Verification Check for Booking Status Changes Trigger.
+* Tweak - WC 8.0 compatibility.
+* Tweak - WP 6.3 compatibility.
+
+2023-07-25 - version 6.0.0
+* Break - Remove deprecated Events code and automatewoo_events database table.
+* Dev - Add Unit Tests for Action Scheduler Jobs.
+* Dev - Automate merging trunk to develop after a release.
+* Dev - Deprecate Background Process Base Class.
+* Dev - Deprecate Cron Workers' usage in StartOnHook based Jobs.
+* Dev - Remove deprecated Background Proccess Classes.
+* Dev - Unit Tests for Action Scheduler Jobs.
+* Fix - Prevent PHP 8.2 deprecation messages.
+* Tweak - Adding a System Check for Action Scheduler Jobs.
+* Update - Migrate Cron-based Jobs to Action Scheduler Jobs.
+
+2023-07-19 - version 5.8.5
+* Add - Activate or Update notification type.
+* Add - Inbox notification for Mailchimp API key failure.
+* Add - Inbox notification for failed system checks.
+* Add - Inbox notification when site is running minimum version of PHP supported by AW.
+* Add - Inbox notifications for Add-ons.
+* Add - Inbox notifications.
+* Add - Migrate existing Welcome Note to Notifications.
+* Add - Notifications for remaining integrations.
+* Add - Unit tests for NotificationsInitializer.
+* Dev - Update Sensei Integration Unit Tests.
+* Fix - Avoid error notice on AW installation.
+* Fix - Date input pattern.
+* Fix - Datepicker initialization in Workflow.
+* Fix - Fix Sensei Quiz Rules not working when using Sensei v4.16.0 .
+* Fix - Revert trigger when using any method to close incompatible actions modal.
+* Tweak - Track currency for conversions.
+
+2023-07-11 - version 5.8.4
+* Add - subscription.retry_payment_date variable.
+* Dev - Fix PHP unit test failed because of test paths changed in WC Subscriptions.
+
+2023-07-04 - version 5.8.3
+* Tweak - Install DB tables using WP CLI.
+* Tweak - WC 7.9 compatibility.
+
 2023-06-29 - version 5.8.2
 * Fix - Use of style tags in email templates.
 * Tweak - Set priority for AutomateWoo Async Actions.
@@ -82,7 +143,6 @@
 * Tweak - Show deprecation warning pointing to new Analytics.
 * Tweak - Use CSS instead of JS to center modals.
 * Tweak - WC 7.6 compatibility.
-* Tweak - WP 6.2 compatibility.
 
 2023-03-14 - version 5.6.10
 * Add - Added "Student Added To the Group" trigger.

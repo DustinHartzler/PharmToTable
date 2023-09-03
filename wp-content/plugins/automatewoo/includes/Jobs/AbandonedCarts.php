@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements RecurringJobInterface {
+class AbandonedCarts extends AbstractRecurringBatchedActionSchedulerJob {
 
 	use ValidateItemAsIntegerId;
 
@@ -46,15 +46,6 @@ class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements Recurr
 	 */
 	public function get_name() {
 		return 'abandoned_carts';
-	}
-
-	/**
-	 * Get the name of an action to attach the job's start method to.
-	 *
-	 * @return string
-	 */
-	public function get_start_hook() {
-		return $this->get_hook_base_name() . 'start';
 	}
 
 	/**

@@ -103,6 +103,8 @@ class JobRegistry implements JobRegistryInterface {
 		$this->jobs          = [];
 		$batched_job_monitor = new ActionSchedulerJobMonitor( $this->action_scheduler );
 
+		$midnight_job = new Midnight( $this->action_scheduler, $batched_job_monitor );
+
 		$jobs = [
 			new DeleteFailedQueuedWorkflows( $this->action_scheduler, $batched_job_monitor ),
 			new RunQueuedWorkflows( $this->action_scheduler, $batched_job_monitor ),
@@ -119,6 +121,11 @@ class JobRegistry implements JobRegistryInterface {
 			new AbandonedCarts( $this->action_scheduler, $batched_job_monitor, $this->options_store ),
 			new WishlistItemOnSale( $this->action_scheduler, $batched_job_monitor ),
 			new ToolTaskRunner( $this->action_scheduler, $batched_job_monitor, $this->tools_service ),
+			$midnight_job,
+			new CheckMidnightJob( $this->action_scheduler, $batched_job_monitor, $midnight_job ),
+			new CheckGmtOffsetChange( $this->action_scheduler, $batched_job_monitor ),
+			new ProductGoesOnSale( $this->action_scheduler, $batched_job_monitor ),
+			new CleanInactiveCarts( $this->action_scheduler, $batched_job_monitor ),
 		];
 
 		/**

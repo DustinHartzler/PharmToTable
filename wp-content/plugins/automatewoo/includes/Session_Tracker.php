@@ -45,6 +45,9 @@ class Session_Tracker {
 		add_action( 'woocommerce_before_order_object_save', [ $self, 'capture_from_store_api' ], 10, 1 );
 		add_action( 'automatewoo_capture_guest_email', [ $self, 'set_session_by_captured_email' ] ); // for third-party
 		add_action( 'woocommerce_checkout_order_processed', [ $self, 'maybe_track_guest_customer_after_order_placed' ], 20 );
+
+		// Checkout blocks uses woocommerce_store_api_checkout_order_processed instead of  woocommerce_checkout_order_processed
+		add_action( 'woocommerce_store_api_checkout_order_processed', [ $self, 'maybe_track_guest_customer_after_order_placed' ] );		
 	}
 
 

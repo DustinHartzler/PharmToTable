@@ -3,7 +3,6 @@
 namespace AutomateWoo\Jobs;
 
 use AutomateWoo\Customer_Factory;
-use AutomateWoo\Cron;
 use AutomateWoo\Jobs\Traits\ValidateItemAsIntegerId;
 use Exception;
 
@@ -12,7 +11,7 @@ use Exception;
  *
  * @since 5.2.0
  */
-class SetupGuestCustomers extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
+class SetupGuestCustomers extends AbstractRecurringBatchedActionSchedulerJob {
 
 	use ValidateItemAsIntegerId;
 
@@ -33,12 +32,13 @@ class SetupGuestCustomers extends AbstractBatchedActionSchedulerJob implements S
 	}
 
 	/**
-	 * Get the name of an action to attach the job's start method to.
+	 * Return the recurring job's interval in seconds.
 	 *
-	 * @return string
+	 * @since 6.0.0
+	 * @return int The interval for the action in seconds
 	 */
-	public function get_start_hook() {
-		return Cron::FOUR_HOUR_WORKER;
+	public function get_interval() {
+		return JobService::FOUR_HOURS_INTERVAL;
 	}
 
 	/**
@@ -139,5 +139,4 @@ class SetupGuestCustomers extends AbstractBatchedActionSchedulerJob implements S
 	protected function handle_complete( int $final_batch_number, array $args ) {
 		update_option( $this->complete_option, true, false );
 	}
-
 }

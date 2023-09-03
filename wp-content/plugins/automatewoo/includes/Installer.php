@@ -21,6 +21,7 @@ class Installer {
 		'5.0.0',
 		'5.1.0',
 		'5.3.0',
+		'6.0.0',
 	];
 
 	/** @var int  */
@@ -52,6 +53,10 @@ class Installer {
 
 			if ( ! Options::database_version() ) {
 				self::first_install();
+			}
+
+			if ( apply_filters( 'woocommerce_enable_auto_update_db', false ) ) {
+				self::run_database_updates();
 			}
 
 			// check for required database update

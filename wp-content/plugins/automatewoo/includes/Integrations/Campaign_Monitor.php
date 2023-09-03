@@ -33,6 +33,23 @@ class Integration_Campaign_Monitor extends Integration {
 		$this->client_id = $client_id;
 	}
 
+	/**
+	 * Test the current API key to confirm that AutomateWoo can communicate with the Campaign Monitor API
+	 *
+	 * @return bool
+	 */
+	public function test_integration(): bool {
+		return $this->request( 'GET', '/primarycontact.json' )->is_successful();
+	}
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool {
+		return (bool) Options::campaign_monitor_enabled();
+	}
 
 	/**
 	 * Automatically logs errors

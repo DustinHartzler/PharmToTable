@@ -2,7 +2,6 @@
 
 namespace AutomateWoo\Jobs;
 
-use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
 use AutomateWoo\Exceptions\InvalidArgument;
 use AutomateWoo\Traits\ArrayValidator;
 use Exception;
@@ -99,6 +98,16 @@ abstract class AbstractBatchedActionSchedulerJob extends AbstractActionScheduler
 	 */
 	protected function get_create_batch_hook() {
 		return $this->get_hook_base_name() . 'create_batch';
+	}
+
+	/**
+	 * Get the name of an action to attach the job's start method to.
+	 * By default, it's 'automatewoo/jobs/{job_name}/start' but it can be overridden in Job implementation.
+	 *
+	 * @return string
+	 */
+	public function get_start_hook() {
+		return $this->get_hook_base_name() . 'start';
 	}
 
 	/**
@@ -229,35 +238,5 @@ abstract class AbstractBatchedActionSchedulerJob extends AbstractActionScheduler
 	 */
 	protected function handle_complete( int $final_batch_number, array $args ) {
 		// Optionally over-ride this method in child class.
-	}
-
-	/**
-	 * Schedules a job with recurrence. Creates a hook named like "automatewoo/jobs/{$job_name}/start
-	 * recurrently. This hook is handled by the StartOnHook flow when the action is Completed.
-	 *
-	 * @since 5.8.1
-	 *
-	 * @see RecurringJobInterface
-	 */
-	public function schedule_recurring() {
-		/**
-		 * @var RecurringJobInterface $this
-		 */
-
-		$interval = apply_filters( "automatewoo/intervals/{$this->get_name()}", $this->get_interval() );
-		if ( $this->can_start() && ! $this->action_scheduler->next_scheduled_action( $this->get_start_hook() ) ) {
-			$this->action_scheduler->schedule_recurring_action( time() + $interval, $interval, $this->get_start_hook() );
-		}
-	}
-
-	/**
-	 * Cancels the recurring action
-	 *
-	 * @since 5.8.1
-	 */
-	public function cancel_recurring() {
-		if ( $this->action_scheduler->next_scheduled_action( $this->get_start_hook() ) ) {
-			$this->action_scheduler->cancel( $this->get_start_hook() );
-		}
 	}
 }

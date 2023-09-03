@@ -1,10 +1,9 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
 use AutomateWoo\SystemChecks\AbstractSystemCheck;
-use AutomateWoo\SystemChecks\CronRunning;
+use AutomateWoo\SystemChecks\ActionSchedulerJobsRunning;
 use AutomateWoo\SystemChecks\DatabaseTablesExist;
 
 /**
@@ -15,17 +14,20 @@ use AutomateWoo\SystemChecks\DatabaseTablesExist;
 class System_Checks {
 
 	/** @var array */
-	static $system_checks;
+	public static $system_checks;
 
 	/**
 	 * @return AbstractSystemCheck[]
 	 */
-	static function get_all() {
+	public static function get_all() {
 		if ( ! isset( self::$system_checks ) ) {
-			$class_names = apply_filters( 'automatewoo/system_checks', [
-				'cron_running'          => CronRunning::class,
-				'database_tables_exist' => DatabaseTablesExist::class,
-			] );
+			$class_names = apply_filters(
+				'automatewoo/system_checks',
+				[
+					'action_scheduler_jobs_running' => ActionSchedulerJobsRunning::class,
+					'database_tables_exist'         => DatabaseTablesExist::class,
+				]
+			);
 
 			foreach ( $class_names as $system_check_id => $class_name ) {
 				self::$system_checks[ $system_check_id ] = new $class_name();
@@ -39,13 +41,13 @@ class System_Checks {
 	/**
 	 * Maybe background check for high priority issues
 	 */
-	static function maybe_schedule_check() {
+	public static function maybe_schedule_check() {
 
 		if ( did_action( 'automatewoo_installed' ) ) {
 			return; // bail if just installed
 		}
 
-		if ( ! AW()->options()->enable_background_system_check || get_transient('automatewoo_background_system_check') ) {
+		if ( ! AW()->options()->enable_background_system_check || get_transient( 'automatewoo_background_system_check' ) ) {
 			return;
 		}
 
@@ -55,9 +57,12 @@ class System_Checks {
 	}
 
 
-	static function run_system_check() {
+	/**
+	 * Runs all the system checks
+	 */
+	public static function run_system_check() {
 
-		foreach( self::get_all() as $check ) {
+		foreach ( self::get_all() as $check ) {
 
 			if ( ! $check->high_priority ) {
 				continue;
@@ -65,28 +70,30 @@ class System_Checks {
 
 			$response = $check->run();
 
-			if ( $response['success'] == false ) {
+			if ( $response['success'] === false ) {
 				set_transient( 'automatewoo_background_system_check_errors', true, DAY_IN_SECONDS );
-				continue;
 			}
 		}
 
 	}
 
 
-	static function maybe_display_notices() {
-		if ( Admin::is_page('status' ) ) {
+	/**
+	 * Display error notices (if any) in Status Page when there is manager capabilities.
+	 */
+	public static function maybe_display_notices() {
+		if ( Admin::is_page( 'status' ) ) {
 			return;
 		}
 
-		if ( ! current_user_can('manage_woocommerce') || ! get_transient('automatewoo_background_system_check_errors') ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) || ! get_transient( 'automatewoo_background_system_check_errors' ) ) {
 			return;
 		}
 
 		$strong = __( 'AutomateWoo status check has found issues.', 'automatewoo' );
-		$more = sprintf( __( '<a href="%s">View details</a>', 'automatewoo' ), Admin::page_url( 'status' ) );
+		$more   = sprintf( __( '<a href="%s">View details</a>', 'automatewoo' ), Admin::page_url( 'status' ) );
 
-		Admin::notice('error is-dismissible', $strong, $more, 'aw-notice-system-error' );
+		Admin::notice( 'error is-dismissible', $strong, $more, 'aw-notice-system-error' );
 	}
 
 

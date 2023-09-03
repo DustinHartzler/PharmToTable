@@ -21,38 +21,6 @@ abstract class Database_Table {
 	public $max_index_length = 191;
 
 	/**
-	 * Getter method for inaccessible class properties.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param string $key The name of the class property to retrieve.
-	 *
-	 * @return mixed
-	 */
-	public function __get( $key ) {
-		switch ( $key ) {
-			case 'name':
-				if ( WP_DEBUG ) {
-					// phpcs:disable WordPress.PHP.DevelopmentFunctions,WordPress.Security.EscapeOutput
-					// This could still be used in add-ons, so make the message geared towards updating the add-on.
-					trigger_error(
-						sprintf(
-							/* translators: %1$s is the final class name accessing an unavailable property */
-							__( '%1$s::$name is no longer directly accessible. Ensure you have the latest version of AutomateWoo and all Add-ons.', 'automatewoo' ),
-							static::class
-						),
-						E_USER_DEPRECATED
-					);
-					// phpcs:enable
-				}
-				return $this->get_name();
-
-			default:
-				return null;
-		}
-	}
-
-	/**
 	 * @return array
 	 */
 	abstract public function get_columns();

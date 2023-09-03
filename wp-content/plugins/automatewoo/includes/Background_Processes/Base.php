@@ -3,6 +3,7 @@
 
 namespace AutomateWoo\Background_Processes;
 
+use AutomateWoo\Jobs\AbstractActionSchedulerJob;
 use AutomateWoo\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -15,8 +16,14 @@ if ( ! class_exists( 'AW_WP_Background_Process', false ) ) {
 	require_once AW()->lib_path( '/wp-background-process.php' );
 }
 
+
+aw_deprecated_class( Base::class, '6.0.0', AbstractActionSchedulerJob::class );
+
 /**
  * Base background process class
+ *
+ * @deprecated in 6.0.0 use ActionScheduler jobs instead.
+ * @see AbstractActionSchedulerJob;
  */
 abstract class Base extends \AW_WP_Background_Process {
 
@@ -88,7 +95,7 @@ abstract class Base extends \AW_WP_Background_Process {
 	 * @return bool
 	 */
 	protected function time_exceeded() {
-		$finish = $this->start_time + apply_filters( 'automatewoo/background_process/time_limit', 10 ); // 10 seconds
+		$finish = $this->start_time + apply_filters_deprecated( 'automatewoo/background_process/time_limit', [10], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' ); // 10 seconds
 		$return = false;
 
 		if ( time() >= $finish ) {
@@ -106,7 +113,7 @@ abstract class Base extends \AW_WP_Background_Process {
 	protected function memory_exceeded() {
 
 		// use only 40% of max memory
-		$memory_limit_percentage = apply_filters( 'automatewoo/background_process/memory_limit_percentage', 0.4 );
+		$memory_limit_percentage = apply_filters_deprecated( 'automatewoo/background_process/memory_limit_percentage', [0.4], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 
 		$memory_limit = $this->get_memory_limit() * $memory_limit_percentage;
 		$current_memory = memory_get_usage( true );
@@ -128,7 +135,7 @@ abstract class Base extends \AW_WP_Background_Process {
 	 */
 	protected function handle() {
 
-		do_action( 'automatewoo/background_process/before_handle', $this );
+		do_action_deprecated( 'automatewoo/background_process/before_handle', [$this], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 
 		$this->lock_process();
 
@@ -159,7 +166,7 @@ abstract class Base extends \AW_WP_Background_Process {
 		} while ( ! $this->time_exceeded() && ! $this->memory_exceeded() && ! $this->is_queue_empty() );
 
 		// throttle process here with sleep to try and prevent crashing mysql
-		$sleep_seconds = apply_filters( 'automatewoo/background_process/post_batch_sleep', 1, $this );
+		$sleep_seconds = apply_filters_deprecated( 'automatewoo/background_process/post_batch_sleep', [1, $this], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 
 		if ( $sleep_seconds ) {
 			sleep( $sleep_seconds );
@@ -301,9 +308,9 @@ abstract class Base extends \AW_WP_Background_Process {
 
 		$args['body'] = json_encode( $this->data );
 		$args['cookies'] = $_COOKIE;
-		$args['sslverify'] = apply_filters( 'https_local_ssl_verify', false );
+		$args['sslverify'] = apply_filters_deprecated( 'https_local_ssl_verify', [false], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 
-		return apply_filters( 'automatewoo/background_process/post_args', $args, $this );
+		return apply_filters_deprecated( 'automatewoo/background_process/post_args', [$args, $this], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 	}
 
 
@@ -316,7 +323,7 @@ abstract class Base extends \AW_WP_Background_Process {
 	 */
 	public function get_post_url() {
 		$url = add_query_arg( $this->get_query_args(), $this->get_query_url() );
-		return apply_filters( 'automatewoo/background_process/post_url', $url, $this );
+		return apply_filters_deprecated( 'automatewoo/background_process/post_url', [$url, $this], '6.0.0',  '\AutomateWoo\Jobs\AbstractActionSchedulerJob' );
 	}
 
 

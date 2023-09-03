@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: AutomateWoo 5.8.2\n"
+"Project-Id-Version: AutomateWoo 6.0.3\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-29T15:06:29+00:00\n"
+"POT-Creation-Date: 2023-08-29T06:06:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: automatewoo\n"
@@ -17,13 +17,13 @@ msgstr ""
 #. Plugin Name of the plugin
 #: admin/admin.php:128
 #: admin/admin.php:134
-#: admin/admin.php:687
+#: admin/admin.php:681
 #: admin/coupons-list.php:30
 #: admin/WCAdminConnectPages.php:74
-#: automatewoo.php:107
+#: automatewoo.php:130
 #: includes/Actions/Change_Workflow_Status.php:18
 #: includes/Actions/Clear_Queued_Events.php:17
-#: includes/Installer.php:244
+#: includes/Installer.php:249
 #: includes/Privacy.php:18
 #: admin/assets/build/index.js:19
 msgid "AutomateWoo"
@@ -59,7 +59,7 @@ msgid "Workflows"
 msgstr ""
 
 #: admin/admin.php:152
-#: admin/views/page-dashboard.php:26
+#: admin/views/page-dashboard.php:17
 #: admin/WCAdminConnectPages.php:75
 msgid "Dashboard"
 msgstr ""
@@ -121,38 +121,32 @@ msgstr ""
 
 #: admin/admin.php:232
 #: admin/WCAdminConnectPages.php:163
-#: includes/Installer.php:268
+#: includes/Installer.php:273
 msgid "Settings"
 msgstr ""
 
-#: admin/admin.php:238
-#: admin/reports/events.php:25
-#: admin/reports/queue.php:19
-msgid "Events"
-msgstr ""
-
-#: admin/admin.php:244
+#: admin/admin.php:239
 #: admin/views/action.php:30
 msgid "Preview"
 msgstr ""
 
-#: admin/admin.php:250
+#: admin/admin.php:245
 msgid "AutomateWoo Data Update"
 msgstr ""
 
-#: admin/admin.php:292
+#: admin/admin.php:287
 msgid "Manual Workflow Runner"
 msgstr ""
 
-#: admin/admin.php:346
+#: admin/admin.php:341
 msgid "This field does not support variables."
 msgstr ""
 
-#: admin/admin.php:347
+#: admin/admin.php:342
 msgid "Variable '%s' is not available with the selected trigger. Please only use variables listed in the the variables box."
 msgstr ""
 
-#: admin/admin.php:348
+#: admin/admin.php:343
 msgid "Variable '%s' is not valid. Please only use variables listed in the variables box."
 msgstr ""
 
@@ -823,7 +817,7 @@ msgstr ""
 #: admin/reports/abstract-graph.php:54
 #: admin/reports/opt-ins.php:60
 #: admin/views/meta-box-timing.php:176
-#: includes/Fields/Date.php:16
+#: includes/Fields/Date.php:20
 msgid "Date"
 msgstr ""
 
@@ -841,7 +835,6 @@ msgid "Show"
 msgstr ""
 
 #: admin/reports/carts.php:40
-#: admin/reports/events.php:76
 #: admin/settings-tabs/status.php:17
 #: includes/Actions/Change_Workflow_Status.php:25
 msgid "Status"
@@ -1011,24 +1004,6 @@ msgstr ""
 msgid "Opens"
 msgstr ""
 
-#: admin/reports/events.php:24
-#: admin/reports/events.php:75
-#: admin/reports/queue.php:18
-msgid "Event"
-msgstr ""
-
-#: admin/reports/events.php:77
-msgid "Hook"
-msgstr ""
-
-#: admin/reports/events.php:78
-msgid "Arguments"
-msgstr ""
-
-#: admin/reports/events.php:79
-msgid "Scheduled date"
-msgstr ""
-
 #: admin/reports/guests.php:26
 msgid "Search guests"
 msgstr ""
@@ -1099,6 +1074,14 @@ msgstr ""
 msgid "Set as opted-in"
 msgstr ""
 
+#: admin/reports/queue.php:18
+msgid "Event"
+msgstr ""
+
+#: admin/reports/queue.php:19
+msgid "Events"
+msgstr ""
+
 #: admin/reports/queue.php:54
 #: admin/views/modal-queued-event-info.php:25
 #: includes/Privacy_Exporters.php:292
@@ -1142,74 +1125,74 @@ msgstr ""
 msgid "Your settings have been saved."
 msgstr ""
 
-#: admin/settings-tabs/active-campaign.php:17
+#: admin/settings-tabs/active-campaign.php:19
 #: includes/Actions/Active_Campaign_Abstract.php:18
 msgid "ActiveCampaign"
 msgstr ""
 
-#: admin/settings-tabs/active-campaign.php:32
-#: admin/settings-tabs/twilio.php:32
+#: admin/settings-tabs/active-campaign.php:34
+#: admin/settings-tabs/twilio.php:34
 msgid "Enable"
 msgstr ""
 
-#: admin/settings-tabs/active-campaign.php:34
+#: admin/settings-tabs/active-campaign.php:36
 msgid "Enable ActiveCampaign Integration"
 msgstr ""
 
-#: admin/settings-tabs/active-campaign.php:40
+#: admin/settings-tabs/active-campaign.php:42
 msgid "API URL"
 msgstr ""
 
-#: admin/settings-tabs/active-campaign.php:46
-#: admin/settings-tabs/mailchimp.php:40
+#: admin/settings-tabs/active-campaign.php:48
+#: admin/settings-tabs/mailchimp.php:42
 msgid "API Key"
 msgstr ""
 
-#: admin/settings-tabs/bitly.php:17
-#: admin/settings-tabs/bitly.php:28
+#: admin/settings-tabs/bitly.php:19
+#: admin/settings-tabs/bitly.php:30
 msgid "Bitly"
 msgstr ""
 
-#: admin/settings-tabs/bitly.php:30
+#: admin/settings-tabs/bitly.php:32
 msgid "Integrating with Bitly allows you to shorten links in your SMS messages. Create a free account at <%1$s>bitly.com<%2$s>."
 msgstr ""
 
-#: admin/settings-tabs/bitly.php:40
+#: admin/settings-tabs/bitly.php:42
 msgid "Generic Access Token"
 msgstr ""
 
-#: admin/settings-tabs/bitly.php:41
+#: admin/settings-tabs/bitly.php:43
 msgid "Find your Generic Access Token in your Bitly account area under Your Account > Edit Profile."
 msgstr ""
 
-#: admin/settings-tabs/bitly.php:49
+#: admin/settings-tabs/bitly.php:51
 msgid "Shorten all SMS links"
 msgstr ""
 
-#: admin/settings-tabs/campaign-monitor.php:17
+#: admin/settings-tabs/campaign-monitor.php:19
 #: includes/Actions/Campaign_Monitor_Abstract.php:14
 msgid "Campaign Monitor"
 msgstr ""
 
-#: admin/settings-tabs/campaign-monitor.php:27
+#: admin/settings-tabs/campaign-monitor.php:29
 msgid "To find your API key or client ID, sign in to your Campaign Monitor account and click your profile image at the top right, then select Account settings, then API keys."
 msgstr ""
 
-#: admin/settings-tabs/campaign-monitor.php:33
+#: admin/settings-tabs/campaign-monitor.php:35
 msgid "Enabling the Campaign Monitor integration makes actions available for use when creating workflows. These actions can be used to automate adding and removing members from lists."
 msgstr ""
 
-#: admin/settings-tabs/campaign-monitor.php:36
-#: admin/settings-tabs/mailchimp.php:33
+#: admin/settings-tabs/campaign-monitor.php:38
+#: admin/settings-tabs/mailchimp.php:35
 msgid "Enable integration"
 msgstr ""
 
-#: admin/settings-tabs/campaign-monitor.php:42
+#: admin/settings-tabs/campaign-monitor.php:44
 #: includes/Actions/Add_To_Mad_Mimi_List.php:39
 msgid "API key"
 msgstr ""
 
-#: admin/settings-tabs/campaign-monitor.php:49
+#: admin/settings-tabs/campaign-monitor.php:51
 msgid "Client ID"
 msgstr ""
 
@@ -1412,20 +1395,20 @@ msgstr ""
 msgid "Coupons generated by AutomateWoo will be deleted 14 days after they expire."
 msgstr ""
 
-#: admin/settings-tabs/mailchimp.php:17
+#: admin/settings-tabs/mailchimp.php:19
 #: includes/Actions/Mailchimp_Abstract.php:27
 msgid "MailChimp"
 msgstr ""
 
-#: admin/settings-tabs/mailchimp.php:30
+#: admin/settings-tabs/mailchimp.php:32
 msgid "Enabling the MailChimp integration does not automatically sync your data but makes three actions available when creating workflows. These actions can be used to automate how you add and remove members from your MailChimp lists and update your custom fields."
 msgstr ""
 
-#: admin/settings-tabs/mailchimp.php:42
+#: admin/settings-tabs/mailchimp.php:44
 msgid "You can get your API key when logged in to MailChimp under Account > Extras > API Keys."
 msgstr ""
 
-#: admin/settings-tabs/mailchimp.php:81
+#: admin/settings-tabs/mailchimp.php:86
 msgid "The MailChimp API Key you entered is not valid."
 msgstr ""
 
@@ -1437,28 +1420,28 @@ msgstr ""
 msgid "Allow occasional background checks for major system issues. If an issue is detected an admin notice will appear."
 msgstr ""
 
-#: admin/settings-tabs/twilio.php:17
+#: admin/settings-tabs/twilio.php:19
 msgid "Twilio"
 msgstr ""
 
-#: admin/settings-tabs/twilio.php:34
+#: admin/settings-tabs/twilio.php:36
 msgid "Enable Twilio Integration"
 msgstr ""
 
-#: admin/settings-tabs/twilio.php:40
+#: admin/settings-tabs/twilio.php:42
 #: admin/views/email-preview-ui.php:30
 msgid "From"
 msgstr ""
 
-#: admin/settings-tabs/twilio.php:41
+#: admin/settings-tabs/twilio.php:43
 msgid "Must be a Twilio phone number (in E.164 format) or alphanumeric sender ID."
 msgstr ""
 
-#: admin/settings-tabs/twilio.php:47
+#: admin/settings-tabs/twilio.php:49
 msgid "Account SID"
 msgstr ""
 
-#: admin/settings-tabs/twilio.php:53
+#: admin/settings-tabs/twilio.php:55
 msgid "Auth Token"
 msgstr ""
 
@@ -1643,7 +1626,7 @@ msgstr ""
 
 #: admin/views/meta-box-save.php:59
 #: includes/Actions/Change_Workflow_Status.php:27
-#: includes/Carts.php:103
+#: includes/Carts.php:101
 msgid "Active"
 msgstr ""
 
@@ -2071,19 +2054,19 @@ msgstr[1] ""
 msgid "Manual"
 msgstr ""
 
-#: automatewoo.php:107
+#: automatewoo.php:130
 msgid "%s is inactive."
 msgstr ""
 
-#: automatewoo.php:110
+#: automatewoo.php:133
 msgid "%1$s The plugin requires PHP version %2$s or newer."
 msgstr ""
 
-#: automatewoo.php:113
+#: automatewoo.php:136
 msgid "%1$s The plugin requires WooCommerce version %2$s or newer."
 msgstr ""
 
-#: automatewoo.php:116
+#: automatewoo.php:139
 msgid "%1$s The plugin requires WordPress version %2$s or newer."
 msgstr ""
 
@@ -3094,31 +3077,18 @@ msgstr ""
 msgid "View plugins"
 msgstr ""
 
-#: includes/ActivityPanelInbox/UpdateNote.php:73
+#: includes/ActivityPanelInbox/UpdateNote.php:70
 msgid "Check out these new AutomateWoo presets"
 msgstr ""
 
-#: includes/ActivityPanelInbox/UpdateNote.php:75
+#: includes/ActivityPanelInbox/UpdateNote.php:72
 msgid "Reach out to your customers and automate your work easily with these new preset workflows."
 msgstr ""
 
-#: includes/ActivityPanelInbox/UpdateNote.php:82
+#: includes/ActivityPanelInbox/UpdateNote.php:79
 #: includes/AdminNotices/WelcomeNoticeManager.php:64
 #: admin/assets/build/index.js:19
 msgid "Browse presets"
-msgstr ""
-
-#: includes/ActivityPanelInbox/WelcomeNote.php:37
-msgid "AutomateWoo is ready"
-msgstr ""
-
-#: includes/ActivityPanelInbox/WelcomeNote.php:39
-msgid "Create your first automated workflow easily with our presets, or build your own from scratch."
-msgstr ""
-
-#: includes/ActivityPanelInbox/WelcomeNote.php:46
-#: admin/assets/build/index.js:18
-msgid "Create workflow"
 msgstr ""
 
 #: includes/AdminNotices.php:171
@@ -3146,11 +3116,11 @@ msgid "Need help? Try out one of our <%1$s>preset workflows<%2$s> or check out t
 msgstr ""
 
 #: includes/AdminNotices/UpdateNoticeManager.php:55
-msgid "Thanks for updating to AutomateWoo 5.8.2!"
+msgid "Thanks for updating to AutomateWoo 6.0.1!"
 msgstr ""
 
 #: includes/AdminNotices/UpdateNoticeManager.php:57
-msgid "In this release we have implemented a fix that addresses the issue with inline CSS being stripped from emails."
+msgid "In this release, we've addressed some minor issues related to the booking status trigger, checkout blocks, and conducted a refactoring of the \"get_param_orderby\" method."
 msgstr ""
 
 #: includes/AdminNotices/UpdateNoticeManager.php:66
@@ -3182,7 +3152,7 @@ msgstr ""
 msgid "Free!"
 msgstr ""
 
-#: includes/Carts.php:104
+#: includes/Carts.php:102
 msgid "Abandoned"
 msgstr ""
 
@@ -3199,44 +3169,39 @@ msgstr ""
 msgid "Generated by AutomateWoo"
 msgstr ""
 
-#: includes/Cron.php:168
+#: includes/Cron.php:151
 msgid "One minute"
 msgstr ""
 
-#: includes/Cron.php:173
+#: includes/Cron.php:156
 msgid "Two minutes"
 msgstr ""
 
-#: includes/Cron.php:178
+#: includes/Cron.php:161
 msgid "Five minutes"
 msgstr ""
 
-#: includes/Cron.php:183
+#: includes/Cron.php:166
 msgid "Fifteen minutes"
 msgstr ""
 
-#: includes/Cron.php:188
+#: includes/Cron.php:171
 msgid "Thirty minutes"
 msgstr ""
 
-#: includes/Cron.php:193
+#: includes/Cron.php:176
 msgid "Two days"
 msgstr ""
 
-#: includes/Cron.php:198
+#: includes/Cron.php:181
 msgid "Four hours"
 msgstr ""
 
-#: includes/Cron.php:203
+#: includes/Cron.php:186
 msgid "Once weekly"
 msgstr ""
 
-#. translators: %1$s is the final class name accessing an unavailable property
-#: includes/Database_Table.php:41
-msgid "%1$s::$name is no longer directly accessible. Ensure you have the latest version of AutomateWoo and all Add-ons."
-msgstr ""
-
-#: includes/Database_Tables.php:78
+#: includes/Database_Tables.php:79
 msgid "Failed to load the '%s' database table."
 msgstr ""
 
@@ -3323,7 +3288,7 @@ msgstr ""
 msgid "Item could not be found."
 msgstr ""
 
-#: includes/Factories.php:58
+#: includes/Factories.php:65
 msgid "Factory class must be registered."
 msgstr ""
 
@@ -3580,16 +3545,16 @@ msgstr ""
 msgid "%1$s is deprecated since version %2$s with no alternative available."
 msgstr ""
 
-#: includes/Installer.php:268
+#: includes/Installer.php:273
 msgid "View AutomateWoo Settings"
 msgstr ""
 
-#: includes/Installer.php:298
+#: includes/Installer.php:303
 msgctxt "Page slug"
 msgid "communication-preferences"
 msgstr ""
 
-#: includes/Installer.php:299
+#: includes/Installer.php:304
 msgctxt "Page title"
 msgid "Communication preferences"
 msgstr ""
@@ -3602,7 +3567,7 @@ msgstr ""
 msgid "The \"%s\" job was stopped because it's failure rate is above the allowed threshold."
 msgstr ""
 
-#: includes/Jobs/RunQueuedWorkflows.php:100
+#: includes/Jobs/RunQueuedWorkflows.php:101
 msgid "Queued workflow is already marked as failed."
 msgstr ""
 
@@ -3611,7 +3576,7 @@ msgid "<strong>Activation disabled</strong>. This plugin's features have been ad
 msgstr ""
 
 #. translators: %1$s is the deprecated class, and %2$s is the new class to replace it
-#: includes/LegacyClassLoader.php:149
+#: includes/LegacyClassLoader.php:148
 msgid "The class %1$s has been deprecated and replaced with %2$s. It will be removed in a future version of AutomateWoo."
 msgstr ""
 
@@ -3645,6 +3610,97 @@ msgstr ""
 
 #: includes/Model.php:222
 msgid "Could not insert '%1$s' item to database. AutomateWoo tables may not be installed. (%2$s)"
+msgstr ""
+
+#: includes/Notifications/Addons/AbstractAddonCheck.php:41
+msgid "AutomateWoo Add-on"
+msgstr ""
+
+#: includes/Notifications/Addons/BirthdaysCheck.php:37
+msgid "AutomateWoo Birthdays add-on was successfully activated."
+msgstr ""
+
+#: includes/Notifications/Addons/BirthdaysCheck.php:50
+#: includes/Notifications/Addons/ReferAFriendCheck.php:50
+msgid "Get Started"
+msgstr ""
+
+#: includes/Notifications/Addons/ReferAFriendCheck.php:37
+msgid "AutomateWoo Refer A Friend add-on was successfully activated."
+msgstr ""
+
+#: includes/Notifications/Integrations/AbstractIntegrationCheck.php:32
+msgid "AutomateWoo Integration Error"
+msgstr ""
+
+#. translators: %1$s: The Integration name.
+#: includes/Notifications/Integrations/AbstractIntegrationCheck.php:43
+msgid "Unable to communicate with the %1$s API. Please check your %1$s settings."
+msgstr ""
+
+#: includes/Notifications/Integrations/ActiveCampaignCheck.php:41
+msgid "ActiveCampaign settings"
+msgstr ""
+
+#: includes/Notifications/Integrations/BitlyCheck.php:41
+msgid "Bitly settings"
+msgstr ""
+
+#: includes/Notifications/Integrations/CampaignMonitorCheck.php:41
+msgid "Campaign Monitor settings"
+msgstr ""
+
+#: includes/Notifications/Integrations/MailchimpCheck.php:41
+msgid "Mailchimp settings"
+msgstr ""
+
+#: includes/Notifications/Integrations/TwilioCheck.php:41
+msgid "Twilio settings"
+msgstr ""
+
+#: includes/Notifications/PHPMinVersionCheck.php:36
+msgid "PHP Outdated"
+msgstr ""
+
+#: includes/Notifications/PHPMinVersionCheck.php:45
+msgid "AutomateWoo may drop support for the version of PHP currently running your website (%s). Please contact your web host to update to the latest version."
+msgstr ""
+
+#: includes/Notifications/SystemChecks.php:48
+msgid "Failed System Checks"
+msgstr ""
+
+#: includes/Notifications/SystemChecks.php:57
+msgid "AutomateWoo system status check has found issues."
+msgstr ""
+
+#: includes/Notifications/SystemChecks.php:72
+msgid "View details"
+msgstr ""
+
+#: includes/Notifications/WCMinVersionCheck.php:37
+msgid "WooCommerce Outdated"
+msgstr ""
+
+#: includes/Notifications/WCMinVersionCheck.php:46
+msgid "You're running the minimum required version of WooCommerce which AutomateWoo may eventually stop supporting. Please consider updating to the latest version."
+msgstr ""
+
+#: includes/Notifications/WCMinVersionCheck.php:59
+msgid "Update WooCommerce"
+msgstr ""
+
+#: includes/Notifications/WelcomeNotification.php:48
+msgid "AutomateWoo is ready"
+msgstr ""
+
+#: includes/Notifications/WelcomeNotification.php:57
+msgid "Create your first automated workflow easily with our presets, or build your own from scratch."
+msgstr ""
+
+#: includes/Notifications/WelcomeNotification.php:70
+#: admin/assets/build/index.js:18
+msgid "Create workflow"
 msgstr ""
 
 #: includes/Options.php:55
@@ -3699,6 +3755,7 @@ msgid_plural "Disabled <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
+#. translators: placeholder is previous workflow title
 #: includes/Post_Types.php:95
 #: includes/Post_Types.php:98
 #: includes/Post_Types.php:101
@@ -3738,6 +3795,7 @@ msgctxt "used in \"Workflow scheduled for <date>\""
 msgid "M j, Y @ G:i"
 msgstr ""
 
+#. translators: php date string, see http://php.net/date
 #: includes/Post_Types.php:106
 msgid "Workflow draft updated."
 msgstr ""
@@ -4938,35 +4996,35 @@ msgstr ""
 msgid "Select which subscription order types this workflow will run for."
 msgstr ""
 
-#: includes/SystemChecks/CronRunning.php:19
-msgid "WP Cron"
+#: includes/SystemChecks/ActionSchedulerJobsRunning.php:30
+msgid "AutomateWoo Action Scheduler Jobs"
 msgstr ""
 
-#: includes/SystemChecks/CronRunning.php:20
-msgid "Checks the dates of scheduled events to see if they are processing."
+#: includes/SystemChecks/ActionSchedulerJobsRunning.php:31
+msgid "Checks the dates of Scheduled Jobs to see if they are correctly setup."
 msgstr ""
 
-#: includes/SystemChecks/CronRunning.php:50
-msgid "WP Cron does not appear to be running. This function is heavily relied upon by AutomateWoo. Please contact your hosting provider to resolve the issue."
+#: includes/SystemChecks/ActionSchedulerJobsRunning.php:57
+msgid "Some Scheduled Jobs are not correctly setup. Action Scheduled Jobs are heavily relied upon by AutomateWoo. It might be that WP Cron is not running. Please contact your hosting provider to resolve the issue."
 msgstr ""
 
-#: includes/SystemChecks/DatabaseTablesExist.php:17
+#: includes/SystemChecks/DatabaseTablesExist.php:22
 msgid "Database Tables Installed"
 msgstr ""
 
-#: includes/SystemChecks/DatabaseTablesExist.php:18
+#: includes/SystemChecks/DatabaseTablesExist.php:23
 msgid "Checks the AutomateWoo custom database tables have been installed."
 msgstr ""
 
-#: includes/SystemChecks/DatabaseTablesExist.php:36
+#: includes/SystemChecks/DatabaseTablesExist.php:42
 msgid "Tables could not be installed."
 msgstr ""
 
-#: includes/System_Checks.php:86
+#: includes/System_Checks.php:93
 msgid "AutomateWoo status check has found issues."
 msgstr ""
 
-#: includes/System_Checks.php:87
+#: includes/System_Checks.php:94
 msgid "<a href=\"%s\">View details</a>"
 msgstr ""
 
@@ -5084,7 +5142,7 @@ msgid "Recheck status before run"
 msgstr ""
 
 #: includes/Trigger.php:419
-msgid "This is useful for Workflows that are not run immediately as it ensures the status of the order hasn't changed since initial trigger."
+msgid "This is useful for Workflows that are not run immediately as it ensures the status hasn't changed since initial trigger."
 msgstr ""
 
 #: includes/Trigger.php:433
@@ -5719,15 +5777,15 @@ msgstr ""
 msgid "Bookings"
 msgstr ""
 
-#: includes/Triggers/Utilities/CustomTimeOfDay.php:31
+#: includes/Triggers/Utilities/CustomTimeOfDay.php:33
 msgid "Time of day"
 msgstr ""
 
-#: includes/Triggers/Utilities/CustomTimeOfDay.php:32
+#: includes/Triggers/Utilities/CustomTimeOfDay.php:34
 msgid "Set the time in your site's timezone that the workflow will be triggered. If no time is set the workflow will run at midnight. If you set a time that has already passed for today the workflow will not run until tomorrow. The workflow will never be run twice in the same day. It's not possible to set a time after 23:00 which gives the background processor at least 1 hour to run any tasks."
 msgstr ""
 
-#: includes/Triggers/Utilities/CustomTimeOfDay.php:47
+#: includes/Triggers/Utilities/CustomTimeOfDay.php:49
 msgid "This workflow will not run immediately after it is saved. It will run daily in the background at the time set in the <strong>Time of day</strong> field. If no time is set it will run at midnight."
 msgstr ""
 
@@ -6820,6 +6878,10 @@ msgstr ""
 
 #: includes/Variables/Subscription_Payment_Method.php:15
 msgid "Displays the payment method of the subscription."
+msgstr ""
+
+#: includes/Variables/Subscription_Retry_Payment_Date.php:20
+msgid "Displays the subscription retry payment date in your website timezone."
 msgstr ""
 
 #: includes/Variables/Subscription_Shipping_Address.php:15

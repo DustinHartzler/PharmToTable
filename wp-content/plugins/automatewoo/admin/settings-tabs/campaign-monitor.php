@@ -2,6 +2,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Notifications\CampaignMonitorCheck;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -69,6 +71,12 @@ class Settings_Tab_Campaign_Monitor extends Admin_Settings_Tab_Abstract {
 	public function save( $fields = array() ): void {
 		Integrations::campaign_monitor()->clear_cache_data();
 		parent::save();
+
+		$campaign_monitor = Integrations::campaign_monitor();
+		if ( $campaign_monitor && $campaign_monitor->test_integration() ) {
+			// If a notification exists relating to a Campaign Monitor integration error, delete it.
+			CampaignMonitorCheck::possibly_delete_note();
+		}
 	}
 }
 

@@ -8,7 +8,7 @@
 		border-radius: 3px;
 		width: 0;
 		height: 100%;
-		background: #0085ba;
+		background: var(--wp-admin-theme-color);
 		transition: width 300ms ease;
 	}
 }

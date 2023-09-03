@@ -3,7 +3,6 @@
 namespace AutomateWoo\Jobs;
 
 use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
-use AutomateWoo\Cron;
 use AutomateWoo\Exceptions\InvalidArgument;
 use AutomateWoo\Jobs\Traits\ItemDeletionDate;
 use AutomateWoo\Jobs\Traits\ValidateItemAsIntegerId;
@@ -17,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since   5.0.0
  * @package AutomateWoo\Jobs
  */
-class DeleteExpiredCoupons extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
+class DeleteExpiredCoupons extends AbstractRecurringBatchedActionSchedulerJob {
 
 	use ItemDeletionDate, ValidateItemAsIntegerId;
 
@@ -39,21 +38,22 @@ class DeleteExpiredCoupons extends AbstractBatchedActionSchedulerJob implements 
 	}
 
 	/**
+	 * Return the recurring job's interval in seconds.
+	 *
+	 * @since 6.0.0
+	 * @return int The interval for the action in seconds
+	 */
+	public function get_interval() {
+		return JobService::FOUR_HOURS_INTERVAL;
+	}
+
+	/**
 	 * Get the name of the job.
 	 *
 	 * @return string
 	 */
 	public function get_name() {
 		return 'delete_expired_coupons';
-	}
-
-	/**
-	 * Get the name of an action to attach the job's start method to.
-	 *
-	 * @return string
-	 */
-	public function get_start_hook() {
-		return Cron::FOUR_HOUR_WORKER;
 	}
 
 	/**

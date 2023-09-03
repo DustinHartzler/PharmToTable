@@ -27,6 +27,24 @@ class Integration_Bitly extends Integration {
 	}
 
 	/**
+	 * Test the current API key to confirm that AutomateWoo can communicate with the Bitly API
+	 *
+	 * @return bool
+	 */
+	public function test_integration(): bool {
+		return $this->request( 'GET', '/user' )->is_successful();
+	}
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool {
+		return (bool) Options::bitly_enabled();
+	}
+
+	/**
 	 * @param string $long_url
 	 * @param bool   $ignore_cache
 	 *

@@ -64,7 +64,7 @@ abstract class AbstractOneTimeActionSchedulerJob extends AbstractActionScheduler
 	 * @throws Exception If an error occurs.
 	 * @throws InvalidArgument If args or an item is invalid.
 	 */
-	public function handle_process_item_action( array $item ) {
+	public function handle_process_item_action( array $item = [] ) {
 		$this->validate_item( $item );
 		$this->process_item( $item );
 	}

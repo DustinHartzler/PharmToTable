@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
+class ComposerStaticInitcdb8e399741fcf93b261a833f6020fc2
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -118,7 +118,6 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Active_Triggers_Cache' => __DIR__ . '/../..' . '/includes/Active_Triggers_Cache.php',
         'AutomateWoo\\ActivityPanelInbox\\SubscriptionsAddonDeactivatedNote' => __DIR__ . '/../..' . '/includes/ActivityPanelInbox/SubscriptionsAddonDeactivatedNote.php',
         'AutomateWoo\\ActivityPanelInbox\\UpdateNote' => __DIR__ . '/../..' . '/includes/ActivityPanelInbox/UpdateNote.php',
-        'AutomateWoo\\ActivityPanelInbox\\WelcomeNote' => __DIR__ . '/../..' . '/includes/ActivityPanelInbox/WelcomeNote.php',
         'AutomateWoo\\Addon' => __DIR__ . '/../..' . '/includes/abstracts/addon.php',
         'AutomateWoo\\Addons' => __DIR__ . '/../..' . '/includes/Addons.php',
         'AutomateWoo\\Admin' => __DIR__ . '/../..' . '/admin/admin.php',
@@ -153,7 +152,6 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Admin\\Controllers\\Base' => __DIR__ . '/../..' . '/admin/controllers/base.php',
         'AutomateWoo\\Admin\\Controllers\\Carts' => __DIR__ . '/../..' . '/admin/controllers/carts.php',
         'AutomateWoo\\Admin\\Controllers\\Dashboard' => __DIR__ . '/../..' . '/admin/controllers/dashboard.php',
-        'AutomateWoo\\Admin\\Controllers\\Events' => __DIR__ . '/../..' . '/admin/controllers/events.php',
         'AutomateWoo\\Admin\\Controllers\\Guests' => __DIR__ . '/../..' . '/admin/controllers/guests.php',
         'AutomateWoo\\Admin\\Controllers\\Logs' => __DIR__ . '/../..' . '/admin/controllers/logs.php',
         'AutomateWoo\\Admin\\Controllers\\Optins' => __DIR__ . '/../..' . '/admin/controllers/opt-ins.php',
@@ -192,10 +190,6 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Async_Request_Abstract' => __DIR__ . '/../..' . '/includes/Async_Request_Abstract.php',
         'AutomateWoo\\Background_Processes' => __DIR__ . '/../..' . '/includes/Background_Processes.php',
         'AutomateWoo\\Background_Processes\\Base' => __DIR__ . '/../..' . '/includes/Background_Processes/Base.php',
-        'AutomateWoo\\Background_Processes\\Event_Runner' => __DIR__ . '/../..' . '/includes/Background_Processes/Event_Runner.php',
-        'AutomateWoo\\Background_Processes\\Tools' => __DIR__ . '/../..' . '/includes/Background_Processes/Tools.php',
-        'AutomateWoo\\Background_Processes\\Wishlist_Item_On_Sale' => __DIR__ . '/../..' . '/includes/Background_Processes/Wishlist_Item_On_Sale.php',
-        'AutomateWoo\\Background_Processes\\Workflows' => __DIR__ . '/../..' . '/includes/Background_Processes/Workflows.php',
         'AutomateWoo\\Blocks\\Marketing_Optin_Block' => __DIR__ . '/../..' . '/includes/Blocks/Marketing_Optin_Block.php',
         'AutomateWoo\\Cache' => __DIR__ . '/../..' . '/includes/Cache.php',
         'AutomateWoo\\Cart' => __DIR__ . '/../..' . '/includes/Cart.php',
@@ -263,7 +257,6 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\DatabaseTables\\Carts' => __DIR__ . '/../..' . '/includes/DatabaseTables/Carts.php',
         'AutomateWoo\\DatabaseTables\\CustomerMeta' => __DIR__ . '/../..' . '/includes/DatabaseTables/CustomerMeta.php',
         'AutomateWoo\\DatabaseTables\\Customers' => __DIR__ . '/../..' . '/includes/DatabaseTables/Customers.php',
-        'AutomateWoo\\DatabaseTables\\Events' => __DIR__ . '/../..' . '/includes/DatabaseTables/Events.php',
         'AutomateWoo\\DatabaseTables\\GuestMeta' => __DIR__ . '/../..' . '/includes/DatabaseTables/GuestMeta.php',
         'AutomateWoo\\DatabaseTables\\Guests' => __DIR__ . '/../..' . '/includes/DatabaseTables/Guests.php',
         'AutomateWoo\\DatabaseTables\\LogMeta' => __DIR__ . '/../..' . '/includes/DatabaseTables/LogMeta.php',
@@ -279,6 +272,7 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\DatabaseUpdates\\Database_Update_5_0_0' => __DIR__ . '/../..' . '/includes/DatabaseUpdates/5.0.0.php',
         'AutomateWoo\\DatabaseUpdates\\Database_Update_5_1_0' => __DIR__ . '/../..' . '/includes/DatabaseUpdates/5.1.0.php',
         'AutomateWoo\\DatabaseUpdates\\Database_Update_5_3_0' => __DIR__ . '/../..' . '/includes/DatabaseUpdates/5.3.0.php',
+        'AutomateWoo\\DatabaseUpdates\\Database_Update_6_0_0' => __DIR__ . '/../..' . '/includes/DatabaseUpdates/6.0.0.php',
         'AutomateWoo\\Database_Table' => __DIR__ . '/../..' . '/includes/Database_Table.php',
         'AutomateWoo\\Database_Tables' => __DIR__ . '/../..' . '/includes/Database_Tables.php',
         'AutomateWoo\\DateTime' => __DIR__ . '/../..' . '/includes/DateTime.php',
@@ -299,15 +293,9 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Entity\\WorkflowTimingScheduled' => __DIR__ . '/../..' . '/includes/Entity/WorkflowTimingScheduled.php',
         'AutomateWoo\\Entity\\WorkflowTimingVariable' => __DIR__ . '/../..' . '/includes/Entity/WorkflowTimingVariable.php',
         'AutomateWoo\\Error' => __DIR__ . '/../..' . '/includes/Error.php',
-        'AutomateWoo\\Event' => __DIR__ . '/../..' . '/includes/Event.php',
-        'AutomateWoo\\Event_Factory' => __DIR__ . '/../..' . '/includes/Event_Factory.php',
-        'AutomateWoo\\Event_Helpers\\Products_On_Sale' => __DIR__ . '/../..' . '/includes/Event_Helpers/Products_On_Sale.php',
         'AutomateWoo\\Event_Helpers\\Review_Posted' => __DIR__ . '/../..' . '/includes/Event_Helpers/Review_Posted.php',
         'AutomateWoo\\Event_Helpers\\Subscription_Status_Changed' => __DIR__ . '/../..' . '/includes/Event_Helpers/Subscription_Status_Changed.php',
         'AutomateWoo\\Event_Helpers\\User_Registration' => __DIR__ . '/../..' . '/includes/Event_Helpers/User_Registration.php',
-        'AutomateWoo\\Event_Query' => __DIR__ . '/../..' . '/includes/Event_Query.php',
-        'AutomateWoo\\Events' => __DIR__ . '/../..' . '/includes/Events.php',
-        'AutomateWoo\\Events_Runner_Async_Request' => __DIR__ . '/../..' . '/includes/Events_Runner_Async_Request.php',
         'AutomateWoo\\Exception' => __DIR__ . '/../..' . '/includes/Exception.php',
         'AutomateWoo\\Exceptions\\Exception' => __DIR__ . '/../..' . '/includes/Exceptions/Exception.php',
         'AutomateWoo\\Exceptions\\InvalidArgument' => __DIR__ . '/../..' . '/includes/Exceptions/InvalidArgument.php',
@@ -389,10 +377,15 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Jobs\\AbstractActionSchedulerJob' => __DIR__ . '/../..' . '/includes/Jobs/AbstractActionSchedulerJob.php',
         'AutomateWoo\\Jobs\\AbstractBatchedActionSchedulerJob' => __DIR__ . '/../..' . '/includes/Jobs/AbstractBatchedActionSchedulerJob.php',
         'AutomateWoo\\Jobs\\AbstractOneTimeActionSchedulerJob' => __DIR__ . '/../..' . '/includes/Jobs/AbstractOneTimeActionSchedulerJob.php',
+        'AutomateWoo\\Jobs\\AbstractRecurringBatchedActionSchedulerJob' => __DIR__ . '/../..' . '/includes/Jobs/AbstractRecurringBatchedActionSchedulerJob.php',
+        'AutomateWoo\\Jobs\\AbstractRecurringOneTimeActionSchedulerJob' => __DIR__ . '/../..' . '/includes/Jobs/AbstractRecurringOneTimeActionSchedulerJob.php',
         'AutomateWoo\\Jobs\\ActionSchedulerJobInterface' => __DIR__ . '/../..' . '/includes/Jobs/ActionSchedulerJobInterface.php',
         'AutomateWoo\\Jobs\\ActionSchedulerJobMonitor' => __DIR__ . '/../..' . '/includes/Jobs/ActionSchedulerJobMonitor.php',
         'AutomateWoo\\Jobs\\BatchedActionSchedulerJobInterface' => __DIR__ . '/../..' . '/includes/Jobs/BatchedActionSchedulerJobInterface.php',
         'AutomateWoo\\Jobs\\BatchedWorkflows' => __DIR__ . '/../..' . '/includes/Jobs/BatchedWorkflows.php',
+        'AutomateWoo\\Jobs\\CheckGmtOffsetChange' => __DIR__ . '/../..' . '/includes/Jobs/CheckGmtOffsetChange.php',
+        'AutomateWoo\\Jobs\\CheckMidnightJob' => __DIR__ . '/../..' . '/includes/Jobs/CheckMidnightJob.php',
+        'AutomateWoo\\Jobs\\CleanInactiveCarts' => __DIR__ . '/../..' . '/includes/Jobs/CleanInactiveCarts.php',
         'AutomateWoo\\Jobs\\DeleteExpiredCoupons' => __DIR__ . '/../..' . '/includes/Jobs/DeleteExpiredCoupons.php',
         'AutomateWoo\\Jobs\\DeleteFailedQueuedWorkflows' => __DIR__ . '/../..' . '/includes/Jobs/DeleteFailedQueuedWorkflows.php',
         'AutomateWoo\\Jobs\\JobException' => __DIR__ . '/../..' . '/includes/Jobs/JobException.php',
@@ -400,7 +393,9 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Jobs\\JobRegistry' => __DIR__ . '/../..' . '/includes/Jobs/JobRegistry.php',
         'AutomateWoo\\Jobs\\JobRegistryInterface' => __DIR__ . '/../..' . '/includes/Jobs/JobRegistryInterface.php',
         'AutomateWoo\\Jobs\\JobService' => __DIR__ . '/../..' . '/includes/Jobs/JobService.php',
+        'AutomateWoo\\Jobs\\Midnight' => __DIR__ . '/../..' . '/includes/Jobs/Midnight.php',
         'AutomateWoo\\Jobs\\OneTimeActionSchedulerJobInterface' => __DIR__ . '/../..' . '/includes/Jobs/OneTimeActionSchedulerJobInterface.php',
+        'AutomateWoo\\Jobs\\ProductGoesOnSale' => __DIR__ . '/../..' . '/includes/Jobs/ProductGoesOnSale.php',
         'AutomateWoo\\Jobs\\RecurringJobInterface' => __DIR__ . '/../..' . '/includes/Jobs/RecurringJobInterface.php',
         'AutomateWoo\\Jobs\\RunQueuedWorkflows' => __DIR__ . '/../..' . '/includes/Jobs/RunQueuedWorkflows.php',
         'AutomateWoo\\Jobs\\SetupGuestCustomers' => __DIR__ . '/../..' . '/includes/Jobs/SetupGuestCustomers.php',
@@ -425,6 +420,22 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Mailer_Raw_HTML' => __DIR__ . '/../..' . '/includes/Mailer_Raw_HTML.php',
         'AutomateWoo\\Memberships_Helper' => __DIR__ . '/../..' . '/includes/Memberships_Helper.php',
         'AutomateWoo\\Model' => __DIR__ . '/../..' . '/includes/Model.php',
+        'AutomateWoo\\Notifications\\AbstractAddonCheck' => __DIR__ . '/../..' . '/includes/Notifications/Addons/AbstractAddonCheck.php',
+        'AutomateWoo\\Notifications\\AbstractIntegrationCheck' => __DIR__ . '/../..' . '/includes/Notifications/Integrations/AbstractIntegrationCheck.php',
+        'AutomateWoo\\Notifications\\AbstractNotification' => __DIR__ . '/../..' . '/includes/Notifications/AbstractNotification.php',
+        'AutomateWoo\\Notifications\\ActiveCampaignCheck' => __DIR__ . '/../..' . '/includes/Notifications/Integrations/ActiveCampaignCheck.php',
+        'AutomateWoo\\Notifications\\BirthdaysCheck' => __DIR__ . '/../..' . '/includes/Notifications/Addons/BirthdaysCheck.php',
+        'AutomateWoo\\Notifications\\BitlyCheck' => __DIR__ . '/../..' . '/includes/Notifications/Integrations/BitlyCheck.php',
+        'AutomateWoo\\Notifications\\CampaignMonitorCheck' => __DIR__ . '/../..' . '/includes/Notifications/Integrations/CampaignMonitorCheck.php',
+        'AutomateWoo\\Notifications\\MailchimpCheck' => __DIR__ . '/../..' . '/includes/Notifications/Integrations/MailchimpCheck.php',
+        'AutomateWoo\\Notifications\\Notifications' => __DIR__ . '/../..' . '/includes/Notifications.php',
+        'AutomateWoo\\Notifications\\NotificationsInitializer' => __DIR__ . '/../..' . '/includes/NotificationsInitializer.php',
+        'AutomateWoo\\Notifications\\PHPMinVersionCheck' => __DIR__ . '/../..' . '/includes/Notifications/PHPMinVersionCheck.php',
+        'AutomateWoo\\Notifications\\ReferAFriendCheck' => __DIR__ . '/../..' . '/includes/Notifications/Addons/ReferAFriendCheck.php',
+        'AutomateWoo\\Notifications\\SystemChecks' => __DIR__ . '/../..' . '/includes/Notifications/SystemChecks.php',
+        'AutomateWoo\\Notifications\\TwilioCheck' => __DIR__ . '/../..' . '/includes/Notifications/Integrations/TwilioCheck.php',
+        'AutomateWoo\\Notifications\\WCMinVersionCheck' => __DIR__ . '/../..' . '/includes/Notifications/WCMinVersionCheck.php',
+        'AutomateWoo\\Notifications\\WelcomeNotification' => __DIR__ . '/../..' . '/includes/Notifications/WelcomeNotification.php',
         'AutomateWoo\\Options' => __DIR__ . '/../..' . '/includes/Options.php',
         'AutomateWoo\\OptionsStore' => __DIR__ . '/../..' . '/includes/OptionsStore.php',
         'AutomateWoo\\Options_API' => __DIR__ . '/../..' . '/includes/Options_API.php',
@@ -465,7 +476,6 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Report_Conversions' => __DIR__ . '/../..' . '/admin/reports/conversions.php',
         'AutomateWoo\\Report_Conversions_List' => __DIR__ . '/../..' . '/admin/reports/conversions-list.php',
         'AutomateWoo\\Report_Email_Tracking' => __DIR__ . '/../..' . '/admin/reports/email-tracking.php',
-        'AutomateWoo\\Report_Events' => __DIR__ . '/../..' . '/admin/reports/events.php',
         'AutomateWoo\\Report_Guests' => __DIR__ . '/../..' . '/admin/reports/guests.php',
         'AutomateWoo\\Report_Logs' => __DIR__ . '/../..' . '/admin/reports/logs.php',
         'AutomateWoo\\Report_Optins' => __DIR__ . '/../..' . '/admin/reports/opt-ins.php',
@@ -645,7 +655,7 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\ShopDataItem' => __DIR__ . '/../..' . '/includes/ShopDataItem.php',
         'AutomateWoo\\Subscription_Workflow_Helper' => __DIR__ . '/../..' . '/includes/Subscription_Workflow_Helper.php',
         'AutomateWoo\\SystemChecks\\AbstractSystemCheck' => __DIR__ . '/../..' . '/includes/SystemChecks/AbstractSystemCheck.php',
-        'AutomateWoo\\SystemChecks\\CronRunning' => __DIR__ . '/../..' . '/includes/SystemChecks/CronRunning.php',
+        'AutomateWoo\\SystemChecks\\ActionSchedulerJobsRunning' => __DIR__ . '/../..' . '/includes/SystemChecks/ActionSchedulerJobsRunning.php',
         'AutomateWoo\\SystemChecks\\DatabaseTablesExist' => __DIR__ . '/../..' . '/includes/SystemChecks/DatabaseTablesExist.php',
         'AutomateWoo\\System_Checks' => __DIR__ . '/../..' . '/includes/System_Checks.php',
         'AutomateWoo\\Temporary_Data' => __DIR__ . '/../..' . '/includes/Temporary_Data.php',
@@ -917,6 +927,7 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\Variable_Subscription_Meta' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Meta.php',
         'AutomateWoo\\Variable_Subscription_Next_Payment_Date' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Next_Payment_Date.php',
         'AutomateWoo\\Variable_Subscription_Payment_Method' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Payment_Method.php',
+        'AutomateWoo\\Variable_Subscription_Retry_Payment_Date' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Retry_Payment_Date.php',
         'AutomateWoo\\Variable_Subscription_Shipping_Address' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Shipping_Address.php',
         'AutomateWoo\\Variable_Subscription_Start_Date' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Start_Date.php',
         'AutomateWoo\\Variable_Subscription_Status' => __DIR__ . '/../..' . '/includes/Variables/Subscription_Status.php',
@@ -955,7 +966,6 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
         'AutomateWoo\\WooCommerce_Blocks_Integration' => __DIR__ . '/../..' . '/includes/WooCommerce_Blocks_Integration.php',
         'AutomateWoo\\WooCommerce_Payments_Integration' => __DIR__ . '/../..' . '/includes/WooCommerce_Payments_Integration.php',
         'AutomateWoo\\Workflow' => __DIR__ . '/../..' . '/includes/Workflow.php',
-        'AutomateWoo\\Workflow_Background_Process_Helper' => __DIR__ . '/../..' . '/includes/Workflow_Background_Process_Helper.php',
         'AutomateWoo\\Workflow_Email' => __DIR__ . '/../..' . '/includes/Workflow_Email.php',
         'AutomateWoo\\Workflow_Fatal_Error_Monitor' => __DIR__ . '/../..' . '/includes/Workflow_Fatal_Error_Monitor.php',
         'AutomateWoo\\Workflow_Location' => __DIR__ . '/../..' . '/includes/Workflow_Location.php',
@@ -984,9 +994,9 @@ class ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8631e98cf4efb4ee5546de4e3cf79fb2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcdb8e399741fcf93b261a833f6020fc2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcdb8e399741fcf93b261a833f6020fc2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitcdb8e399741fcf93b261a833f6020fc2::$classMap;
 
         }, null, ClassLoader::class);
     }

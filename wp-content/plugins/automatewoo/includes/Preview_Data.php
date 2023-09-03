@@ -8,6 +8,7 @@ use AutomateWoo\Actions\TestableInterface;
 use AutomateWoo\Exceptions\InvalidPreviewData;
 use AutomateWoo\Workflows\Factory;
 use WC_Order;
+use WP_Query;
 
 /**
  * @class Preview_Data
@@ -94,13 +95,14 @@ class Preview_Data {
 			$cart->set_token();
 			$cart->set_date_last_modified( new DateTime() );
 
-			$items = [];
+			$product_ids = self::get_preview_product_ids( array( 'post_status' => 'publish' ) );
+			$items 		 = [];
 
-			foreach ( self::get_preview_product_ids() as $product_id ) {
+			foreach ( $product_ids as $product_id ) {
 				$product = wc_get_product( $product_id );
 
-				// Reject products that can't be purchased
-				if ( ! $product->is_purchasable() ) {
+				// Ensure only published products are included.
+				if ( ! is_a( $product, 'WC_Product' ) || $product->get_status() !== 'publish' ) {
 					continue;
 				}
 
@@ -125,6 +127,10 @@ class Preview_Data {
 					'line_subtotal_tax' => (float) wc_get_price_including_tax( $product ) - (float) $product->get_price(),
 				];
 
+			}
+
+			if ( empty( $items ) ) {
+				throw InvalidPreviewData::data_item_needed( 'product' );
 			}
 
 			$cart->set_items( $items );
@@ -453,21 +459,23 @@ class Preview_Data {
 	/**
 	 * Get preview products.
 	 *
+	 * @param array $args Optional array of arguments to pass to WP_Query.
+	 *
 	 * @return array
 	 *
 	 * @throws InvalidPreviewData When no products found.
 	 */
-	protected static function get_preview_product_ids(): array {
+	protected static function get_preview_product_ids( $args = array() ): array {
 		// Cache for request since this may be called multiple times
 		static $products = null;
 		if ( null === $products ) {
-			$product_query = new \WP_Query(
-				[
-					'post_type'      => 'product',
-					'posts_per_page' => 4,
-					'fields'         => 'ids'
-				]
-			);
+			$args = array_merge( array(
+				'post_type'      => 'product',
+				'posts_per_page' => 4,
+				'fields'         => 'ids'
+			), $args );
+
+			$product_query = new WP_Query( $args );
 
 			$products = $product_query->posts;
 			if ( empty( $products ) ) {

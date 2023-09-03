@@ -1,11 +1,11 @@
 <?php
-// phpcs:ignoreFile
-
 namespace AutomateWoo\Admin;
 
 use AutomateWoo\Registry;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Admin controller registry class
@@ -13,30 +13,31 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Controllers extends Registry {
 
 	/** @var array */
-	static $includes;
+	public static $includes;
 
 	/** @var array */
-	static $loaded = [];
+	public static $loaded = [];
 
 	/**
-	 * @return array
+	 * Load the application Controller classes
+	 *
+	 * @return array The controller classes to be loaded
 	 */
-	static function load_includes() {
+	public static function load_includes() {
 
 		$path = AW()->admin_path( '/controllers/' );
 
 		$includes = [
-			'guests' => $path . 'guests.php',
-			'queue' => $path . 'queue.php',
-			'logs' => $path . 'logs.php',
+			'guests'    => $path . 'guests.php',
+			'queue'     => $path . 'queue.php',
+			'logs'      => $path . 'logs.php',
 			'dashboard' => $path . 'dashboard.php',
-			'carts' => $path . 'carts.php',
-			'reports' => $path . 'reports.php',
-			'settings' => $path . 'settings.php',
-			'tools' => $path . 'tools.php',
-			'opt-ins' => $path . 'opt-ins.php',
-			'events' => $path . 'events.php',
-			'preview' => $path . 'preview.php'
+			'carts'     => $path . 'carts.php',
+			'reports'   => $path . 'reports.php',
+			'settings'  => $path . 'settings.php',
+			'tools'     => $path . 'tools.php',
+			'opt-ins'   => $path . 'opt-ins.php',
+			'preview'   => $path . 'preview.php',
 		];
 
 		return apply_filters( 'automatewoo/admin/controllers/includes', $includes );
@@ -44,28 +45,34 @@ class Controllers extends Registry {
 
 
 	/**
-	 * @return Controllers\Base[]
+	 * Get all the controllers
+	 *
+	 * @return Controllers\Base[] All the controllers
 	 */
-	static function get_all() {
+	public static function get_all() {
 		return parent::get_all();
 	}
 
 
 	/**
-	 * @param $name
-	 * @return Controllers\Base|false
+	 * Get one controller by name
+	 *
+	 * @param string $name The controller name
+	 *
+	 * @return Controllers\Base|false The controller
 	 */
-	static function get( $name ) {
+	public static function get( $name ) {
 		return parent::get( $name );
 	}
 
 
 	/**
 	 * Optional method to implement
-	 * @param string $name
+	 *
+	 * @param string           $name
 	 * @param Controllers\Base $controller
 	 */
-	static function after_loaded( $name, $controller ) {
+	public static function after_loaded( $name, $controller ) {
 		$controller->name = $name;
 	}
 

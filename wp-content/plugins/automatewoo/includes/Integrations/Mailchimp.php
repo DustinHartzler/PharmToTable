@@ -46,6 +46,25 @@ class Integration_Mailchimp extends Integration {
 		$this->api_root = str_replace( '<dc>', $data_center, $this->api_root );
 	}
 
+
+	/**
+	 * Test the current API key to confirm that AutomateWoo can communicate with the Mailchimp API
+	 *
+	 * @return bool
+	 */
+	public function test_integration(): bool {
+		return $this->request( 'GET', '/' )->is_successful();
+	}
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool {
+		return (bool) Options::mailchimp_enabled();
+	}
+
 	/**
 	 * Make a request to the API.
 	 *

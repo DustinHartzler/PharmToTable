@@ -2,7 +2,6 @@
 
 namespace AutomateWoo\Jobs;
 
-use AutomateWoo\Cron;
 use AutomateWoo\Jobs\Traits\ItemDeletionDate;
 use AutomateWoo\Jobs\Traits\ValidateItemAsIntegerId;
 use AutomateWoo\Queue_Query;
@@ -16,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since   5.0.0
  * @package AutomateWoo\Jobs
  */
-class DeleteFailedQueuedWorkflows extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
+class DeleteFailedQueuedWorkflows extends AbstractRecurringBatchedActionSchedulerJob {
 
 	use ItemDeletionDate, ValidateItemAsIntegerId;
 
@@ -30,12 +29,13 @@ class DeleteFailedQueuedWorkflows extends AbstractBatchedActionSchedulerJob impl
 	}
 
 	/**
-	 * Get the name of an action to attach the job's start method to.
+	 * Return the recurring job's interval in seconds.
 	 *
-	 * @return string
+	 * @since 6.0.0
+	 * @return int The interval for the action in seconds
 	 */
-	public function get_start_hook() {
-		return Cron::FOUR_HOUR_WORKER;
+	public function get_interval() {
+		return JobService::FOUR_HOURS_INTERVAL;
 	}
 
 	/**

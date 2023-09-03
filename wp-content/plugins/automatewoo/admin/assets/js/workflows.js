@@ -29,10 +29,13 @@
 
 		$triggerDescription: $( '.js-trigger-description' ),
 
+		$typeSelect: $( '.automatewoo-workflow-type-field' ),
+
 		initialize() {
 			this.listenTo( this.model, 'change:trigger', this.changeTrigger );
 
 			this.model.set( 'prevTrigger', this.$triggerSelect.val() );
+			this.model.set( 'prevType', this.$typeSelect.val() );
 
 			this.insertMetaboxHelpTips();
 		},
@@ -61,13 +64,20 @@
 
 			this.updateTriggerDescription();
 
-			// update the prev trigger value
+			// update the prev trigger and type values
 			this.model.set( 'prevTrigger', this.$triggerSelect.val() );
+			this.model.set( 'prevType', this.$typeSelect.val() );
 
 			$( document.body ).trigger( 'automatewoo_trigger_changed' );
 		},
 
 		cancelTriggerChange() {
+			if ( this.$typeSelect.val() !== this.model.get( 'prevType' ) ) {
+				this.$typeSelect
+					.val( this.model.get( 'prevType' ) )
+					.trigger( 'change' );
+			}
+
 			this.$triggerSelect
 				.val( this.model.get( 'prevTrigger' ) )
 				.trigger( 'change' );
@@ -117,6 +127,7 @@
 
 			AW.initTooltips();
 			AutomateWoo.Workflows.action_dependent_fields( $action );
+			AutomateWoo.init_date_pickers();
 		},
 
 		initDynamicActionSelect( $field, $action ) {
@@ -274,17 +285,19 @@
 		initialize( data ) {
 			this.data = data;
 
+			document.body.addEventListener(
+				'awmodal-close',
+				( event ) => {
+					if ( event.detail.closedBy === 'dismiss' ) {
+						AW.workflowView.cancelTriggerChange();
+					}
+				},
+				{ once: true }
+			);
+
 			this.$el.on( 'click', '.js-confirm', function () {
 				AW.workflowView.completeTriggerChange();
 			} );
-
-			this.$el.on(
-				'click',
-				`.${ AutomateWoo.Modal.triggerClasses.close }`,
-				function () {
-					AW.workflowView.cancelTriggerChange();
-				}
-			);
 		},
 
 		render() {

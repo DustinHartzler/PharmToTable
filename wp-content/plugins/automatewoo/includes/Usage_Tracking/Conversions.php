@@ -35,6 +35,7 @@ class Conversions implements Event_Tracker_Interface {
 		$this->record_event(
 			'conversion_recorded',
 			[
+				'order_currency'    => $order->get_currency(),
 				'order_total'       => $order->get_total(),
 				'workflow_run_date' => $log->get_date()->to_mysql_string(),
 				'workflow_trigger'  => $workflow->get_trigger_name(),

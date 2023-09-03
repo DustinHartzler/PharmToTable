@@ -3,6 +3,8 @@
 namespace AutomateWoo\Triggers\Utilities;
 
 use AutomateWoo\Fields\Time as TimeField;
+use AutomateWoo\Jobs\BatchedWorkflows;
+use AutomateWoo\Logger;
 
 /**
  * Trait CustomTimeOfDayTrait
@@ -12,12 +14,12 @@ use AutomateWoo\Fields\Time as TimeField;
 trait CustomTimeOfDay {
 
 	/**
-	 * Register hooks.
+	 * Registers a hook when 'automatewoo/custom_time_of_day_workflow' happens for running the desired workflow Job.
 	 */
 	public function register_hooks() {
 		// This action only needs to be added once for all custom time of day triggers
-		if ( ! has_action( 'automatewoo/custom_time_of_day_workflow', [ 'AutomateWoo\Workflow_Background_Process_Helper', 'init_process' ] ) ) {
-			add_action( 'automatewoo/custom_time_of_day_workflow', [ 'AutomateWoo\Workflow_Background_Process_Helper', 'init_process' ], 10, 2 );
+		if ( ! has_action( 'automatewoo/custom_time_of_day_workflow', [ $this, 'start_batched_workflow_job' ] ) ) {
+			add_action( 'automatewoo/custom_time_of_day_workflow', [ $this, 'start_batched_workflow_job' ] );
 		}
 	}
 
@@ -45,6 +47,29 @@ trait CustomTimeOfDay {
 	 */
 	protected function get_description_text_workflow_not_immediate() {
 		return __( 'This workflow will not run immediately after it is saved. It will run daily in the background at the time set in the <strong>Time of day</strong> field. If no time is set it will run at midnight.', 'automatewoo' );
+	}
+
+	/**
+	 * Start a batched workflow job for the Custom Day Triggers.
+	 *
+	 * @since 6.0.0
+	 * @param int $workflow_id The workflow id to attach to the batched workflow job
+	 */
+	public function start_batched_workflow_job( $workflow_id ) {
+		try {
+			/** @var BatchedWorkflows $job */
+			$job = AW()->job_service()->get_job( 'batched_workflows' );
+			$job->start( [ 'workflow' => $workflow_id ] );
+		} catch ( \Exception $e ) {
+			Logger::error(
+				'jobs',
+				sprintf(
+					'Exception thrown when attempting to start the batched workflow (#%d): %s',
+					$workflow_id,
+					$e->getMessage()
+				)
+			);
+		}
 	}
 
 }

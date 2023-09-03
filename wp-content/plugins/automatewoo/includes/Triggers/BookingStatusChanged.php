@@ -74,6 +74,8 @@ class BookingStatusChanged extends Trigger {
 			->set_description( __( 'Select which booking status values will trigger this workflow. Leave blank to allow all.', 'automatewoo' ) )
 			->set_multiple();
 		$this->add_field( $to );
+
+		$this->add_field_validate_queued_order_status();
 	}
 
 	/**
@@ -136,5 +138,29 @@ class BookingStatusChanged extends Trigger {
 		return true;
 	}
 
+	/**
+	 * Ensures 'to' status has not changed while sitting in queue in case
+	 * `validate_order_status_before_queued_run` is checked in Trigger the UI.
+	 *
+	 * @param \AutomateWoo\Workflow $workflow The workflow to validate
+	 * @return bool True if it's valid
+	 */
+	public function validate_before_queued_event( $workflow ) {
+
+		if ( ! $workflow ) {
+			return false;
+		}
+
+		if ( $workflow->get_trigger_option( 'validate_order_status_before_queued_run' ) ) {
+			$status_to = $workflow->get_trigger_option( 'booking_status_to' );
+			$booking   = $workflow->data_layer()->get_booking();
+
+			if ( ! $this->validate_status_field( $status_to, $booking->get_status() ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 }

@@ -32,13 +32,13 @@ class Clean {
 	 * Sanitize the ORDER BY parameter allowing only valid column names.
 	 *
 	 * @param string $order_by The column attempted to set as order by
-	 * @param array $valid_columns Valid column names available to set as order by
+	 * @param array $valid_columns Valid column names available to set as order_by. If empty, all the columns are allowed
 	 *
 	 * @return string The sanitized column name. Or empty string if invalid column name.
 	 */
-	static function order_by( $order_by, $valid_columns ) {
+	static function order_by( $order_by, $valid_columns = [] ) {
 
-		if ( in_array( $order_by, $valid_columns ) ) {
+		if ( empty( $valid_columns ) || in_array( $order_by, $valid_columns ) ) {
 			return $order_by;
 		}
 
@@ -175,6 +175,22 @@ class Clean {
 
 
 	/**
+	 * Standardizes new line characters to \n.
+	 *
+	 * Serialize strings with CR new lines causes problems when is imported using WP Importer.
+	 * See: https://github.com/woocommerce/automatewoo/issues/1183
+	 *
+	 * @since 6.0.2
+	 *
+	 * @param string $string String to standardize new line characters in.
+	 * @return string String with new line characters standardized.
+	 */
+	public static function standarize_new_line_characters( $string ) {
+		return str_replace( array( "\r\n", "\r" ), "\n", $string );
+	}
+
+
+	/**
 	 * Performs a basic sanitize for AW email content permitting all HTML.
 	 *
 	 * Can contain unprocessed variables {{}}.
@@ -186,6 +202,7 @@ class Clean {
 	 * @return string
 	 */
 	static function email_content( $content ) {
+		$content = self::standarize_new_line_characters( $content );
 		$content = wp_check_invalid_utf8( (string) $content );
 		return $content;
 	}

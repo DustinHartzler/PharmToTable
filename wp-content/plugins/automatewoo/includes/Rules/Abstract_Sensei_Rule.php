@@ -89,21 +89,19 @@ abstract class Abstract_Sensei_Rule extends Searchable_Select_Rule_Abstract {
 		}
 
 		if ( empty( $quiz_ids ) ) {
-			return ( 'not_yet_taken' === $status ) ? true : false;
+			return 'not_yet_taken' === $status;
 		}
 
 		foreach ( $quiz_ids as $quiz_id ) {
-			$lesson_id = Sensei()->quiz->get_lesson_id( $quiz_id );
+			$lesson_id     = Sensei()->quiz->get_lesson_id( $quiz_id );
+			$quiz_progress = Sensei()->quiz_progress_repository->get( $quiz_id, $user_id );
 
-			if ( 'passed' === $status ) {
-				if ( ! \WooThemes_Sensei_Utils::user_passed_quiz( $quiz_id, $user_id ) ) {
+			if ( 'not_yet_taken' === $status ) {
+				if ( \Sensei()->lesson->is_quiz_submitted( $lesson_id, $user_id ) ) {
 					return false;
 				}
-			} elseif ( 'not_yet_taken' === $status ) {
-				return ( ! \Sensei()->lesson->is_quiz_submitted( $lesson_id, $user_id ) );
-			} elseif ( 'failed' === $status ) {
-				$user_lesson_status = \Sensei_Utils::user_lesson_status( $lesson_id, $user_id );
-				if ( empty( $user_lesson_status ) || 'failed' !== $user_lesson_status->comment_approved ) {
+			} elseif ( 'passed' === $status || 'failed' === $status ) {
+				if ( ! $quiz_progress || $quiz_progress->get_status() !== $status ) {
 					return false;
 				}
 			}

@@ -37,6 +37,24 @@ class Integration_Mailpoet extends Integration {
 	}
 
 	/**
+	 * The MailPoet Integration doesn't rely on a user provided API keym so we don't need to test it.
+	 *
+	 * @return bool
+	 */
+	public function test_integration(): bool {
+		return true;
+	}
+
+	/**
+	 * Check if the integration is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool {
+		return (bool) Integrations::is_mailpoet_active();
+	}
+
+	/**
 	 * This functions allows adding hooks for MailPoet
 	 *
 	 * @since 5.7.0

@@ -137,6 +137,7 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		AutomateWoo\Ajax::init();
 
 		if ( $this->is_installed() ) {
+			// Todo: Remove in 6.2.0
 			AutomateWoo\Cron::init();
 			( new AutomateWoo\Rest_Api() )->init();
 			AutomateWoo\Session_Tracker::init();
@@ -168,7 +169,6 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 			}
 
 			if ( WC()->is_wc_admin_active() ) {
-				AutomateWoo\ActivityPanelInbox\WelcomeNote::init();
 				AutomateWoo\ActivityPanelInbox\UpdateNote::init();
 				( new AutomateWoo\ActivityPanelInbox\SubscriptionsAddonDeactivatedNote() )->init();
 			}
@@ -179,7 +179,6 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		do_action( 'automatewoo_init' );
 
 		AutomateWoo\Event_Helpers\User_Registration::init();
-		AutomateWoo\Event_Helpers\Products_On_Sale::init();
 		AutomateWoo\Event_Helpers\Review_Posted::init();
 
 		if ( AutomateWoo\Integrations::is_subscriptions_active() ) {
@@ -193,6 +192,8 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		AutomateWoo\Active_Triggers_Cache::init();
 		AutomateWoo\Async_Events::init_required_events();
 
+		( new AutomateWoo\Notifications\NotificationsInitializer( AW()->action_scheduler() ) )->init();
+
 		/**
 		 * Check if Points and Rewards is active
 		 *
@@ -205,9 +206,6 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		if ( $this->is_request( 'ajax' ) || $this->is_request( 'cron' ) || ( defined( 'WP_CLI' ) && WP_CLI ) || is_admin() ) {
 			// Load all background processes
 			AutomateWoo\Background_Processes::get_all();
-			// Load async request
-			AutomateWoo\Events::get_event_runner_async_request();
-
 			$this->job_service()->init_jobs();
 		}
 

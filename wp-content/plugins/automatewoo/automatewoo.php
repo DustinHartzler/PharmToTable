@@ -3,17 +3,17 @@
  * Plugin Name: AutomateWoo
  * Plugin URI: https://automatewoo.com
  * Description: Powerful marketing automation for your WooCommerce store.
- * Version: 5.8.2
+ * Version: 6.0.3
  * Author: WooCommerce
  * Author URI: https://woocommerce.com
  * License: GPLv3
  * License URI: http://www.gnu.org/licenses/gpl-3.0
  * Text Domain: automatewoo
  * Domain Path: /languages
- * Tested up to: 6.2
+ * Tested up to: 6.3
  *
  * WC requires at least: 6.7
- * WC tested up to: 7.8
+ * WC tested up to: 8.0
  * Woo: 4652610:f6f1f8a56a16a3715b30b21fb557e78f
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,10 +37,10 @@ use Automattic\WooCommerce\Utilities\FeaturesUtil;
 defined( 'ABSPATH' ) || exit;
 
 define( 'AUTOMATEWOO_SLUG', 'automatewoo' );
-define( 'AUTOMATEWOO_VERSION', '5.8.2' ); // WRCS: DEFINED_VERSION.
+define( 'AUTOMATEWOO_VERSION', '6.0.3' ); // WRCS: DEFINED_VERSION.
 define( 'AUTOMATEWOO_FILE', __FILE__ );
 define( 'AUTOMATEWOO_PATH', dirname( __FILE__ ) );
-define( 'AUTOMATEWOO_MIN_PHP_VER', '7.2.0' );
+define( 'AUTOMATEWOO_MIN_PHP_VER', '7.3.0' );
 define( 'AUTOMATEWOO_MIN_WP_VER', '5.9' );
 // IMPORTANT: If AUTOMATEWOO_MIN_WC_VER is updated, AW Refer a friend (PHP Unit Tests) should be updated accordingly
 // See https://github.com/woocommerce/automatewoo-referrals/blob/684a6d7f1e33359553b3b681b32cb4bad8d53089/.github/workflows/php-unit-tests.yml#L34-L40
@@ -69,6 +69,7 @@ class AutomateWoo_Loader {
 		// Ensure core before AutomateWoo add-ons.
 		add_action( 'plugins_loaded', array( __CLASS__, 'load' ), 8 );
 
+		add_action( 'activate_plugin', array( __CLASS__, 'load_by_cli' ), 8 );
 		// Load translations even if plugin requirements aren't met
 		add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
 
@@ -77,6 +78,13 @@ class AutomateWoo_Loader {
 
 		// Declare compatibility for WooCommerce features.
 		add_action( 'before_woocommerce_init', [ __CLASS__, 'declare_feature_compatibility' ] );
+
+		/**
+		 * Trigger "automatewoo_activated" action after activation using option workaround.
+		 *
+		 * @see https://developer.wordpress.org/reference/functions/register_activation_hook/#process-flow
+		 */
+		register_activation_hook( __FILE__, [ __CLASS__, 'activation' ] );
 	}
 
 	/**
@@ -84,8 +92,23 @@ class AutomateWoo_Loader {
 	 */
 	public static function load() {
 		if ( self::check() ) {
+			add_action( 'admin_init', [ __CLASS__, 'do_activation_action' ], 20 );
+
 			require_once __DIR__ . '/vendor/autoload.php';
 			AutomateWoo::instance();
+		}
+	}
+
+	/**
+	 * Loads plugin when using WP CLI.
+	 *
+	 * @param string $plugin Plugin file.
+	 */
+	public static function load_by_cli( $plugin ): void {
+		if ( self::check() && ( defined( 'WP_CLI' ) && WP_CLI ) && $plugin === 'automatewoo/automatewoo.php' ) {
+			require_once __DIR__ . '/vendor/autoload.php';
+			( AutomateWoo::instance() )->init();
+			AutomateWoo\Installer::admin_init();
 		}
 	}
 
@@ -168,6 +191,31 @@ class AutomateWoo_Loader {
 	public static function declare_feature_compatibility() {
 		if ( class_exists( FeaturesUtil::class ) ) {
 			FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
+
+	/**
+	 * Set an option stating that AutomateWoo was activated.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @return void
+	 */
+	public static function activation(): void {
+		add_option( 'automatewoo_activated', true );
+	}
+
+	/**
+	 * Trigger "activation" hook if "automatewoo_activated" option exists
+	 *
+	 * @since 5.8.5
+	 *
+	 * @return void
+	 */
+	public static function do_activation_action(): void {
+		if ( get_option( 'automatewoo_activated' ) ) {
+			do_action( 'automatewoo_activated' );
+			delete_option( 'automatewoo_activated' );
 		}
 	}
 }

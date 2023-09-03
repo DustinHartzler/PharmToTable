@@ -53,17 +53,30 @@ class JobService {
 			$job->init();
 
 			if ( $job instanceof StartOnHookInterface ) {
+				$this->check_is_using_deprecated_cron_workers( $job );
 				add_action( $job->get_start_hook(), [ $job, 'start' ], 10, 0 );
 			}
 
 			if ( $job instanceof RecurringJobInterface ) {
-				// AuctionScheduler loads its tables on "init" action
-				add_action( 'init', [ $job, 'schedule_recurring' ], 10, 0 );
+				// ActionScheduler loads its tables on "init" action
+				add_action( 'admin_init', [ $job, 'schedule_recurring' ], 10, 0 );
 
 				// Cancel the recurring action on deactivation
 				register_deactivation_hook( AUTOMATEWOO_FILE, [ $job, 'cancel_recurring' ] );
 			}
 		}
+	}
+
+	/**
+	 * Get all the jobs
+	 *
+	 * @since 6.0.0
+	 * @return JobInterface[] All the Jobs
+	 *
+	 * @throws InvalidClass|InvalidArgument When there is an error loading jobs.
+	 */
+	public function get_jobs(): array {
+		return $this->registry->list();
 	}
 
 	/**
@@ -78,6 +91,38 @@ class JobService {
 	 */
 	public function get_job( string $name ): JobInterface {
 		return $this->registry->get( $name );
+	}
+
+	/**
+	 * Check if the start hook is relying on legacy Cron workers. If so, it shows a deprecation notice.
+	 *
+	 * @since 6.0.0
+	 * @param StartOnHookInterface $job The job to check.
+	 */
+	public function check_is_using_deprecated_cron_workers( $job ) {
+
+		$legacy_cron_workers = array_map(
+			function ( $worker ) {
+				return 'automatewoo_' . $worker . '_worker';
+			},
+			[
+				'events',
+				'one_minute',
+				'two_minute',
+				'five_minute',
+				'fifteen_minute',
+				'thirty_minute',
+				'hourly',
+				'four_hourly',
+				'daily',
+				'two_days',
+				'weekly',
+			]
+		);
+
+		if ( in_array( $job->get_start_hook(), $legacy_cron_workers, true ) ) {
+			wc_deprecated_hook( $job->get_start_hook(), '6.0.0', 'Action Scheduler Recurrent Jobs', 'See \AutomateWoo\Jobs\RecurringJobInterface' );
+		}
 	}
 
 }

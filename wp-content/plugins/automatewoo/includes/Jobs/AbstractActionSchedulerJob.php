@@ -55,4 +55,46 @@ abstract class AbstractActionSchedulerJob implements ActionSchedulerJobInterface
 	public function get_process_item_hook() {
 		return $this->get_hook_base_name() . 'process_item';
 	}
+
+
+	/**
+	 * Schedules a job with recurrence. Creates a hook named like "automatewoo/jobs/{$job_name}/start
+	 * recurrently. This hook is handled by the StartOnHook flow when the action is Completed.
+	 *
+	 * @since 6.0.0
+	 *
+	 * @see RecurringJobInterface
+	 */
+	public function schedule_recurring() {
+		$interval = apply_filters( "automatewoo/intervals/{$this->get_name()}", $this->get_interval() );
+		if ( ! $this->get_schedule() ) {
+			$this->action_scheduler->schedule_recurring_action(
+				time() + $interval,
+				$interval,
+				$this->get_schedule_hook()
+			);
+		}
+	}
+
+	/**
+	 * Cancels the recurring action
+	 *
+	 * @since 6.0.0
+	 */
+	public function cancel_recurring() {
+		if ( $this->get_schedule() ) {
+			$this->action_scheduler->cancel( $this->get_schedule_hook() );
+		}
+	}
+
+	/**
+	 * Check if the Job is scheduled
+	 *
+	 * @since 6.0.0
+	 * @return int|bool The timestamp for the next occurrence of the scheduled action, true if in-progress or false if there is no scheduled action.
+	 */
+	public function get_schedule() {
+		return $this->action_scheduler->next_scheduled_action( $this->get_schedule_hook() );
+	}
+
 }

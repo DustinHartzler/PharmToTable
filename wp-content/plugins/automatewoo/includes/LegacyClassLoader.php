@@ -40,7 +40,6 @@ class LegacyClassLoader {
 		\AutomateWoo\Database_Table_Carts::class         => DatabaseTables\Carts::class,
 		\AutomateWoo\Database_Table_Customer_Meta::class => DatabaseTables\CustomerMeta::class,
 		\AutomateWoo\Database_Table_Customers::class     => DatabaseTables\Customers::class,
-		\AutomateWoo\Database_Table_Events::class        => DatabaseTables\Events::class,
 		\AutomateWoo\Database_Table_Guest_Meta::class    => DatabaseTables\GuestMeta::class,
 		\AutomateWoo\Database_Table_Guests::class        => DatabaseTables\Guests::class,
 		\AutomateWoo\Database_Table_Log_Meta::class      => DatabaseTables\LogMeta::class,

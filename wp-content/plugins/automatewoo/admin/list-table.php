@@ -310,8 +310,8 @@ abstract class Admin_List_Table extends \WP_List_Table {
 	/**
 	 * @return string
 	 */
-	protected function get_param_orderby( $columns = [] ) {
-		return aw_request( 'orderby' ) ? Clean::order_by( aw_request( 'orderby' ), $columns ) : $this->default_param_orderby;
+	protected function get_param_orderby() {
+		return aw_request( 'orderby' ) ?: $this->default_param_orderby;
 	}
 
 
@@ -319,7 +319,7 @@ abstract class Admin_List_Table extends \WP_List_Table {
 	 * @return string
 	 */
 	protected function get_param_order() {
-		return aw_request( 'order' ) ? Clean::order( aw_request( 'order' ) ) : $this->default_param_order;
+		return aw_request( 'order' ) ?: $this->default_param_order;
 	}
 
 	/**

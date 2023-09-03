@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
@@ -10,18 +9,18 @@ namespace AutomateWoo;
 class Hooks {
 
 
-	static function init() {
+	/**
+	 * Initialize Application hooks
+	 */
+	public static function init() {
 		$self = __CLASS__; /** @var $self Hooks (for IDE) */
 
 		// addons
-		add_action( 'automatewoo/addons/activate', [ $self , 'activate_addon' ] );
+		add_action( 'automatewoo/addons/activate', [ $self, 'activate_addon' ] );
 
 		// frontend action endpoints
 		add_action( 'wp_loaded', [ $self, 'check_for_action_endpoint' ] );
 		add_action( 'wp_loaded', [ $self, 'maybe_handle_frontend_form' ] );
-
-		// events
-		add_action( 'automatewoo_events_worker', [ 'AutomateWoo\Events', 'run_due_events' ] );
 
 		// email
 		add_filter( 'automatewoo_email_content', 'wpautop' );
@@ -91,10 +90,13 @@ class Hooks {
 	}
 
 	/**
-	 * @param $addon_id
+	 * Activates an addon
+	 *
+	 * @param string $addon_id The addon ID
 	 */
-	static function activate_addon( $addon_id ) {
-		if ( $addon = Addons::get( $addon_id ) ) {
+	public static function activate_addon( $addon_id ) {
+		$addon = Addons::get( $addon_id );
+		if ( $addon ) {
 			$addon->activate();
 		}
 	}
@@ -103,8 +105,11 @@ class Hooks {
 	/**
 	 * Action endpoints
 	 */
-	static function check_for_action_endpoint() {
-		if ( empty( $_GET[ 'aw-action' ] ) || wp_doing_ajax() || is_admin() ) {
+	public static function check_for_action_endpoint() {
+
+		// We are not processing any action here so no need for a nonce.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( empty( $_GET['aw-action'] ) || wp_doing_ajax() || is_admin() ) {
 			return;
 		}
 
@@ -115,7 +120,10 @@ class Hooks {
 	/**
 	 * Action endpoints
 	 */
-	static function maybe_handle_frontend_form() {
+	public static function maybe_handle_frontend_form() {
+
+		// We are not processing any action here so no need for a nonce.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) || empty( $_POST['action'] ) ) {
 			return;
 		}
@@ -127,14 +135,16 @@ class Hooks {
 	/**
 	 * Maybe print pre-submit js
 	 */
-	static function maybe_enqueue_presubmit_js() {
+	public static function maybe_enqueue_presubmit_js() {
 		if ( ! Options::presubmit_capture_enabled() || is_user_logged_in() ) {
 			return;
 		}
 
-		switch( AW()->options()->guest_email_capture_scope ) {
+		switch ( AW()->options()->guest_email_capture_scope ) {
 			case 'checkout':
-				if ( ! is_checkout() ) return;
+				if ( ! is_checkout() ) {
+					return;
+				}
 				break;
 		}
 
@@ -147,7 +157,7 @@ class Hooks {
 	/**
 	 * Load plugin frontend pages
 	 */
-	static function maybe_init_pages() {
+	public static function maybe_init_pages() {
 		switch ( get_the_ID() ) {
 			case Options::communication_page_id():
 			case Options::signup_page_id():
@@ -157,7 +167,10 @@ class Hooks {
 	}
 
 
-	static function register_scripts() {
+	/**
+	 * Register Application Scripts and Styles
+	 */
+	public static function register_scripts() {
 
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$suffix = '';

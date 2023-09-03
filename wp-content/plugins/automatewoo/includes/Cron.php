@@ -47,12 +47,10 @@ class Cron {
 
 		add_action( 'admin_init', [ __CLASS__, 'add_events' ] );
 
-		add_action( self::FIVE_MINUTE_WORKER, [ __CLASS__, 'check_for_gmt_offset_change' ] );
-		add_action( self::THIRTY_MINUTE_WORKER, [ __CLASS__, 'check_midnight_cron' ], 1 );
-		add_action( 'automatewoo_midnight', [ __CLASS__, 'update_midnight_cron_last_run' ], 1 );
+		// Un-schedule legacy  WP Cron based 'automatewoo_midnight'
+		// Now this job runs via ActionScheduler
+		wp_unschedule_hook('automatewoo_midnight');
 
-		// set up midnight cron job, but doesn't repair it (which is important)
-		add_action( 'admin_init', [ __CLASS__, 'setup_midnight_cron' ] );
 	}
 
 
@@ -104,21 +102,6 @@ class Cron {
 		update_option( 'aw_workers_last_run', $last_runs, false );
 	}
 
-
-	/**
-	 * @param $action
-	 * @return int|false
-	 */
-	static function get_worker_interval( $action ) {
-		$schedules = wp_get_schedules();
-		$schedule = wp_get_schedule( $action );
-
-		if ( isset( $schedules[$schedule] ) ) {
-			return $schedules[$schedule]['interval'];
-		}
-
-		return false;
-	}
 
 
 	/**
@@ -204,157 +187,6 @@ class Cron {
 		];
 
 		return $schedules;
-	}
-
-
-	/**
-	 * Track changes in the GMT offset such as DST
-	 *
-	 * @since 3.8
-	 */
-	static function check_for_gmt_offset_change() {
-		$new_offset = Time_Helper::get_timezone_offset();
-		$existing_offset = get_option( 'automatewoo_gmt_offset' );
-
-		if ( $existing_offset === false ) {
-			update_option( 'automatewoo_gmt_offset', $new_offset, false );
-			return;
-		}
-
-		if ( $existing_offset != $new_offset ) {
-			do_action( 'automatewoo/gmt_offset_changed', $new_offset, $existing_offset );
-			update_option( 'automatewoo_gmt_offset', $new_offset, false );
-		}
-	}
-
-	/**
-	 * Set midnight cron, if not already set
-	 * @since 3.8
-	 */
-	static function setup_midnight_cron() {
-		if ( $next = wp_next_scheduled( 'automatewoo_midnight' ) ) {
-			return false; // already setup
-		}
-
-		// calculate next midnight in the site's timezone
-		$date = new DateTime( 'now' );
-		$date->convert_to_site_time();
-		$date->set_time_to_day_start();
-		// actually trigger now instead of tomorrow, to avoid issues with custom time of day triggers
-		// these triggers could skip 1 day if we don't run the midnight cron immediately when adding
-		// TODO remove in the future
-		//$date->modify('+1 day');
-		$date->convert_to_utc_time(); // convert back to UTC
-
-		self::update_midnight_cron( $date );
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	static function is_midnight_cron_correct() {
-		if ( ! $next = wp_next_scheduled( 'automatewoo_midnight' ) ) {
-			return false;
-		}
-		$date = new DateTime();
-		$date->setTimestamp( $next );
-		$date->convert_to_site_time();
-		return $date->format('Hi') == '0000';
-	}
-
-
-	/**
-	 * Sets a new time for the midnight cron.
-	 *
-	 * @param DateTime $date GMT
-	 */
-	static function update_midnight_cron( $date ) {
-		wp_clear_scheduled_hook( 'automatewoo_midnight' );
-		wp_schedule_event( $date->getTimestamp(), 'daily', 'automatewoo_midnight' );
-	}
-
-	/**
-	 * Check the midnight cron job is correctly scheduled.
-	 *
-	 * If schedule is not correct this method fixes the schedule.
-	 *
-	 * @since 4.6.0
-	 */
-	public static function check_midnight_cron() {
-		if ( self::is_midnight_cron_correct() ) {
-			return;
-		}
-
-		// Repair the cron job schedule
-		$date = new DateTime();
-		$date->convert_to_site_time();
-		$date->set_time_to_day_start();
-
-		// If midnight cron should not run for today, schedule it for tomorrow
-		// Otherwise, run it now because it's better to run at a slightly wrong time rather than not run at all.
-		if ( ! self::should_midnight_cron_run_today() ) {
-			// Replace date with last run +1 day, i.e. the day after last run
-			$date = self::get_midnight_cron_last_run();
-			$date->modify('+1 day');
-		}
-
-		$date->convert_to_utc_time();
-
-		self::update_midnight_cron( $date );
-	}
-
-	/**
-	 * Update the last run date of the midnight cron to now.
-	 *
-	 * Store last run in site time as Y-m-d.
-	 *
-	 * This is stored as site time because the goal of the midnight cron event is to run once per day
-	 * in the site's timezone. Storing in site time means we can handle DST timezone changes better.
-	 *
-	 * @since 4.6.0
-	 */
-	public static function update_midnight_cron_last_run() {
-		$now = new DateTime();
-		$now->convert_to_site_time();
-		update_option( 'automatewoo_midnight_cron_last_run', $now->format( 'Y-m-d' ), false );
-	}
-
-	/**
-	 * Get the last run date of the midnight cron in site time.
-	 *
-	 * @since 4.6.0
-	 *
-	 * @return DateTime|false
-	 */
-	public static function get_midnight_cron_last_run() {
-		$last_run = get_option( 'automatewoo_midnight_cron_last_run' );
-		return $last_run ? aw_normalize_date( $last_run ) : false;
-	}
-
-	/**
-	 * Did the midnight cron task run today (in local time)?
-	 *
-	 * Also returns true if midnight cron has run for tomorrow. E.g. in the case of DST changes.
-	 *
-	 * @since 4.6.0
-	 *
-	 * @return bool
-	 */
-	public static function should_midnight_cron_run_today() {
-		$last_run = self::get_midnight_cron_last_run();
-
-		if ( ! $last_run ) {
-			return true;
-		}
-
-		$last_run->set_time_to_day_end();
-
-		$now = new DateTime();
-		$now->convert_to_site_time();
-
-		// Return false if cron has run today or even for tomorrow
-		return $now > $last_run;
 	}
 
 }

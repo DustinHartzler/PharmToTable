@@ -11,14 +11,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.8.1
  */
-interface RecurringJobInterface extends StartOnHookInterface {
+interface RecurringJobInterface extends JobInterface {
 
 	/**
 	 * Return the recurring job's interval in seconds.
 	 *
 	 * @return int The interval for the action
 	 */
-	public function get_interval(): int;
+	public function get_interval();
+
+	/**
+	 * Return the hook used in the Action Scheduler recurring action.
+	 *
+	 * @return string The hook name
+	 */
+	public function get_schedule_hook();
 
 	/**
 	 * Init the job recurrence.
@@ -29,5 +36,10 @@ interface RecurringJobInterface extends StartOnHookInterface {
 	 * Cancels the job recurrence.
 	 */
 	public function cancel_recurring();
+
+	/**
+	 * Get the next scheduled job
+	 */
+	public function get_schedule();
 
 }

@@ -1,12 +1,9 @@
-$color-body-bg: #f1f1f1;
 $grey-text-light: #8e8e8e;
 $grey-very-light: #f5f5f5;
 $grey-very-light-border: #f2f2f2;
 $grey-light-border: #e1e1e1;
 $grey-border: #ccc;
 $grey-very-light-border: #eee;
-$blue-light: #08a5e2;
-$blue: #0085ba;
 $white: #fff;
 $black: #000;
 $red: #dc3232;
@@ -15,12 +12,7 @@ $color-text-dark-grey: #515151;
 
 $warning-badge-red: #ca4a1f;
 
-$color-brand-purple: #7532e4;
-$color-brand-light-purple: #928bbc;
 $color-brand-paragraph-grey: #69686e;
-
-// todo replace with CSS variable in future
-$wp-theme-blue: #007cba;
 
 $color-dark-grey: #464646;
 $color-g2-dark-grey: #1e1e1e;
@@ -63,10 +55,6 @@ $breakpoint-xlarge: 1450px;
 		}
 
 		@include loader();
-	}
-
-	&--purple {
-		border-left-color: $color-brand-purple;
 	}
 }
 
@@ -214,13 +202,12 @@ automatewoo-icon {
 
 .automatewoo-arrow-link {
 	display: block;
-	width: 14px;
-	height: 14px;
-	border: 2px solid #d1d1d1;
+	width: 15px;
+	height: 15px;
+	border: 2px solid;
 	border-radius: 50%;
 	text-decoration: none;
 	color: #d1d1d1;
-	text-align: center;
 	position: relative;
 
 	&::before {
@@ -231,11 +218,6 @@ automatewoo-icon {
 		left: 2px;
 		font-size: 13px;
 		-webkit-font-smoothing: subpixel-antialiased;
-	}
-
-	&:hover {
-		color: $color-dark-grey;
-		border-color: $color-dark-grey;
 	}
 }
 
@@ -282,16 +264,12 @@ automatewoo-icon {
 }
 
 .automatewoo-help-link {
+	color: $grey-text-light;
 
 	&::before {
 
 		@include dashicon( "\f504" );
-		color: #bbb;
 		font-size: 16px;
-	}
-
-	&:hover::before {
-		color: $blue;
 	}
 }
 

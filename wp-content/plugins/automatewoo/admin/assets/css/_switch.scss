@@ -35,7 +35,7 @@
 
 
 	&[data-aw-switch="on"] {
-		box-shadow: inset 0 0 0 calc($height / 2) $blue;
+		box-shadow: inset 0 0 0 calc($height / 2) var(--wp-admin-theme-color);
 
 		&::before {
 			transform: translateX($width - $height);

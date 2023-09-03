@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Interface StartOnHookInterface.
  *
- * Jobs that implement this interface will start on a specific action hook, e.g. automatewoo_hourly_worker.
+ * Jobs that implement this interface will start on a specific action hook.
  *
  * @since 5.1.0
  */
