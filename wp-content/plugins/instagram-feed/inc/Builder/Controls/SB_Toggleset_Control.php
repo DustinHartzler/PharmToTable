@@ -42,7 +42,7 @@ class SB_Toggleset_Control extends SB_Controls_Base{
 				<div class="sb-control-toggle-deco sb-tr-1"></div>
 				<div class="sb-control-toggle-icon" v-if="toggle.icon" v-html="svgIcons[toggle.icon]"></div>
 				<div class="sb-control-label">
-					{{toggle.label}}
+					<span v-html="toggle.label"></span>
 					<span class="sb-control-label-pro-toggle" v-if="toggle.proLabel">Pro</span>
 				</div>
 			</div>

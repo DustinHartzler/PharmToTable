@@ -815,57 +815,16 @@ function sbi_create_local_avatar( $username, $file_name ) {
  * @return array
  */
 function sbi_get_database_settings() {
-	$defaults = array(
-		'sb_instagram_at'                   => '',
-		'sb_instagram_user_id'              => '',
-		'sb_instagram_preserve_settings'    => '',
-		'sb_instagram_ajax_theme'           => false,
-		'sb_instagram_disable_resize'       => false,
-		'sb_instagram_cache_time'           => 1,
-		'sb_instagram_cache_time_unit'      => 'hours',
-		'sbi_caching_type'                  => 'background',
-		'sbi_cache_cron_interval'           => '12hours',
-		'sbi_cache_cron_time'               => '1',
-		'sbi_cache_cron_am_pm'              => 'am',
-		'sb_instagram_width'                => '100',
-		'sb_instagram_width_unit'           => '%',
-		'sb_instagram_feed_width_resp'      => false,
-		'sb_instagram_height'               => '',
-		'sb_instagram_num'                  => '20',
-		'sb_instagram_height_unit'          => '',
-		'sb_instagram_cols'                 => '4',
-		'sb_instagram_disable_mobile'       => false,
-		'sb_instagram_image_padding'        => '5',
-		'sb_instagram_image_padding_unit'   => 'px',
-		'sb_instagram_sort'                 => 'none',
-		'sb_instagram_background'           => '',
-		'sb_instagram_show_btn'             => true,
-		'sb_instagram_btn_background'       => '',
-		'sb_instagram_btn_text_color'       => '',
-		'sb_instagram_btn_text'             => __( 'Load More...', 'instagram-feed' ),
-		'sb_instagram_image_res'            => 'auto',
-		//Header
-		'sb_instagram_show_header'          => true,
-		'sb_instagram_header_size'  => 'small',
-		'sb_instagram_header_color'         => '',
-		//Follow button
-		'sb_instagram_show_follow_btn'      => true,
-		'sb_instagram_folow_btn_background' => '',
-		'sb_instagram_follow_btn_text_color' => '',
-		'sb_instagram_follow_btn_text'      => __( 'Follow on Instagram', 'instagram-feed' ),
-		//Misc
-		'sb_instagram_custom_css'           => '',
-		'sb_instagram_custom_js'            => '',
-		'sb_instagram_cron'                 => 'no',
-		'sb_instagram_backup' => true,
-		'sb_ajax_initial'    => false,
-		'enqueue_css_in_shortcode' => false,
-		'sb_instagram_disable_mob_swipe' => false,
-		'sb_instagram_disable_awesome'      => false
-	);
 	$sbi_settings = get_option( 'sb_instagram_settings', array() );
 
-	return array_merge( $defaults, $sbi_settings );
+	if ( ! is_array( $sbi_settings ) ) {
+        $sbi_settings = array();
+    }
+
+	$return_settings = array_merge( sbi_defaults(), $sbi_settings );
+	$return_settings = apply_filters( 'sbi_database_settings', $return_settings );
+
+	return $return_settings;
 }
 
 /**
@@ -930,6 +889,8 @@ function sbi_cron_updater() {
 	$cron_updater->do_feed_updates();
 
 	sbi_do_background_tasks( array() );
+    \InstagramFeed\Admin\SBI_Support_Tool::delete_expired_users();
+
 }
 add_action( 'sbi_feed_update', 'sbi_cron_updater' );
 

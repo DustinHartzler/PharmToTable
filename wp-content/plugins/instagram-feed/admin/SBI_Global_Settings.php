@@ -676,18 +676,8 @@ class SBI_Global_Settings {
 
 		// Check if the license key reached max site installations
 		if ( isset( $sbi_license_data['error'] ) && 'no_activations_left' === $sbi_license_data['error'] )  {
-			$sbi_license_data['errorMsg'] = sprintf(
-				'%s (%s/%s). %s <a href="%s" target="_blank">%s</a> %s <a href="%s" target="_blank">%s</a>',
-				__( 'You have reached the maximum number of sites available in your plan', 'instagram-feed' ),
-				$sbi_license_data['site_count'],
-				$sbi_license_data['max_sites'],
-				__( 'Learn more about it', 'instagram-feed' ),
-				$learn_more_url,
-				'here',
-				__( 'or upgrade your plan.', 'instagram-feed' ),
-				$upgrade_url,
-				__( 'Upgrade', 'instagram-feed' )
-			);
+			$sbi_license_data['errorMsg'] = sprintf( __( 'You have reached the maximum number of sites available in your plan %s', 'instagram-feed' ), '(' . (int)$sbi_license_data['site_count'] . '/' . (int)$sbi_license_data['max_sites'] . ')' );
+			$sbi_license_data['errorMsg'] .= ' ' . sprintf( __( '%sLearn more about%s it or %supgrade your plan%s', 'instagram-feed' ), '<a href="' . esc_url( $learn_more_url ) . '" target="_blank" rel="noopener">', '</a>', '<a href="' . esc_url( $upgrade_url ) . '" rel="noopener" target="_blank">', '</a>' );
 		}
 		// Check if the license key has expired
 		if (
@@ -884,7 +874,7 @@ class SBI_Global_Settings {
 					'inactiveText' => __( 'Your <b>Instagram Feed Pro</b> license is Inactive!', 'instagram-feed' ),
 					'freeText'	=> __( 'Already purchased? Simply enter your license key below to activate Instagram Feed Pro.', 'instagram-feed'),
 					'inactiveFieldPlaceholder' => __( 'Paste license key here', 'instagram-feed' ),
-					'upgradeText1' => __( 'You are using the Lite version of the plugin–no license needed. Enjoy! 🙂 To unlock more features, consider <a href="'. $upgrade_url .'">Upgrading to Pro</a>.', 'instagram-feed' ),
+					'upgradeText1' => sprintf( __( 'You are using the Lite version of the plugin–no license needed. Enjoy! 🙂 To unlock more features, consider %s.', 'instagram-feed' ), '<a href="'. $upgrade_url .'">' . __( 'upgrading to Pro.', 'instagram-feed' ) . '</a>' ),
 					'upgradeText2' => __( 'As a valued user of our Lite plugin, you receive 50% OFF - automatically applied at checkout!', 'instagram-feed' ),
 					'manageLicense' => __( 'Manage License', 'instagram-feed' ),
 					'test' => __( 'Test Connection', 'instagram-feed' ),
@@ -958,7 +948,7 @@ class SBI_Global_Settings {
 						'features' => array(
 							__( 'Only local images (not from Instagram\'s CDN) will be displayed in the feed.', 'instagram-feed'),
 							__( 'Placeholder blank images will be displayed until images are available.', 'instagram-feed'),
-							__( 'To view videos, visitors will click a link to view the video on Instagram.', 'instagram-feed'),
+							__( 'Video posts will link to the post on Instagram.com for visitors to watch.', 'instagram-feed'),
 							__( 'Carousel posts will only show the first image in the lightbox.', 'instagram-feed'),
 							__( 'The maximum image resolution will be 640 pixels wide in the lightbox.', 'instagram-feed'),
 						)
@@ -981,7 +971,7 @@ class SBI_Global_Settings {
 				),
 				'usageBox' => array(
 					'title' => __( 'Usage Tracking', 'instagram-feed' ),
-					'helpText' => __( 'This helps to prevent plugin and theme conflicts by sending a report in the background once per week about your settings and relevant site stats. It does not send sensitive information like access tokens, email addresses, or user info. This will also not affect your site performance. <a href="'. $usage_tracking_url .'" target="_blank">Learn More</a>', 'instagram-feed' ),
+					'helpText' => sprintf( __( 'This helps to prevent plugin and theme conflicts by sending a report in the background once per week about your settings and relevant site stats. It does not send sensitive information like access tokens, email addresses, or user info. This will also not affect your site performance. %s', 'instagram-feed' ), '<a href="'. $usage_tracking_url .'" target="_blank">'  . __( 'Learn More', 'instagram-feed' ) . '</a>' ),
 				),
 				'resetErrorBox' => array(
 					'title' => __( 'Reset Error Log', 'instagram-feed' ),
@@ -1231,7 +1221,7 @@ class SBI_Global_Settings {
 		if ( $active_gdpr_plugin ) {
 			$output = $active_gdpr_plugin;
 		} else {
-			$output = __( 'No GDPR consent plugin detected. Install a compatible <a href="'. $gdpr_doc_url .'" target="_blank">GDPR consent plugin</a>, or manually enable the setting to display a GDPR compliant version of the feed to all visitors.', 'instagram-feed' );
+			$output = sprintf( __( 'No GDPR consent plugin detected. Install a compatible GDPR consent %s, or manually enable the setting to display a GDPR compliant version of the feed to all visitors.', 'instagram-feed' ), '<a href="'. esc_url( $gdpr_doc_url ) .'" target="_blank" rel="noopener">' . __( 'plugin', 'instagram-feed' ). '</a>' );
 		}
 		return $output;
 	}

@@ -93,6 +93,13 @@ class SBI_Support {
 		);
 
 		wp_enqueue_style(
+			'global-style',
+			SBI_PLUGIN_URL . 'admin/builder/assets/css/global.css',
+			false,
+			SBIVER
+		);
+
+		wp_enqueue_style(
 			'support-style',
 			SBI_PLUGIN_URL . 'admin/assets/css/support.css',
 			false,
@@ -154,11 +161,18 @@ class SBI_Support {
 			'supportUrl'          => $this->get_support_url(),
 			'svgIcons'            => SBI_Feed_Builder::builder_svg_icons(),
 			'socialWallLinks'     => \InstagramFeed\Builder\SBI_Feed_Builder::get_social_wall_links(),
+			'tempUser' => \InstagramFeed\Admin\SBI_Support_Tool::check_temporary_user_exists(),
+
 			'socialWallActivated' => is_plugin_active( 'social-wall/social-wall.php' ),
 			'genericText'         => array(
+				'delete'              => __( 'delete', 'instagram-feed' ),
+				'copyLink'              => __( 'Copy Link', 'instagram-feed' ),
+				'link'              => __( 'Link', 'instagram-feed' ),
+				'expires'              => __( 'Expires in', 'instagram-feed' ),
 				'help'              => __( 'Help', 'instagram-feed' ),
 				'title'             => __( 'Support', 'instagram-feed' ),
 				'gettingStarted'    => __( 'Getting Started', 'instagram-feed' ),
+				'learnMore'              => __( 'Learn More', 'instagram-feed' ),
 				'someHelpful'       => __( 'Some helpful resources to get you started', 'instagram-feed' ),
 				'docsN'             => __( 'Docs & Troubleshooting', 'instagram-feed' ),
 				'runInto'           => __( 'Run into an issue? Check out our help docs.', 'instagram-feed' ),
@@ -170,10 +184,17 @@ class SBI_Support {
 				'exportSettings'    => __( 'Export Settings', 'instagram-feed' ),
 				'shareYour'         => __( 'Share your plugin settings easily with Support', 'instagram-feed' ),
 				'copiedToClipboard' => __( 'Copied to clipboard', 'instagram-feed' ),
+				'days'              => __( 'Days', 'instagram-feed' ),
+				'day'               => __( 'Day', 'instagram-feed' ),
+				'newTempHeading'    => __( 'Temporary Login', 'instagram-feed' ),
+				'newTempDesc'       => __( 'Our team might ask for a temporary login link with limited access to only our plugin to help troubleshoot account related issues.', 'instagram-feed' ),
+				'newTempButton'     => __( 'Create Temporary Login Link', 'instagram-feed' ),
+				'tempLoginHeading'  => __( 'Temporary Login', 'instagram-feed' ),
+				'tempLoginDesc'     => __( 'Temporary login link for support access created by you. This is auto-destructed 14 days after creation. To create a new link, please delete the old one.', 'instagram-feed' ),
 			),
 			'buttons'             => array(
 				'searchDoc'    => __( 'Search Documentation', 'instagram-feed' ),
-				'moreHelp'     => __( 'More help on Getting started', 'instagram-feed' ),
+				'moreHelp'     => __( 'More Help Getting Started', 'instagram-feed' ),
 				'viewDoc'      => __( 'View Documentation', 'instagram-feed' ),
 				'viewBlog'     => __( 'View Blog', 'instagram-feed' ),
 				'submitTicket' => __( 'Submit a Support Ticket', 'instagram-feed' ),
@@ -467,8 +488,6 @@ class SBI_Support {
 					foreach ( $feed['settings']['sources'] as $id => $source ) {
 						$output .= esc_html( $source['username'] );
 						$output .= ' (' . esc_html( $id ) . ')';
-						$output .= '</br>';
-						$output .= esc_html( $manager->remote_encrypt( $source['access_token'] ) );
 					}
 				}
 			}
@@ -513,8 +532,6 @@ class SBI_Support {
 			$output .= 'Username: ' . esc_html( $source['username'] );
 			$output .= '</br>';
 			$output .= 'Error: ' . esc_html( $source['error'] );
-			$output .= '</br>';
-			$output .= esc_html( $manager->remote_encrypt( $source['access_token'] ) );
 			$output .= '</br>';
 			$output .= '</br>';
 
@@ -741,9 +758,7 @@ class SBI_Support {
 		$oembed_token_settings = get_option( 'sbi_oembed_token', array() );
 		foreach ( $oembed_token_settings as $key => $value ) {
 			if ( $key === 'access_token' ) {
-				$manager = new \SB_Instagram_Data_Manager();
-
-				$output .= esc_html(  $key ) . ': ' . esc_html( $manager->remote_encrypt( $value ) ) . '</br>';
+				// do nothing we don't want to show the AT
 			} else {
 				$output .= esc_html(  $key ) . ': ' . esc_html( $value ) . '</br>';
 			}

@@ -1,10 +1,15 @@
 var sbiBuilder,
 	sbiStorage = window.localStorage,
-	sketch = VueColor.Sketch;
+	sketch = VueColor.Sketch,
+	dummyLightBoxComponent = 'sbi-dummy-lightbox-component';
 
 
 
 
+Vue.component( dummyLightBoxComponent , {
+	template: '#' + dummyLightBoxComponent,
+	props: ['customizerFeedData','parent','dummyLightBoxScreen']
+});
 
 /**
  * VueJS Global App Builder
@@ -61,6 +66,7 @@ sbiBuilder = new Vue({
 		addFeaturedAlbumScreen: sbi_builder.addFeaturedAlbumScreen,
 		addVideosPostScreen: sbi_builder.addVideosPostScreen,
 		dummyLightBoxData: sbi_builder.dummyLightBoxData,
+		dummyLightBoxScreen 	: false,
 
 		svgIcons: sbi_builder.svgIcons,
 		feedsList: sbi_builder.feeds,
@@ -1017,6 +1023,7 @@ sbiBuilder = new Vue({
 
 			document.getElementById("sbi-builder-app").classList.remove('sb-onboarding-active');
 
+			this.switchCustomizerTab('customize');
 			self.viewsActive.onboardingPopup = false;
 			self.viewsActive.onboardingCustomizerPopup = false;
 
@@ -1044,13 +1051,19 @@ sbiBuilder = new Vue({
 					wrapElem.classList.add('sb-onboarding-active');
 
 					var step1El = document.querySelectorAll(".sbi-csz-header")[0];
-					step1El.appendChild(document.getElementById("sb-onboarding-tooltip-customizer-1"));
+					if( step1El !== undefined ){
+						step1El.appendChild(document.getElementById("sb-onboarding-tooltip-customizer-1"));
+					}
 
 					var step2El = document.querySelectorAll(".sb-customizer-sidebar-sec1")[0];
-					step2El.appendChild(document.getElementById("sb-onboarding-tooltip-customizer-2"));
+					if( step2El !== undefined ){
+						step2El.appendChild(document.getElementById("sb-onboarding-tooltip-customizer-2"));
+					}
 
 					var step3El = document.querySelectorAll(".sb-customizer-sidebar-sec1")[0];
-					step3El.appendChild(document.getElementById("sb-onboarding-tooltip-customizer-3"));
+					if( step3El !== undefined ){
+						step3El.appendChild(document.getElementById("sb-onboarding-tooltip-customizer-3"));
+					}
 
 					self.onboardingHideShow();
 				}
@@ -1060,10 +1073,14 @@ sbiBuilder = new Vue({
 						wrapElem.classList.add('sb-onboarding-active');
 
 						var step1El = document.querySelectorAll(".sbi-fb-wlcm-header .sb-positioning-wrap")[0];
-						step1El.appendChild(document.getElementById("sb-onboarding-tooltip-single-1"));
+						if( step1El !== undefined ){
+							step1El.appendChild(document.getElementById("sb-onboarding-tooltip-single-1"));
+						}
 
 						var step2El = document.querySelectorAll(".sbi-table-wrap")[0];
-						step2El.appendChild(document.getElementById("sb-onboarding-tooltip-single-2"));
+						if( step2El !== undefined ){
+							step2El.appendChild(document.getElementById("sb-onboarding-tooltip-single-2"));
+						}
 						self.onboardingHideShow();
 					}
 				} else {
@@ -1071,13 +1088,18 @@ sbiBuilder = new Vue({
 						wrapElem.classList.add('sb-onboarding-active');
 
 						var step1El = document.querySelectorAll(".sbi-fb-wlcm-header .sb-positioning-wrap")[0];
-						step1El.appendChild(document.getElementById("sb-onboarding-tooltip-multiple-1"));
+						if( step1El !== undefined ){
+							step1El.appendChild(document.getElementById("sb-onboarding-tooltip-multiple-1"));
+						}
 
 						var step2El = document.querySelectorAll(".sbi-fb-lgc-ctn")[0];
-						step2El.appendChild(document.getElementById("sb-onboarding-tooltip-multiple-2"));
-
+						if( step2El !== undefined ){
+							step2El.appendChild(document.getElementById("sb-onboarding-tooltip-multiple-2"));
+						}
 						var step3El = document.querySelectorAll(".sbi-legacy-table-wrap")[0];
-						step3El.appendChild(document.getElementById("sb-onboarding-tooltip-multiple-3"));
+						if( step3El !== undefined ){
+							step3El.appendChild(document.getElementById("sb-onboarding-tooltip-multiple-3"));
+						}
 
 						self.activateView('legacyFeedsShown');
 						self.onboardingHideShow();
@@ -1590,7 +1612,7 @@ sbiBuilder = new Vue({
 				lightBoxSection = ['customize_lightbox'],
 				domBody = document.getElementsByTagName("body")[0];
 
-			//self.dummyLightBoxData.visibility = 'hidden';
+			self.dummyLightBoxScreen = false;
 			domBody.classList.remove("no-overflow");
 
 			if (listPostSection.includes(sectionId)) {
@@ -1605,6 +1627,12 @@ sbiBuilder = new Vue({
 			} else if (loadeMoreSection.includes(sectionId)) {
 				self.highLightedSection = 'loadMore';
 				self.scrollToHighLightedSection("sbi_load");
+			} else if( lightBoxSection.includes(sectionId) ){
+				self.highLightedSection = 'lightBox';
+				self.dummyLightBoxScreen = true;
+				document.body.scrollTop = 0;
+				document.documentElement.scrollTop = 0;
+				domBody.classList.add("no-overflow");
 			} else {
 				self.highLightedSection = 'all';
 				domBody.classList.remove("no-overflow");
@@ -1666,6 +1694,7 @@ sbiBuilder = new Vue({
 			self.customizerScreens.activeSectionData = null;
 			self.highLightedSection = 'all';
 
+			self.dummyLightBoxScreen = false;
 			//self.dummyLightBoxData.visibility = 'hidden';
 			domBody.classList.remove("no-overflow");
 

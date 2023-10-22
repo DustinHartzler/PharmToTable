@@ -181,7 +181,7 @@ class SBI_oEmbeds {
 			'genericText'       => array(
 				'help' => __( 'Help', 'instagram-feed' ),
 				'title' => __( 'oEmbeds', 'instagram-feed' ),
-				'description' => __( 'Use Smash Balloon to power any Instagram or Instagram oEmbeds across your site. Just click the button below and we\'ll do the rest.                ', 'instagram-feed' ),
+				'description' => __( 'Use Smash Balloon to power any Instagram or Facebook oEmbeds across your site. Just click the button below and we\'ll do the rest.                ', 'instagram-feed' ),
 				'instagramOEmbeds' => __( 'Instagram oEmbeds are currently not being handled by Smash Balloon', 'instagram-feed' ),
 				'instagramOEmbedsEnabled' => __( 'Instagram oEmbeds are turned on', 'instagram-feed' ),
 				'facebookOEmbeds' => __( 'Facebook oEmbeds are currently not being handled by Smash Balloon', 'instagram-feed' ),

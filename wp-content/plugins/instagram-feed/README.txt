@@ -1,9 +1,9 @@
-=== Smash Balloon Social Photo Feed ===
+=== Smash Balloon Social Photo Feed - Best Social Feed Plugin for WordPress ===
 Contributors: smashballoon, craig-at-smash-balloon, am, smub
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 4.1
 Tested up to: 6.3
-Stable tag: 6.2.1
+Stable tag: 6.2.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -171,7 +171,7 @@ We've made it super easy. Just follow the steps outlined when onboarding and you
 There are a few common reasons for this:
 
 * **Your Access Token may not be valid.** Try clicking on the blue Instagram login button on the plugin's Settings page again and copy and paste the Instagram token it gives you into the plugin's Access Token field.
-* **The plugin's JavaScript file isn't included in your page.** This is most likely because your WordPress theme is missing the WordPress [wp_footer](http://codex.wordpress.org/Function_Reference/wp_footer) function which is required for plugins to be able to add their JavaScript files to your page. You can fix this by opening your theme's **footer.php** file and adding the following directly before the closing </body> tag: `<?php wp_footer(); ?>`
+* **The plugin's JavaScript file isn't included in your page.** This is most likely because your WordPress theme is missing the WordPress [wp_footer](http://codex.wordpress.org/Function_Reference/wp_footer) function which is required for plugins to be able to add their JavaScript files to your page. You can fix this by opening your theme's **footer.php** file and adding the following directly before the closing </body> tag between two php tags: `wp_footer();`
 * **Your website may contain a JavaScript error which is preventing JavaScript from running.** The plugin uses JavaScript to load the Instagram photos into your page and so needs JavaScript to be running in order to work. You would need to remove any existing JavaScript errors on your website for the plugin to be able to load in your feed.
 
 If you're still having an issue displaying your feed then please open a ticket in the [Support forum](http://wordpress.org/support/plugin/instagram-feed 'Instagram Feed Support Forum') with a link to the page where you're trying to display the Instagram feed and, if possible, a link to your Instagram account.
@@ -184,7 +184,7 @@ Nope. The Access Token used in the plugin is a "read only" token, which means th
 
 This is a feature of the [Pro version](http://smashballoon.com/instagram-feed/?utm_campaign=instagram-free-readme&utm_source=faqs&utm_medium=fullsize 'Instagram Feed Pro') of the plugin, which allows you to view the photos in a pop-up lightbox, support videos, display captions, display photos by hashtag + more!
 
-= How do I embed my Instagram Feed directly into a WordPress page template? =
+= How do I embed my Instagram feed directly into a WordPress page template? =
 
 You can embed your Instagram feed directly into a template file by using the WordPress [do_shortcode](http://codex.wordpress.org/Function_Reference/do_shortcode) function: `<?php echo do_shortcode('[instagram-feed]'); ?>`.
 
@@ -206,7 +206,7 @@ This is most likely because your WordPress theme is missing the WordPress wp_foo
 
 3) There's a JavaScript error on your site which is preventing the plugin's JavaScript file from running
 
-You find find out whether this is the case by right clicking on your page, selecting 'Inspect Element', and then clicking on the 'Console' tab, or by selecting the 'JavaScript Console' option from your browser's Developer Tools.
+You can find out whether this is the case by right clicking on your page, selecting 'Inspect Element', and then clicking on the 'Console' tab, or by selecting the 'JavaScript Console' option from your browser's Developer Tools.
 
 If a JavaScript error is occurring on your site then you'll see it listed in red along with the JavaScript file which is causing it.
 
@@ -319,7 +319,42 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Use the shortcode options to style multiple Instagram feeds in completely different ways
 * Plus more customization options added all the time!
 
+= What's Next =
+
+If you like our WordPress Instagram plugin, then consider checking out our other projects:
+
+[OptinMonster](https://optinmonster.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – Get more email subscribers with the most popular conversion optimization plugin for WordPress.
+[WPForms](https://wpforms.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – #1 drag & drop online form builder for WordPress (trusted by 5 million sites).
+[AIOSEO](https://aioseo.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – The original WordPress SEO plugin to help you rank higher in search results (trusted by over 3 million sites).
+[MonsterInsights](https://monsterinsights.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – See the stats that matter and grow your business with confidence. Best Google Analytics plugin for WordPress.
+[SeedProd](https://seedprod.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – Create beautiful landing pages with our powerful drag & drop landing page builder.
+[WP Mail SMTP](https://wpmailsmtp.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – Improve email deliverability for your contact form with the most popular SMTP plugin for WordPress.
+[WPCode](https://wpcode.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) - must have WordPress code snippet management plugin to help you future-proof website customization (trusted by 1.5 million sites).
+[Duplicator](https://duplicator.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) - popular WordPress backup and migration plugin used by over 1 million websites.
+[WP Simple Pay](https://wpsimplepay.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – #1 Stripe payments plugin for WordPress. Start accepting one-time or recurring payments without a shopping cart.
+[PushEngage](https://pushengage.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – Connect with visitors after they leave your website with the leading web push notification plugin.
+[RafflePress](https://rafflepress.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – Best WordPress giveaway and contest plugin to grow traffic and social followers.
+[TrustPulse](https://trustpulse.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – Add real-time social proof notifications to boost your store conversions by up to 15%.
+[SearchWP](https://searchwp.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – The most advanced custom WordPress search plugin to improve WordPress search quality.
+[AffiliateWP](https://affiliatewp.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – #1 affiliate management plugin for WordPress. Add a referral program to your online store.
+[Easy Digital Downloads](https://easydigitaldownloads.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) – The best WordPress eCommerce plugin to sell digital products (eBooks, software, music, and more).
+[WPCharitable](https://wpcharitable.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) - Top-rated WordPress donation and fundraising plugin for WordPress.
+
+Visit [WPBeginner](https://wpbeginner.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) to learn from our [WordPress Tutorials](https://www.wpbeginner.com/category/wp-tutorials/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) and about the [best WordPress plugins](https://www.wpbeginner.com/category/plugins/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links).
+
 == Changelog ==
+= 6.2.4 =
+* Fix: Disabled translation for a string that would cause an error in some languages.
+
+= 6.2.3 =
+* Fix: Fixed translation bugs that would cause PHP errors on certain settings pages.
+* Fix: Fixed a PHP error that would occur when the database record for translations was corrupted.
+
+= 6.2.2 =
+* Translations: Fixed many translation issues and added translation files for German, French, Japanese, and many more.
+* Fix: Fixed an issue that would cause extra slashes to be added to text settings that contained single and double quotes.
+* Fix: Fixed an issue that would cause the customizer to not work the first time it was accessed.
+
 = 6.2.1 =
 * Fix: Fixed a deprecation warning that would occur in PHP 8.2+.
 * Fix: Fixed a PHP error that would occur when using PHP 8.0+, legacy feeds, and a shortcode with no arguments.
@@ -533,7 +568,7 @@ We understand that sometimes you need help, have issues or just have questions. 
 
 = 2.4.4 =
 * Fix: Workaround added for PHP warning related to an undefined media_url index.
-* Fix: Connecting a business account on a mobile device when more than 2 pages where returned was not possible.
+* Fix: Connecting a business account on a mobile device when more than 2 pages were returned was not possible.
 * Fix: After connecting an account, the warning that there were no connected accounts would still be visible.
 * Fix: URL for retrieving image files from Instagram using a redirect method was changed to prevent an extra, unnecessary redirect.
 
@@ -616,7 +651,7 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Fix: When using the new Twenty Twenty theme, Instagram icon in "follow" button displaying as block and causing the button text to appear on a new line.
 
 = 2.1.2 =
-* New: Added setting "API request size" on the "Customize" tab to allow requesting of more posts than are in the feed. Setting this to a high number will prevent no posts being found if you often post IG TV posts and use a personal account.
+* New: Added setting "API request size" on the "Customize" tab to allow requesting of more posts than are in the feed. Setting this to a high number will prevent no posts being found if you often post IGTV posts and use a personal account.
 * Tweak: Removed width and height attributes from the image element in the feed to prevent notices about serving scaled images in optimization tools.
 
 = 2.1.1 =
@@ -645,7 +680,7 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Fix: Fixed a PHP notice which might display under certain circumstances
 
 = 2.0 =
-* **MAJOR UDPATE**
+* **MAJOR UPDATE**
 * New: We've rebuilt the plugin from the ground up with a focus on performance and reliability. Your feeds are now loaded from the server using PHP removing the reliance on AJAX.
 * New: Local copies of images are now automatically stored on your server and used in your feed. You can disable this feature in the "Advanced" section of the "Customize" tab. Use the "Favor Local Images" setting on the "Customize" tab, "Advanced" sub-tab to have the plugin use local images whenever available, thus removing reliance on the Instagram CDN.
 * New: You can now set the plugin to check for new Instagram posts in the background rather than when the page loads by using the new "Background caching" option which utilizes the WordPress "cron" feature. Enable this using the "Check for new posts" setting on the "Configure" tab.
@@ -722,7 +757,7 @@ We understand that sometimes you need help, have issues or just have questions. 
 
 = 1.8.1 =
 * Fix: Fixed issue where Instagram feeds were displaying "Looking for cache that doesn't exist" when page caching was not being used
-* Fix: Font method setting not working when "Are you using an ajax theme?" setting is enabled
+* Fix: Font method setting not working when "Are you using an AJAX theme?" setting is enabled
 
 = 1.8 =
 * Important: Due to [recent changes](https://smashballoon.com/instagram-api-changes-april-4-2018/?utm_campaign=instagram-free-readme&utm_source=changelog&utm_medium=apichanges) in the Instagram API it is no longer possible to display photos from other Instagram accounts which are not your own. You can only display the user feed of the account that is associated with your Access Token.
@@ -787,7 +822,7 @@ We understand that sometimes you need help, have issues or just have questions. 
 * **IMPORTANT: Due to the recent Instagram API changes, in order for the Instagram Feed plugin to continue working after June 1st you must obtain a new Access Token by using the Instagram button on the plugin's Settings page.** This is true even if you recently already obtained a new token. Apologies for any inconvenience.
 
 = 1.4.5 =
-* New: When you click on the name of a setting on the plugin's Settings pages it now displays the shortcode option for that setting, making it easier to find the option that you need
+* New: When you click on the name of a setting on the plugin's Settings pages it now displays the shortcode option for that setting, making it easier to find the option that you need.
 * New: Added a setting to disable the Font Awesome icon font if needed. This can be found under the Misc tab at the bottom of the Customize page.
 * Tweak: Updated the Instagram icon to match their new branding
 * Tweak: Added a help link next to the Instagram login button in case there's an issue using it
@@ -844,11 +879,11 @@ We understand that sometimes you need help, have issues or just have questions. 
 
 = 1.3.3 =
 * Fix: Fixed an issue with the 'Load more' button not always showing when displaying Instagram photos from multiple Instagram User IDs
-* Fix: Moved the initiating sbi_init function outside of the jQuery ready function so that it can be called externally if needed by Ajax powered themes/plugins
+* Fix: Moved the initiating sbi_init function outside of the jQuery ready function so that it can be called externally if needed by AJAX powered themes/plugins
 
 = 1.3.2 =
 * New: Added an option to disable the Instagram Feed mobile layout
-* New: Added an setting which allows you to use the Instagram Feed plugin with an Ajax powered theme
+* New: Added an setting which allows you to use the Instagram Feed plugin with an AJAX powered theme
 * New: Added a 'class' shortcode option which allows you to add a CSS to class to each individual Instagram feed: `[instagram-feed class=feedOne]`
 * New: Added a Support tab which contains System Info to help with troubleshooting
 * New: Added friendly error messages which display only to WordPress admins

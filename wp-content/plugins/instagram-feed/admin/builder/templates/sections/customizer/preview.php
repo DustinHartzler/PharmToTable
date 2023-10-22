@@ -21,9 +21,14 @@
 			<div>
 				<component :is="{template}"></component>
 			</div>
+			<?php
+				include_once SBI_BUILDER_DIR . 'templates/preview/light-box.php';
+			?>
 		</div>
 
 	</div>
+	<sbi-dummy-lightbox-component :dummy-light-box-screen="dummyLightBoxScreen" :customizer-feed-data="customizerFeedData"></sbi-dummy-lightbox-component>
+
 </div>
 
 

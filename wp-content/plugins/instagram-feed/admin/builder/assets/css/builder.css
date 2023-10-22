@@ -510,7 +510,14 @@ body.jetpack-masterbar .sbi-csz-header-insider {
     width: calc(100% - 36px);
   }
 }
-
+.sbi-fb-extpp-lite-btn-texts {
+    display: flex;
+    flex-direction: column;
+}
+.sbi-fb-extpp-lite-btn .sbi-fb-extpp-lite-btn-discount-applied {
+    font-size: 12px;
+    font-weight: normal;
+}
 .sbi-fb-hd-btn{
     cursor: pointer;
     display: flex;
@@ -524,6 +531,10 @@ body.jetpack-masterbar .sbi-csz-header-insider {
 }
 .sbi-fb-hd-btn i{
     margin: 0px 5px;
+}
+.sbi-fb-ft-action .sbi-fb-hd-btn {
+    -webkit-transition: background .15s ease-in-out;
+    transition: background .15s ease-in-out;
 }
 .sbi-fb-full-wrapper {
     padding: 0 53px;
@@ -890,7 +901,7 @@ Welcome Screen Empty State
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
-.sbi-fb-type-el:before{
+.sbi-fb-type-el[data-active="true"]:before{
     content: '';
     position: absolute;
     width: 24px;
@@ -913,12 +924,11 @@ Welcome Screen Empty State
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #F1F1F1;
-    border: 2px solid #F1F1F1;
+    background: #E2F5FF;
     border-bottom: 1px solid #fff;
 }
 .sbi-fb-type-el[data-active="true"] .sbi-fb-type-el-img{
-    border: 1px solid #F1F1F1;
+    background-color: #F1F1F1;
     border-bottom: 2px solid #fff;
 }
 .sbi-fb-type-el-img svg {
@@ -930,11 +940,11 @@ Welcome Screen Empty State
 .sbi-fb-type-el-info{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     text-align: center;
     flex: 1 1 auto;
-    padding: 0 13px 13px;
+    padding: 0 18px 13px;
 }
 .sbi-fb-type-el-link{
     font-size: 13px;
@@ -951,16 +961,11 @@ Welcome Screen Empty State
 #sbi-builder-app .sbi-fb-type-el p {
     margin: 11px 0 4px;
 }
-#sbi-builder-app .sbi-fb-type-el[data-active="true"] p{
-    margin-top: 10px;
-}
 #sbi-builder-app .sbi-fb-type-el[data-active="true"] .sbi-fb-type-el-info {
     padding-bottom: 12px;
 }
 #sbi-builder-app .sbi-fb-type-el p svg {
-    width: 14px;
-    height: 14px;
-    margin-left: 5px;
+    margin-left: 1px;
     vertical-align: middle;
 }
 /*.sbi-fb-type-el-info strong{
@@ -3156,9 +3161,6 @@ Controls Style
 .sb-control-toggle-elm:first-child {
     border-top: 1px solid #E8E8EB;
 }
-.sb-control-toggle-elm[data-disabled="true"]{
-    background: #F3F4F5;
-}
 .sb-control-toggle-extension-cover{
     width: 100%;
     height: 100%;
@@ -3188,6 +3190,11 @@ Controls Style
     width: 16px;
     float: left;
     fill: #141B38;
+}
+.sb-control-toggle-elm .sb-control-label span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 .sb-control-toggle-elm[data-active="true"]{
     background: #F7FDFF;
@@ -4998,34 +5005,6 @@ width: calc(100% - 20px);
 /*
     FREE
 */
-
-.sbi-fb-types-list-free{
-    display: block;
-    grid-template-columns: unset;
-    grid-column-gap: unset;
-    margin-bottom: 31px;
-    margin-top: 25px;
-}
-.sbi-fb-types-list-free .sbi-fb-type-el > div{
-    height: 100%;
-}
-.sbi-fb-types-list-free .sbi-fb-type-el{
-    width: 420px;
-    max-width: 100%;
-    height: 165px;
-    flex-direction: row;
-    align-items: center;
-}
-.sbi-fb-types-list-free .sbi-fb-type-el .sbi-fb-type-el-info{
-    text-align: left;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.sbi-fb-types-list-free .sbi-fb-type-el .sbi-fb-type-el-info > *{
-    padding: 0 20px;
-}
-
 .sbi-fb-types-list-pro{
     display: grid;
     grid-template-columns: 24.5% 24.5% 24.5% 24.5%;
@@ -5093,6 +5072,90 @@ width: calc(100% - 20px);
     margin-left: 2px;
 }
 
+
+/*Lightbox */
+.sbi-lightbox-ctn{
+    width: 100%;
+    height: 100%;
+    position: absolute!important;
+    left: 0;
+    top: 2px;
+    z-index: 9;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    opacity: 0;
+    visibility: hidden;
+}
+.sbi-lightbox-dummy-overlay{
+    background: rgba(0,0,0,0.9);
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    left: 0;
+    top: 0;
+}
+
+.sbi-lightbox-ctn[data-visibility="true"]{
+    display: flex;
+}
+.sbi-lightbox-ctn[data-visibility="true"].sbi_lightbox-active{
+    display: flex!important;
+}
+.sbi-lightbox-ctn.sbi_lightbox-disabled{
+    display: none!important;
+}
+
+#sbi_lightbox.sbi-lightbox-dummy-ctn .sbi_lb-outerContainer{
+   width: calc(100% - 140px)!important;
+    height: auto!important;
+    left: calc(50% - 70px)!important;
+    transform: translateX(-50%);
+    max-height: 585px!important;
+    padding-right: 0px!important;
+}
+#sbi_lightbox.sbi-lightbox-dummy-ctn .sbi_lb-container-wrapper{
+    width: calc(100% - 300px);
+}
+#sbi_lightbox.sbi-lightbox-dummy-ctn.sbi_lb-comments-disabled .sbi_lb-container-wrapper{
+    width: 100%;
+}
+
+#sbi_lightbox.sbi-lightbox-dummy-ctn .sbi_lb-image1{
+    width: 100%!important;
+    height: auto!important;
+}
+
+#sbi_lightbox.sbi-lightbox-dummy-ctn .sbi_lb-nav a{
+    pointer-events: none;
+}
+#sbi_lightbox.sbi-lightbox-dummy-ctn.sbi_lb-comments-disabled .sbi_lb-outerContainer{
+    width: calc(60% - 140px)!important;
+    left: 50%!important;
+    position: absolute!important;
+    background: none;
+}
+
+
+#sbi_lightbox.sbi-lightbox-ctn{
+    top: 0px!important
+}
+body #sbi_lightboxOverlay.sbi_lightboxOverlay,
+body #sbi_lightbox.sbi_lightbox:not(.sbi-lightbox-dummy-ctn){
+    display: none!important;
+    opacity: 0!important;
+    visibility: hidden!important;
+}
+
+#sbi-builder-app[data-app-loaded="true"] .sbi-lightbox-ctn{
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+}
+
+.sbi_lb-comments-disabled .sbi_lb-commentBox{
+    display: none!important;
+}
 
 /*
     Onboarding Wizard

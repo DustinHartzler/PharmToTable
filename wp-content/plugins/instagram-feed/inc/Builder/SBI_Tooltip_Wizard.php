@@ -125,8 +125,9 @@ class SBI_Tooltip_Wizard {
 			<div class="sbi-tlp-wizard-cls sbi-tlp-wizard-close"></div>
 			<div class="sbi-tlp-wizard-content">
 				<strong class="sbi-tooltip-wizard-head"><?php echo __('Add a Block','instagram-feed') ?></strong>
-				<p class="sbi-tooltip-wizard-txt"><?php echo __('Click the plus button, search for Instagram Feed','instagram-feed'); ?>
-                    <br/><?php echo __('Feed, and click the block to embed it.','instagram-feed') ?> <a href="https://smashballoon.com/doc/wordpress-5-block-page-editor-gutenberg/?instagram&utm_campaign=instagram-free&utm_source=add-block-tooltip" rel="noopener" target="_blank"><?php echo __('Learn More','instagram-feed') ?></a></p>
+				<p class="sbi-tooltip-wizard-txt">
+					<?php _e('Click the plus button, search for Instagram Feed,<br/> and click the block to embed it.','instagram-feed'); ?>
+                    <a href="https://smashballoon.com/doc/wordpress-5-block-page-editor-gutenberg/?instagram&utm_campaign=instagram-free&utm_source=add-block-tooltip" rel="noopener" target="_blank"><?php echo __('Learn More','instagram-feed') ?></a></p>
 				<div class="sbi-tooltip-wizard-actions">
 					<button class="sbi-tlp-wizard-close"><?php echo __('Done','instagram-feed') ?></button>
 				</div>

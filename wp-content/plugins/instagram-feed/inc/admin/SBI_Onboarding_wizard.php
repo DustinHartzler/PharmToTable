@@ -112,8 +112,8 @@ class SBI_Onboarding_wizard extends SBI_Feed_Builder
 			'userIcon' => SBI_BUILDER_URL . 'assets/img/user.png',
 			'saveSettings' => [ 'featuresList', 'pluginsList' ],
 			'successMessages' => [
-				'connectAccount' => __( 'Connect an Instagram Account!', 'instagram-feed' ),
-				'setupFeatures' => __( 'Setup Features!', 'instagram-feed' ),
+				'connectAccount' => __( 'Connected an Instagram account', 'instagram-feed' ),
+				'setupFeatures' => __( 'Features were set up', 'instagram-feed' ),
 				'feedPlugins' => __( 'Feed plugins for # installed', 'instagram-feed' )
 			],
 			'steps' => [
@@ -215,12 +215,7 @@ class SBI_Onboarding_wizard extends SBI_Feed_Builder
 							'text' => __( 'Upgrade to Instagram Feed Pro', 'instagram-feed' ),
 							'link'	=> 'https://smashballoon.com/pricing/instagram-feed/?license_key&upgrade=true&utm_campaign=instagram-free&utm_source=setup&utm_medium=upgrade-license'
 						],
-						'upgradeCouppon' => sprintf(
-							__( 'Upgrade today and %ssave 50%% on a Pro License!%s%s (auto-applied at checkout)', 'instagram-feed' ),
-							'<strong>',
-							'</strong>',
-							'<br>'
-						),
+						'upgradeCouppon' => 'Upgrade today and save 50% on a Pro License! (auto-applied at checkout)',
 						'banner' => SBI_BUILDER_URL . 'assets/img/success-banner.jpg',
 
 						'upgradeFeaturesList' => [
@@ -479,7 +474,7 @@ class SBI_Onboarding_wizard extends SBI_Feed_Builder
 				'data' => [
 					'type' => 'install_plugins',
 					'id' => 'monsterinsight',
-					'pluginName' => __('Monster Insights', 'instagram-feed' ),
+					'pluginName' => __('MonsterInsights', 'instagram-feed' ),
 				],
 				'heading' => __( 'Analytics by MonsterInsights', 'instagram-feed' ),
 				'description' => __( 'Make it “effortless” to connect your WordPress site with Google Analytics, so you can start making data-driven decisions to grow your business.', 'instagram-feed' ),

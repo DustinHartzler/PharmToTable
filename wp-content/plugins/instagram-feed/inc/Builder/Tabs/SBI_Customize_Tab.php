@@ -94,6 +94,9 @@ class SBI_Customize_Tab{
 	 * @return array
 	*/
 	static function get_customize_feedlayout_controls(){
+		$svg_icons = SBI_Feed_Builder::builder_svg_icons();
+		$svg_rocket_icon = $svg_icons['rocketPremiumBlue'];
+
 		return [
 			[
 				'type' 		=> 'toggleset',
@@ -110,19 +113,19 @@ class SBI_Customize_Tab{
 						'value' => 'carousel',
 						'icon' => 'carousel',
 						'checkExtension'	=> 'feedLayout',
-						'label' => __( 'Carousel', 'instagram-feed' )
+						'label' => __( 'Carousel', 'instagram-feed' ) . $svg_rocket_icon
 					],
 					[
 						'value' => 'masonry',
 						'icon' => 'masonry',
 						'checkExtension'	=> 'feedLayout',
-						'label' => __( 'Masonry', 'instagram-feed' )
+						'label' => __( 'Masonry', 'instagram-feed' ) . $svg_rocket_icon
 					],
 					[
 						'value' 			=> 'highlight',
 						'icon' 				=> 'highlight',
 						'checkExtension'	=> 'feedLayout',
-						'label' 			=> __( 'Highlight', 'instagram-feed' )
+						'label' 			=> __( 'Highlight', 'instagram-feed' ) . $svg_rocket_icon
 					]
 				]
 			],

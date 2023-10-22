@@ -86,6 +86,20 @@
 	background: #BC120E!important;
 	color: #fff!important;
 }
+/* green */
+.sbi-btn-green{
+	background: #1da867!important;
+	color: #fff!important;
+}
+.sbi-btn-green:hover{
+	background: #20c276!important;
+	color: #fff!important;
+}
+.sbi-btn-green:focus,
+.sbi-btn-green:active{
+	background: #0ea15c!important;
+	color: #fff!important;
+}
 /*grey*/
 .sbi-btn-grey{
 	background: #F3F4F5!important;

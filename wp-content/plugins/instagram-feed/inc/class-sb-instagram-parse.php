@@ -186,7 +186,7 @@ class SB_Instagram_Parse {
 	}
 
 	/**
-	 * Uses the existing data for the indvidual instagram post to
+	 * Uses the existing data for the individual instagram post to
 	 * set the best image sources for each resolution size. Due to
 	 * random bugs or just how the API works, different post types
 	 * need special treatment.

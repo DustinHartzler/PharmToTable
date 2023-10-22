@@ -3,7 +3,7 @@
 Plugin Name: Smash Balloon Instagram Feed
 Plugin URI: https://smashballoon.com/instagram-feed
 Description: Display beautifully clean, customizable, and responsive Instagram feeds.
-Version: 6.2.1
+Version: 6.2.4
 Author: Smash Balloon
 Author URI: https://smashballoon.com/
 License: GPLv2 or later
@@ -32,7 +32,7 @@ if ( ! defined( 'SBI_PLUGIN_NAME' ) ) {
 	define( 'SBI_PLUGIN_NAME', 'Instagram Feed Free' );
 }
 if ( ! defined( 'SBIVER' ) ) {
-	define( 'SBIVER', '6.2.1' );
+	define( 'SBIVER', '6.2.4' );
 }
 // Db version.
 if ( ! defined( 'SBI_DBVERSION' ) ) {
@@ -59,6 +59,9 @@ if ( ! defined( 'SBI_REFRESH_THRESHOLD_OFFSET' ) ) {
 }
 if ( ! defined( 'SBI_MINIMUM_INTERVAL' ) ) {
 	define( 'SBI_MINIMUM_INTERVAL', 600 );
+}
+if ( ! defined( 'SBI_CONNECT_URL' ) ) {
+    define( 'SBI_CONNECT_URL', 'https://connect.smashballoon.com/auth/ig/' );
 }
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -196,6 +199,8 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'admin/SBI_Support.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'admin/SBI_Upgrader.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'admin/SBI_View.php';
+		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'admin/SBI_Support_Tool.php';
+
 		$sbi_oembed				= new InstagramFeed\Admin\SBI_oEmbeds();
 		$sbi_global_settings	= new InstagramFeed\Admin\SBI_Global_Settings();
 		$sbi_support			= new InstagramFeed\Admin\SBI_Support();
@@ -206,6 +211,7 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 		$sbi_tooltip_wizard		= new InstagramFeed\Builder\SBI_Tooltip_Wizard();
 		$sbi_onboarding_wizard	= new InstagramFeed\admin\SBI_Onboarding_wizard();
 
+		$sbi_support_tool = new InstagramFeed\Admin\SBI_Support_Tool();
 
 
 	}
@@ -375,6 +381,8 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 		wp_clear_scheduled_hook( 'sb_instagram_cron_job' );
 		wp_clear_scheduled_hook( 'sb_instagram_feed_issue_email' );
 		wp_clear_scheduled_hook( 'sbi_notification_update' );
+        InstagramFeed\Admin\SBI_Support_Tool::delete_temp_user();
+
 	}
 
 	register_deactivation_hook( __FILE__, 'sb_instagram_deactivate' );

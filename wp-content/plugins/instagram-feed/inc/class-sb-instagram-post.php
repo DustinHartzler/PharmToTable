@@ -265,7 +265,7 @@ class SB_Instagram_Post {
 						$image_editor = wp_get_image_editor( $temp_file );
 
 						global $sb_instagram_posts_manager;
-						$details = __( 'Using backup editor method.', 'instagram-feed' ) . ' ' . $file_name;
+						$details = 'Using backup editor method.' . $file_name;
 						$sb_instagram_posts_manager->add_error( 'image_editor', $details );
 					}
 

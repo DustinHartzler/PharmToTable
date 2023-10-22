@@ -722,7 +722,7 @@ class SBI_Feed_Saver_Manager {
 				$return = self::cast_boolean($value);
 			break;
 			default:
-				$return = sanitize_text_field( $value );
+				$return = sanitize_text_field( stripslashes($value) );
 			break;
 		}
 

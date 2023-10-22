@@ -244,8 +244,22 @@ class SBI_Source {
 			$user_email = $current_user->user_email;
 		}
 		$user_email = isset( $user_email ) ? $user_email : $admin_email;
-		$urls['personal']  ='https://connect.smashballoon.com/auth/ig/?wordpress_user=' . sanitize_email( $user_email ) . '&v=free&vn=' . SBIVER . '&sbi_con=' . $nonce . '&state=';
-		$urls['business'] = 'https://connect.smashballoon.com/auth/ig/?wordpress_user=' . sanitize_email( $user_email ) . '&v=free&vn=' . SBIVER . '&sbi_con=' . $nonce . '&state=';
+
+		$urls['personal'] = array(
+			'connect'          => SBI_CONNECT_URL,
+			'wordpress_user'   => sanitize_email( $user_email ),
+			'v'                => 'free',
+			'vn'               => SBIVER,
+			'sbi_con'          => $nonce,
+		);
+
+		$urls['business'] = array(
+			'connect'          => SBI_CONNECT_URL,
+			'wordpress_user'   => sanitize_email( $user_email ),
+			'v'                => 'free',
+			'vn'               => SBIVER,
+			'sbi_con'          => $nonce,
+		);
 
 		$urls['stateURL'] = $admin_url_state;
 

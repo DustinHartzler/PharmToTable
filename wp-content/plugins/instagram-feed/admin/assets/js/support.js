@@ -27,7 +27,14 @@ var support_data = {
         type : 'success', // success, error, warning, message
         text : '',
         shown : null
-    }
+    },
+    viewsActive : {
+        tempLoginAboutPopup : false
+    },
+    //Tenmp User Account
+    tempUser : sbi_support.tempUser,
+    createStatus : null,
+    deleteStatus : null
 }
 
 var sbisupport = new Vue({
@@ -57,6 +64,29 @@ var sbisupport = new Vue({
                 this.notificationElement.shown =  "hidden";
             }.bind(self), 3000);
         },
+        /**
+		 * Copy text to clipboard
+		 *
+		 * @since 4.0
+		 */
+         copyToClipBoard : function(value){
+			var self = this;
+			const el = document.createElement('textarea');
+			el.className = 'sbi-fb-cp-clpboard';
+			el.value = value;
+			document.body.appendChild(el);
+			el.select();
+			document.execCommand('copy');
+			document.body.removeChild(el);
+			self.notificationElement =  {
+				type : 'success',
+				text : this.genericText.copiedToClipboard,
+				shown : "shown"
+			};
+			setTimeout(function(){
+				self.notificationElement.shown =  "hidden";
+			}, 3000);
+		},
         expandSystemInfo: function() {
             this.systemInfoBtnStatus = ( this.systemInfoBtnStatus == 'collapsed' ) ? 'expanded' : 'collapsed';
         },
@@ -111,6 +141,15 @@ var sbisupport = new Vue({
             }
         },
         /**
+         * Activate View
+         *
+         * @since 6.2.0
+        */
+         activateView : function(viewName, sourcePopupType = 'creation', ajaxAction = false){
+            var self = this;
+            self.viewsActive[viewName] = (self.viewsActive[viewName] == false ) ? true : false;
+        },
+        /**
          * Toggle Sticky Widget view
          *
          * @since 4.0
@@ -118,5 +157,73 @@ var sbisupport = new Vue({
          toggleStickyWidget: function() {
             this.stickyWidget = !this.stickyWidget;
         },
+
+        /**
+         * Create New Temp User
+         *
+         * @since 4.0
+         */
+        createTempUser: function() {
+            const self = this;
+            self.createStatus = 'loading';
+            let data = new FormData();
+            data.append( 'action', 'sbi_create_temp_user' );
+            data.append( 'nonce', sbi_admin.nonce );
+            fetch(sbi_support.ajax_handler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                self.createStatus = null;
+                if( data.success ){
+                    self.tempUser = data.user;
+                }
+                self.notificationElement =  {
+                    type : data.success === true ? 'success' : 'error',
+                    text : data.message,
+                    shown : "shown"
+                };
+                setTimeout(function(){
+                    self.notificationElement.shown =  "hidden";
+                }, 5000);
+            });
+
+        },
+
+        /**
+         * Delete Temp User
+         *
+         * @since 4.0
+         */
+        deleteTempUser: function() {
+            const self = this;
+            self.deleteStatus = 'loading';
+            let data = new FormData();
+            data.append( 'action', 'sbi_delete_temp_user' );
+            data.append( 'nonce', sbi_admin.nonce );
+            data.append( 'userId', self.tempUser.id );
+            fetch(sbi_support.ajax_handler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                self.deleteStatus = null;
+                if( data.success ){
+                    self.tempUser = null;
+                }
+                self.notificationElement =  {
+                    type : data.success === true ? 'success' : 'error',
+                    text : data.message,
+                    shown : "shown"
+                };
+                setTimeout(function(){
+                    self.notificationElement.shown =  "hidden";
+                }, 5000);
+            });
+        }
     },
 })

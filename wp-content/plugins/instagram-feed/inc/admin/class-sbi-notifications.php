@@ -524,7 +524,7 @@ class SBI_Notifications {
 					if ( $type == 'review' || $type == 'discount' ) {
 						$btn_class = $btn_type === 'primary' ? 'sbi-btn-blue' : 'sbi-btn-grey';
 					} else {
-						$btn_class = $btn_type === 'primary' ? 'sbi-btn-orange' : 'sbi-btn-grey';
+						$btn_class = $btn_type === 'primary' ? 'sbi-btn-green' : 'sbi-btn-grey';
 					}
 					if ( is_array( $btn['url'] ) ) {
 						$args = array();
