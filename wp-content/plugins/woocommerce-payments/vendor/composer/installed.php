@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'woocommerce/payments',
-        'pretty_version' => 'dev-release/6.4.0',
-        'version' => 'dev-release/6.4.0',
-        'reference' => 'ebf4400bf4786d903d5b27f1ce926fe58bf4bec7',
+        'pretty_version' => 'dev-release/6.6.2',
+        'version' => 'dev-release/6.6.2',
+        'reference' => '0968272d3c3609c30852aef2ac7b788bcc692600',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -154,15 +154,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'psr/container' => array(
-            'pretty_version' => '1.1.1',
-            'version' => '1.1.1.0',
-            'reference' => '8622567409010282b7aeebe4bb841fe98b58dcaf',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../psr/container',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'roundcube/plugin-installer' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -176,18 +167,18 @@
             ),
         ),
         'woocommerce/payments' => array(
-            'pretty_version' => 'dev-release/6.4.0',
-            'version' => 'dev-release/6.4.0',
-            'reference' => 'ebf4400bf4786d903d5b27f1ce926fe58bf4bec7',
+            'pretty_version' => 'dev-release/6.6.2',
+            'version' => 'dev-release/6.6.2',
+            'reference' => '0968272d3c3609c30852aef2ac7b788bcc692600',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'woocommerce/subscriptions-core' => array(
-            'pretty_version' => '6.0.0',
-            'version' => '6.0.0.0',
-            'reference' => 'b48c46a6a08b73d8afc7a0e686173c5b5c55ecbb',
+            'pretty_version' => '6.3.0',
+            'version' => '6.3.0.0',
+            'reference' => '8ba0249f97df46caafd625950853f8f5e5a29984',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../woocommerce/subscriptions-core',
             'aliases' => array(),

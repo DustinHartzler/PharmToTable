@@ -9,7 +9,6 @@ return array(
     'WCPay\\Vendor\\' => array($baseDir . '/lib/packages'),
     'WCPay\\MultiCurrency\\' => array($baseDir . '/includes/multi-currency'),
     'WCPay\\' => array($baseDir . '/src'),
-    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
     'Automattic\\Jetpack\\Autoloader\\' => array($vendorDir . '/automattic/jetpack-autoloader/src'),
 );

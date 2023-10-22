@@ -271,7 +271,45 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 						'default'           => array_keys( $wcpay_form_fields['payment_request_button_locations']['options'] ),
 						'validate_callback' => 'rest_validate_request_arg',
 					],
+					'is_stripe_billing_enabled'         => [
+						'description'       => __( 'If Stripe Billing is enabled.', 'woocommerce-payments' ),
+						'type'              => 'boolean',
+						'validate_callback' => 'rest_validate_request_arg',
+					],
+					'is_migrating_stripe_billing'       => [
+						'description'       => __( 'Whether there is a Stripe Billing off-site to on-site billing migration in progress.', 'woocommerce-payments' ),
+						'type'              => 'boolean',
+						'validate_callback' => 'rest_validate_request_arg',
+					],
+					'stripe_billing_subscription_count' => [
+						'description'       => __( 'The number of subscriptions using Stripe Billing', 'woocommerce-payments' ),
+						'type'              => 'int',
+						'validate_callback' => 'rest_validate_request_arg',
+					],
+					'stripe_billing_migrated_count'     => [
+						'description'       => __( 'The number of subscriptions migrated from Stripe Billing to on-site billing.', 'woocommerce-payments' ),
+						'type'              => 'int',
+						'validate_callback' => 'rest_validate_request_arg',
+					],
 				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/schedule-stripe-billing-migration',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'schedule_stripe_billing_migration' ],
+				'permission_callback' => [ $this, 'check_permission' ],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/request-capability',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'request_capability' ],
+				'permission_callback' => [ $this, 'check_permission' ],
 			]
 		);
 	}
@@ -396,8 +434,10 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 	 * @return WP_REST_Response
 	 */
 	public function get_settings(): WP_REST_Response {
-		$wcpay_form_fields             = $this->wcpay_gateway->get_form_fields();
+		$wcpay_form_fields = $this->wcpay_gateway->get_form_fields();
+
 		$available_upe_payment_methods = $this->wcpay_gateway->get_upe_available_payment_methods();
+
 		/**
 		 * It might be possible that enabled payment methods settings have an invalid state. As an example,
 		 * if an account is switched to a new country and earlier country had PM's that are no longer valid; or if the PM is not available anymore.
@@ -409,6 +449,20 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 				$available_upe_payment_methods
 			)
 		);
+
+		// Gather the status of the Stripe Billing migration for use on the settings page.
+		if ( class_exists( 'WC_Subscriptions' ) ) {
+			$stripe_billing_migrated_count = $this->wcpay_gateway->get_subscription_migrated_count();
+
+			if ( class_exists( 'WC_Payments_Subscriptions' ) ) {
+				$stripe_billing_migrator = WC_Payments_Subscriptions::get_stripe_billing_migrator();
+
+				if ( $stripe_billing_migrator ) {
+					$is_migrating_stripe_billing       = $stripe_billing_migrator->is_migrating();
+					$stripe_billing_subscription_count = $stripe_billing_migrator->get_stripe_billing_subscription_count();
+				}
+			}
+		}
 
 		return new WP_REST_Response(
 			[
@@ -422,10 +476,13 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 				'is_multi_currency_enabled'           => WC_Payments_Features::is_customer_multi_currency_enabled(),
 				'is_client_secret_encryption_enabled' => WC_Payments_Features::is_client_secret_encryption_enabled(),
 				'is_wcpay_subscriptions_enabled'      => WC_Payments_Features::is_wcpay_subscriptions_enabled(),
+				'is_stripe_billing_enabled'           => WC_Payments_Features::is_stripe_billing_enabled(),
 				'is_wcpay_subscriptions_eligible'     => WC_Payments_Features::is_wcpay_subscriptions_eligible(),
 				'is_subscriptions_plugin_active'      => $this->wcpay_gateway->is_subscriptions_plugin_active(),
 				'account_country'                     => $this->wcpay_gateway->get_option( 'account_country' ),
 				'account_statement_descriptor'        => $this->wcpay_gateway->get_option( 'account_statement_descriptor' ),
+				'account_statement_descriptor_kanji'  => $this->wcpay_gateway->get_option( 'account_statement_descriptor_kanji' ),
+				'account_statement_descriptor_kana'   => $this->wcpay_gateway->get_option( 'account_statement_descriptor_kana' ),
 				'account_business_name'               => $this->wcpay_gateway->get_option( 'account_business_name' ),
 				'account_business_url'                => $this->wcpay_gateway->get_option( 'account_business_url' ),
 				'account_business_support_address'    => $this->wcpay_gateway->get_option( 'account_business_support_address' ),
@@ -458,6 +515,9 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 				'deposit_completed_waiting_period'    => $this->wcpay_gateway->get_option( 'deposit_completed_waiting_period' ),
 				'current_protection_level'            => $this->wcpay_gateway->get_option( 'current_protection_level' ),
 				'advanced_fraud_protection_settings'  => $this->wcpay_gateway->get_option( 'advanced_fraud_protection_settings' ),
+				'is_migrating_stripe_billing'         => $is_migrating_stripe_billing ?? false,
+				'stripe_billing_subscription_count'   => $stripe_billing_subscription_count ?? 0,
+				'stripe_billing_migrated_count'       => $stripe_billing_migrated_count ?? 0,
 			]
 		);
 	}
@@ -480,7 +540,6 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 		$this->update_payment_request_enabled_locations( $request );
 		$this->update_payment_request_appearance( $request );
 		$this->update_is_saved_cards_enabled( $request );
-		$this->update_account( $request );
 		$this->update_is_woopay_enabled( $request );
 		$this->update_woopay_store_logo( $request );
 		$this->update_woopay_custom_message( $request );
@@ -488,6 +547,13 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 		// Note: Both "current_protection_level" and "advanced_fraud_protection_settings"
 		// are handled in the below method.
 		$this->update_fraud_protection_settings( $request );
+		$this->update_is_stripe_billing_enabled( $request );
+
+		$update_account_result = $this->update_account( $request );
+
+		if ( is_wp_error( $update_account_result ) ) {
+			return new WP_REST_Response( [ 'server_error' => $update_account_result->get_error_message() ], 400 );
+		}
 
 		return new WP_REST_Response( [], 200 );
 	}
@@ -707,7 +773,7 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 			$updated_fields['deposit_schedule_interval'] = $this->wcpay_gateway->get_option( 'deposit_schedule_interval' );
 		}
 
-		$this->wcpay_gateway->update_account_settings( $updated_fields );
+		return $this->wcpay_gateway->update_account_settings( $updated_fields );
 	}
 
 	/**
@@ -831,6 +897,11 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 			return;
 		}
 
+		$is_woopay_enabled = WC_Payments_Features::is_woopay_enabled();
+		if ( ! $is_woopay_enabled ) {
+			return;
+		}
+
 		$woopay_enabled_locations = $request->get_param( 'woopay_enabled_locations' );
 
 		$all_locations = $this->wcpay_gateway->form_fields['payment_request_button_locations']['options'];
@@ -893,6 +964,71 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 
 		// Update the option only when server update succeeds.
 		update_option( 'current_protection_level', $protection_level );
+	}
+
+	/**
+	 * Updates the Stripe Billing Subscriptions feature status.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 */
+	private function update_is_stripe_billing_enabled( WP_REST_Request $request ) {
+		if ( ! $request->has_param( 'is_stripe_billing_enabled' ) ) {
+			return;
+		}
+
+		$is_stripe_billing_enabled = $request->get_param( 'is_stripe_billing_enabled' );
+
+		update_option( WC_Payments_Features::STRIPE_BILLING_FLAG_NAME, $is_stripe_billing_enabled ? '1' : '0' );
+
+		// Schedule a migration if Stripe Billing was disabled and there are subscriptions to migrate.
+		if ( ! $is_stripe_billing_enabled ) {
+			$this->schedule_stripe_billing_migration();
+		}
+	}
+
+	/**
+	 * Schedule a migration of Stripe Billing subscriptions.
+	 *
+	 * @param WP_REST_Request $request The request object. Optional. If passed, the function will return a REST response.
+	 *
+	 * @return WP_REST_Response|null The response object, if this is a REST request.
+	 */
+	public function schedule_stripe_billing_migration( WP_REST_Request $request = null ) {
+
+		if ( class_exists( 'WC_Payments_Subscriptions' ) ) {
+			$stripe_billing_migrator = WC_Payments_Subscriptions::get_stripe_billing_migrator();
+
+			if ( $stripe_billing_migrator && ! $stripe_billing_migrator->is_migrating() && $stripe_billing_migrator->get_stripe_billing_subscription_count() > 0 ) {
+				$stripe_billing_migrator->schedule_migrate_wcpay_subscriptions_action();
+			}
+		}
+
+		// Return a response if this is a REST request.
+		if ( $request ) {
+			return new WP_REST_Response( [], 200 );
+		}
+	}
+
+	/**
+	 * Request a specific capability.
+	 *
+	 * @param WP_REST_Request $request The request object. Optional. If passed, the function will return a REST response.
+	 *
+	 * @return WP_REST_Response|WP_Error The response object, if this is a REST request.
+	 */
+	public function request_capability( WP_REST_Request $request = null ) {
+		$id                      = $request->get_param( 'id' );
+		$capability_key_map      = $this->wcpay_gateway->get_payment_method_capability_key_map();
+		$payment_method_statuses = $this->wcpay_gateway->get_upe_enabled_payment_method_statuses();
+		$stripe_key              = $capability_key_map[ $id ] ?? null;
+
+		if ( array_key_exists( $stripe_key, $payment_method_statuses )
+			&& 'unrequested' === $payment_method_statuses[ $stripe_key ]['status'] ) {
+			$request_result = $this->api_client->request_capability( $stripe_key, true );
+			$this->wcpay_gateway->refresh_cached_account_data();
+		}
+
+		return rest_ensure_response( $request_result );
 	}
 
 	/**
