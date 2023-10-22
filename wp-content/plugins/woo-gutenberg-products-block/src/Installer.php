@@ -8,12 +8,12 @@ namespace Automattic\WooCommerce\Blocks;
  * @internal
  */
 class Installer {
-
 	/**
-	 * Constructor
+	 * Initialize class features.
 	 */
-	public function __construct() {
-		$this->init();
+	public function init() {
+		add_action( 'admin_init', array( $this, 'install' ) );
+		add_filter( 'woocommerce_create_pages', array( $this, 'create_pages' ) );
 	}
 
 	/**
@@ -24,10 +24,15 @@ class Installer {
 	}
 
 	/**
-	 * Initialize class features.
+	 * Modifies default page content.
+	 *
+	 * @param array $pages Default pages.
+	 * @return array
 	 */
-	protected function init() {
-		add_action( 'admin_init', array( $this, 'install' ) );
+	public function create_pages( $pages ) {
+		$pages['cart']['content']     = '<!-- wp:woocommerce/classic-shortcode {"shortcode":"cart"} /-->';
+		$pages['checkout']['content'] = '<!-- wp:woocommerce/classic-shortcode {"shortcode":"checkout"} /-->';
+		return $pages;
 	}
 
 	/**

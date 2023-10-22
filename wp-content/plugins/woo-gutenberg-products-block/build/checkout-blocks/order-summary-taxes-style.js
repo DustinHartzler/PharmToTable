@@ -1,1 +1,1 @@
-(window.webpackWcBlocksJsonp=window.webpackWcBlocksJsonp||[]).push([[54],{949:function(t,c,e){"use strict";e.r(c);var s=e(65),i=e(508),o=e(507);c.default=Object(s.withFilteredAttributes)(o.a)(i.a)}}]);
+"use strict";(self.webpackChunkwebpackWcBlocksJsonp=self.webpackChunkwebpackWcBlocksJsonp||[]).push([[3688],{34377:(e,s,c)=>{c.r(s),c.d(s,{default:()=>a});var t=c(80721),k=c(43202),p=c(7062);const a=(0,t.withFilteredAttributes)(p.Z)(k.Z)}}]);
