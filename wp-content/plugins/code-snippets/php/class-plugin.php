@@ -3,6 +3,8 @@
 namespace Code_Snippets;
 
 use Code_Snippets\REST_API\Snippets_REST_Controller;
+use Code_Snippets\Cloud\Cloud_API;
+
 
 /**
  * The main plugin class
@@ -45,6 +47,13 @@ class Plugin {
 	 * @var Frontend
 	 */
 	public $frontend;
+
+	/**
+	 * Class for managing cloud API actions.
+	 *
+	 * @var Cloud_API
+	 */
+	public $cloud_api;
 
 	/**
 	 * Class for managing active snippets
@@ -100,8 +109,12 @@ class Plugin {
 		require_once $includes_path . '/settings/editor-preview.php';
 		require_once $includes_path . '/settings/settings.php';
 
+		// Cloud List Table shared functions.
+		require_once $includes_path . '/cloud/list-table-shared-ops.php';
+
 		$this->active_snippets = new Active_Snippets();
 		$this->frontend = new Frontend();
+		$this->cloud_api = new Cloud_API();
 
 		$upgrade = new Upgrade( $this->version, $this->db );
 		add_action( 'plugins_loaded', array( $upgrade, 'run' ), 0 );
@@ -112,7 +125,7 @@ class Plugin {
 	 *
 	 * @return void
 	 *
-	 * @since [NEXT_VERSION]
+	 * @since 3.4.0
 	 */
 	public function register_rest_api_controllers() {
 		$controllers = [ new Snippets_REST_Controller() ];
@@ -290,10 +303,13 @@ class Plugin {
 		return apply_filters(
 			'code_snippets_types',
 			array(
-				'php'  => __( 'Functions', 'code-snippets' ),
-				'html' => __( 'Content', 'code-snippets' ),
-				'css'  => __( 'Styles', 'code-snippets' ),
-				'js'   => __( 'Scripts', 'code-snippets' ),
+				'php'          => __( 'Functions', 'code-snippets' ),
+				'html'         => __( 'Content', 'code-snippets' ),
+				'cloud_search' => __( 'Cloud Search', 'code-snippets' ),
+				'css'          => __( 'Styles', 'code-snippets' ),
+				'js'           => __( 'Scripts', 'code-snippets' ),
+				'cloud'        => __( 'Codevault', 'code-snippets' ),
+				'bundles'      => __( 'Bundles', 'code-snippets' ),
 			)
 		);
 	}
@@ -306,26 +322,7 @@ class Plugin {
 	 * @return bool
 	 */
 	public static function is_pro_type( string $type ): bool {
-		return 'css' === $type || 'js' === $type;
-	}
-
-	/**
-	 * Retrieve the description for a particular snippet type.
-	 *
-	 * @param string $type Snippet type name.
-	 *
-	 * @return string
-	 */
-	public function get_type_description( string $type ): string {
-		$descriptions = array(
-			'php'  => __( 'Function snippets are run on your site as if there were in a plugin or theme functions.php file.', 'code-snippets' ),
-			'html' => __( 'Content snippets are bits of reusable PHP and HTML content that can be inserted into posts and pages.', 'code-snippets' ),
-			'css'  => __( 'Style snippets are written in CSS and loaded in the admin area or on the site front-end, just like the theme style.css.', 'code-snippets' ),
-			'js'   => __( 'Script snippets are loaded on the site front-end in a JavaScript file, either in the head or body sections.', 'code-snippets' ),
-		);
-
-		$descriptions = apply_filters( 'code_snippets/plugins/type_descriptions', $descriptions );
-		return $descriptions[ $type ] ?? '';
+		return 'css' === $type || 'js' === $type || 'cloud' === $type || 'bundles' === $type;
 	}
 
 	/**
