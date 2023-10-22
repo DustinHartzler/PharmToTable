@@ -210,7 +210,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </p>
                         <div class="bottom">
                             <div class="video">
-                                <a href="https://app.monstercampaigns.com/c/g9aoffuqh8sc1kutmuzw/" class="relative theme video-play-button item-center">
+                              <script async data-uid="50816bd319" src="https://witty-producer-4283.ck.page/50816bd319/index.js"></script>
+                                <a data-formkit-toggle="50816bd319" href="https://witty-producer-4283.ck.page/50816bd319" class="relative theme video-play-button item-center">
                                     <i class="fa fa-play"></i>
                                 </a>
                             </div>
