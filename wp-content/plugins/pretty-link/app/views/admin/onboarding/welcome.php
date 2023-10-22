@@ -64,7 +64,7 @@
     <div class="prlip-reasons">
       <?php if(!in_array(PRLI_EDITION, array('pretty-link-beginner', 'pretty-link-marketer', 'pretty-link-pro-blogger', 'pretty-link-pro-developer'))): ?>
         <div class="prlip-reason">
-          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/Swiss_Army_Knife.png'; ?>" alt=""></div>
+          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/Automatic_Link_Placement.png'; ?>" alt=""></div>
           <div class="reason-content">
             <div class="reason-title"><h3><?php esc_html_e('Automatic Link Placement ', 'pretty-link'); ?></h3></div>
             <div class="reason-desc">
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="prlip-reason">
-          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/PL-Categories.png'; ?>" alt=""></div>
+          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/Streamlined_Categories_Tags.png'; ?>" alt=""></div>
           <div class="reason-content">
             <div class="reason-title"><h3><?php esc_html_e('Streamlined Categories & Tags', 'pretty-link'); ?></h3></div>
             <div class="reason-desc">
@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="prlip-reason">
-          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/redirection-link-menu_324_original3.png'; ?>" alt=""></div>
+          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/Advanced_Redirect_Types.png'; ?>" alt=""></div>
           <div class="reason-content">
             <div class="reason-title"><h3><?php esc_html_e('Advanced Redirect Types', 'pretty-link'); ?></h3></div>
             <div class="reason-desc">
@@ -96,7 +96,7 @@
           </div>
         </div>
         <div class="prlip-reason">
-          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/dynamic-redirect-types.jpg'; ?>" alt=""></div>
+          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/Dynamic_Redirect_Types.png'; ?>" alt=""></div>
           <div class="reason-content">
             <div class="reason-title"><h3><?php esc_html_e('Dynamic Redirect Types', 'pretty-link'); ?></h3></div>
             <div class="reason-desc">
@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="prlip-reason">
-          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/import-export.png'; ?>" alt=""></div>
+          <div class="reason-image"><img src="<?php echo PRLI_IMAGES_URL . '/Effortlessly_Import_Export_Links.png'; ?>" alt=""></div>
           <div class="reason-content">
             <div class="reason-title"><h3><?php esc_html_e('Effortlessly Import & Export Links', 'pretty-link'); ?></h3></div>
             <div class="reason-desc">

@@ -119,7 +119,7 @@ class PrliAppController extends PrliBaseController {
   public function dismiss_daily_notice() {
     if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
       $notice = sanitize_key($_POST['notice']);
-      set_transient("prli_dismiss_notice_${notice}", true, DAY_IN_SECONDS);
+      set_transient("prli_dismiss_notice_{$notice}", true, DAY_IN_SECONDS);
     }
 
     wp_send_json_success();
