@@ -93,7 +93,7 @@ class Email_Sender {
 	public function send_email( $email_name, $replacements, $usage_tracking_type ) {
 		$email_post = $this->get_email_post_by_name( $email_name );
 
-		if ( ! $email_post ) {
+		if ( ! $email_post || 'publish' !== $email_post->post_status ) {
 			return;
 		}
 
@@ -130,8 +130,7 @@ class Email_Sender {
 					$recipient,
 					$subject,
 					$message,
-					$this->get_email_headers(),
-					null
+					$this->get_email_headers()
 				);
 				sensei_log_event( 'email_send', [ 'type' => $usage_tracking_type ] );
 			}

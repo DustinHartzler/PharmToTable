@@ -14,8 +14,26 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Sensei_Question {
+	/**
+	 * Question token.
+	 *
+	 * @var string
+	 */
 	public $token;
+
+	/**
+	 * Question meta fields.
+	 *
+	 * @var array
+	 */
 	public $meta_fields;
+
+	/**
+	 * Question types.
+	 *
+	 * @var array
+	 */
+	public $question_types;
 
 	/**
 	 * Constructor.
@@ -366,7 +384,7 @@ class Sensei_Question {
 			$quizzes = array_unique( array_filter( $quizzes ) );
 		}
 
-		if ( 0 == count( $quizzes ) ) {
+		if ( ! $quizzes ) {
 			echo wp_kses_post( $no_lessons );
 			return;
 		}
@@ -649,12 +667,18 @@ class Sensei_Question {
 
 		$question_grade = Sensei()->question->get_question_grade( $question_id );
 
-		$title_html  = '<span class="question question-title">';
+		$title_html = '<div class="sensei-lms-question-block__header"><h2 class="question question-title">';
+
+		// translators: %d is the question number.
+		$title_html .= sprintf( esc_html__( '%d. ', 'sensei-lms' ), sensei_get_the_question_number() );
 		$title_html .= esc_html( $title );
+		$title_html .= '</h2>';
+
 		if ( $question_grade > 0 ) {
 			$title_html .= Sensei()->view_helper->format_question_points( $question_grade );
 		}
-		$title_html .= '</span>';
+
+		$title_html .= '</div>';
 
 		return $title_html;
 	}
@@ -678,6 +702,10 @@ class Sensei_Question {
 					$question_description = render_block( $block );
 				}
 			}
+		}
+
+		if ( ! empty( $question_description ) ) {
+			$question_description = '<div class="wp-block-sensei-lms-question-description">' . $question_description . '</div>';
 		}
 
 		/**
@@ -879,10 +907,10 @@ class Sensei_Question {
 			return;
 		}
 
-		$user_lesson_status = Sensei_Utils::user_lesson_status( $lesson_id, get_current_user_id() );
+		$user_quiz_progress = Sensei()->quiz_progress_repository->get( $quiz_id, get_current_user_id() );
 		$user_quiz_grade    = Sensei_Quiz::get_user_quiz_grade( $lesson_id, get_current_user_id() );
 		$reset_quiz_allowed = Sensei_Quiz::is_reset_allowed( $lesson_id );
-		$quiz_graded        = isset( $user_lesson_status->comment_approved ) && ! in_array( $user_lesson_status->comment_approved, array( 'ungraded', 'in-progress' ) );
+		$quiz_graded        = $user_quiz_progress && ! in_array( $user_quiz_progress->get_status(), array( 'ungraded', 'in-progress' ) );
 
 		$quiz_required_pass_grade = intval( get_post_meta( $quiz_id, '_quiz_passmark', true ) );
 		$succeeded                = $user_quiz_grade >= $quiz_required_pass_grade;
@@ -1016,7 +1044,7 @@ class Sensei_Question {
 					<?php if ( $correct_answer ) { ?>
 						<div class="sensei-lms-question__answer-feedback__correct-answer">
 							<?php echo wp_kses_post( __( 'Right Answer:', 'sensei-lms' ) ); ?>
-							<strong><?php echo wp_kses_post( $correct_answer ); ?></strong>
+							<?php echo wp_kses_post( $correct_answer ); ?>
 						</div>
 					<?php } ?>
 					<?php if ( $has_answer_notes ) { ?>

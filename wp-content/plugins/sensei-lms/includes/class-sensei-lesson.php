@@ -19,6 +19,13 @@ class Sensei_Lesson {
 	public $allowed_html;
 
 	/**
+	 * Question order.
+	 *
+	 * @var string
+	 */
+	public $question_order;
+
+	/**
 	 * Lesson ID being saved.
 	 *
 	 * @since 3.8.0
@@ -810,7 +817,7 @@ class Sensei_Lesson {
 		$post   = get_post( $post_id );
 		$blocks = parse_blocks( $post->post_content );
 
-		if ( 0 === count( $blocks ) || 'sensei-lms/featured-video' !== $blocks[0]['blockName'] ) {
+		if ( ! $blocks || 'sensei-lms/featured-video' !== $blocks[0]['blockName'] ) {
 			return null;
 		}
 
@@ -1017,7 +1024,7 @@ class Sensei_Lesson {
 		update_post_meta( $post_id, '_lesson_quiz', $quiz_id );
 		// Mark if the Lesson Quiz has questions
 		$quiz_questions = Sensei()->lesson->lesson_quiz_questions( $quiz_id );
-		if ( 0 < count( $quiz_questions ) ) {
+		if ( $quiz_questions ) {
 			update_post_meta( $post_id, '_quiz_has_questions', '1' );
 		} else {
 			delete_post_meta( $post_id, '_quiz_has_questions' );
@@ -1318,6 +1325,11 @@ class Sensei_Lesson {
 
 					$html .= '</table>';
 
+		/**
+		 * In case the question order is not set, we need to initialize it to an empty string.
+		 *
+		 * @psalm-suppress RedundantPropertyInitializationCheck
+		 */
 		if ( ! isset( $this->question_order ) ) {
 			$this->question_order = '';
 		}
@@ -1393,7 +1405,7 @@ class Sensei_Lesson {
 
 		$html = '';
 
-		if ( count( $questions ) > 0 ) {
+		if ( $questions ) {
 			$question_counter = 1;
 
 			foreach ( $questions as $question ) {
@@ -1424,8 +1436,14 @@ class Sensei_Lesson {
 				$html             .= $this->quiz_panel_question( $question_type, $question_counter, $question_id, 'quiz', $multiple_data );
 				$question_counter += $question_increment;
 
+				/**
+				 * In case the question order is not set, we need to initialize it to an empty string.
+				 *
+				 * @psalm-suppress RedundantConditionGivenDocblockType
+				*/
 				if ( isset( $this->question_order ) && strlen( $this->question_order ) > 0 ) {
-					$this->question_order .= ','; }
+					$this->question_order .= ',';
+				}
 				$this->question_order .= $question_id;
 			}
 		}
@@ -1437,9 +1455,18 @@ class Sensei_Lesson {
 	public function quiz_panel_question( $question_type = '', $question_counter = 0, $question_id = 0, $context = 'quiz', $multiple_data = array() ) {
 		global $row_counter;
 
-		$html = '';
+		$random_order                = null;
+		$question_grade              = null;
+		$question_media_add_button   = '';
+		$question_media_delete_class = '';
+		$question_media_link_class   = '';
+		$question_media_link         = '';
+		$question_media_thumb_class  = '';
+		$question_media_thumb        = '';
+		$question_media              = '';
+		$html                        = '';
+		$question_class              = '';
 
-		$question_class = '';
 		if ( 'quiz' == $context ) {
 			if ( ! $row_counter || ! isset( $row_counter ) ) {
 				$row_counter = 1;
@@ -1507,7 +1534,7 @@ class Sensei_Lesson {
 					$question                = get_post( $question_id );
 					$html                   .= '<td class="table-count question-number question-count-column"><span class="number">' . esc_html( $question_counter ) . '</span></td>';
 					$html                   .= '<td>' . esc_html( $question->post_title ) . '</td>';
-					$html                   .= '<td class="question-grade-column">' . esc_html( $question_grade ) . '</td>';
+					$html                   .= '<td class="question-grade-column">' . esc_html( (string) $question_grade ) . '</td>';
 					$question_types_filtered = ucwords( str_replace( array( 'boolean', 'multiple-choice', 'gap-fill', 'single-line', 'multi-line', 'file-upload' ), array( __( 'True/False', 'sensei-lms' ), __( 'Multiple Choice', 'sensei-lms' ), __( 'Gap Fill', 'sensei-lms' ), __( 'Single Line', 'sensei-lms' ), __( 'Multi Line', 'sensei-lms' ), __( 'File Upload', 'sensei-lms' ) ), $question_type ) );
 					$html                   .= '<td>' . esc_html( $question_types_filtered ) . '</td>';
 
@@ -1565,7 +1592,7 @@ class Sensei_Lesson {
 							// Question grade
 							$html     .= '<div>';
 								$html .= '<label for="question_' . esc_attr( $question_counter ) . '_grade">' . esc_html__( 'Grade:', 'sensei-lms' ) . '</label> ';
-								$html .= '<input type="number" id="question_' . esc_attr( $question_counter ) . '_grade" class="question_grade small-text" name="question_grade" min="0" value="' . esc_attr( $question_grade ) . '" />';
+								$html .= '<input type="number" id="question_' . esc_attr( $question_counter ) . '_grade" class="question_grade small-text" name="question_grade" min="0" value="' . esc_attr( (string) $question_grade ) . '" />';
 							$html     .= '</div>';
 
 							// Random order
@@ -1581,7 +1608,7 @@ class Sensei_Lesson {
 								$html .= '<button id="question_' . esc_attr( $question_counter ) . '_media_button" class="upload_media_file_button button-secondary" data-uploader-title="' . esc_attr__( 'Add file to question', 'sensei-lms' ) . '" data-uploader-button-text="' . esc_attr__( 'Add to question', 'sensei-lms' ) . '">' . esc_html( $question_media_add_button ) . '</button>';
 								$html .= '<button id="question_' . esc_attr( $question_counter ) . '_media_button_delete" class="delete_media_file_button button-secondary ' . esc_attr( $question_media_delete_class ) . '">' . esc_html__( 'Delete file', 'sensei-lms' ) . '</button><br/>';
 								$html .= '<span id="question_' . esc_attr( $question_counter ) . '_media_link" class="question_media_link ' . esc_attr( $question_media_link_class ) . '">' . wp_kses_post( $question_media_link ) . '</span>';
-								$html .= '<br/><img id="question_' . esc_attr( $question_counter ) . '_media_preview" class="question_media_preview ' . esc_attr( $question_media_thumb_class ) . '" src="' . esc_url( $question_media_thumb ) . '" /><br/>';
+								$html .= '<br/><img id="question_' . esc_attr( $question_counter ) . '_media_preview" class="question_media_preview ' . esc_attr( $question_media_thumb_class ) . '" src="' . esc_url( (string) $question_media_thumb ) . '" /><br/>';
 								$html .= '<input type="hidden" id="question_' . esc_attr( $question_counter ) . '_media" class="question_media" name="question_media" value="' . esc_attr( $question_media ) . '" />';
 							$html     .= '</div>';
 
@@ -2849,6 +2876,7 @@ class Sensei_Lesson {
 	 * @access public
 	 */
 	public function lesson_update_question() {
+		$nonce = '';
 		// Add nonce security to the request.
 		if ( isset( $_POST['lesson_update_question_nonce'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
@@ -3133,6 +3161,7 @@ class Sensei_Lesson {
 	}
 
 	public function lesson_update_grade_type() {
+		$nonce = '';
 		// Add nonce security to the request
 		if ( isset( $_POST['lesson_update_grade_type_nonce'] ) ) {
 
@@ -3157,6 +3186,7 @@ class Sensei_Lesson {
 	}
 
 	public function lesson_update_question_order() {
+		$nonce = '';
 		// Add nonce security to the request
 		if ( isset( $_POST['lesson_update_question_order_nonce'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
@@ -3190,6 +3220,7 @@ class Sensei_Lesson {
 	}
 
 	public function lesson_update_question_order_random() {
+		$nonce = '';
 		// Add nonce security to the request
 		if ( isset( $_POST['lesson_update_question_order_random_nonce'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
@@ -3226,6 +3257,7 @@ class Sensei_Lesson {
 		$question_wrong_answers = $question_right_answers = array();
 		$question_type          = 'multiple-choice';
 		$question_category      = '';
+		$question_grade         = null;
 
 		// Handle Question Type
 		if ( isset( $data['question_type'] ) && ( '' != $data['question_type'] ) ) {
@@ -3347,7 +3379,7 @@ class Sensei_Lesson {
 			}
 		}
 
-		$wrong_answer_count = count( $question_wrong_answers );
+		$wrong_answer_count = is_countable( $question_wrong_answers ) ? count( $question_wrong_answers ) : 0;
 
 		// Only save if there is a valid title
 		if ( $post_title != '' ) {
@@ -3607,9 +3639,14 @@ class Sensei_Lesson {
 	 * @return bool Whether quiz is submitted.
 	 */
 	public function is_quiz_submitted( int $lesson_id, int $user_id ) : bool {
-		$user_lesson_status = \Sensei_Utils::user_lesson_status( $lesson_id, $user_id );
+		$quiz_id = Sensei()->lesson->lesson_quizzes( $lesson_id );
+		if ( ! $quiz_id ) {
+			return false;
+		}
 
-		return ! empty( $user_lesson_status ) && in_array( $user_lesson_status->comment_approved, [ 'ungraded', 'passed', 'failed', 'graded' ], true );
+		$quiz_progress = Sensei()->quiz_progress_repository->get( $quiz_id, $user_id );
+
+		return ! empty( $quiz_progress ) && in_array( $quiz_progress->get_status(), [ 'ungraded', 'passed', 'failed', 'graded' ], true );
 	}
 
 
@@ -3644,7 +3681,7 @@ class Sensei_Lesson {
 		// If viewing quiz on the frontend then show questions in random order if set.
 		if ( ! is_admin() ) {
 			$random_order = get_post_meta( $quiz_id, '_random_question_order', true );
-			if ( $random_order && 'yes' === $random_order ) {
+			if ( 'yes' === $random_order ) {
 				$orderby = 'rand';
 			}
 		}
@@ -3770,13 +3807,15 @@ class Sensei_Lesson {
 				// Negative amount is considered as All (same as zero).
 				if ( $show_questions > 0 ) {
 					// Get random set of array keys from selected questions array.
+					$questions_count    = is_countable( $questions_array ) ? count( $questions_array ) : 0;
 					$selected_questions = array_rand(
 						$questions_array,
-						$show_questions > count( $questions_array ) ? count( $questions_array ) : $show_questions
+						$show_questions > $questions_count ? $questions_count : $show_questions
 					);
 
-					// Loop through all questions and pick the the ones to be shown based on the random key selection.
+					// Loop through all questions and pick the ones to be shown based on the random key selection.
 					$questions = [];
+
 					foreach ( $questions_array as $k => $question ) {
 
 						// Random keys will always be an array, unless only one question is to be shown.
@@ -4466,8 +4505,8 @@ class Sensei_Lesson {
 
 				<?php
 
-				$meta_html          = '';
-				$user_lesson_status = Sensei_Utils::user_lesson_status( get_the_ID(), get_current_user_id() );
+				$meta_html    = '';
+				$has_progress = Sensei()->lesson_progress_repository->has( $lesson_id, get_current_user_id() );
 
 				$lesson_length = get_post_meta( $lesson_id, '_lesson_length', true );
 				if ( '' != $lesson_length ) {
@@ -4491,7 +4530,7 @@ class Sensei_Lesson {
 
 					$meta_html .= '<span class="lesson-status complete">' . esc_html__( 'Complete', 'sensei-lms' ) . '</span>';
 
-				} elseif ( $user_lesson_status ) {
+				} elseif ( $has_progress ) {
 
 					$meta_html .= '<span class="lesson-status in-progress">' . esc_html__( 'In Progress', 'sensei-lms' ) . '</span>';
 
@@ -4708,9 +4747,14 @@ class Sensei_Lesson {
 	 */
 	public static function course_signup_link() {
 
-		$course_id = Sensei()->lesson->get_course_id( get_the_ID() );
+		$lesson_id = get_the_ID();
+		if ( ! $lesson_id ) {
+			return;
+		}
 
-		if ( empty( $course_id ) || 'course' !== get_post_type( $course_id ) || sensei_all_access() || Sensei_Utils::is_preview_lesson( get_the_ID() ) ) {
+		$course_id = Sensei()->lesson->get_course_id( $lesson_id );
+
+		if ( empty( $course_id ) || 'course' !== get_post_type( $course_id ) || sensei_all_access() || Sensei_Utils::is_preview_lesson( $lesson_id ) ) {
 			return;
 		}
 
@@ -4797,8 +4841,12 @@ class Sensei_Lesson {
 	 * @since 1.9.0
 	 */
 	public static function prerequisite_complete_message() {
+		$lesson_id = get_the_ID();
+		if ( false === $lesson_id ) {
+			return;
+		}
 
-		$lesson_prerequisite = self::find_first_prerequisite_lesson( get_the_ID(), get_current_user_id() );
+		$lesson_prerequisite = self::find_first_prerequisite_lesson( $lesson_id, get_current_user_id() );
 
 		if ( $lesson_prerequisite > 0 ) {
 
@@ -4869,14 +4917,20 @@ class Sensei_Lesson {
 			&& Sensei_Utils::is_preview_lesson( $post->ID )
 			&& ! Sensei_Course::is_user_enrolled( $course_id, $current_user->ID );
 
+		/** This filter is documented in includes/class-sensei-messages.php */
+		$title = apply_filters( 'sensei_single_title', get_the_title( $post ), $post->post_type );
+
+		if ( ! $title ) {
+			return;
+		}
+
 		?>
 		<header class="lesson-title">
 
 			<h1>
 
 				<?php
-				/** This filter is documented in includes/class-sensei-messages.php */
-				echo wp_kses_post( apply_filters( 'sensei_single_title', get_the_title( $post ), $post->post_type ) );
+				echo wp_kses_post( $title );
 				?>
 
 			</h1>
@@ -5009,7 +5063,7 @@ class Sensei_Lesson {
 	 */
 	public static function user_lesson_quiz_status_message( $lesson_id = 0, $user_id = 0 ) {
 
-		$lesson_id                 = empty( $lesson_id ) ? get_the_ID() : $lesson_id;
+		$lesson_id                 = empty( $lesson_id ) ? (int) get_the_ID() : $lesson_id;
 		$user_id                   = empty( $user_id ) ? get_current_user_id() : $user_id;
 		$lesson_course_id          = (int) get_post_meta( $lesson_id, '_lesson_course', true );
 		$quiz_id                   = Sensei()->lesson->lesson_quizzes( $lesson_id );
