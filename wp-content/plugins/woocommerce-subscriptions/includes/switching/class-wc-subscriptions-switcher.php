@@ -54,15 +54,7 @@ class WC_Subscriptions_Switcher {
 		add_action( 'woocommerce_checkout_update_order_meta', array( __CLASS__, 'add_order_meta' ), 10, 2 );
 
 		// Same as above for WooCommerce Blocks.
-		if ( class_exists( 'Automattic\WooCommerce\Blocks\Package' ) ) {
-			if ( version_compare( \Automattic\WooCommerce\Blocks\Package::get_version(), '7.2.0', '>=' ) ) {
-				add_action( 'woocommerce_store_api_checkout_update_order_meta', array( __CLASS__, 'add_order_meta' ), 10, 1 );
-			} elseif ( version_compare( \Automattic\WooCommerce\Blocks\Package::get_version(), '6.3.0', '>=' ) ) {
-				add_action( 'woocommerce_blocks_checkout_update_order_meta', array( __CLASS__, 'add_order_meta' ), 10, 1 );
-			} else {
-				add_action( '__experimental_woocommerce_blocks_checkout_update_order_meta', array( __CLASS__, 'add_order_meta' ), 10, 1 );
-			}
-		}
+		add_action( 'woocommerce_store_api_checkout_update_order_meta', array( __CLASS__, 'add_order_meta' ), 10, 1 );
 
 		// Don't allow switching to the same product
 		add_filter( 'woocommerce_add_to_cart_validation', array( __CLASS__, 'validate_switch_request' ), 10, 4 );
@@ -405,6 +397,7 @@ class WC_Subscriptions_Switcher {
 				'css'      => 'min-width:150px;',
 				'default'  => 'no',
 				'type'     => 'select',
+				'class'    => 'wc-enhanced-select',
 				'options'  => array(
 					'no'              => _x( 'Never', 'when to allow a setting', 'woocommerce-subscriptions' ),
 					'virtual-upgrade' => _x( 'For Upgrades of Virtual Subscription Products Only', 'when to prorate recurring fee when switching', 'woocommerce-subscriptions' ),
@@ -422,6 +415,7 @@ class WC_Subscriptions_Switcher {
 				'css'      => 'min-width:150px;',
 				'default'  => 'no',
 				'type'     => 'select',
+				'class'    => 'wc-enhanced-select',
 				'options'  => array(
 					'no'   => _x( 'Never (do not charge a sign up fee)', 'when to prorate signup fee when switching', 'woocommerce-subscriptions' ),
 					'full' => _x( 'Never (charge the full sign up fee)', 'when to prorate signup fee when switching', 'woocommerce-subscriptions' ),
@@ -437,6 +431,7 @@ class WC_Subscriptions_Switcher {
 				'css'      => 'min-width:150px;',
 				'default'  => 'no',
 				'type'     => 'select',
+				'class'    => 'wc-enhanced-select',
 				'options'  => array(
 					'no'      => _x( 'Never', 'when to allow a setting', 'woocommerce-subscriptions' ),
 					'virtual' => _x( 'For Virtual Subscription Products Only', 'when to prorate first payment / subscription length', 'woocommerce-subscriptions' ),
@@ -1221,14 +1216,14 @@ class WC_Subscriptions_Switcher {
 	 * @return bool|array Returns cart items that modify subscription contents, or false if no such items exist.
 	 */
 	public static function cart_contains_switches( $item_action = 'switch' ) {
-		$subscription_switches = false;
+		$subscription_switches = [];
 
 		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || false == DOING_AJAX ) ) {
-			return $subscription_switches;
+			return false;
 		}
 
 		if ( ! isset( WC()->cart ) ) {
-			return $subscription_switches;
+			return false;
 		}
 
 		// We use WC()->cart->cart_contents instead of WC()->cart->get_cart() to prevent recursion caused when get_cart_from_session() is called too early ref: https://github.com/woocommerce/woocommerce/commit/1f3365f2066b1e9d7e84aca7b1d7e89a6989c213
@@ -1260,7 +1255,7 @@ class WC_Subscriptions_Switcher {
 			}
 		}
 
-		return $subscription_switches;
+		return ! empty( $subscription_switches ) ? $subscription_switches : false;
 	}
 
 	/**
