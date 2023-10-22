@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Loads admin tabs and adds related hooks / filters.
  *
- * @version  1.15.2
+ * @version  1.15.3
  */
 class WC_CSP_Admin {
 
@@ -25,7 +25,7 @@ class WC_CSP_Admin {
 	 *
 	 * @var string
 	 */
-	private static $bundled_selectsw_version = '1.2.1';
+	private static $bundled_selectsw_version = '1.2.2';
 
 	/**
 	 * @var array
@@ -147,12 +147,18 @@ class WC_CSP_Admin {
 	 */
 	public static function include_admin_body_class( $classes ) {
 
-		if ( strpos( $classes, 'sw-wp-version-gte-53' ) !== false ) {
+		if ( strpos( $classes, 'sw-wp-version-gte-53' ) !== false
+		     || strpos( $classes, 'sw-wp-version-gte-55' ) !== false
+		) {
 			return $classes;
 		}
 
 		if ( WC_CSP_Core_Compatibility::is_wp_version_gte( '5.3' ) ) {
 			$classes .= ' sw-wp-version-gte-53';
+		}
+
+		if ( WC_CSP_Core_Compatibility::is_wp_version_gte( '5.5' ) ) {
+			$classes .= ' sw-wp-version-gte-55';
 		}
 
 		return $classes;
@@ -247,8 +253,13 @@ class WC_CSP_Admin {
 
 		global $post;
 
-		$suffix       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		$wc_screen_id = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		if ( version_compare( WC()->version, '7.3.0' ) < 0 ) {
+			$wc_screen_id = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
+		} else {
+			$wc_screen_id = 'woocommerce';
+		}
 
 		// Get admin screen id.
 		$screen    = get_current_screen();
