@@ -32,7 +32,7 @@ class Sensei_Compat_Dependency_Checker {
 			return;
 		}
 		// translators: %1$s is the minimum version number; %2$s if the current PHP version.
-		$message = sprintf( __( '<strong>Sensei Pro (WC Paid Courses)</strong> requires a minimum PHP version of %1$s, but you are running %2$s.', 'sensei-compat' ), '7.3.0', phpversion() );
+		$message = sprintf( __( '<strong>Sensei Pro (WC Paid Courses)</strong> requires a minimum PHP version of %1$s, but you are running %2$s.', 'sensei-compat' ), '7.4.0', phpversion() );
 		echo '<div class="error"><p>';
 		echo wp_kses( $message, array( 'strong' => array() ) );
 		$php_update_url = self::WORDPRESS_ORG_PHP_UPGRADE_DOC_URL;

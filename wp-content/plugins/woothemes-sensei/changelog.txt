@@ -1,5 +1,23 @@
 *** Sensei Pro (WC Paid Courses) ***
 
+2023-10-12 - version 4.18.0.1.18.0
+* Sensei LMS: Version bump to 4.18.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.18.0/changelog.txt
+* Sensei Pro: Version bump to 1.18.0
+	* Add support for WooCommerce High-Performance Order Storage (HPOS)
+	* Changed styles of ordered graded question answers
+	* Bump minimum required PHP version to 7.4
+	* Improve support for PHP 8.1
+	* Fix issue of woothemes-sensei (WCPC) bundle breaking some translated sites for PHP 8.0 and above
+
+2023-09-13 - version 4.17.0.1.17.0
+* Sensei LMS: Version bump to 4.17.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.17.0/changelog.txt
+* Sensei Pro: Version bump to 1.17.0
+	* Added functionality to deactivate license directly within the plugin.
+	* Added functionality to view and modify licenses within the plugin.
+	* Changed the styles of pro question and answers
+	* Fix issue with widgets not being loaded.
+	* Fix translations when woothemes-sensei and sensei-lms are both active
+
 2023-08-15 - version 4.16.1.1.16.1
 * Sensei LMS: Version bump to 4.16.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.16.1/changelog.txt
 * Sensei Pro: Version bump to 1.16.1

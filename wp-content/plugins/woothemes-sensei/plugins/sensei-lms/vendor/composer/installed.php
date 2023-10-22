@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'automattic/sensei-lms',
-        'pretty_version' => 'dev-trunk',
-        'version' => 'dev-trunk',
-        'reference' => '02badcf28f067fc8777f92a9754c744f3949c5ae',
+        'pretty_version' => 'dev-6b93645c228d99b68e7ed8e6c873d074f543dd1f',
+        'version' => 'dev-6b93645c228d99b68e7ed8e6c873d074f543dd1f',
+        'reference' => '6b93645c228d99b68e7ed8e6c873d074f543dd1f',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,11 +11,20 @@
     ),
     'versions' => array(
         'automattic/sensei-lms' => array(
-            'pretty_version' => 'dev-trunk',
-            'version' => 'dev-trunk',
-            'reference' => '02badcf28f067fc8777f92a9754c744f3949c5ae',
+            'pretty_version' => 'dev-6b93645c228d99b68e7ed8e6c873d074f543dd1f',
+            'version' => 'dev-6b93645c228d99b68e7ed8e6c873d074f543dd1f',
+            'reference' => '6b93645c228d99b68e7ed8e6c873d074f543dd1f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'woocommerce/action-scheduler' => array(
+            'pretty_version' => '3.6.2',
+            'version' => '3.6.2.0',
+            'reference' => '4eb2fa9737a53e4d284dafcf3e0bf428b5f941bc',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../woocommerce/action-scheduler',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

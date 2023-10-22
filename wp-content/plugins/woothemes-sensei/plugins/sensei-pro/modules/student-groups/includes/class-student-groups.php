@@ -19,13 +19,23 @@ use Sensei_Pro_Student_Groups\Rest_Api\Controllers\Group_Courses_Controller;
 use Sensei_Pro_Student_Groups\Rest_Api\Controllers\Group_Students_Controller;
 use Sensei_Pro_Student_Groups\Rest_Api\Controllers\Groups_Controller;
 use Sensei_Pro_Student_Groups\Rest_Api\Controllers\WP_REST_Groups_Controller;
+use Sensei_Pro_Student_Groups\Settings\Group_Settings;
 use Sensei_Pro_Student_Groups\Students\Group_Bulk_Actions;
 use Sensei_Pro_Student_Groups\View\Student_Groups_View;
+use Sensei_Pro_Student_Groups\Blocks\Join_Group_Block;
 use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+add_filter(
+	'sensei_default_feature_flag_settings',
+	function ( $settings ) {
+		$settings['group_signup'] = false;
+		return $settings;
+	}
+);
 
 /**
  * Student groups.
@@ -35,6 +45,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Student_Groups {
 
 	const MODULE_NAME = 'student-groups';
+
+	const GROUP_SIGNUP_CODE_META_NAME = 'sensei_group_signup_code';
 
 	/**
 	 * Instance of class.
@@ -130,7 +142,12 @@ class Student_Groups {
 	public function set_groups_column( $columns ): array {
 		$columns['students'] = _x( 'Students', 'column name', 'sensei-pro' );
 		$columns['courses']  = _x( 'Group Courses', 'column name', 'sensei-pro' );
-		$columns['actions']  = '';
+
+		if ( function_exists( 'Sensei' ) && Sensei()->feature_flags->is_enabled( 'group_signup' ) ) {
+			$columns['signup'] = _x( 'Invite Link', 'column name', 'sensei-pro' );
+		}
+
+		$columns['actions'] = '';
 		unset( $columns['date'] );
 
 		return $columns;
@@ -165,6 +182,111 @@ class Student_Groups {
 		if ( 'courses' === $key ) {
 			echo esc_html( $this->group_course_repository->get_count_for_group( $group_id ) );
 		}
+
+		if ( 'signup' === $key ) {
+			$signup_link = $this->get_group_signup_link( $group_id );
+
+			$signup_page_id = Sensei()->settings->get( Group_Settings::GROUP_SIGNUP_PAGE_SETTING );
+			$signup_page_id = $signup_page_id ? intval( $signup_page_id ) : 0;
+
+			if ( 0 !== $signup_page_id ) {
+				$edit_page_link = admin_url( 'post.php?post=' . $signup_page_id . '&action=edit' );
+
+				echo sprintf(
+					'<div class="sensei-group-copy-signup-link-container" data-signup-link="%s" data-edit-page-link="%s" />',
+					esc_url( $signup_link ),
+					esc_url( $edit_page_link ),
+				);
+			}
+		}
+	}
+
+	/**
+	 * Get group signup link.
+	 *
+	 * @param int $group_id The group ID.
+	 *
+	 * @return string The signup link or empty string in case of error.
+	 */
+	private function get_group_signup_link( int $group_id ) {
+		$page_permalink = $this->get_group_signup_page_permalink();
+
+		if ( ! $page_permalink ) {
+			return '';
+		}
+
+		$code = $this->get_group_signup_code( $group_id );
+
+		if ( ! $code ) {
+			return '';
+		}
+
+		return add_query_arg(
+			[ 'code' => $code ],
+			$page_permalink
+		);
+	}
+
+	/**
+	 * Get group signup page permalink.
+	 * The page is created if it does not exist yet.
+	 *
+	 * @return string|false The permalink URL. False if the post does not exist.
+	 */
+	private function get_group_signup_page_permalink() {
+		$page_id = Sensei()->settings->get( Group_Settings::GROUP_SIGNUP_PAGE_SETTING );
+		$page_id = $page_id ? intval( $page_id ) : 0;
+
+		if ( 0 !== $page_id ) {
+			$page = get_post( $page_id );
+
+			if ( null === $page || 'page' !== $page->post_type || 'publish' !== $page->post_status ) {
+				$page_id = 0;
+			}
+		}
+
+		if ( 0 === $page_id ) {
+			// Create page.
+			// TODO: Add blocks.
+			$page_id = wp_insert_post(
+				[
+					'post_title'   => __( 'Join your new group', 'sensei-pro' ),
+					'post_content' => 'TODO: Add blocks here.',
+					'post_status'  => 'publish',
+					'post_type'    => 'page',
+				]
+			);
+
+			Sensei()->settings->set( Group_Settings::GROUP_SIGNUP_PAGE_SETTING, $page_id );
+
+			// See https://github.com/Automattic/sensei/issues/7194.
+			Sensei()->settings->get_settings();
+		}
+
+		return get_permalink( $page_id );
+	}
+
+	/**
+	 * Get group signup code.
+	 * The code is generated if it does not exist yet.
+	 *
+	 * @param int $group_id The group ID.
+	 *
+	 * @return string|false The signup code. False in case of error.
+	 */
+	private function get_group_signup_code( int $group_id ) {
+		$code = get_post_meta( $group_id, self::GROUP_SIGNUP_CODE_META_NAME, true );
+
+		if ( empty( $code ) ) {
+			$code = wp_generate_password( 12, false );
+			$meta = update_post_meta( $group_id, self::GROUP_SIGNUP_CODE_META_NAME, $code );
+
+			if ( false === $meta ) {
+				return false;
+			}
+		}
+
+		return $code;
 	}
 
 	/**
@@ -255,6 +377,13 @@ class Student_Groups {
 
 		// Init the group related bulk actions.
 		Group_Bulk_Actions::instance()->init();
+
+		if ( function_exists( 'Sensei' ) && Sensei()->feature_flags->is_enabled( 'group_signup' ) ) {
+			// Init the group settings.
+			Group_Settings::instance()->init();
+
+			Join_Group_Block::instance()->init( $instance->assets );
+		}
 	}
 
 	/**
@@ -436,7 +565,9 @@ class Student_Groups {
 		require_once $this->ssg_dir . '/includes/enrolment/class-providers.php';
 		require_once $this->ssg_dir . '/includes/enrolment/class-enrolment-handler.php';
 		require_once $this->ssg_dir . '/includes/reports/class-group-reports.php';
+		require_once $this->ssg_dir . '/includes/settings/class-group-settings.php';
 		require_once $this->ssg_dir . '/includes/students/class-group-bulk-actions.php';
+		require_once $this->ssg_dir . '/includes/blocks/class-join-group-block.php';
 	}
 
 	/**
@@ -630,6 +761,7 @@ class Student_Groups {
 		if ( in_array( $screen->id, [ 'edit-group' ], true ) ) {
 			$this->assets->enqueue_component( 'group-creation-modal', [ 'wp-components' ], [ 'wp-components' ] );
 			$this->assets->enqueue_component( 'group-action-menu', [], [] );
+			$this->assets->enqueue_component( 'copy-signup-link-button' );
 		}
 
 		if ( in_array( $screen->id, [ 'sensei-lms_page_student_groups' ], true ) ) {

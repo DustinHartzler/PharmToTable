@@ -473,13 +473,13 @@ window.addEventListener("scroll",(function(){var e=document.documentElement,t=e.
 /******/,
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (()=>{"use strict";
-/* harmony import */n(91971),n(49977),n(91729)
-/* harmony import */;var e=n(40365),t=n(1487),r=n(68825);
+/* harmony import */n(49977),n(91729),n(91971)
+/* harmony import */;var e=n(68825),t=n(1487),r=n(40365);
 /**
  * Internal dependencies
  */
 window.sensei||(window.sensei={})
 /**
  * Show or hide the sidebar in mobile mode.
- */;window.sensei.courseTheme={toggleFocusMode:e/* .toggleFocusMode */.w,toggleSidebar:function(){document.body.classList.toggle("sensei-course-theme--sidebar-open")}},window.sensei.submitContactTeacher=t/* .submitContactTeacher */.R,(0,r/* .initCompleteLessonTransition */.F)()})()})
+ */;window.sensei.courseTheme={toggleFocusMode:r/* .toggleFocusMode */.w,toggleSidebar:function(){document.body.classList.toggle("sensei-course-theme--sidebar-open")}},window.sensei.submitContactTeacher=t/* .submitContactTeacher */.R,(0,e/* .initCompleteLessonTransition */.F)()})()})
 /******/();

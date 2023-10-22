@@ -395,20 +395,20 @@ class Sensei_Learners_Main extends Sensei_List_Table {
 
 				if ( Sensei()->feature_flags->is_enabled( 'enrolment_provider_tooltip' ) ) {
 					if ( ! empty( $provider_results ) ) {
-						$enrolment_tooltip_html = [ '<ul class="enrolment-helper">' ];
+						$tooltip_html_parts = [ '<ul class="enrolment-helper">' ];
 
 						foreach ( $provider_results as $id => $result ) {
 							$name       = Sensei_Course_Enrolment_Manager::instance()->get_enrolment_provider_name_by_id( $id ) ?? $id;
 							$item_class = $result ? 'provides-enrolment' : 'does-not-provide-enrolment';
 
-							$enrolment_tooltip_html[] =
+							$tooltip_html_parts[] =
 								'<li class="' . esc_attr( $item_class ) . '">' .
 									esc_html( $name ) .
 								'</li>';
 						}
 
-						$enrolment_tooltip_html[] = '</ul>';
-						$enrolment_tooltip_html   = implode( '', $enrolment_tooltip_html );
+						$tooltip_html_parts[]   = '</ul>';
+						$enrolment_tooltip_html = implode( '', $tooltip_html_parts );
 					} else {
 						$enrolment_tooltip_html = esc_html__( 'No enrollment data was found.', 'sensei-lms' );
 					}
@@ -1148,19 +1148,19 @@ class Sensei_Learners_Main extends Sensei_List_Table {
 			return;
 		}
 
-		$post_type      = '';
+		$box_title      = '';
 		$post_title     = '';
 		$form_post_type = '';
 		$form_course_id = 0;
 		$form_lesson_id = 0;
 		if ( $this->course_id && ! $this->lesson_id ) {
 			$post_title     = get_the_title( $this->course_id );
-			$post_type      = __( 'Course', 'sensei-lms' );
+			$box_title      = __( 'Add Student to Course', 'sensei-lms' );
 			$form_post_type = 'course';
 			$form_course_id = $this->course_id;
 		} elseif ( $this->course_id && $this->lesson_id ) {
 			$post_title     = get_the_title( $this->lesson_id );
-			$post_type      = __( 'Lesson', 'sensei-lms' );
+			$box_title      = __( 'Add Student to Lesson', 'sensei-lms' );
 			$form_post_type = 'lesson';
 			$form_course_id = $this->course_id;
 			$form_lesson_id = $this->lesson_id;
@@ -1172,10 +1172,7 @@ class Sensei_Learners_Main extends Sensei_List_Table {
 		?>
 		<div class="postbox">
 			<h2 id="add-student-to-course-header">
-				<?php
-				// translators: Placeholder is the post type.
-				printf( esc_html__( 'Add Student to %1$s', 'sensei-lms' ), esc_html( $post_type ) );
-				?>
+				<?php echo esc_html( $box_title ); ?>
 			</h2>
 			<div class="inside">
 				<form name="add_learner" action="" method="post">

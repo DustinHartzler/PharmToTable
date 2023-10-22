@@ -523,7 +523,7 @@ class Sensei_Grading {
 		$courses     = get_posts( apply_filters( 'sensei_grading_filter_courses', $course_args ) );
 
 		$html .= '<option value="">' . __( 'Select a course', 'sensei-lms' ) . '</option>';
-		if ( count( $courses ) > 0 ) {
+		if ( $courses ) {
 			foreach ( $courses as $course_id ) {
 				$html .= '<option value="' . esc_attr( absint( $course_id ) ) . '" ' . selected( $course_id, $selected_course_id, false ) . '>' . esc_html( get_the_title( $course_id ) ) . '</option>' . "\n";
 			}
@@ -614,7 +614,7 @@ class Sensei_Grading {
 			$lessons     = get_posts( apply_filters( 'sensei_grading_filter_lessons', $lesson_args ) );
 
 			$html .= '<option value="">' . esc_html__( 'Select a lesson', 'sensei-lms' ) . '</option>';
-			if ( count( $lessons ) > 0 ) {
+			if ( $lessons ) {
 				foreach ( $lessons as $lesson_id ) {
 					$html .= '<option value="' . esc_attr( absint( $lesson_id ) ) . '" ' . selected( $lesson_id, $selected_lesson_id, false ) . '>' . esc_html( get_the_title( $lesson_id ) ) . '</option>' . "\n";
 				}
@@ -688,12 +688,16 @@ class Sensei_Grading {
 		// store the feedback from grading
 		Sensei()->quiz->save_user_answers_feedback( $all_answers_feedback, $quiz_lesson_id, $user_id );
 
+		$lesson_progress = Sensei()->lesson_progress_repository->get( $quiz_lesson_id, $user_id );
+		if ( ! $lesson_progress ) {
+			$lesson_progress = Sensei()->lesson_progress_repository->create( $quiz_lesson_id, $user_id );
+		}
+
 		$quiz_progress = Sensei()->quiz_progress_repository->get( $quiz_id, $user_id );
 		if ( ! $quiz_progress ) {
 			return false;
 		}
 
-		$lesson_status   = 'ungraded';
 		$lesson_metadata = [];
 		$quiz_progress->ungrade();
 
@@ -712,21 +716,27 @@ class Sensei_Grading {
 			if ( $pass_required ) {
 				// Student has reached the pass mark and lesson is complete.
 				if ( $quiz_passmark <= $grade ) {
-					$lesson_status = 'passed';
+					// Due to our internal logic, we need to complete the lesson first.
+					// This is because in the comments-based version the lesson status is used for both the lesson and the quiz.
+					$lesson_progress->complete();
 					$quiz_progress->pass();
 				} else {
-					$lesson_status = 'failed';
 					$quiz_progress->fail();
 				}
 			}
 
 			// Student only has to partake the quiz.
 			else {
-				$lesson_status = 'graded';
+				$lesson_progress->complete();
 				$quiz_progress->grade();
 			}
 		}
 
+		// Due to our internal logic, we need to save the lesson progress first.
+		// This is because in the comments-based version the lesson status is used for both the lesson and the quiz.
+		// And in this context the quiz status should be preserved in the comments-based version.
+		// For the tables-based version the order does not matter.
+		Sensei()->lesson_progress_repository->save( $lesson_progress );
 		Sensei()->quiz_progress_repository->save( $quiz_progress );
 		if ( count( $lesson_metadata ) ) {
 			foreach ( $lesson_metadata as $key => $value ) {
@@ -734,22 +744,13 @@ class Sensei_Grading {
 			}
 		}
 
-		if ( in_array( $lesson_status, [ 'passed', 'graded' ], true ) ) {
+		if ( $lesson_progress->is_complete() ) {
 
-			/**
-			 * Fires when a user completes a lesson.
-			 *
-			 * This hook is fired when a user passes a quiz or their quiz submission was graded.
-			 * Therefore the corresponding lesson is marked as complete.
-			 *
-			 * @since 1.7.0
-			 *
-			 * @param int $user_id
-			 * @param int $quiz_lesson_id
-			 */
+			/* The action is documented in includes/class-sensei-utils.php */
 			do_action( 'sensei_user_lesson_end', $user_id, $quiz_lesson_id );
 
 		}
+
 		if ( isset( $_POST['sensei_grade_next_learner'] ) && strlen( $_POST['sensei_grade_next_learner'] ) > 0 ) {
 
 			$load_url = add_query_arg( array( 'message' => 'graded' ) );
@@ -1287,7 +1288,7 @@ class Sensei_Grading {
 			) averages_by_course"
 		);
 
-		return doubleval( $result->courses_average );
+		return floatval( $result->courses_average );
 	}
 }
 

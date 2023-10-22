@@ -563,7 +563,7 @@ class Sensei_Frontend {
 	public function lesson_tags_display( $lesson_id = 0 ) {
 		if ( $lesson_id ) {
 			$tags = wp_get_post_terms( $lesson_id, 'lesson-tag' );
-			if ( $tags && count( $tags ) > 0 ) {
+			if ( $tags ) {
 				$tag_list = '';
 				foreach ( $tags as $tag ) {
 					$tag_link = get_term_link( $tag, 'lesson-tag' );
@@ -719,7 +719,7 @@ class Sensei_Frontend {
 	 * @param int    $course_id The course ID.
 	 */
 	public function redirect_to_course_completed_page( $status, $user_id, $course_id ) {
-		if ( 'complete' !== $status || ! $course_id ) {
+		if ( 'complete' !== $status || ! $course_id || Sensei_Utils::is_rest_request() ) {
 			return;
 		}
 
@@ -998,7 +998,7 @@ class Sensei_Frontend {
 					the_post();
 					?>
 
-					<article class="<?php echo esc_attr( join( ' ', get_post_class( array( 'course', 'post' ), get_the_ID() ) ) ); ?>">
+					<article class="<?php echo esc_attr( implode( ' ', get_post_class( array( 'course', 'post' ), get_the_ID() ) ) ); ?>">
 
 						<?php do_action( 'sensei_course_archive_meta' ); ?>
 
@@ -1029,7 +1029,7 @@ class Sensei_Frontend {
 		 */
 
 		?>
-		<div id="my-courses">
+		<div id="my-courses" class="alignwide">
 			<?php Sensei()->notices->maybe_print_notices(); ?>
 			<div class="col2-set" id="customer_login">
 
@@ -1076,7 +1076,7 @@ class Sensei_Frontend {
 						<?php wp_nonce_field( 'sensei-register' ); ?>
 
 						<p class="form-row">
-							<input type="submit" class="button" name="register" value="<?php esc_attr_e( 'Register', 'sensei-lms' ); ?>" />
+							<input type="submit" class="button wp-element-button" name="register" value="<?php esc_attr_e( 'Register', 'sensei-lms' ); ?>" />
 						</p>
 
 						<?php do_action( 'sensei_register_form_end' ); ?>
@@ -1541,10 +1541,10 @@ class Sensei_Frontend {
 	 */
 	public function login_message_process() {
 
-			// setup the message variables.
-			$message = '';
+		// setup the message variables.
+		$message = '';
 
-			// only output message if the url contains login=failed and login=emptyfields.
+		// only output message if the url contains login=failed and login=emptyfields.
 		if ( $_GET['login'] == 'failed' ) {
 
 			$message = __( 'Incorrect login details', 'sensei-lms' );
@@ -1554,7 +1554,14 @@ class Sensei_Frontend {
 			$message = __( 'Please enter your username and password', 'sensei-lms' );
 		}
 
-			Sensei()->notices->add_notice( $message, 'alert' );
+		if ( '' !== $message ) {
+			// If it's a login failure, don't print the notices from the wp_body_open hook. Because on non-block
+			// themes, the notices are printed in the top, even above the header or nav, which breaks it.
+			// We show the notice on the login form instead.
+			remove_action( 'wp_body_open', [ Sensei()->notices, 'maybe_print_notices' ] );
+		}
+
+		Sensei()->notices->add_notice( $message, 'alert' );
 
 	}
 

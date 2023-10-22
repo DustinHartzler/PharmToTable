@@ -743,13 +743,7 @@ class Sensei_Core_Modules {
 		$title_text = '';
 
 		if ( method_exists( 'Sensei_Utils', 'is_preview_lesson' ) && Sensei_Utils::is_preview_lesson( $lesson_id ) ) {
-			$is_user_taking_course = Sensei_Utils::sensei_check_for_activity(
-				array(
-					'post_id' => $course_id,
-					'user_id' => $current_user->ID,
-					'type'    => 'sensei_course_status',
-				)
-			);
+			$is_user_taking_course = Sensei()->course_progress_repository->has( $course_id, $current_user->ID );
 			if ( ! $is_user_taking_course ) {
 				if ( method_exists( 'Sensei_Frontend', 'sensei_lesson_preview_title_text' ) ) {
 					$title_text = Sensei()->frontend->sensei_lesson_preview_title_text( $course_id );
@@ -1187,13 +1181,14 @@ class Sensei_Core_Modules {
 		);
 		$lessons = get_posts( $args );
 
-		if ( is_wp_error( $lessons ) || 0 >= count( $lessons ) ) {
+		if ( is_wp_error( $lessons ) || ! $lessons ) {
 			return 0;
 		}
 
 		$completed       = false;
 		$lesson_count    = 0;
 		$completed_count = 0;
+		$lessons         = array_map( 'intval', $lessons );
 		foreach ( $lessons as $lesson_id ) {
 			$completed = Sensei_Utils::user_completed_lesson( $lesson_id, $user_id );
 			++$lesson_count;
@@ -2546,10 +2541,12 @@ class Sensei_Core_Modules {
 	 */
 	public function filter_course_selected_terms( $terms, $course_ids_array, $taxonomies ) {
 
+		$taxonomies_count = is_countable( $taxonomies ) ? count( $taxonomies ) : 0;
+
 		// dont limit for admins and other taxonomies. This should also only apply to admin
 		if ( current_user_can( 'manage_options' ) || ! is_admin() || empty( $terms )
 			// only apply this to module only taxonomy queries so 1 taxonomy only:
-			|| count( $taxonomies ) > 1 || ! in_array( 'module', $taxonomies ) ) {
+			|| $taxonomies_count > 1 || ! in_array( 'module', $taxonomies ) ) {
 			return $terms;
 		}
 

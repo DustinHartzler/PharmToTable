@@ -1,5 +1,29 @@
 # Sensei Pro Changelog
 
+## 1.18.0 - 2023-10-12
+### Added
+- Add support for WooCommerce High-Performance Order Storage (HPOS)
+
+### Changed
+- Changed styles of ordered graded question answers
+- Bump minimum required PHP version to 7.4
+- Improve support for PHP 8.1
+
+### Fixed
+- Fix issue of woothemes-sensei (WCPC) bundle breaking some translated sites for PHP 8.0 and above
+
+## 1.17.0 - 2023-09-13
+### Added
+- Added functionality to deactivate license directly within the plugin.
+- Added functionality to view and modify licenses within the plugin.
+
+### Changed
+- Changed the styles of pro question and answers
+
+### Fixed
+- Fix issue with widgets not being loaded.
+- Fix translations when woothemes-sensei and sensei-lms are both active
+
 ## 1.16.1 - 2023-08-15
 ### Fixed
 - Fix license issues with multisite

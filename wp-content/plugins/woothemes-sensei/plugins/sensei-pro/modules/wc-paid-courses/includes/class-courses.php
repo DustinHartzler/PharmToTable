@@ -244,7 +244,7 @@ final class Courses {
 		 *
 		 * @param WP_Post[] $course      The array of courses.
 		 * @param array     $product_ids The array of product IDs.
-		 * @param array     $args        The additional query args.
+		 * @return WP_Post[] Filtered array of courses.
 		 */
 		$courses = apply_filters( 'sensei_wc_paid_courses_get_product_courses', $courses, $product_ids );
 
@@ -995,14 +995,15 @@ final class Courses {
 				}
 			);
 			$variation_ids      = wp_list_pluck( $variation_products, 'ID' );
+			$count_variations   = is_countable( $variation_ids ) ? count( $variation_ids ) : 0;
 
-			if ( count( $variation_ids ) > 0 ) {
+			if ( $count_variations > 0 ) {
 				$query_variations  = new \Automattic\WooCommerce\Admin\API\Reports\Variations\Query(
 					[
 						'variation_includes' => $variation_ids,
 						'fields'             => [ 'variation_id', 'items_sold' ],
 						'after'              => '2010-01-01T00:00:00+00:00',
-						'per_page'           => count( $variation_ids ),
+						'per_page'           => $count_variations,
 					]
 				);
 				$result_variations = $query_variations->get_data();

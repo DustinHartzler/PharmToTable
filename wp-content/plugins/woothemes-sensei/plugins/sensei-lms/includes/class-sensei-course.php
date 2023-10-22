@@ -1551,11 +1551,11 @@ class Sensei_Course {
 
 
 	/**
-	 * course_lessons function.
+	 * Get course lessons.
 	 *
 	 * @access public
 	 *
-	 * @param int          $course_id   (default: 0).         The course id.
+	 * @param int|WP_Post  $course_id   (default: 0).         The course id.
 	 * @param string|array $post_status (default: 'publish'). The post status.
 	 * @param string       $fields      (default: 'all').     WP only allows 3 types, but we will limit it to only 'ids' or 'all'.
 	 * @param array        $query_args  Base arguments for the WP query.
@@ -1598,14 +1598,27 @@ class Sensei_Course {
 		// that have been added to the course.
 		if ( count( $lessons ) > 1 ) {
 
+			$lesson_order = array();
 			foreach ( $lessons as $lesson ) {
 
 				$order = intval( get_post_meta( $lesson->ID, '_order_' . $course_id, true ) );
 				// for lessons with no order set it to be 10000 so that it show up at the end
-				$lesson->course_order = $order ? $order : 100000;
+				$lesson_order[ $lesson->ID ] = $order ? $order : 100000;
 			}
 
-			uasort( $lessons, [ $this, '_short_course_lessons_callback' ] );
+			uasort(
+				$lessons,
+				function ( $lesson_1, $lesson_2 ) use ( $lesson_order ) {
+					$lesson_1_order = $lesson_order[ $lesson_1->ID ];
+					$lesson_2_order = $lesson_order[ $lesson_2->ID ];
+
+					if ( $lesson_1_order == $lesson_2_order ) {
+						return 0;
+					}
+
+					return ( $lesson_1_order < $lesson_2_order ) ? -1 : 1;
+				}
+			);
 		}
 
 		/**
@@ -1618,9 +1631,8 @@ class Sensei_Course {
 		 */
 		$lessons = apply_filters( 'sensei_course_get_lessons', $lessons, $course_id );
 
-		// return the requested fields
-		// runs after the sensei_course_get_lessons filter so the filter always give an array of lesson
-		// objects
+		// Return the requested fields.
+		// Runs after the sensei_course_get_lessons filter so the filter always give an array of lesson objects.
 		if ( 'ids' === $fields ) {
 			$lesson_objects = $lessons;
 			$lessons        = [];
@@ -1632,25 +1644,6 @@ class Sensei_Course {
 
 		return $lessons;
 
-	}
-
-	/**
-	 * Used for the uasort in $this->course_lessons()
-	 *
-	 * @since 1.8.0
-	 * @access protected
-	 *
-	 * @param array $lesson_1
-	 * @param array $lesson_2
-	 * @return int
-	 */
-	protected function _short_course_lessons_callback( $lesson_1, $lesson_2 ) {
-
-		if ( $lesson_1->course_order == $lesson_2->course_order ) {
-			return 0;
-		}
-
-		return ( $lesson_1->course_order < $lesson_2->course_order ) ? -1 : 1;
 	}
 
 	/**
@@ -1884,7 +1877,7 @@ class Sensei_Course {
 				// Get Course Categories
 				$category_output = get_the_term_list( $course_item->ID, 'course-category', '', ', ', '' );
 
-				$active_html .= '<article class="' . esc_attr( join( ' ', get_post_class( [ 'course', 'post' ], $course_item->ID ) ) ) . '">';
+				$active_html .= '<article class="' . esc_attr( implode( ' ', get_post_class( [ 'course', 'post' ], $course_item->ID ) ) ) . '">';
 
 				// Image
 				$active_html .= Sensei()->course->course_image( absint( $course_item->ID ), '100', '100', true );
@@ -1941,7 +1934,7 @@ class Sensei_Course {
 
 				$progress_percentage = Sensei_Utils::quotient_as_absolute_rounded_percentage( $lessons_completed, $lesson_count, 0 );
 
-				$active_html .= $this->get_progress_meter( $progress_percentage );
+				$active_html .= $this->get_progress_meter( (int) $progress_percentage );
 
 				$active_html .= '</section>';
 
@@ -2025,7 +2018,7 @@ class Sensei_Course {
 				// Get Course Categories
 				$category_output = get_the_term_list( $course_item->ID, 'course-category', '', ', ', '' );
 
-				$complete_html .= '<article class="' . esc_attr( join( ' ', get_post_class( [ 'course', 'post' ], $course_item->ID ) ) ) . '">';
+				$complete_html .= '<article class="' . esc_attr( implode( ' ', get_post_class( [ 'course', 'post' ], $course_item->ID ) ) ) . '">';
 
 				// Image
 				$complete_html .= Sensei()->course->course_image( absint( $course_item->ID ), 100, 100, true );
@@ -3569,8 +3562,7 @@ class Sensei_Course {
 		// Check if course is completed.
 		$completed_course = false;
 		if ( ! empty( $user_id ) ) {
-			$user_course_status = Sensei_Utils::user_course_status( $course_id, $user_id );
-			$completed_course   = Sensei_Utils::user_completed_course( $user_course_status );
+			$completed_course = Sensei_Utils::user_completed_course( $course_id, $user_id );
 		}
 
 		/**
@@ -4056,9 +4048,10 @@ class Sensei_Course {
 	public function log_initial_publish_event( $course ) {
 		$product_ids   = get_post_meta( $course->ID, '_course_woocommerce_product', false );
 		$product_count = empty( $product_ids ) ? 0 : count( array_filter( $product_ids, 'is_numeric' ) );
+		$modules       = wp_get_post_terms( $course->ID, 'module' );
 
 		$event_properties = [
-			'module_count'  => count( wp_get_post_terms( $course->ID, 'module' ) ),
+			'module_count'  => is_countable( $modules ) ? count( $modules ) : 0,
 			'lesson_count'  => $this->course_lesson_count( $course->ID ),
 			'product_count' => $product_count,
 			'sample_course' => Sensei_Data_Port_Manager::SAMPLE_COURSE_SLUG === $course->post_name ? 1 : 0,
@@ -4148,6 +4141,7 @@ class Sensei_Course {
 		$content       = $post->post_content;
 		$product_ids   = get_post_meta( $course_id, '_course_woocommerce_product', false );
 		$product_count = empty( $product_ids ) ? 0 : count( array_filter( $product_ids, 'is_numeric' ) );
+		$modules       = wp_get_post_terms( $course_id, 'module' );
 
 		$event_properties = [
 			'course_id'                     => $course_id,
@@ -4156,7 +4150,7 @@ class Sensei_Course {
 			'has_take_course_block'         => has_block( 'sensei-lms/button-take-course', $content ) ? 1 : 0,
 			'has_contact_teacher_block'     => has_block( 'sensei-lms/button-contact-teacher', $content ) ? 1 : 0,
 			'has_conditional_content_block' => has_block( 'sensei-lms/conditional-content', $content ) ? 1 : 0,
-			'module_count'                  => count( wp_get_post_terms( $course_id, 'module' ) ),
+			'module_count'                  => is_countable( $modules ) ? count( $modules ) : 0,
 			'lesson_count'                  => $this->course_lesson_count( $course_id ),
 			'product_count'                 => $product_count,
 			'sample_course'                 => Sensei_Data_Port_Manager::SAMPLE_COURSE_SLUG === $post->post_name ? 1 : 0,

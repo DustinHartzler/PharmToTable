@@ -3,15 +3,15 @@
  * Plugin Name: Sensei Pro (WC Paid Courses)
  * Plugin URI: https://senseilms.com
  * Description: Whether you want to teach, tutor or train, we have you covered.
- * Version: 4.16.1.1.16.1
+ * Version: 4.18.0.1.18.0
  * Author: Automattic
  * Author URI: https://automattic.com
  * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Requires at least: 6.1
  * Tested up to: 6.3
- * Requires PHP: 7.3
+ * Requires PHP: 7.4
  * WC requires at least: 4.0
- * WC tested up to: 8.0
+ * WC tested up to: 8.2
  * Text Domain: sensei-compat
  * Domain Path: /languages
  *
@@ -20,8 +20,21 @@
  * @package sensei-compat
  */
 
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
+
 define( 'SENSEI_COMPAT_PLUGIN', true );
 define( 'SENSEI_COMPAT_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+
+// Declare compatibility with WooCommerce High-Performance Order Storage (HPOS).
+// This is done before the conflicts check to ensure the compatibility warning is not shown if the check do not pass.
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( FeaturesUtil::class ) ) {
+			FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
+);
 
 require_once dirname( __FILE__ ) . '/sensei-compat-conflicts-checker.php';
 if ( woothemes_sensei_has_conflicts() ) {
@@ -29,7 +42,7 @@ if ( woothemes_sensei_has_conflicts() ) {
 }
 
 require_once dirname( __FILE__ ) . '/class-sensei-compat-dependency-checker.php';
-if ( Sensei_Compat_Dependency_Checker::is_php_version_at_least( '7.3.0' ) ) {
+if ( Sensei_Compat_Dependency_Checker::is_php_version_at_least( '7.4.0' ) ) {
 	add_action( 'admin_notices', array( 'Sensei_Compat_Dependency_Checker', 'show_php_notice' ) );
 	add_action( 'admin_init', array( 'Sensei_Compat_Dependency_Checker', 'deactivate_self' ) );
 	return;
@@ -65,10 +78,15 @@ function sensei_compat_load() {
 
 	if ( ! Sensei_Compat_Dependency_Checker::is_sensei_active() ) {
 		define( 'SENSEI_COMPAT_LOADING_SENSEI', true );
+	} else {
+		define( 'SENSEI_COMPAT_LOADING_SENSEI', false );
+	}
 
+	add_filter( 'load_script_textdomain_relative_path', 'sensei_filter_script_textdomain_relative_path' );
+	add_filter( 'loco_compile_script_reference', 'woothemes_sensei_fix_correct_path_check_for_loco_translate', 999, 3 );
+
+	if ( SENSEI_COMPAT_LOADING_SENSEI ) {
 		add_filter( 'load_textdomain_mofile', 'sensei_compat_load_sensei_static_translations', 10, 2 );
-		add_filter( 'load_script_textdomain_relative_path', 'sensei_filter_script_textdomain_relative_path' );
-		add_filter( 'loco_compile_script_reference', 'woothemes_sensei_fix_correct_path_check_for_loco_translate', 999, 3 );
 
 		require_once dirname( __FILE__ ) . '/plugins/sensei-lms/sensei-lms.php';
 
@@ -76,8 +94,6 @@ function sensei_compat_load() {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 			define( 'SENSEI_IGNORE_ACTIVATION_CONFLICT', true );
 		}
-	} else {
-		define( 'SENSEI_COMPAT_LOADING_SENSEI', false );
 	}
 
 	define( 'SENSEI_COMPAT_LOADING_SENSEI_PRO', true );
@@ -93,6 +109,10 @@ function sensei_compat_load() {
  * More details here: https://wordpress.org/support/topic/request-disable-file-existence-check-to-generate-json-files
  * If we don't do this, translations for JS won't be generated when using Loco Translate.
  *
+ * @since  1.0.3
+ * @since  1.17.0 Check Sensei only when using Sensei Compat.
+ * @access private
+ *
  * @param boolean $bool     Whether the JS file exists or not.
  * @param string  $relative Path for the JS file.
  * @param string  $domain   Translation domain.
@@ -102,7 +122,7 @@ function woothemes_sensei_fix_correct_path_check_for_loco_translate( $bool, $rel
 	if ( 'sensei-pro' === $domain ) {
 		return file_exists( __DIR__ . '/plugins/sensei-pro/' . $relative );
 	}
-	if ( 'sensei-lms' === $domain ) {
+	if ( 'sensei-lms' === $domain && SENSEI_COMPAT_LOADING_SENSEI ) {
 		return file_exists( __DIR__ . '/plugins/sensei-lms/' . $relative );
 	}
 
@@ -135,6 +155,7 @@ function sensei_compat_load_sensei_static_translations( $mofile, $domain ) {
  * Filters the relative path to fix textdomain JSON filename hash.
  *
  * @since  2.4.0
+ * @since  1.17.0 Change path for Sensei only when using Sensei Compat.
  * @access private
  *
  * @param string $relative Relative path to the script file.
@@ -145,7 +166,11 @@ function sensei_filter_script_textdomain_relative_path( $relative ) {
 	$sensei_prefix     = 'plugins/sensei-lms/';
 	$sensei_pro_prefix = 'plugins/sensei-pro/';
 
-	$relative = preg_replace( '/^' . preg_quote( $sensei_prefix, '/' ) . '|^' . preg_quote( $sensei_pro_prefix, '/' ) . '/', '', $relative );
+	$relative = preg_replace( '/^' . preg_quote( $sensei_pro_prefix, '/' ) . '/', '', $relative );
+
+	if ( SENSEI_COMPAT_LOADING_SENSEI ) {
+		$relative = preg_replace( '/^' . preg_quote( $sensei_prefix, '/' ) . '/', '', $relative );
+	}
 
 	return $relative;
 }
