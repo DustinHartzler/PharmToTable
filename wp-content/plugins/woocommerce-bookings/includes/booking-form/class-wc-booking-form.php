@@ -96,7 +96,8 @@ class WC_Booking_Form {
 			array( 'booking_duration_type' => $this->product->get_duration_type() )
 		);
 
-		wp_enqueue_script( 'wc-bookings-booking-form', WC_BOOKINGS_PLUGIN_URL . '/dist/frontend.js', array( 'jquery', 'jquery-blockui', 'jquery-ui-datepicker', 'underscore', 'wp-hooks' ), WC_BOOKINGS_VERSION, true );
+		$bookings_form_script_dependencies = wc_booking_get_script_dependencies( 'frontend', array( 'jquery-blockui', 'jquery-ui-datepicker' ) );
+		wp_enqueue_script( 'wc-bookings-booking-form', WC_BOOKINGS_PLUGIN_URL . '/dist/frontend.js', $bookings_form_script_dependencies, WC_BOOKINGS_VERSION, true );
 		wp_localize_script( 'wc-bookings-booking-form', 'wc_bookings_booking_form', $wc_bookings_booking_form_args );
 		wp_localize_script( 'wc-bookings-booking-form', "wc_bookings_booking_form_{$wc_bookings_booking_form_product_args['product_id']}", $wc_bookings_booking_form_product_args );
 		wp_localize_script( 'wc-bookings-booking-form', 'wc_bookings_date_picker_args', $wc_bookings_date_picker_args );
@@ -743,27 +744,27 @@ class WC_Booking_Form {
 			$end_time = $booking_data['end_time'];
 			$duration = $booking_data['duration'];
 
-			if ( $this->product->has_resources() ) {
-				$resource_id = isset( $_POST['resource_id'] ) ? absint( $_POST['resource_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$resource_id = absint( $_POST['resource_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-				$availability = wc_bookings_get_total_available_bookings_for_range(
-					$this->product,
-					strtotime( substr( $start_date_time, 0, 19 ) ),
-					$end_time,
-					0
-				);
+			$availability = wc_bookings_get_total_available_bookings_for_range(
+				$this->product,
+				strtotime( substr( $start_date_time, 0, 19 ) ),
+				$end_time,
+				0
+			);
 
-				if ( is_wp_error( $availability ) ) {
-					$free_slots = 0;
-				} elseif ( empty( $resource_id ) ) {
+			$free_slots = 0;
+			if ( is_array( $availability ) ) {
+				if ( empty( $resource_id ) ) {
 					$free_slots = array_sum( array_values( $availability ) );
 				} else {
-					$free_slots = $availability[ $resource_id ];
+					$free_slots = $availability[ $resource_id ] ?? 0;
 				}
-
-				$display .= sprintf( ' (%s %s)', $free_slots, esc_html__( 'left', 'woocommerce-bookings' ) );
+			} elseif ( is_int( $availability ) ) {
+				$free_slots = $availability;
 			}
 
+			$display    .= sprintf( ' (%s %s)', $free_slots, esc_html__( 'left', 'woocommerce-bookings' ) );
 			$block_html .= sprintf(
 				'<option data-duration-display="%1$s" data-value="%2$s" value="%3$s">%4$s%1$s</option>',
 				esc_attr( $display ),
