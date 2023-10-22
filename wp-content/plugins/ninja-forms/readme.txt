@@ -3,8 +3,8 @@ Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, krmoorho
 Tags: forms, contact form, email form, form builder, custom form, pdf form, registration form, payment form, login form, contact me, signature form, upload form, file upload form, conditional form, feedback form, appointment form, quote form, survey form, contact button, signup form, form plugin, contact form plugin, subscription form, email subscription form, newsletter form, donation form, booking form, quote request form, multi page form, conditional logic form, subscription form, application form, employment verification form, star rating form, rating form, event form, mailchimp form, campaign monitor form, constant contact form, mailpoet form, aweber form, cleverreach form, emma form, convertkit form, active campaign form, salesforce form, zoho form, capsule form, insightly form, pipelinedeals form, onepagecrm form
 
 Requires at least: 6.0
-Tested up to: 6.3
-Stable tag: 3.6.29
+Tested up to: 6.3.1
+Stable tag: 3.6.34
 
 License: GPLv2 or later
 
@@ -304,17 +304,64 @@ This section describes how to install the plugin and get it working.
 5. Beautiful Forms Every Time!
 
 == Upgrade Notice ==
-= 3.6.29 (16 August 2023)
+= 3.6.34 (11 October 2023)
 
-*Bug fixes:*
-* Fix submission retrieval error missing submissions within time stamp on date
-* Ensure 7.4-required functionality doesn't trigger warnings
+* Bug Fixes: *
+- Prevent script triggers in field labels
+- Ensure needed export data present before action
 
-*Other:*
-* Update library for autonumeric, WP scripts
-* Update tested up to, now 6.3 was 6.2.2
+* Other: *
+- Update to country list
+- Close notice from bulk export results
 
 == Changelog ==
+= 3.6.34 (11 October 2023)
+
+* Bug Fixes: *
+- Prevent script triggers in field labels
+- Ensure needed export data present before action
+
+* Other: *
+- Update to country list
+- Close notice from bulk export results
+
+= 3.6.33 (3 October 2023)
+
+* Bug Fixes: *
+- Error re-triggering email action when PDF is active
+- Display anonymized repeater field data in submissions
+- Error on missing class name
+- Remove Max-width CSS being applied to form content
+- misspelled text fixes
+
+* Other *
+- Dependencies bumps
+
+== Changelog ==
+= 3.6.32 (21 September 2023)
+
+* Bug Fixes: *
+- rePrints data on the template for the frontend in order to prevent conflicts with other plugins
+- checks if the description of fields in the builder is set before running trim
+
+= 3.6.31 (19 September 2023)
+
+* Bug Fixes: *
+- Fixes form not displaying and form stuck on processing from jQuery trim() failure on non-string
+
+* Other: *
+- Remove old promotions banner
+
+= 3.6.30 (14 September 2023)
+
+* Bug Fixes: *
+- Form should now submit properly if submit button label and processing label match.
+- Ensure forms display on themes using wp_localize_script
+
+* Other: *
+- Remove support for NF 2.9
+- JS dependency updates: update to React 18, WordPress block editor/scripts/server side render/i18n, babel-jest, core-js
+
 = 3.6.29 (16 August 2023)
 
 *Bug fixes:*
