@@ -7,7 +7,7 @@
  * Text Domain: woocommerce-one-page-checkout
  * Domain Path: languages
  * Plugin URI:  https://woocommerce.com/products/woocommerce-one-page-checkout/
- * Version: 2.7.0
+ * Version: 2.8.1
  * Tested up to: 6.3
  * WC requires at least: 2.5
  * WC tested up to: 7.9
@@ -32,13 +32,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// Declare compatibility with custom order tables for WooCommerce.
 add_action(
 	'before_woocommerce_init',
 	function() {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			// Declare compatibility with custom order tables for WooCommerce.
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+
+			// Declare incompatibility with cart and checkout blocks for WooCommerce.
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, false );
 		}
+
 	}
 );
 
@@ -64,7 +68,7 @@ if ( ! is_woocommerce_active() || version_compare( get_option( 'woocommerce_db_v
 	return;
 }
 
-define( 'WC_ONE_PAGE_CHECKOUT_VERSION', '2.7.0' ); // WRCS: DEFINED_VERSION.
+define( 'WC_ONE_PAGE_CHECKOUT_VERSION', '2.8.1' ); // WRCS: DEFINED_VERSION.
 
 add_filter( 'woocommerce_translations_updates_for_woocommerce-one-page-checkout', '__return_true' );
 
@@ -1484,7 +1488,7 @@ class PP_One_Page_Checkout {
 		// WC 3.3+ deprecates handle-specific filters in favour of 'woocommerce_get_script_data'.
 		if ( 'woocommerce_get_script_data' === current_filter() && 'wc-checkout' !== $handle ) {
 			return $params;
-		} elseif ( $post->ID === self::$shortcode_page_id ) {
+		} elseif ( ! empty( $post ) && $post->ID === self::$shortcode_page_id ) {
 			$params['is_checkout'] = true;
 		}
 
