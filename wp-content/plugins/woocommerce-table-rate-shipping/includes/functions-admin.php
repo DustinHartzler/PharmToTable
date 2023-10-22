@@ -1,4 +1,10 @@
 <?php
+/**
+ * Functions collection.
+ *
+ * @package WooCommerce_Table_Rat_Shipping
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -21,43 +27,43 @@ function wc_table_rate_admin_shipping_rows( $instance ) {
 				<?php if ( is_array( $shipping_classes ) && count( $shipping_classes ) ) : ?>
 					<th>
 						<?php esc_html_e( 'Shipping Class', 'woocommerce-table-rate-shipping' ); ?>
-						<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Shipping class this rate applies to.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+						<a class="tips" data-tip="<?php esc_attr_e( 'Shipping class this rate applies to.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 					</th>
 				<?php endif; ?>
 				<th>
 					<?php esc_html_e( 'Condition', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Condition vs. destination', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Condition vs. destination', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th>
 					<?php esc_html_e( 'Min&ndash;Max', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Bottom and top range for the selected condition. ', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Bottom and top range for the selected condition. ', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th width="1%" class="checkbox">
 					<?php esc_html_e( 'Break', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Break at this point. For per-order rates, no rates other than this will be offered. For calculated rates, this will stop any further rates being matched.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Break at this point. For per-order rates, no rates other than this will be offered. For calculated rates, this will stop any further rates being matched.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th width="1%" class="checkbox">
 					<?php esc_html_e( 'Abort', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Enable this option to disable all rates/this shipping method if this row matches any item/line/class being quoted.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Enable this option to disable all rates/this shipping method if this row matches any item/line/class being quoted.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th class="cost">
 					<?php esc_html_e( 'Row cost', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Cost for shipping the order.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Cost for shipping the order.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th class="cost cost_per_item">
 					<?php esc_html_e( 'Item cost', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Cost per item.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Cost per item.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th class="cost cost_per_weight">
 					<?php echo esc_html( get_option( 'woocommerce_weight_unit' ) . ' ' . __( 'cost', 'woocommerce-table-rate-shipping' ) ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Cost per weight unit.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Cost per weight unit.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 				<th class="cost cost_percent">
 					<?php esc_html_e( '% cost', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Percentage of total to charge.', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a></th>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Percentage of total to charge.', 'woocommerce-table-rate-shipping' ); ?>">[?]</a></th>
 				<th class="shipping_label">
 					<?php esc_html_e( 'Label', 'woocommerce-table-rate-shipping' ); ?>
-					<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Label for the shipping method which the user will be presented. ', 'woocommerce-table-rate-shipping' ) ); ?>">[?]</a>
+					<a class="tips" data-tip="<?php esc_attr_e( 'Label for the shipping method which the user will be presented. ', 'woocommerce-table-rate-shipping' ); ?>">[?]</a>
 				</th>
 			</tr>
 		</thead>
@@ -130,9 +136,10 @@ function wc_table_rate_admin_shipping_rows( $instance ) {
 }
 
 /**
- * wc_table_rate_admin_shipping_class_priorities function.
+ * The wc_table_rate_admin_shipping_class_priorities function.
  *
- * @access public
+ * @param int $shipping_method_id Shipping Method Id.
+ *
  * @return void
  */
 function wc_table_rate_admin_shipping_class_priorities( $shipping_method_id ) {
@@ -140,7 +147,7 @@ function wc_table_rate_admin_shipping_class_priorities( $shipping_method_id ) {
 	if ( ! $classes ) :
 		echo '<p class="description">' . esc_html__( 'No shipping classes exist - you can ignore this option :)', 'woocommerce-table-rate-shipping' ) . '</p>';
 	else :
-		$priority = get_option( 'woocommerce_table_rate_default_priority_' . $shipping_method_id ) != '' ? get_option( 'woocommerce_table_rate_default_priority_' . $shipping_method_id ) : 10;
+		$priority = get_option( 'woocommerce_table_rate_default_priority_' . $shipping_method_id, 10 );
 		?>
 		<table class="widefat shippingrows" style="position:relative;">
 			<thead>
@@ -152,7 +159,11 @@ function wc_table_rate_admin_shipping_class_priorities( $shipping_method_id ) {
 			<tfoot>
 				<tr>
 					<td colspan="2">
-						<span class="description per_order"><?php _e( 'When calculating shipping, the cart contents will be <strong>searched for all shipping classes</strong>. If all product shipping classes are <strong>identical</strong>, the corresponding class will be used.<br/><strong>If there are a mix of classes</strong> then the class with the <strong>lowest number priority</strong> (defined above) will be used.', 'woocommerce-table-rate-shipping' ); // WPCS: xss ok. ?></span>
+						<span class="description per_order">
+							<?php
+							echo wp_kses_post( __( 'When calculating shipping, the cart contents will be <strong>searched for all shipping classes</strong>. If all product shipping classes are <strong>identical</strong>, the corresponding class will be used.<br/><strong>If there are a mix of classes</strong> then the class with the <strong>lowest number priority</strong> (defined above) will be used.', 'woocommerce-table-rate-shipping' ) );
+							?>
+						</span>
 					</td>
 				</tr>
 			</tfoot>
@@ -185,10 +196,10 @@ function wc_table_rate_admin_shipping_rows_process( $shipping_method_id ) {
 	global $wpdb;
 	// phpcs:disable WordPress.Security.NonceVerification.Missing --- callable only on admin page
 
-	// Clear cache
+	// Clear cache.
 	$wpdb->query( "DELETE FROM `$wpdb->options` WHERE `option_name` LIKE ('_transient_wc_ship_%')" );
 
-	// Save class priorities
+	// Save class priorities.
 	if ( empty( $_POST['woocommerce_table_rate_calculation_type'] ) ) {
 
 		if ( isset( $_POST['woocommerce_table_rate_priorities'] ) ) {
@@ -210,23 +221,23 @@ function wc_table_rate_admin_shipping_rows_process( $shipping_method_id ) {
 		$precision = 4;
 	}
 
-	// Save rates
-	$rate_ids                 = isset( $_POST['rate_id'] ) ? array_map( 'intval', $_POST['rate_id'] ) : array();
-	$shipping_class           = isset( $_POST['shipping_class'] ) ? array_map( 'wc_clean', $_POST['shipping_class'] ) : array();
-	$shipping_condition       = isset( $_POST['shipping_condition'] ) ? array_map( 'wc_clean', $_POST['shipping_condition'] ) : array();
-	$shipping_min             = isset( $_POST['shipping_min'] ) ? array_map( 'wc_clean', $_POST['shipping_min'] ) : array();
-	$shipping_max             = isset( $_POST['shipping_max'] ) ? array_map( 'wc_clean', $_POST['shipping_max'] ) : array();
-	$shipping_cost            = isset( $_POST['shipping_cost'] ) ? array_map( 'wc_clean', $_POST['shipping_cost'] ) : array();
-	$shipping_per_item        = isset( $_POST['shipping_per_item'] ) ? array_map( 'wc_clean', $_POST['shipping_per_item'] ) : array();
-	$shipping_cost_per_weight = isset( $_POST['shipping_cost_per_weight'] ) ? array_map( 'wc_clean', $_POST['shipping_cost_per_weight'] ) : array();
-	$cost_percent             = isset( $_POST['shipping_cost_percent'] ) ? array_map( 'wc_clean', $_POST['shipping_cost_percent'] ) : array();
-	$shipping_label           = isset( $_POST['shipping_label'] ) ? array_map( 'wc_clean', $_POST['shipping_label'] ) : array();
-	$shipping_priority        = isset( $_POST['shipping_priority'] ) ? array_map( 'wc_clean', $_POST['shipping_priority'] ) : array();
-	$shipping_abort           = isset( $_POST['shipping_abort'] ) ? array_map( 'wc_clean', $_POST['shipping_abort'] ) : array();
-	$shipping_abort_reason    = isset( $_POST['shipping_abort_reason'] ) ? array_map( 'wc_clean', $_POST['shipping_abort_reason'] ) : array();
+	// Save rates.
+	$rate_ids                 = isset( $_POST['rate_id'] ) ? array_map( 'intval', wp_unslash( $_POST['rate_id'] ) ) : array();
+	$shipping_class           = isset( $_POST['shipping_class'] ) ? wc_clean( wp_unslash( $_POST['shipping_class'] ) ) : array();
+	$shipping_condition       = isset( $_POST['shipping_condition'] ) ? wc_clean( wp_unslash( $_POST['shipping_condition'] ) ) : array();
+	$shipping_min             = isset( $_POST['shipping_min'] ) ? wc_clean( wp_unslash( $_POST['shipping_min'] ) ) : array();
+	$shipping_max             = isset( $_POST['shipping_max'] ) ? wc_clean( wp_unslash( $_POST['shipping_max'] ) ) : array();
+	$shipping_cost            = isset( $_POST['shipping_cost'] ) ? wc_clean( wp_unslash( $_POST['shipping_cost'] ) ) : array();
+	$shipping_per_item        = isset( $_POST['shipping_per_item'] ) ? wc_clean( wp_unslash( $_POST['shipping_per_item'] ) ) : array();
+	$shipping_cost_per_weight = isset( $_POST['shipping_cost_per_weight'] ) ? wc_clean( wp_unslash( $_POST['shipping_cost_per_weight'] ) ) : array();
+	$cost_percent             = isset( $_POST['shipping_cost_percent'] ) ? wc_clean( wp_unslash( $_POST['shipping_cost_percent'] ) ) : array();
+	$shipping_label           = isset( $_POST['shipping_label'] ) ? wc_clean( wp_unslash( $_POST['shipping_label'] ) ) : array();
+	$shipping_priority        = isset( $_POST['shipping_priority'] ) ? wc_clean( wp_unslash( $_POST['shipping_priority'] ) ) : array();
+	$shipping_abort           = isset( $_POST['shipping_abort'] ) ? wc_clean( wp_unslash( $_POST['shipping_abort'] ) ) : array();
+	$shipping_abort_reason    = isset( $_POST['shipping_abort_reason'] ) ? wc_clean( wp_unslash( $_POST['shipping_abort_reason'] ) ) : array();
 	// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-	// Get max key
+	// Get max key.
 	$max_key = ( $rate_ids ) ? max( array_keys( $rate_ids ) ) : 0;
 
 	for ( $i = 0; $i <= $max_key; $i++ ) {
@@ -249,7 +260,7 @@ function wc_table_rate_admin_shipping_rows_process( $shipping_method_id ) {
 		$rate_abort                = isset( $shipping_abort[ $i ] ) ? 1 : 0;
 		$rate_abort_reason         = isset( $shipping_abort_reason[ $i ] ) ? $shipping_abort_reason[ $i ] : '';
 
-		// Format min and max
+		// Format min and max.
 		switch ( $rate_condition ) {
 			case 'weight':
 			case 'price':
@@ -277,7 +288,7 @@ function wc_table_rate_admin_shipping_rows_process( $shipping_method_id ) {
 
 		if ( $rate_id > 0 ) {
 
-			// Update row
+			// Update row.
 			$wpdb->update(
 				$wpdb->prefix . 'woocommerce_shipping_table_rates',
 				array(
@@ -322,7 +333,7 @@ function wc_table_rate_admin_shipping_rows_process( $shipping_method_id ) {
 
 		} else {
 
-			// Insert row
+			// Insert row.
 			$result = $wpdb->insert(
 				$wpdb->prefix . 'woocommerce_shipping_table_rates',
 				array(

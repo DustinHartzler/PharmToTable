@@ -1,4 +1,10 @@
 <?php
+/**
+ * Uninstall file.
+ *
+ * @package WooCommerce_Table_Rat_Shipping
+ */
+
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }

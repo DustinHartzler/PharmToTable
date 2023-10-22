@@ -1,5 +1,21 @@
 *** Table Rate Shipping Changelog ***
 
+2023-10-06 - version 3.1.6
+* Fix - Shipping rates are not displayed when calculating per shipping class.
+
+2023-10-03 - version 3.1.5
+* Fix - The optional abort reason text is missing from the checkout page.
+* Fix - WordPress Coding Standards.
+
+2023-09-07 - version 3.1.4
+* Update - Security updates.
+* Fix    - Method title always defaults to "Table Rate".
+* Fix    - Shipping tax is not calculated.
+
+2023-09-05 - version 3.1.3
+* Fix   - Optional abort text will only be displayed if no other rates available.
+* Tweak - PHP 8.2 compatibility.
+
 2023-08-08 - version 3.1.2
 * Fix - Security updates.
 
