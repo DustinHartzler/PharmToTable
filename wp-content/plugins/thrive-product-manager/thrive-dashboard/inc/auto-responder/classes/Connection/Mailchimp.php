@@ -430,13 +430,12 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				$status = $contact->status;
 			}
 
-		} catch ( Exception $exception ) {
+		} finally {
+			return array(
+				$optin,
+				$status,
+			);
 		}
-
-		return array(
-			$optin,
-			$status,
-		);
 	}
 
 	/**

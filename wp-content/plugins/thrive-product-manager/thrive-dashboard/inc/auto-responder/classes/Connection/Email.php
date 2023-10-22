@@ -120,11 +120,16 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 	 * @return array
 	 */
 	public function get_connected_email_providers() {
+		if ( function_exists( 'wp_mail_smtp' ) ) {
+			$own_site_name = 'WP Mail SMTP';
+		} else {
+			$own_site_name = 'Send emails from this site';
+		}
 
 		$providers = array(
 			array(
-				'id'   => 'own_site',
-				'name' => 'Send emails from this site',
+				'id'         => 'own_site',
+				'name'       => $own_site_name,
 			),
 		);
 

@@ -181,7 +181,7 @@ msgstr ""
 msgid "Manage Scripts"
 msgstr ""
 
-#: ../inc/functions.php:499, ../inc/functions.php:507, ../inc/automator/class-tap-facebook.php:196, ../inc/auto-responder/classes/Connection/Abstract.php:1012, ../inc/auto-responder/classes/Connection/Email.php:472, ../inc/auto-responder/views/setup/awsses.php:21, ../inc/auto-responder/views/setup/gotowebinar.php:33, ../inc/auto-responder/views/setup/madmimi.php:13, ../inc/auto-responder/lib/vendor/Html/Renderer.php:41, ../inc/auto-responder/lib/vendor/Html/Renderer.php:416
+#: ../inc/functions.php:499, ../inc/functions.php:507, ../inc/automator/class-tap-facebook.php:196, ../inc/auto-responder/classes/Connection/Abstract.php:1018, ../inc/auto-responder/classes/Connection/Email.php:477, ../inc/auto-responder/views/setup/awsses.php:21, ../inc/auto-responder/views/setup/gotowebinar.php:33, ../inc/auto-responder/views/setup/madmimi.php:13, ../inc/auto-responder/lib/vendor/Html/Renderer.php:41, ../inc/auto-responder/lib/vendor/Html/Renderer.php:416
 msgid "Email"
 msgstr ""
 
@@ -193,11 +193,11 @@ msgstr ""
 msgid "Custom fields"
 msgstr ""
 
-#: ../inc/functions.php:557, ../inc/automator/action-fields/class-api-fields.php:50, ../inc/font-import-manager/views/main.php:48, ../inc/auto-responder/classes/Connection/Abstract.php:711, ../inc/auto-responder/classes/Connection/Abstract.php:1019, ../inc/auto-responder/classes/Connection/Email.php:479, ../inc/auto-responder/lib/vendor/Html/Renderer.php:34
+#: ../inc/functions.php:557, ../inc/automator/action-fields/class-api-fields.php:50, ../inc/font-import-manager/views/main.php:48, ../inc/auto-responder/classes/Connection/Abstract.php:717, ../inc/auto-responder/classes/Connection/Abstract.php:1025, ../inc/auto-responder/classes/Connection/Email.php:484, ../inc/auto-responder/lib/vendor/Html/Renderer.php:34
 msgid "Name"
 msgstr ""
 
-#: ../inc/functions.php:565, ../inc/automator/class-tap-facebook.php:200, ../inc/automator/action-fields/class-api-fields.php:54, ../inc/auto-responder/classes/Connection/Abstract.php:712, ../inc/auto-responder/classes/Connection/Abstract.php:1025, ../inc/auto-responder/classes/Connection/Email.php:485
+#: ../inc/functions.php:565, ../inc/automator/class-tap-facebook.php:200, ../inc/automator/action-fields/class-api-fields.php:54, ../inc/auto-responder/classes/Connection/Abstract.php:718, ../inc/auto-responder/classes/Connection/Abstract.php:1031, ../inc/auto-responder/classes/Connection/Email.php:490
 msgid "Phone"
 msgstr ""
 
@@ -1898,43 +1898,43 @@ msgstr ""
 msgid "Disconnect Thrivethemes.com Account"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:485, ../inc/auto-responder/classes/Connection/Abstract.php:832
+#: ../inc/auto-responder/classes/Connection/Abstract.php:485, ../inc/auto-responder/classes/Connection/Abstract.php:838
 msgid "is not connected"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:959, ../inc/smart-site/views/admin/templates/global-fields/text-options.phtml:24
+#: ../inc/auto-responder/classes/Connection/Abstract.php:965, ../inc/smart-site/views/admin/templates/global-fields/text-options.phtml:24
 msgid "Text"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:964
+#: ../inc/auto-responder/classes/Connection/Abstract.php:970
 msgid "URL"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:969
+#: ../inc/auto-responder/classes/Connection/Abstract.php:975
 msgid "Radio"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:974
+#: ../inc/auto-responder/classes/Connection/Abstract.php:980
 msgid "Dropdown"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:979
+#: ../inc/auto-responder/classes/Connection/Abstract.php:985
 msgid "Checkbox"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:984
+#: ../inc/auto-responder/classes/Connection/Abstract.php:990
 msgid "Textarea"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:989
+#: ../inc/auto-responder/classes/Connection/Abstract.php:995
 msgid "File upload"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:994
+#: ../inc/auto-responder/classes/Connection/Abstract.php:1000
 msgid "Avatar picker"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Abstract.php:999
+#: ../inc/auto-responder/classes/Connection/Abstract.php:1005
 msgid "Hidden"
 msgstr ""
 
@@ -2054,7 +2054,7 @@ msgstr ""
 msgid "Failed to send email"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Email.php:355
+#: ../inc/auto-responder/classes/Connection/Email.php:360
 msgid "Extra Data"
 msgstr ""
 
@@ -2247,19 +2247,19 @@ msgstr ""
 msgid "Mailchimp connected successfully"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Mailchimp.php:525, ../inc/auto-responder/classes/Connection/Mailchimp.php:607, ../inc/auto-responder/classes/Connection/MailerLite.php:187, ../inc/auto-responder/classes/Connection/Sendinblue.php:224, ../inc/auto-responder/classes/Connection/SendinblueEmail.php:384, ../inc/auto-responder/classes/Connection/SendinblueEmailV3.php:423, ../inc/auto-responder/classes/Connection/SendinblueV3.php:261
+#: ../inc/auto-responder/classes/Connection/Mailchimp.php:524, ../inc/auto-responder/classes/Connection/Mailchimp.php:606, ../inc/auto-responder/classes/Connection/MailerLite.php:187, ../inc/auto-responder/classes/Connection/Sendinblue.php:224, ../inc/auto-responder/classes/Connection/SendinblueEmail.php:384, ../inc/auto-responder/classes/Connection/SendinblueEmailV3.php:423, ../inc/auto-responder/classes/Connection/SendinblueV3.php:261
 msgid "Unknown Error"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Mailchimp.php:605
+#: ../inc/auto-responder/classes/Connection/Mailchimp.php:604
 msgid "Unknown Mailchimp Error"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Mailchimp.php:623, ../inc/auto-responder/classes/Connection/Mailchimp.php:715
+#: ../inc/auto-responder/classes/Connection/Mailchimp.php:622, ../inc/auto-responder/classes/Connection/Mailchimp.php:714
 msgid "Missing required parameters for adding tags to contact"
 msgstr ""
 
-#: ../inc/auto-responder/classes/Connection/Mailchimp.php:640, ../inc/auto-responder/classes/Connection/Mailchimp.php:933, ../inc/auto-responder/classes/Connection/MailerLite.php:128, ../inc/auto-responder/classes/Connection/Sendinblue.php:167, ../inc/auto-responder/classes/Connection/SendinblueEmail.php:346, ../inc/auto-responder/classes/Connection/SendinblueEmailV3.php:383, ../inc/auto-responder/classes/Connection/SendinblueV3.php:190, ../inc/auto-responder/classes/Connection/SGAutorepondeur.php:128
+#: ../inc/auto-responder/classes/Connection/Mailchimp.php:639, ../inc/auto-responder/classes/Connection/Mailchimp.php:932, ../inc/auto-responder/classes/Connection/MailerLite.php:128, ../inc/auto-responder/classes/Connection/Sendinblue.php:167, ../inc/auto-responder/classes/Connection/SendinblueEmail.php:346, ../inc/auto-responder/classes/Connection/SendinblueEmailV3.php:383, ../inc/auto-responder/classes/Connection/SendinblueV3.php:190, ../inc/auto-responder/classes/Connection/SGAutorepondeur.php:128
 msgid "Please re-check your API connection details."
 msgstr ""
 

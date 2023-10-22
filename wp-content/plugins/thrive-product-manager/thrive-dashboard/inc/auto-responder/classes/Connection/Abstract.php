@@ -269,7 +269,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * set connection parameter
 	 *
 	 * @param string $field
-	 * @param mixed  $value
+	 * @param mixed $value
 	 *
 	 * @return $this
 	 */
@@ -451,7 +451,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * delete a contact matching arguments
 	 *
 	 * @param string $email
-	 * @param array  $arguments
+	 * @param array $arguments
 	 *
 	 * @return mixed
 	 */
@@ -668,7 +668,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * Return an array with the lists, custom fields and extra settings
 	 *
 	 * @param array $params
-	 * @param int   $force
+	 * @param int $force
 	 *
 	 * @return array
 	 */
@@ -677,8 +677,13 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 			$params = [];
 		}
 
-		$transient = 'tve_api_data_' . $this->get_key();
-		$data      = get_transient( $transient );
+
+		if ( $this->get_key() === 'email' ) {
+			$force = true;
+		} else {
+			$transient = 'tve_api_data_' . $this->get_key();
+			$data = get_transient( $transient );
+		}
 
 		if ( false === $force && tve_dash_is_debug_on() ) {
 			$force = true;
@@ -690,8 +695,9 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 				'extra_settings' => $this->get_extra_settings( $params ),
 				'custom_fields'  => $this->get_custom_fields( $params ),
 			);
-
-			set_transient( $transient, $data, MONTH_IN_SECONDS );
+			if ( $this->get_key() !== 'email' ) {
+				set_transient( $transient, $data, MONTH_IN_SECONDS );
+			}
 		}
 
 		$data['api_custom_fields'] = $this->get_api_custom_fields( $params, $force );
@@ -717,7 +723,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * output directly the html for a connection form from views/setup
 	 *
 	 * @param string $filename
-	 * @param array  $data allows passing variables to the view file
+	 * @param array $data allows passing variables to the view file
 	 */
 	protected function output_controls_html( $filename, $data = [] ) {
 		include dirname( dirname( __DIR__ ) ) . '/views/setup/' . $filename . '.php';
@@ -915,8 +921,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * Insert message to API error log
 	 *
 	 * @param string|int $list_identifier
-	 * @param array      $data
-	 * @param string     $error
+	 * @param array $data
+	 * @param string $error
 	 *
 	 * @return bool
 	 */
@@ -1154,7 +1160,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * Push external tags in $data, EX: adds tags from tqb
 	 *
 	 * @param array|string $tags
-	 * @param array        $data
+	 * @param array $data
 	 *
 	 * @return array
 	 */
@@ -1241,8 +1247,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 	/**
 	 * @param string $email
-	 * @param array  $tags
-	 * @param array  $extra
+	 * @param array $tags
+	 * @param array $extra
 	 *
 	 * @return int
 	 */
@@ -1258,9 +1264,9 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Prepare necessary arguments for adding a tag
 	 *
-	 * @param string       $email
+	 * @param string $email
 	 * @param array|string $tags
-	 * @param array        $extra
+	 * @param array $extra
 	 *
 	 * @return array
 	 */
@@ -1300,7 +1306,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * This method should be overwritten in every instance that deals with custom fields and prepare them as needed
 	 *
 	 * @param array $custom_fields
-	 * @param null  $list_identifier
+	 * @param null $list_identifier
 	 *
 	 * @return array
 	 */
@@ -1337,7 +1343,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * Get a sanitized value from post
 	 *
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 *
 	 * @return array|mixed|null
 	 */

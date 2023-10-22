@@ -157,18 +157,27 @@ class Thrive_Dash_Api_Mailchimp {
 				$query_string = isset( $options['query'] ) ? '?' . http_build_query( $options['query'] ) : '';
 				break;
 			case 'delete':
-				$method  = 'DELETE';
+				$args['method']                     = 'DELETE';
 				$fn      = 'tve_dash_api_remote_request';
 				$no_body = true;
 				break;
-			default:
 
-				$args['method'] = $method;
+			case 'put':
+				$args['method']                     = 'PUT';
+				$fn                                 = 'tve_dash_api_remote_request';
+				$body                               = json_encode( $options['json'] );
+				$options['headers']['Content-type'] = 'application/json';
+				$args['body']                       = $body;
+				break;
+			default:
 				$fn                                 = 'tve_dash_api_remote_post';
 				$body                               = json_encode( $options['json'] );
 				$options['headers']['Content-type'] = 'application/json';
-				$args['body'] = $body;
+				$args['body']                       = $body;
 				break;
+		}
+		if ( $no_body ) {
+			unset( $args['body'] );
 		}
 
 		$url      = $this->endpoint . $resource . $query_string;
