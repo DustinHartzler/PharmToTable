@@ -4,6 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Printful_Token_Migration
 {
+    private const MIGRATION_WAITING = '0';
+    private const MIGRATION_RUNNING = '1';
+    private const MIGRATION_FAILED = '-1';
+
     private const OPTION_NAME_MIGRATION = 'pf-migration-in-progress';
 
     public static $_instance;
@@ -31,7 +35,13 @@ class Printful_Token_Migration
             try {
                 $instance->startMigration();
                 $instance->migrate();
-            } catch (Throwable $throwable) {
+            } catch (PrintfulApiException $exception) {
+                if ($exception->isNotAuthorizedError()) {
+                    $instance->markMigrationFailed();
+
+                    return;
+                }
+
                 $instance->restartMigration();
                 // allow migration to silently fail
             }
@@ -42,7 +52,7 @@ class Printful_Token_Migration
         $restKey = $this->integration->get_option( 'printful_key' );
         $oauthKey = $this->integration->get_option( 'printful_oauth_key' );
 
-        return $restKey && !$oauthKey && !$this->isMigrationRunning();
+        return $restKey && !$oauthKey && !$this->isMigrationRunning() && !$this->hasMigrationFailed();
     }
 
     public function migrate() {
@@ -71,16 +81,26 @@ class Printful_Token_Migration
 
     protected function isMigrationRunning()
     {
-        return (bool) get_option(self::OPTION_NAME_MIGRATION, 0);
+        return get_option(self::OPTION_NAME_MIGRATION, 0) === self::MIGRATION_RUNNING;
     }
 
     protected function startMigration()
     {
-        update_option(self::OPTION_NAME_MIGRATION, 1);
+        update_option(self::OPTION_NAME_MIGRATION, self::MIGRATION_RUNNING);
     }
 
     protected function restartMigration()
     {
-        update_option(self::OPTION_NAME_MIGRATION, 0);
+        update_option(self::OPTION_NAME_MIGRATION, self::MIGRATION_WAITING);
+    }
+
+    protected function markMigrationFailed()
+    {
+        update_option(self::OPTION_NAME_MIGRATION, self::MIGRATION_FAILED);
+    }
+
+    protected function hasMigrationFailed()
+    {
+        return get_option(self::OPTION_NAME_MIGRATION, 0) === self::MIGRATION_FAILED;
     }
 }

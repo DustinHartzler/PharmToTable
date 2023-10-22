@@ -196,4 +196,8 @@ class PrintfulException extends Exception {}
 /**
  * Class PrintfulException Printful exception returned from the API
  */
-class PrintfulApiException extends PrintfulException {}
+class PrintfulApiException extends PrintfulException {
+    public function isNotAuthorizedError() {
+        return $this->getCode() === 401;
+    }
+}
