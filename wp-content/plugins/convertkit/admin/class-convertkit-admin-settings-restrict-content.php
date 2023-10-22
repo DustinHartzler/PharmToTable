@@ -66,18 +66,6 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 	public function register_fields() {
 
 		add_settings_field(
-			'enabled',
-			__( 'Enable', 'convertkit' ),
-			array( $this, 'enable_callback' ),
-			$this->settings_key,
-			$this->name,
-			array(
-				'name'        => 'enabled',
-				'description' => __( 'Enables the Member Content functionality, displaying configuration options on pages to require a subscription to a ConvertKit product', 'convertkit' ),
-			)
-		);
-
-		add_settings_field(
 			'subscribe_text',
 			__( 'Subscribe Text', 'convertkit' ),
 			array( $this, 'text_callback' ),
@@ -85,6 +73,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$this->name,
 			array(
 				'name'        => 'subscribe_text',
+				'label_for'   => 'subscribe_text',
 				'description' => array(
 					__( 'The text to display above the subscribe button, explaining why the content is only available to subscribers.', 'convertkit' ),
 				),
@@ -99,6 +88,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$this->name,
 			array(
 				'name'        => 'subscribe_button_label',
+				'label_for'   => 'subscribe_button_label',
 				'description' => array(
 					__( 'The text to display for the call to action button to subscribe to the ConvertKit product.', 'convertkit' ),
 				),
@@ -113,6 +103,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$this->name,
 			array(
 				'name'        => 'email_text',
+				'label_for'   => 'email_text',
 				'description' => array(
 					__( 'The text to display above the email form, instructing the subscriber to enter their email address to receive a login link to access the member\'s only content.', 'convertkit' ),
 				),
@@ -127,6 +118,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$this->name,
 			array(
 				'name'        => 'email_button_label',
+				'label_for'   => 'email_button_label',
 				'description' => array(
 					__( 'The text to display for the button to submit the subscriber\'s email address and receive a login link to access the member only content.', 'convertkit' ),
 				),
@@ -141,6 +133,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$this->name,
 			array(
 				'name'        => 'email_check_text',
+				'label_for'   => 'email_check_text',
 				'description' => array(
 					__( 'The text to display instructing the subscriber to check their email for the login link that was sent.', 'convertkit' ),
 				),
@@ -155,6 +148,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$this->name,
 			array(
 				'name'        => 'no_access_text',
+				'label_for'   => 'no_access_text',
 				'description' => array(
 					__( 'The text to display for a subscriber who authenticates via the login link, but does not have access to the product.', 'convertkit' ),
 				),
@@ -175,7 +169,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 		<div class="notice notice-warning">
 			<p>
 				<?php
-				echo sprintf(
+				printf(
 					'%s %s %s',
 					esc_html__( 'If your web host has caching configured (or you are using a caching plugin), you must configure it to disable caching when the', 'convertkit' ),
 					'<code>ck_subscriber_id</code>',
@@ -203,25 +197,6 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 	}
 
 	/**
-	 * Renders the input for the Enable setting.
-	 *
-	 * @since   2.1.0
-	 *
-	 * @param   array $args   Setting field arguments (name,description).
-	 */
-	public function enable_callback( $args ) {
-
-		// Output field.
-		echo $this->get_checkbox_field( // phpcs:ignore WordPress.Security.EscapeOutput
-			$args['name'],
-			'on',
-			$this->settings->enabled(), // phpcs:ignore WordPress.Security.EscapeOutput
-			$args['description'] // phpcs:ignore WordPress.Security.EscapeOutput
-		);
-
-	}
-
-	/**
 	 * Renders the input for the text setting.
 	 *
 	 * @since   2.1.0
@@ -237,7 +212,6 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 			$args['description'], // phpcs:ignore WordPress.Security.EscapeOutput
 			array(
 				'widefat',
-				'enabled',
 			)
 		);
 
@@ -248,7 +222,7 @@ class ConvertKit_Admin_Settings_Restrict_Content extends ConvertKit_Settings_Bas
 // Bootstrap.
 add_action(
 	'convertkit_admin_settings_register_sections',
-	function( $sections ) {
+	function ( $sections ) {
 
 		$sections['restrict-content'] = new ConvertKit_Admin_Settings_Restrict_Content();
 		return $sections;

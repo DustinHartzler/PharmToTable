@@ -241,7 +241,7 @@ class ConvertKit_Resource {
 		// Sort resources ascending by the order_by property.
 		uasort(
 			$resources,
-			function( $a, $b ) {
+			function ( $a, $b ) {
 				return strcmp( $a[ $this->order_by ], $b[ $this->order_by ] );
 			}
 		);
@@ -481,6 +481,19 @@ class ConvertKit_Resource {
 	public function get_cron_event() {
 
 		return wp_get_schedule( 'convertkit_resource_refresh_' . $this->type );
+
+	}
+
+	/**
+	 * Returns the timestamp for when the WordPress Cron event is next scheduled to run.
+	 *
+	 * @since   1.3.8
+	 *
+	 * @return  bool|int
+	 */
+	public function get_cron_event_next_scheduled() {
+
+		return wp_next_scheduled( 'convertkit_resource_refresh_' . $this->type );
 
 	}
 

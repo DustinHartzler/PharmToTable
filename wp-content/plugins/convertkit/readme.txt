@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, ggwicz
 Donate link: https://convertkit.com
 Tags: email marketing, email newsletter, newsletter, subscribers, membership
 Requires at least: 5.0
-Tested up to: 6.3
+Tested up to: 6.3.2
 Requires PHP: 5.6.20
-Stable tag: 2.2.8
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,6 +137,40 @@ Full Plugin documentation can be found [here](https://help.convertkit.com/en/art
 7. Track subscriber growth
 
 == Changelog ==
+
+### 2.3.3 2023-10-18
+* Added: Broadcasts (Beta): Option to export WordPress Posts to draft ConvertKit Broadcasts
+* Added: Member Content: Wizard: Option to restrict content by ConvertKit Tag
+* Fix: Member Content: Check Product or Tag exists in ConvertKit before restricting content
+* Fix: Form Trigger Block: Add spacing to button on non-block themes
+* Fix: Form Trigger Block: Render button in Gutenberg to better match frontend output when changing background color
+* Fix: Product Block: Add spacing to button on non-block themes
+* Fix: Product Block: Render button in Gutenberg to better match frontend output when changing background color
+
+### 2.3.2 2023-10-05
+* Added: Member Content: Option to restrict content by ConvertKit Tag, displaying a subscription form and subscribing the entered email address to the tag
+* Added: Member Content: Posts: Display Filter dropdown in Posts table
+* Fix: Member Content: Always enable Member Content options, ensuring imported Paid Broadcasts correctly show / hide content.
+* Fix: Prevent blank submenu entries displaying under `Dashboard` menu when using a third party admin menu editor Plugin
+* Updated: ConvertKit WordPress Libraries to 1.3.9
+
+### 2.3.1 2023-09-14
+* Fix: Settings: Member Content: Added missing`for` label attributes
+* Fix: Settings: Broadcasts: Added missing`for` label attributes
+* Fix: Posts: Add / Edit Category: `for` label attribute now matches the field ID
+* Fix: Select2: Remove whitespace on tooltip hover
+* Fix: Blocks: Include `editorScript` in `block.json`
+
+### 2.3.0 2023-09-12
+* Added: Forminator: Option to map Forminator Forms to ConvertKit Forms, to subscribe email addresses at Settings > ConvertKit > Forminator
+* Added: Forminator: Option to Enable Creator Network Recommendations modal on individual Forms at Settings > ConvertKit > Forminator
+* Added: Blocks: Register blocks using block.json
+* Fix: Landing Pages: Use WordPress Site Icon as favicon, if defined
+
+### 2.2.9 2023-09-06
+* Added: Broadcasts (Beta): Automatically publish public ConvertKit Broadcasts as WordPress Posts. Head over to `Settings > ConvertKit > Broadcasts` to get started.
+* Updated: WordPress Coding Standards
+* Updated: ConvertKit WordPress Libraries to 1.3.8
 
 ### 2.2.8 2023-08-07
 * Fix: Use `file_get_contents` instead of `WP_Filesystem` for reading plugin files, to avoid fatal error on activation when file ownership/permission issues occur
