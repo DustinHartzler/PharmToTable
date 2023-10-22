@@ -10,6 +10,17 @@
         'dev' => false,
     ),
     'versions' => array(
+        'appsero/client' => array(
+            'pretty_version' => 'dev-develop',
+            'version' => 'dev-develop',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../appsero/client',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'reference' => 'e62563b26f6b5a65556f929578b313d7652eb59d',
+            'dev_requirement' => false,
+        ),
         'composer/installers' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
