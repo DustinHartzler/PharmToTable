@@ -70,6 +70,7 @@ class BlockTemplatesController {
 	 * Initialization method.
 	 */
 	protected function init() {
+		add_filter( 'default_wp_template_part_areas', array( $this, 'register_mini_cart_template_part_area' ), 10, 1 );
 		add_action( 'template_redirect', array( $this, 'render_block_template' ) );
 		add_filter( 'pre_get_block_template', array( $this, 'get_block_template_fallback' ), 10, 3 );
 		add_filter( 'pre_get_block_file_template', array( $this, 'get_block_file_template' ), 10, 3 );
@@ -115,7 +116,7 @@ class BlockTemplatesController {
 						$settings['original_render_callback'] = $settings['render_callback'];
 						$settings['render_callback']          = function( $attributes, $content ) use ( $settings ) {
 							// The shortcode has already been rendered, so look for the cart/checkout HTML.
-							if ( strstr( $content, 'woocommerce-cart-form' ) || strstr( $content, 'woocommerce-checkout-form' ) ) {
+							if ( strstr( $content, 'woocommerce-cart-form' ) || strstr( $content, 'wc-empty-cart-message' ) || strstr( $content, 'woocommerce-checkout-form' ) ) {
 								// Return early before wpautop runs again.
 								return $content;
 							}
@@ -131,6 +132,23 @@ class BlockTemplatesController {
 				2
 			);
 		}
+	}
+
+	/**
+	 * Add Mini-Cart to the default template part areas.
+	 *
+	 * @param array $default_area_definitions An array of supported area objects.
+	 * @return array The supported template part areas including the Mini-Cart one.
+	 */
+	public function register_mini_cart_template_part_area( $default_area_definitions ) {
+		$mini_cart_template_part_area = [
+			'area'        => 'mini-cart',
+			'label'       => __( 'Mini-Cart', 'woocommerce' ),
+			'description' => __( 'The Mini-Cart template allows shoppers to see their cart items and provides access to the Cart and Checkout pages.', 'woocommerce' ),
+			'icon'        => 'mini-cart',
+			'area_tag'    => 'mini-cart',
+		];
+		return array_merge( $default_area_definitions, [ $mini_cart_template_part_area ] );
 	}
 
 	/**
@@ -325,7 +343,7 @@ class BlockTemplatesController {
 	 * @return array
 	 */
 	public function add_block_templates( $query_result, $query, $template_type ) {
-		if ( ! BlockTemplateUtils::supports_block_templates() ) {
+		if ( ! BlockTemplateUtils::supports_block_templates( $template_type ) ) {
 			return $query_result;
 		}
 
@@ -602,7 +620,13 @@ class BlockTemplatesController {
 		if (
 			is_singular( 'product' ) && $this->block_template_is_available( 'single-product' )
 		) {
-			$templates = get_block_templates( array( 'slug__in' => array( 'single-product' ) ) );
+			global $post;
+
+			$valid_slugs = [ 'single-product' ];
+			if ( 'product' === $post->post_type && $post->post_name ) {
+				$valid_slugs[] = 'single-product-' . $post->post_name;
+			}
+			$templates = get_block_templates( array( 'slug__in' => $valid_slugs ) );
 
 			if ( isset( $templates[0] ) && BlockTemplateUtils::template_has_legacy_template_block( $templates[0] ) ) {
 				add_filter( 'woocommerce_disable_compatibility_layer', '__return_true' );
@@ -831,6 +855,39 @@ class BlockTemplatesController {
 	 * @return string THe actual permalink assigned to the page. May differ from $permalink if it was already taken.
 	 */
 	protected function sync_endpoint_with_page( $page, $page_slug, $permalink ) {
+		$matching_page = get_page_by_path( $permalink, OBJECT, 'page' );
+
+		/**
+		 * Filters whether to attempt to guess a redirect URL for a 404 request.
+		 *
+		 * Returning a false value from the filter will disable the URL guessing
+		 * and return early without performing a redirect.
+		 *
+		 * @since 11.0.0
+		 *
+		 * @param bool $do_redirect_guess Whether to attempt to guess a redirect URL
+		 *                                for a 404 request. Default true.
+		 */
+		if ( ! $matching_page instanceof WP_Post && apply_filters( 'do_redirect_guess_404_permalink', true ) ) {
+			// If it is a subpage and url guessing is on, then we will need to get it via post_name as path will not match.
+			$query = new \WP_Query(
+				[
+					'post_type' => 'page',
+					'name'      => $permalink,
+				]
+			);
+
+			$matching_page = $query->have_posts() ? $query->posts[0] : null;
+		}
+
+		if ( $matching_page && 'publish' === $matching_page->post_status ) {
+			// Existing page matches given permalink; use its ID.
+			update_option( 'woocommerce_' . $page_slug . '_page_id', $matching_page->ID );
+
+			return get_page_uri( $matching_page );
+		}
+
+		// No matching page; either update current page (by ID stored in option table) or create a new page.
 		if ( ! $page ) {
 			$updated_page_id = wc_create_page(
 				esc_sql( $permalink ),
@@ -851,8 +908,9 @@ class BlockTemplatesController {
 
 		// Get post again in case slug was updated with a suffix.
 		if ( $updated_page_id && ! is_wp_error( $updated_page_id ) ) {
-			return get_post( $updated_page_id )->post_name;
+			return get_page_uri( get_post( $updated_page_id ) );
 		}
+
 		return $permalink;
 	}
 }
