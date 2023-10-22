@@ -204,6 +204,134 @@ textarea#episode_embed_code {
   font-size: 16px;
   top: -3px; }
 
+.ssp-settings:not(.ssp-settings-extensions, .ssp-settings-integrations) {
+  background: #FFFFFF;
+  margin-top: 28px;
+  border-radius: 4px;
+  border: 1px solid #CBD5E1;
+  padding: 0 10px; }
+  .ssp-settings h2 {
+    border-bottom: 1px solid #CBD5E1;
+    padding: 15px 10px 12px;
+    margin: 0 -10px 0 -10px; }
+  .ssp-settings table input.regular-text {
+    max-width: 90%;
+    background: #F1F5F9; }
+  .ssp-settings .validate-api-credentials-message {
+    margin-left: 30px; }
+  .ssp-settings .loader {
+    position: relative; }
+    .ssp-settings .loader:after {
+      content: '';
+      display: block;
+      width: 21px;
+      height: 21px;
+      background: url(../img/loader.svg) no-repeat;
+      position: absolute;
+      right: -24px;
+      top: 2px; }
+  .ssp-settings .ssp-sync-msg {
+    font-size: 12px; }
+    .ssp-settings .ssp-sync-msg .sync-overview {
+      font-size: 14px;
+      display: block;
+      margin: 10px 0; }
+    .ssp-settings .ssp-sync-msg.error .sync-overview {
+      color: #DF4E4F; }
+    .ssp-settings .ssp-sync-msg.success .sync-overview {
+      color: #4caf50; }
+
+.ssp-sync-podcast {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px; }
+
+.ssp-sync-label {
+  border-radius: 50px;
+  margin-right: 5px;
+  position: relative;
+  background: #F5F5F5;
+  border: 1px solid #ccd6e2;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+  white-space: nowrap;
+  color: #9CA3AF;
+  line-height: initial;
+  width: 25px;
+  height: 25px; }
+  .ssp-sync-label.ssp-full-label {
+    width: initial;
+    padding: 0 10px 0 27px;
+    line-height: 23px; }
+  .ssp-sync-label a {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0; }
+  .ssp-sync-label:before {
+    content: '';
+    background-repeat: no-repeat;
+    background-position: center;
+    display: block;
+    position: absolute;
+    background-size: contain;
+    left: 0;
+    top: 0;
+    width: 25px;
+    height: 25px; }
+  .ssp-sync-label.none {
+    color: #9CA3AF; }
+    .ssp-sync-label.none:before {
+      background-image: url(../img/status-none.svg); }
+  .ssp-sync-label.syncing {
+    border: 1px solid var(--blue-200, #BFDFFE);
+    background: var(--blue-100, #DBECFE);
+    color: #1C51CF; }
+    .ssp-sync-label.syncing:before {
+      background-image: url(../img/status-sending.svg); }
+  .ssp-sync-label.synced {
+    border: 1px solid var(--emerald-200, #A7F3D0);
+    background: var(--emerald-100, #D1FAE5);
+    color: #047857; }
+    .ssp-sync-label.synced:before {
+      left: 5px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      background-image: url(../img/status-success.svg); }
+  .ssp-sync-label.failed, .ssp-sync-label.synced_with_errors {
+    background: var(--yellow-100, #FEF8D7);
+    color: #AF6A09;
+    border: 1px solid #e2cccc; }
+    .ssp-sync-label.failed:before, .ssp-sync-label.synced_with_errors:before {
+      left: 4px;
+      top: 4px;
+      width: 17px;
+      height: 16px;
+      background-image: url(../img/status-failed.svg); }
+
+.ssp-episode-sync-status {
+  margin-bottom: 20px; }
+  .ssp-episode-sync-status__data {
+    margin-top: 10px; }
+
+.column-ssp_sync_status, .widefat th.column-ssp_sync_status {
+  width: 50px;
+  text-align: center; }
+
+.column-ssp_cover {
+  width: 80px; }
+
+.ssp-external-feed-message h3 {
+  color: #4caf50; }
+
+.ssp-external-feed-message.import-error h3 {
+  color: #DF4E4F; }
+
 /* latin-ext */
 @font-face {
   font-family: 'Inter';

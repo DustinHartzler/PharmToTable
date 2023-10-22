@@ -73,9 +73,6 @@ class Frontend_Controller {
 	 */
 	public function register_hooks_and_filters() {
 
-		// Register HTML5 player scripts and styles
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_html5_player_assets' ) );
-
 		// Add meta data to start of podcast content
 		$locations = get_option( 'ss_podcasting_player_locations', array( 'content' ) );
 
@@ -112,9 +109,6 @@ class Frontend_Controller {
 
 		// Download podcast episode
 		add_action( 'wp', array( $this, 'download_file' ), 1 );
-
-		// Trigger import podcast process (if active)
-		add_action( 'wp_loaded', array( $this, 'import_existing_podcast_to_podmotor' ) );
 
 		add_filter( 'feed_content_type', array( $this, 'feed_content_type' ), 10, 2 );
 
@@ -256,21 +250,6 @@ class Frontend_Controller {
 	public function get_ajax_playlist_items() {
 		$items = $this->players_controller->get_ajax_playlist_items();
 		wp_send_json_success( $items );
-	}
-
-	/**
-	 * Used to load the HTML5 player scripts and styles
-	 * Only load this if the HTML5 player is enabled in the plugin
-	 * Additionally, if we're rendering a post or page which includes a player block, enqueue the player assets
-	 */
-	public function register_html5_player_assets() {
-		/**
-		 * If we're rendering a SSP Block, which includes the HTML5 player, also enqueue the player scripts
-		 */
-		if ( has_block( 'seriously-simple-podcasting/castos-player' ) || has_block( 'seriously-simple-podcasting/podcast-list' ) ) {
-			wp_enqueue_script( 'ssp-castos-player' );
-			wp_enqueue_style( 'ssp-castos-player' );
-		}
 	}
 
 	/**
@@ -860,29 +839,6 @@ class Frontend_Controller {
 	}
 
 	/**
-	 * Public action which is triggered from the Seriously Simple Hosting queue
-	 * Imports episodes to Serioulsy Simple Hosting
-	 * @deprecated
-	 * @todo: investigate and remove. Looks like an obsolete function.
-	 */
-	public function import_existing_podcast_to_podmotor(){
-		// this will soon be deprecated
-		$podcast_importer = ( isset( $_GET['podcast_importer'] ) ? filter_var( $_GET['podcast_importer'], FILTER_DEFAULT ) : '' );
-		if (empty($podcast_importer)){
-			$podcast_importer = ( isset( $_GET['ssp_podcast_importer'] ) ? filter_var( $_GET['ssp_podcast_importer'], FILTER_DEFAULT ) : '' );
-		}
-		if ( ! empty( $podcast_importer ) && 'true' == $podcast_importer ) {
-			$continue = import_existing_podcast();
-			if ( $continue ) {
-				$reponse = array( 'continue' => 'false', 'response' => 'Podcast data imported' );
-			} else {
-				$reponse = array( 'continue' => 'true', 'response' => 'An error occurred importing the podcast data' );
-			}
-			wp_send_json( $reponse );
-		}
-	}
-
-	/**
 	 * Download file from `podcast_episode` query variable
 	 * @return void
 	 */
@@ -921,7 +877,7 @@ class Frontend_Controller {
 			}
 
 			// Ensure that $file is a valid URL
-			$is_url = 0 === strpos( $file, 'http' );
+			$is_url = boolval( filter_var( $file, FILTER_VALIDATE_URL ) );
 
 			// Exit if no file is found
 			if ( ! $is_url ) {

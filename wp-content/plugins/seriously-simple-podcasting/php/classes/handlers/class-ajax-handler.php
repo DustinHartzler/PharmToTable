@@ -1,17 +1,27 @@
 <?php
 
-namespace SeriouslySimplePodcasting\Ajax;
+namespace SeriouslySimplePodcasting\Handlers;
 
-use SeriouslySimplePodcasting\Handlers\Castos_Handler;
-use SeriouslySimplePodcasting\Handlers\RSS_Import_Handler;
-use SeriouslySimplePodcasting\Handlers\Options_Handler;
+use SeriouslySimplePodcasting\Controllers\Podcast_Post_Types_Controller as PPT_Controller;
+use SeriouslySimplePodcasting\Entities\Sync_Status;
+use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 
 class Ajax_Handler {
 
 	/**
+	 * @var Castos_Handler $castos_handler
+	 *
+	 * */
+	protected $castos_handler;
+
+	/**
 	 * Ajax_Handler constructor.
+	 *
+	 * @param Castos_Handler $castos_handler
 	 */
-	public function __construct() {
+	public function __construct( $castos_handler ) {
+		$this->castos_handler = $castos_handler;
+
 		$this->bootstrap();
 	}
 
@@ -22,17 +32,8 @@ class Ajax_Handler {
 		// Add ajax action for plugin rating
 		add_action( 'wp_ajax_ssp_rated', array( $this, 'rated' ) );
 
-		// Insert a new subscribe option to the ss_podcasting_subscribe_options array.
-		add_action( 'wp_ajax_insert_new_subscribe_option', array( $this, 'insert_new_subscribe_option' ) );
-
-		// Deletes a subscribe option from the ss_podcasting_subscribe_options array.
-		add_action( 'wp_ajax_delete_subscribe_option', array( $this, 'delete_subscribe_option' ) );
-
 		// Add ajax action for plugin rating.
 		add_action( 'wp_ajax_validate_castos_credentials', array( $this, 'validate_podmotor_api_credentials' ) );
-
-		// Add ajax action for uploading file data to Castos that has been uploaded already via plupload
-		add_action( 'wp_ajax_ssp_store_podmotor_file', array( $this, 'store_castos_file' ) );
 
 		// Add ajax action for customising episode embed code
 		add_action( 'wp_ajax_update_episode_embed_code', array( $this, 'update_episode_embed_code' ) );
@@ -45,6 +46,9 @@ class Ajax_Handler {
 
 		// Add ajax action to reset external feed options
 		add_action( 'wp_ajax_reset_rss_feed_data', array( $this, 'reset_rss_feed_data' ) );
+
+		// Add ajax action to the Castos sync process
+		add_action( 'wp_ajax_sync_castos', array( $this, 'sync_castos' ) );
 	}
 
 	/**
@@ -59,49 +63,109 @@ class Ajax_Handler {
 	}
 
 	/**
-	 * Insert a new subscribe field option
+	 * Sync podcasts with Castos
 	 */
-	public function insert_new_subscribe_option() {
-		check_ajax_referer( 'ssp_ajax_options_nonce' );
-		if ( ! current_user_can( 'manage_podcast' ) ) {
-			wp_send_json(
-				array(
-					'status'  => 'error',
-					'message' => 'Current user doesn\'t have correct permissions',
-				)
+	public function sync_castos() {
+		try {
+			$this->nonce_check('ss_podcasting_castos-hosting');
+			$this->user_capability_check();
+
+			$podcast_ids = filter_input( INPUT_GET, 'podcasts', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
+
+			// Provide possible errors for translation purposes.
+			$msgs_map = array(
+				'Failed to connect to SSP API.'                   => __( 'Failed to connect to SSP API.', 'seriously-simple-podcasting' ),
+				'A sync is already in progress for this podcast.' => __( 'A sync is already in progress for this podcast.', 'seriously-simple-podcasting' ),
 			);
-			return;
+
+			$podcast_statuses = array();
+
+			$has_syncing = false;
+			$has_errors = false;
+
+			foreach ( $podcast_ids as $podcast_id ) {
+
+				$podcast_status = array();
+
+				$response = $this->castos_handler->trigger_podcast_sync( $podcast_id );
+
+				if ( isset( $response['code'] ) && in_array( $response['code'], array( 200, 409 ) ) ) {
+					$podcast_status['status'] = Sync_Status::SYNC_STATUS_SYNCING;
+					$podcast_status['title']  = __( 'Syncing', 'seriously-simple-podcasting' );
+					$has_syncing              = true;
+				} else {
+					$podcast_status['status'] = Sync_Status::SYNC_STATUS_FAILED;
+					$podcast_status['title']  = __( 'Failed', 'seriously-simple-podcasting' );
+					$has_errors               = true;
+				}
+
+				do_action( 'ssp_triggered_podcast_sync', $podcast_id, $response, $podcast_status['status'] );
+
+				$msg = isset( $response['error'] ) ? $response['error'] : '';
+
+				// Try to translate the response message.
+				$msg = ( $msg && array_key_exists( $msg, $msgs_map ) ) ? $msgs_map[ $msg ] : $msg;
+
+				// If there is an error but got no error message, add the default one.
+				if ( Sync_Status::SYNC_STATUS_FAILED === $podcast_status['status'] && empty( $msg ) ) {
+					$msg = __( 'Could not trigger podcast sync', 'seriously-simple-podcasting' );
+				}
+
+				$msg_template = _x( '%s: %s', 'podcast-sync-error-message', 'seriously-simple-podcasting' );
+
+				$podcast_status['msg'] = $msg ? sprintf( $msg_template, $this->get_podcast_name( $podcast_id ), $msg ) : '';
+
+				$podcast_statuses [ $podcast_id ] = $podcast_status;
+			}
+
+			// We use SYNC_STATUS_ constants for both episode sync statuses and podcast sync statuses. Might be changed in the future.
+			$msgs = array(
+				Sync_Status::SYNC_STATUS_SYNCING             => __(
+					'Seriously Simple Podcasting is updating episode data to your Castos account. You can refresh this page to view the updated status in a few minutes.',
+					'seriously-simple-podcasting'
+				),
+				Sync_Status::SYNC_STATUS_SYNCED_WITH_ERRORS => __( 'Started the sync process with errors', 'seriously-simple-podcasting' ),
+				Sync_Status::SYNC_STATUS_FAILED             => __( 'Failed to start the sync process', 'seriously-simple-podcasting' ),
+			);
+
+			$results_status = ! $has_errors ?
+				Sync_Status::SYNC_STATUS_SYNCING :
+				( $has_syncing ? Sync_Status::SYNC_STATUS_SYNCED_WITH_ERRORS : Sync_Status::SYNC_STATUS_FAILED );
+
+			$results = array(
+				'status'   => $results_status,
+				'msg'      => $msgs[ $results_status ],
+				'podcasts' => $podcast_statuses
+			);
+
+			if ( Sync_Status::SYNC_STATUS_SYNCING === $results['status'] ) {
+				wp_send_json_success( $results );
+			} else {
+				wp_send_json_error( $results );
+			}
+		} catch ( \Exception $e ) {
+			wp_send_json_error( $e->getMessage() );
 		}
-		$options_handler   = new Options_Handler();
-		$subscribe_options = $options_handler->insert_subscribe_option();
-		wp_send_json( $subscribe_options );
 	}
 
-	public function delete_subscribe_option() {
-		check_ajax_referer( 'ssp_ajax_options_nonce' );
-		if ( ! current_user_can( 'manage_podcast' ) ) {
-			wp_send_json(
-				array(
-					'status'  => 'error',
-					'message' => 'Current user doesn\'t have correct permissions',
-				)
-			);
-
-			return;
+	/**
+	 * @param int $podcast_id
+	 *
+	 * @return string
+	 */
+	protected function get_podcast_name( $podcast_id ) {
+		// 0 is the default podcast.
+		if ( ! $podcast_id ) {
+			return __( 'Default Podcast', 'seriously-simple-podcasting' );
 		}
-		if ( ! isset( $_POST['option'] ) || ! isset( $_POST['count'] ) ) {
-			wp_send_json(
-				array(
-					'status'  => 'error',
-					'message' => 'POSTed option or count not set',
-				)
-			);
 
-			return;
+		$podcast = ( $podcast_id > 0 ) ? get_term( $podcast_id, 'series' ) : null;
+
+		if ( ! is_wp_error( $podcast ) && isset( $podcast->name ) ) {
+			return $podcast->name;
 		}
-		$options_handler   = new Options_Handler();
-		$subscribe_options = $options_handler->delete_subscribe_option( sanitize_text_field( $_POST['option'] ), sanitize_text_field( $_POST['count'] ) );
-		wp_send_json( $subscribe_options );
+
+		return __( 'Error', 'seriously-simple-podcasting' );
 	}
 
 	/**
@@ -113,14 +177,13 @@ class Ajax_Handler {
 			$this->user_capability_check();
 
 			if ( ! isset( $_GET['api_token'] ) || ! isset( $_GET['email'] ) ) {
-				throw new \Exception( 'Castos arguments not set' );
+				throw new \Exception( __('Castos arguments not set', 'seriously-simple-podcasting') );
 			}
 
 			$account_api_token = sanitize_text_field( $_GET['api_token'] );
 			$account_email     = sanitize_text_field( $_GET['email'] );
 
-			$castos_handler = new Castos_Handler();
-			$response       = $castos_handler->validate_api_credentials( $account_api_token, $account_email );
+			$response       = $this->castos_handler->validate_api_credentials( $account_api_token, $account_email );
 			wp_send_json( $response );
 		} catch ( \Exception $e ) {
 			$this->send_json_error( $e->getMessage() );

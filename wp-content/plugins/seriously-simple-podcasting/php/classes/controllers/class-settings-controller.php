@@ -2,11 +2,15 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
+use SeriouslySimplePodcasting\Entities\Sync_Status;
+use SeriouslySimplePodcasting\Handlers\Castos_Handler;
 use SeriouslySimplePodcasting\Handlers\RSS_Import_Handler;
 use SeriouslySimplePodcasting\Handlers\Settings_Handler;
 use SeriouslySimplePodcasting\Handlers\Series_Handler;
 use SeriouslySimplePodcasting\Renderers\Renderer;
 use SeriouslySimplePodcasting\Renderers\Settings_Renderer;
+use SeriouslySimplePodcasting\Repositories\Episode_Repository;
+use SeriouslySimplePodcasting\Traits\Useful_Variables;
 
 /**
  * SSP Settings
@@ -29,7 +33,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       2.0
  */
-class Settings_Controller extends Controller {
+class Settings_Controller {
+
+	use Useful_Variables;
 
 	const SETTINGS_BASE = 'ss_podcasting_';
 
@@ -59,6 +65,11 @@ class Settings_Controller extends Controller {
 	protected $series_handler;
 
 	/**
+	 * @var Castos_Handler
+	 * */
+	public $castos_handler;
+
+	/**
 	 * @var Renderer
 	 * */
 	protected $renderer;
@@ -68,22 +79,33 @@ class Settings_Controller extends Controller {
 	 * */
 	protected $settings_renderer;
 
+	/**
+	 * @var Episode_Repository
+	 * */
+	protected $episode_repository;
+
 
 	/**
 	 * Constructor
 	 *
-	 * @param string $file Plugin base file.
-	 * @param string $version Plugin version
+	 * @param Settings_Handler $settings_handler
+	 * @param Settings_Renderer $settings_renderer
+	 * @param Renderer $renderer
+	 * @param Series_Handler $series_handler
+	 * @param Castos_Handler $castos_handler
+	 * @param Episode_Repository $episode_repository
 	 */
-	public function __construct( $file, $version ) {
-		parent::__construct( $file, $version );
+	public function __construct( $settings_handler, $settings_renderer, $renderer, $series_handler, $castos_handler, $episode_repository ) {
+		$this->init_useful_variables();
 
 		$this->settings_base = self::SETTINGS_BASE;
 
-		$this->settings_handler  = new Settings_Handler();
-		$this->series_handler    = new Series_Handler();
-		$this->renderer          = new Renderer();
-		$this->settings_renderer = Settings_Renderer::instance();
+		$this->settings_handler   = $settings_handler;
+		$this->settings_renderer  = $settings_renderer;
+		$this->renderer           = $renderer;
+		$this->series_handler     = $series_handler;
+		$this->castos_handler     = $castos_handler;
+		$this->episode_repository = $episode_repository;
 
 		$this->register_hooks_and_filters();
 	}
@@ -109,18 +131,86 @@ class Settings_Controller extends Controller {
 
 		// Add settings link to plugins page.
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->file ), array( $this, 'add_plugin_links' ) );
-		
+
 		// Load scripts and styles for settings page.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ), 10 );
 
 		// Trigger the disconnect action
-		add_action( 'update_option_' . $this->settings_base . 'podmotor_disconnect', array(
+		add_filter( 'pre_update_option_' . $this->settings_base . 'podmotor_disconnect', array(
 			$this,
 			'maybe_disconnect_from_castos'
 		), 10, 2 );
 
+		// Add podcasts sync status to the sync settings
+		add_filter( 'ssp_field_data', array( $this, 'provide_podcasts_sync_status' ), 10, 2 );
+
 		$this->generate_dynamic_color_scheme();
+	}
+
+	/**
+	 * @param $data
+	 * @param $args
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function provide_podcasts_sync_status( $data, $args ) {
+		if ( isset( $args['field']['id'] ) && 'podcasts_sync' === $args['field']['id'] ) {
+			$data = (array) $data;
+			$res = $this->castos_handler->get_podcasts();
+			if ( empty( $res['status'] ) || 'success' !== $res['status'] || ! isset( $res['data']['podcast_list'] ) ) {
+				$data['statuses'] = null;
+
+				return $data;
+			}
+
+			// First, prepare all SSP podcasts with a "none" status, and after, update them with the data retrieved from Castos.
+			$statuses     = array();
+			foreach ( (array) $args['field']['options'] as $series_id => $v ) {
+				$statuses[ $series_id ] = new Sync_Status( Sync_Status::SYNC_STATUS_NONE );
+			}
+
+			$castos_podcasts = (array) $res['data']['podcast_list'];
+
+			// Update statuses with the data retrieved from Castos.
+			foreach ( $castos_podcasts as $podcast ) {
+				if ( ! isset( $podcast['series_id'] ) || ! array_key_exists( $podcast['series_id'], $statuses ) ) {
+					continue;
+				}
+
+				$status = $this->castos_handler->retrieve_sync_status_by_podcast_data( $podcast );
+
+				// If status is none, let's try to guess the sync status
+				if( Sync_Status::SYNC_STATUS_NONE === $status->status ){
+					$status = $this->guess_podcast_sync_status( $podcast );
+				}
+
+				$statuses[ $podcast['series_id'] ] = $status;
+			}
+
+			$data['statuses'] = $statuses;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @param array $podcast
+	 *
+	 * @return Sync_Status
+	 */
+	protected function guess_podcast_sync_status( $podcast ) {
+		$episodes = $this->episode_repository->get_podcast_episodes( $podcast['series_id'], 10 );
+
+		foreach ( $episodes as $episode ) {
+			$episode_id = get_post_meta( $episode->ID, 'podmotor_episode_id', true );
+			if ( ! $episode_id ) {
+				return new Sync_Status( Sync_Status::SYNC_STATUS_NONE );
+			}
+		}
+
+		return new Sync_Status( Sync_Status::SYNC_STATUS_SYNCED );
 	}
 
 	protected function generate_dynamic_color_scheme() {
@@ -195,12 +285,6 @@ class Settings_Controller extends Controller {
 			$this,
 			'settings_page',
 		) );
-
-		/* @todo Add Back In When Doing New Analytics Pages */
-		/* add_submenu_page( 'edit.php?post_type=podcast', __( 'Analytics', 'seriously-simple-podcasting' ), __( 'Analytics', 'seriously-simple-podcasting' ), 'manage_podcast', 'podcast_settings&view=analytics', array(
-			 $this,
-			 'settings_page',
-		 ) );*/
 	}
 
 	/**
@@ -233,16 +317,8 @@ class Settings_Controller extends Controller {
 			wp_enqueue_media();
 		}
 
-		// // @todo add back for analytics launch
-		// wp_enqueue_script( 'jquery-ui-datepicker' );
-		// wp_register_style( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' );
-		// wp_enqueue_style( 'jquery-ui' );
-
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-
-		// wp_enqueue_script( 'plotly', 'https://cdn.plot.ly/plotly-latest.min.js', SSP_VERSION, true );
-
 	}
 
 	/**
@@ -268,47 +344,84 @@ class Settings_Controller extends Controller {
 	 */
 	public function register_settings() {
 		if ( 'podcast_settings' !== filter_input( INPUT_GET, 'page' ) &&
-			 'ss_podcasting' !== filter_input( INPUT_POST, 'option_page' ) ) {
+		     'ss_podcasting' !== filter_input( INPUT_POST, 'option_page' ) ) {
 			return;
 		}
 
-		$section = $this->get_settings_section();
-		$data    = $this->get_settings_data( $section );
+		$tab = $this->get_current_tab();
+
+		$data = $this->get_settings_data( $tab );
 
 		if ( ! $data ) {
 			return;
 		}
 
+		if ( isset( $data['sections'] ) ) {
+			foreach ( $data['sections'] as $section_id => $section_data ) {
+				$is_section_valid = true;
+				if ( isset( $section_data['condition_callback'] ) ) {
+					$callback = $section_data['condition_callback'];
+					if ( is_string( $callback ) && function_exists( $callback ) ) {
+						$is_section_valid = call_user_func( $callback );
+					}
+				}
+
+				if ( $is_section_valid ) {
+					$this->register_settings_section( $section_id, $section_data );
+				}
+			}
+
+			return;
+		}
+
 		// Get data for specific feed series.
-		$series_id  = 0;
+		$series_id   = 0;
 		$feed_series = '';
-		$section_title = $data['title'];
-		if ( 'feed-details' === $section ) {
+		if ( 'feed-details' === $tab ) {
 			$feed_series = ( isset( $_REQUEST['feed-series'] ) ? filter_var( $_REQUEST['feed-series'], FILTER_DEFAULT ) : '' );
 			if ( $feed_series && 'default' !== $feed_series ) {
-
-				// Get selected series.
 				$series = get_term_by( 'slug', esc_attr( $feed_series ), 'series' );
-
-				// Store series ID for later use.
 				$series_id = $series->term_id;
 
 				// Append series name to section title.
 				if ( $series ) {
-					$section_title .= ': ' . $series->name;
+					$data['title'] .= ': ' . $series->name;
 				}
 			}
 		}
 
-		// Add section to page.
-		add_settings_section( $section, $section_title, array( $this, 'settings_section' ), 'ss_podcasting' );
+		$this->register_settings_section( $tab, $data, $feed_series, $series_id );
+	}
 
-		if ( empty( $data['fields'] ) ) {
+	/**
+	 * @param string $section_id
+	 * @param array $section_data
+	 * @param string $feed_series
+	 * @param int $series_id
+	 *
+	 * @return void
+	 */
+	protected function register_settings_section( $section_id, $section_data, $feed_series = '', $series_id = 0 ) {
+		$section_title = isset( $section_data['title'] ) ? $section_data['title'] : '';
+
+		$default_section_args = $section_data['fields'] ? array(
+			'before_section' => sprintf( '<div class="ssp-settings ssp-settings-%s">', esc_attr( $section_id ) ),
+			'after_section'  => '</div><!--ssp-settings section-->',
+			'section_class'  => '',
+		) : array();
+
+		// Override default args with args from settings if they exist.
+		$args = array_merge( $default_section_args, array_intersect_key( $section_data, $default_section_args ) );
+
+		// Add section to page.
+		add_settings_section( $section_id, $section_title, array( $this, 'settings_section' ), 'ss_podcasting', $args );
+
+		if ( empty( $section_data['fields'] ) ) {
 			return;
 		}
 
-		foreach ( $data['fields'] as $field ) {
-			$this->register_settings_field( $section, $field, $feed_series, $series_id );
+		foreach ( $section_data['fields'] as $field ) {
+			$this->register_settings_field( $section_id, $field, $feed_series, $series_id );
 		}
 	}
 
@@ -337,7 +450,7 @@ class Settings_Controller extends Controller {
 	/**
 	 * @return string
 	 */
-	protected function get_settings_section(){
+	protected function get_current_tab(){
 		$tab = ( isset( $_POST['tab'] ) ? filter_var( $_POST['tab'], FILTER_DEFAULT ) : '' );
 		if ( ! $tab ) {
 			$tab = ( isset( $_GET['tab'] ) ? filter_var( $_GET['tab'], FILTER_DEFAULT ) : '' );
@@ -415,7 +528,7 @@ class Settings_Controller extends Controller {
 		$html = '';
 
 		if ( ! empty( $this->settings[ $section['id'] ]['description'] ) ) {
-			$html = '<p>' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
+			$html .= '<p>' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
 		}
 
 		switch ( $section['id'] ) {
@@ -436,6 +549,15 @@ class Settings_Controller extends Controller {
 
 				if ( $feed_url ) {
 					$html .= '<p><a class="view-feed-link" href="' . esc_url( $feed_url ) . '" target="_blank"><span class="dashicons dashicons-rss"></span>' . __( 'View feed', 'seriously-simple-podcasting' ) . '</a></p>' . "\n";
+				}
+				break;
+
+			case 'import':
+				if ( ssp_get_external_rss_being_imported() ) {
+					$progress = RSS_Import_Handler::get_import_data( 'import_progress', 0 );
+					$html     .= $this->render_external_import_process( $progress );
+				} else {
+					$html .= $this->render_external_import_form();
 				}
 				break;
 
@@ -475,6 +597,7 @@ class Settings_Controller extends Controller {
 		$data = get_option( $option_name, $default );
 
 		// Get specific series data if applicable
+		// Todo: use ssp_field_data filter instead
 		if ( isset( $args['feed-series'] ) && $args['feed-series'] ) {
 
 			// Set placeholder to default feed option with specified default fallback
@@ -492,6 +615,8 @@ class Settings_Controller extends Controller {
 			// Get series-specific option
 			$data = get_option( $option_name, $default );
 		}
+
+		$data = apply_filters( 'ssp_field_data', $data, $args );
 
 		echo $this->settings_renderer->render_field( $field, $data, $option_name, $default_option_name );
 	}
@@ -519,18 +644,21 @@ class Settings_Controller extends Controller {
 
 		$q_args = $this->get_query_args();
 
-		$html = '<div class="wrap" id="podcast_settings">' . "\n";
+		$html = '<div class="wrap" id="ssp-settings-page">' . "\n";
 
 		$html .= '<h1>' . __( 'Podcast Settings', 'seriously-simple-podcasting' ) . '</h1>' . "\n";
 
 		$tab = empty( $q_args['tab'] ) ? 'general' : $q_args['tab'];
 
 		$html .= $this->show_page_messages();
-		$html .= '<div id="main-settings">' . "\n";
+		$html .= '<div id="ssp-main-settings">' . "\n";
 		$html .= $this->show_page_tabs();
 		$html .= $this->show_tab_before_settings( $tab );
 		$html .= $this->show_tab_settings( $tab );
 		$html .= $this->show_tab_after_settings( $tab );
+		$html .= '</div><!--ssp-main-settings-->' . "\n";
+		$html .= $this->render_seriously_simple_sidebar();
+		$html .= '</div><!--ssp-settings-page-->' . "\n";
 
 		echo $html;
 	}
@@ -607,8 +735,10 @@ class Settings_Controller extends Controller {
 					$tab_link = remove_query_arg( 'feed-series', $tab_link );
 				}
 
+				$title = isset( $data['tab_title'] ) ? $data['tab_title'] : $data['title'];
+
 				// Output tab
-				$html .= '<a href="' . esc_url( $tab_link ) . '" class="' . esc_attr( $class ) . '">' . esc_html( $data['title'] ) . '</a>' . "\n";
+				$html .= '<a href="' . esc_url( $tab_link ) . '" class="' . esc_attr( $class ) . '">' . esc_html( $title ) . '</a>' . "\n";
 
 				++ $c;
 			}
@@ -698,13 +828,6 @@ class Settings_Controller extends Controller {
 	 */
 	protected function show_tab_after_settings( $tab ) {
 		$html = '';
-		if ( isset( $tab ) && 'castos-hosting' === $tab ) {
-			// Validate button
-			$html .= '<p class="submit">' . "\n";
-			$html .= '<input id="validate_api_credentials" type="button" class="button-primary" value="' . esc_attr( __( 'Validate Credentials', 'seriously-simple-podcasting' ) ) . '" />' . "\n";
-			$html .= '<span class="validate-api-credentials-message"></span>' . "\n";
-			$html .= '</p>' . "\n";
-		}
 
 		$disable_save_button_on_tabs = array( 'extensions', 'import' );
 
@@ -716,30 +839,7 @@ class Settings_Controller extends Controller {
 			$html .= '</p>' . "\n";
 		}
 
-		if ( 'import' === $tab ) {
-			if ( ssp_get_external_rss_being_imported() ) {
-				$progress = RSS_Import_Handler::get_import_data( 'import_progress', 0 );
-				$html     .= $this->render_external_import_process( $progress );
-			} else {
-				// Custom submits for Imports
-				if ( ssp_is_connected_to_castos() ) {
-					$html .= '<p class="submit">' . "\n";
-					$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-					$html .= '<input id="ssp-settings-submit" name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Trigger sync', 'seriously-simple-podcasting' ) ) . '" />' . "\n";
-					$html .= '</p>' . "\n";
-				}
-
-				$html .= $this->render_external_import_form();
-			}
-		}
-
 		$html .= '</form>' . "\n";
-
-		$html .= '</div>' . "\n";
-
-		$html .= $this->render_seriously_simple_sidebar();
-
-		$html .= '</div>' . "\n";
 
 		return apply_filters( sprintf( 'ssp_settings_show_tab_%s_after_settings', $tab ), $html );
 	}
@@ -862,14 +962,15 @@ class Settings_Controller extends Controller {
 	 * Disconnects a user from the Castos Hosting service by deleting their API keys
 	 * Triggered by the update_option_ss_podcasting_podmotor_disconnect action hook
 	 */
-	public function maybe_disconnect_from_castos( $old_value, $new_value ) {
-		if ( 'on' !== $new_value ) {
-			return;
+	public function maybe_disconnect_from_castos( $new_value ) {
+		if ( 'on' === $new_value ) {
+			delete_option( $this->settings_base . 'podmotor_account_email' );
+			delete_option( $this->settings_base . 'podmotor_account_api_token' );
+			delete_option( $this->settings_base . 'podmotor_account_id' );
+			delete_option( $this->settings_base . 'podmotor_disconnect' );
 		}
-		delete_option( $this->settings_base . 'podmotor_account_email' );
-		delete_option( $this->settings_base . 'podmotor_account_api_token' );
-		delete_option( $this->settings_base . 'podmotor_account_id' );
-		delete_option( $this->settings_base . 'podmotor_disconnect' );
+
+		return null;
 	}
 
 

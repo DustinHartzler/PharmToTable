@@ -2,6 +2,9 @@
 
 namespace SeriouslySimplePodcasting\Rest;
 
+use SeriouslySimplePodcasting\Controllers\Podcast_Post_Types_Controller as PPT_Controller;
+use SeriouslySimplePodcasting\Entities\Sync_Status;
+use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 use WP_REST_Controller;
 use WP_REST_Posts_Controller;
 use WP_REST_Server;
@@ -28,13 +31,23 @@ use WP_Query;
 /**
  * Class Episodes_Controller
  */
-class Episodes_Controller extends WP_REST_Controller {
+class Episodes_Rest_Controller extends WP_REST_Controller {
 
 	public $namespace;
 	public $rest_base;
 	public $post_types;
 
-	public function __construct() {
+	/**
+	 * @var Episode_Repository $episode_repository
+	 * */
+	protected $episode_repository;
+
+	/**
+	 * @param Episode_Repository $episode_repository
+	 */
+	public function __construct( $episode_repository ) {
+		$this->episode_repository = $episode_repository;
+
 		$this->namespace  = 'ssp/v1';
 		$this->rest_base  = '/episodes';
 		$this->post_types = ssp_post_types();
@@ -131,13 +144,15 @@ class Episodes_Controller extends WP_REST_Controller {
 			$new_data   = $request->get_json_params();
 
 			// In case of the error update sync information to show it to user.
-			// Todo: display this error message to users
-			if ( $new_data['error'] ) {
-				update_post_meta( $episode_id, 'ssp_sync_episode_error', $new_data['error'] );
+			if ( ! empty( $new_data['error'] ) ) {
+				$this->episode_repository->update_episode_sync_error( $episode_id, $new_data['error'] );
 			} else {
 				// Successful sync, remove the possible previous error.
-				delete_post_meta( $episode_id, 'ssp_sync_episode_error' );
+				$this->episode_repository->delete_episode_sync_error( $episode_id );
 			}
+
+			// Update file URL (meta key defaults to 'audio_file').
+			$audio_file_meta_key = apply_filters( 'ssp_audio_file_meta_key', 'audio_file' );
 
 			// Update the file data.
 			if ( ! empty( $new_data['file']['id'] ) && ! empty( $new_data['file']['url'] ) ) {
@@ -145,11 +160,9 @@ class Episodes_Controller extends WP_REST_Controller {
 				// Update Castos file ID.
 				update_post_meta( $episode_id, 'podmotor_file_id', $new_data['file']['id'] );
 
-				// Update file URL (meta key defaults to 'audio_file').
-				$audio_file_meta_key = apply_filters( 'ssp_audio_file_meta_key', 'audio_file' );
 				update_post_meta( $episode_id, $audio_file_meta_key, $new_data['file']['url'] );
 
-				// Also, update legacy 'enclosure' field which is the same as 'audio_file' just for consistency
+				// Also, update 'enclosure' field for easy moving from/to other plugins
 				update_post_meta( $episode_id, 'enclosure', $new_data['file']['url'] );
 			}
 
@@ -157,6 +170,12 @@ class Episodes_Controller extends WP_REST_Controller {
 			if ( ! empty( $new_data['episode']['id'] ) ) {
 				update_post_meta( $episode_id, 'podmotor_episode_id', $new_data['episode']['id'] );
 			}
+
+			$full_success = ! empty( $new_data['file']['id'] ) && ! empty( $new_data['file']['url'] ) && ! empty( $new_data['episode']['id'] );
+
+			$sync_status = $full_success ? Sync_Status::SYNC_STATUS_SYNCED : Sync_Status::SYNC_STATUS_FAILED;
+
+			$this->episode_repository->update_episode_sync_status( $episode_id, $sync_status );
 
 			return rest_ensure_response( array(
 				'id'   => intval( $episode_id ),

@@ -2,10 +2,12 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
+use SeriouslySimplePodcasting\Entities\Sync_Status;
 use SeriouslySimplePodcasting\Handlers\Admin_Notifications_Handler;
 use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
 use SeriouslySimplePodcasting\Handlers\Castos_Handler;
 use SeriouslySimplePodcasting\Handlers\Podping_Handler;
+use SeriouslySimplePodcasting\Handlers\Series_Handler;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
 
@@ -25,6 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Podcast_Post_Types_Controller {
 
 	use Useful_Variables;
+
 
 	/**
 	 * @var CPT_Podcast_Handler
@@ -52,22 +55,32 @@ class Podcast_Post_Types_Controller {
 	protected $episode_repository;
 
 	/**
+	 * @var Series_Handler
+	 */
+	protected $series_handler;
+
+	/**
 	 * @param CPT_Podcast_Handler $cpt_podcast_handler
 	 * @param Castos_Handler $castos_handler
 	 * @param Admin_Notifications_Handler $admin_notices_handler
+	 * @param Podping_Handler $podping_handler
+	 * @param Episode_Repository $episode_repository
+	 * @param Series_Handler $series_handler
 	 */
 	public function __construct(
 		$cpt_podcast_handler,
 		$castos_handler,
 		$admin_notices_handler,
 		$podping_handler,
-		$episode_repository
+		$episode_repository,
+		$series_handler
 	) {
 		$this->cpt_podcast_handler   = $cpt_podcast_handler;
 		$this->castos_handler        = $castos_handler;
 		$this->admin_notices_handler = $admin_notices_handler;
 		$this->podping_handler       = $podping_handler;
 		$this->episode_repository    = $episode_repository;
+		$this->series_handler        = $series_handler;
 
 		$this->init_useful_variables();
 		$this->register_hooks_and_filters();
@@ -92,25 +105,34 @@ class Podcast_Post_Types_Controller {
 		add_action( 'save_post', array( $this, 'invalidate_cache' ), 10, 2 );
 
 		// Update podcast details to Castos when a post is updated or saved
-		add_action( 'save_post', array( $this, 'update_podcast_details' ), 20, 2 );
+		add_action( 'save_post', array( $this, 'sync_episode' ), 20, 2 );
 
 		// Notify Podping if new episode has been published, or if new series is assigned to the episode
 		add_action( 'wp_after_insert_post', array( $this, 'notify_podping' ), 10, 4 );
 		add_action( 'added_term_relationship', array( $this, 'notify_podping_on_series_added' ), 10, 3 );
 
 		// Delete podcast from Castos
-		add_action( 'trashed_post', array( $this, 'delete_post' ), 11, 1 );
+		add_action( 'trashed_post', array( $this, 'delete_post' ), 11 );
 
 		// Episode edit screen.
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ) );
 		add_filter( 'post_updated_messages', array( $this, 'updated_messages' ) );
 
 		// Episodes list table.
-		add_filter( 'manage_edit-' . $this->token . '_columns', array(
-			$this,
-			'register_custom_column_headings',
-		), 10, 1 );
-		add_action( 'manage_posts_custom_column', array( $this, 'register_custom_columns' ), 10, 2 );
+		add_action( 'admin_init', array( $this, 'add_custom_columns' ) );
+
+		// Change the podcast episode statuses to sending after the sync has been triggered.
+		add_action( 'ssp_triggered_podcast_sync', array( $this, 'update_podcast_episodes_status' ), 10, 2 );
+
+		add_action( 'ssp_check_episode_sync_status', array( $this, 'maybe_update_sync_status' ), 10, 2 );
+	}
+
+	public function add_custom_columns(){
+		$ssp_post_types = ssp_post_types();
+		foreach ( $ssp_post_types as $post_type ) {
+			add_filter( 'manage_edit-' . $post_type . '_columns', array( $this, 'register_custom_column_headings' ), 20, 2 );
+		}
+		add_action( 'manage_posts_custom_column', array( $this, 'manage_custom_columns' ), 10, 2 );
 	}
 
 
@@ -121,6 +143,51 @@ class Podcast_Post_Types_Controller {
 	 */
 	public function register_post_type() {
 		$this->cpt_podcast_handler->register_post_type();
+		$this->cpt_podcast_handler->register_taxonomies();
+	}
+
+	/**
+	 * @param int $episode_id
+	 * @param string $episode_status
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function maybe_update_sync_status( $episode_id, $episode_status ) {
+		$series_id      = ssp_get_episode_series_id( $episode_id );
+		$podcast_status = $this->series_handler->get_sync_status( $series_id );
+		$syncing        = Sync_Status::SYNC_STATUS_SYNCING;
+
+		// First, let's check if the podcast is still syncing and maybe update the status
+		if ( $syncing === $podcast_status || ! $podcast_status ) {
+			$sync_status = $this->castos_handler->get_podcast_sync_status( $series_id );
+			$podcast_status = $sync_status->status;
+			$this->series_handler->update_sync_status( $series_id, $podcast_status );
+		}
+
+		if ( $syncing == $episode_status && $podcast_status && $syncing != $podcast_status ) {
+			// If the podcast status is synced_with_errors, and episode status is syncing, it's failed.
+			$new_episode_status = Sync_Status::SYNC_STATUS_SYNCED_WITH_ERRORS === $podcast_status ?
+				Sync_Status::SYNC_STATUS_FAILED : $podcast_status;
+			$this->episode_repository->update_episode_sync_status( $episode_id, $new_episode_status );
+		}
+	}
+
+	/**
+	 * @param int $podcast_id
+	 * @param array $response
+	 */
+	public function update_podcast_episodes_status( $podcast_id, $response ) {
+		if ( isset( $response['code'] ) && 200 === $response['code'] ) {
+			$episodes = $this->episode_repository->get_podcast_episodes( $podcast_id );
+
+			foreach ( $episodes as $episode ) {
+				$this->episode_repository->update_episode_sync_status(
+					$episode->ID,
+					Sync_Status::SYNC_STATUS_SYNCING
+				);
+			}
+		}
 	}
 
 	/**
@@ -223,24 +290,16 @@ class Podcast_Post_Types_Controller {
 	public function delete_post( $post_id ) {
 		$post = get_post( $post_id );
 
-		/**
-		 * Only trigger this when the post type is podcast
-		 */
-		if ( ! in_array( $post->post_type, ssp_post_types( true ), true ) ) {
+		if ( ! in_array( $post->post_type, ssp_post_types(), true ) ) {
 			return;
 		}
 
-		/**
-		 * Don't trigger this if we're not connected to Podcast Motor
-		 */
-		if ( ! ssp_is_connected_to_castos() ) {
-			return;
+		if ( ssp_is_connected_to_castos() ) {
+			$this->castos_handler->delete_episode( $post );
 		}
 
-		$this->castos_handler->delete_podcast( $post );
-
-		delete_post_meta( $post_id, 'podmotor_file_id' );
-		delete_post_meta( $post_id, 'podmotor_episode_id' );
+		$this->episode_repository->delete_sync_info( $post_id );
+		$this->episode_repository->delete_audio_file( $post_id );
 	}
 
 
@@ -303,7 +362,7 @@ class Podcast_Post_Types_Controller {
 	 * @param integer $post_id ID of post
 	 * @param \WP_Post $post
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function meta_box_save( $post_id, $post ) {
 
@@ -406,7 +465,7 @@ class Podcast_Post_Types_Controller {
 		$podcast_post_types = ssp_post_types( true );
 
 		// Post type check
-		if ( ! in_array( $post->post_type, $podcast_post_types ) ) {
+		if (  ( 'trash' === $post->post_status ) || ! in_array( $post->post_type, $podcast_post_types ) ) {
 			return false;
 		}
 
@@ -470,6 +529,8 @@ class Podcast_Post_Types_Controller {
 	 * @param \WP_Post $post
 	 *
 	 * @return void
+	 *
+	 * Todo: use renderer for all the fields
 	 */
 	public function meta_box_content( $post ) {
 
@@ -477,13 +538,12 @@ class Podcast_Post_Types_Controller {
 
 		$field_data = $this->custom_fields();
 
-		$html = '';
-
-		$html .= '<input type="hidden" name="seriouslysimple_' . $this->token . '_nonce" id="seriouslysimple_' . $this->token . '_nonce" value="' . wp_create_nonce( plugin_basename( $this->dir ) ) . '" />';
+		$html = '<input type="hidden" name="seriouslysimple_' . $this->token . '_nonce" id="seriouslysimple_' . $this->token . '_nonce" value="' . wp_create_nonce( plugin_basename( $this->dir ) ) . '" />';
 
 		if ( 0 < count( $field_data ) ) {
 
 			$html .= '<input id="seriouslysimple_post_id" type="hidden" value="' . $post_id . '" />';
+			$renderer = ssp_renderer();
 
 			foreach ( $field_data as $k => $v ) {
 				$data  = $v['default'];
@@ -503,6 +563,11 @@ class Podcast_Post_Types_Controller {
 				}
 
 				switch ( $v['type'] ) {
+					case 'sync_status':
+						$status = $this->episode_repository->get_episode_sync_status( $post_id );
+						$html .= $renderer->fetch( 'metafields/sync-status', compact( 'status' ) );
+						break;
+
 					case 'file':
 						$upload_button = '<input type="button" class="button" id="upload_' . esc_attr( $k ) . '_button" value="' . __( 'Upload File', 'seriously-simple-podcasting' ) . '" data-uploader_title="' . __( 'Choose a file', 'seriously-simple-podcasting' ) . '" data-uploader_button_text="' . __( 'Insert podcast file', 'seriously-simple-podcasting' ) . '" />';
 
@@ -536,20 +601,17 @@ class Podcast_Post_Types_Controller {
 									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
 								</p>' . "\n";
 						break;
+
 					case 'image':
-						$html .= '<p>
-									<span class="ssp-episode-details-label">' . wp_kses_post( $v['name'] ) . '</span><br/>
-									<img id="' . esc_attr( $k ) . '_preview" src="' . esc_attr( $data ) . '" style="max-width:200px;height:auto;margin:20px 0;" />
-									<br/>
-									<input id="' . esc_attr( $k ) . '_button" type="button" class="button" value="' . __( 'Upload new image', 'seriously-simple-podcasting' ) . '" />
-									<input id="' . esc_attr( $k ) . '_delete" type="button" class="button" value="' . __( 'Remove image', 'seriously-simple-podcasting' ) . '" />
-									<input id="' . esc_attr( $k ) . '" type="hidden" name="' . esc_attr( $k ) . '" value="' . esc_attr( $data ) . '"/>
-									<br/>
-									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								<p/>' . "\n";
+						$label = $v['name'];
+						$description = $v['description'];
+
+						$html .= $renderer->fetch( 'metafields/image', compact( 'label', 'description', 'data', 'k' ) );
+
 						break;
+
 					case 'checkbox':
-						$html .= '<p><input name="' . esc_attr( $k ) . '" type="checkbox" class="' . esc_attr( $class ) . '" id="' . esc_attr( $k ) . '" ' . checked( 'on', $data, false ) . ' /> <label for="' . esc_attr( $k ) . '"><span>' . wp_kses_post( $v['description'] ) . '</span></label></p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/checkbox', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					case 'radio':
@@ -646,7 +708,7 @@ class Podcast_Post_Types_Controller {
 	 * @param int $id
 	 * @param \WP_Post $post
 	 */
-	public function update_podcast_details( $id, $post ) {
+	public function sync_episode( $id, $post ) {
 		/**
 		 * Don't trigger this if we're not connected to Castos
 		 */
@@ -694,12 +756,15 @@ class Podcast_Post_Types_Controller {
 
 			// if uploading was scheduled before, lets unschedule it
 			delete_post_meta( $id, 'podmotor_schedule_upload' );
+			$this->episode_repository->update_episode_sync_status( $post->ID, Sync_Status::SYNC_STATUS_SYNCED );
+			$this->episode_repository->delete_sync_error( $post->ID );
 		} else {
 			// schedule uploading with a cronjob
 			update_post_meta( $id, 'podmotor_schedule_upload', true );
 			$this->admin_notices_handler->add_predefined_flash_notice(
 				Admin_Notifications_Handler::NOTICE_API_EPISODE_ERROR
 			);
+			$this->episode_repository->update_episode_sync_status( $post->ID, Sync_Status::SYNC_STATUS_FAILED );
 		}
 	}
 
@@ -753,15 +818,28 @@ class Podcast_Post_Types_Controller {
 	 * @return array           Modified columns
 	 */
 	public function register_custom_column_headings( $defaults ) {
-		$new_columns = apply_filters( 'ssp_admin_columns_episodes', array(
-			'image'  => __( 'Image', 'seriously-simple-podcasting' ),
-		) );
 
-		// remove date column
-		unset( $defaults['comments'] );
+		$columns_to_add = array();
+
+		if ( ssp_is_connected_to_castos() ) {
+			$columns_to_add['ssp_sync_status'] = __( 'Sync', 'seriously-simple-podcasting' );
+		}
+
+		$columns_to_add['ssp_cover'] = __( 'Cover', 'seriously-simple-podcasting' );
+
+		$columns_to_add = apply_filters( 'ssp_admin_columns_episodes', $columns_to_add );
+
+		$columns_to_unset = apply_filters( 'ssp_remove_admin_columns_episodes', array( 'comments' ) );
+
+		// remove columns
+		foreach ( $columns_to_unset as $column ) {
+			if ( isset( $defaults[ $column ] ) ) {
+				unset( $defaults[ $column ] );
+			}
+		}
 
 		// add new columns before last default one
-		$columns = array_slice( $defaults, 0, - 1 ) + $new_columns + array_slice( $defaults, - 1 );
+		$columns = array_slice( $defaults, 0, 1 ) + $columns_to_add + array_slice( $defaults, 1 );
 
 		return $columns;
 	}
@@ -770,21 +848,32 @@ class Podcast_Post_Types_Controller {
 	 * Display column data in podcast list table
 	 *
 	 * @param string $column_name Name of current column
-	 * @param integer $id ID of episode
+	 * @param integer $post_id ID of episode
 	 *
 	 * @return void
 	 */
-	public function register_custom_columns( $column_name, $id ) {
+	public function manage_custom_columns( $column_name, $post_id ) {
+		if ( 0 !== strpos( $column_name, 'ssp_' ) ) {
+			return;
+		}
+
 		switch ( $column_name ) {
-			case 'image':
-				$value = ssp_frontend_controller()->get_image( $id, 40 );
-				echo $value ?: '<span aria-hidden="true">—</span>';
+			case 'ssp_cover':
+				$value = ssp_episode_image( $post_id, 40 );
+				$value = $value ?: '<span aria-hidden="true">—</span>';
+				break;
+
+			case 'ssp_sync_status':
+				$status = $this->episode_repository->check_episode_sync_status( $post_id );
+				$link   = get_edit_post_link( $post_id );
+				$value  = ssp_renderer()->fetch( 'settings/sync-label', compact( 'status', 'link' ) );
 				break;
 
 			default:
+				$value = '';
 				break;
-
 		}
+		echo apply_filters( 'ssp_custom_column_value', $value, $column_name, $post_id );
 	}
 
 	/**

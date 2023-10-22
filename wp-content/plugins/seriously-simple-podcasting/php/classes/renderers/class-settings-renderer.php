@@ -6,6 +6,7 @@
 namespace SeriouslySimplePodcasting\Renderers;
 
 // Exit if accessed directly.
+use SeriouslySimplePodcasting\Entities\Sync_Status;
 use SeriouslySimplePodcasting\Interfaces\Service;
 use SeriouslySimplePodcasting\Traits\Singleton;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
@@ -59,6 +60,9 @@ class Settings_Renderer implements Service {
 			case 'hidden':
 				$html .= $this->render_hidden_field( $field, $data );
 				break;
+			case 'button':
+				$html .= $this->render_button( $field );
+				break;
 			case 'text_multi':
 				$html .= $this->render_text_multi( $field, $data, $option_name );
 				break;
@@ -101,6 +105,8 @@ class Settings_Renderer implements Service {
 			case 'importing_podcasts':
 				$html .= $this->render_importing_podcasts( $field );
 				break;
+			case 'podcasts_sync':
+				$html .= $this->render_sync_podcasts( $field, $data, $option_name );;
 		}
 
 		if ( ! in_array( $field['type'], array(
@@ -114,7 +120,6 @@ class Settings_Renderer implements Service {
 				case 'checkbox_multi':
 				case 'radio':
 				case 'select_multi':
-				case 'select2_multi':
 				case 'color':
 					if ( ! empty( $field['description'] ) ) {
 						$html .= '<br/><span class="description">' . esc_attr( $field['description'] ) . '</span>';
@@ -145,6 +150,16 @@ class Settings_Renderer implements Service {
 		return '<input name="' . esc_attr( $field['id'] ) .
 			   '" type="hidden" id="' . esc_attr( $field['id'] ) .
 			   '" value="' . esc_attr( $data ) . '" />' . "\n";
+	}
+
+	/**
+	 * @param array $field
+	 *
+	 * @return string
+	 */
+	protected function render_button( $field ) {
+		return '<button type="button" id="' . esc_attr( $field['id'] ) .
+			   '" class="' . esc_attr( $field['class'] ) . '" />' . esc_html( $field['label'] ) .  "</button>\n";
 	}
 
 	/**
@@ -360,6 +375,50 @@ class Settings_Renderer implements Service {
 	 *
 	 * @return string
 	 */
+	protected function render_sync_podcasts( $field, $data, $option_name ) {
+		$html = '';
+		if ( empty( $field['options'] ) ) {
+			return $html;
+		}
+
+		if ( empty( $data['statuses'] ) ) {
+			return '<div class="ssp-sync-podcast api-error">' . __( 'Castos API error', 'seriously-simple-podcasting' ) . '</div>';
+		}
+
+		foreach ( $field['options'] as $podcast_id => $v ) {
+			$status = $data['statuses'][ $podcast_id ];
+			/**
+			 * @var Sync_Status $status
+			 * */
+			$link = '';
+			if ( $podcast_id ) {
+				$podcast = get_term_by( 'term_id', $podcast_id, 'series' );
+				$link    = admin_url( sprintf( 'edit.php?series=%s&post_type=%s', $podcast->slug, $this->token ) );
+			}
+
+			$checkbox = '<div class="ssp-sync-podcast__checkbox"><label for="' . esc_attr( $field['id'] . '_' . $podcast_id ) .
+						'"><input type="checkbox" name="' . esc_attr( $option_name ) .
+						'[]" value="' . esc_attr( $podcast_id ) . '" id="' . esc_attr( $field['id'] . '_' . $podcast_id ) .
+						'" class="' . esc_attr ( $this->get_field_class( $field ) ) . '" /> ' . $v . '</label></div>';
+
+
+			$classes = 'js-sync-status ' . $status->status;
+			$is_full_label = true;
+			$label = ssp_renderer()->fetch( 'settings/sync-label', compact('status', 'classes', 'link', 'is_full_label') );
+
+			$html .= '<div class="ssp-sync-podcast js-sync-podcast">' . $checkbox . $label . '</div>';
+		}
+
+		return $html;
+	}
+
+	/**
+	 * @param array $field
+	 * @param array $data
+	 * @param string $option_name
+	 *
+	 * @return string
+	 */
 	protected function render_select2_multi( $field, $data, $option_name ) {
 		$html = '<select class="js-ssp-select2" name="' . esc_attr( $option_name ) . '[]" multiple="multiple">';
 		foreach ( $field['options'] as $k => $v ) {
@@ -367,7 +426,7 @@ class Settings_Renderer implements Service {
 			$html     .= '<option ' . selected( $selected, true, false ) .
 						 ' value="' . esc_attr( $k ) .
 						 '" id="' . esc_attr( $field['id'] . '_' . $k ) .
-						 '" class="' . $this->get_field_class( $field ) . '" /> ' . $v . '</option>';
+						 '" class="' . $this->get_field_class( $field ) . '"> ' . $v . '</option>';
 		}
 		$html .= '</select>';
 
