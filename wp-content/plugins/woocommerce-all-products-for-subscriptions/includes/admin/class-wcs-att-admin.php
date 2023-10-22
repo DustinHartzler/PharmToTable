@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Admin includes and hooks.
  *
  * @class    WCS_ATT_Admin
- * @version  4.1.0
+ * @version  x.x.x
  */
 class WCS_ATT_Admin {
 
@@ -24,7 +24,7 @@ class WCS_ATT_Admin {
   	 *
   	 * @var string
   	 */
-  	private static $bundled_selectsw_version = '1.2.1';
+  	private static $bundled_selectsw_version = '1.2.2';
 
 	/**
 	 * Initialize.
@@ -193,12 +193,18 @@ class WCS_ATT_Admin {
 	 */
 	public static function include_admin_body_class( $classes ) {
 
-		if ( strpos( $classes, 'sw-wp-version-gte-53' ) !== false ) {
+		if ( strpos( $classes, 'sw-wp-version-gte-53' ) !== false
+		     || strpos( $classes, 'sw-wp-version-gte-55' ) !== false
+		) {
 			return $classes;
 		}
 
 		if ( WCS_ATT_Core_Compatibility::is_wp_version_gte( '5.3' ) ) {
 			$classes .= ' sw-wp-version-gte-53';
+		}
+
+		if ( WCS_ATT_Core_Compatibility::is_wp_version_gte( '5.5' ) ) {
+			$classes .= ' sw-wp-version-gte-55';
 		}
 
 		return $classes;
