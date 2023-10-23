@@ -8,7 +8,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ajax.php#L378](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/ajax.php#L378)
+- [ajax.php#L378](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/ajax.php#L378)
 
 ## automatewoo/action/before_preview
 
@@ -16,7 +16,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ajax.php#L370](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/ajax.php#L370)
+- [ajax.php#L370](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/ajax.php#L370)
 
 ## automatewoo/admin/analytics_enabled
 
@@ -24,7 +24,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Analytics.php#L114](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/Analytics.php#L114)
+- [Analytics.php#L114](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/Analytics.php#L114)
 
 ## automatewoo/admin/asset_data
 
@@ -32,7 +32,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AssetData.php#L47](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/AssetData.php#L47)
+- [AssetData.php#L47](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/AssetData.php#L47)
 
 ## automatewoo/admin/controllers/includes
 
@@ -40,7 +40,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [controllers.php#L43](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers.php#L43)
+- [controllers.php#L43](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers.php#L43)
 
 ## automatewoo/admin/js_settings
 
@@ -48,7 +48,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [admin.php#L368](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/admin.php#L368)
+- [admin.php#L402](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/admin.php#L402)
 
 ## automatewoo/admin/screen_ids
 
@@ -56,7 +56,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [admin.php#L499](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/admin.php#L499)
+- [admin.php#L533](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/admin.php#L533)
 
 ## automatewoo/admin/settings/->GET_ID
 
@@ -64,7 +64,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [abstract.php#L93](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/settings-tabs/abstract.php#L93)
+- [abstract.php#L93](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/settings-tabs/abstract.php#L93)
 
 ## automatewoo/admin/submenu_pages
 
@@ -72,7 +72,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [admin.php#L279](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/admin.php#L279)
+- [admin.php#L280](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/admin.php#L280)
 
 ## automatewoo/dashboard/chart_widgets
 
@@ -80,7 +80,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [dashboard.php#L102](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/dashboard.php#L102)
+- [dashboard.php#L102](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/dashboard.php#L102)
 
 ## automatewoo/dashboard/date_range
 
@@ -88,7 +88,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [dashboard.php#L176](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/dashboard.php#L176)
+- [dashboard.php#L176](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/dashboard.php#L176)
 
 ## automatewoo/dashboard/key_figures
 
@@ -96,7 +96,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [key-figures.php#L60](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/dashboard-widgets/key-figures.php#L60)
+- [key-figures.php#L60](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/dashboard-widgets/key-figures.php#L60)
 
 ## automatewoo/dashboard/widgets
 
@@ -104,7 +104,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [dashboard.php#L109](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/dashboard.php#L109)
+- [dashboard.php#L109](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/dashboard.php#L109)
 
 ## automatewoo/email_preview/html
 
@@ -112,7 +112,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ajax.php#L383](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/ajax.php#L383)
+- [ajax.php#L383](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/ajax.php#L383)
 
 ## automatewoo/email_preview/send_test
 
@@ -120,7 +120,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ajax.php#L433](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/ajax.php#L433)
+- [ajax.php#L433](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/ajax.php#L433)
 
 ## automatewoo/email_preview/subject
 
@@ -128,7 +128,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [preview.php#L65](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/preview.php#L65)
+- [preview.php#L65](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/preview.php#L65)
 
 ## automatewoo/email_preview/template
 
@@ -136,7 +136,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [preview.php#L66](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/preview.php#L66)
+- [preview.php#L66](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/preview.php#L66)
 
 ## automatewoo/formatted_data_layer
 
@@ -144,7 +144,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [data-layer-formatter.php#L158](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/data-layer-formatter.php#L158)
+- [data-layer-formatter.php#L158](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/data-layer-formatter.php#L158)
 
 ## automatewoo/reports/tabs
 
@@ -152,7 +152,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [reports.php#L90](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/reports.php#L90)
+- [reports.php#L90](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/reports.php#L90)
 
 ## automatewoo/settings/tabs
 
@@ -160,7 +160,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [settings.php#L69](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/controllers/settings.php#L69)
+- [settings.php#L69](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/controllers/settings.php#L69)
 
 ## automatewoo/workflow/timing_options
 
@@ -168,7 +168,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [meta-box-timing.php#L20](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/views/meta-box-timing.php#L20)
+- [meta-box-timing.php#L20](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/views/meta-box-timing.php#L20)
 
 ## automatewoo_report_items_per_page
 
@@ -176,7 +176,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [conversions-list.php#L158](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/reports/conversions-list.php#L158)
+- [conversions-list.php#L158](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/reports/conversions-list.php#L158)
 
 ## woocommerce_json_search_found_products
 
@@ -184,7 +184,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [json-search.php#L68](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/json-search.php#L68)
+- [json-search.php#L68](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/json-search.php#L68)
 
 ## woocommerce_json_search_limit
 
@@ -192,7 +192,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [json-search.php#L42](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/admin/json-search.php#L42)
+- [json-search.php#L42](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/admin/json-search.php#L42)
 
 ## [filter]
 
@@ -200,7 +200,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Shop_Products.php#L180](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables/Shop_Products.php#L180)
+- [Shop_Products.php#L180](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables/Shop_Products.php#L180)
 
 ## BookingCreated->GET_HOOK_NAME
 
@@ -208,7 +208,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [BookingCreated.php#L151](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events/BookingCreated.php#L151)
+- [BookingCreated.php#L151](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events/BookingCreated.php#L151)
 
 ## Order_Created->GET_HOOK_NAME
 
@@ -216,7 +216,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Created.php#L115](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events/Order_Created.php#L115)
+- [Order_Created.php#L115](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events/Order_Created.php#L115)
 
 ## Order_Paid->GET_HOOK_NAME
 
@@ -224,7 +224,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Paid.php#L66](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events/Order_Paid.php#L66)
+- [Order_Paid.php#L66](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events/Order_Paid.php#L66)
 
 ## automatewoo/actions
 
@@ -232,7 +232,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Actions.php#L112](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions.php#L112)
+- [Actions.php#L112](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions.php#L112)
 
 ## automatewoo/active_triggers
 
@@ -240,7 +240,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Active_Triggers_Cache.php#L56](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Active_Triggers_Cache.php#L56)
+- [Active_Triggers_Cache.php#L56](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Active_Triggers_Cache.php#L56)
 
 ## automatewoo/admin_notice/
 
@@ -248,7 +248,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AdminNotices.php#L112](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/AdminNotices.php#L112)
+- [AdminNotices.php#L112](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/AdminNotices.php#L112)
 
 ## automatewoo/ajax/before_send_json
 
@@ -256,8 +256,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Ajax.php#L86](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Ajax.php#L86)
-- [Ajax.php#L95](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Ajax.php#L95)
+- [Ajax.php#L86](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Ajax.php#L86)
+- [Ajax.php#L95](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Ajax.php#L95)
 
 ## automatewoo/ajax/sanitize_text_field
 
@@ -265,7 +265,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Ajax.php#L77](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Ajax.php#L77)
+- [Ajax.php#L77](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Ajax.php#L77)
 
 ## automatewoo/anonymize_email
 
@@ -273,7 +273,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [helpers.php#L509](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/helpers.php#L509)
+- [helpers.php#L509](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/helpers.php#L509)
 
 ## automatewoo/async_events/after_init_required_events
 
@@ -281,7 +281,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Async_Events.php#L148](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events.php#L148)
+- [Async_Events.php#L148](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events.php#L148)
 
 ## automatewoo/async_events/always_required_events
 
@@ -289,7 +289,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Async_Events.php#L94](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events.php#L94)
+- [Async_Events.php#L94](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events.php#L94)
 
 ## automatewoo/async_events/includes
 
@@ -297,7 +297,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Async_Events.php#L70](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events.php#L70)
+- [Async_Events.php#L70](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events.php#L70)
 
 ## automatewoo/async_events/required_events
 
@@ -305,7 +305,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Async_Events.php#L131](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events.php#L131)
+- [Async_Events.php#L131](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events.php#L131)
 
 ## automatewoo/batched_job_monitor/failure_rate_threshold
 
@@ -313,7 +313,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ActionSchedulerJobMonitor.php#L63](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/ActionSchedulerJobMonitor.php#L63)
+- [ActionSchedulerJobMonitor.php#L63](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/ActionSchedulerJobMonitor.php#L63)
 
 ## automatewoo/bitly/shorten_url
 
@@ -321,7 +321,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Bitly.php#L77](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Integrations/Bitly.php#L77)
+- [Bitly.php#L77](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Integrations/Bitly.php#L77)
 
 ## automatewoo/cart/get_item_count
 
@@ -329,7 +329,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart.php#L395](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart.php#L395)
+- [Cart.php#L395](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart.php#L395)
 
 ## automatewoo/cart/get_items
 
@@ -337,7 +337,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart.php#L344](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart.php#L344)
+- [Cart.php#L344](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart.php#L344)
 
 ## automatewoo/cart/get_shipping_total_html
 
@@ -345,7 +345,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart.php#L243](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart.php#L243)
+- [Cart.php#L243](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart.php#L243)
 
 ## automatewoo/cart/price_args
 
@@ -353,7 +353,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart.php#L555](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart.php#L555)
+- [Cart.php#L555](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart.php#L555)
 
 ## automatewoo/cart/restored
 
@@ -361,7 +361,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [CartRestorer.php#L80](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Carts/CartRestorer.php#L80)
+- [CartRestorer.php#L80](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Carts/CartRestorer.php#L80)
 
 ## automatewoo/cart/status_changed
 
@@ -369,7 +369,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart.php#L76](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart.php#L76)
+- [Cart.php#L76](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart.php#L76)
 
 ## automatewoo/cart/statuses
 
@@ -377,7 +377,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Carts.php#L100](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Carts.php#L100)
+- [Carts.php#L100](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Carts.php#L100)
 
 ## automatewoo/cart_item/get_quantity
 
@@ -385,7 +385,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart_Item.php#L177](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart_Item.php#L177)
+- [Cart_Item.php#L177](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart_Item.php#L177)
 
 ## automatewoo/checkout_capture_fields
 
@@ -393,7 +393,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [PreSubmit.php#L30](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/PreSubmit.php#L30)
+- [PreSubmit.php#L30](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/PreSubmit.php#L30)
 
 ## automatewoo/click_track/safe_redirect_fallback
 
@@ -401,7 +401,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Tracking.php#L117](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Tracking.php#L117)
+- [Tracking.php#L117](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Tracking.php#L117)
 
 ## automatewoo/communication_page/legal_text
 
@@ -409,7 +409,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend.php#L33](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend.php#L33)
+- [Frontend.php#L33](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend.php#L33)
 
 ## automatewoo/communication_page/save_preferences
 
@@ -417,7 +417,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend_Form_Handler.php#L109](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend_Form_Handler.php#L109)
+- [Frontend_Form_Handler.php#L109](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend_Form_Handler.php#L109)
 
 ## automatewoo/communication_tab/endpoint
 
@@ -425,7 +425,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Communication_Account_Tab.php#L18](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Communication_Account_Tab.php#L18)
+- [Communication_Account_Tab.php#L18](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Communication_Account_Tab.php#L18)
 
 ## automatewoo/communication_tab/menu_title
 
@@ -433,7 +433,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Communication_Account_Tab.php#L44](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Communication_Account_Tab.php#L44)
+- [Communication_Account_Tab.php#L44](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Communication_Account_Tab.php#L44)
 
 ## automatewoo/communication_tab/page_title
 
@@ -441,7 +441,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Communication_Account_Tab.php#L36](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Communication_Account_Tab.php#L36)
+- [Communication_Account_Tab.php#L36](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Communication_Account_Tab.php#L36)
 
 ## automatewoo/conversion/recorded
 
@@ -449,7 +449,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Conversions.php#L61](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Conversions.php#L61)
+- [Conversions.php#L61](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Conversions.php#L61)
 
 ## automatewoo/conversions/is_valid_conversion
 
@@ -457,7 +457,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Conversions.php#L116](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Conversions.php#L116)
+- [Conversions.php#L116](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Conversions.php#L116)
 
 ## automatewoo/counted_order_statuses
 
@@ -465,7 +465,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [helpers.php#L254](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/helpers.php#L254)
+- [helpers.php#L254](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/helpers.php#L254)
 
 ## automatewoo/coupon_generator/code
 
@@ -473,7 +473,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Coupon_Generator.php#L142](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Coupon_Generator.php#L142)
+- [Coupon_Generator.php#L142](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Coupon_Generator.php#L142)
 
 ## automatewoo/coupon_generator/generate_from_template_coupon
 
@@ -481,7 +481,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Coupon_Generator.php#L240](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Coupon_Generator.php#L240)
+- [Coupon_Generator.php#L240](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Coupon_Generator.php#L240)
 
 ## automatewoo/coupon_generator/key_length
 
@@ -489,7 +489,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Coupon_Generator.php#L140](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Coupon_Generator.php#L140)
+- [Coupon_Generator.php#L140](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Coupon_Generator.php#L140)
 
 ## automatewoo/coupons/days_to_keep_expired
 
@@ -497,7 +497,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [DeleteExpiredCoupons.php#L65](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/DeleteExpiredCoupons.php#L65)
+- [DeleteExpiredCoupons.php#L65](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/DeleteExpiredCoupons.php#L65)
 
 ## automatewoo/customer/before_is_unsubscribed
 
@@ -505,7 +505,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Customer.php#L157](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Customer.php#L157)
+- [Customer.php#L157](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Customer.php#L157)
 
 ## automatewoo/customer/converted_guest_to_registered_customer
 
@@ -513,7 +513,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Customers.php#L105](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Customers.php#L105)
+- [Customers.php#L105](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Customers.php#L105)
 
 ## automatewoo/customer/get_language
 
@@ -521,7 +521,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Customer.php#L683](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Customer.php#L683)
+- [Customer.php#L683](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Customer.php#L683)
 
 ## automatewoo/customer/is_unsubscribed
 
@@ -529,7 +529,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Customer.php#L166](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Customer.php#L166)
+- [Customer.php#L166](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Customer.php#L166)
 
 ## automatewoo/customer/opted_in
 
@@ -537,7 +537,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Customer.php#L198](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Customer.php#L198)
+- [Customer.php#L198](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Customer.php#L198)
 
 ## automatewoo/customer/opted_out
 
@@ -545,7 +545,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Customer.php#L214](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Customer.php#L214)
+- [Customer.php#L214](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Customer.php#L214)
 
 ## automatewoo/data_layer/init
 
@@ -553,7 +553,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Data_Layer.php#L47](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Data_Layer.php#L47)
+- [Data_Layer.php#L47](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Data_Layer.php#L47)
 
 ## automatewoo/data_types/includes
 
@@ -561,7 +561,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [DataTypes.php#L63](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/DataTypes/DataTypes.php#L63)
+- [DataTypes.php#L63](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/DataTypes/DataTypes.php#L63)
 
 ## automatewoo/database_tables
 
@@ -569,7 +569,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Database_Tables.php#L50](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Database_Tables.php#L50)
+- [Database_Tables.php#L50](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Database_Tables.php#L50)
 
 ## automatewoo/email/before_send
 
@@ -577,7 +577,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer_Abstract.php#L179](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer_Abstract.php#L179)
+- [Mailer_Abstract.php#L179](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer_Abstract.php#L179)
 
 ## automatewoo/email/plain_text_unsubscribe_footer
 
@@ -585,7 +585,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow_Email.php#L330](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow_Email.php#L330)
+- [Workflow_Email.php#L330](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow_Email.php#L330)
 
 ## automatewoo/email/product_image
 
@@ -593,7 +593,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [mailer-api.php#L94](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/mailer-api.php#L94)
+- [mailer-api.php#L94](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/mailer-api.php#L94)
 
 ## automatewoo/email/product_placeholder_image
 
@@ -601,7 +601,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [mailer-api.php#L96](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/mailer-api.php#L96)
+- [mailer-api.php#L96](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/mailer-api.php#L96)
 
 ## automatewoo/factories
 
@@ -609,7 +609,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Factories.php#L23](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Factories.php#L23)
+- [Factories.php#L23](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Factories.php#L23)
 
 ## automatewoo/gmt_offset_changed
 
@@ -617,7 +617,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [CheckGmtOffsetChange.php#L43](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/CheckGmtOffsetChange.php#L43)
+- [CheckGmtOffsetChange.php#L43](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/CheckGmtOffsetChange.php#L43)
 
 ## automatewoo/guest/locking_timeout
 
@@ -625,7 +625,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Guest.php#L427](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Guest.php#L427)
+- [Guest.php#L427](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Guest.php#L427)
 
 ## automatewoo/guest_capture_fields
 
@@ -633,7 +633,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [PreSubmit.php#L17](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/PreSubmit.php#L17)
+- [PreSubmit.php#L17](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/PreSubmit.php#L17)
 
 ## automatewoo/honeypot_field/name
 
@@ -641,7 +641,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend_Form_Handler.php#L30](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend_Form_Handler.php#L30)
+- [Frontend_Form_Handler.php#L30](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend_Form_Handler.php#L30)
 
 ## automatewoo/intervals/->GET_NAME
 
@@ -649,7 +649,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AbstractActionSchedulerJob.php#L69](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/AbstractActionSchedulerJob.php#L69)
+- [AbstractActionSchedulerJob.php#L69](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/AbstractActionSchedulerJob.php#L69)
 
 ## automatewoo/jobs
 
@@ -657,7 +657,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [JobRegistry.php#L138](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/JobRegistry.php#L138)
+- [JobRegistry.php#L138](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/JobRegistry.php#L138)
 
 ## automatewoo/log/data_layer_storage_keys
 
@@ -665,7 +665,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Logs.php#L24](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Logs.php#L24)
+- [Logs.php#L24](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Logs.php#L24)
 
 ## automatewoo/mailer/blacklist
 
@@ -673,7 +673,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer_Abstract.php#L154](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer_Abstract.php#L154)
+- [Mailer_Abstract.php#L154](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer_Abstract.php#L154)
 
 ## automatewoo/mailer/from_address
 
@@ -681,7 +681,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Emails.php#L88](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Emails.php#L88)
+- [Emails.php#L88](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Emails.php#L88)
 
 ## automatewoo/mailer/from_name
 
@@ -689,7 +689,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Emails.php#L57](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Emails.php#L57)
+- [Emails.php#L57](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Emails.php#L57)
 
 ## automatewoo/mailer/init
 
@@ -697,7 +697,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L58](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L58)
+- [Mailer.php#L58](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L58)
 
 ## automatewoo/mailer/styles
 
@@ -705,7 +705,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L255](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L255)
+- [Mailer.php#L255](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L255)
 
 ## automatewoo/mailer/variable_value
 
@@ -713,7 +713,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer_Abstract.php#L253](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer_Abstract.php#L253)
+- [Mailer_Abstract.php#L253](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer_Abstract.php#L253)
 
 ## automatewoo/mailer_raw/styles
 
@@ -721,7 +721,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer_Raw_HTML.php#L30](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer_Raw_HTML.php#L30)
+- [Mailer_Raw_HTML.php#L30](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer_Raw_HTML.php#L30)
 
 ## automatewoo/notifications/includes
 
@@ -729,7 +729,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Notifications.php#L66](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Notifications.php#L66)
+- [Notifications.php#L66](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Notifications.php#L66)
 
 ## automatewoo/notifications/loaded
 
@@ -737,7 +737,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [NotificationsInitializer.php#L126](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/NotificationsInitializer.php#L126)
+- [NotificationsInitializer.php#L126](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/NotificationsInitializer.php#L126)
 
 ## automatewoo/object/create
 
@@ -745,7 +745,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Model.php#L228](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Model.php#L228)
+- [Model.php#L228](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Model.php#L228)
 
 ## automatewoo/object/delete
 
@@ -753,7 +753,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Model.php#L246](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Model.php#L246)
+- [Model.php#L246](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Model.php#L246)
 
 ## automatewoo/object/load
 
@@ -761,7 +761,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Model.php#L62](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Model.php#L62)
+- [Model.php#L62](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Model.php#L62)
 
 ## automatewoo/object/update
 
@@ -769,7 +769,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Model.php#L206](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Model.php#L206)
+- [Model.php#L206](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Model.php#L206)
 
 ## automatewoo/order/paid
 
@@ -777,7 +777,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Paid.php#L69](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events/Order_Paid.php#L69)
+- [Order_Paid.php#L69](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events/Order_Paid.php#L69)
 
 ## automatewoo/preview_data_layer
 
@@ -785,7 +785,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Preview_Data.php#L314](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Preview_Data.php#L314)
+- [Preview_Data.php#L314](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Preview_Data.php#L314)
 
 ## automatewoo/privacy/erase_user_meta
 
@@ -793,7 +793,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Privacy_Erasers.php#L200](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Privacy_Erasers.php#L200)
+- [Privacy_Erasers.php#L200](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Privacy_Erasers.php#L200)
 
 ## automatewoo/privacy/exported_customer_data
 
@@ -801,7 +801,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Privacy_Exporters.php#L103](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Privacy_Exporters.php#L103)
+- [Privacy_Exporters.php#L103](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Privacy_Exporters.php#L103)
 
 ## automatewoo/privacy/exported_data_layer
 
@@ -809,7 +809,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Privacy_Exporters.php#L385](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Privacy_Exporters.php#L385)
+- [Privacy_Exporters.php#L385](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Privacy_Exporters.php#L385)
 
 ## automatewoo/privacy/loaded
 
@@ -817,7 +817,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Privacy.php#L35](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Privacy.php#L35)
+- [Privacy.php#L35](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Privacy.php#L35)
 
 ## automatewoo/privacy_policy_guide
 
@@ -825,7 +825,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Privacy_Policy_Guide.php#L56](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Privacy_Policy_Guide.php#L56)
+- [Privacy_Policy_Guide.php#L56](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Privacy_Policy_Guide.php#L56)
 
 ## automatewoo/products/gone_on_sale
 
@@ -833,7 +833,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ProductGoesOnSale.php#L46](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/ProductGoesOnSale.php#L46)
+- [ProductGoesOnSale.php#L46](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/ProductGoesOnSale.php#L46)
 
 ## automatewoo/query/get_count_sql
 
@@ -841,7 +841,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Query_Abstract.php#L449](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Query_Abstract.php#L449)
+- [Query_Abstract.php#L449](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Query_Abstract.php#L449)
 
 ## automatewoo/query/get_results_sql
 
@@ -849,7 +849,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Query_Abstract.php#L388](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Query_Abstract.php#L388)
+- [Query_Abstract.php#L388](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Query_Abstract.php#L388)
 
 ## automatewoo/review/posted
 
@@ -857,7 +857,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Review_Posted.php#L59](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Event_Helpers/Review_Posted.php#L59)
+- [Review_Posted.php#L59](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Event_Helpers/Review_Posted.php#L59)
 
 ## automatewoo/rules/includes
 
@@ -865,7 +865,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Rules.php#L170](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Rules.php#L170)
+- [Rules.php#L170](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Rules.php#L170)
 
 ## automatewoo/rules/preloaded_select/choices
 
@@ -873,7 +873,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Preloaded_Select_Rule_Abstract.php#L40](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Rules/Preloaded_Select_Rule_Abstract.php#L40)
+- [Preloaded_Select_Rule_Abstract.php#L40](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Rules/Preloaded_Select_Rule_Abstract.php#L40)
 
 ## automatewoo/rules/validate_logical_empty_date
 
@@ -881,7 +881,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Abstract_Date.php#L530](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Rules/Abstract_Date.php#L530)
+- [Abstract_Date.php#L530](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Rules/Abstract_Date.php#L530)
 
 ## automatewoo/session_tracker/cookie_name
 
@@ -889,7 +889,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Session_Tracker.php#L35](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Session_Tracker.php#L35)
+- [Session_Tracker.php#L35](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Session_Tracker.php#L35)
 
 ## automatewoo/session_tracker/new_stored_guest
 
@@ -897,7 +897,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Session_Tracker.php#L444](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Session_Tracker.php#L444)
+- [Session_Tracker.php#L444](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Session_Tracker.php#L444)
 
 ## automatewoo/session_tracking/cookies_permitted
 
@@ -905,7 +905,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Session_Tracker.php#L138](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Session_Tracker.php#L138)
+- [Session_Tracker.php#L138](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Session_Tracker.php#L138)
 
 ## automatewoo/sms/is_recipient_primary_customer
 
@@ -913,7 +913,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Send_SMS_Twilio.php#L149](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Send_SMS_Twilio.php#L149)
+- [Send_SMS_Twilio.php#L149](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Send_SMS_Twilio.php#L149)
 
 ## automatewoo/stored_cart/created_via_frontend
 
@@ -921,7 +921,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Carts.php#L194](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Carts.php#L194)
+- [Carts.php#L194](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Carts.php#L194)
 
 ## automatewoo/stored_cart/deleted_via_frontend
 
@@ -929,7 +929,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Carts.php#L164](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Carts.php#L164)
+- [Carts.php#L164](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Carts.php#L164)
 
 ## automatewoo/stored_cart/updated_via_frontend
 
@@ -937,7 +937,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Carts.php#L173](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Carts.php#L173)
+- [Carts.php#L173](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Carts.php#L173)
 
 ## automatewoo/subscription/status_changed
 
@@ -945,7 +945,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Subscription_Status_Changed.php#L60](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Event_Helpers/Subscription_Status_Changed.php#L60)
+- [Subscription_Status_Changed.php#L60](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Event_Helpers/Subscription_Status_Changed.php#L60)
 
 ## automatewoo/system_checks
 
@@ -953,8 +953,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [SystemChecks.php#L91](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Notifications/SystemChecks.php#L91)
-- [System_Checks.php#L25](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/System_Checks.php#L25)
+- [SystemChecks.php#L91](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Notifications/SystemChecks.php#L91)
+- [System_Checks.php#L25](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/System_Checks.php#L25)
 
 ## automatewoo/tools
 
@@ -962,7 +962,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [ToolsService.php#L53](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Tools/ToolsService.php#L53)
+- [ToolsService.php#L53](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Tools/ToolsService.php#L53)
 
 ## automatewoo/tracking/excluded_user_agents
 
@@ -970,7 +970,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Tracking.php#L132](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Tracking.php#L132)
+- [Tracking.php#L132](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Tracking.php#L132)
 
 ## automatewoo/trigger/workflows
 
@@ -978,7 +978,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Trigger.php#L247](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Trigger.php#L247)
+- [Trigger.php#L247](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Trigger.php#L247)
 
 ## automatewoo/triggers
 
@@ -986,7 +986,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Triggers.php#L134](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Triggers.php#L134)
+- [Triggers.php#L134](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Triggers.php#L134)
 
 ## automatewoo/usage_tracking/addon_base_properties
 
@@ -994,7 +994,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Tracks.php#L47](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Usage_Tracking/Tracks.php#L47)
+- [Tracks.php#L47](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Usage_Tracking/Tracks.php#L47)
 
 ## automatewoo/usage_tracking/addon_tracking_classes
 
@@ -1002,7 +1002,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Initializer.php#L57](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Usage_Tracking/Initializer.php#L57)
+- [Initializer.php#L57](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Usage_Tracking/Initializer.php#L57)
 
 ## automatewoo/usage_tracking/enabled
 
@@ -1010,7 +1010,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Initializer.php#L29](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Usage_Tracking/Initializer.php#L29)
+- [Initializer.php#L29](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Usage_Tracking/Initializer.php#L29)
 
 ## automatewoo/usage_tracking/init
 
@@ -1018,7 +1018,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Initializer.php#L33](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Usage_Tracking/Initializer.php#L33)
+- [Initializer.php#L33](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Usage_Tracking/Initializer.php#L33)
 
 ## automatewoo/usage_tracking/workflow_data
 
@@ -1026,7 +1026,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [WorkflowTracksData.php#L49](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Usage_Tracking/WorkflowTracksData.php#L49)
+- [WorkflowTracksData.php#L49](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Usage_Tracking/WorkflowTracksData.php#L49)
 
 ## automatewoo/user_registered
 
@@ -1034,7 +1034,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [User_Registration.php#L54](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Event_Helpers/User_Registration.php#L54)
+- [User_Registration.php#L54](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Event_Helpers/User_Registration.php#L54)
 
 ## automatewoo/variables
 
@@ -1042,7 +1042,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Variables.php#L294](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables.php#L294)
+- [Variables.php#L294](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables.php#L294)
 
 ## automatewoo/variables/after_get_value
 
@@ -1050,7 +1050,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Variables_Processor.php#L70](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables_Processor.php#L70)
+- [Variables_Processor.php#L70](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables_Processor.php#L70)
 
 ## automatewoo/variables/coupons/use_email_restriction
 
@@ -1058,7 +1058,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Abstract_Generate_Coupon.php#L70](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables/Abstract_Generate_Coupon.php#L70)
+- [Abstract_Generate_Coupon.php#L70](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables/Abstract_Generate_Coupon.php#L70)
 
 ## automatewoo/variables/date_format_options
 
@@ -1066,7 +1066,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Abstract_Datetime.php#L67](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables/Abstract_Datetime.php#L67)
+- [Abstract_Datetime.php#L67](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables/Abstract_Datetime.php#L67)
 
 ## automatewoo/variables/generate_coupon
 
@@ -1074,7 +1074,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Abstract_Generate_Coupon.php#L113](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables/Abstract_Generate_Coupon.php#L113)
+- [Abstract_Generate_Coupon.php#L113](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables/Abstract_Generate_Coupon.php#L113)
 
 ## automatewoo/variables/get_variable_value
 
@@ -1082,7 +1082,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Variables_Processor.php#L145](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables_Processor.php#L145)
+- [Variables_Processor.php#L145](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables_Processor.php#L145)
 
 ## automatewoo/variables/product_templates
 
@@ -1090,7 +1090,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Abstract_Product_Display.php#L46](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables/Abstract_Product_Display.php#L46)
+- [Abstract_Product_Display.php#L46](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables/Abstract_Product_Display.php#L46)
 
 ## automatewoo/variables_processor/excluded
 
@@ -1098,7 +1098,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [VariableParser.php#L111](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows/VariableParsing/VariableParser.php#L111)
+- [VariableParser.php#L111](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows/VariableParsing/VariableParser.php#L111)
 
 ## automatewoo/workflow/before_run
 
@@ -1106,7 +1106,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L420](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L420)
+- [Workflow.php#L420](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L420)
 
 ## automatewoo/workflow/created
 
@@ -1114,8 +1114,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Factory.php#L148](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows/Factory.php#L148)
-- [Workflows.php#L75](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows.php#L75)
+- [Workflows.php#L75](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows.php#L75)
+- [Factory.php#L148](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows/Factory.php#L148)
 
 ## automatewoo/workflow/deleted
 
@@ -1123,7 +1123,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflows.php#L84](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows.php#L84)
+- [Workflows.php#L84](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows.php#L84)
 
 ## automatewoo/workflow/is_customer_unsubscribed
 
@@ -1131,7 +1131,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L1168](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L1168)
+- [Workflow.php#L1168](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L1168)
 
 ## automatewoo/workflow/is_exempt_from_unsubscribing
 
@@ -1139,7 +1139,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L1219](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L1219)
+- [Workflow.php#L1219](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L1219)
 
 ## automatewoo/workflow/location
 
@@ -1147,7 +1147,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L1685](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L1685)
+- [Workflow.php#L1685](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L1685)
 
 ## automatewoo/workflow/mailer
 
@@ -1155,7 +1155,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow_Email.php#L270](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow_Email.php#L270)
+- [Workflow_Email.php#L270](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow_Email.php#L270)
 
 ## automatewoo/workflow/option
 
@@ -1163,7 +1163,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L650](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L650)
+- [Workflow.php#L650](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L650)
 
 ## automatewoo/workflow/queue_date
 
@@ -1171,7 +1171,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L509](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L509)
+- [Workflow.php#L509](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L509)
 
 ## automatewoo/workflow/record_click
 
@@ -1179,7 +1179,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Log.php#L180](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Log.php#L180)
+- [Log.php#L180](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Log.php#L180)
 
 ## automatewoo/workflow/record_open
 
@@ -1187,7 +1187,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Log.php#L212](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Log.php#L212)
+- [Log.php#L212](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Log.php#L212)
 
 ## automatewoo/workflow/statuses
 
@@ -1195,7 +1195,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Status.php#L102](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows/Status.php#L102)
+- [Status.php#L102](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows/Status.php#L102)
 
 ## automatewoo/workflow/tax_location
 
@@ -1203,7 +1203,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L1699](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L1699)
+- [Workflow.php#L1699](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L1699)
 
 ## automatewoo/workflow/types
 
@@ -1211,7 +1211,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflows.php#L45](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows.php#L45)
+- [Workflows.php#L45](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows.php#L45)
 
 ## automatewoo/workflow/updated
 
@@ -1219,7 +1219,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflows.php#L58](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows.php#L58)
+- [Workflows.php#L58](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows.php#L58)
 
 ## automatewoo/workflows/presets
 
@@ -1227,7 +1227,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [FileStorage.php#L136](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflows/Presets/Storage/FileStorage.php#L136)
+- [FileStorage.php#L136](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflows/Presets/Storage/FileStorage.php#L136)
 
 ## automatewoo_action_option
 
@@ -1235,7 +1235,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Action.php#L270](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Action.php#L270)
+- [Action.php#L270](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Action.php#L270)
 
 ## automatewoo_addon_updated
 
@@ -1243,7 +1243,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [addon.php#L156](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/abstracts/addon.php#L156)
+- [addon.php#L161](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/abstracts/addon.php#L161)
 
 ## automatewoo_after_action_run
 
@@ -1251,7 +1251,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L435](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L435)
+- [Workflow.php#L435](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L435)
 
 ## automatewoo_after_register_post_types
 
@@ -1259,7 +1259,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Post_Types.php#L66](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Post_Types.php#L66)
+- [Post_Types.php#L66](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Post_Types.php#L66)
 
 ## automatewoo_after_workflow_run
 
@@ -1267,7 +1267,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L443](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L443)
+- [Workflow.php#L443](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L443)
 
 ## automatewoo_before_action_run
 
@@ -1275,7 +1275,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L433](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L433)
+- [Workflow.php#L433](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L433)
 
 ## automatewoo_cache_default_expiration
 
@@ -1283,7 +1283,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cache.php#L27](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cache.php#L27)
+- [Cache.php#L27](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cache.php#L27)
 
 ## automatewoo_click_track_url
 
@@ -1291,7 +1291,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Tracking.php#L58](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Tracking.php#L58)
+- [Tracking.php#L58](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Tracking.php#L58)
 
 ## automatewoo_conversion_window
 
@@ -1299,7 +1299,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Conversions.php#L18](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Conversions.php#L18)
+- [Conversions.php#L18](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Conversions.php#L18)
 
 ## automatewoo_create_pages
 
@@ -1307,7 +1307,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Installer.php#L296](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Installer.php#L296)
+- [Installer.php#L300](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Installer.php#L300)
 
 ## automatewoo_create_run_log
 
@@ -1315,7 +1315,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L582](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L582)
+- [Workflow.php#L582](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L582)
 
 ## automatewoo_custom_validate_workflow
 
@@ -1323,7 +1323,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L322](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L322)
+- [Workflow.php#L322](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L322)
 
 ## automatewoo_disable_async_runner
 
@@ -1331,7 +1331,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AsyncActionRunner.php#L74](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/ActionScheduler/AsyncActionRunner.php#L74)
+- [AsyncActionRunner.php#L74](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/ActionScheduler/AsyncActionRunner.php#L74)
 
 ## automatewoo_email_content
 
@@ -1339,7 +1339,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L148](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L148)
+- [Mailer.php#L148](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L148)
 
 ## automatewoo_email_footer_separator
 
@@ -1347,7 +1347,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L272](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L272)
+- [Mailer.php#L272](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L272)
 
 ## automatewoo_email_templates
 
@@ -1355,7 +1355,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Emails.php#L113](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Emails.php#L113)
+- [Emails.php#L113](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Emails.php#L113)
 
 ## automatewoo_email_unsubscribe_text
 
@@ -1363,7 +1363,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow_Email.php#L310](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow_Email.php#L310)
+- [Workflow_Email.php#L310](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow_Email.php#L310)
 
 ## automatewoo_failed_events_delete_after
 
@@ -1371,7 +1371,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [DeleteFailedQueuedWorkflows.php#L47](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Jobs/DeleteFailedQueuedWorkflows.php#L47)
+- [DeleteFailedQueuedWorkflows.php#L47](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Jobs/DeleteFailedQueuedWorkflows.php#L47)
 
 ## automatewoo_first_installed
 
@@ -1379,7 +1379,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Installer.php#L113](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Installer.php#L113)
+- [Installer.php#L117](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Installer.php#L117)
 
 ## automatewoo_generate_coupon_default_prefix
 
@@ -1387,7 +1387,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Coupon_Generator.php#L45](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Coupon_Generator.php#L45)
+- [Coupon_Generator.php#L45](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Coupon_Generator.php#L45)
 
 ## automatewoo_init
 
@@ -1395,7 +1395,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AutomateWoo.php#L179](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/AutomateWoo.php#L179)
+- [AutomateWoo.php#L179](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/AutomateWoo.php#L179)
 
 ## automatewoo_init_addons
 
@@ -1403,7 +1403,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AutomateWoo.php#L153](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/AutomateWoo.php#L153)
+- [AutomateWoo.php#L153](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/AutomateWoo.php#L153)
 
 ## automatewoo_init_triggers
 
@@ -1411,7 +1411,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Triggers.php#L188](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Triggers.php#L188)
+- [Triggers.php#L188](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Triggers.php#L188)
 
 ## automatewoo_installed
 
@@ -1419,7 +1419,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Installer.php#L102](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Installer.php#L102)
+- [Installer.php#L106](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Installer.php#L106)
 
 ## automatewoo_loaded
 
@@ -1427,7 +1427,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AutomateWoo.php#L251](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/AutomateWoo.php#L251)
+- [AutomateWoo.php#L251](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/AutomateWoo.php#L251)
 
 ## automatewoo_new_session_initiated
 
@@ -1435,7 +1435,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Session_Tracker.php#L161](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Session_Tracker.php#L161)
+- [Session_Tracker.php#L161](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Session_Tracker.php#L161)
 
 ## automatewoo_open_track_url
 
@@ -1443,7 +1443,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Tracking.php#L30](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Tracking.php#L30)
+- [Tracking.php#L30](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Tracking.php#L30)
 
 ## automatewoo_order_pending
 
@@ -1451,7 +1451,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Pending.php#L75](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events/Order_Pending.php#L75)
+- [Order_Pending.php#L75](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events/Order_Pending.php#L75)
 
 ## automatewoo_order_pending_check_delay
 
@@ -1459,7 +1459,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Pending.php#L50](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Events/Order_Pending.php#L50)
+- [Order_Pending.php#L50](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Events/Order_Pending.php#L50)
 
 ## automatewoo_parse_phone_number
 
@@ -1467,7 +1467,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Phone_Numbers.php#L46](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Phone_Numbers.php#L46)
+- [Phone_Numbers.php#L46](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Phone_Numbers.php#L46)
 
 ## automatewoo_register_post_type_aw_workflow
 
@@ -1475,7 +1475,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Post_Types.php#L28](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Post_Types.php#L28)
+- [Post_Types.php#L28](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Post_Types.php#L28)
 
 ## automatewoo_text_variable_value
 
@@ -1483,7 +1483,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Variables_Processor.php#L119](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables_Processor.php#L119)
+- [Variables_Processor.php#L119](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables_Processor.php#L119)
 
 ## automatewoo_trigger_option
 
@@ -1491,7 +1491,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Trigger.php#L353](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Trigger.php#L353)
+- [Trigger.php#L353](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Trigger.php#L353)
 
 ## automatewoo_unsubscribe_url
 
@@ -1499,8 +1499,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Workflow.php#L1198](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L1198)
-- [Workflow.php#L1211](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Workflow.php#L1211)
+- [Workflow.php#L1198](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L1198)
+- [Workflow.php#L1211](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Workflow.php#L1211)
 
 ## automatewoo_updated
 
@@ -1508,7 +1508,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Installer.php#L280](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Installer.php#L280)
+- [Installer.php#L284](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Installer.php#L284)
 
 ## automatewoo_validate_data_item
 
@@ -1516,7 +1516,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [helpers.php#L109](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/helpers.php#L109)
+- [helpers.php#L109](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/helpers.php#L109)
 
 ## automatewoo_version_changed
 
@@ -1524,7 +1524,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Installer.php#L91](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Installer.php#L91)
+- [Installer.php#L95](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Installer.php#L95)
 
 ## automatewoo_visitor_tracking_cookie_expiry
 
@@ -1532,7 +1532,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Session_Tracker.php#L36](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Session_Tracker.php#L36)
+- [Session_Tracker.php#L36](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Session_Tracker.php#L36)
 
 ## edit_term_taxonomy
 
@@ -1540,7 +1540,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [User_Tags.php#L129](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/User_Tags.php#L129)
+- [User_Tags.php#L129](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/User_Tags.php#L129)
 
 ## edited_term_taxonomy
 
@@ -1548,7 +1548,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [User_Tags.php#L131](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/User_Tags.php#L131)
+- [User_Tags.php#L131](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/User_Tags.php#L131)
 
 ## https_local_ssl_verify
 
@@ -1556,8 +1556,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AW_AsyncRequest_QueueRunner.php#L37](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/ActionScheduler/AW_AsyncRequest_QueueRunner.php#L37)
-- [Async_Request_Abstract.php#L40](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Async_Request_Abstract.php#L40)
+- [AW_AsyncRequest_QueueRunner.php#L37](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/ActionScheduler/AW_AsyncRequest_QueueRunner.php#L37)
+- [Async_Request_Abstract.php#L40](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Async_Request_Abstract.php#L40)
 
 ## wc_get_template
 
@@ -1565,7 +1565,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L325](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L325)
+- [Mailer.php#L325](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L325)
 
 ## woocommerce_add_to_cart_product_id
 
@@ -1573,7 +1573,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend_Endpoints.php#L129](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend_Endpoints.php#L129)
+- [Frontend_Endpoints.php#L129](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend_Endpoints.php#L129)
 
 ## woocommerce_add_to_cart_validation
 
@@ -1581,7 +1581,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend_Endpoints.php#L150](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend_Endpoints.php#L150)
+- [Frontend_Endpoints.php#L150](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend_Endpoints.php#L150)
 
 ## woocommerce_admin_disabled
 
@@ -1589,7 +1589,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [WcAdminDisabled.php#L29](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/AdminNotices/WcAdminDisabled.php#L29)
+- [WcAdminDisabled.php#L29](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/AdminNotices/WcAdminDisabled.php#L29)
 
 ## woocommerce_after_resend_order_email
 
@@ -1597,8 +1597,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Subscription_Send_Invoice.php#L35](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Subscription_Send_Invoice.php#L35)
-- [Order_Resend_Email.php#L94](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Order_Resend_Email.php#L94)
+- [Order_Resend_Email.php#L94](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Order_Resend_Email.php#L94)
+- [Subscription_Send_Invoice.php#L35](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Subscription_Send_Invoice.php#L35)
 
 ## woocommerce_after_template_part
 
@@ -1606,7 +1606,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L332](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L332)
+- [Mailer.php#L332](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L332)
 
 ## woocommerce_before_resend_order_emails
 
@@ -1614,8 +1614,8 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Subscription_Send_Invoice.php#L29](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Subscription_Send_Invoice.php#L29)
-- [Order_Resend_Email.php#L73](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Order_Resend_Email.php#L73)
+- [Order_Resend_Email.php#L73](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Order_Resend_Email.php#L73)
+- [Subscription_Send_Invoice.php#L29](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Subscription_Send_Invoice.php#L29)
 
 ## woocommerce_before_template_part
 
@@ -1623,7 +1623,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L326](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L326)
+- [Mailer.php#L326](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L326)
 
 ## woocommerce_cart_item_name
 
@@ -1631,7 +1631,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart_Item.php#L77](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart_Item.php#L77)
+- [Cart_Item.php#L77](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart_Item.php#L77)
 
 ## woocommerce_email_customer_details
 
@@ -1639,7 +1639,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Customer_Details.php#L27](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Variables/Order_Customer_Details.php#L27)
+- [Order_Customer_Details.php#L27](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Variables/Order_Customer_Details.php#L27)
 
 ## woocommerce_email_styles
 
@@ -1647,7 +1647,16 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L254](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L254)
+- [Mailer.php#L254](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L254)
+
+## woocommerce_enable_auto_update_db
+
+**Type**: filter
+
+**Used in**:
+
+- [Installer.php#L60](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Installer.php#L60)
+- [addon.php#L115](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/abstracts/addon.php#L115)
 
 ## woocommerce_get_item_data
 
@@ -1655,7 +1664,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart_Item.php#L218](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart_Item.php#L218)
+- [Cart_Item.php#L218](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart_Item.php#L218)
 
 ## woocommerce_is_rest_api_request
 
@@ -1663,7 +1672,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [AutomateWoo.php#L321](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/AutomateWoo.php#L321)
+- [AutomateWoo.php#L321](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/AutomateWoo.php#L321)
 
 ## woocommerce_mail_content
 
@@ -1671,7 +1680,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Mailer.php#L133](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Mailer.php#L133)
+- [Mailer.php#L133](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Mailer.php#L133)
 
 ## woocommerce_order_action_sanitize_title
 
@@ -1679,7 +1688,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Trigger_Action.php#L84](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Order_Trigger_Action.php#L84)
+- [Order_Trigger_Action.php#L84](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Order_Trigger_Action.php#L84)
 
 ## woocommerce_order_actions
 
@@ -1687,7 +1696,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Order_Trigger_Action.php#L57](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Actions/Order_Trigger_Action.php#L57)
+- [Order_Trigger_Action.php#L57](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Actions/Order_Trigger_Action.php#L57)
 
 ## woocommerce_order_again_cart_item_data
 
@@ -1695,7 +1704,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend_Endpoints.php#L133](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend_Endpoints.php#L133)
+- [Frontend_Endpoints.php#L133](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend_Endpoints.php#L133)
 
 ## woocommerce_ordered_again
 
@@ -1703,7 +1712,23 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Frontend_Endpoints.php#L157](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Frontend_Endpoints.php#L157)
+- [Frontend_Endpoints.php#L157](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Frontend_Endpoints.php#L157)
+
+## woocommerce_product_variation_title_attributes_separator
+
+**Type**: filter
+
+**Used in**:
+
+- [helpers.php#L851](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/helpers.php#L851)
+
+## woocommerce_product_variation_title_include_attributes
+
+**Type**: filter
+
+**Used in**:
+
+- [helpers.php#L850](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/helpers.php#L850)
 
 ## woocommerce_variation_option_name
 
@@ -1711,7 +1736,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [Cart_Item.php#L202](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/includes/Cart_Item.php#L202)
+- [Cart_Item.php#L202](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/includes/Cart_Item.php#L202)
 
 ## automatewoo/communication_form/after_subscribe_preference
 
@@ -1719,7 +1744,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [communication-preferences-list.php#L48](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/templates/communication-preferences/communication-preferences-list.php#L48)
+- [communication-preferences-list.php#L48](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/templates/communication-preferences/communication-preferences-list.php#L48)
 
 ## automatewoo/communication_preferences/default_to_checked
 
@@ -1727,7 +1752,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [communication-preferences-list.php#L25](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/templates/communication-preferences/communication-preferences-list.php#L25)
+- [communication-preferences-list.php#L25](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/templates/communication-preferences/communication-preferences-list.php#L25)
 
 ## automatewoo/honeypot_field/name
 
@@ -1735,7 +1760,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [honeypot-field.php#L17](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/templates/honeypot-field.php#L17)
+- [honeypot-field.php#L17](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/templates/honeypot-field.php#L17)
 
 ## automatewoo/show_plain_text_footer_when_no_unsubscribe_link
 
@@ -1743,7 +1768,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [email-footer.php#L13](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/templates/email/plain/email-footer.php#L13)
+- [email-footer.php#L13](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/templates/email/plain/email-footer.php#L13)
 
 ## woocommerce_email_footer_text
 
@@ -1751,7 +1776,7 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [email-footer.php#L16](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/templates/email/plain/email-footer.php#L16)
+- [email-footer.php#L16](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/templates/email/plain/email-footer.php#L16)
 
 ## woocommerce_email_order_details
 
@@ -1759,5 +1784,13 @@ A list of hooks, e.g. `actions` and `filters`, that are defined or used in this 
 
 **Used in**:
 
-- [order-table.php#L18](https://github.com/woocommerce/automatewoo/blob/4279fb3ef7a5e40b64d0a945e162439fc2083480/templates/email/order-table.php#L18)
+- [order-table.php#L18](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/templates/email/order-table.php#L18)
+
+## automatewoo_activated
+
+**Type**: action
+
+**Used in**:
+
+- [automatewoo.php#L217](https://github.com/woocommerce/automatewoo/blob/5b86d9a32d606d966909f601aed31d751e35628c/automatewoo.php#L217)
 

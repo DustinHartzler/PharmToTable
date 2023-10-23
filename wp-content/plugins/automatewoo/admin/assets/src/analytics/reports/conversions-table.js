@@ -8,7 +8,7 @@ import { defaultTableDateFormat } from '@woocommerce/date';
 import { formatValue } from '@woocommerce/number';
 import { getSetting } from '@woocommerce/settings';
 import apiFetch from '@wordpress/api-fetch';
-import { Button, Tooltip } from 'extracted/@wordpress/components';
+import { Button, Tooltip } from '@wordpress/components';
 import { dispatch, useDispatch } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
 import Modal from '#external/automatewoo/modal.js';

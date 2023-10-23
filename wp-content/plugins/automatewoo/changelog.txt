@@ -1,5 +1,41 @@
 *** AutomateWoo Changelog ***
 
+2023-10-10 - version 6.0.6
+* Dev - Add E2E tests for Menu and basic page elements.
+* Dev - Add E2E tests for Settings, Presets and Tools.
+* Dev - Add tests for Cart tracking.
+* Dev - Enable phpcs checking for admin utilities file.
+* Fix - Externalize WordPress JS packages to avoid CSS style conflicts.
+* Tweak - Add documentation link with UTM parameters.
+* Tweak - Add sorting when listing customers with purchase orders within a specific date range.
+* Tweak - WC 8.2 compatibility.
+
+2023-09-22 - version 6.0.5
+* Dev -  E2E tests for Dashboard page.
+* Dev - Remove unit test marked as incomplete.
+* Dev - Update WooCommerce Bookings payment gateway title.
+* Fix - Fatal error when enabling Active Campaign integration without API key.
+* Fix - Logic for automatic database updates.
+* Fix - Shop order transients hook setting customer id to 0.
+* Fix - Use helper function for checking supported subscription payment methods.
+
+2023-09-14 - version 6.0.4
+* Dev - Add E2E documentation reference in the Readme file.
+* Dev - Add documentation about engines directive.
+* Dev - Add node ^18.17 and npm ^9.5 as supported engines for dependabot.
+* Dev - Fix Linter for JS.
+* Dev - Implement wp-env for E2E tests.
+* Dev - Setup E2E Test Github Action Workflow.
+* Dev - Setup Playwright for E2E tests.
+* Fix - Fatal error getting product permalink on emails.
+* Fix - HPOS SET clause for WC 8.1.
+* Fix - Hide Tool Items Submenu items in WP.COM shops.
+* Fix - Merge - Anonymize tracking data.
+* Fix - Restore trigger options when cancelling a trigger change.
+* Tweak - Anonymize specific workflow values for usage tracking.
+* Tweak - Remove unnecessary columns from workflows table.
+* Tweak - WC 8.1.0 compatibility.
+
 2023-08-29 - version 6.0.3
 * Dev - Add Action for Hooks Documentation Generator.
 * Dev - Fetch WooCommerce and WordPress versions for our tests.

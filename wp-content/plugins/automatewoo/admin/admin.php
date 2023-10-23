@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
@@ -17,12 +16,15 @@ use Automattic\WooCommerce\Blocks\Package as BlocksPackage;
  */
 class Admin {
 
-	static function init() {
+	/**
+	 * Initialize the Admin class.
+	 */
+	public static function init() {
 		$self = __CLASS__; /** @var $self Admin (for IDE) */
 
 		Admin_Ajax::init();
 		AdminNotices::init();
-		( new WCAdminConnectPages )->init();
+		( new WCAdminConnectPages() )->init();
 		Analytics::init();
 
 		add_action( 'current_screen', [ $self, 'includes' ] );
@@ -33,6 +35,7 @@ class Admin {
 		add_action( 'admin_menu', [ $self, 'admin_menu' ] );
 		add_action( 'admin_footer', [ $self, 'replace_top_level_menu' ] );
 		add_action( 'admin_head', [ $self, 'menu_highlight' ] );
+		add_filter( 'admin_menu', [ $self, 'alter_menu' ] );
 
 		add_filter( 'woocommerce_screen_ids', [ $self, 'filter_woocommerce_screen_ids' ] );
 		add_filter( 'woocommerce_display_admin_footer_text', [ $self, 'filter_woocommerce_display_footer_text' ] );
@@ -60,35 +63,45 @@ class Admin {
 		( new AssetData( $registry ) )->add_data();
 	}
 
-	static function includes() {
+	/**
+	 * Initialize classes based on current screen.
+	 */
+	public static function includes() {
 
 		switch ( self::get_screen_id() ) {
-			case 'aw_workflow' :
+			case 'aw_workflow':
 				new Admin_Workflow_Edit();
 				break;
 
-			case 'edit-aw_workflow' :
+			case 'edit-aw_workflow':
 				new Admin_Workflow_List();
 				break;
 
-			case 'edit-shop_coupon' :
+			case 'edit-shop_coupon':
 				new \AW_Admin_Coupons_List();
 				break;
 		}
 	}
 
+	/**
+	 * Add screen options based on current screen.
+	 */
+	public static function screen_options() {
+		$screen_id = self::get_screen_id();
 
-	static function screen_options() {
-		switch ( $id = self::get_screen_id() ) {
-			case 'logs' :
-			case 'carts' :
-			case 'guests' :
-			case 'queue' :
-			case 'unsubscribes' :
-				add_screen_option( 'per_page', [
-				   'option' => "automatewoo_{$id}_per_page",
-				   'default' => 20
-				]);
+		switch ( $screen_id ) {
+			case 'logs':
+			case 'carts':
+			case 'guests':
+			case 'queue':
+			case 'unsubscribes':
+				add_screen_option(
+					'per_page',
+					[
+						'option'  => "automatewoo_{$screen_id}_per_page",
+						'default' => 20,
+					]
+				);
 				break;
 		}
 	}
@@ -105,27 +118,38 @@ class Admin {
 	 */
 	public static function handle_save_screen_option( $keep, $option, $value ) {
 		$options = [
-		   'automatewoo_logs_per_page',
-		   'automatewoo_carts_per_page',
-		   'automatewoo_queue_per_page',
-		   'automatewoo_guests_per_page',
-		   'automatewoo_unsubscribes_per_page'
+			'automatewoo_logs_per_page',
+			'automatewoo_carts_per_page',
+			'automatewoo_queue_per_page',
+			'automatewoo_guests_per_page',
+			'automatewoo_unsubscribes_per_page',
 		];
 
 		if ( in_array( $option, $options, true ) ) {
-		   return $value;
+			return $value;
 		}
 
 		return $keep;
 	}
 
-
+	/**
+	 * Add menu entries.
+	 */
 	public static function admin_menu() {
-		$sub_menu = [];
-		$position = '55.6324'; // fix for rare position clash bug
+		$sub_menu        = [];
+		$position        = '55.6324'; // fix for rare position clash bug
 		$workflows_group = 'automatewoo-workflows-group';
-		$icon = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PHBvbHlnb24gZmlsbD0iIzlFQTNBOCIgcG9pbnRzPSIxMTcuNiwyNzIuNyAxNjYuOSwyNzIuNyAxNDIuMywyMDUuNCAiLz48cGF0aCBmaWxsPSIjOUVBM0E4IiBkPSJNNDY0LDU0LjRINDhDMjUuMSw1NC40LDYuNCw3My4xLDYuNCw5NnYzMjBjMCwyMi45LDE4LjcsNDEuNiw0MS42LDQxLjZoNDE2YzIyLjksMCw0MS42LTE4LjcsNDEuNi00MS42Vjk2QzUwNS42LDczLjEsNDg2LjksNTQuNCw0NjQsNTQuNHogTTE5My4zLDM0NS4xbC0xNC45LTQwLjdIMTA2bC0xNC44LDQwLjdINTQuNkwxMjMsMTY2LjloNDAuMkwyMzEsMzQ1LjFIMTkzLjN6IE00MDguMSwzNDUuMWgtMzUuN2wtNDAuNy0xMjYuOUwyOTEsMzQ1LjFoLTM2LjJsLTQ5LjUtMTc4LjJIMjQybDMyLjcsMTIyLjZsMzkuNS0xMjIuNmgzNS45TDM4OS45LDI5MEw0MjIsMTY2LjloMzUuNEw0MDguMSwzNDUuMXoiLz48L2c+PC9zdmc+';
-		add_menu_page( __( 'AutomateWoo', 'automatewoo' ), __( 'AutomateWoo', 'automatewoo' ), 'manage_woocommerce', 'automatewoo', [ 'AutomateWoo\Admin', 'load_controller' ], $icon, $position );
+		$icon            = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PHBvbHlnb24gZmlsbD0iIzlFQTNBOCIgcG9pbnRzPSIxMTcuNiwyNzIuNyAxNjYuOSwyNzIuNyAxNDIuMywyMDUuNCAiLz48cGF0aCBmaWxsPSIjOUVBM0E4IiBkPSJNNDY0LDU0LjRINDhDMjUuMSw1NC40LDYuNCw3My4xLDYuNCw5NnYzMjBjMCwyMi45LDE4LjcsNDEuNiw0MS42LDQxLjZoNDE2YzIyLjksMCw0MS42LTE4LjcsNDEuNi00MS42Vjk2QzUwNS42LDczLjEsNDg2LjksNTQuNCw0NjQsNTQuNHogTTE5My4zLDM0NS4xbC0xNC45LTQwLjdIMTA2bC0xNC44LDQwLjdINTQuNkwxMjMsMTY2LjloNDAuMkwyMzEsMzQ1LjFIMTkzLjN6IE00MDguMSwzNDUuMWgtMzUuN2wtNDAuNy0xMjYuOUwyOTEsMzQ1LjFoLTM2LjJsLTQ5LjUtMTc4LjJIMjQybDMyLjcsMTIyLjZsMzkuNS0xMjIuNmgzNS45TDM4OS45LDI5MEw0MjIsMTY2LjloMzUuNEw0MDguMSwzNDUuMXoiLz48L2c+PC9zdmc+';
+
+		add_menu_page(
+			__( 'AutomateWoo', 'automatewoo' ),
+			__( 'AutomateWoo', 'automatewoo' ),
+			'manage_woocommerce',
+			'automatewoo',
+			[ 'AutomateWoo\Admin', 'load_controller' ],
+			$icon,
+			$position
+		);
 
 		if ( class_exists( Menu::class ) ) {
 			Menu::add_plugin_category(
@@ -149,9 +173,9 @@ class Admin {
 		}
 
 		$sub_menu['dashboard'] = [
-			'title' => __( 'Dashboard', 'automatewoo' ),
+			'title'    => __( 'Dashboard', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'order' => 0,
+			'order'    => 0,
 		];
 
 		// Workflows menu group
@@ -182,61 +206,60 @@ class Admin {
 			}
 		}
 
-		$sub_menu['logs'] = [
-			'title' => __( 'Logs', 'automatewoo' ),
+		$sub_menu['logs']  = [
+			'title'    => __( 'Logs', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'parent' => $workflows_group,
-			'order' => 2,
+			'parent'   => $workflows_group,
+			'order'    => 2,
 		];
 		$sub_menu['queue'] = [
-			'title' => __( 'Queue', 'automatewoo' ),
+			'title'    => __( 'Queue', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'parent' => $workflows_group,
-			'order' => 3,
+			'parent'   => $workflows_group,
+			'order'    => 3,
 		];
 
 		if ( Options::abandoned_cart_enabled() ) {
 			$sub_menu['carts'] = [
-				'title' => __( 'Carts', 'automatewoo' ),
+				'title'    => __( 'Carts', 'automatewoo' ),
 				'function' => [ __CLASS__, 'load_controller' ],
-				'order' => 2,
+				'order'    => 2,
 			];
 
 			$sub_menu['guests'] = [
-				'title' => __( 'Guests', 'automatewoo' ),
+				'title'    => __( 'Guests', 'automatewoo' ),
 				'function' => [ __CLASS__, 'load_controller' ],
-				'order' => 3,
+				'order'    => 3,
 			];
 		}
 
 		$sub_menu['opt-ins'] = [
-			'title' => Options::optin_enabled() ? __( 'Opt-ins', 'automatewoo' ) : __( 'Opt-outs', 'automatewoo' ),
+			'title'    => Options::optin_enabled() ? __( 'Opt-ins', 'automatewoo' ) : __( 'Opt-outs', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'order' => 4,
+			'order'    => 4,
 		];
 
 		$sub_menu['reports'] = [
-			'title' => __( 'Reports', 'automatewoo' ),
+			'title'    => __( 'Reports', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'order'  => 5,
-			'enabled' => ! HPOS_Helper::is_HPOS_enabled()
+			'order'    => 5,
+			'enabled'  => ! HPOS_Helper::is_HPOS_enabled(),
 		];
 
 		$sub_menu['tools'] = [
-			'title' => __( 'Tools', 'automatewoo' ),
+			'title'    => __( 'Tools', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'order' => 6,
+			'order'    => 6,
 		];
 
 		$sub_menu['settings'] = [
-			'title' => __( 'Settings', 'automatewoo' ),
+			'title'    => __( 'Settings', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'order' => 7,
+			'order'    => 7,
 		];
 
-
 		$sub_menu['preview'] = [
-			'title' => __( 'Preview', 'automatewoo' ),
+			'title'    => __( 'Preview', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
 			'display'  => WCAdminConnectPages::PAGE_DISPLAY_STANDALONE,
 		];
@@ -248,11 +271,21 @@ class Admin {
 		];
 
 		foreach ( $sub_menu as $key => $item ) {
-			if ( empty( $item['function'] ) ) $item['function'] = '';
-			if ( empty( $item['capability'] ) ) $item['capability'] = 'manage_woocommerce';
-			if ( empty( $item['slug'] ) ) $item['slug'] = 'automatewoo-'.$key;
-			if ( empty( $item['page_title'] ) ) $item['page_title'] = $item['title'];
-			if ( ! isset( $item['parent'] ) ) $item['parent'] = 'automatewoo';
+			if ( empty( $item['function'] ) ) {
+				$item['function'] = '';
+			}
+			if ( empty( $item['capability'] ) ) {
+				$item['capability'] = 'manage_woocommerce';
+			}
+			if ( empty( $item['slug'] ) ) {
+				$item['slug'] = 'automatewoo-' . $key;
+			}
+			if ( empty( $item['page_title'] ) ) {
+				$item['page_title'] = $item['title'];
+			}
+			if ( ! isset( $item['parent'] ) ) {
+				$item['parent'] = 'automatewoo';
+			}
 
 			$is_enabled = $item['enabled'] ?? true;
 
@@ -267,7 +300,7 @@ class Admin {
 							'title'      => $item['title'],
 							'capability' => $item['capability'],
 							'url'        => $item['slug'],
-							'order'      => isset( $item['order'] ) ? $item['order']: 99,
+							'order'      => isset( $item['order'] ) ? $item['order'] : 99,
 						)
 					);
 				} elseif ( WCAdminConnectPages::PAGE_DISPLAY_HIDDEN === $item['display'] ) {
@@ -292,70 +325,110 @@ class Admin {
 		}
 	}
 
+	/**
+	 * This function alters some items in AutomateWoo submenu
+	 * This is because we need to add .hide-if-js classname in the submenu for hide them in Calypso for wp.com
+	 * The classes are usually loaded in position 4 in the submenu.
+	 *
+	 * @see Menu::migrate_menu_items for a reference of how WC Admin loads this class.
+	 * @param array $menu Menu items
+	 * @return array Menu items
+	 */
+	public static function alter_menu( $menu ) {
+		global $submenu;
+
+		if ( isset( $submenu['automatewoo'] ) ) {
+			foreach ( $submenu['automatewoo'] as $index => $submenu_item ) {
+				if (
+					$submenu_item[0] === 'AutomateWoo' ||
+					$submenu_item[0] === 'AutomateWoo Data Update' ||
+					$submenu_item[0] === 'Manual Workflow Runner' ||
+					$submenu_item[0] === 'Preview'
+				) {
+					if ( isset( $submenu_item[4] ) ) {
+						$submenu_item[4] .= ' hide-if-js'; // if there are some classes already, concat the new one
+					} else {
+						$submenu_item[] = 'hide-if-js'; // Otherwise, add the new class
+					}
+
+					// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$submenu['automatewoo'][ $index ] = $submenu_item;
+				}
+			}
+		}
+
+		return $menu;
+	}
 
 	/**
 	 * Highlight the correct top level admin menu item
 	 */
-	static function menu_highlight() {
+	public static function menu_highlight() {
 		global $parent_file, $post_type;
 
 		switch ( $post_type ) {
-			case 'aw_workflow' :
+			case 'aw_workflow':
+				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				$parent_file = 'automatewoo';
 				break;
 		}
 	}
 
-
-	static function register_scripts() {
+	/**
+	 * Register admin scripts.
+	 */
+	public static function register_scripts() {
 
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-			$url = AW()->admin_assets_url( '/js' );
+			$url    = AW()->admin_assets_url( '/js' );
 			$suffix = '';
 		} else {
-			$url = AW()->admin_assets_url( '/js/min' );
+			$url    = AW()->admin_assets_url( '/js/min' );
 			$suffix = '.min';
 		}
 
-		wp_register_script( 'js-cookie', WC()->plugin_url()."/assets/js/js-cookie/js.cookie{$suffix}.js", [], '2.1.4', true );
+		wp_register_script( 'js-cookie', WC()->plugin_url() . "/assets/js/js-cookie/js.cookie{$suffix}.js", [], '2.1.4', true );
 
-		wp_register_script( 'automatewoo', $url."/automatewoo$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'jquery-tiptip', 'backbone', 'underscore' ], AW()->version );
-		wp_register_script( 'automatewoo-validate', $url."/validate$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-tracks', $url."/tracks$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-workflows', $url."/workflows$suffix.js", [ 'automatewoo', 'automatewoo-validate', 'automatewoo-modal', 'automatewoo-tracks', 'wp-util' ], AW()->version );
-		wp_register_script( 'automatewoo-variables', $url."/variables$suffix.js", [ 'automatewoo-modal', 'clipboard' ], AW()->version );
-		wp_register_script( 'automatewoo-tools', $url."/tools$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-sms-test', $url."/sms-test$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-modal', $url."/modal$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-rules', $url."/rules$suffix.js", [ 'automatewoo', 'automatewoo-workflows' ], AW()->version );
-		wp_register_script( 'automatewoo-dashboard', $url."/dashboard$suffix.js", [ 'automatewoo', 'automatewoo-modal', 'jquery-masonry', 'flot', 'flot-resize', 'flot-time', 'flot-pie', 'flot-stack' ], AW()->version );
-		wp_register_script( 'automatewoo-preview', $url."/preview$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-settings', $url."/settings$suffix.js", [ 'automatewoo' ], AW()->version );
-
+		wp_register_script( 'automatewoo', "{$url}/automatewoo{$suffix}.js", [ 'jquery', 'jquery-ui-datepicker', 'jquery-tiptip', 'backbone', 'underscore' ], AW()->version, false );
+		wp_register_script( 'automatewoo-validate', "{$url}/validate{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
+		wp_register_script( 'automatewoo-tracks', "{$url}/tracks{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
+		wp_register_script( 'automatewoo-workflows', "{$url}/workflows{$suffix}.js", [ 'automatewoo', 'automatewoo-validate', 'automatewoo-modal', 'automatewoo-tracks', 'wp-util' ], AW()->version, false );
+		wp_register_script( 'automatewoo-variables', "{$url}/variables{$suffix}.js", [ 'automatewoo-modal', 'clipboard' ], AW()->version, false );
+		wp_register_script( 'automatewoo-tools', "{$url}/tools{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
+		wp_register_script( 'automatewoo-sms-test', "{$url}/sms-test{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
+		wp_register_script( 'automatewoo-modal', "{$url}/modal{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
+		wp_register_script( 'automatewoo-rules', "{$url}/rules{$suffix}.js", [ 'automatewoo', 'automatewoo-workflows' ], AW()->version, false );
+		wp_register_script( 'automatewoo-dashboard', "{$url}/dashboard{$suffix}.js", [ 'automatewoo', 'automatewoo-modal', 'jquery-masonry', 'flot', 'flot-resize', 'flot-time', 'flot-pie', 'flot-stack' ], AW()->version, false );
+		wp_register_script( 'automatewoo-preview', "{$url}/preview{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
+		wp_register_script( 'automatewoo-settings', "{$url}/settings{$suffix}.js", [ 'automatewoo' ], AW()->version, false );
 
 		global $wp_locale;
 
 		wp_localize_script( 'automatewoo-dashboard', 'automatewooDashboardLocalizeScript', [] );
 
-		wp_localize_script( 'automatewoo-validate', 'automatewooValidateLocalizedErrorMessages', [
-			'noVariablesSupport' => __( 'This field does not support variables.', 'automatewoo' ),
-			'invalidDataType' => __( "Variable '%s' is not available with the selected trigger. Please only use variables listed in the the variables box.", 'automatewoo' ),
-			'invalidVariable' => __( "Variable '%s' is not valid. Please only use variables listed in the variables box.", 'automatewoo' )
-		] );
+		wp_localize_script(
+			'automatewoo-validate',
+			'automatewooValidateLocalizedErrorMessages',
+			[
+				'noVariablesSupport' => __( 'This field does not support variables.', 'automatewoo' ),
+				'invalidDataType'    => __( "Variable '%s' is not available with the selected trigger. Please only use variables listed in the the variables box.", 'automatewoo' ),
+				'invalidVariable'    => __( "Variable '%s' is not valid. Please only use variables listed in the variables box.", 'automatewoo' ),
+			]
+		);
 
 		$settings = [
-			'url'           => [
+			'url'    => [
 				'admin' => admin_url(),
-				'ajax'  => admin_url( 'admin-ajax.php' )
+				'ajax'  => admin_url( 'admin-ajax.php' ),
 			],
-			'locale'        => [
+			'locale' => [
 				'month_abbrev'                => array_values( $wp_locale->month_abbrev ),
 				'currency_symbol'             => get_woocommerce_currency_symbol(),
 				'currency_decimal_separator'  => wc_get_price_decimal_separator(),
 				'currency_thousand_separator' => wc_get_price_thousand_separator(),
-				'currency_position'           => get_option( 'woocommerce_currency_pos' )
+				'currency_position'           => get_option( 'woocommerce_currency_pos' ),
 			],
-			'nonces'        => [
+			'nonces' => [
 				'remove_notice'                  => wp_create_nonce( 'aw-remove-notice' ),
 				'aw_dismiss_system_error_notice' => wp_create_nonce( 'aw_dismiss_system_error_notice' ),
 				'aw_toggle_workflow_status'      => wp_create_nonce( 'aw_toggle_workflow_status' ),
@@ -368,17 +441,27 @@ class Admin {
 			apply_filters( 'automatewoo/admin/js_settings', $settings )
 		);
 
-		wp_localize_script( 'automatewoo-preview', 'automatewooPreviewLocalizeScript', [
-			'nonce' => wp_create_nonce( 'aw_send_test_email' )
-		] );
+		wp_localize_script(
+			'automatewoo-preview',
+			'automatewooPreviewLocalizeScript',
+			[
+				'nonce' => wp_create_nonce( 'aw_send_test_email' ),
+			]
+		);
 
-		wp_localize_script( 'automatewoo-sms-test', 'automatewooSmsTestLocalizeScript', [
-			'nonce' => wp_create_nonce( 'aw_test_sms' )
-		] );
+		wp_localize_script(
+			'automatewoo-sms-test',
+			'automatewooSmsTestLocalizeScript',
+			[
+				'nonce' => wp_create_nonce( 'aw_test_sms' ),
+			]
+		);
 	}
 
-
-	static function register_styles() {
+	/**
+	 * Register admin styles.
+	 */
+	public static function register_styles() {
 		wp_register_style(
 			'automatewoo-main',
 			AW()->admin_assets_url( '/css/aw-main.css' ),
@@ -386,14 +469,13 @@ class Admin {
 			AW()->version
 		);
 		wp_register_style( 'automatewoo-preview', AW()->admin_assets_url( '/css/preview.css' ), [], AW()->version );
-	 }
-
+	}
 
 	/**
 	 * Enqueue scripts based on screen id
 	 */
-	static function enqueue_scripts_and_styles() {
-		$screen_id = self::get_current_screen_id();
+	public static function enqueue_scripts_and_styles() {
+		$screen_id    = self::get_current_screen_id();
 		$is_aw_screen = self::is_automatewoo_screen();
 
 		// Load WC Admin styles for AW pages before our own styles
@@ -455,7 +537,7 @@ class Admin {
 			return;
 		}
 
-		$asset_file_path = AW()->admin_path() . "/assets/build/index.asset.php";
+		$asset_file_path = AW()->admin_path() . '/assets/build/index.asset.php';
 
 		if ( ! file_exists( $asset_file_path ) ) {
 			return;
@@ -470,7 +552,7 @@ class Admin {
 
 		wp_enqueue_script(
 			$handle,
-			AW()->admin_assets_url() . "/build/index.js",
+			AW()->admin_assets_url() . '/build/index.js',
 			$dependencies,
 			$version,
 			true
@@ -478,9 +560,13 @@ class Admin {
 		wp_set_script_translations( $handle, 'automatewoo', AW()->path( '/languages' ) );
 	}
 
-	static function screen_ids() {
-
-		$ids = [];
+	/**
+	 * Return filtered screen ids.
+	 *
+	 * @return array List of screen ids.
+	 */
+	public static function screen_ids() {
+		$ids    = [];
 		$prefix = 'automatewoo_page_automatewoo';
 
 		$ids[] = "$prefix-dashboard";
@@ -510,7 +596,7 @@ class Admin {
 	 *
 	 * @return array
 	 */
-	static function filter_woocommerce_screen_ids( $screen_ids ) {
+	public static function filter_woocommerce_screen_ids( $screen_ids ) {
 		$screen_ids = array_merge( $screen_ids, self::screen_ids() );
 		return $screen_ids;
 	}
@@ -525,7 +611,7 @@ class Admin {
 	 *
 	 * @return bool
 	 */
-	static function filter_woocommerce_display_footer_text( $display ) {
+	public static function filter_woocommerce_display_footer_text( $display ) {
 		if ( self::is_automatewoo_screen() ) {
 			$display = false;
 		}
@@ -538,7 +624,7 @@ class Admin {
 	 *
 	 * @since 4.4.2
 	 */
-	static function remove_woocommerce_help_tab() {
+	public static function remove_woocommerce_help_tab() {
 		if ( self::is_automatewoo_screen() ) {
 			$screen = get_current_screen();
 			$screen->remove_help_tabs();
@@ -548,20 +634,22 @@ class Admin {
 	/**
 	 * Dynamic replace top level menu
 	 */
-	static function replace_top_level_menu() {
+	public static function replace_top_level_menu() {
 		?>
 	   <script type="text/javascript">
-           jQuery('#adminmenu').find('a.toplevel_page_automatewoo').attr('href', '<?php echo esc_url( self::page_url( 'dashboard' ) ); ?>');
+			jQuery('#adminmenu').find('a.toplevel_page_automatewoo').attr('href', '<?php echo esc_url( self::page_url( 'dashboard' ) ); ?>');
 	   </script>
 		<?php
 	}
 
 	/**
-	 * @param string $page
+	 * Return a page URL based on page type.
+	 *
+	 * @param string   $page
 	 * @param bool|int $id
 	 * @return false|string
 	 */
-	static function page_url( $page, $id = false ) {
+	public static function page_url( $page, $id = false ) {
 
 		switch ( $page ) {
 
@@ -621,54 +709,75 @@ class Admin {
 					return esc_url_raw( add_query_arg( 'workflowId', $id, $url ) );
 				}
 				return $url;
+
 			case 'analytics':
 				$url = admin_url( 'admin.php?page=wc-admin&path=/analytics/automatewoo-' . $id );
 				return $url;
+
+			case 'documentation':
+				return 'https://woocommerce.com/document/automatewoo/?utm_source=wordpress&utm_medium=all-plugins-page&utm_campaign=doc-link&utm_content=automatewoo';
 		}
 
 		return false;
 	}
 
-	static function page_data_upgrade() {
+	/**
+	 * Data upgrade page.
+	 */
+	public static function page_data_upgrade() {
 		self::get_view( 'page-data-upgrade' );
 	}
 
 	/**
-	 * @param $view
-	 * @param array $imported_variables
-	 * @param mixed $path
+	 * Get a view.
+	 *
+	 * Both calling extract and include are based off of the methods used in `wc_get_template`.
+	 *
+	 * @param string $view
+	 * @param array  $imported_variables
+	 * @param mixed  $path
 	 */
-	static function get_view( $view, $imported_variables = [], $path = false ) {
+	public static function get_view( $view, $imported_variables = [], $path = false ) {
 
-		if ( $imported_variables && is_array( $imported_variables ) )
-			extract( $imported_variables );
+		if ( $imported_variables && is_array( $imported_variables ) ) {
+			extract( $imported_variables ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		}
 
-		if ( ! $path )
+		if ( ! $path ) {
 			$path = AW()->admin_path( '/views/' );
+		}
 
 		// SEMGREP WARNING EXPLANATION
 		// No user input reached. This is for loading our views.
-		include $path.$view.'.php';
+		include "{$path}{$view}.php";
 	}
 
-	static function load_controller() {
-		if ( ! $screen_id = self::get_screen_id() ) {
+	/**
+	 * Load controller.
+	 */
+	public static function load_controller() {
+		$screen_id = self::get_screen_id();
+
+		if ( ! $screen_id ) {
 			return;
 		}
 
-		if ( $screen_id == 'toplevel_page_automatewoo' ) {
+		if ( $screen_id === 'toplevel_page_automatewoo' ) {
 			$screen_id = 'dashboard';
 		}
 
-		if ( $controller = Admin\Controllers::get( $screen_id ) ) {
+		$controller = Admin\Controllers::get( $screen_id );
+		if ( $controller ) {
 			$controller->handle();
 		}
 	}
 
 	/**
+	 * Get the current screen ID.
+	 *
 	 * @return string|bool
 	 */
-	static function get_screen_id() {
+	public static function get_screen_id() {
 		$screen_id = self::get_current_screen_id();
 
 		// Replace hidden screen ID's without AutomateWoo as parent.
@@ -686,30 +795,33 @@ class Admin {
 	/**
 	 * Save settings on wp_loaded
 	 */
-	static function save_settings() {
-		if ( $controller = Admin\Controllers::get( 'settings' ) ) {
+	public static function save_settings() {
+		$controller = Admin\Controllers::get( 'settings' );
+		if ( $controller ) {
 			$controller->save();
 		}
 	}
 
 	/**
-	 * @param $page
+	 * Check if we are on a specific page.
+	 *
+	 * @param string $page
 	 * @return bool
 	 */
-	static function is_page( $page ) {
+	public static function is_page( $page ) {
 
 		$current_page = Clean::string( aw_request( 'page' ) );
-		$current_tab = Clean::string( aw_request( 'tab' ) );
+		$current_tab  = Clean::string( aw_request( 'tab' ) );
 
 		switch ( $page ) {
 			case 'dashboard':
-				return $current_page == 'automatewoo-dashboard';
+				return $current_page === 'automatewoo-dashboard';
 			case 'settings':
-				return $current_page == 'automatewoo-settings';
+				return $current_page === 'automatewoo-settings';
 			case 'reports':
-				return $current_page == 'automatewoo-reports';
+				return $current_page === 'automatewoo-reports';
 			case 'status':
-				return $current_page == 'automatewoo-settings' && $current_tab == 'status';
+				return $current_page === 'automatewoo-settings' && $current_tab === 'status';
 		}
 
 		return false;
@@ -742,34 +854,40 @@ class Admin {
 	}
 
 	/**
-	 * @param $ids
+	 * Add WooCommerce Reports screen IDs.
+	 *
+	 * @param array $ids
 	 * @return array
 	 */
-	static function inject_woocommerce_reports_screen_ids( $ids ) {
+	public static function inject_woocommerce_reports_screen_ids( $ids ) {
 		$ids[] = 'automatewoo_page_automatewoo-reports';
 		return $ids;
 	}
 
 	/**
-	 * @param $stylesheets
+	 * Add editor styles.
+	 *
+	 * @param array $stylesheets
 	 * @return array
 	 */
-	static function add_editor_styles( $stylesheets ) {
+	public static function add_editor_styles( $stylesheets ) {
 		$stylesheets[] = AW()->admin_assets_url( '/css/editor.css' );
 		return $stylesheets;
 	}
 
 	/**
-	 * @param $id
-	 * @param $title
+	 * Add a meta box.
+	 *
+	 * @param string   $id
+	 * @param string   $title
 	 * @param callable $callback
-	 * @param null $screen
-	 * @param string $context
-	 * @param string $priority
-	 * @param null $callback_args
+	 * @param null     $screen
+	 * @param string   $context
+	 * @param string   $priority
+	 * @param null     $callback_args
 	 */
-	static function add_meta_box( $id, $title, $callback, $screen = null, $context = 'advanced', $priority = 'default', $callback_args = null ) {
-		$id = 'aw_'.$id;
+	public static function add_meta_box( $id, $title, $callback, $screen = null, $context = 'advanced', $priority = 'default', $callback_args = null ) {
+		$id = 'aw_' . $id;
 
 		add_meta_box( $id, $title, $callback, $screen, $context, $priority, $callback_args );
 
@@ -777,25 +895,34 @@ class Admin {
 	}
 
 	/**
-	 * @param $classes
+	 * Add postbox class.
+	 *
+	 * @param array $classes
 	 *
 	 * @return array
 	 */
-	static function inject_postbox_class( $classes ) {
+	public static function inject_postbox_class( $classes ) {
 		$classes[] = 'automatewoo-metabox';
 		$classes[] = 'no-drag';
 		return $classes;
 	}
 
 	/**
-	 * @param $vars array
+	 * Add hidden form inputs.
+	 *
+	 * @param array $vars
 	 */
-	static function get_hidden_form_inputs_from_query( $vars ) {
+	public static function get_hidden_form_inputs_from_query( $vars ) {
 		foreach ( $vars as $var ) {
-			if ( empty( $_GET[$var] ) )
+			// Adding a nonce is handled by the calling functions.
+			// Validating of sanatized input is done when the values are read (we are copying the values here).
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput
+			if ( empty( $_GET[ $var ] ) ) {
 				continue;
+			}
 
-			echo '<input type="hidden" name="'.esc_attr( $var ).'" value="'.esc_attr( $_GET[$var] ).'">';
+			echo '<input type="hidden" name="' . esc_attr( $var ) . '" value="' . esc_attr( $_GET[ $var ] ) . '">';
+			// phpcs:enable
 		}
 	}
 
@@ -807,7 +934,7 @@ class Admin {
 	 * @param bool   $pull_right Whether the tip should include the automatewoo-help-tip--right class
 	 * @param bool   $allow_html Deprecated parameter, no longer used.
 	 */
-	static function help_tip( $tip, $pull_right = true, $allow_html = false ) {
+	public static function help_tip( $tip, $pull_right = true, $allow_html = false ) {
 		$tip = wc_sanitize_tooltip( $tip );
 		if ( empty( $tip ) ) {
 			return;
@@ -821,18 +948,20 @@ class Admin {
 			]
 		);
 
-		printf( '<span class="%1$s" data-tip="%2$s"></span>', join( ' ', $classes ), $tip );
+		printf( '<span class="%1$s" data-tip="%2$s"></span>', esc_attr( join( ' ', $classes ) ), esc_attr( $tip ) );
 	}
 
 
 	/**
+	 * Return an AutomateWoo badge.
+	 *
 	 * @param string $type
 	 * @param string $dashicon
-	 * @param bool $tip
+	 * @param bool   $tip
 	 * @return string
 	 */
-	static function badge( $type, $dashicon, $tip = false ) {
-		$html = '<span class="automatewoo-badge automatewoo-badge--' . $type . ' automatewoo-tiptip" data-tip="' . esc_attr( $tip ) . '">';
+	public static function badge( $type, $dashicon, $tip = false ) {
+		$html  = '<span class="automatewoo-badge automatewoo-badge--' . $type . ' automatewoo-tiptip" data-tip="' . esc_attr( $tip ) . '">';
 		$html .= '<span class="dashicons dashicons-' . $dashicon . '"></span>';
 		$html .= '</span>';
 		return $html;
@@ -840,42 +969,51 @@ class Admin {
 
 
 	/**
-	 * @param $url
-	 * @param bool $pull_right
+	 * Get a help link.
+	 *
+	 * @param string $url
+	 * @param bool   $pull_right
 	 * @return string
 	 */
-	static function help_link( $url, $pull_right = true ) {
-		return '<a href="'.$url.'" class="automatewoo-help-link '.( $pull_right ? 'automatewoo-help-link--right' : '' ).'" target="_blank"></a>';
+	public static function help_link( $url, $pull_right = true ) {
+		return '<a href="' . esc_url( $url ) . '" class="automatewoo-help-link ' . ( $pull_right ? 'automatewoo-help-link--right' : '' ) . '" target="_blank"></a>';
 	}
 
 
 	/**
-	 * @param string $page
+	 * Get documentation link.
+	 *
+	 * @param string      $page
 	 * @param string|bool $utm_source
 	 * @param string|bool $utm_campaign
 	 * @return string
 	 */
-	static function get_docs_link( $page = '', $utm_source = false, $utm_campaign = false ) {
+	public static function get_docs_link( $page = '', $utm_source = false, $utm_campaign = false ) {
 		return esc_url_raw( self::get_website_link( "docs/$page", $utm_source, $utm_campaign ) );
 	}
 
 	/**
-	 * @param string $page
+	 * Get a website link.
+	 *
+	 * @param string      $page
 	 * @param string|bool $utm_source
 	 * @param string|bool $utm_campaign
 	 * @return string
 	 */
-	static function get_website_link( $page = '', $utm_source = false, $utm_campaign = false ) {
-		$url = 'https://automatewoo.com/'.( $page ? trailingslashit( $page ) : '' );
+	public static function get_website_link( $page = '', $utm_source = false, $utm_campaign = false ) {
+		$url = 'https://automatewoo.com/' . ( $page ? trailingslashit( $page ) : '' );
 
 		if ( $utm_source ) {
 			// SEMGREP WARNING EXPLANATION
 			// This is escaped in the consumer function.
-			$url = add_query_arg( [
-				'utm_source' => $utm_source,
-				'utm_medium' => 'plugin',
-				'utm_campaign' => $utm_campaign ? $utm_campaign : 'plugin-links'
-			], $url );
+			$url = add_query_arg(
+				[
+					'utm_source'   => $utm_source,
+					'utm_medium'   => 'plugin',
+					'utm_campaign' => $utm_campaign ? $utm_campaign : 'plugin-links',
+				],
+				$url
+			);
 		}
 
 		return $url;
@@ -897,32 +1035,36 @@ class Admin {
 	/**
 	 * Output loader
 	 */
-	static function cache_preview_loader() {
+	public static function cache_preview_loader() {
+		// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 		@header_remove( 'Cache-Control' );
-		@header( "Expires: ".gmdate( "D, d M Y H:i:s", time() + DAY_IN_SECONDS )." GMT" );
+		@header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + DAY_IN_SECONDS ) . ' GMT' );
+		// phpcs:enable
 	}
 
 
 	/**
+	 * Create a new page.
+	 *
 	 * @param string $slug
 	 * @param string $page_title
 	 * @param string $page_content
 	 * @param string $option
 	 * @return int|bool Page ID
 	 */
-	static function create_page( $slug, $page_title, $page_content, $option ) {
+	public static function create_page( $slug, $page_title, $page_content, $option ) {
 
 		if ( get_option( $option ) ) {
 			return false; // page is already defined in settings
 		}
 
 		$page_data = [
-			'post_status' => 'publish',
-			'post_type' => 'page',
-			'post_author' => 1,
-			'post_name' => $slug,
-			'post_title' => $page_title,
-			'post_content' => $page_content,
+			'post_status'    => 'publish',
+			'post_type'      => 'page',
+			'post_author'    => 1,
+			'post_name'      => $slug,
+			'post_title'     => $page_title,
+			'post_content'   => $page_content,
 			'comment_status' => 'closed',
 		];
 
@@ -939,7 +1081,7 @@ class Admin {
 	 *
 	 * @return bool|string
 	 */
-	static function get_current_screen_id() {
+	public static function get_current_screen_id() {
 		$screen = get_current_screen();
 		return $screen ? $screen->id : false;
 	}
@@ -950,7 +1092,7 @@ class Admin {
 	 * @since 4.7.0
 	 * @return bool
 	 */
-	static function is_automatewoo_screen() {
+	public static function is_automatewoo_screen() {
 		return in_array( self::get_current_screen_id(), self::screen_ids(), true );
 	}
 
@@ -959,7 +1101,7 @@ class Admin {
 	 *
 	 * @since 4.4.0
 	 */
-	static function remove_admin_notices() {
+	public static function remove_admin_notices() {
 		remove_all_actions( 'admin_notices' );
 	}
 

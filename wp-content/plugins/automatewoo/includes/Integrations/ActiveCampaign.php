@@ -52,7 +52,7 @@ class Integration_ActiveCampaign extends Integration {
 	 * @return bool
 	 */
 	public function test_integration(): bool {
-		return $this->get_sdk()->credentials_test();
+		return $this->get_sdk() && $this->get_sdk()->credentials_test();
 	}
 
 	/**

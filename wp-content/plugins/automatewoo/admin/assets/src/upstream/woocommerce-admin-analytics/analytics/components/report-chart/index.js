@@ -7,7 +7,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { Component } from '@wordpress/element';
-import { compose } from 'extracted/@wordpress/compose';
+import { compose } from '@wordpress/compose';
 import { format as formatDate } from '@wordpress/date';
 import { withSelect } from '@wordpress/data';
 import { get, isEqual } from 'lodash';

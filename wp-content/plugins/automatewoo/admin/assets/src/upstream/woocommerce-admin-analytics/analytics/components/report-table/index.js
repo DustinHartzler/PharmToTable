@@ -9,10 +9,10 @@
 /**
  * External dependencies
  */
-import { CheckboxControl, Button } from 'extracted/@wordpress/components';
+import { CheckboxControl, Button } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 import { Fragment, useRef, useState } from '@wordpress/element';
-import { compose } from 'extracted/@wordpress/compose';
+import { compose } from '@wordpress/compose';
 import { focus } from '@wordpress/dom';
 import { withDispatch, withSelect } from '@wordpress/data';
 import { get, noop, partial, uniq } from 'lodash';

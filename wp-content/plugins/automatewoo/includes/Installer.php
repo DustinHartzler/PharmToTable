@@ -55,13 +55,13 @@ class Installer {
 				self::first_install();
 			}
 
-			if ( apply_filters( 'woocommerce_enable_auto_update_db', false ) ) {
-				self::run_database_updates();
-			}
-
 			// check for required database update
 			if ( self::is_database_upgrade_required() ) {
-				add_action( 'admin_notices', [ __CLASS__, 'data_upgrade_prompt' ] );
+				if ( apply_filters( 'woocommerce_enable_auto_update_db', false ) ) {
+					self::run_database_updates();
+				} else {
+					add_action( 'admin_notices', [ __CLASS__, 'data_upgrade_prompt' ] );
+				}
 			} else {
 				self::update_database_version( AW()->version );
 				self::do_plugin_updated_actions();
@@ -270,7 +270,8 @@ class Installer {
 	 */
 	public static function plugin_action_links( $links ) {
 		$action_links = [
-			'settings' => '<a href="' . esc_url( Admin::page_url( 'settings' ) ) . '" title="' . esc_attr( __( 'View AutomateWoo Settings', 'automatewoo' ) ) . '">' . esc_html__( 'Settings', 'automatewoo' ) . '</a>',
+			'settings'      => '<a href="' . esc_url( Admin::page_url( 'settings' ) ) . '" title="' . esc_attr( __( 'View AutomateWoo Settings', 'automatewoo' ) ) . '">' . esc_html__( 'Settings', 'automatewoo' ) . '</a>',
+			'documentation' => '<a href="' . esc_url( Admin::page_url( 'documentation' ) ) . '" title="' . esc_attr( __( 'View AutomateWoo Documentation', 'automatewoo' ) ) . '">' . esc_html__( 'Documentation', 'automatewoo' ) . '</a>',
 		];
 
 		return array_merge( $action_links, $links );

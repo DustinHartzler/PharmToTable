@@ -60,7 +60,7 @@ trait WorkflowTracksData {
 	private function recursively_add_items( &$data, $key, $value, $prefix = '' ) {
 		if ( is_array( $value ) ) {
 			foreach ( $value as $index => $item ) {
-				$this->recursively_add_items( $data, $index, $item, "{$prefix}{$key}_" );
+				$this->recursively_add_items( $data, $index, $this->maybe_anonymize_value( $item ), "{$prefix}{$key}_" );
 			}
 		} elseif ( is_object( $value ) ) {
 			foreach ( get_object_vars( $value ) as $index => $item ) {
@@ -69,5 +69,30 @@ trait WorkflowTracksData {
 		} elseif ( is_string( $value ) ) {
 			$data[ "{$prefix}{$key}" ] = $value;
 		}
+	}
+
+	/**
+	 * If the item name matches either `customer_email` or `customer_phone` then value will be anonymized.
+	 *
+	 * @param array|string $item The workflow item.
+	 *
+	 * @return array|string
+	 */
+	private function maybe_anonymize_value( $item ) {
+		if (
+			isset( $item['name'] ) &&
+			in_array(
+				$item['name'],
+				array(
+					'customer_email',
+					'customer_phone',
+				),
+				true
+			)
+		) {
+			$item['value'] = aw_anonymize_email( $item['value'] );
+		}
+
+		return $item;
 	}
 }

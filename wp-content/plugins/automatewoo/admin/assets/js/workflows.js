@@ -37,6 +37,7 @@
 			this.model.set( 'prevTrigger', this.$triggerSelect.val() );
 			this.model.set( 'prevType', this.$typeSelect.val() );
 
+			this.setTriggerOptions();
 			this.insertMetaboxHelpTips();
 		},
 
@@ -80,7 +81,30 @@
 
 			this.$triggerSelect
 				.val( this.model.get( 'prevTrigger' ) )
-				.trigger( 'change' );
+				.trigger( 'change', true );
+		},
+
+		setTriggerOptions() {
+			const options = [];
+
+			$( '[name^="aw_workflow_data[trigger_options]"]' ).each(
+				function () {
+					if ( $( this ).attr( 'type' ) === 'checkbox' ) {
+						options.push( {
+							name: $( this ).attr( 'name' ),
+							value: $( this ).is( ':checked' ),
+						} );
+					} else {
+						options.push( {
+							name: $( this ).attr( 'name' ),
+							text: $( this ).text(),
+							value: $( this ).val(),
+						} );
+					}
+				}
+			);
+
+			this.model.set( 'prevTriggerOptions', options );
 		},
 
 		/**
@@ -197,6 +221,13 @@
 						$triggerBox
 					);
 				} );
+
+			$( '[name^="aw_workflow_data[trigger_options]"]' ).on(
+				'change',
+				() => {
+					this.setTriggerOptions();
+				}
+			);
 		},
 
 		initDynamicTriggerOptions( $field, $triggerBox ) {
@@ -413,9 +444,15 @@ jQuery( function ( $ ) {
 		/**
 		 */
 		init_triggers_box() {
-			AutomateWoo.Workflows.$trigger_select.on( 'change', function () {
-				AutomateWoo.Workflows.fill_trigger_fields( $( this ).val() );
-			} );
+			AutomateWoo.Workflows.$trigger_select.on(
+				'change',
+				function ( event, restoreOptions ) {
+					AutomateWoo.Workflows.fill_trigger_fields(
+						$( this ).val(),
+						restoreOptions
+					);
+				}
+			);
 
 			AutomateWoo.Workflows.$manual_trigger_select.on(
 				'change',
@@ -527,9 +564,10 @@ jQuery( function ( $ ) {
 		},
 
 		/**
-		 * @param {*} triggerName
+		 * @param {*}       triggerName
+		 * @param {boolean} [restoreOptions=false] If true then the trigger fields will be populated from the previous trigger options
 		 */
-		fill_trigger_fields( triggerName ) {
+		fill_trigger_fields( triggerName, restoreOptions = false ) {
 			// Remove existing fields
 			AutomateWoo.Workflows.$triggers_box
 				.find( 'tr.aw-trigger-option' )
@@ -551,6 +589,38 @@ jQuery( function ( $ ) {
 					AutomateWoo.Workflows.$triggers_box.removeClass(
 						'aw-loading'
 					);
+
+					if ( restoreOptions ) {
+						const options = AW.workflow.get( 'prevTriggerOptions' );
+
+						$.each( options, function ( index, option ) {
+							const element = $( `[name="${ option.name }"]` );
+
+							switch ( element.prop( 'type' ) ) {
+								case 'select-one':
+									if (
+										element.find( 'option' ).length === 0
+									) {
+										const selected = $( '<option />' )
+											.attr( 'value', option.value )
+											.text( option.text );
+
+										element.append( selected );
+									} else {
+										element.val( option.value );
+									}
+									break;
+								case 'checkbox':
+									element.prop( 'checked', option.value );
+									break;
+								default:
+									element.val( option.value );
+									break;
+							}
+
+							element.trigger( 'change' );
+						} );
+					}
 
 					AW.workflow.set( 'trigger', response.data.trigger );
 					AW.workflowView.initTrigger();
@@ -1142,6 +1212,11 @@ jQuery( function ( $ ) {
 				// Reset select box to first option on type change
 				AutomateWoo.Workflows.$manual_trigger_select[ 0 ].selectedIndex = 0;
 				AutomateWoo.Workflows.$trigger_select[ 0 ].selectedIndex = 0;
+
+				AutomateWoo.Workflows.$triggers_box
+					.find( 'tr.aw-trigger-option' )
+					.remove();
+
 				AW.workflow.set( 'trigger', false );
 			}
 		}

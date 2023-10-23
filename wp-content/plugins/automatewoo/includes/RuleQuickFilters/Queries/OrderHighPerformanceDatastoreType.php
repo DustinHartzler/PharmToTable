@@ -466,11 +466,26 @@ class OrderHighPerformanceDatastoreType implements DatastoreTypeInterface {
 	 * @throws UnexpectedValueException When there is an error adding the query arg.
 	 */
 	protected function add_set_date_query_arg( $field, $clause ) {
-		$this->query_args['field_query'][] = [
-			'field'   => $field,
-			'compare' => $clause->get_operator() === 'SET' ? '!=' : '=',
-			'value'   => '0000-00-00 00:00:00',
-		];
+
+		if ( version_compare( WC()->version, 8.1, '>=' ) ) {
+			// compatibility-code "WC >= 8.1"
+			// Supporting HPOS where NULL is defined for NOT SET fields.
+			// @see https://github.com/woocommerce/automatewoo/issues/1571
+			$this->query_args['field_query'][] = [
+				'field'   => $field,
+				'compare' => $clause->get_operator() === 'SET' ? 'EXISTS' : 'NOT EXISTS',
+			];
+		} else {
+			// compatibility-code "WC < 8.1"
+			// Supporting HPOS where default values are being used.
+			// @see https://github.com/woocommerce/automatewoo/issues/1571
+			$this->query_args['field_query'][] = [
+				'field'   => $field,
+				'compare' => $clause->get_operator() === 'SET' ? '!=' : '=',
+				'value'   => '0000-00-00 00:00:00',
+			];
+		}
+
 	}
 
 	/**

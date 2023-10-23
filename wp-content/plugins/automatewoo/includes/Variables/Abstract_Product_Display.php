@@ -117,9 +117,6 @@ abstract class Variable_Abstract_Product_Display extends Variable {
 
 		$this->temp_template_args = $args;
 		add_filter( 'post_type_link', [ $this, 'filter_product_links' ], 100, 2 );
-		add_filter( 'automatewoo_email_template_product_permalink', [ $this, 'add_attributes_to_permalink' ], 10, 1 );
-		add_filter( 'automatewoo_email_template_product_name', [ $this, 'add_attributes_to_product_name' ], 10, 1 );
-
 		aw_get_template( 'email/' . $template, $args );
 
 		remove_filter( 'post_type_link', [ $this, 'filter_product_links' ] );
@@ -145,86 +142,6 @@ abstract class Variable_Abstract_Product_Display extends Variable {
 			$link .= $this->temp_template_args['url_append'];
 		}
 		return $link;
-	}
-
-	/**
-	 * Add product attributes to the product's permalink if it is a \WC_Order_Item_Product.
-	 *
-	 * Return an array containing the product object and its permalink because if the
-	 * passed product arg is a \WC_Order_Item_Product we should get \WC_Product from it and
-	 * returns back to the caller as the caller would use other methods from \WC_Product.
-	 *
-	 * @param \WC_Product|\WC_Order_Item_Product $product
-	 *
-	 * @since 6.0.3
-	 *
-	 * @return array
-	 */
-	public function add_attributes_to_permalink( $product ) {
-		if ( is_a( $product, 'WC_Order_Item_Product' ) ) {
-			$item         = $product;
-			$product      = $item->get_product();
-			$product_meta = $item->get_formatted_meta_data();
-			$permalink    = $product->get_permalink( [ 'item_meta_array' => $product_meta ] );
-		} else {
-			$permalink = $product->get_permalink();
-		}
-
-		return [
-			'product'   => $product,
-			'permalink' => $permalink,
-		];
-	}
-
-	/**
-	 * Add product attributes to the product's name.
-	 *
-	 * Return an array containing the product object and its product name because if the
-	 * passed product arg is a \WC_Order_Item_Product we should get \WC_Product from it and
-	 * returns back to the caller as the caller would use other methods from \WC_Product.
-	 *
-	 * @param \WC_Product|\WC_Order_Item_Product $product
-	 *
-	 * @since 6.0.3
-	 *
-	 * @return array
-	 */
-	public function add_attributes_to_product_name( $product ) {
-		if ( is_a( $product, 'WC_Order_Item_Product' ) ) {
-			$item         = $product;
-			$product      = $item->get_product();
-			$product_name = $product->get_name();
-			$product_meta = $item->get_formatted_meta_data();
-
-			// Part of the logic of generating product name refers to:
-			// https://github.com/woocommerce/woocommerce/blob/462c690d613e1f5af3be9459b2aac8409a4587dc/plugins/woocommerce/includes/data-stores/class-wc-product-variation-data-store-cpt.php#L291-L313
-
-			// Do not include attributes if the product has 3+ attributes.
-			$should_include_attributes = apply_filters( 'woocommerce_product_variation_title_include_attributes', count( $product_meta ) < 3, $product );
-			$separator                 = apply_filters( 'woocommerce_product_variation_title_attributes_separator', ' - ', $product );
-
-			if ( $should_include_attributes ) {
-				$title_suffix = [];
-
-				foreach ( $product_meta as $meta ) {
-					$value = $meta->value;
-					if ( ! wc_is_attribute_in_product_name( $value, $product_name ) ) {
-						$title_suffix[] = $value;
-					}
-				}
-
-				if ( ! empty( $title_suffix ) ) {
-					$product_name = $product_name . $separator . implode( ', ', $title_suffix );
-				}
-			}
-		} else {
-			$product_name = $product->get_name();
-		}
-
-		return [
-			'product'      => $product,
-			'product_name' => $product_name,
-		];
 	}
 
 	/**

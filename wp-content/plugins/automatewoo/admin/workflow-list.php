@@ -37,6 +37,8 @@ class Admin_Workflow_List {
 	function columns( $columns ) {
 
 		unset( $columns['date'] );
+		unset( $columns['stats'] );
+		unset( $columns['likes'] );
 
 		$columns['timing'] = __( 'Timing', 'automatewoo' );
 		$columns['times_run'] = __( 'Run Count', 'automatewoo' );

@@ -17,7 +17,7 @@ class Order_Helper {
 			add_action( 'woocommerce_order_status_changed', [ $this, 'maybe_refresh_customer_totals' ], 5, 3 );
 		}
 
-		add_action( 'woocommerce_delete_shop_order_transients', [ $this, 'delete_shop_order_transients' ] );
+		add_action( 'woocommerce_before_order_object_save', [ $this, 'maybe_delete_shop_order_transients' ], 10 );
 	}
 
 
@@ -60,14 +60,48 @@ class Order_Helper {
 
 
 	/**
-	 * @param int $order_id
+	 * Delete transients only if some fields have changed.
+	 *
+	 * @param \WC_Order $order
 	 */
-	public function delete_shop_order_transients( $order_id ) {
+	public function maybe_delete_shop_order_transients( $order ) {
 
-		$order = wc_get_order( $order_id );
-		if ( ! $order ) {
+		// Only delete the transients if one of the following fields has changed
+		$changes = [
+			'total',
+			'status',
+			'billing',
+			'customer_id',
+		];
+
+		$new_changes = array_intersect( $changes, array_keys( $order->get_changes() ) );
+
+		if ( ! $order || empty( $new_changes ) ) {
 			return;
 		}
+
+		// If the only change is billings but not email, don't delete the transients
+		if ( count( $new_changes ) === 1 && isset( $order->get_changes()['billing'] ) && ! isset( $order->get_changes()['billing']['email'] ) ) {
+			return;
+		}
+
+		// If there have been changes to the customer ID or billing email, remove the transients associated with the previous customer.
+		if ( isset( $order->get_changes()['customer_id'] ) || ( isset( $order->get_changes()['billing']['email'] ) ) ) {
+			$old_order = new \WC_Order();
+			$old_order->set_props( $order->get_base_data() );
+			$this->delete_shop_order_transients( $old_order );
+		}
+
+		$this->delete_shop_order_transients( $order );
+	}
+
+
+	/**
+	 * Delete transients for a shop order.
+	 *
+	 * @param \WC_Order $order
+	 */
+	public function delete_shop_order_transients( $order ) {
 
 		// Set $create param to false to prevent creating a new customer at this point
 		$customer = Customer_Factory::get_by_order( $order, false );

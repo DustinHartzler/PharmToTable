@@ -3,6 +3,7 @@
 namespace AutomateWoo\Rules;
 
 use AutomateWoo;
+use WC_Subscriptions_Payment_Gateways;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,7 +38,15 @@ class Subscription_Payment_Method extends AutomateWoo\Rule_Order_Payment_Gateway
 		$choices = [];
 
 		foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $gateway ) {
-			if ( $gateway->supports( 'subscriptions' ) ) {
+			// compatibility-code "woocommerce-subscriptions >= 4.0.0"
+			// Use helper function to check if subscriptions is supported by payment gateway.
+			if ( is_callable( [ WC_Subscriptions_Payment_Gateways::class, 'gateway_supports_subscriptions' ] ) ) {
+				$supported = WC_Subscriptions_Payment_Gateways::gateway_supports_subscriptions( $gateway );
+			} else {
+				$supported = $gateway->supports( 'subscriptions' );
+			}
+
+			if ( $supported ) {
 				$choices[ $gateway->id ] = $gateway->get_title();
 			}
 		}

@@ -129,6 +129,7 @@ class Trigger_Customer_Win_Back extends AbstractBatchedDailyTrigger {
 		$query->set_limit( $limit );
 		$query->set_offset( $offset );
 		$query->where( 'last_purchased', $min_date, '<' );
+		$query->set_ordering( 'last_purchased' );
 
 		if ( $max_date ) {
 			$query->where( 'last_purchased', $max_date, '>' );

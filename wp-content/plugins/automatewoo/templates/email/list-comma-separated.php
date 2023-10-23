@@ -18,9 +18,9 @@ if ( isset( $order ) ) {
 }
 
 foreach( $products as $product ) {
-	$filtered_permalink_data    = apply_filters( 'automatewoo_email_template_product_permalink', $product );
+	$filtered_permalink_data    = automatewoo_email_template_product_permalink( $product );
 	$permalink                  = $filtered_permalink_data['permalink'];
-	$filtered_product_name_data = apply_filters( 'automatewoo_email_template_product_name', $product );
+	$filtered_product_name_data = automatewoo_email_template_product_name( $product );
 	$product_name               = $filtered_product_name_data['product_name'];
 	$links[]                    = '<a href="' . esc_url( $permalink ) .'">' . esc_attr( $product_name ) . '</a>';
 }

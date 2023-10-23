@@ -111,13 +111,13 @@ abstract class Addon {
 
 		$this->install();
 
-		if ( apply_filters( 'woocommerce_enable_auto_update_db', false ) ) {
-			$this->do_database_update();
-			return;
-		}
-
 		if ( $this->is_database_upgrade_available() ) {
-			add_action( 'admin_notices', [ $this, 'data_upgrade_prompt' ] );
+			if ( apply_filters( 'woocommerce_enable_auto_update_db', false ) ) {
+				$this->do_database_update();
+				return;
+			} else {
+				add_action( 'admin_notices', [ $this, 'data_upgrade_prompt' ] );
+			}
 		} else {
 			$this->update_database_version();
 		}

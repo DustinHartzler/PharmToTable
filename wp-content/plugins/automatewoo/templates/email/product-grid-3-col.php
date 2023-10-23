@@ -41,9 +41,9 @@ $n = 1;
 				<?php endif; ?>
 
 				<?php foreach ( $products as $product ): ?>
-					<?php $filtered_permalink_data    = apply_filters( 'automatewoo_email_template_product_permalink', $product ); ?>
+					<?php $filtered_permalink_data    = automatewoo_email_template_product_permalink( $product ) ?>
 					<?php $permalink                  = $filtered_permalink_data['permalink']; ?>
-					<?php $filtered_product_name_data = apply_filters( 'automatewoo_email_template_product_name', $product ); ?>
+					<?php $filtered_product_name_data = automatewoo_email_template_product_name( $product ) ?>
 					<?php $product_name               = $filtered_product_name_data['product_name']; ?>
 					<?php $product                    = $filtered_product_name_data['product']; ?>
 
