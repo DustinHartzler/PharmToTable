@@ -5,7 +5,9 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Product;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\Event;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\VariationTypesTrait;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\WCVariationController;
 use WC_Data;
 use WC_Product;
@@ -60,11 +62,11 @@ class Controller extends WC_REST_Products_Controller {
 	protected $logger;
 
 	/**
-	 * TaskDataStore instance.
+	 * ProductTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var ProductTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * VariationController instance.
@@ -76,14 +78,15 @@ class Controller extends WC_REST_Products_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @param  Logger                $logger  Logger instance.
-	 * @param  TaskDataStore         $data_store  TaskDataStore instance.
+	 * @param  Logger                $logger               Logger instance.
+	 * @param  ProductTaskCreator    $task_creator         ProductTaskCreator instance.
 	 * @param  WCVariationController $variation_controller WCVariationController instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store, WCVariationController $variation_controller ) {
+	public function __construct( Logger $logger, ProductTaskCreator $task_creator, WCVariationController $variation_controller ) {
 		$this->logger               = $logger;
-		$this->data_store           = $data_store;
+		$this->task_creator         = $task_creator;
 		$this->variation_controller = $variation_controller;
+
 		add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
 		parent::__construct();
 	}
@@ -551,22 +554,21 @@ class Controller extends WC_REST_Products_Controller {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
-		// @phpstan-ignore-next-line Structure comes from WooCommerce.
-		if ( \in_array( $response->data['type'], $this->get_product_variation_types(), true ) ) {
-			$this->create_task(
-				// @phpstan-ignore-next-line Structure comes from WooCommerce.
-				$response->data['parent_id'],
-				__( 'Created via Zapier', 'woocommerce-zapier' ),
-				// @phpstan-ignore-next-line Structure comes from WooCommerce.
-				$response->data['id']
-			);
+
+		/**
+		 * \WP_REST_Response::$data is array.
+		 *
+		 * @var array $data
+		 */
+		$data = $response->data;
+		if ( \in_array( $data['type'], $this->get_product_variation_types(), true ) ) {
+			$id       = $data['parent_id'];
+			$child_id = $data['id'];
 		} else {
-			$this->create_task(
-				// @phpstan-ignore-next-line Structure comes from WooCommerce.
-				$response->data['id'],
-				__( 'Created via Zapier', 'woocommerce-zapier' )
-			);
+			$id       = $data['id'];
+			$child_id = 0;
 		}
+		$this->task_creator->record( Event::action_create( $this->resource_type ), $id, $child_id );
 		return $response;
 	}
 
@@ -583,20 +585,21 @@ class Controller extends WC_REST_Products_Controller {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
-		// @phpstan-ignore-next-line Structure comes from WooCommerce.
-		if ( \in_array( $response->data['type'], $this->get_product_variation_types(), true ) ) {
-			$this->create_task(
-				// @phpstan-ignore-next-line Structure comes from WooCommerce.
-				$response->data['parent_id'],
-				__( 'Updated via Zapier', 'woocommerce-zapier' ),
-				$request['id']
-			);
+
+		/**
+		 * \WP_REST_Response::$data is array.
+		 *
+		 * @var array $data
+		 */
+		$data = $response->data;
+		if ( \in_array( $data['type'], $this->get_product_variation_types(), true ) ) {
+			$id       = $data['parent_id'];
+			$child_id = $data['id'];
 		} else {
-			$this->create_task(
-				$request['id'],
-				__( 'Updated via Zapier', 'woocommerce-zapier' )
-			);
+			$id       = $data['id'];
+			$child_id = 0;
 		}
+		$this->task_creator->record( Event::action_update( $this->resource_type ), $id, $child_id );
 		return $response;
 	}
 }

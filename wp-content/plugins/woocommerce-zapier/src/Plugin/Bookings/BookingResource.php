@@ -3,9 +3,9 @@
 namespace OM4\WooCommerceZapier\Plugin\Bookings;
 
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
-use OM4\WooCommerceZapier\Plugin\Bookings\Payload;
 use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller;
-use OM4\WooCommerceZapier\Webhook\Trigger\Trigger;
+use OM4\WooCommerceZapier\Webhook\Payload;
+use OM4\WooCommerceZapier\Webhook\Trigger;
 use OM4\WooCommerceZapier\WooCommerceResource\CustomPostTypeResource;
 use WC_Booking;
 use WC_Bookings_REST_Booking_Controller;
@@ -261,32 +261,5 @@ class BookingResource extends CustomPostTypeResource {
 	 */
 	public function get_webhook_payload() {
 		return new Payload( $this->key, $this->controller );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @param int $resource_id  Resource ID.
-	 * @param int $variation_id Variation ID.
-	 */
-	public function get_description( $resource_id, $variation_id = 0 ) {
-		$object = \get_wc_booking( $resource_id );
-		if ( false !== $object && is_a( $object, 'WC_Booking' ) && 'trash' !== $object->get_status() ) {
-			// Use the corresponding order's billing name.
-			$order = \wc_get_order( $object->get_order_id() );
-			if ( is_callable( array( $order, 'get_formatted_billing_full_name' ) ) ) {
-				return \sprintf(
-					/* translators: 1: Booking ID, 2: Order Formatted Full Billing Name */
-					__( 'Booking #%1$d (%2$s)', 'woocommerce-zapier' ),
-					$object->get_id(),
-					\trim( $order->get_formatted_billing_full_name() )
-				);
-			} else {
-				// Booking does not have an order or order no longer exists.
-				/* translators: 1: Booking ID */
-				return \sprintf( __( 'Booking #%d', 'woocommerce-zapier' ), $object->get_id() );
-			}
-		}
-		return null;
 	}
 }

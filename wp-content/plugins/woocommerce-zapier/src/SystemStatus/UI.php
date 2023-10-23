@@ -6,7 +6,7 @@ use OM4\WooCommerceZapier\Auth\KeyDataStore;
 use OM4\WooCommerceZapier\Installer;
 use OM4\WooCommerceZapier\Plugin;
 use OM4\WooCommerceZapier\Settings;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\Webhook\DataStore as WebhookDataStore;
 use OM4\WooCommerceZapier\Webhook\ZapierWebhook;
 use RecursiveArrayIterator;

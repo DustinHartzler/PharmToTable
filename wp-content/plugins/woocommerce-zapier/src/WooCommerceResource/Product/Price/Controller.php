@@ -6,7 +6,8 @@ use Automattic\WooCommerce\Utilities\NumberUtil;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\Event;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductUpdatesTrait;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\VariationTypesTrait;
 use WC_Product;
@@ -57,21 +58,21 @@ class Controller extends WC_REST_Controller {
 	protected $logger;
 
 	/**
-	 * TaskDataStore instance.
+	 * ProductTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var ProductTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param Logger        $logger     Logger instance.
-	 * @param TaskDataStore $data_store TaskDataStore instance.
+	 * @param Logger             $logger       Logger instance.
+	 * @param ProductTaskCreator $task_creator OrderTaskCreator instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
+	public function __construct( Logger $logger, ProductTaskCreator $task_creator ) {
+		$this->logger       = $logger;
+		$this->task_creator = $task_creator;
 	}
 
 	/**
@@ -106,7 +107,7 @@ class Controller extends WC_REST_Controller {
 					'wcz_meta_v1' => array(
 						'field_properties' => array(
 							'alters_dynamic_fields' => true,
-							'default'               => 'set_to',
+							'default'               => 'set_regular_price_to',
 						),
 						'enum_labels'      => array(
 							'set_regular_price_to'      => __( 'Set Regular Price To', 'woocommerce-zapier' ),
@@ -223,7 +224,15 @@ class Controller extends WC_REST_Controller {
 				$this->log_error_response( $request, $response );
 				return $response;
 		}
+
 		$product->save();
+
+		$event        = Event::action_update( $this->resource_type );
+		$event->topic = 'product.update_price';
+		$event->name  = __( 'Update Product Price', 'woocommerce-zapier' );
+		$id           = 0 === $product->get_parent_id() ? $product->get_id() : $product->get_parent_id();
+		$child_id     = 0 === $product->get_parent_id() ? 0 : $product->get_id();
+		$this->task_creator->record( $event, $id, $child_id );
 
 		$response = array(
 			'id'            => $product->get_id(),
@@ -233,12 +242,6 @@ class Controller extends WC_REST_Controller {
 			'sale_price'    => $product->get_sale_price( 'edit' ),
 			'on_sale'       => $product->is_on_sale( 'edit' ),
 		);
-		$message  = __( 'Updated price via Zapier', 'woocommerce-zapier' );
-		if ( $product->get_parent_id() === 0 ) {
-			$this->create_task( $product->get_id(), $message );
-		} else {
-			$this->create_task( $product->get_parent_id(), $message, $product->get_id() );
-		}
 		return rest_ensure_response( $response );
 	}
 

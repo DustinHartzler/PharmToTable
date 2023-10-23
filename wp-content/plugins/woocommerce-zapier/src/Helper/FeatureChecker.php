@@ -2,6 +2,9 @@
 
 namespace OM4\WooCommerceZapier\Helper;
 
+use Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer;
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -40,5 +43,43 @@ class FeatureChecker {
 	 */
 	public function is_coupon_enabled() {
 		return \wc_coupons_enabled();
+	}
+
+	/**
+	 * Check if High-Performance Order Storage (HPOS) is enabled in WooCommerce,
+	 * and HPOS is the authoritative source of order data.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @return boolean
+	 */
+	public function is_hpos_enabled() {
+		// OrderUtil class is only available in WooCommerce 6.9+.
+		return class_exists( OrderUtil::class ) && OrderUtil::custom_orders_table_usage_is_enabled();
+	}
+
+	/**
+	 * Check if High-Performance Order Storage (HPOS) synchronisation is enabled in WooCommerce,
+	 *
+	 * @since 2.7.0
+	 *
+	 * @return boolean
+	 */
+	public function is_hpos_in_sync() {
+		// OrderUtil class is only available in WooCommerce 6.9+.
+		return $this->is_hpos_enabled() && OrderUtil::is_custom_order_tables_in_sync();
+	}
+
+	/**
+	 * Returns the HPOS default placeholder post type, or an empty string.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @return string
+	 */
+	public function hpos_placeholder_order_post_type() {
+		return defined( DataSynchronizer::class . '::PLACEHOLDER_ORDER_POST_TYPE' ) ?
+			DataSynchronizer::PLACEHOLDER_ORDER_POST_TYPE :
+			'';
 	}
 }

@@ -2,8 +2,9 @@
 
 namespace OM4\WooCommerceZapier\WooCommerceResource;
 
-use OM4\WooCommerceZapier\Webhook\Payload\Definition as PayloadDefinition;
-use OM4\WooCommerceZapier\Webhook\Trigger\Definition as TriggerDefinition;
+use OM4\WooCommerceZapier\Webhook\Payload;
+use OM4\WooCommerceZapier\Webhook\Trigger;
+use WP_REST_Controller;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -11,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Interface for WooCommerce REST API Resource Definitions.
  *
  * @since 2.0.0
+ * @since 2.8.0 Removed the `get_description()` method, as it is no longer used.
  */
 interface Definition {
 	/**
@@ -43,9 +45,9 @@ interface Definition {
 	/**
 	 * Get class name of the REST API Controller for this resource (FQN).
 	 *
-	 * This class must be extend a WP_REST_Controller
+	 * This class must extend a WP_REST_Controller.
 	 *
-	 * @return class-string
+	 * @return class-string<WP_REST_Controller>
 	 */
 	public function get_controller_name();
 
@@ -77,16 +79,29 @@ interface Definition {
 	 *
 	 * @since 2.1.0
 	 *
-	 * @return TriggerDefinition[]
+	 * @return Trigger[]
 	 */
 	public function get_webhook_triggers();
 
 	/**
-	 * Return payload definitions. Used to build payload for `woocommerce_webhook_payload` filter.
+	 * Modify webhook trigger.
+	 *
+	 * Modify already defined webhook trigger.
+	 * For able to fix built-in or newly defined triggers.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param array $topic_hooks Topic hooks.
+	 * @return array
+	 */
+	public function webhook_topic_hooks( $topic_hooks );
+
+	/**
+	 * Used to build payload for `woocommerce_webhook_payload` filter.
 	 *
 	 * @since 2.2.0
 	 *
-	 * @return PayloadDefinition|null Payload or null if webhook payload not provided.
+	 * @return Payload|null Payload or null if webhook payload not provided.
 	 */
 	public function get_webhook_payload();
 
@@ -101,14 +116,13 @@ interface Definition {
 	public function get_admin_url( $resource_id );
 
 	/**
-	 * Get the description of an individual resource object/record.
+	 * Get an individual resource record/instance's unique identifier.
 	 *
-	 * @since 2.1.0
-	 * @since 2.5.0 Added $variation_id parameter.
+	 * @since 2.7.1
 	 *
-	 * @param int $resource_id  Resource ID.
-	 * @param int $variation_id Variation ID.
-	 * @return string|null Description or null if resource not found.
+	 * @param mixed $object Object instance.
+	 *
+	 * @return int
 	 */
-	public function get_description( $resource_id, $variation_id = 0 );
+	public function get_resource_id_from_object( $object );
 }

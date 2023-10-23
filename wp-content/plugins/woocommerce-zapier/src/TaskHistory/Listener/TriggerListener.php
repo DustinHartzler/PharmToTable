@@ -2,10 +2,23 @@
 
 namespace OM4\WooCommerceZapier\TaskHistory\Listener;
 
+use OM4\WooCommerceZapier\ContainerService;
+use OM4\WooCommerceZapier\Exception\InvalidImplementationException;
 use OM4\WooCommerceZapier\Logger;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\Plugin\Bookings\BookingsTaskCreator;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNote;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteTaskCreator;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\SubscriptionsTaskCreator;
+use OM4\WooCommerceZapier\TaskHistory\Task\Event;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\Webhook\Resources;
 use OM4\WooCommerceZapier\Webhook\ZapierWebhook;
+use OM4\WooCommerceZapier\WooCommerceResource\Coupon\CouponTaskCreator;
+use OM4\WooCommerceZapier\WooCommerceResource\Customer\CustomerTaskCreator;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNote;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNoteTaskCreator;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderTaskCreator;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -39,22 +52,32 @@ class TriggerListener {
 	protected $webhook_resources;
 
 	/**
+	 * ContainerService instance.
+	 *
+	 * @var ContainerService
+	 */
+	protected $container;
+
+	/**
 	 * TriggerListener constructor.
 	 *
-	 * @param Logger        $logger            Logger.
-	 * @param TaskDataStore $data_store        TaskDataStore instance.
-	 * @param Resources     $webhook_resources Webhook Topics.
+	 * @param Logger           $logger            Logger.
+	 * @param TaskDataStore    $data_store        TaskDataStore instance.
+	 * @param Resources        $webhook_resources Webhook Topics.
+	 * @param ContainerService $container         ContainerService instance.
 	 *
 	 * @return void
 	 */
 	public function __construct(
 		Logger $logger,
 		TaskDataStore $data_store,
-		Resources $webhook_resources
+		Resources $webhook_resources,
+		ContainerService $container
 	) {
 		$this->logger            = $logger;
 		$this->data_store        = $data_store;
 		$this->webhook_resources = $webhook_resources;
+		$this->container         = $container;
 	}
 
 	/**
@@ -67,7 +90,7 @@ class TriggerListener {
 	}
 
 	/**
-	 * Whenever WooCommerce delivers a payload to a WC Zapier webhook, add the event to our task history.
+	 * Whenever WooCommerce successfully delivers a payload to a WC Zapier webhook, add the event to our task history.
 	 *
 	 * Executed by the `woocommerce_webhook_delivery` hook (which occurs for all Webhooks not just Zapier Webhooks)
 	 *
@@ -78,6 +101,7 @@ class TriggerListener {
 	 * @param int            $webhook_id ID Webhook ID.
 	 *
 	 * @return void
+	 * @throws InvalidImplementationException If an unknown resource type is encountered.
 	 */
 	public function woocommerce_webhook_delivery( $http_args, $response, $duration, $arg, $webhook_id ) {
 		$webhook = new ZapierWebhook( $webhook_id );
@@ -90,56 +114,76 @@ class TriggerListener {
 			return;
 		};
 
-		$task = $this->data_store->new_task();
-		$task->set_webhook_id( $webhook->get_id() );
-		$task->set_type( 'trigger' );
-		$task->set_resource_type( $webhook->get_resource() );
-
-		$resource_id = \absint( $arg );
-		if ( 'product' === $task->get_resource_type() ) {
-			$product = \wc_get_product( $arg );
-			if ( $product && $product->get_parent_id() > 0 ) {
-				// A product variation was sent.
-				// Record the variation ID, but use the parent product ID as the resource ID.
-				$task->set_variation_id( $product->get_id() );
-				$resource_id = $product->get_parent_id();
-			}
-		}
-		$task->set_resource_id( $resource_id );
-
 		if ( is_wp_error( $response ) ) {
 			// Webhook delivery failed.
-			$task->set_message(
-				sprintf(
-					// Translators: 1: Error Code. 2: Error Message.
-					__( 'Error sending to Zapier. Error Code: %1$s. Error Message: %2$s', 'woocommerce-zapier' ),
-					$response->get_error_code(),
-					$response->get_error_message()
-				)
-			);
-		} else {
-			// Successful delivery.
-			// Log the success message, along with the trigger rule name.
-			$topics     = $this->webhook_resources->get_topics();
-			$topic_name = isset( $topics[ $webhook->get_topic() ] ) ? $topics[ $webhook->get_topic() ] : $webhook->get_topic();
-			$task->set_message(
-				sprintf(
-					// Translators: 1: Trigger Rule Name.
-					__( 'Sent to Zapier successfully via the <em>%1$s</em> trigger', 'woocommerce-zapier' ),
-					$topic_name
-				)
-			);
+			return;
 		}
 
-		if ( 0 === $task->save() ) {
-			$this->logger->critical(
-				'Error creating task history record for webhook ID %d, topic %s, args ID %s',
-				array(
-					$webhook->get_id(),
-					$webhook->get_topic(),
-					$arg,
-				)
-			);
+		$resource_id   = \absint( $arg );
+		$child_id      = 0;
+		$resource_type = $webhook->get_resource();
+
+		switch ( $resource_type ) {
+			case 'booking':
+				$task_creator = $this->container->get( BookingsTaskCreator::class );
+				break;
+			case 'coupon':
+				$task_creator = $this->container->get( CouponTaskCreator::class );
+				break;
+			case 'customer':
+				$task_creator = $this->container->get( CustomerTaskCreator::class );
+				break;
+			case 'order':
+				$task_creator = $this->container->get( OrderTaskCreator::class );
+				break;
+			case 'order_note':
+				$task_creator = $this->container->get( OrderNoteTaskCreator::class );
+				$note         = OrderNote::find( $resource_id );
+				if ( $note ) {
+					// An existing Order Note.
+					// Record the note ID, but use the parent order ID as the resource ID.
+					$child_id    = $note->id;
+					$resource_id = $note->order_id;
+				}
+				break;
+			case 'product':
+				$task_creator = $this->container->get( ProductTaskCreator::class );
+				$product      = \wc_get_product( $resource_id );
+				if ( $product && $product->get_parent_id() > 0 ) {
+					// A product variation was sent.
+					// Record the variation ID, but use the parent product ID as the resource ID.
+					$child_id    = $product->get_id();
+					$resource_id = $product->get_parent_id();
+				}
+				break;
+			case 'subscription':
+				$task_creator = $this->container->get( SubscriptionsTaskCreator::class );
+				break;
+			case 'subscription_note':
+				$task_creator = $this->container->get( SubscriptionNoteTaskCreator::class );
+				$note         = SubscriptionNote::find( $resource_id );
+				if ( $note ) {
+					// An existing Subscription Note.
+					// Record the note ID, but use the parent order ID as the resource ID.
+					$child_id    = $note->id;
+					$resource_id = $note->subscription_id;
+				}
+				break;
+			default:
+				throw new InvalidImplementationException( 'Unknown resource type: ' . $resource_type );
 		}
+
+		if ( false !== strpos( $webhook->get_topic(), '.deleted' ) ) {
+			$parent_id = \absint( \get_transient( "wc_zapier_{$resource_type}_{$resource_id}_parent_id" ) );
+			if ( $parent_id ) {
+				$child_id    = $resource_id;
+				$resource_id = $parent_id;
+				\delete_transient( "wc_zapier_{$resource_type}_{$resource_id}_parent_id" );
+			}
+		}
+
+		$topics     = $this->webhook_resources->get_topics();
+		$topic_name = isset( $topics[ $webhook->get_topic() ] ) ? $topics[ $webhook->get_topic() ] : $webhook->get_topic();
+		$task_creator->record( Event::trigger( $webhook->get_topic(), $topic_name ), $resource_id, $child_id, $webhook_id );
 	}
 }

@@ -5,7 +5,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Coupon;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\WooCommerceResource\Coupon\CouponTaskCreator;
 use WC_REST_Coupons_Controller;
 
 defined( 'ABSPATH' ) || exit;
@@ -40,21 +40,22 @@ class Controller extends WC_REST_Coupons_Controller {
 	 */
 	protected $logger;
 
+
 	/**
-	 * TaskDataStore instance.
+	 * CouponTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var CouponTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param Logger        $logger     Logger instance.
-	 * @param TaskDataStore $data_store TaskDataStore instance.
+	 * @param Logger            $logger       Logger instance.
+	 * @param CouponTaskCreator $task_creator CouponTaskCreator instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
+	public function __construct( Logger $logger, CouponTaskCreator $task_creator ) {
+		$this->logger       = $logger;
+		$this->task_creator = $task_creator;
 	}
 }

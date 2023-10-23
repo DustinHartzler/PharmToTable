@@ -71,7 +71,7 @@ class WebhookTopicsController extends WC_REST_Controller {
 	public function register_routes() {
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->rest_base . '/(?P<resource>[a-z]+)',
+			'/' . $this->rest_base . '/(?P<resource>[a-z_]+)',
 			array(
 				'args'   => array(
 					'resource' => array(
@@ -175,6 +175,7 @@ class WebhookTopicsController extends WC_REST_Controller {
 		usort(
 			$response,
 			function( $a, $b ) {
+				// @phpstan-ignore-next-line Both are strings.
 				return strnatcasecmp( $a['name'], $b['name'] );
 			}
 		);

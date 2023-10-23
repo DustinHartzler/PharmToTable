@@ -39,7 +39,7 @@ class Plugin extends Base {
 	/**
 	 * The minimum WooCommerce Bookings version that this plugin supports.
 	 */
-	const MINIMUM_SUPPORTED_VERSION = '1.15.35';
+	const MINIMUM_SUPPORTED_VERSION = '1.15.55';
 
 	/**
 	 * Constructor.
@@ -48,9 +48,9 @@ class Plugin extends Base {
 	 * @param Logger         $logger Logger instance.
 	 */
 	public function __construct( FeatureChecker $checker, Logger $logger ) {
-		$this->checker  = $checker;
-		$this->logger   = $logger;
-		$this->resource = BookingResource::class;
+		$this->checker     = $checker;
+		$this->logger      = $logger;
+		$this->resources[] = BookingResource::class;
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace OM4\WooCommerceZapier\TaskHistory\Listener;
 
-use OM4\WooCommerceZapier\TaskHistory\Task;
+use OM4\WooCommerceZapier\TaskHistory\Task\Event;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -23,20 +23,19 @@ trait APIListenerTrait {
 	/**
 	 * Item Create.
 	 *
-	 * @uses WP_REST_Controller::create_item() as parent::create_item() Create a single item.
-	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response REST API Response.
 	 */
 	public function create_item( $request ) {
 		$response = parent::create_item( $request );
-		if ( is_a( $response, 'WP_Error' ) ) {
+		if ( \is_wp_error( $response ) ) {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
+
 		// @phpstan-ignore-next-line Structure comes from WooCommerce.
-		$this->create_task( $response->data['id'], __( 'Created via Zapier', 'woocommerce-zapier' ) );
+		$this->task_creator->record( Event::action_create( $this->resource_type ), $response->data['id'] );
 		return $response;
 	}
 
@@ -60,7 +59,7 @@ trait APIListenerTrait {
 		 * @var WP_Error|WP_REST_Response $response
 		 */
 		$response = parent::delete_item( $request );
-		if ( is_a( $response, 'WP_Error' ) ) {
+		if ( \is_wp_error( $response ) ) {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
@@ -86,49 +85,16 @@ trait APIListenerTrait {
 	 */
 	public function update_item( $request ) {
 		$response = parent::update_item( $request );
-		if ( is_a( $response, 'WP_Error' ) ) {
+		if ( \is_wp_error( $response ) ) {
 			$this->log_error_response( $request, $response );
 			return $response;
 		}
-		$this->create_task( $request['id'], __( 'Updated via Zapier', 'woocommerce-zapier' ) );
+
+		// @phpstan-ignore-next-line Structure comes from WooCommerce.
+		$this->task_creator->record( Event::action_update( $this->resource_type ), $response->data['id'] );
 		return $response;
 	}
 
-	/**
-	 * Create a Task History record.
-	 *
-	 * @param  int    $resource_id  Resource ID.
-	 * @param  string $message  Message.
-	 * @param  int    $variation_id Variation ID.
-	 *
-	 * @return void
-	 * @uses self::$data_store TaskDataStore instance.
-	 */
-	protected function create_task( $resource_id, $message, $variation_id = 0 ) {
-		/**
-		 * Task instance.
-		 *
-		 * @var Task
-		 */
-		$task = $this->data_store->new_task();
-		$task->set_type( 'action' );
-		$task->set_resource_id( $resource_id );
-		if ( $variation_id ) {
-			$task->set_variation_id( $variation_id );
-		}
-		$task->set_resource_type( $this->resource_type );
-		$task->set_message( $message );
-		if ( 0 === $task->save() ) {
-			$this->logger->critical(
-				'Error creating task history record for resource_id %d, resource_type %s, message: %s',
-				array(
-					$resource_id,
-					$this->resource_type,
-					$message,
-				)
-			);
-		}
-	}
 
 	/**
 	 * Log a REST API response error.

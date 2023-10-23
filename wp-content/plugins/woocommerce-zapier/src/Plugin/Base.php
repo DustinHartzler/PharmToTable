@@ -34,13 +34,13 @@ abstract class Base implements PluginDefinition {
 	const MINIMUM_SUPPORTED_VERSION = '';
 
 	/**
-	 * The FQN of the third party plugin's Resource Definition.
+	 * The FQN(s) of the third party plugin's Resource Definition(s).
 	 *
-	 * Class must be implement `OM4\WooCommerceZapier\WooCommerceResource\Definition`.
+	 * Classes must be implement `OM4\WooCommerceZapier\WooCommerceResource\Definition`.
 	 *
-	 * @var class-string
+	 * @var class-string[]
 	 */
-	protected $resource;
+	protected $resources;
 
 	/**
 	 * Logger instance.
@@ -114,10 +114,10 @@ abstract class Base implements PluginDefinition {
 	 * @throws InvalidImplementationException If resource is not set.
 	 */
 	public function wc_zapier_additional_resource_classes( $resources ) {
-		if ( empty( $this->resource ) ) {
+		if ( empty( $this->resources ) ) {
 			throw new InvalidImplementationException( 'Resource must be defined.' );
 		}
-		$resources[] = $this->resource;
+		array_push( $resources, ...$this->resources );
 		return $resources;
 	}
 

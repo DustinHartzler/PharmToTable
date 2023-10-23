@@ -5,7 +5,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Order;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderTaskCreator;
 use WC_REST_Orders_Controller;
 
 defined( 'ABSPATH' ) || exit;
@@ -41,20 +41,20 @@ class Controller extends WC_REST_Orders_Controller {
 	protected $logger;
 
 	/**
-	 * TaskDataStore instance.
+	 * OrderTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var OrderTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param Logger        $logger     Logger instance.
-	 * @param TaskDataStore $data_store TaskDataStore instance.
+	 * @param Logger           $logger       Logger instance.
+	 * @param OrderTaskCreator $task_creator OrderTaskCreator instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
+	public function __construct( Logger $logger, OrderTaskCreator $task_creator ) {
+		$this->logger       = $logger;
+		$this->task_creator = $task_creator;
 	}
 }

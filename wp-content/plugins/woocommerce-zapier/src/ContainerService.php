@@ -22,18 +22,23 @@ use OM4\WooCommerceZapier\NewUser\NewUser;
 use OM4\WooCommerceZapier\NewUser\NewUserWelcomeNotice;
 use OM4\WooCommerceZapier\Plugin;
 use OM4\WooCommerceZapier\Plugin\Bookings\BookingResource;
+use OM4\WooCommerceZapier\Plugin\Bookings\BookingsTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Bookings\Plugin as BookingsPlugin;
 use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller as BookingsV1Controller;
-use OM4\WooCommerceZapier\Plugin\Subscriptions\Controller as SubscriptionsController;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\Controller as SubscriptionNoteController;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteResource;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Plugin as SubscriptionsPlugin;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\SubscriptionResource;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\SubscriptionsTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\V1Controller as SubscriptionsV1Controller;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\WCSV1Controller;
 use OM4\WooCommerceZapier\Privacy;
 use OM4\WooCommerceZapier\SystemStatus\UI as SystemStatusUI;
 use OM4\WooCommerceZapier\TaskHistory\Installer as TaskHistoryInstaller;
 use OM4\WooCommerceZapier\TaskHistory\Listener\TriggerListener;
 use OM4\WooCommerceZapier\TaskHistory\ListTable;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\TaskHistory\UI as TaskHistoryUI;
 use OM4\WooCommerceZapier\Vendor\League\Container\Container;
 use OM4\WooCommerceZapier\Webhook\DataStore as WebhookDataStore;
@@ -43,14 +48,21 @@ use OM4\WooCommerceZapier\Webhook\Resources;
 use OM4\WooCommerceZapier\Webhook\TopicsRetriever as WebhookTopicsRetriever;
 use OM4\WooCommerceZapier\WooCommerceResource\Coupon\Controller as CouponController;
 use OM4\WooCommerceZapier\WooCommerceResource\Coupon\CouponResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Coupon\CouponTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Customer\Controller as CustomerController;
 use OM4\WooCommerceZapier\WooCommerceResource\Customer\CustomerResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Customer\CustomerTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
 use OM4\WooCommerceZapier\WooCommerceResource\Order\Controller as OrderController;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\Controller as OrderNoteController;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNoteResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNoteTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\Controller as ProductController;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\Price\Controller as ProductPriceController;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\Stock\Controller as ProductStockController;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\WCVariationController;
 use WC_Webhook_Data_Store;
@@ -199,9 +211,7 @@ class ContainerService {
 		$this->container->addShared(
 			ResourceManager::class,
 			function () {
-				return new ResourceManager(
-					$this
-				);
+				return new ResourceManager( $this );
 			}
 		);
 
@@ -213,12 +223,23 @@ class ContainerService {
 			}
 		);
 
+		// Resource: Customer.
+		$this->container->add(
+			CustomerTaskCreator::class,
+			function() {
+				return new CustomerTaskCreator(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
 		$this->container->add(
 			CustomerController::class,
 			function() {
 				return new CustomerController(
 					$this->get( Logger::class ),
-					$this->get( TaskDataStore::class )
+					$this->get( CustomerTaskCreator::class )
 				);
 			}
 		);
@@ -234,11 +255,21 @@ class ContainerService {
 		);
 
 		$this->container->add(
+			CouponTaskCreator::class,
+			function() {
+				return new CouponTaskCreator(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
 			CouponController::class,
 			function() {
 				return new CouponController(
 					$this->get( Logger::class ),
-					$this->get( TaskDataStore::class )
+					$this->get( CouponTaskCreator::class )
 				);
 			}
 		);
@@ -247,7 +278,19 @@ class ContainerService {
 		$this->container->add(
 			OrderResource::class,
 			function() {
-				return new OrderResource();
+				return new OrderResource(
+					$this->get( FeatureChecker::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			OrderTaskCreator::class,
+			function() {
+				return new OrderTaskCreator(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
 			}
 		);
 
@@ -256,7 +299,40 @@ class ContainerService {
 			function() {
 				return new OrderController(
 					$this->get( Logger::class ),
+					$this->get( OrderTaskCreator::class )
+				);
+			}
+		);
+
+		// Resource: Order Note.
+		$this->container->add(
+			OrderNoteResource::class,
+			function() {
+				return new OrderNoteResource(
+					$this->get( FeatureChecker::class ),
+					$this->get( OrderNoteController::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			OrderNoteTaskCreator::class,
+			function() {
+				return new OrderNoteTaskCreator(
+					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			OrderNoteController::class,
+			function() {
+				return new OrderNoteController(
+					$this->get( Logger::class ),
+					$this->get( OrderNoteTaskCreator::class ),
+					$this->get( FeatureChecker::class ),
+					$this->get( WordPressDB::class )
 				);
 			}
 		);
@@ -270,11 +346,21 @@ class ContainerService {
 		);
 
 		$this->container->add(
+			ProductTaskCreator::class,
+			function() {
+				return new ProductTaskCreator(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
 			ProductController::class,
 			function() {
 				return new ProductController(
 					$this->get( Logger::class ),
-					$this->get( TaskDataStore::class ),
+					$this->get( ProductTaskCreator::class ),
 					$this->get( WCVariationController::class )
 				);
 			}
@@ -285,7 +371,7 @@ class ContainerService {
 			function() {
 				return new ProductPriceController(
 					$this->get( Logger::class ),
-					$this->get( TaskDataStore::class )
+					$this->get( ProductTaskCreator::class )
 				);
 			}
 		);
@@ -295,7 +381,7 @@ class ContainerService {
 			function() {
 				return new ProductStockController(
 					$this->get( Logger::class ),
-					$this->get( TaskDataStore::class )
+					$this->get( ProductTaskCreator::class )
 				);
 			}
 		);
@@ -305,7 +391,7 @@ class ContainerService {
 			function() {
 				return new WCVariationController(
 					$this->get( Logger::class ),
-					$this->get( TaskDataStore::class )
+					$this->get( ProductTaskCreator::class )
 				);
 			}
 		);
@@ -332,14 +418,16 @@ class ContainerService {
 		);
 
 		$this->container->add(
-			BookingsV1Controller::class,
+			BookingsTaskCreator::class,
 			function() {
-				return new BookingsV1Controller(
+				return new BookingsTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
 				);
 			}
 		);
+
+		$this->container->add( BookingsV1Controller::class );
 
 		// Subscriptions.
 		$this->container->add(
@@ -348,7 +436,7 @@ class ContainerService {
 				return new SubscriptionsPlugin(
 					$this->get( FeatureChecker::class ),
 					$this->get( Logger::class ),
-					$this->get( SubscriptionResource::class )
+					$this
 				);
 			}
 		);
@@ -357,15 +445,16 @@ class ContainerService {
 			SubscriptionResource::class,
 			function() {
 				return new SubscriptionResource(
-					$this->get( FeatureChecker::class )
+					$this->get( FeatureChecker::class ),
+					$this->get( SubscriptionsV1Controller::class )
 				);
 			}
 		);
 
 		$this->container->add(
-			SubscriptionsController::class,
+			SubscriptionsTaskCreator::class,
 			function() {
-				return new SubscriptionsController(
+				return new SubscriptionsTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
 				);
@@ -377,7 +466,52 @@ class ContainerService {
 			function() {
 				return new SubscriptionsV1Controller(
 					$this->get( Logger::class ),
+					$this->get( SubscriptionsTaskCreator::class ),
+					$this->get( WCSV1Controller::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			WCSV1Controller::class,
+			function() {
+				return new WCSV1Controller(
+					$this->get( Logger::class ),
+					$this->get( SubscriptionsTaskCreator::class ),
+					$this->get( FeatureChecker::class )
+				);
+			}
+		);
+
+		// Resource: Subscription Note.
+		$this->container->add(
+			SubscriptionNoteResource::class,
+			function() {
+				return new SubscriptionNoteResource(
+					$this->get( FeatureChecker::class ),
+					$this->get( SubscriptionNoteController::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			SubscriptionNoteTaskCreator::class,
+			function() {
+				return new SubscriptionNoteTaskCreator(
+					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			SubscriptionNoteController::class,
+			function() {
+				return new SubscriptionNoteController(
+					$this->get( Logger::class ),
+					$this->get( SubscriptionNoteTaskCreator::class ),
+					$this->get( FeatureChecker::class ),
+					$this->get( WordPressDB::class )
 				);
 			}
 		);
@@ -506,7 +640,8 @@ class ContainerService {
 				return new TriggerListener(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class ),
-					$this->get( Resources::class )
+					$this->get( Resources::class ),
+					$this
 				);
 			}
 		);

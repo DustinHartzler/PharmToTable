@@ -1,20 +1,19 @@
 <?php
 
-namespace OM4\WooCommerceZapier\Webhook\Trigger;
-
-use OM4\WooCommerceZapier\Webhook\Trigger\Definition;
+namespace OM4\WooCommerceZapier\Webhook;
 
 defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Implements an individual REST API based Trigger definition.
+ * Represents an individual REST API based Trigger.
  *
  * A trigger is an event that users can use to send data to Zapier.
  *
  * @since 2.2.0
+ * @since 2.8.0 Moved from OM4\WooCommerceZapier\Webhook\Trigger\Payload
  */
-class Trigger implements Definition {
+class Trigger {
 
 	/**
 	 * Trigger Key.
@@ -57,14 +56,18 @@ class Trigger implements Definition {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Get this Trigger's key.
+	 *
+	 * @return string
 	 */
 	public function get_key() {
 		return $this->key;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Get this Trigger's event name.
+	 *
+	 * @return string|false
 	 */
 	public function get_event() {
 		$data = $this->get_topic_parts();
@@ -75,7 +78,9 @@ class Trigger implements Definition {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Get this trigger's resource name.
+	 *
+	 * @return string|false
 	 */
 	public function get_resource() {
 		$data = $this->get_topic_parts();
@@ -102,14 +107,18 @@ class Trigger implements Definition {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Get this Trigger's name.
+	 *
+	 * @return string
 	 */
 	public function get_name() {
 		return $this->name;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Get this Trigger's list of WooCommerce hooks/actions that this trigger should fire on.
+	 *
+	 * @return string[]
 	 */
 	public function get_actions() {
 		return $this->actions;

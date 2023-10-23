@@ -2,14 +2,16 @@
 
 namespace OM4\WooCommerceZapier\Plugin\Subscriptions;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
-use OM4\WooCommerceZapier\Plugin\Subscriptions\Controller;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\V1Controller;
-use OM4\WooCommerceZapier\Webhook\Trigger\Trigger;
-use OM4\WooCommerceZapier\WooCommerceResource\CustomPostTypeResource;
+use OM4\WooCommerceZapier\Webhook\Payload;
+use OM4\WooCommerceZapier\Webhook\Trigger;
+use OM4\WooCommerceZapier\WooCommerceResource\Base;
 use WC_REST_Subscriptions_Controller;
 use WC_REST_Subscriptions_V1_Controller;
 use WC_Subscription;
+use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.2.0
  */
-class SubscriptionResource extends CustomPostTypeResource {
+class SubscriptionResource extends Base {
 
 	/**
 	 * Feature Checker instance.
@@ -33,34 +35,39 @@ class SubscriptionResource extends CustomPostTypeResource {
 	protected $checker;
 
 	/**
+	 * Controller instance.
+	 *
+	 * @var V1Controller
+	 */
+	protected $controller;
+
+	/**
 	 * {@inheritDoc}
 	 *
-	 * @param FeatureChecker $checker FeatureChecker instance.
+	 * @since 2.7.0 Added $controller parameter.
+	 *
+	 * @param FeatureChecker $checker    FeatureChecker instance.
+	 * @param V1Controller   $controller V1Controller instance.
 	 */
-	public function __construct( FeatureChecker $checker ) {
-		$this->checker             = $checker;
-		$this->key                 = 'subscription';
-		$this->name                = __( 'Subscription', 'woocommerce-zapier' );
-		$this->metabox_screen_name = 'shop_subscription';
+	public function __construct( FeatureChecker $checker, V1Controller $controller ) {
+		$this->checker    = $checker;
+		$this->controller = $controller;
+		$this->key        = 'subscription';
+		$this->name       = __( 'Subscription', 'woocommerce-zapier' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function is_enabled() {
-		return $this->checker->class_exists( WC_REST_Subscriptions_V1_Controller::class ) || $this->checker->class_exists( WC_REST_Subscriptions_Controller::class );
+		return $this->checker->class_exists( WC_REST_Subscriptions_V1_Controller::class ) && $this->checker->class_exists( WC_REST_Subscriptions_Controller::class );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_controller_name() {
-		if ( $this->checker->class_exists( WC_REST_Subscriptions_V1_Controller::class ) ) {
-			// WooCommerce Subscriptions 3.1 (or newer).
-			return V1Controller::class;
-		}
-		// WooCommerce Subscriptions 3.0 (or older).
-		return Controller::class;
+		return V1Controller::class;
 	}
 
 	/**
@@ -160,22 +167,54 @@ class SubscriptionResource extends CustomPostTypeResource {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @param int $resource_id  Resource ID.
-	 * @param int $variation_id Variation ID.
-	 *
-	 * @return string|null
 	 */
-	public function get_description( $resource_id, $variation_id = 0 ) {
-		$object = \wcs_get_subscription( $resource_id );
-		if ( false !== $object && is_a( $object, 'WC_Subscription' ) && 'trash' !== $object->get_status() ) {
-			return \sprintf(
-			/* translators: 1: Subscription ID, 2: Subscription Formatted Full Billing Name */
-				__( 'Subscription #%1$d (%2$s)', 'woocommerce-zapier' ),
-				$object->get_id(),
-				\trim( $object->get_formatted_billing_full_name() )
-			);
+	public function get_webhook_payload() {
+		return new Payload( $this->key, $this->controller );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param int $resource_id Resource ID.
+	 */
+	public function get_admin_url( $resource_id ) {
+		if ( $this->checker->is_hpos_enabled() ) {
+			return OrderUtil::get_order_admin_edit_url( $resource_id );
 		}
-		return null;
+		return \admin_url( "post.php?post={$resource_id}&action=edit" );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @since 2.7.0
+	 */
+	public function get_metabox_screen_name() {
+		if ( $this->checker->is_hpos_enabled() ) {
+			/**
+			 * HPOS enabled screen name.
+			 *
+			 * @see \wc_get_page_screen_id()
+			 *
+			 * We don't use the above function because it is only available in an admin context.
+			 */
+			return 'woocommerce_page_wc-orders--shop_subscription';
+		}
+		// HPOS disabled screen name.
+		return 'shop_subscription';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param WC_Subscription|WP_Post $object Subscription instance.
+	 *
+	 * @return int
+	 * @since 2.7.1
+	 */
+	public function get_resource_id_from_object( $object ) {
+		return is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->ID;
 	}
 }

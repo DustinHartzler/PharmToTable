@@ -4,7 +4,7 @@ namespace OM4\WooCommerceZapier\Plugin\Bookings;
 
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use WC_Booking;
 use WC_Bookings_REST_Booking_Controller;
 use WP_REST_Request;
@@ -32,31 +32,6 @@ class V1Controller extends WC_Bookings_REST_Booking_Controller {
 	 * @var string
 	 */
 	protected $resource_type = 'booking';
-
-	/**
-	 * Logger instance.
-	 *
-	 * @var Logger
-	 */
-	protected $logger;
-
-	/**
-	 * TaskDataStore instance.
-	 *
-	 * @var TaskDataStore
-	 */
-	protected $data_store;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param Logger        $logger     Logger instance.
-	 * @param TaskDataStore $data_store TaskDataStore instance.
-	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
-	}
 
 	/**
 	 * Prepare a single booking output for response.

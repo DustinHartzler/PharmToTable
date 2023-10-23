@@ -156,6 +156,7 @@ class KeyDataStore {
 	 * @return array
 	 */
 	public function create( $user_id ) {
+		// phpcs:ignore Generic.PHP.ForbiddenFunctions.Discouraged
 		wp_set_current_user( $user_id );
 		$method = $this->get_wc_auth_method( 'create_keys' );
 		return $method->invoke( $this->wc_auth, $this->app_name, (string) $user_id, $this->scope );

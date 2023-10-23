@@ -4,6 +4,7 @@ namespace OM4\WooCommerceZapier\TaskHistory;
 
 use OM4\WooCommerceZapier\Helper\WordPressDB;
 use OM4\WooCommerceZapier\Logger;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -67,6 +68,8 @@ class Installer {
 		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'delete_cron_jobs' ) );
 		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'update_messages_to_remove_view_edit_zap_link' ) );
 		add_action( 'wc_zapier_db_upgrade_v_14_to_15', array( $this, 'install_database_table' ) );
+		add_action( 'wc_zapier_db_upgrade_v_15_to_16', array( $this, 'install_database_table' ) );
+		add_action( 'wc_zapier_db_upgrade_v_16_to_17', array( $this, 'alter_table_for_child_resource_support' ) );
 	}
 
 	/**
@@ -75,6 +78,16 @@ class Installer {
 	 * @return void
 	 */
 	public function install_database_table() {
+		if ( $this->database_table_exists() ) {
+			/*
+			 * WordPress' dbDelta() function does not support renaming columns,
+			 * so we need to do this manually first. Otherwise the existing
+			 * `variation_id` and `type` columns will be dropped and new columns
+			 * created, causing existing data to be lost.
+			 */
+			$this->alter_table_for_child_resource_support();
+		}
+
 		$collate = '';
 
 		if ( $this->wp_db->has_cap( 'collation' ) ) {
@@ -88,10 +101,13 @@ CREATE TABLE {$this->db_table} (
   webhook_id bigint UNSIGNED,
   resource_type varchar(32) NOT NULL,
   resource_id bigint UNSIGNED NOT NULL,
-  variation_id bigint UNSIGNED NOT NULL DEFAULT 0,
+  child_type varchar(32) NOT NULL,
+  child_id bigint UNSIGNED NOT NULL DEFAULT 0,
   message text NOT NULL,
-  type varchar(32) NOT NULL,
-  PRIMARY KEY  (history_id)
+  event_type varchar(32) NOT NULL,
+  event_topic varchar(128) NOT NULL,
+  PRIMARY KEY  (history_id),
+  KEY resource_id_and_type (resource_id,resource_type)
 ) $collate
 SQL;
 
@@ -107,6 +123,36 @@ SQL;
 					isset( $result[ $this->db_table ] ) ? $result[ $this->db_table ] : '',
 				)
 			);
+		}
+	}
+
+	/**
+	 * Alter the database table to support various resources having children.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @return void
+	 */
+	public function alter_table_for_child_resource_support() {
+		if ( $this->wp_db->get_var( "SHOW COLUMNS FROM {$this->db_table} LIKE 'variation_id'" ) ) {
+			$this->wp_db->query( "ALTER TABLE {$this->db_table} RENAME COLUMN `variation_id` TO `child_id`" );
+			$this->logger->info( 'Renamed `variation_id` column to `child_id`.' );
+		}
+		if ( ! $this->wp_db->get_var( "SHOW COLUMNS FROM {$this->db_table} LIKE 'child_type'" ) ) {
+			$this->wp_db->query(
+				"ALTER TABLE {$this->db_table} ADD `child_type` varchar(32) NOT NULL AFTER `resource_id`"
+			);
+			$this->logger->info( 'Added `child_type` column.' );
+		}
+		if ( $this->wp_db->get_var( "SHOW COLUMNS FROM {$this->db_table} LIKE 'type'" ) ) {
+			$this->wp_db->query( "ALTER TABLE {$this->db_table} RENAME COLUMN `type` TO `event_type`" );
+			$this->logger->info( 'Renamed `type` column to `event_type`.' );
+		}
+		if ( ! $this->wp_db->get_var( "SHOW COLUMNS FROM {$this->db_table} LIKE 'event_topic'" ) ) {
+			$this->wp_db->query(
+				"ALTER TABLE {$this->db_table} ADD `event_topic` varchar(128) NOT NULL AFTER `event_type`"
+			);
+			$this->logger->info( 'Added `event_topic` column.' );
 		}
 	}
 

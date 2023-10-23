@@ -1,9 +1,10 @@
 <?php
 
-namespace OM4\WooCommerceZapier\TaskHistory;
+namespace OM4\WooCommerceZapier\TaskHistory\Task;
 
 use OM4\WooCommerceZapier\Exception\InvalidTaskException;
 use OM4\WooCommerceZapier\Helper\WordPressDB;
+use OM4\WooCommerceZapier\TaskHistory\Task\Task;
 use WC_Data;
 use WC_Object_Data_Store_Interface;
 
@@ -106,9 +107,11 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 				'webhook_id'    => $data['webhook_id'],
 				'resource_type' => $data['resource_type'],
 				'resource_id'   => $data['resource_id'],
-				'variation_id'  => $data['variation_id'],
+				'child_type'    => $data['child_type'],
+				'child_id'      => $data['child_id'],
 				'message'       => $data['message'],
-				'type'          => $data['type'],
+				'event_type'    => $data['event_type'],
+				'event_topic'   => $data['event_topic'],
 			)
 		);
 		$task->set_object_read( true );
@@ -174,9 +177,11 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			'webhook_id'    => $task->get_webhook_id( 'edit' ),
 			'resource_type' => $task->get_resource_type( 'edit' ),
 			'resource_id'   => $task->get_resource_id( 'edit' ),
-			'variation_id'  => $task->get_variation_id( 'edit' ),
+			'child_type'    => $task->get_child_type( 'edit' ),
+			'child_id'      => $task->get_child_id( 'edit' ),
 			'message'       => $task->get_message( 'edit' ),
-			'type'          => $task->get_type( 'edit' ),
+			'event_type'    => $task->get_event_type( 'edit' ),
+			'event_topic'   => $task->get_event_topic( 'edit' ),
 		);
 
 		return $data;
@@ -196,6 +201,8 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 
 	/**
 	 * Get Task records matching the specified criteria.
+	 *
+	 * @since 2.8.0 Added support for specifying `resource_type` as an array.
 	 *
 	 * @param array $args Search criteria.
 	 *
@@ -219,7 +226,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	protected function get_tasks_matching_criteria( $args = array() ) {
 		$default_args = array(
 			'resource_id'   => null,
-			'variation_id'  => null,
+			'child_id'      => null,
 			'resource_type' => null,
 			'orderby'       => 'history_id',
 			'order'         => 'DESC',
@@ -232,11 +239,25 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 
 		$query = 'SELECT * FROM ' . $this->get_table_name() . ' WHERE 1=1';
 
-		if ( ! empty( $args['resource_type'] ) && ! empty( $args['resource_id'] ) ) {
-			$query .= $this->wp_db->prepare( ' AND resource_id = %d AND resource_type = %s', absint( $args['resource_id'] ), $args['resource_type'] );
+		if ( ! empty( $args['resource_id'] ) ) {
+			$query .= $this->wp_db->prepare( ' AND resource_id = %d', absint( $args['resource_id'] ) );
 		}
-		if ( ! is_null( $args['variation_id'] ) ) {
-			$query .= $this->wp_db->prepare( ' AND variation_id = %d', absint( $args['variation_id'] ) );
+		if ( ! empty( $args['resource_type'] ) ) {
+			if ( \is_string( $args['resource_type'] ) ) {
+				// A single resource type.
+				$query .= $this->wp_db->prepare( ' AND resource_type = %s', $args['resource_type'] );
+			} elseif ( \is_array( $args['resource_type'] ) ) {
+				/**
+				 * List of resource types.
+				 *
+				 * @var string[] $resource_types
+				 */
+				$resource_types = array_map( 'esc_sql', $args['resource_type'] );
+				$query         .= ' AND resource_type IN (\'' . implode( '\', \'', $resource_types ) . '\')';
+			}
+		}
+		if ( ! is_null( $args['child_id'] ) ) {
+			$query .= $this->wp_db->prepare( ' AND child_id = %d', absint( $args['child_id'] ) );
 		}
 
 		if ( true === $args['count'] ) {
@@ -291,7 +312,9 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			'%d',
 			'%s',
 			'%d',
+			'%s',
 			'%d',
+			'%s',
 			'%s',
 			'%s',
 		);
@@ -306,7 +329,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	 */
 	public function get_trigger_task_count() {
 		$results = $this->wp_db->get_results(
-			'SELECT webhook_id, resource_type, count(*) AS count FROM ' . $this->get_table_name() . " WHERE type='trigger' GROUP BY webhook_id, resource_type ORDER BY webhook_id DESC",
+			'SELECT webhook_id, resource_type, count(*) AS count FROM ' . $this->get_table_name() . " WHERE event_type='trigger' GROUP BY webhook_id, resource_type ORDER BY webhook_id DESC",
 			ARRAY_A
 		);
 
@@ -329,7 +352,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	 */
 	public function get_action_task_counts() {
 		$results = $this->wp_db->get_results(
-			'SELECT resource_type, count(*) AS count FROM ' . $this->get_table_name() . " WHERE type='action' GROUP BY resource_type ORDER BY resource_type ASC",
+			'SELECT resource_type, count(*) AS count FROM ' . $this->get_table_name() . " WHERE event_type='action' GROUP BY resource_type ORDER BY resource_type ASC",
 			ARRAY_A
 		);
 

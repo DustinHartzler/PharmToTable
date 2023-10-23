@@ -2,7 +2,7 @@
 
 namespace OM4\WooCommerceZapier\WooCommerceResource\Product;
 
-use OM4\WooCommerceZapier\Webhook\Trigger\Trigger;
+use OM4\WooCommerceZapier\Webhook\Trigger;
 use OM4\WooCommerceZapier\WooCommerceResource\CustomPostTypeResource;
 use WC_Product;
 
@@ -188,53 +188,4 @@ class ProductResource extends CustomPostTypeResource {
 			do_action( 'wc_zapier_product_stock_low', $product->get_id() );
 		}
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @param int $resource_id  Resource ID.
-	 * @param int $variation_id Variation ID.
-	 *
-	 * @return string|null
-	 */
-	public function get_description( $resource_id, $variation_id = 0 ) {
-		if ( 0 === $variation_id ) {
-			// Product (not a variation).
-			$object = \wc_get_product( $resource_id );
-			if ( ! is_null( $object ) && ! is_bool( $object ) && is_a( $object, 'WC_Product' ) && 'trash' !== $object->get_status() ) {
-				return \sprintf(
-				/* translators: 1: Product ID, 2: Product Formatted Name */
-					__( 'Product #%1$d (%2$s)', 'woocommerce-zapier' ),
-					$object->get_id(),
-					// Ensure the product ID is not included in the formatted name if the product does not have a SKU.
-					\trim( str_replace( \sprintf( '(#%d)', $object->get_id() ), '', $object->get_formatted_name() ) )
-				);
-			}
-			return null;
-		}
-
-		// Product variation.
-		$object = \wc_get_product( $variation_id );
-		if ( ! is_null( $object ) && ! is_bool( $object ) && is_a( $object, 'WC_Product' ) && 'trash' !== $object->get_status() ) {
-			return \sprintf(
-			/* translators: 1: Variation ID, 2: Variation Formatted Name */
-				__( 'Variation #%1$d (%2$s)', 'woocommerce-zapier' ),
-				$object->get_id(),
-				// Ensure the product ID is not included in the formatted name if the product does not have a SKU.
-				\trim(
-					str_replace(
-						'  ',
-						' ',
-						str_replace(
-							\sprintf( '(#%d)', $object->get_id() ),
-							'',
-							\wp_strip_all_tags( \str_replace( '<span', ' <span', $object->get_formatted_name() ) )
-						)
-					)
-				)
-			);
-		}
-		return null;
-	}
-
 }

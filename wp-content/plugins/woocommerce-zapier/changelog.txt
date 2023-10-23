@@ -1,15 +1,68 @@
-=== WooCommerce Zapier Changelog ===
+*** WooCommerce Zapier Changelog ***
+
+2023-10-20 - version 2.9.0
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-9-0-subscription-notes
+* New: Subscription Notes can be created using the "Create Subscription Note" action. PR#675
+* New: Subscription Notes can be found using the "Find Subscription Note" action. PR#675
+* New: "Subscription Note Created" trigger rule. PR#675
+* New: "Subscription Note Deleted" trigger rule. PR#675
+* New: Add Subscription Notes REST API endpoint. PR#675
+* Update: Marked as compatible with WooCommerce Subscriptions v5.6. PR#675
+* Fix: Ensure that **Find Order Note** action only returns notes from orders. PR#675
+
+2023-10-16 - version 2.8.0
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-8-0-order-notes/
+* New: Order Notes can be created using the "Create Order Note" action. PR #663
+* New: Order Notes can be found using the "Find Order Note" action. PR #663
+* New: "Order Note Created" trigger rule. PR #663
+* New: "Order Note Deleted" trigger rule. PR #663
+* New: Add Order Notes REST API endpoint. PR #663
+* Change: More detailed task history records. Simplified task history display. PR #670
+* Update: Marked as compatible with WooCommerce v8.2. PR #673
+* Update: Marked as compatible with WordPress v6.3 PR #660
+* Fix: Avoid unnecessary database queries on WooCommerce Zapier Task History screen and metaboxes. PR #655
+
+2023-08-22 - version 2.7.3
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-7-3-maintenance-release/
+* Fix: Ensure "Order Updated" trigger rule does not trigger when trashing an order on WooCommerce 8.0 with HPOS enabled and HPOS sync enabled. PR #636
+* Change: Improve performance by adding a new INDEX to the Zapier Task History database table. PR #652
+* Update: Compatibility with WooCommerce 8.0. PR #636
+* Update: Marked as compatible with WooCommerce Subscriptions v5.4. PR #636
+* Update: Marked as compatible with WooCommerce Bookings v2.0.x. PR #636
+
+2023-08-01 - version 2.7.2
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-7-2-maintenance-release/
+* Fix: Fatal error in "WooCommerce Zapier History" metabox for Orders and Subscriptions when HPOS is disabled. PR #641
+
+2023-08-01 - version 2.7.1
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-7-1-maintenance-release/
+* Fix: The "WooCommerce Zapier History" metabox displaying empty on the Edit Order screen. PR #635
+* Fix: Subscriptions REST API response for sample data and subscription search. PR #638
+* Fix: Subscription Trigger data payload when HPOS is enabled. PR #638
+
+2023-07-25 - version 2.7.0
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-7-hpos-compatibility/
+* New: Add support for WooCommerce High-Performance Order Storage (HPOS). PR #619 #621 #623 #624
+* Update: Minimum required WordPress version is 6.0.0. PR #622
+* Update: Minimum required WooCommerce version is 6.5.0. PR #622
+* Update: Minimum required WooCommerce Bookings version is 1.15.55. PR #622
+* Update: Minimum required WooCommerce Subscriptions version is 4.2.0. PR #622
+* Update: Marked as compatible with WooCommerce 7.9. PR #625
+* Update: Marked as compatible with WooCommerce Bookings 2.0. PR #625
+* Update: Marked as compatible with WooCommerce Subscriptions v5.3. #628
+* Fix: Ensure default adjustment type for "Update Product Price" action is valid. PR #617
+* Other: Security: Ensure Bookings trigger/webhook sending checks webhook user permissions. PR #623
 
 2023-06-08 - version 2.6.0
 * Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-6-0-full-product-variation-support/
 * New: Product variations can be created using the "Create Product" action. PR #606, PR #612
 * New: Product variations can be updated using the "Update Product" action. PR #606, PR #612
 * New: Product variations can be found using the "Find Product" action. PR #606, PR #612
-* New: "Product stock status changed (any status)" trigger rule. PR ##609
-* New: "Product stock status changed to in stock" trigger rule. PR ##609
-* New: "Product stock status changed to on backorder" trigger rule. PR ##609
-* New: "Product stock status changed to out of stock" trigger rule. PR ##609
-* New: "Product stock low" trigger rule. PR ##609
+* New: "Product stock status changed (any status)" trigger rule. PR #609
+* New: "Product stock status changed to in stock" trigger rule. PR #609
+* New: "Product stock status changed to on backorder" trigger rule. PR #609
+* New: "Product stock status changed to out of stock" trigger rule. PR #609
+* New: "Product stock low" trigger rule. PR #609
 * New: Add "Update Product Price" REST API endpoint, for use with the new "Update Product Price" action. PR #608
 * Change: Product actions now checking both products and product variation permissions. PR #606
 * Change: Trigger sample data now includes product variations. PR #606

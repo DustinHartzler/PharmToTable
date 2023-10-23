@@ -75,7 +75,11 @@ class Resources {
 	 */
 	public function woocommerce_valid_webhook_resources( $resources ) {
 		foreach ( $this->resource_manager->get_enabled() as $resource ) {
-			if ( ! is_null( $resource->get_webhook_payload() ) ) {
+			if (
+				! is_null( $resource->get_webhook_payload() ) &&
+				! in_array( $resource->get_key(), $resources, true )
+			) {
+				// Resource builds its own payload, and is not already in the list of supported webhook resources.
 				$resources[] = $resource->get_key();
 			}
 		}
@@ -113,6 +117,7 @@ class Resources {
 			foreach ( $resource->get_webhook_triggers() as $trigger ) {
 				$topic_hooks[ $trigger->get_key() ] = $trigger->get_actions();
 			}
+			$topic_hooks = $resource->webhook_topic_hooks( $topic_hooks );
 		}
 		return $topic_hooks;
 	}
@@ -163,7 +168,7 @@ class Resources {
 	/**
 	 * Retrieve the list of available WooCommerce Webhook Topics.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	public function get_topics() {
 		if ( ! is_null( self::$topics ) ) {
@@ -183,25 +188,5 @@ class Resources {
 			self::$topics[ $topic_key ] = trim( $topic_name );
 		}
 		return self::$topics;
-	}
-
-	/**
-	 * Fill a list of available WooCommerce Webhook Topics.
-	 *
-	 * @param array $topics The topics array.
-	 *
-	 * @return void
-	 */
-	public function set_topics( $topics ) {
-		self::$topics = $topics;
-	}
-
-	/**
-	 * Retrieve the list of available WooCommerce Webhook Topics.
-	 *
-	 * @return boolean
-	 */
-	public function is_set() {
-		return ! is_null( self::$topics );
 	}
 }

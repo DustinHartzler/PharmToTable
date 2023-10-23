@@ -5,7 +5,8 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Product\Stock;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\Event;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductUpdatesTrait;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\VariationTypesTrait;
 use WC_REST_Controller;
@@ -55,21 +56,21 @@ class Controller extends WC_REST_Controller {
 	protected $logger;
 
 	/**
-	 * TaskDataStore instance.
+	 * ProductTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var ProductTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param Logger        $logger     Logger instance.
-	 * @param TaskDataStore $data_store TaskDataStore instance.
+	 * @param Logger             $logger       Logger instance.
+	 * @param ProductTaskCreator $task_creator OrderTaskCreator instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
+	public function __construct( Logger $logger, ProductTaskCreator $task_creator ) {
+		$this->logger       = $logger;
+		$this->task_creator = $task_creator;
 	}
 
 	/**
@@ -192,18 +193,19 @@ class Controller extends WC_REST_Controller {
 		$product->set_stock_quantity( $new_quantity );
 		$product->save();
 
+		$event        = Event::action_update( $this->resource_type );
+		$event->topic = 'product.update_stock';
+		$event->name  = __( 'Update Product Stock Quantity', 'woocommerce-zapier' );
+		$id           = 0 === $product->get_parent_id() ? $product->get_id() : $product->get_parent_id();
+		$child_id     = 0 === $product->get_parent_id() ? 0 : $product->get_id();
+		$this->task_creator->record( $event, $id, $child_id );
+
 		$response = array(
 			'id'             => $product->get_id(),
 			'sku'            => $product->get_sku( 'edit' ),
 			'stock_quantity' => $product->get_stock_quantity( 'edit' ),
 			'stock_status'   => $product->get_stock_status( 'edit' ),
 		);
-		$message  = __( 'Updated stock quantity via Zapier', 'woocommerce-zapier' );
-		if ( $product->get_parent_id() === 0 ) {
-			$this->create_task( $product->get_id(), $message );
-		} else {
-			$this->create_task( $product->get_parent_id(), $message, $product->get_id() );
-		}
 		return rest_ensure_response( $response );
 	}
 }

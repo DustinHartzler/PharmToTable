@@ -2,11 +2,13 @@
 
 namespace OM4\WooCommerceZapier\TaskHistory;
 
+use Automattic\WooCommerce\Admin\Overrides\Order;
 use OM4\WooCommerceZapier\ContainerService;
 use OM4\WooCommerceZapier\TaskHistory\ListTable;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\WooCommerceResource\Definition;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
+use WC_Subscription;
 use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
@@ -86,7 +88,11 @@ class UI {
 				array( $this, 'metabox_output' ),
 				$resource->get_metabox_screen_name(),
 				'normal',
-				'default'
+				'default',
+				// $args passed to the metabox_output() callback function.
+				array(
+					'resource' => $resource->get_key(),
+				)
 			);
 		}
 	}
@@ -110,17 +116,23 @@ class UI {
 	/**
 	 * Output the Task History Metabox content.
 	 *
-	 * Executed automatically by WordPress when the metabox needs to be displayed on a Custom Post Type edit screen.
+	 * Executed automatically by WordPress when the metabox needs to be displayed on a resource's edit screen.
 	 *
-	 * @param WP_Post $post The order/post object.
+	 * @since 2.7.1 Added $args parameter.
+	 *
+	 * @param mixed $object  The post/object instance being displayed.
+	 * @param array $args    Callback arguments.
 	 *
 	 * @return void
 	 */
-	public function metabox_output( WP_Post $post ) {
+	public function metabox_output( $object, $args ) {
 		$this->list_table = $this->container->get( ListTable::class );
 		foreach ( $this->resources_with_metaboxes as $resource ) {
-			if ( $post->post_type === $resource->get_metabox_screen_name() ) {
-				$this->list_table->enable_metabox_mode( $resource->get_key(), intval( $post->ID ) );
+			if ( $args['args']['resource'] === $resource->get_key() ) {
+				$this->list_table->enable_metabox_mode(
+					$resource->get_key(),
+					$resource->get_resource_id_from_object( $object )
+				);
 				$this->list_table->prepare_items();
 				$this->list_table->display();
 				return;

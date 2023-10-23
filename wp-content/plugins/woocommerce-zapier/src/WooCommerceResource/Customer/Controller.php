@@ -5,7 +5,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Customer;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\WooCommerceResource\Customer\CustomerTaskCreator;
 use WC_REST_Customers_Controller;
 
 defined( 'ABSPATH' ) || exit;
@@ -41,20 +41,20 @@ class Controller extends WC_REST_Customers_Controller {
 	protected $logger;
 
 	/**
-	 * TaskDataStore instance.
+	 * CustomerTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var CustomerTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param Logger        $logger     Logger instance.
-	 * @param TaskDataStore $data_store TaskDataStore instance.
+	 * @param Logger              $logger     Logger instance.
+	 * @param CustomerTaskCreator $task_creator CustomerTaskCreator instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
+	public function __construct( Logger $logger, CustomerTaskCreator $task_creator ) {
+		$this->logger       = $logger;
+		$this->task_creator = $task_creator;
 	}
 }

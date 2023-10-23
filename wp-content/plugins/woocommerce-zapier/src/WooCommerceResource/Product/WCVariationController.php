@@ -4,7 +4,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Product;
 
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\TaskHistory\Listener\APIListenerTrait;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
 use WC_REST_Product_Variations_Controller;
 
 /**
@@ -33,22 +33,22 @@ class WCVariationController extends WC_REST_Product_Variations_Controller {
 	protected $logger;
 
 	/**
-	 * TaskDataStore instance.
+	 * ProductTaskCreator instance.
 	 *
-	 * @var TaskDataStore
+	 * @var ProductTaskCreator
 	 */
-	protected $data_store;
+	protected $task_creator;
 
 	/**
 	 * Constructor.
 	 *
 	 * Not calling parent constructor to avoid add_filter() call in \WC_REST_Products_V2_Controller::__construct().
 	 *
-	 * @param  Logger        $logger  Logger instance.
-	 * @param  TaskDataStore $data_store  TaskDataStore instance.
+	 * @param  Logger             $logger        Logger instance.
+	 * @param  ProductTaskCreator $task_creator  ProductTaskCreator instance.
 	 */
-	public function __construct( Logger $logger, TaskDataStore $data_store ) {
-		$this->logger     = $logger;
-		$this->data_store = $data_store;
+	public function __construct( Logger $logger, ProductTaskCreator $task_creator ) {
+		$this->logger       = $logger;
+		$this->task_creator = $task_creator;
 	}
 }

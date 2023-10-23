@@ -1,10 +1,11 @@
 <?php
 
-namespace OM4\WooCommerceZapier\TaskHistory;
+declare(strict_types=1);
+
+namespace OM4\WooCommerceZapier\TaskHistory\Task;
 
 use OM4\WooCommerceZapier\Exception\InvalidTaskException;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
-use OM4\WooCommerceZapier\Webhook\ZapierWebhook;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use WC_Data;
 use WC_DateTime;
 
@@ -14,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Represents as single Task History Task record.
  *
  * @since 2.0.0
+ * @since 2.8.0 Moved from OM4\WooCommerceZapier\TaskHistory\Task to OM4\WooCommerceZapier\TaskHistory\Task\Task.
  */
 class Task extends WC_Data {
 
@@ -25,11 +27,13 @@ class Task extends WC_Data {
 	protected $data = array(
 		'date_time'     => null,
 		'webhook_id'    => null,
-		'resource_type' => null,
 		'resource_id'   => null,
-		'variation_id'  => 0,
+		'resource_type' => null,
+		'child_id'      => 0,
+		'child_type'    => '',
 		'message'       => '',
-		'type'          => '',
+		'event_type'    => '',
+		'event_topic'   => '',
 	);
 
 	/**
@@ -63,9 +67,11 @@ class Task extends WC_Data {
 		} elseif ( is_numeric( $task ) ) {
 			$this->set_id( $task );
 		} elseif ( is_array( $task ) ) {
+			// Populate with the supplied data.
 			$this->set_id( $task['history_id'] );
 			$this->set_props( $task );
 			$this->set_object_read( true );
+			return;
 		}
 
 		// If we have an ID, load the task from the DB.
@@ -78,7 +84,7 @@ class Task extends WC_Data {
 			}
 		} else {
 			// Creating a brand new Task.
-			$this->set_date_time( new WC_DateTime() );
+			$this->set_date_time( (string) new WC_DateTime() );
 			$this->set_object_read( true );
 		}
 
@@ -114,15 +120,6 @@ class Task extends WC_Data {
 	}
 
 	/**
-	 * Get the webhook.
-	 *
-	 * @return ZapierWebhook The webhook.
-	 */
-	public function get_webhook() {
-		return new ZapierWebhook( $this->get_webhook_id() );
-	}
-
-	/**
 	 * Get resource type.
 	 *
 	 * @param  string $context Get context.
@@ -146,14 +143,30 @@ class Task extends WC_Data {
 	}
 
 	/**
-	 * Get variation id.
+	 * Get child id.
 	 *
 	 * @param  string $context Get context.
 	 *
+	 * @since 2.8.0 Renamed get_variation_id() to get_child_id().
+	 *
 	 * @return integer
 	 */
-	public function get_variation_id( $context = 'view' ) {
-		return absint( $this->get_prop( 'variation_id', $context ) );
+	public function get_child_id( $context = 'view' ) {
+		return absint( $this->get_prop( 'child_id', $context ) );
+	}
+
+	/**
+	 * Get child type (eg variation, order_notes, etc).
+	 *
+	 * @param  string $context Get context.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @return string
+	 */
+	public function get_child_type( $context = 'view' ) {
+		$child_type = $this->get_prop( 'child_type', $context );
+		return \is_scalar( $child_type ) ? \strval( $child_type ) : '';
 	}
 
 	/**
@@ -166,19 +179,34 @@ class Task extends WC_Data {
 	public function get_message( $context = 'view' ) {
 		$message = $this->get_prop( 'message', $context );
 		return \is_scalar( $message ) ? \strval( $message ) : '';
-
 	}
 
 	/**
-	 * Get type.
+	 * Get event_type (action or trigger).
 	 *
 	 * @param  string $context Get context.
 	 *
+	 * @since 2.8.0 Renamed get_type() to get_event_type().
+	 *
 	 * @return string
 	 */
-	public function get_type( $context = 'view' ) {
-		$type = $this->get_prop( 'type', $context );
-		return \is_scalar( $type ) ? \strval( $type ) : '';
+	public function get_event_type( $context = 'view' ) {
+		$event_type = $this->get_prop( 'event_type', $context );
+		return \is_scalar( $event_type ) ? \strval( $event_type ) : '';
+	}
+
+	/**
+	 * Get event_topic (eg Resource updated, Create Resource,etc).
+	 *
+	 * @param  string $context Get context.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @return string
+	 */
+	public function get_event_topic( $context = 'view' ) {
+		$event_topic = $this->get_prop( 'event_topic', $context );
+		return \is_scalar( $event_topic ) ? \strval( $event_topic ) : '';
 	}
 
 	/*
@@ -235,14 +263,27 @@ class Task extends WC_Data {
 	}
 
 	/**
-	 * Set variation id.
+	 * Set child id.
 	 *
 	 * @param int $value Value to set.
 	 *
+	 * @since 2.8.0 Renamed set_variation_id() to set_child_id().
+	 *
 	 * @return void
 	 */
-	public function set_variation_id( $value ) {
-		$this->set_prop( 'variation_id', absint( $value ) );
+	public function set_child_id( $value ) {
+		$this->set_prop( 'child_id', absint( $value ) );
+	}
+
+	/**
+	 * Set child type (eg variation, order_notes, etc).
+	 *
+	 * @param string $value Value to set.
+	 *
+	 * @return void
+	 */
+	public function set_child_type( $value ) {
+		$this->set_prop( 'child_type', $value );
 	}
 
 	/**
@@ -257,13 +298,24 @@ class Task extends WC_Data {
 	}
 
 	/**
-	 * Set type.
+	 * Set event_type.
 	 *
 	 * @param string $value Value to set.
 	 *
 	 * @return void
 	 */
-	public function set_type( $value ) {
-		$this->set_prop( 'type', $value );
+	public function set_event_type( $value ) {
+		$this->set_prop( 'event_type', $value );
+	}
+
+	/**
+	 * Set event_topic.
+	 *
+	 * @param string $value Value to set.
+	 *
+	 * @return void
+	 */
+	public function set_event_topic( $value ) {
+		$this->set_prop( 'event_topic', $value );
 	}
 }

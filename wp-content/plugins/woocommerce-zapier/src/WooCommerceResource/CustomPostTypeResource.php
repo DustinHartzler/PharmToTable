@@ -3,6 +3,7 @@
 namespace OM4\WooCommerceZapier\WooCommerceResource;
 
 use OM4\WooCommerceZapier\Exception\InvalidImplementationException;
+use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,5 +39,17 @@ abstract class CustomPostTypeResource extends Base {
 			throw new InvalidImplementationException( '`metabox_screen_name` needs to be set', 1 );
 		}
 		return $this->metabox_screen_name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @since 2.7.1
+	 *
+	 * @param WP_Post $object Object instance.
+	 * @return int
+	 */
+	public function get_resource_id_from_object( $object ) {
+		return $object->ID;
 	}
 }

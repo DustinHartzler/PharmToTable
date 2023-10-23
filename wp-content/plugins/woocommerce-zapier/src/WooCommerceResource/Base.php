@@ -4,6 +4,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource;
 
 use OM4\WooCommerceZapier\Exception\InvalidImplementationException;
 use OM4\WooCommerceZapier\WooCommerceResource\Definition;
+
 use ReflectionObject;
 
 defined( 'ABSPATH' ) || exit;
@@ -71,6 +72,7 @@ abstract class Base implements Definition {
 		if ( ! class_exists( $controller_class ) ) {
 			throw new InvalidImplementationException( 'Controller class not found', 1 );
 		}
+		// @phpstan-ignore-next-line All controllers extend WP_REST_Controller.
 		return $controller_class;
 	}
 
@@ -86,6 +88,15 @@ abstract class Base implements Definition {
 	 */
 	public function get_webhook_triggers() {
 		return array();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param array $topic_hooks Topic hooks.
+	 */
+	public function webhook_topic_hooks( $topic_hooks ) {
+		return $topic_hooks;
 	}
 
 	/**

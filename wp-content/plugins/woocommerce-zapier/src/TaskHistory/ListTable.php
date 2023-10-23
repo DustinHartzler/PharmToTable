@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier\TaskHistory;
 
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
+use OM4\WooCommerceZapier\TaskHistory\Task\Task;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\Webhook\Resources;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
 use WP_List_Table;
@@ -37,25 +41,11 @@ class ListTable extends WP_List_Table {
 	protected $metabox_mode = false;
 
 	/**
-	 * Whether this table should show the resource column.
+	 * Resource type(s) (used when displaying in metabox mode).
 	 *
-	 * @var bool
+	 * @var string[]
 	 */
-	protected $show_resource_column = true;
-
-	/**
-	 * Whether this table should show a link to the resource in the resource column.
-	 *
-	 * @var bool
-	 */
-	protected $show_link_in_resource_column = true;
-
-	/**
-	 * Resource type (used when displaying in metabox mode).
-	 *
-	 * @var string
-	 */
-	protected $resource_type;
+	protected $resource_types;
 
 	/**
 	 * Resource ID (used when displaying in metabox mode).
@@ -138,13 +128,8 @@ class ListTable extends WP_List_Table {
 	 * @return void
 	 */
 	public function enable_metabox_mode( $resource_type, $resource_id ) {
-		$this->metabox_mode         = true;
-		$this->show_resource_column = false;
-		if ( 'product' === $resource_type ) {
-			$this->show_resource_column         = true;
-			$this->show_link_in_resource_column = false;
-		}
-		$this->resource_type  = $resource_type;
+		$this->metabox_mode   = true;
+		$this->resource_types = array( $resource_type );
 		$this->resource_id    = $resource_id;
 		$this->items_per_page = 10;
 	}
@@ -163,7 +148,7 @@ class ListTable extends WP_List_Table {
 
 		if ( $this->metabox_mode ) {
 			$args['resource_id']   = $this->resource_id;
-			$args['resource_type'] = $this->resource_type;
+			$args['resource_type'] = $this->resource_types;
 		}
 
 		// Pagination.
@@ -187,11 +172,7 @@ class ListTable extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns['date_time'] = __( 'Date/Time', 'woocommerce-zapier' );
-		if ( $this->show_resource_column ) {
-			$columns['resource'] = __( 'Resource', 'woocommerce-zapier' );
-		}
-		$columns['message'] = __( 'Message', 'woocommerce-zapier' );
-
+		$columns['message']   = __( 'Message', 'woocommerce-zapier' );
 		return $columns;
 	}
 
@@ -210,6 +191,27 @@ class ListTable extends WP_List_Table {
 			return;
 		}
 		parent::display_tablenav( $which );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param string $which Required by WordPress.
+	 */
+	protected function bulk_actions( $which = '' ) {
+		if ( $this->metabox_mode ) {
+			foreach ( $this->resource_types as $resource_type ) {
+				if ( in_array( $resource_type, array( 'order', 'subscription' ), true ) ) {
+					// Don't show bulk actions for orders or subscriptions.
+					// Ensures that the bulk actions dropdown is not shown when in metabox mode for orders when HPOS is enabled.
+					return;
+				}
+			}
+		}
+		// @phpstan-ignore-next-line Function signature mismatching in parent.
+		parent::bulk_actions( $which );
 	}
 
 	/**
@@ -248,72 +250,22 @@ class ListTable extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_message( $task ) {
-		if ( 'trigger' === $task->get_type() ) {
-			// Trigger-based task.
-			$message = $task->get_message();
-			if (
-				$task->get_webhook()->get_id() > 0 &&
-				false === strpos( $message, $this->get_webhook_topic_name( $task->get_webhook()->get_topic() ) )
-			) {
-				// A historical Task record with no denormalized webhook details, and the webhook still exists.
-				// Add webhook details on to the end of the message.
-				$message = sprintf(
-				// Translators: 1: Message. 2: Webhook Topic Name.
-					__( '%1$s via the <em>%2$s</em> trigger', 'woocommerce-zapier' ),
-					$message,
-					$this->get_webhook_topic_name( $task->get_webhook()->get_topic() )
-				);
-			}
-
-			return wp_kses_post( $message );
-		}
-		// Action-based task.
-		return esc_html( $task->get_message() );
-	}
-
-	/**
-	 * Resource column output.
-	 *
-	 * @param Task $task Task History Record.
-	 *
-	 * @return string
-	 */
-	public function column_resource( $task ) {
-		$id       = $task->get_resource_id();
 		$resource = $this->resource_manager->get_resource( $task->get_resource_type() );
-		if ( false !== $resource ) {
-			$resource_name = $resource->get_name();
-			if ( $resource->is_enabled() ) {
-				$resource_description = $resource->get_description( $id, $task->get_variation_id() );
-				$resource_url         = $resource->get_admin_url( $id );
-			}
-		}
-
-		if ( ! isset( $resource_name ) ) {
-			// Task History record is for a non-existent (invalid) resource.
+		if ( ! $resource ) {
 			return '';
 		}
-
-		if ( isset( $resource_description ) && isset( $resource_url ) ) {
-			// Resource still exists.
-			if ( $this->show_link_in_resource_column ) {
-				// Display it with a clickable link to the resource.
-				return wp_kses_post(
-					sprintf(
-						// translators: 1: Resource Edit URL. 2: Resource Description.
-						__( '<a href="%1$s">%2$s</a>', 'woocommerce-zapier' ),
-						esc_attr( $resource_url ),
-						$resource_description
-					)
-				);
-			}
-			// Display it without a clickable link to the resource.
-			return wp_kses_post( $resource_description );
-		} else {
-			// Non-existent resource.
-			// Translators: 1: Resource Name. 2: Resource ID.
-			return esc_html( sprintf( __( '%1$s #%2$d', 'woocommerce-zapier' ), $resource_name, $id ) );
+		if ( $this->metabox_mode ) {
+			return $task->get_message();
 		}
+		$resource_url = $resource->get_admin_url( $task->get_resource_id() );
+		return wp_kses_post(
+			\sprintf(
+				// Translators: 1: Resource Edit URL. 2: Task history message.
+				__( '<a href="%1$s">%2$s</a>', 'woocommerce-zapier' ),
+				esc_attr( $resource_url ),
+				$task->get_message()
+			)
+		);
 	}
 
 	/**
@@ -325,24 +277,8 @@ class ListTable extends WP_List_Table {
 		// CSS that specifies column widths.
 		?>
 <style type="text/css">
-.wp-list-table.task-history .column-date_time { width: 15%; }
-.wp-list-table.task-history .column-resource { width: 40%; }
-.wp-list-table.task-history .column-message { width: 45%; }
-		<?php
-		if ( ! $this->show_resource_column ) {
-			// No Resource column, so adjust widths and override WooCommerce width rules.
-			?>
-
-.wp-list-table.task-history .column-date_time { width: 25% !important; }
-.wp-list-table.task-history .column-message { width: 75% !important; }
-.wp-list-table.task-history tfoot { display: none; }
-/* Ensure Order screen's Task History metabox displays the total number of items. */
-.post-type-shop_order #woocommerce-zapier-history .tablenav .one-page .displaying-num {
-	display: inline-block;
-}
-			<?php
-		}
-		?>
+.wp-list-table.task-history .column-date_time { width: 20%; }
+.wp-list-table.task-history .column-message { width: 80%; }
 </style>
 		<?php
 		parent::display();

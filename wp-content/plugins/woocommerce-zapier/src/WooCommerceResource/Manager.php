@@ -6,6 +6,7 @@ use OM4\WooCommerceZapier\ContainerService;
 use OM4\WooCommerceZapier\WooCommerceResource\Coupon\CouponResource;
 use OM4\WooCommerceZapier\WooCommerceResource\Customer\CustomerResource;
 use OM4\WooCommerceZapier\WooCommerceResource\Definition;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNoteResource;
 use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderResource;
 use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductResource;
 use ReflectionClass;
@@ -53,6 +54,7 @@ class Manager {
 		$this->resources[] = $this->container->get( CustomerResource::class );
 		$this->resources[] = $this->container->get( CouponResource::class );
 		$this->resources[] = $this->container->get( OrderResource::class );
+		$this->resources[] = $this->container->get( OrderNoteResource::class );
 		$this->resources[] = $this->container->get( ProductResource::class );
 
 		/**

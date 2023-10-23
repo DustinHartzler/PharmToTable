@@ -3,9 +3,11 @@
 namespace OM4\WooCommerceZapier\Plugin\Subscriptions;
 
 use OM4\WooCommerceZapier\API\API;
+use OM4\WooCommerceZapier\ContainerService;
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
 use OM4\WooCommerceZapier\Logger;
 use OM4\WooCommerceZapier\Plugin\Base;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteResource;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\SubscriptionResource;
 use WC_Subscription;
 use WC_Subscriptions;
@@ -34,11 +36,11 @@ class Plugin extends Base {
 	protected $logger;
 
 	/**
-	 * Definition instance.
+	 * ContainerService instance.
 	 *
-	 * @var SubscriptionResource
+	 * @var ContainerService
 	 */
-	protected $resource_definition;
+	protected $container;
 
 	/**
 	 * Name of the third party plugin.
@@ -48,20 +50,22 @@ class Plugin extends Base {
 	/**
 	 * The minimum WooCommerce Subscriptions version that this plugin supports.
 	 */
-	const MINIMUM_SUPPORTED_VERSION = '3.0.0';
+	const MINIMUM_SUPPORTED_VERSION = '4.2.0';
 
 	/**
 	 * Constructor.
 	 *
-	 * @param FeatureChecker       $checker FeatureChecker instance.
-	 * @param Logger               $logger Logger instance.
-	 * @param SubscriptionResource $resource_definition Subscriptions Resource Definition.
+	 * @param FeatureChecker   $checker FeatureChecker instance.
+	 * @param Logger           $logger Logger instance.
+	 * @param ContainerService $container ContainerService instance.
 	 */
-	public function __construct( FeatureChecker $checker, Logger $logger, SubscriptionResource $resource_definition ) {
-		$this->checker             = $checker;
-		$this->logger              = $logger;
-		$this->resource_definition = $resource_definition;
-		$this->resource            = SubscriptionResource::class;
+	public function __construct( FeatureChecker $checker, Logger $logger, ContainerService $container ) {
+		$this->checker     = $checker;
+		$this->logger      = $logger;
+		$this->container   = $container;
+		$this->resources[] = SubscriptionResource::class;
+		$this->resources[] = SubscriptionNoteResource::class;
+
 	}
 
 	/**
@@ -79,7 +83,7 @@ class Plugin extends Base {
 			array( $this, 'add_variable_product_types_to_variation_types' )
 		);
 
-		foreach ( $this->resource_definition->get_webhook_triggers() as $trigger ) {
+		foreach ( $this->container->get( SubscriptionResource::class )->get_webhook_triggers() as $trigger ) {
 			foreach ( $trigger->get_actions() as $action ) {
 				if ( 0 === strpos( $action, 'wc_zapier_' ) ) {
 					$action = str_replace( 'wc_zapier_', '', $action );

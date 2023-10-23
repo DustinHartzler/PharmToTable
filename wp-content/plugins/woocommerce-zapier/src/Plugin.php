@@ -2,6 +2,7 @@
 
 namespace OM4\WooCommerceZapier;
 
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use OM4\WooCommerceZapier\AdminUI;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\Auth\AuthKeyRotator;
@@ -34,7 +35,10 @@ defined( 'ABSPATH' ) || exit;
 class Plugin {
 
 	/** The minimum WooCommerce version that this plugin supports. */
-	const MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION = '6.0.0';
+	const MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION = '6.5.0';
+
+	/** The minimum WooCommerce version that this plugin declares HPOS compatibility with. */
+	const MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION_FOR_HPOS = '7.8.0';
 
 	/** URL to the documentation for this plugin. */
 	const DOCUMENTATION_URL = 'https://docs.om4.io/woocommerce-zapier/';
@@ -114,12 +118,34 @@ class Plugin {
 	 * @return void
 	 */
 	public function before_woocommerce_init() {
+		$this->declare_hpos_compatibility();
+
 		$this->third_party_plugin_compatibility();
 
 		$this->container->get( ResourceManager::class )->initialise();
 		$this->container->get( WebhookDeliveryFilter::class )->initialise();
 		$this->container->get( TriggerListener::class )->initialise();
 		$this->container->get( WebhookResources::class )->initialise();
+	}
+
+	/**
+	 * Declare compatibility (or incompatibility) with WooCommerce's High-Performance Order Storage (HPOS) feature.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @return void
+	 */
+	protected function declare_hpos_compatibility() {
+		if ( ! $this->container->get( FeatureChecker::class )->class_exists( FeaturesUtil::class ) ) {
+			// WooCommerce 7.0 or earlier. HPOS compatibility declaration is not possible.
+			return;
+		}
+		$is_compatible = version_compare( WC_VERSION, self::MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION_FOR_HPOS, '>=' );
+		FeaturesUtil::declare_compatibility(
+			'custom_order_tables',
+			plugin_basename( WC_ZAPIER_PLUGIN_FILE ),
+			$is_compatible
+		);
 	}
 
 	/**
@@ -141,7 +167,6 @@ class Plugin {
 	 */
 	public function woocommerce_init() {
 		$this->container->get( API::class )->initialise();
-
 	}
 
 	/**
@@ -217,17 +242,17 @@ class Plugin {
 		?>
 		<div id="message" class="error">
 			<p>
-				<?php
-				echo esc_html(
-					sprintf(
-						// Translators: %s: WooCommerce Version.
-						__( 'WooCommerce Zapier requires WooCommerce version %s or later. Please update WooCommerce.', 'woocommerce-zapier' ),
-						self::MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION
-					)
-				);
-				?>
+			<?php
+			echo esc_html(
+				sprintf(
+					// Translators: %s: WooCommerce Version.
+					__( 'WooCommerce Zapier requires WooCommerce version %s or later. Please update WooCommerce.', 'woocommerce-zapier' ),
+					self::MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION
+				)
+			);
+			?>
 			</p>
 		</div>
-		<?php
+			<?php
 	}
 }

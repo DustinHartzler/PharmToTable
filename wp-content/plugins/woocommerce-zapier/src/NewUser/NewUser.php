@@ -5,7 +5,7 @@ namespace OM4\WooCommerceZapier\NewUser;
 use OM4\WooCommerceZapier\Auth\KeyDataStore;
 use OM4\WooCommerceZapier\NewUser\NewUserWelcomeNotice;
 use OM4\WooCommerceZapier\Settings;
-use OM4\WooCommerceZapier\TaskHistory\TaskDataStore;
+use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 
 defined( 'ABSPATH' ) || exit;
 
