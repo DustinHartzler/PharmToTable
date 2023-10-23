@@ -98,7 +98,6 @@ if ( ! class_exists( 'AFWC_Rule_Context' ) ) {
 			$valid_product_ids = empty( $valid_product_ids ) ? array_merge( $valid_product_ids, $this->base_context['product_id'] ) : $valid_product_ids;
 			return $valid_product_ids;
 		}
-
 	}
 
 }

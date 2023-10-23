@@ -68,7 +68,6 @@ if ( ! class_exists( 'AFWC_Elementor_Dynamic_Tags' ) ) {
 					'title' => esc_html_x( 'Affiliate Registration Form', 'Elementor dynamic group title for Affiliate registration form ids', 'affiliate-for-woocommerce' ),
 				)
 			);
-
 		}
 
 		/**
@@ -111,7 +110,6 @@ if ( ! class_exists( 'AFWC_Elementor_Dynamic_Tags' ) ) {
 					}
 				}
 			}
-
 		}
 	}
 }

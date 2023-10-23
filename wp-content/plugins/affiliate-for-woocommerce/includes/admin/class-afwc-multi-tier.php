@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       5.4.0
- * @version     1.0.0
+ * @version     1.0.1
  */
 
 // Exit if accessed directly.
@@ -72,7 +72,6 @@ if ( ! class_exists( 'AFWC_Multi_Tier' ) ) {
 			if ( ! empty( $tree ) && is_array( $tree ) ) {
 				return array( $tree );
 			}
-
 		}
 
 		/**
@@ -80,11 +79,10 @@ if ( ! class_exists( 'AFWC_Multi_Tier' ) ) {
 		 *
 		 * @param array $parent_child The array of child and immediate parent.
 		 * @param int   $affiliate_id The affiliate user id.
-		 * @param array $final The resulting array.
 		 *
 		 * @return array children for an affiliate.
 		 */
-		public function build_tree( $parent_child = array(), $affiliate_id = 0, $final = array() ) {
+		public function build_tree( $parent_child = array(), $affiliate_id = 0 ) {
 			$children = array();
 
 			foreach ( $parent_child as $child_id => $parent_id ) {
@@ -105,6 +103,5 @@ if ( ! class_exists( 'AFWC_Multi_Tier' ) ) {
 				'children' => $children,
 			);
 		}
-
 	}
 }

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.1
- * @version     1.1.1
+ * @version     1.1.2
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Affiliate's first name */ ?>
-<p><?php echo sprintf( esc_html_x( 'Hi %s,', 'greeting message for the affiliate', 'affiliate-for-woocommerce' ), esc_html( $affiliate_name ) ); ?></p>
+<p><?php printf( esc_html_x( 'Hi %s,', 'greeting message for the affiliate', 'affiliate-for-woocommerce' ), esc_html( $affiliate_name ) ); ?></p>
 
 <p><?php echo esc_html_x( 'Congratulations on your successful referrals. We just processed your commission payout.', 'congratulating affiliate for successful referrals and payouts', 'affiliate-for-woocommerce' ); ?></p>
 
@@ -29,7 +29,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p><i><?php echo esc_html_x( 'Commission: ', 'title for the commission amount', 'affiliate-for-woocommerce' ); ?></i><?php echo wp_kses_post( $currency_symbol . '' . $commission_amount ); ?></p>
 
 <?php
-if ( 'paypal' === $payment_gateway && ! empty( $paypal_receiver_email ) ) {
+if ( 'paypal' === $payout_method && ! empty( $paypal_receiver_email ) ) {
 	?>
 	<p><i><?php echo esc_html_x( 'PayPal email: ', 'title for the PayPal email', 'affiliate-for-woocommerce' ); ?></i><?php echo esc_html( $paypal_receiver_email ); ?></p>
 	<?php
@@ -45,7 +45,7 @@ if ( ! empty( $payout_notes ) ) {
 <p>
 	<?php
 		/* translators: %1$s: Opening a tag for affiliate my account link %2$s: closing a tag for affiliate my account link */
-		echo sprintf( esc_html_x( 'We have already updated your account with this info. You can %1$slogin to your affiliate dashboard%2$s to track all referrals, payouts and campaigns.', 'message for affiliate to find payout and other information in their account', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', '</a>' );
+		printf( esc_html_x( 'We have already updated your account with this info. You can %1$slogin to your affiliate dashboard%2$s to track all referrals, payouts and campaigns.', 'message for affiliate to find payout and other information in their account', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', '</a>' );
 	?>
 </p>
 

@@ -57,7 +57,6 @@ if ( ! class_exists( 'AFWC_Plan' ) ) {
 				return parent::validate( $context );
 			}
 		}
-
 	}
 
 }

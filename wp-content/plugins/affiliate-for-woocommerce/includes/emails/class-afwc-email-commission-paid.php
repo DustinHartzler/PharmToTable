@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.2
- * @version     1.3.3
+ * @version     1.3.5
  */
 
 // Exit if accessed directly.
@@ -56,7 +56,6 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 
 			// When sending email to customer in this case it is affiliate.
 			$this->customer_email = true;
-
 		}
 
 		/**
@@ -93,11 +92,10 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 			$this->email_args['end_date']              = isset( $this->email_args['to_date'] ) ? $this->email_args['to_date'] : '';
 			$this->email_args['total_referrals']       = isset( $this->email_args['total_referrals'] ) ? $this->email_args['total_referrals'] : '';
 			$this->email_args['payout_notes']          = isset( $this->email_args['payout_notes'] ) ? $this->email_args['payout_notes'] : '';
-			$this->email_args['payment_gateway']       = ! empty( $this->email_args['payment_gateway'] ) ? $this->email_args['payment_gateway'] : '';
+			$this->email_args['payout_method']         = ! empty( $this->email_args['payout_method'] ) ? $this->email_args['payout_method'] : '';
 			$this->email_args['paypal_receiver_email'] = ! empty( $this->email_args['paypal_receiver_email'] ) ? $this->email_args['paypal_receiver_email'] : '';
 
-			$endpoint                                = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-			$this->email_args['my_account_afwc_url'] = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
+			$this->email_args['my_account_afwc_url'] = afwc_myaccount_dashboard_url();
 
 			// For any email placeholders.
 			$this->set_placeholders();
@@ -112,7 +110,6 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 			}
 
 			$this->restore_locale();
-
 		}
 
 		/**
@@ -175,7 +172,6 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 			}
 
 			return '';
-
 		}
 
 		/**
@@ -194,7 +190,7 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 				'end_date'              => $this->email_args['end_date'],
 				'total_referrals'       => $this->email_args['total_referrals'],
 				'payout_notes'          => $this->email_args['payout_notes'],
-				'payment_gateway'       => $this->email_args['payment_gateway'],
+				'payout_method'         => $this->email_args['payout_method'],
 				'paypal_receiver_email' => $this->email_args['paypal_receiver_email'],
 				'my_account_afwc_url'   => $this->email_args['my_account_afwc_url'],
 				'additional_content'    => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
@@ -245,7 +241,6 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 				),
 			);
 		}
-
 	}
 
 

@@ -26,7 +26,6 @@ if ( ! class_exists( 'SA_WC_Compatibility_3_9' ) ) {
 		public static function is_wc_gte_39() {
 			return self::is_wc_greater_than( '3.8.1' );
 		}
-
 	}
 
 }

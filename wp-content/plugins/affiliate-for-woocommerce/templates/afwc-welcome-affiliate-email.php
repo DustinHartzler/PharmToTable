@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.0
- * @version     1.1.3
+ * @version     1.1.5
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Affiliate's first name */ ?>
-<p><?php echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $user_name ) ); ?></p>
+<p><?php printf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $user_name ) ); ?></p>
 
 <?php if ( ! empty( $approval_action ) && 'user_registration' === $approval_action ) { ?>
 	<p><?php echo esc_html_x( 'Your affiliate request has been approved.', 'Affiliate approval message', 'affiliate-for-woocommerce' ); ?></p>
@@ -29,11 +29,28 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><strong><?php echo esc_html__( 'Your personal affiliated link: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $affiliate_link ); ?></p>
 
+<?php if ( ! empty( $use_referral_coupons ) && 'yes' === $use_referral_coupons ) : ?>
+<p>
+	<strong><?php echo esc_html_x( 'Your personal affiliate coupon(s): ', 'Label for affiliate coupons in welcome email', 'affiliate-for-woocommerce' ); ?></strong>
+	<?php
+	if ( ! empty( $contact_email ) ) {
+		printf(
+			/* translators: %1$s: Opening tag with href for the anchor tag  %1$s: Closing tag for the anchor tag */
+			esc_html_x( 'Contact us %1$shere%2$s to get personalized affiliate coupons for your audience.', 'Requesting affiliate coupons to affiliate manager in the welcome email', 'affiliate-for-woocommerce' ),
+			'<a href="mailto:' . esc_attr( sanitize_email( $contact_email ) ) . '">',
+			'</a>'
+		);
+	} else {
+		echo esc_html_x( 'Reply to this email to get personalized affiliate coupons for your audience.', 'Requesting affiliate coupons by replying to the welcome email', 'affiliate-for-woocommerce' );
+	}
+	?>
+</p>
+<?php endif; ?>
 <p><strong><?php echo esc_html_x( 'Your affiliate dashboard', 'affiliate dashboard page text', 'affiliate-for-woocommerce' ); ?></strong></p>
 <p>
 	<?php
 		/* translators: %1$s: Opening a tag for affiliate my account link %2$s: closing a tag for affiliate my account link */
-		echo sprintf( esc_html_x( 'Log in to %1$syour affiliate dashboard%2$s regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard.', 'Message to view the affiliate dashboard', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '">', '</a>' );
+		printf( esc_html_x( 'Log in to %1$syour affiliate dashboard%2$s regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard.', 'Message to view the affiliate dashboard', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '">', '</a>' );
 	?>
 </p>
 
@@ -43,7 +60,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 		echo esc_html_x( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'Instruction to promote the store products with affiliate link', 'affiliate-for-woocommerce' );
 	if ( ! empty( $shop_page ) ) {
 		/* translators: %1$s: Opening a tag for shop page link %2$s: closing a tag for shop page link */
-		echo sprintf( esc_html__( ' %1$sHere is our complete product catalog%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $shop_page ) . '">', '</a>' );
+		printf( esc_html__( ' %1$sHere is our complete product catalog%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $shop_page ) . '">', '</a>' );
 	}
 	?>
 </p>

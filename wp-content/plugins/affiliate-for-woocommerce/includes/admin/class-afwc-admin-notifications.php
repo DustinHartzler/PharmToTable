@@ -40,7 +40,6 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 
 			// To show admin notifications.
 			add_action( 'admin_init', array( $this, 'afw_dismiss_admin_notice' ) );
-
 		}
 
 		/**
@@ -117,7 +116,6 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 			}
 
 			return $afw_rating_text;
-
 		}
 
 		/**
@@ -152,7 +150,6 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 			}
 
 			return $afw_text;
-
 		}
 
 		/**
@@ -169,9 +166,7 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 				wp_safe_redirect( $referer );
 				exit();
 			}
-
 		}
-
 	}
 
 }

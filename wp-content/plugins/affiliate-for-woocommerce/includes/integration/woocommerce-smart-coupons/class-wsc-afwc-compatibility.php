@@ -156,7 +156,6 @@ if ( ! class_exists( 'WSC_AFWC_Compatibility' ) ) {
 
 			return $meta_value;
 		}
-
 	}
 }
 

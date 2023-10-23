@@ -4,7 +4,7 @@
  *
  * @package   affiliate-for-woocommerce/includes/admin/
  * @since     6.14.0
- * @version   1.0.0
+ * @version   1.0.1
  */
 
 // Exit if accessed directly.
@@ -35,7 +35,7 @@ if ( ! class_exists( 'AFWC_Admin_Housekeeping' ) ) {
 			if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 				// These actions are available since a particular WooCommerce version.
 				// @since WC 7.1.0.
-				add_action( 'woocommerce_before_trash_order', array( $this, 'afwc_update_referral_before_trash' ), 9, 2 );
+				add_action( 'woocommerce_before_trash_order', array( $this, 'afwc_update_referral_before_trash' ), 9 );
 				// @since WC 7.2.0.
 				add_action( 'woocommerce_untrash_order', array( $this, 'afwc_update_referral_before_untrash' ), 9, 2 );
 				// @since WC 7.1.0.
@@ -45,7 +45,6 @@ if ( ! class_exists( 'AFWC_Admin_Housekeeping' ) ) {
 				add_action( 'untrashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
 				add_action( 'delete_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
 			}
-
 		}
 
 		/**
@@ -65,10 +64,9 @@ if ( ! class_exists( 'AFWC_Admin_Housekeeping' ) ) {
 		/**
 		 * Function to delete referral and order data before order is permanently deleted.
 		 *
-		 * @param int    $order_id The Order ID to be deleted.
-		 * @param object $order    The Order object.
+		 * @param int $order_id The Order ID to be deleted.
 		 */
-		public function afwc_update_referral_before_trash( $order_id = 0, $order = null ) {
+		public function afwc_update_referral_before_trash( $order_id = 0 ) {
 			if ( empty( $order_id ) ) {
 				return;
 			}
@@ -108,7 +106,6 @@ if ( ! class_exists( 'AFWC_Admin_Housekeeping' ) ) {
 				$order->update_meta_data( 'is_commission_recorded', 'yes' );
 				$order->save();
 			}
-
 		}
 
 		/**
@@ -183,9 +180,7 @@ if ( ! class_exists( 'AFWC_Admin_Housekeeping' ) ) {
 					delete_post_meta( $trashed_order_id, 'afwc_parent_commissions' );
 				}
 			}
-
 		}
-
 	}
 
 }

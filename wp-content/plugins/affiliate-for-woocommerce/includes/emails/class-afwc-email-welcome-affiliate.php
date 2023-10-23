@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.0
- * @version     1.4.6
+ * @version     1.4.9
  */
 
 // Exit if accessed directly.
@@ -56,7 +56,6 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 
 			// When sending email to customer in this case it is affiliate.
 			$this->customer_email = true;
-
 		}
 
 		/**
@@ -85,21 +84,21 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 			$user_info                     = get_userdata( $affiliate_id );
 			$this->email_args['user_name'] = ! empty( $user_info->first_name ) ? $user_info->first_name : __( 'there', 'affiliate-for-woocommerce' );
 
-			$pname                                   = afwc_get_pname();
-			$afwc_ref_url_id                         = get_user_meta( $affiliate_id, 'afwc_ref_url_id', true );
-			$affiliate_id                            = afwc_get_affiliate_id_based_on_user_id( $affiliate_id );
-			$affiliate_identifier                    = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
-			$endpoint                                = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-			$my_account_page_id                      = wc_get_page_id( 'myaccount' );
-			$my_account_page                         = ( ! empty( $my_account_page_id ) && ( intval( $my_account_page_id ) > 0 ) ) ? wc_get_page_permalink( 'myaccount' ) : '';
-			$this->email_args['my_account_afwc_url'] = apply_filters( 'afwc_myaccount_dashboard_url', ( ! empty( $my_account_page ) ? wc_get_endpoint_url( $endpoint, '', $my_account_page ) : get_home_url() ), array( 'source' => $this ) );
-			$this->email_args['affiliate_link']      = afwc_get_affiliate_url( trailingslashit( home_url() ), $pname, $affiliate_identifier );
-			$shop_page_id                            = wc_get_page_id( 'shop' );
-			$shop_page                               = ( ! empty( $shop_page_id ) && ( intval( $shop_page_id ) > 0 ) ) ? wc_get_page_permalink( 'shop' ) : '';
-			$this->email_args['shop_page']           = apply_filters( 'afwc_shop_url', $shop_page, array( 'source' => $this ) );
-			$this->email_args['affiliate_id']        = $affiliate_identifier;
-			$this->email_args['is_auto_approved']    = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
-			$this->email_args['approval_action']     = ! empty( $this->email_args['approval_action'] ) ? $this->email_args['approval_action'] : 'user_registration';
+			$affiliate = new AFWC_Affiliate( $user );
+
+			$afwc_ref_url_id                          = get_user_meta( $affiliate_id, 'afwc_ref_url_id', true );
+			$affiliate_id                             = afwc_get_affiliate_id_based_on_user_id( $affiliate_id );
+			$affiliate_identifier                     = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
+			$this->email_args['my_account_afwc_url']  = afwc_myaccount_dashboard_url();
+			$this->email_args['affiliate_link']       = is_callable( array( $affiliate, 'get_affiliate_link' ) ) ? $affiliate->get_affiliate_link() : '';
+			$shop_page_id                             = wc_get_page_id( 'shop' );
+			$shop_page                                = ( ! empty( $shop_page_id ) && ( intval( $shop_page_id ) > 0 ) ) ? wc_get_page_permalink( 'shop' ) : '';
+			$this->email_args['shop_page']            = apply_filters( 'afwc_shop_url', $shop_page, array( 'source' => $this ) );
+			$this->email_args['affiliate_id']         = $affiliate_identifier;
+			$this->email_args['is_auto_approved']     = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
+			$this->email_args['approval_action']      = ! empty( $this->email_args['approval_action'] ) ? $this->email_args['approval_action'] : 'user_registration';
+			$this->email_args['contact_email']        = get_option( 'afwc_contact_admin_email_address', '' );
+			$this->email_args['use_referral_coupons'] = get_option( 'afwc_use_referral_coupons', 'yes' );
 
 			// For any email placeholders.
 			$this->set_placeholders();
@@ -114,7 +113,6 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 			}
 
 			$this->restore_locale();
-
 		}
 
 		/**
@@ -186,16 +184,18 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 		 */
 		public function get_template_args() {
 			return array(
-				'email'               => $this,
-				'email_heading'       => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
-				'user_name'           => $this->email_args['user_name'],
-				'affiliate_link'      => esc_url( $this->email_args['affiliate_link'] ),
-				'affiliate_id'        => $this->email_args['affiliate_id'],
-				'shop_page'           => $this->email_args['shop_page'],
-				'my_account_afwc_url' => esc_url( $this->email_args['my_account_afwc_url'] ),
-				'is_auto_approved'    => $this->email_args['is_auto_approved'],
-				'approval_action'     => $this->email_args['approval_action'],
-				'additional_content'  => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
+				'email'                => $this,
+				'email_heading'        => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
+				'user_name'            => $this->email_args['user_name'],
+				'affiliate_link'       => esc_url( $this->email_args['affiliate_link'] ),
+				'affiliate_id'         => $this->email_args['affiliate_id'],
+				'shop_page'            => $this->email_args['shop_page'],
+				'my_account_afwc_url'  => esc_url( $this->email_args['my_account_afwc_url'] ),
+				'is_auto_approved'     => $this->email_args['is_auto_approved'],
+				'approval_action'      => $this->email_args['approval_action'],
+				'contact_email'        => $this->email_args['contact_email'],
+				'use_referral_coupons' => $this->email_args['use_referral_coupons'],
+				'additional_content'   => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
 		}
 
@@ -243,7 +243,6 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 				),
 			);
 		}
-
 	}
 
 }

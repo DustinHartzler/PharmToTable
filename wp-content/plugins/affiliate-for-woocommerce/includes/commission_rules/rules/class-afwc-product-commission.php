@@ -106,4 +106,3 @@ if ( ! class_exists( 'AFWC_Product_Commission' ) ) {
 		}
 	}
 }
-

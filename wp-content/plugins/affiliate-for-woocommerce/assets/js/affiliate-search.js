@@ -6,12 +6,12 @@ jQuery(function( $ ){
 		init() {
 			let self = affiliateUserSearch;
 
-			$( ':input.wc-afw-customer-search' ).filter( ':not(.enhanced)' ).each( function() {
+			$( ':input.afwc-affiliate-search' ).filter( ':not(.enhanced)' ).each( function() {
 				let select2Args = self.getSelect2Args( this );
 				select2Args = $.extend( select2Args, self.getEnhancedSelectFormatString() );
 
 				$( this )
-				.selectWoo( select2Args )
+				.select2( select2Args )
 				.addClass( 'enhanced' )
 				.on( 'select2:selecting', function (e) {
 					self.affiliateConfirmationAlert( e, self.getCustomerId(), e.params.args.data.id || 0 );

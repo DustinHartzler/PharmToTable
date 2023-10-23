@@ -67,7 +67,6 @@ if ( ! class_exists( 'AFWC_Elementor_Form_Actions' ) ) {
 					$form_actions_registrar->register( new Elementor_AFWC_Registration_After_Submit() );
 				}
 			}
-
 		}
 
 		/**
@@ -160,7 +159,6 @@ if ( ! class_exists( 'AFWC_Elementor_Form_Actions' ) ) {
 			}
 
 			return $item;
-
 		}
 
 		/**
@@ -187,9 +185,7 @@ if ( ! class_exists( 'AFWC_Elementor_Form_Actions' ) ) {
 					unset( $ajax_handler->errors[ $field ] );
 				}
 			}
-
 		}
-
 	}
 
 }

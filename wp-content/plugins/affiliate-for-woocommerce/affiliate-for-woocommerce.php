@@ -3,15 +3,15 @@
  * Plugin Name: Affiliate For WooCommerce
  * Plugin URI: https://woocommerce.com/products/affiliate-for-woocommerce/
  * Description: The best affiliate management plugin for WooCommerce. Track, manage and payout affiliate commissions easily.
- * Version: 6.17.0
+ * Version: 6.28.0
  * Author: StoreApps
  * Author URI: https://www.storeapps.org/
  * Developer: StoreApps
  * Developer URI: https://www.storeapps.org/
  * Requires at least: 5.0.0
- * Tested up to: 6.2.2
+ * Tested up to: 6.3.2
  * WC requires at least: 4.0.0
- * WC tested up to: 7.8.1
+ * WC tested up to: 8.2.1
  * Text Domain: affiliate-for-woocommerce
  * Domain Path: /languages/
  * Woo: 4830848:0f21ae7f876a631d2db8952926715502
@@ -57,7 +57,7 @@ add_action( 'admin_init', 'afwc_redirect' );
 function initialize_affiliate_for_woocommerce() {
 	define( 'AFWC_PLUGIN_FILE', __FILE__ );
 	if ( ! defined( 'AFWC_PLUGIN_DIRPATH' ) ) {
-		define( 'AFWC_PLUGIN_DIRPATH', dirname( __FILE__ ) );
+		define( 'AFWC_PLUGIN_DIRPATH', __DIR__ );
 	}
 
 	// To insert the option on plugin update.
@@ -73,14 +73,13 @@ function initialize_affiliate_for_woocommerce() {
 	if ( ( in_array( 'woocommerce/woocommerce.php', $active_plugins, true ) || array_key_exists( 'woocommerce/woocommerce.php', $active_plugins ) ) ) {
 		include_once 'includes/class-affiliate-for-woocommerce.php';
 		$GLOBALS['affiliate_for_woocommerce'] = Affiliate_For_WooCommerce::get_instance();
-	} else {
-		if ( is_admin() ) {
-			?>
+	} elseif ( is_admin() ) {
+		?>
 			<div class="notice notice-error">
 				<p><?php echo esc_html__( 'Affiliate for WooCommerce requires WooCommerce to be activated.', 'affiliate-for-woocommerce' ); ?></p>
 			</div>
 			<?php
-		}
+
 	}
 }
 add_action( 'plugins_loaded', 'initialize_affiliate_for_woocommerce' );
@@ -88,9 +87,19 @@ add_action( 'plugins_loaded', 'initialize_affiliate_for_woocommerce' );
 // Declare WooCommerce custom order tables i.e HPOS compatibility.
 add_action(
 	'before_woocommerce_init',
-	function() {
+	function () {
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
+);
+
+// Declare WooCommerce cart checkout blocks compatibility.
+add_action(
+	'before_woocommerce_init',
+	function () {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
 		}
 	}
 );

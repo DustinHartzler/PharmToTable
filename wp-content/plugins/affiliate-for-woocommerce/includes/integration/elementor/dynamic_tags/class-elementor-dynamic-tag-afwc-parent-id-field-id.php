@@ -92,7 +92,6 @@ if ( ! class_exists( 'Elementor_Dynamic_Tag_AFWC_Parent_Id_Field_ID' ) ) {
 		public function render() {
 			echo ! empty( $this->field_id ) ? sanitize_key( $this->field_id ) : '';
 		}
-
 	}
 
 }

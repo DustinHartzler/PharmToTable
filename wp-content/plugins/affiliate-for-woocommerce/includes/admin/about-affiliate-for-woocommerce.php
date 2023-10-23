@@ -4,7 +4,7 @@
  *
  * @package   affiliate-for-woocommerce/includes/admin/
  * @since     1.0.0
- * @version   1.2.5
+ * @version   1.2.7
  */
 
 // Exit if accessed directly.
@@ -29,11 +29,24 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 		text-align: left;
 		margin: 1rem 0;
 	}
+	.afw .column.last-feature {
+		margin-right: 2px !important;
+	}
+	.afw-faq ul {
+		list-style: disc;
+		margin-left: 1.2rem;
+	}
 	.afw-faq li {
 		margin-bottom: 1rem;
 	}
 	.afw-faq {
 		margin-bottom: 2rem !important;
+	}
+	.how-to {
+		margin-top: 2.5rem;
+	}
+	.how-to p {
+		font-size: 1.1rem;
 	}
 </style>
 
@@ -106,10 +119,9 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 			</div>
 		</div>
 		<div class="about-text feature-section">
-			<h2><?php echo esc_html__( 'To get started:', 'affiliate-for-woocommerce' ); ?></h2>
-			<br>
+			<h3><?php echo esc_html__( 'To get started', 'affiliate-for-woocommerce' ); ?></h3>
 			<?php
-				echo sprintf(
+				printf(
 					/* translators: Link to the Affiliate For WooCommerce Settings */
 					esc_html__( '1. Review and update your Affiliate For WooCommerce %s', 'affiliate-for-woocommerce' ),
 					'<a class="button-primary" target="_blank" href="' . esc_url(
@@ -125,7 +137,7 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 				?>
 				<br>
 				<?php
-					echo sprintf(
+					printf(
 						/* translators: Link to the Affiliate For WooCommerce Dashboard in admin */
 						esc_html__( '2. Access affiliate %s.', 'affiliate-for-woocommerce' ),
 						'<a target="_blank" href="' . esc_url(
@@ -140,7 +152,7 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 					?>
 				<br>
 				<?php
-					echo sprintf(
+					printf(
 						/* translators: Link to the Affiliate For WooCommerce Plans Dashboard in admin */
 						esc_html__( '3. Setup default commission rate for Storewide Default Commission in %s.', 'affiliate-for-woocommerce' ),
 						'<a target="_blank" href="' . esc_url(
@@ -154,26 +166,34 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 					);
 					?>
 		</div>
-		<div class="afw-faq">
+		<div class="how-to">
 			<h3><?php echo esc_html__( 'How to\'s', 'affiliate-for-woocommerce' ); ?></h3>
-			<ol>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-5">' . esc_html__( 'How do I add/make a user an affiliate?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-9">' . esc_html__( 'Where do affiliates login and get their stats from?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-11">' . esc_html__( 'Where\'s the link an affiliate will use to refer to my site?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-customize-affiliate-referral-link/">' . esc_html__( 'How to find, customize and share an affiliate referral link', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-create-and-assign-coupons-to-affiliates/">' . esc_html__( 'How to give coupons for referral to affiliates?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-assign-unassign-an-order-to-an-affiliate/">' . esc_html__( 'How to manually assign/unassign an order to an affiliate?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-create-affiliate-commission-plans/">' . esc_html__( 'How to create affiliate commission plans', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-different-affiliate-commission-rates-for-affiliates/">' . esc_html__( 'How to set different affiliate commission rates for affiliates', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-different-affiliate-commission-rates-for-product-or-product-category/">' . esc_html__( 'How to set different affiliate commission rates for product or product category', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-up-a-multilevel-referral-multi-tier-affiliate-program/">' . esc_html__( 'How to set up a multilevel referral/multi-tier affiliate program?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-up-lifetime-commissions/">' . esc_html__( 'How to set up lifetime commissions', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-export-affiliate-data-to-csv/">' . esc_html__( 'How to export affiliate data to CSV?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/">' . esc_html__( 'How to payout commissions to affiliates and check all the processed payouts?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-				<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-26">' . esc_html__( 'FAQ\'s', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
-			</ol>
+			<div class="has-2-columns feature-section col two-col">
+				<div class="column col afw-faq">
+					<ul>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-5">' . esc_html__( 'How do I add/make a user an affiliate?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-9">' . esc_html__( 'Where do affiliates login and get their stats from?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-11">' . esc_html__( 'Where\'s the link an affiliate will use to refer to my site?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-customize-affiliate-referral-link/">' . esc_html__( 'How to find, customize and share an affiliate referral link?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-create-and-assign-coupons-to-affiliates/">' . esc_html__( 'How to give coupons for referral to affiliates?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-assign-unassign-an-order-to-an-affiliate/">' . esc_html__( 'How to manually assign/unassign an order to an affiliate?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-create-affiliate-commission-plans/">' . esc_html__( 'How to create affiliate commission plans?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+					</ul>
+				</div>
+				<div class="column col last-feature afw-faq">
+					<ul>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-different-affiliate-commission-rates-for-affiliates/">' . esc_html__( 'How to set different affiliate commission rates for affiliates?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-different-affiliate-commission-rates-for-product-or-product-category/">' . esc_html__( 'How to set different affiliate commission rates for product or product category?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-up-a-multilevel-referral-multi-tier-affiliate-program/">' . esc_html__( 'How to set up a multilevel referral/multi-tier affiliate program?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-up-lifetime-commissions/">' . esc_html__( 'How to set up lifetime commissions?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-export-affiliate-data-to-csv/">' . esc_html__( 'How to export affiliate data to CSV?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/">' . esc_html__( 'How to payout commissions to affiliates and check all the processed payouts?', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+						<li><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-26">' . esc_html__( 'FAQ\'s', 'affiliate-for-woocommerce' ) . '</a>'; ?></li>
+					</ul>
+				</div>
+			</div>
 		</div>
-		<p><?php echo esc_html__( 'To re-visit this page, go to Plugins > Affiliate For WooCommerce and click on "Getting started".', 'affiliate-for-woocommerce' ); ?></p>
+		<p><?php echo esc_html_x( 'For more information, ', 'description to view all docs', 'affiliate-for-woocommerce' ) . /* translators: Link to the Affiliate For WooCommerce Doc */ '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/">' . esc_html_x( 'view all docs', 'link text to view all docs', 'affiliate-for-woocommerce' ) . '</a>.'; ?></p>
 	</div>
 </div>
 <?php

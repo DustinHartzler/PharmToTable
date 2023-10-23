@@ -108,7 +108,6 @@ if ( ! class_exists( 'Elementor_AFWC_Registration_After_Submit' ) ) {
 					$ajax_handler->add_error_message( $response['message'] );
 				}
 			}
-
 		}
 
 		/**
@@ -119,7 +118,6 @@ if ( ! class_exists( 'Elementor_AFWC_Registration_After_Submit' ) ) {
 		public function on_export( $element ) {
 			return $element;
 		}
-
 	}
 
 }

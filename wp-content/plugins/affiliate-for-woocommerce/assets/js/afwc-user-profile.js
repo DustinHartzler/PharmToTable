@@ -13,7 +13,7 @@ jQuery(function(){
 			jQuery('#afwc_is_affiliate_row input[name="afwc_is_affiliate"]')
 				.val(jQuery(this).attr('data-affiliate-status') || '')
 				.prop('checked',true);
-			jQuery('input:submit.button-primary').trigger('click');
+			jQuery('input:submit#submit').click();
 		});
 	}
 
@@ -61,7 +61,7 @@ jQuery(function(){
 			cache: true
 		}
 	};
-	jQuery('#afwc_user_tags').selectWoo(tagsSelect2Args);
+	jQuery('#afwc_user_tags').select2(tagsSelect2Args);
 
 	let affiliateSelect2Args = {
 		placeholder: jQuery( this ).data( 'placeholder' ) || '',
@@ -95,5 +95,5 @@ jQuery(function(){
 			cache: true
 		}
 	};
-	jQuery('#afwc_parent_id').selectWoo(affiliateSelect2Args);
+	jQuery('#afwc_parent_id').select2(affiliateSelect2Args);
 });

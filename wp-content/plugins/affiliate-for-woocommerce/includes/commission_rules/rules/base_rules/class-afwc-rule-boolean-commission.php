@@ -34,6 +34,5 @@ if ( ! class_exists( 'AFWC_Rule_Boolean_Commission' ) ) {
 			);
 			$this->possible_values    = array( true, false );
 		}
-
 	}
 }

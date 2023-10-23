@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/admin/
  * @since    2.1.1
- * @version  1.3.4
+ * @version  1.3.8
  */
 
 // Exit if accessed directly.
@@ -32,8 +32,8 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
-			add_action( 'add_meta_boxes', array( $this, 'add_afwc_custom_box' ), 10, 2 );
-			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'link_unlink_affiliate_in_order' ), 10, 2 );
+			add_action( 'add_meta_boxes', array( $this, 'add_afwc_custom_box' ) );
+			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'link_unlink_affiliate_in_order' ) );
 		}
 
 		/**
@@ -52,11 +52,8 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 
 		/**
 		 * Function to add custom meta box in order add/edit screen.
-		 *
-		 * @param string $post_type            The post type of the current post being edited.
-		 * @param object $post_or_order_object The post or order currently being edited.
 		 */
-		public function add_afwc_custom_box( $post_type = '', $post_or_order_object = null ) {
+		public function add_afwc_custom_box() {
 			$current_screen    = is_callable( 'get_current_screen' ) ? get_current_screen() : null;
 			$current_screen_id = ( ! empty( $current_screen ) && $current_screen instanceof WP_Screen && ! empty( $current_screen->id ) ) ? $current_screen->id : '';
 
@@ -79,7 +76,6 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			}
 
 			add_meta_box( 'afwc_order', _x( 'Affiliate details', 'Affiliate\'s order meta box title', 'affiliate-for-woocommerce' ), array( $this, 'affiliate_in_order' ), $screen, 'side', 'low' );
-
 		}
 
 		/**
@@ -101,7 +97,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			}
 
 			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
-			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
+			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array( 'jquery', 'wp-i18n', 'select2' ), $plugin_data['Version'], true );
 			if ( function_exists( 'wp_set_script_translations' ) ) {
 				wp_set_script_translations( 'affiliate-user-search', 'affiliate-for-woocommerce' );
 			}
@@ -119,7 +115,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 
 			$is_commission_recorded = $order->get_meta( 'is_commission_recorded', true );
 
-			$afwc_api       = new AFWC_API();
+			$afwc_api       = AFWC_API::get_instance();
 			$affiliate_data = is_callable( array( $afwc_api, 'get_affiliate_by_order' ) ) ? $afwc_api->get_affiliate_by_order( $order_id ) : array();
 
 			$user_string = '';
@@ -148,7 +144,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 					<label for="afwc_referral_order_of"><?php esc_attr_e( 'Assigned to affiliate', 'affiliate-for-woocommerce' ); ?></label>
 					<?php echo wp_kses_post( wc_help_tip( _x( 'Search affiliate by email, username, name or user id to assign this order to them. Affiliates will see this order in their My account > Affiliates > Reports.', 'help tip for search and assign affiliate', 'affiliate-for-woocommerce' ) ) ); ?>
 					<br><br>
-					<select id="afwc_referral_order_of" name="afwc_referral_order_of" style="width: 100%;" class="wc-afw-customer-search" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="<?php echo esc_attr( $allow_clear ); ?>" data-action="afwc_json_search_affiliates" <?php echo esc_attr( $disabled ); ?>>
+					<select id="afwc_referral_order_of" name="afwc_referral_order_of" style="width: 100%;" class="afwc-affiliate-search" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="<?php echo esc_attr( $allow_clear ); ?>" data-action="afwc_json_search_affiliates" <?php echo esc_attr( $disabled ); ?>>
 						<?php
 						if ( ! empty( $user_id ) ) {
 							?>
@@ -165,10 +161,9 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		/**
 		 * Function to do database updates when linking/unlinking affiliate from the order.
 		 *
-		 * @param int    $order_id The Order ID.
-		 * @param object $order    The Order Object.
+		 * @param int $order_id The Order ID.
 		 */
-		public function link_unlink_affiliate_in_order( $order_id = 0, $order = null ) {
+		public function link_unlink_affiliate_in_order( $order_id = 0 ) {
 
 			if ( empty( $_POST['woocommerce_meta_nonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) { // phpcs:ignore
 				return;
@@ -300,9 +295,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			$order      = wc_get_order( $order_id );
 			$new_status = is_object( $order ) && is_callable( array( $order, 'get_status' ) ) ? $order->get_status() : '';
 			$affiliate_api->update_referral_status( $order_id, '', $new_status );
-
 		}
-
 	}
 
 }

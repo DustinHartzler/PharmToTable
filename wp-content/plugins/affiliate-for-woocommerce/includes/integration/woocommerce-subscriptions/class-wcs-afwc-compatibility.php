@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce-subscriptions/
  * @since       6.1.0
- * @version     1.2.1
+ * @version     1.2.3
  */
 
 // Exit if accessed directly.
@@ -31,10 +31,10 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 		 */
 		private function __construct() {
 			add_filter( 'afwc_admin_settings', array( $this, 'add_settings' ) );
-			add_filter( 'afwc_endpoint_account_settings_after_key', array( $this, 'endpoint_account_settings_after_key' ), 10, 2 );
+			add_filter( 'afwc_endpoint_account_settings_after_key', array( $this, 'endpoint_account_settings_after_key' ) );
 			add_filter( 'afwc_id_for_order', array( $this, 'get_affiliate_id_for_subscription_order' ), 9, 2 );
 			add_filter( 'afwc_add_referral_in_admin_emails_setting_description', array( $this, 'referral_in_admin_emails_setting_description' ), 10, 1 );
-			add_filter( 'afwc_allowed_emails_for_referral_details', array( $this, 'allowed_subscription_email' ), 10, 2 );
+			add_filter( 'afwc_allowed_emails_for_referral_details', array( $this, 'allowed_subscription_email' ) );
 		}
 
 		/**
@@ -117,7 +117,6 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 			array_splice( $settings, ( count( $settings ) - 1 ), 0, $wc_subscriptions_options );
 
 			return $settings;
-
 		}
 
 		/**
@@ -132,11 +131,9 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 		/**
 		 * Return field key after which the setting should appear
 		 *
-		 * @param  string $after_key The field key.
-		 * @param  array  $args      Additional arguments.
 		 * @return string
 		 */
-		public function endpoint_account_settings_after_key( $after_key = '', $args = array() ) {
+		public function endpoint_account_settings_after_key() {
 			return 'woocommerce_myaccount_subscription_payment_method_endpoint';
 		}
 
@@ -178,7 +175,7 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 					return $affiliate_id;
 				}
 
-				$afwc_api          = ( ! empty( $args['source'] ) ) ? $args['source'] : new AFWC_API();
+				$afwc_api          = ( ! empty( $args['source'] ) ) ? $args['source'] : AFWC_API::get_instance();
 				$affiliate_details = is_callable( array( $afwc_api, 'get_affiliate_by_order' ) ) ? $afwc_api->get_affiliate_by_order( intval( $parent_id ) ) : array();
 				$affiliate_id      = ( ! empty( $affiliate_details ) && ! empty( $affiliate_details['affiliate_id'] ) ) ? intval( $affiliate_details['affiliate_id'] ) : 0;
 			}
@@ -207,11 +204,10 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 		 * Return new renewal order email key if recurring commission is enabled.
 		 *
 		 * @param array $emails The allowed emails.
-		 * @param array $args   The arguments.
 		 *
 		 * @return array The allowed emails.
 		 */
-		public function allowed_subscription_email( $emails = array(), $args = array() ) {
+		public function allowed_subscription_email( $emails = array() ) {
 			if ( 'no' === $this->afwc_is_recurring_commission() ) {
 				return $emails;
 			}
@@ -222,7 +218,6 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 
 			return $emails;
 		}
-
 	}
 
 }

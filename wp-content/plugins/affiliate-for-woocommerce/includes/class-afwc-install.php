@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.0.7
+ * @version     1.0.8
  */
 
 // Exit if accessed directly.
@@ -120,6 +120,7 @@ if ( ! class_exists( 'AFWC_Install' ) ) {
 								short_description mediumtext NOT NULL,
 								body longtext NOT NULL,
 								status enum('Draft', 'Active') DEFAULT 'Draft',
+								rules longtext DEFAULT NULL,
 								meta_data longtext NOT NULL,
 								PRIMARY KEY  (id)
 							) $collate;
@@ -167,7 +168,6 @@ if ( ! class_exists( 'AFWC_Install' ) ) {
 			// Run the alter table query.
 			$wpdb->query( "ALTER TABLE {$wpdb->prefix}afwc_hits ADD COLUMN id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST" ); // phpcs:ignore
 		}
-
 	}
 
 }

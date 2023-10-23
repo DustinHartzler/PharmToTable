@@ -3,7 +3,7 @@
  * Class for rule group
  *
  * @since       2.5.0
- * @version     1.0.1
+ * @version     1.0.2
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules
  */
@@ -66,7 +66,7 @@ if ( ! class_exists( 'AFWC_Rule_Group' ) ) {
 			$res_array  = array();
 			while ( $i < $rule_count ) {
 				$res_array[] = $this->rules[ $i ]->validate( $context );
-				$i++;
+				++$i;
 			}
 			$val = array_unique( $res_array );
 			if ( 'OR' === $this->condition ) {
@@ -77,7 +77,5 @@ if ( ! class_exists( 'AFWC_Rule_Group' ) ) {
 
 			return $res;
 		}
-
 	}
 }
-

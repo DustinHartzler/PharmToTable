@@ -114,7 +114,6 @@ if ( ! class_exists( 'SA_WC_Compatibility_3_5' ) ) {
 		public static function is_wc_greater_than( $version ) {
 			return version_compare( self::get_wc_version(), $version, '>' );
 		}
-
 	}
 
 }

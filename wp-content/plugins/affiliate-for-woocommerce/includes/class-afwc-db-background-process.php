@@ -51,7 +51,6 @@ if ( ! class_exists( 'AFWC_DB_Background_Process' ) ) {
 
 			add_action( 'afwc_run_migrate_order_status_action', array( $this, 'run_migrate_order_status' ) );
 			add_action( 'afwc_schedule_action_for_date_migration', array( $this, 'afwc_schedule_action_for_date_migration' ) );
-
 		}
 
 		/**
@@ -296,7 +295,6 @@ if ( ! class_exists( 'AFWC_DB_Background_Process' ) ) {
 					$int = as_schedule_single_action( time(), 'afwc_schedule_action_for_date_migration' );
 				}
 			}
-
 		}
 	}
 }

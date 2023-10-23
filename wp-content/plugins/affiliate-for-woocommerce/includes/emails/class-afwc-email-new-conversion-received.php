@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.3.0
- * @version     1.2.2
+ * @version     1.2.3
  */
 
 // Exit if accessed directly.
@@ -56,7 +56,6 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 
 			// When sending email to customer in this case it is affiliate.
 			$this->customer_email = true;
-
 		}
 
 		/**
@@ -92,11 +91,7 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 			$this->email_args['order_commission_amount']  = ! empty( $this->email_args['order_commission_amount'] ) ? wc_format_decimal( $this->email_args['order_commission_amount'], wc_get_price_decimals() ) : 0.00;
 			$this->email_args['order_currency_symbol']    = ! empty( $this->email_args['currency_id'] ) ? get_woocommerce_currency_symbol( $this->email_args['currency_id'] ) : get_woocommerce_currency_symbol();
 			$this->email_args['affiliate_name']           = ! empty( $this->email_args['user_name'] ) ? $this->email_args['user_name'] : __( 'there', 'affiliate-for-woocommerce' );
-			$this->email_args['my_account_afwc_url']      = wc_get_endpoint_url(
-				get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' ),
-				'',
-				wc_get_page_permalink( 'myaccount' )
-			);
+			$this->email_args['my_account_afwc_url']      = afwc_myaccount_dashboard_url();
 
 			$this->email_args['order_customer_full_name'] = ! empty( $this->email_args['order_customer_full_name'] ) ? $this->email_args['order_customer_full_name'] : _x( 'Guest', 'Guest user name', 'affiliate-for-woocommerce' );
 
@@ -113,7 +108,6 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 			}
 
 			$this->restore_locale();
-
 		}
 
 		/**
@@ -242,7 +236,6 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 				),
 			);
 		}
-
 	}
 
 }

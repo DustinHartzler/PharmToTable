@@ -56,7 +56,6 @@ if ( ! class_exists( 'AFWC_Email_Affiliate_Pending_Request' ) ) {
 
 			// When sending email to customer in this case it is affiliate.
 			$this->customer_email = true;
-
 		}
 
 		/**
@@ -95,7 +94,6 @@ if ( ! class_exists( 'AFWC_Email_Affiliate_Pending_Request' ) ) {
 			}
 
 			$this->restore_locale();
-
 		}
 
 		/**
@@ -220,7 +218,6 @@ if ( ! class_exists( 'AFWC_Email_Affiliate_Pending_Request' ) ) {
 				),
 			);
 		}
-
 	}
 
 }

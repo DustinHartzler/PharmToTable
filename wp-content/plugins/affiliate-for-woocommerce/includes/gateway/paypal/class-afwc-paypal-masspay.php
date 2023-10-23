@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
  * @since       4.0.0
- * @version     1.1.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -112,7 +112,7 @@ if ( ! class_exists( 'AFWC_PayPal_Masspay' ) ) {
 						$unique_id     = rawurlencode( $affiliate['unique_id'] );
 						$note          = rawurlencode( $affiliate['note'] );
 						$nvp_str      .= "&L_EMAIL$j=$receiver_mail&L_AMT$j=$amount&L_UNIQUEID$j=$unique_id&L_NOTE$j=$note";
-						$j++;
+						++$j;
 					}
 				}
 				$nvp_str .= "&EMAILSUBJECT=$this->email_subject&RECEIVERTYPE=$this->receiver_type&CURRENCYCODE=$this->currency";
@@ -280,9 +280,7 @@ if ( ! class_exists( 'AFWC_PayPal_Masspay' ) ) {
 			}
 
 			return true;
-
 		}
-
 	}
 
 }

@@ -90,7 +90,6 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 				return $rules_arr;
 			}
 		}
-
 	}
 
 }

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.4.4
+ * @version     1.4.8
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -116,11 +116,11 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			);
 
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-			if ( ! wp_script_is( 'selectWoo', 'registered' ) ) {
-				wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo' . $suffix . '.js', array( 'jquery' ), WC_VERSION, true );
+			if ( ! wp_script_is( 'select2', 'registered' ) ) {
+				wp_register_script( 'select2', WC()->plugin_url() . '/assets/js/select2/select2.full' . $suffix . '.js', array( 'jquery' ), WC_VERSION, true );
 			}
-			wp_enqueue_script( 'selectWoo' );
-			wp_enqueue_style( 'selectWoo', WC()->plugin_url() . '/assets/css/select2.css', array(), WC_VERSION );
+			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'select2', WC()->plugin_url() . '/assets/css/select2.css', array(), WC_VERSION );
 
 			$affiliate_registration_page_link      = ! empty( get_permalink( get_page_by_path( 'afwc_registration_form' ) ) ) ? get_permalink( get_page_by_path( 'afwc_registration_form' ) ) : get_permalink( get_page_by_path( 'affiliates' ) );
 			$affiliate_registration_edit_form_link = admin_url( 'admin.php?page=affiliate-form-settings' );
@@ -241,6 +241,15 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 					'autoload' => false,
 				),
 				array(
+					'name'     => _x( 'Show affiliate referral link for a product', 'Admin setting name for Show affiliate referral link for a product', 'affiliate-for-woocommerce' ),
+					'desc'     => _x( 'Allow affiliates to quickly copy their affiliate referral link for a specific product from a single product page.', 'Admin setting description for Show affiliate referral link for a product', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_show_product_referral_url',
+					'type'     => 'checkbox',
+					'default'  => 'no',
+					'desc_tip' => _x( 'When enabled, a "Click to copy affiliate link" button will appear for active affiliates on all products except the ones listed under "Excluded products" and assigned to the affiliate via a "Landing page".', 'Admin setting description tip for Show affiliate referral link for a product', 'affiliate-for-woocommerce' ),
+					'autoload' => false,
+				),
+				array(
 					'title'    => __( 'Coupons for referral', 'affiliate-for-woocommerce' ),
 					'desc'     => __( 'Use coupons for referral - along with affiliated links', 'affiliate-for-woocommerce' ),
 					'id'       => 'afwc_use_referral_coupons',
@@ -316,6 +325,30 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 					'default'  => 'no',
 					'autoload' => false,
 				),
+				array(
+					'title'    => _x( 'Custom page for affiliate dashboard', 'Admin setting name for affiliate dashboard page', 'affiliate-for-woocommerce' ),
+					/* Translators: %s Affiliate dashboard shortcode. */
+					'desc'     => sprintf( _x( 'Allow affiliates to view their dashboard on any page using the %s shortcode. If no page or any non-published page is selected, the dashboard will be shown on the default My Account > Affiliate page.', 'Admin setting description for setup custom affiliate dashboard page', 'affiliate-for-woocommerce' ), '<code>[afwc_dashboard]</code>' ),
+					'id'       => 'afwc_custom_affiliate_dashboard_page_id',
+					'type'     => 'single_select_page_with_search',
+					'class'    => 'wc-page-search',
+					'args'     => array(
+						'exclude' =>
+							array(
+								wc_get_page_id( 'myaccount' ),
+							),
+					),
+					'autoload' => false,
+				),
+				array(
+					'name'     => _x( 'Affiliate landing pages', 'Admin setting name', 'affiliate-for-woocommerce' ),
+					'desc'     => _x( 'Enable this to allow assigning landing pages, posts, or products to an affiliate.', 'Admin setting description', 'affiliate-for-woocommerce' ),
+					'desc_tip' => _x( 'Use the <code>Affiliate Landing Page</code> meta box on a single page, post, or product to assign it to an affiliate which they can promote without using an affiliate link. The commission will be calculated based on the commission plan.', 'Admin setting description tip', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_enable_landing_pages',
+					'type'     => 'checkbox',
+					'default'  => 'no',
+					'autoload' => false,
+				),
 				// phpcs:disable
 				// array(
 				//  'title'    => __( 'Approve commission', 'affiliate-for-woocommerce' ),
@@ -367,7 +400,6 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			);
 
 			return apply_filters( 'afwc_admin_settings', $afwc_admin_settings );
-
 		}
 
 		/**
@@ -484,7 +516,6 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			}
 
 			return $values;
-
 		}
 
 		/**
@@ -623,7 +654,6 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 		public function is_updated( $option = '', $value = '' ) {
 			return ! empty( $option ) && ( get_option( $option ) !== $value );
 		}
-
 	}
 
 }

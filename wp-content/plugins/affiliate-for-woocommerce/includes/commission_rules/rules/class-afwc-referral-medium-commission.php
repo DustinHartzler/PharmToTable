@@ -88,7 +88,6 @@ if ( ! class_exists( 'AFWC_Referral_Medium_Commission' ) ) {
 		public function filter_values( $mediums = array() ) {
 			return array_filter( $mediums );
 		}
-
 	}
 
 }

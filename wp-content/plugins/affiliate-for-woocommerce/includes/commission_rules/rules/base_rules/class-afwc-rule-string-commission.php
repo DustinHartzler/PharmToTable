@@ -78,7 +78,6 @@ if ( ! class_exists( 'AFWC_Rule_String_Commission' ) ) {
 
 			return $res;
 		}
-
 	}
 
 }

@@ -4,13 +4,15 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.7.0
+ * @version     1.9.2
  */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Automattic\WooCommerce\Internal\Utilities\URL;
 
 /**
  * Encode affiliate id
@@ -69,7 +71,6 @@ function afwc_get_commission_status_colors( $status = '' ) {
 	}
 
 	return ( ! empty( $colors[ $status ] ) ) ? $colors[ $status ] : '';
-
 }
 
 /**
@@ -92,7 +93,6 @@ function afwc_get_payout_methods( $method = '' ) {
 	}
 
 	return ( ! empty( $payout_methods[ $method ] ) ) ? $payout_methods[ $method ] : $method;
-
 }
 
 /**
@@ -154,12 +154,12 @@ function afwc_get_hit_id() {
  * Get date range for smart date selector
  * TODO:: Not in use
  *
- * @param  string $for    The smart date label.
- * @param  string $format The format.
+ * @param  string $date_range The date range.
+ * @param  string $format     The format.
  * @return array
  */
-function get_afwc_date_range( $for = '', $format = 'd-M-Y' ) {
-	if ( empty( $for ) ) {
+function get_afwc_date_range( $date_range = '', $format = 'd-M-Y' ) {
+	if ( empty( $date_range ) ) {
 		return array();
 	}
 	$today            = gmdate( $format, Affiliate_For_WooCommerce::get_offset_timestamp() );
@@ -167,7 +167,7 @@ function get_afwc_date_range( $for = '', $format = 'd-M-Y' ) {
 	$date_from        = $date;
 	$date_to          = $date;
 	$offset_timestamp = Affiliate_For_WooCommerce::get_offset_timestamp();
-	switch ( $for ) {
+	switch ( $date_range ) {
 		case 'today':
 			$from_date = $today;
 			$to_date   = $today;
@@ -264,7 +264,6 @@ function afwc_get_user_id_based_on_affiliate_id( $affiliate_id ) {
 	} else {
 		return '';
 	}
-
 }
 
 /**
@@ -439,17 +438,27 @@ function afwc_get_campaign_id_by_slug( $slug ) {
 /**
  * Function to check if we have any active campaigns.
  *
- * @return string if we find active campaigns else NULL.
+ * @param bool $check_rules Whether to validate the rules.
+ *
+ * @return bool if we find active campaigns for the current users otherwise false.
  */
-function afwc_is_campaign_active() {
-	global $wpdb;
-	$is_found = $wpdb->get_var( // phpcs:ignore
-		$wpdb->prepare( // phpcs:ignore
-			"SELECT id FROM {$wpdb->prefix}afwc_campaigns WHERE status = %s LIMIT 1",
-			'Active'
-		)
+function afwc_is_campaign_active( $check_rules = true ) {
+	if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
+		include_once AFWC_PLUGIN_DIRPATH . '/includes/admin/class-afwc-campaign-dashboard.php';
+	}
+	$campaign_dashboard = AFWC_Campaign_Dashboard::get_instance();
+	return apply_filters(
+		'afwc_is_campaign_active',
+		is_callable( array( $campaign_dashboard, 'fetch_campaigns' ) ) ? ! empty(
+			$campaign_dashboard->fetch_campaigns(
+				array(
+					'campaign_status' => 'Active',
+					'affiliate_id'    => get_current_user_id(),
+					'check_rules'     => $check_rules,
+				)
+			)
+		) : false
 	);
-	return apply_filters( 'afwc_is_campaign_active', ! empty( $is_found ) );
 }
 
 /**
@@ -663,13 +672,12 @@ function afwc_allow_self_refer() {
 }
 
 /**
- * Get regex pattern for referral params.
- * Restrict the params for referral URL.
+ * Get regex pattern for affiliate identifier.
  *
- * @return string Return the regex pattern for referral url params. Allows only the alphabets and numbers and the pattern should start from the alphabets.
+ * @return string Return the regex pattern for affiliate identifier. Allows only the alphabets and numbers and the pattern should start from the alphabets.
  */
-function afwc_referral_params_regex_pattern() {
-	return '^[a-zA-Z]\w*$';
+function afwc_affiliate_identifier_regex_pattern() {
+	return apply_filters( 'afwc_affiliate_identifier_regex_pattern', '^[a-zA-Z]\w*$' );
 }
 
 /**
@@ -684,16 +692,16 @@ function afwc_get_pname() {
 }
 
 /**
- * Function to get affiliate URL based on pretty referral setting.
+ * Function to get affiliate URL based on provided URL.
  *
- * @param string $affiliate_url         The affiliate URL.
+ * @param string $url                   The existing URL.
  * @param string $pname                 Affiliate tracking param name.
  * @param string $affiliate_identifier  Affiliate's unique ID.
  *
  * @return string Updated affiliate URL
  */
-function afwc_get_affiliate_url( $affiliate_url = '', $pname = '', $affiliate_identifier = '' ) {
-	if ( empty( $affiliate_url ) ) {
+function afwc_get_affiliate_url( $url = '', $pname = '', $affiliate_identifier = '' ) {
+	if ( empty( $url ) ) {
 		return '';
 	}
 
@@ -702,9 +710,13 @@ function afwc_get_affiliate_url( $affiliate_url = '', $pname = '', $affiliate_id
 	}
 
 	if ( 'yes' === get_option( 'afwc_use_pretty_referral_links', 'no' ) ) {
-		$affiliate_url .= $pname . '/' . $affiliate_identifier;
+		$parsed_url = wp_parse_url( $url );
+		// Update the path by appending referral tracking param.
+		$update_path   = trailingslashit( ( ! empty( $parsed_url['path'] ) ? $parsed_url['path'] : '' ) ) . $pname . '/' . $affiliate_identifier;
+		$url_obj       = new URL( $url );
+		$affiliate_url = is_callable( array( $url_obj, 'get_url' ) ) ? $url_obj->get_url( array( 'path' => trailingslashit( $update_path ) ) ) : '';
 	} else {
-		$affiliate_url = add_query_arg( $pname, $affiliate_identifier, trailingslashit( $affiliate_url ) );
+		$affiliate_url = add_query_arg( $pname, $affiliate_identifier, $url );
 	}
 
 	return $affiliate_url;
@@ -769,4 +781,109 @@ function afwc_is_affiliate_user_role( $user_roles = array() ) {
 	$affiliate_roles = get_option( 'affiliate_users_roles', array() );
 
 	return ( ! empty( $affiliate_roles ) && is_array( $affiliate_roles ) ) && count( array_intersect( $affiliate_roles, $user_roles ) ) > 0;
+}
+
+if ( ! function_exists( 'afwc_get_current_url' ) ) {
+	/**
+	 * Function to get the current url.
+	 *
+	 * @return string.
+	 */
+	function afwc_get_current_url() {
+		$server_scheme      = ( ! empty( $_SERVER['HTTPS'] ) ) ? wc_clean( wp_unslash( $_SERVER['HTTPS'] ) ) : ''; // phpcs:ignore
+		$server_http_host   = ( ! empty( $_SERVER['HTTP_HOST'] ) ) ? wc_clean( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''; // phpcs:ignore
+		$server_request_uri = ( ! empty( $_SERVER['REQUEST_URI'] ) ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''; // phpcs:ignore
+		$base_url           = ( ( ! empty( $server_scheme ) && 'on' === $server_scheme ) ? 'https' : 'http' ) . '://' . $server_http_host;
+		return $base_url . $server_request_uri;
+	}
+}
+
+if ( ! function_exists( 'afwc_myaccount_dashboard_url' ) ) {
+	/**
+	 * Function to get affiliate dashboard URL.
+	 *
+	 * @return string.
+	 */
+	function afwc_myaccount_dashboard_url() {
+
+		$affiliate_dashboard_page_id = get_option( 'afwc_custom_affiliate_dashboard_page_id' );
+		$affiliate_dashboard_url     = '';
+
+		if ( ! empty( $affiliate_dashboard_page_id ) && 'publish' === get_post_status( $affiliate_dashboard_page_id ) ) {
+			$affiliate_dashboard_url = get_permalink( $affiliate_dashboard_page_id );
+		} else {
+			$endpoint                = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
+			$my_account_page_id      = wc_get_page_id( 'myaccount' );
+			$my_account_page         = ( ! empty( $my_account_page_id ) && ( intval( $my_account_page_id ) > 0 ) ) ? wc_get_page_permalink( 'myaccount' ) : '';
+			$affiliate_dashboard_url = ! empty( $my_account_page ) && ! empty( $endpoint ) ? wc_get_endpoint_url( $endpoint, '', $my_account_page ) : get_home_url();
+		}
+
+		return apply_filters( 'afwc_myaccount_dashboard_url', $affiliate_dashboard_url );
+	}
+}
+
+if ( ! function_exists( 'afwc_get_product_affiliate_url' ) ) {
+	/**
+	 * Function to get affiliate URL for the provided product.
+	 *
+	 * @param int  $product_id     The product ID.
+	 * @param int  $affiliate_id   The affiliate ID.
+	 * @param bool $force_generate Whether to generate forcefully without checking the exclude products.
+	 *
+	 * @return string Return the product affiliate URL.
+	 */
+	function afwc_get_product_affiliate_url( $product_id = 0, $affiliate_id = 0, $force_generate = false ) {
+
+		$product_id   = absint( $product_id );
+		$affiliate_id = absint( $affiliate_id );
+		if ( empty( $product_id ) || empty( $affiliate_id ) ) {
+			return '';
+		}
+
+		if ( 'no' === get_option( 'afwc_show_product_referral_url', 'no' ) ) {
+			return '';
+		}
+
+		$affiliate = new AFWC_Affiliate( $affiliate_id );
+
+		// Return if the affiliate ID is not existing for the affiliate(Not a valid affiliate).
+		if ( empty( $affiliate->affiliate_id ) ) {
+			return '';
+		}
+
+		if ( ! $force_generate ) {
+			$excluded_products = get_option( 'afwc_storewide_excluded_products', array() );
+
+			// Return if the product is listed under excluded products for commission.
+			if ( ! empty( $excluded_products ) && is_array( $excluded_products ) ) {
+				$excluded_products = array_map( 'absint', $excluded_products );
+
+				if ( in_array( $product_id, $excluded_products, true ) ) {
+					return '';
+				}
+			}
+
+			// Return if the product page assigned to another affiliate for landing page.
+			if ( is_callable( 'AFWC_Landing_Page', 'is_enabled' ) && AFWC_Landing_Page::is_enabled() ) {
+				$landing_page          = AFWC_Landing_Page::get_instance();
+				$lp_assigned_affiliate = ( $affiliate instanceof AFWC_Affiliate && is_callable( array( $landing_page, 'get_affiliate_id' ) ) ) ? absint( $landing_page->get_affiliate_id( $product_id ) ) : 0;
+
+				if ( ! empty( $lp_assigned_affiliate ) && ( absint( $affiliate->affiliate_id ) !== $lp_assigned_affiliate ) ) {
+					return '';
+				}
+			}
+		}
+
+		$product = wc_get_product( $product_id );
+		// Get product link.
+		$product_link = ( $product instanceof WC_Product && is_callable( array( $product, 'get_permalink' ) ) ) ? $product->get_permalink( $product_id ) : '';
+
+		if ( empty( $product_link ) ) {
+			return '';
+		}
+
+		$identifier = ( $affiliate instanceof AFWC_Affiliate && is_callable( array( $affiliate, 'get_identifier' ) ) ) ? $affiliate->get_identifier() : '';
+
+		return afwc_get_affiliate_url( $product_link, '', $identifier );
+	}
 }

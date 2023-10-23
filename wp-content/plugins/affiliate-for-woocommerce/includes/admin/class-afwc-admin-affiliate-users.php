@@ -72,7 +72,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate_Users' ) ) {
 
 			return $parent_file;
 		}
-
 	}
 }
 

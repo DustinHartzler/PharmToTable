@@ -3,20 +3,20 @@ Contributors: storeapps, niravmehta, ratnakardubey, Tarun.Parswani, Mansi Shah, 
 Donate link: https://www.storeapps.org/
 Tags: affiliates, affiliate wordpress, commission, woocommerce, affiliatewp, ecommerce, partner, share, affiliate plugin
 Requires at least: 5.0.0
-Tested up to: 6.2.2
-Stable tag: 6.17.0
+Tested up to: 6.3.2
+Stable tag: 6.28.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The Easiest Affiliate Management system for WordPress (and WooCommerce)!!
+The Easiest Affiliate Management system for WooCommerce!!
 
 == Description ==
 
-Affiliate for WooCommerce is the **Easiest Affiliate Management System** for WordPress (and WooCommerce)!!
+Affiliate for WooCommerce is the **Easiest Affiliate Management System** for WordPress and WooCommerce!!
 
 Affiliate for WooCommerce is undoubtedly the simplest tool that helps you track Affiliate Sale, Referrals, Commissions, Record Payouts and much more - all from a single screen interface.
 
-What makes Affiliate for WooCommerce the best affiliate plugin for WordPress?
+What makes Affiliate for WooCommerce the best affiliate plugin for WooCommerce?
 
 = Single Screen Interface =
 One thing that sets apart Affiliate for WooCommerce from all other affiliate systems is its intuitive user interface. You no longer have to struggle with different screens and menus to track affiliates, referrals and payouts. Everything is available in one single dashboard.
@@ -46,7 +46,7 @@ An important part of any business online is customer support. Expect to get awes
 
 1. Unzip and upload contents of the plugin to your /wp-content/plugins/ directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Click on 'Affiliate for WooCommerce' option within WordPress admin sidebar
+3. Click on 'Affiliate for WooCommerce' option within WordPress admin > WooCommerce 
 
 = Setting up Affiliate for WooCommerce =
 
@@ -77,4 +77,3 @@ Additionally, go to Users - All Users and select a user. You will see their affi
 
 == Screenshots ==
 1. Affiliate for WooCommerce single screen dashboard!
-

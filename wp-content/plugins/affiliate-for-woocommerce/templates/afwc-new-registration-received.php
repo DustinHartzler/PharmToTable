@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.0
- * @version     1.2.2
+ * @version     1.2.3
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ $text_align = is_rtl() ? 'right' : 'left';
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: admin's first name */ ?>
-<p><?php echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $admin_name ) ); ?></p>
+<p><?php printf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $admin_name ) ); ?></p>
 
 <p>
 	<?php echo 'yes' === $is_auto_approved ? esc_html__( 'Congratulations! You got a new affiliate partner.', 'affiliate-for-woocommerce' ) : esc_html__( 'Please review and respond to this potential affiliate partner request.', 'affiliate-for-woocommerce' ); ?>
@@ -30,7 +30,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php if ( ! empty( $user_url ) ) { ?>
 	<?php /* translators: %s: website URL */ ?>
-<p><strong><?php echo sprintf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) ); ?></strong><?php echo esc_url( $user_url ); ?></p>
+<p><strong><?php printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) ); ?></strong><?php echo esc_url( $user_url ); ?></p>
 <?php } ?>
 
 <?php if ( ! empty( $additional_information ) ) { ?>
@@ -80,14 +80,14 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 </p>
 
 <?php /* translators: %1$s: Opening a tag for admin affiliate dashboard link %2$s: closing a tag for admin affiliate dashboard link */ ?>
-<p><?php echo sprintf( esc_html__( 'BTW, you can review and manage all affiliates and also process pending requests from %1$shere%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $dashboard_url ) . '">', '</a>' ); ?></p>
+<p><?php printf( esc_html__( 'BTW, you can review and manage all affiliates and also process pending requests from %1$shere%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $dashboard_url ) . '">', '</a>' ); ?></p>
 <?php
 if ( 'yes' !== $is_auto_approved ) {
 	?>
 	<p>
 	<?php
 	/* translators: %1$s: Opening strong tag %2$s: affiliate's name %3$s: closing strong tag */
-	echo sprintf( esc_html__( 'Do respond promptly. %1$s%2$s%3$s is waiting!', 'affiliate-for-woocommerce' ), '<strong>', esc_attr( $user_name ), '</strong>' );
+	printf( esc_html__( 'Do respond promptly. %1$s%2$s%3$s is waiting!', 'affiliate-for-woocommerce' ), '<strong>', esc_attr( $user_name ), '</strong>' );
 	?>
 	</p>
 	<?php

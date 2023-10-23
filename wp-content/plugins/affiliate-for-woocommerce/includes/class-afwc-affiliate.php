@@ -2,10 +2,9 @@
 /**
  * Main class for Affiliate Details.
  *
- * @since       1.0.0
- * @version     1.2.1
- *
  * @package     affiliate-for-woocommerce/includes/
+ * @since       1.0.0
+ * @version     1.4.0
  */
 
 // Exit if accessed directly.
@@ -21,6 +20,23 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 	class AFWC_Affiliate extends WP_User {
 
 		/**
+		 * Variable to hold affiliate ID.
+		 *
+		 * @var array
+		 */
+		public $affiliate_id = 0;
+
+		/**
+		 * Initialize AFWC_Affiliate.
+		 *
+		 * @param WP_User|int $user WP User instance or ID.
+		 */
+		public function __construct( $user = 0 ) {
+			parent::__construct( $user );
+			$this->set_affiliate_id();
+		}
+
+		/**
 		 * Checks if an affiliate id is from a currently valid affiliate.
 		 *
 		 * @return bool Return true if valid, otherwise false.
@@ -30,12 +46,26 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 		}
 
 		/**
+		 * Set the affiliate ID based on the user ID.
+		 *
+		 * @return void.
+		 */
+		public function set_affiliate_id() {
+			// Return if the ID is empty or not valid.
+			if ( empty( $this->ID ) || ! $this->is_valid() ) {
+				return;
+			}
+
+			// Assign the affiliate ID based on the user ID.
+			$this->affiliate_id = intval( afwc_get_affiliate_id_based_on_user_id( $this->ID ) );
+		}
+
+		/**
 		 * Get the Linked customers for Lifetime commissions.
 		 *
 		 * @return array Array of linked customers.
 		 */
 		public function get_ltc_customers() {
-
 			if ( empty( $this->ID ) ) {
 				return array();
 			}
@@ -66,7 +96,7 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 
 			$ltc_customers[] = $customer;
 
-			return true === update_user_meta( $this->ID, 'afwc_ltc_customers', implode( ',', array_filter( $ltc_customers ) ) );
+			return (bool) update_user_meta( $this->ID, 'afwc_ltc_customers', implode( ',', array_filter( $ltc_customers ) ) );
 		}
 
 		/**
@@ -77,7 +107,6 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 		 * @return bool Return true if successfully removed otherwise false.
 		 */
 		public function remove_ltc_customer( $customer = '' ) {
-
 			if ( empty( $customer ) || empty( $this->ID ) ) {
 				return false;
 			}
@@ -96,9 +125,8 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 
 			$value = ! empty( $ltc_customers ) ? ( implode( ',', array_filter( $ltc_customers ) ) ) : '';
 
-			return true === update_user_meta( $this->ID, 'afwc_ltc_customers', $value );
+			return (bool) ( empty( $value ) ? delete_user_meta( $this->ID, 'afwc_ltc_customers' ) : update_user_meta( $this->ID, 'afwc_ltc_customers', $value ) );
 		}
-
 
 		/**
 		 * Check whether Lifetime commission feature is enabled of the affiliate.
@@ -106,7 +134,6 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 		 * @return bool Return true if enabled otherwise false.
 		 */
 		public function is_ltc_enabled() {
-
 			if ( empty( $this->ID ) ) {
 				return false;
 			}
@@ -139,7 +166,6 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 		 * @return array Array of tags having Id as key and tag name as value.
 		 */
 		public function get_tags() {
-
 			if ( empty( $this->ID ) ) {
 				return array();
 			}
@@ -148,5 +174,78 @@ if ( ! class_exists( 'AFWC_Affiliate' ) ) {
 			return ! empty( $tags ) && ! is_wp_error( $tags ) ? $tags : array();
 		}
 
+		/**
+		 * Get the landing pages assigned to the affiliate.
+		 *
+		 * @return array Array of landing page links.
+		 */
+		public function get_landing_page_links() {
+			if ( empty( $this->affiliate_id ) ) {
+				return array();
+			}
+
+			// Check whether landing page feature is enabled.
+			if ( is_callable( array( 'AFWC_Landing_Page', 'is_enabled' ) ) && ! AFWC_Landing_Page::is_enabled() ) {
+				return array();
+			}
+
+			$landing_page = AFWC_Landing_Page::get_instance();
+
+			$page_ids = is_callable( array( $landing_page, 'get_pages_by_affiliate_id' ) ) ? (array) $landing_page->get_pages_by_affiliate_id( $this->affiliate_id ) : array();
+			if ( empty( $page_ids ) || ! is_array( $page_ids ) ) {
+				return array();
+			}
+
+			$page_links = array();
+
+			foreach ( $page_ids as $id ) {
+				// fetch the URL of the published post's permalink.
+				$link = 'publish' === get_post_status( $id ) ? get_permalink( $id ) : '';
+				if ( empty( $link ) ) {
+					continue;
+				}
+				$page_links[ $id ] = $link;
+			}
+
+			return apply_filters(
+				'afwc_landing_page_links',
+				$page_links,
+				array(
+					'affiliate_id' => $this->affiliate_id,
+					'source'       => $this,
+				)
+			);
+		}
+
+		/**
+		 * Get the affiliate link.
+		 *
+		 * @return string The referral link.
+		 */
+		public function get_affiliate_link() {
+
+			$affiliate_identifier = $this->get_identifier();
+
+			// Generate the affiliate link.
+			return ( ! empty( $affiliate_identifier ) ) ? afwc_get_affiliate_url( trailingslashit( home_url() ), '', $affiliate_identifier ) : '';
+		}
+
+		/**
+		 * Get the affiliate identifier.
+		 *
+		 * @return int|string Return the affiliate identifier.
+		 */
+		public function get_identifier() {
+			if ( empty( $this->ID ) || empty( $this->affiliate_id ) ) {
+				return '';
+			}
+
+			// Get the affiliate's reference URL ID from user meta.
+			$ref_url_id = ( 'yes' === get_option( 'afwc_allow_custom_affiliate_identifier', 'yes' ) ) ? get_user_meta( $this->ID, 'afwc_ref_url_id', true ) : '';
+
+			// Determine the affiliate identifier to use for the link.
+			return ( ! empty( $ref_url_id ) ) ? $ref_url_id : $this->affiliate_id;
+		}
 	}
+
 }

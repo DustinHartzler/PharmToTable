@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.2.1
- * @version     1.2.6
+ * @version     1.3.0
  */
 
 // Exit if accessed directly.
@@ -65,7 +65,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 */
 		public function initialize_db_upgrade() {
 			$current_db_version = get_option( '_afwc_current_db_version' );
-			if ( version_compare( $current_db_version, '1.3.2', '<' ) || empty( $current_db_version ) ) {
+			if ( version_compare( $current_db_version, '1.3.3', '<' ) || empty( $current_db_version ) ) {
 				update_option( 'afwc_db_upgrade_running', true, 'no' );
 				$this->do_db_upgrade();
 			}
@@ -139,13 +139,16 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 					$this->upgrade_to_1_3_2();
 				}
 
+				if ( '1.3.2' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_3_3();
+				}
+
 				update_option( 'afwc_db_upgrade_running', false, 'no' );
 
 				if ( is_multisite() ) {
 					restore_current_blog();
 				}
 			}
-
 		}
 
 		/**
@@ -529,7 +532,6 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 				}
 			}
 			update_option( '_afwc_current_db_version', '1.2.4', 'no' );
-
 		}
 
 		/**
@@ -580,7 +582,6 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 				}
 			}
 			update_option( '_afwc_current_db_version', '1.2.7', 'no' );
-
 		}
 
 		/**
@@ -630,7 +631,6 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 
 				update_option( '_afwc_current_db_version', '1.2.8', 'no' );
 			}
-
 		}
 
 		/**
@@ -656,7 +656,6 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 				update_option( 'afwc_dates_migration_done', 'yes', 'no' );
 			}
 			update_option( '_afwc_current_db_version', '1.2.9', 'no' );
-
 		}
 
 		/**
@@ -750,7 +749,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 			// Operation on afwc_referrals table.
 			$afwc_referrals_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $wpdb->prefix . 'afwc_referrals' ) . '%' ) ); // phpcs:ignore
 
-			// Check if table exist.
+			// Check if the table exists.
 			if ( ! empty( $afwc_referrals_table ) ) {
 				$cols_from_referral_table = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_referrals" ); // phpcs:ignore
 
@@ -761,9 +760,30 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 			}
 
 			update_option( '_afwc_current_db_version', '1.3.2', 'no' );
-
 		}
 
+		/**
+		 * Function to upgrade the database to version 1.3.3.
+		 * Add the rules column to the campaign table.
+		 */
+		public function upgrade_to_1_3_3() {
+			global $wpdb;
+
+			// Operation on afwc_campaigns table.
+			$afwc_campaigns_table = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $wpdb->prefix . 'afwc_campaigns' ) . '%' ) ); // phpcs:ignore
+
+			// Check if the table exists.
+			if ( ! empty( $afwc_campaigns_table ) ) {
+				$cols_from_campaigns_table = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_campaigns" ); // phpcs:ignore
+
+				// Add new column `rules` if it doesn't exist.
+				if ( ! in_array( 'rules', $cols_from_campaigns_table, true ) ) {
+					$wpdb->query( "ALTER table {$wpdb->prefix}afwc_campaigns ADD COLUMN rules longtext DEFAULT NULL AFTER status" );// phpcs:ignore
+				}
+			}
+
+			update_option( '_afwc_current_db_version', '1.3.3', 'no' );
+		}
 	}
 }
 

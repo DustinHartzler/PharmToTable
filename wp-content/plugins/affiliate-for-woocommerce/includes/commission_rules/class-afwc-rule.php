@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.0.4
+ * @version     1.0.5
  */
 
 // Exit if accessed directly.
@@ -134,14 +134,17 @@ if ( ! class_exists( 'AFWC_Rule' ) ) {
 		/**
 		 * Exclude operators from possible_operator
 		 *
-		 * @param array $list list of exclude operator.
+		 * @param array $operators list of exclude operator.
 		 */
-		public function exclude_operators( $list = array() ) {
+		public function exclude_operators( $operators = array() ) {
+			if ( empty( $operators ) || ! is_array( $operators ) ) {
+				return;
+			}
 			$this->possible_operators = array_values(
 				array_filter(
 					$this->possible_operators,
-					function( $item ) use ( $list ) {
-						return ! in_array( $item['op'], $list, true );
+					function ( $item ) use ( $operators ) {
+						return ! in_array( $item['op'], $operators, true );
 					}
 				)
 			);
@@ -169,7 +172,7 @@ if ( ! class_exists( 'AFWC_Rule' ) ) {
 					if ( is_array( $value ) && is_array( $current ) ) {
 						$intersection = array_filter(
 							$value,
-							function( $x ) {
+							function ( $x ) {
 								return in_array( $x, $current, true );
 							}
 						);
@@ -183,7 +186,7 @@ if ( ! class_exists( 'AFWC_Rule' ) ) {
 					if ( is_array( $value ) && is_array( $current ) ) {
 						$intersection = array_filter(
 							$value,
-							function( $x ) {
+							function ( $x ) {
 								return in_array( $x, $current, true );
 							}
 						);

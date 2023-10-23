@@ -396,7 +396,6 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 			}
 
 			return $response;
-
 		}
 
 		/**
@@ -503,7 +502,6 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 			$converted_ip_address = ip2long( $anonymize_ip_address );
 
 			return $converted_ip_address;
-
 		}
 
 		/**
@@ -565,7 +563,6 @@ if ( ! class_exists( 'AFWC_Privacy' ) ) {
 
 			return array( true, false, array( '<strong>' . __( 'Anonymized IP Address', 'affiliate-for-woocommerce' ) . '</strong> - ' . __( 'Removed Order Personal Data', 'affiliate-for-woocommerce' ) ) );
 		}
-
 	}
 
 }

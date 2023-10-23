@@ -70,7 +70,6 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 			if ( false === $this->is_set_credentials( $this->key ) ) {
 				$this->set_credentials();
 			}
-
 		}
 
 		/**
@@ -146,7 +145,6 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 				return new WP_Error( $code, $message );
 
 			}
-
 		}
 
 		/**
@@ -225,7 +223,6 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 
 			return number_format( floatval( $amount ), 2, '.', '' );
 		}
-
 	}
 
 }

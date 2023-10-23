@@ -59,7 +59,6 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 			if ( ! $this->recipient ) {
 				$this->recipient = get_option( 'admin_email' );
 			}
-
 		}
 
 		/**
@@ -105,7 +104,6 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 			}
 
 			$this->restore_locale();
-
 		}
 
 		/**
@@ -142,7 +140,6 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 			}
 
 			return '';
-
 		}
 
 		/**
@@ -238,7 +235,6 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 				),
 			);
 		}
-
 	}
 
 }

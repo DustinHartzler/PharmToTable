@@ -47,7 +47,6 @@ if ( ! class_exists( 'AFWC_Emails' ) ) {
 
 			// Filter to register email classes from this plugin.
 			add_filter( 'woocommerce_email_classes', array( $this, 'register_email_classes' ) );
-
 		}
 
 		/**
@@ -71,7 +70,6 @@ if ( ! class_exists( 'AFWC_Emails' ) ) {
 			}
 
 			return $email_classes;
-
 		}
 
 		/**
@@ -102,7 +100,6 @@ if ( ! class_exists( 'AFWC_Emails' ) ) {
 
 			return false;
 		}
-
 	}
 
 }

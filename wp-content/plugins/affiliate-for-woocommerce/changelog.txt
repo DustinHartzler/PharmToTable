@@ -1,8 +1,106 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2023-10-20 - version 6.28.0
+* New: WooCommerce 8.2.1 compatible
+* New: Rewrite payout processing module
+* Update: Code improvements for the latest WordPress Coding Standards
+* Update: POT file
+
+2023-09-29 - version 6.27.0
+* New: Declare compatibility with Cart and Checkout (WooCommerce) Blocks (https://woocommerce.com/checkout-blocks/)
+* New: Setting to show product-specific affiliate referral links on the single product page
+* Fix: Trailing slash removed from the affiliate URL after updating the affiliate identifier in My Account > Affiliate > Profile [User]
+* Update: Hide the 'Click to copy affiliate link' button by default on a single product page
+* Update: Set secure parameter when setting cookies
+* Update: Code improvements for consistency in the affiliate link and affiliate identifier
+* Update: POT file
+* Developer: Remove the 'affiliate_referral_url_id' argument from Affiliate profile template
+* Developer: Filter 'afwc_affiliate_identifier_regex_pattern' to customize the validation pattern for the affiliate identifier
+* Developer: Filter 'afwc_affiliate_identifier_regex_pattern_error_message' to customize validation error message for the affiliate identifier pattern
+
+2023-09-22 - version 6.26.0
+* New: WooCommerce 8.1.1 compatible
+* New: One-click copy for product-specific affiliate referral links on the single product page [User]
+* Fix: Referral URL not refreshing after updating the affiliate identifier in the Referral URL generator under My Account > Affiliate > Profile [User]
+* Fix: Incorrect bold style for 'When' in the commission plan [Admin]
+* Update: Affiliate profile template
+* Update: Code improvements [User]
+* Update: POT file
+
+2023-09-12 - version 6.25.0
+* New: Template for My Account > Affiliate > Reports [User]
+* Fix: Manually linking customers to an affiliate not working the first time in lifetime commissions [Admin]
+* Fix: WooCommerce coupon fields not clearing when saving a coupon [Admin]
+* Update: Replace documentation link with welcome page in the Admin Dashboard [Admin]
+* Update: Welcome page for onboarding [Admin]
+* Update: Code improvements
+* Update: POT file
+
+2023-09-01 - version 6.24.0
+* New: Affiliate landing pages
+* New: Merge tags: {afwc_affiliate_id}, {afwc_affiliate_link}, {afwc_affiliate_name} for landing pages
+* Fix: Showing double slash (//) in the affiliate's my account link if the affiliate endpoint does not exist
+* Update: Affiliate profile template
+* Update: UI/UX improvements in campaign and commission plan [Admin]
+* Update: Code improvements to merge affiliate search from order, coupon, and landing pages [Admin]
+* Update: POT file
+
+2023-08-25 - version 6.23.0
+* Fix: Order filters by Point of Sale for WooCommerce plugin not showing in WooCommerce Analytics > Orders [Admin]
+* Fix: Analytics JS included on all admin pages [Admin]
+* Update: Include analytics module only when 'Enables WooCommerce Analytics' is enabled in WooCommerce > Settings > Advanced > Features [Admin]
+* Update: POT file
+
+2023-08-18 - version 6.22.0
+* New: WooCommerce 8.0.2 compatible
+* New: WordPress 6.3.0 compatible
+* New: Allow affiliates to request referral coupons via the welcome email
+* Fix: PHP Fatal Error: Call to undefined function wc_post_content_has_shortcode() during plugin update in some cases
+* Fix: Additional padding on the Payout status column in the Referrals table in My Account > Affiliate > Reports [User]
+* Update: Show Referrals followed by Products in My Account > Affiliate > Reports [User]
+* Update: Messages after form submission via the registration form shortcode [User]
+* Update: No record found messages in the affiliate dashboard [Admin]
+* Update: Show the page's title on the custom affiliate dashboard page [User]
+* Update: Code improvements
+* Update: POT file
+
+2023-08-10 - version 6.21.0
+* New: '[afwc_dashboard]' shortcode to show the affiliate's dashboard on any custom page [User]
+* New: Setting to set a custom page for the affiliate's dashboard [Admin]
+* New: Default tab value for reports tab endpoint in My Account > Affiliate [User]
+* Fix: Affiliate menu showing even after removing the affiliate endpoint from WooCommerce > Settings > Advanced > Account endpoints
+* Fix: 'Approve' & 'Reject' affiliate actions not working under user profile in some cases [Admin]
+* Update: Code improvements to get the current URL
+* Update: POT file
+* Developer: Filter 'afwc_myaccount_dashboard_url' extended to support affiliate dashboard URL everywhere
+* Developer: Filter 'afwc_dashboard_tab_endpoint' to change the default tab endpoint name for the affiliate's dashboard
+
+2023-07-28 - version 6.20.0
+* New: Display the affiliate details and support in export under WooCommerce Analytics > Orders [Admin]
+* Fix: Parent affiliate's commissions doubled when the order status changes from failed to processing
+* Fix: A trailing slash not added - in Destination Link under Campaigns [Admin] and Referral URL generator [User] - before URL parameters while generating the referral URL with a targeted path
+* Update: POT file
+
+2023-07-21 - version 6.19.0
+* New: WooCommerce 7.9.0 compatible
+* Fix: Newly created campaign placed at the end instead of at the top in the campaign listing [Admin]
+* Fix: No data showing if the date is translated in My Account > Affiliate [User]
+* Fix: Dual commission tracked for the order, if failed first and then completed when Send referral details to admin option, is enabled
+* Fix: PHP Fatal error on re-payment of a failed order after some time when Keep the posts table and the orders tables synchronized is enabled [HPOS]
+* Update: Code improvements
+* Update: POT file
+
+2023-07-12 - version 6.18.0
+* New: Restrict the campaigns by affiliates or affiliate tags to show only to them
+* Fix: Additional day's records showing in the affiliate dashboard [Admin]
+* Fix: To date's records not showing when filtering by dates in My Account > Affiliate > Reports [User]
+* Update: Show campaigns in descending order
+* Update: Replace selectWoo with select2
+* Update: POT file
+
 2023-07-01 - version 6.17.0
 * Fix: PHP Fatal error when sending a welcome email on affiliate approval [PHP 8.0+]
-* Fix: ArgumentCountError for sprintf() function when registering submenu [PHP 8.0+]
+* Fix: Placeholder missing for sprintf() function when registering submenu [PHP 8.0+]
 * Fix: SSL verification is disabled but should not be for PayPal MassPay
 * Update: Additional validation for PayPal email address and commission amount to prevent PayPal Payout without it
 * Update: POT file

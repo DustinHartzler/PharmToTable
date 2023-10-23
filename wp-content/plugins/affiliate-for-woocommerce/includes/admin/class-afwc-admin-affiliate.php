@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.4.14
+ * @version     1.5.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,25 +19,30 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 	class AFWC_Admin_Affiliate {
 
 		/**
-		 * The affiliate id
+		 * Variable to hold instance of this class
 		 *
-		 * @var mixed $aff_id
+		 * @var $instance
 		 */
-		public $aff_id = null;
+		private static $instance = null;
 
 		/**
-		 * The active affiliate
+		 * Get single instance of this class
 		 *
-		 * @var $active_affiliate
+		 * @return AFWC_Admin_Affiliate Singleton object of this class
 		 */
-		public $active_affiliate = null;
+		public static function get_instance() {
+			// Check if instance is already exists.
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
+		}
 
 		/**
 		 * Constructor
-		 *
-		 * @param mixed $aff_id The affiliate id.
 		 */
-		public function __construct( $aff_id = '' ) {
+		private function __construct() {
 			global $wpdb;
 
 			add_action( 'show_user_profile', array( $this, 'afwc_can_be_affiliate' ) );
@@ -54,32 +59,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 
 			add_action( 'admin_footer', array( $this, 'styles_scripts' ) );
 
-			if ( ! empty( $aff_id ) ) {
-				if ( false !== $this->active_affiliate ) {
-					return $this->active_affiliate;
-				}
-
-				return self::get_instance( $aff_id );
-			}
-
 			add_action( 'wp_ajax_afwc_json_search_tags', array( $this, 'afwc_json_search_tags' ) );
 			add_action( 'wp_ajax_afwc_json_search_parent_affiliates', array( $this, 'afwc_json_search_parent_affiliates' ) );
-		}
-
-		/**
-		 * Get the instance
-		 *
-		 * @param  integer $aff_id The affiliate id.
-		 * @return WP_User
-		 */
-		public function get_instance( $aff_id ) {
-			if ( $aff_id === self::$aff_id && false !== self::$active_affiliate ) {
-				return self::$active_affiliate;
-			}
-
-			$aff                    = new WP_User( $aff_id );
-			self::$active_affiliate = $aff;
-			return self::$active_affiliate;
 		}
 
 		/**
@@ -126,7 +107,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 			wp_enqueue_style( 'afwc-admin-affiliate-style', AFWC_PLUGIN_URL . '/assets/css/afwc-admin-affiliate.css', array(), $plugin_data['Version'] );
 			// Register script.
-			wp_register_script( 'afwc-user-profile-js', AFWC_PLUGIN_URL . '/assets/js/afwc-user-profile.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
+			wp_register_script( 'afwc-user-profile-js', AFWC_PLUGIN_URL . '/assets/js/afwc-user-profile.js', array( 'jquery', 'wp-i18n', 'select2' ), $plugin_data['Version'], true );
 			if ( function_exists( 'wp_set_script_translations' ) ) {
 				wp_set_script_translations( 'afwc-user-profile-js', 'affiliate-for-woocommerce', AFWC_PLUGIN_DIR_PATH . 'languages' );
 			}
@@ -231,11 +212,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 							}
 						}
 						if ( 'yes' === $is_affiliate && ! empty( $user_id ) ) {
-							$pname           = afwc_get_pname();
-							$afwc_ref_url_id = get_user_meta( $user_id, 'afwc_ref_url_id', true );
-							$affiliate_id    = afwc_get_affiliate_id_based_on_user_id( $user_id );
-							$affiliate_id    = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
-							$affiliate_link  = afwc_get_affiliate_url( trailingslashit( home_url() ), $pname, $affiliate_id );
+							$affiliate      = new AFWC_Affiliate( $user_id );
+							$affiliate_link = is_callable( array( $affiliate, 'get_affiliate_link' ) ) ? $affiliate->get_affiliate_link() : '';
 							?>
 							<tr>
 								<th><label for="afwc_affiliate_link"><?php echo esc_html__( 'Referral link', 'affiliate-for-woocommerce' ); ?></label></th>
@@ -552,7 +530,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 				}
 			}
 			wp_set_object_terms( $user_id, $post_afwc_user_tags, 'afwc_user_tags' );
-
 		}
 
 		/**
@@ -610,7 +587,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 		public function afwc_json_search_parent_affiliates() {
 			check_admin_referer( 'afwc-search-parent', 'security' );
 
-			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
 				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
 			}
 
@@ -641,7 +618,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 		public function afwc_json_search_tags() {
 			check_admin_referer( 'afwc-search-tags', 'security' );
 
-			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
 				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
 			}
 
@@ -666,8 +643,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 			echo wp_json_encode( $tags );
 			wp_die();
 		}
-
 	}
 }
 
-return new AFWC_Admin_Affiliate();
+return AFWC_Admin_Affiliate::get_instance();

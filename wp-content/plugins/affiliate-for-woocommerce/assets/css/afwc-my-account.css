@@ -88,9 +88,6 @@ thead, tbody tr {
 	.afwc_referrals thead th:nth-child(5), .afwc_referrals tbody td:nth-child(5) {
 		width: 20%;
 	}
-	.afwc_referrals tbody td:last-child {
-		padding-top: 1.4em;
-	}
 	.afwc_payout_history thead th:nth-child(1), .afwc_payout_history tbody td:nth-child(1) {
 		width: 30%;
 	}

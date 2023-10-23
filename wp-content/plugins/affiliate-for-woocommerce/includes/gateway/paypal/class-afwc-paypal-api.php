@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
  * @since       4.0.0
- * @version     1.2.2
+ * @version     1.2.3
  */
 
 // Exit if accessed directly.
@@ -83,13 +83,6 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 		public $currency = 'USD';
 
 		/**
-		 * The PayPal supported currencies
-		 *
-		 * @var array $paypal_supported_currency
-		 */
-		public static $paypal_supported_currency = array( 'AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS', 'JPY', 'MYR', 'MXN', 'NOK', 'NZD', 'PHP', 'PLN', 'GBP', 'SGD', 'SEK', 'CHF', 'TWD', 'THB', 'USD' );
-
-		/**
 		 * Variable to hold instance of this class
 		 *
 		 * @var $instance
@@ -148,7 +141,6 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 				$this->api_signature = ( ! empty( $credentials['signature'] ) ) ? $credentials['signature'] : '';
 
 			}
-
 		}
 
 		/**
@@ -219,11 +211,11 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 		/**
 		 * Process PayPal payment.
 		 *
-		 * @param  array  $affiliates The affiliates.
+		 * @param  array  $payout_records The payout records.
 		 * @param  string $currency   The currency code.
 		 * @return array  $response
 		 */
-		public function process_paypal_mass_payment( $affiliates = array(), $currency = 'USD' ) {
+		public function process_paypal_mass_payment( $payout_records = array(), $currency = 'USD' ) {
 			if ( ! empty( $this->payout_method ) ) {
 				// payment method loader.
 				$loader = AFWC_PLUGIN_DIRPATH . '/includes/gateway/paypal/class-afwc-' . str_replace( '_', '-', $this->payout_method ) . '.php';
@@ -241,16 +233,16 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 						if ( is_callable( array( $obj, 'make_payment' ) ) && $this->is_set_credentials( $this->payout_method ) ) {
 
 							$obj->currency = $currency;
-							$result        = $obj->make_payment( $affiliates );
+							$result        = $obj->make_payment( $payout_records );
 
 							/**
 							 * Fires immediately after PayPal commission payout.
 							 *
-							 * @param array $result      The results
-							 * @param array $affiliates  Whether the user data was also flagged for deletion.
+							 * @param array $result         The results
+							 * @param array $payout_records  The Payout records.
 							 * @param array
 							 */
-							do_action( 'afwc_after_paypal_commission_payout', $result, $affiliates, array( 'source' => $this ) );
+							do_action( 'afwc_after_paypal_commission_payout', $result, $payout_records, array( 'source' => $this ) );
 
 							return $result;
 						}
@@ -432,8 +424,6 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 			if ( ! empty( $credentials ) && ! empty( $credentials['username'] ) && ! empty( $credentials['password'] ) ) {
 				update_option( 'afwc_commission_payout_method', 'paypal_payout', 'no' );
 			}
-
 		}
-
 	}
 }

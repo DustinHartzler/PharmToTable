@@ -1,26 +1,11 @@
+/* phpcs:ignoreFile */
 jQuery(function(){
 	const { _x } = wp.i18n;
 	let homeURL          = afwcProfileParams.homeURL || '';
 	let pName            = afwcProfileParams.pName;
 	let isPrettyReferral = afwcProfileParams.isPrettyReferralEnabled || 'no';
 
-	jQuery('#afwc_resources_wrapper').on('change, keyup', '#afwc_affiliate_link', function() {
-		let path                  = jQuery(this).val() || '';
-		// Remove the slash at the end of pageURL.
-		let pageURL               = (homeURL + path).replace(/\/$/, "");
-		let affiliateIdentifier   = jQuery('#afwc_id_change_wrap code').text();
-		let affiliateReferralLink = '';
-		if ( -1 === pageURL.indexOf( '?' ) ) {
-			affiliateReferralLink = pageURL + ( 'yes' == isPrettyReferral ? ( '/' + pName + '/' + affiliateIdentifier ) : ( '?'+ pName + '=' + affiliateIdentifier ) );
-		} else {
-			if ( 'yes' == isPrettyReferral ) {
-				affiliateReferralLink = ( pageURL.substring( 0, pageURL.indexOf('?') ) ).replace(/\/$/, "") + '/' + pName + '/' + affiliateIdentifier + '/?'+ ( pageURL.substring( pageURL.indexOf('?') + 1 ) );
-			} else {
-				affiliateReferralLink = pageURL + '&' + pName+'='+affiliateIdentifier;
-			}
-		}
-		jQuery('#afwc_generated_affiliate_link').text( affiliateReferralLink );
-	});
+	jQuery('#afwc_resources_wrapper').on('change, keyup', '#afwc_affiliate_link', afwcGenerateLink);
 
 	jQuery('#afwc_account_form').on('submit', function(e) {
 		e.preventDefault();
@@ -84,9 +69,7 @@ jQuery(function(){
 				}
 
 				if ( false === new RegExp(afwcProfileParams.identifierRegexPattern || '', 'g').test(referralIdentifier) ) {
-					jQuery( '#afwc_id_msg' )
-						.html( _x( 'Invalid identifier. It should be a combination of alphabets and numbers, but the number should not be in the first position.', 'referral identifier validation message', 'affiliate-for-woocommerce' ) )
-						.addClass( 'afwc_error' ).show();
+					jQuery('#afwc_id_msg').html(afwcProfileParams.identifierPatternValidationErrorMessage || '').addClass('afwc_error').show();
 					return;
 				}
 
@@ -115,8 +98,10 @@ jQuery(function(){
 									jQuery('.afwc_ref_id_span').text(referralIdentifier);
 								}
 								if( jQuery('#afwc_affiliate_link_label').length > 0 && homeURL && pName ) {
-									jQuery('#afwc_affiliate_link_label').text( ( 'yes' == isPrettyReferral ) ? ( `${homeURL}${pName}/${referralIdentifier}` ) : ( `${homeURL}?${pName}=${referralIdentifier}` ) );
+									let refURL =  ( 'yes' == isPrettyReferral ) ? ( `${homeURL}${pName}/${referralIdentifier}/` ) : ( `${homeURL}?${pName}=${referralIdentifier}` )
+									jQuery('#afwc_affiliate_link_label').text(refURL).attr('data-ctp', refURL);
 								}
+								afwcGenerateLink();
 							} else if ( 'no' === response.success && response.message ) {
 								jQuery( '#afwc_id_msg' ).html( response.message ).addClass( 'afwc_error' ).removeClass( 'afwc_success' ).show();
 							}
@@ -127,14 +112,22 @@ jQuery(function(){
 			}
 		}
 	})
-});
 
-function afwc_copy_affiliate_link_coupon( obj ) {
-	let element = jQuery("<input>");
-	jQuery("body").append(element);
-	element.val(jQuery(obj).text()).select();
-	if( navigator && navigator.clipboard ) {
-		navigator.clipboard.writeText(element.val());
+	function afwcGenerateLink(){
+		let path                  = jQuery('#afwc_affiliate_link').val() || '';
+		// Remove the slash at the end of pageURL.
+		let pageURL               = (homeURL + path).replace(/\/$/, "");
+		let affiliateIdentifier   = jQuery('#afwc_id_change_wrap code').text();
+		let affiliateReferralLink = '';
+		if ( -1 === pageURL.indexOf( '?' ) ) {
+			affiliateReferralLink = pageURL + ( 'yes' == isPrettyReferral ? ( '/' + pName + '/' + affiliateIdentifier ) : ( '/?'+ pName + '=' + affiliateIdentifier ) );
+		} else {
+			if ( 'yes' == isPrettyReferral ) {
+				affiliateReferralLink = ( pageURL.substring( 0, pageURL.indexOf('?') ) ).replace(/\/$/, "") + '/' + pName + '/' + affiliateIdentifier + '/?'+ ( pageURL.substring( pageURL.indexOf('?') + 1 ) );
+			} else {
+				affiliateReferralLink = pageURL + '&' + pName+'='+affiliateIdentifier;
+			}
+		}
+		jQuery('#afwc_generated_affiliate_link').text(affiliateReferralLink).attr('data-ctp', affiliateReferralLink);
 	}
-	element.remove();
-}
+});

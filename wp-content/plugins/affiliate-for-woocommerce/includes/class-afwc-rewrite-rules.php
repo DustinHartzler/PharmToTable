@@ -113,7 +113,6 @@ if ( ! class_exists( 'AFWC_Rewrite_Rules' ) ) {
 
 			return $redirect_url;
 		}
-
 	}
 
 }

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.10.2
+ * @version     1.13.2
  */
 
 // Exit if accessed directly.
@@ -64,6 +64,14 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			add_action( 'valid-paypal-standard-ipn-request', array( $this, 'handle_ipn_request' ) );
 
+			// Show after add to cart button.
+			add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'add_product_referral_button' ), 99 );
+
+			// Ajax for updating the product affiliate link.
+			add_action( 'wc_ajax_afwc_get_product_affiliate_link', array( $this, 'get_product_affiliate_link' ) );
+
+			// Register the scripts.
+			add_action( 'wp_enqueue_scripts', array( $this, 'register_global_scripts' ) );
 		}
 
 		/**
@@ -84,7 +92,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			} else {
 				return call_user_func( 'SA_WC_Compatibility_3_9::' . $function_name );
 			}
-
 		}
 
 		/**
@@ -166,7 +173,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( ! defined( 'AFWC_SQL_COLLATION' ) ) {
 				define( 'AFWC_SQL_COLLATION', 'utf32_general_ci' );
 			}
-
 		}
 
 		/**
@@ -264,6 +270,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			include_once 'commission_rules/class-afwc-rule-group.php';
 			include_once 'commission_rules/class-afwc-plan.php';
 			// end.
+
 			if ( is_admin() ) {
 				include_once 'migration/class-afwc-migrate-affiliates.php';
 				include_once 'admin/class-afwc-admin-settings.php';
@@ -280,6 +287,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				include_once 'admin/class-afwc-multi-tier.php';
 				include_once 'admin/class-afwc-admin-housekeeping.php';
 			}
+
 			include_once 'admin/class-afwc-admin-new-referral-email.php';
 
 			include_once 'class-afwc-db-background-process.php';
@@ -320,6 +328,14 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			include_once 'class-afwc-registration-submissions.php';
 
 			include_once 'class-afwc-rewrite-rules.php';
+
+			if ( 'yes' === get_option( 'woocommerce_analytics_enabled' ) ) {
+				include_once 'integration/woocommerce/analytics/class-afwc-wc-orders-analytics.php';
+			}
+
+			include_once 'class-afwc-landing-page.php';
+			include_once 'class-afwc-merge-tags.php';
+			include_once 'payouts/class-afwc-payout-handler.php';
 		}
 
 		/**
@@ -349,7 +365,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 */
 		public function add_afwc_admin_menu() {
 			/* translators: A small arrow */
-			add_submenu_page( 'woocommerce', __( 'Affiliates Dashboard', 'affiliate-for-woocommerce' ), __( 'Affiliates', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce', 'AFWC_Admin_Dashboard::afwc_dashboard_page' );
+			add_submenu_page( 'woocommerce', __( 'Affiliates Dashboard', 'affiliate-for-woocommerce' ), __( 'Affiliates', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce', 'AFWC_Admin_Dashboard::afwc_dashboard_page' ); // phpcs:ignore WordPress.WP.Capabilities.Unknown
 
 			$get_page = ( ! empty( $_GET['page'] ) ) ? wc_clean( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore
 
@@ -358,10 +374,9 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 
 			if ( 'affiliate-for-woocommerce-documentation' === $get_page ) {
-				add_submenu_page( 'woocommerce', _x( 'Getting Started', 'Page title for setup guide page', 'affiliate-for-woocommerce' ), _x( 'Getting Started', 'Menu name for setup guide page', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' );
+				add_submenu_page( 'woocommerce', _x( 'Getting Started', 'Page title for setup guide page', 'affiliate-for-woocommerce' ), _x( 'Getting Started', 'Menu name for setup guide page', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' ); // phpcs:ignore WordPress.WP.Capabilities.Unknown
 			}
-			add_submenu_page( 'woocommerce', _x( 'Affiliate Form Settings', 'Page title for Affiliate Form Settings', 'affiliate-for-woocommerce' ), _x( 'Affiliate Form Settings', 'Menu name for Affiliate Form Settings', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-form-settings', 'AFWC_Registration_Form::reg_form_settings' );
-
+			add_submenu_page( 'woocommerce', _x( 'Affiliate Form Settings', 'Page title for Affiliate Form Settings', 'affiliate-for-woocommerce' ), _x( 'Affiliate Form Settings', 'Menu name for Affiliate Form Settings', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-form-settings', 'AFWC_Registration_Form::reg_form_settings' ); // phpcs:ignore WordPress.WP.Capabilities.Unknown
 		}
 
 		/**
@@ -408,11 +423,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 					return;
 				}
 
-				$server_scheme      = ( ! empty( $_SERVER['HTTPS'] ) ) ? wc_clean( wp_unslash( $_SERVER['HTTPS'] ) ) : ''; // phpcs:ignore
-				$server_http_host   = ( ! empty( $_SERVER['HTTP_HOST'] ) ) ? wc_clean( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''; // phpcs:ignore
-				$server_request_uri = ( ! empty( $_SERVER['REQUEST_URI'] ) ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''; // phpcs:ignore
-				$base_url           = ( ( ! empty( $server_scheme ) && 'on' === $server_scheme ) ? 'https' : 'http' ) . '://' . $server_http_host;
-				$url                = $base_url . $server_request_uri;
+				$url = afwc_get_current_url();
 				if ( strpos( $url, $pname ) === false ) {
 					return;
 				}
@@ -535,7 +546,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 					$encoded_affiliate_id,
 					$expire,
 					COOKIEPATH ? COOKIEPATH : '/',
-					COOKIE_DOMAIN
+					COOKIE_DOMAIN,
+					( wc_site_is_https() && is_ssl() )
 				);
 			}
 
@@ -549,7 +561,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				$campaign_id,
 				$expire,
 				COOKIEPATH ? COOKIEPATH : '/',
-				COOKIE_DOMAIN
+				COOKIE_DOMAIN,
+				( wc_site_is_https() && is_ssl() )
 			);
 
 			$params['campaign_id'] = $campaign_id;
@@ -565,11 +578,11 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$hit_id,
 						$expire,
 						COOKIEPATH ? COOKIEPATH : '/',
-						COOKIE_DOMAIN
+						COOKIE_DOMAIN,
+						( wc_site_is_https() && is_ssl() )
 					);
 				}
 			}
-
 		}
 
 		/**
@@ -630,7 +643,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 												)
 			);
 			// phpcs:enable
-
 		}
 
 		/**
@@ -736,17 +748,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 
 			return get_plugin_data( AFWC_PLUGIN_FILE );
-		}
-
-		/**
-		 * Function to get products data for my account page.
-		 *
-		 * @param array $args arguments.
-		 * @return array products data
-		 */
-		public static function get_my_account_products( $args = array() ) {
-			$args['limit'] = apply_filters( 'afwc_my_account_referrals_per_page', ( ! empty( $args['limit'] ) ) ? $args['limit'] : get_option( 'afwc_my_account_referrals_per_page', AFWC_MY_ACCOUNT_DEFAULT_BATCH_LIMIT ) );
-			return self::get_products_data( $args );
 		}
 
 		/**
@@ -1006,7 +1007,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( ! empty( $products_result ) ) {
 				// get the product id name map.
 				$product_ids = array_map(
-					function( $res ) {
+					function ( $res ) {
 							$product_id = ! empty( $res['vid'] ) ? $res['vid'] : $res['pid'];
 							return $product_id;
 					},
@@ -1090,8 +1091,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					current( $affiliate_ids ),
-																					$from . ' 00:00:00',
-																					$to . ' 23:59:59',
+																					$from,
+																					$to,
 																					$start_limit,
 																					$batch_limit
 																				),
@@ -1145,8 +1146,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					$option_nm,
-																					$from . ' 00:00:00',
-																					$to . ' 23:59:59',
+																					$from,
+																					$to,
 																					$start_limit,
 																					$batch_limit
 																				),
@@ -1179,8 +1180,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 					delete_option( $option_nm );
 				}
-			} else {
-				if ( ! empty( $from ) && ! empty( $to ) ) {
+			} elseif ( ! empty( $from ) && ! empty( $to ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
@@ -1197,17 +1197,17 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					0,
-																					$from . ' 00:00:00',
-																					$to . ' 23:59:59',
+																					$from,
+																					$to,
 																					$start_limit,
 																					$batch_limit
 																				),
 							'ARRAY_A'
 						);
-				} else {
-						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT payouts.payout_id,
+			} else {
+					$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
+																			$wpdb->prepare( // phpcs:ignore
+																				"SELECT payouts.payout_id,
                                                                                                             DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
@@ -1217,15 +1217,14 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																								WHERE payouts.affiliate_id != %d
 																								ORDER BY payouts.datetime DESC
 																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					0,
-																					$start_limit,
-																					$batch_limit
-																				),
-							'ARRAY_A'
-						);
-				}
+																				AFWC_TIMEZONE_STR,
+																				'%d-%b-%Y',
+																				0,
+																				$start_limit,
+																				$batch_limit
+																			),
+						'ARRAY_A'
+					);
 			}
 
 			$payout_ids           = array();
@@ -1550,6 +1549,203 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 		}
 
+		/**
+		 * Method to render the affiliate search.
+		 *
+		 * @param string $id The ID of the field.
+		 * @param array  $args The arguments.
+		 *
+		 * @return void
+		 */
+		public function render_affiliate_search( $id = '', $args = array() ) {
+
+			if ( empty( $id ) ) {
+				return;
+			}
+
+			$affiliate_id = ! empty( $args['affiliate_id'] ) ? intval( $args['affiliate_id'] ) : 0;
+			$class        = 'afwc-affiliate-search';
+
+			$plugin_data = self::get_plugin_data();
+			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array( 'jquery', 'wp-i18n', 'select2', 'wc-enhanced-select' ), $plugin_data['Version'], true );
+			wp_enqueue_script( 'affiliate-user-search' );
+
+			wp_localize_script(
+				'affiliate-user-search',
+				'affiliateParams',
+				array(
+					'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+					'security' => wp_create_nonce( 'afwc-search-affiliate-users' ),
+				)
+			);
+
+			$user_string = '';
+
+			if ( ! empty( $affiliate_id ) ) {
+				$user_id = afwc_get_user_id_based_on_affiliate_id( $affiliate_id );
+				if ( ! empty( $user_id ) ) {
+					$user = get_user_by( 'id', $user_id );
+					if ( is_object( $user ) && $user instanceof WP_User ) {
+						$user_string = sprintf(
+							/* translators: 1: user display name 2: user ID 3: user email */
+							esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'affiliate-for-woocommerce' ),
+							! empty( $user->display_name ) ? $user->display_name : '',
+							absint( $user_id ),
+							! empty( $user->user_email ) ? $user->user_email : ''
+						);
+					}
+				}
+			}
+
+			?>
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $id ); ?>" style="width: 100%;" class="<?php echo esc_attr( $class ); ?>" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="true" data-action="afwc_json_search_affiliates">
+				<?php
+				if ( ! empty( $affiliate_id ) ) {
+					?>
+					<option value="<?php echo esc_attr( $affiliate_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+					<?php
+				}
+				?>
+			</select>
+
+			<?php
+		}
+
+		/**
+		 * Method to provide the values to select2 affiliate search.
+		 *
+		 * @return void
+		 */
+		public function afwc_json_search_affiliates() {
+
+			check_ajax_referer( 'afwc-search-affiliate-users', 'security' );
+
+			$term = ( ! empty( $_GET['term'] ) ) ? (string) urldecode( stripslashes( wp_strip_all_tags( $_GET ['term'] ) ) ) : ''; // phpcs:ignore
+			if ( empty( $term ) ) {
+				wp_die();
+			}
+
+			$users = $this->get_affiliates(
+				array(
+					'search' => '*' . $term . '*',
+				)
+			);
+
+			echo wp_json_encode( ! empty( $users ) ? $users : array() );
+			wp_die();
+		}
+
+		/**
+		 * Method to display the product referral the button.
+		 *
+		 * @return void.
+		 */
+		public function add_product_referral_button() {
+			global $product;
+
+			$product_id = $product instanceof WC_Product && is_callable( array( $product, 'get_id' ) ) ? absint( $product->get_id() ) : 0;
+			if ( empty( $product_id ) ) {
+				return;
+			}
+
+			$style = '';
+
+			$theme = wp_get_theme();
+			if ( $theme instanceof WP_Theme && is_callable( array( $theme, 'get_template' ) ) && 'astra' === $theme->get_template() ) {
+				$style = 'padding: 10px 20px;margin: 0 10px;';
+			}
+
+			$this->print_product_referral_button(
+				$product_id,
+				array(
+					'class' => 'single-product-affiliate-link',
+					'style' => $style,
+				)
+			);
+		}
+
+		/**
+		 * Method to display the button with referral URL.
+		 *
+		 * @param int   $product_id The product Id.
+		 * @param array $args The arguments.
+		 * @return void.
+		 */
+		public function print_product_referral_button( $product_id = 0, $args = array() ) {
+			$product_id = absint( $product_id );
+			if ( empty( $product_id ) ) {
+				return;
+			}
+
+			$link = afwc_get_product_affiliate_url( $product_id, get_current_user_id() );
+			if ( empty( $link ) ) {
+				return;
+			}
+
+			if ( ! wp_script_is( 'afwc-affiliate-link' ) ) {
+				wp_enqueue_script( 'afwc-affiliate-link' );
+			}
+
+			$class = 'woocommerce-button button afwc-click-to-copy ' . ( ! empty( $args['class'] ) ? $args['class'] : '' );
+			$style = ! empty( $args['style'] ) ? $args['style'] : '';
+			$label = apply_filters(
+				'afwc_product_referral_link_label',
+				_x( 'Click to copy affiliate link', 'text for copying the product affiliate link', 'affiliate-for-woocommerce' ),
+				array(
+					'product_id' => $product_id,
+					'source'     => $this,
+				)
+			);
+
+			echo wp_kses_post(
+				sprintf(
+					'<a href="%1$s" data-ctp="%1$s" class="%2$s" style="%3$s">%4$s</a>',
+					esc_url( $link ),
+					esc_attr( $class ),
+					esc_attr( $style ),
+					esc_attr( $label )
+				)
+			);
+		}
+
+		/**
+		 * Ajax callback method to get the referral url.
+		 *
+		 * @return void.
+		 */
+		public function get_product_affiliate_link() {
+			check_ajax_referer( 'afwc-product-affiliate-link', 'security' );
+
+			if ( empty( $_POST['product_id'] ) ) {
+				wp_send_json_error();
+			}
+
+			wp_send_json_success(
+				array(
+					'url' => afwc_get_product_affiliate_url( absint( $_POST['product_id'] ), get_current_user_id() ),
+				)
+			);
+		}
+
+		/**
+		 * Register the global scripts.
+		 *
+		 * @return void.
+		 */
+		public function register_global_scripts() {
+			$plugin_data = self::get_plugin_data();
+			wp_register_script( 'afwc-affiliate-link', AFWC_PLUGIN_URL . '/assets/js/afwc-affiliate-link.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
+			wp_localize_script(
+				'afwc-affiliate-link',
+				'afwcAffiliateLinkParams',
+				array(
+					'product' => array(
+						'ajaxURL'  => WC_AJAX::get_endpoint( 'afwc_get_product_affiliate_link' ),
+						'security' => wp_create_nonce( 'afwc-product-affiliate-link' ),
+					),
+				)
+			);
+		}
 	}
 
 }

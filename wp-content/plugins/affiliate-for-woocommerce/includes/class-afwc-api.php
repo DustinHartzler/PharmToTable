@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/
  * @since    1.10.0
- * @version  1.9.4
+ * @version  1.9.8
  */
 
 // Exit if accessed directly.
@@ -44,11 +44,11 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'track_conversion' ) );
 
 			if ( class_exists( 'WC_Subscriptions_Core_Plugin' ) || class_exists( 'WC_Subscriptions' ) ) {
-				add_filter( 'wcs_renewal_order_created', array( $this, 'handle_renewal_order_created' ), 10, 2 );
+				add_filter( 'wcs_renewal_order_created', array( $this, 'handle_renewal_order_created' ) );
 				if ( WCS_AFWC_Compatibility::get_instance()->is_wcs_core_gte( '2.5.0' ) ) {
 					add_filter( 'wc_subscriptions_renewal_order_data', array( $this, 'do_not_copy_affiliate_meta' ) );
 				} else {
-					add_filter( 'wcs_renewal_order_meta_query', array( $this, 'do_not_copy_meta' ), 10, 3 );
+					add_filter( 'wcs_renewal_order_meta_query', array( $this, 'do_not_copy_meta' ) );
 				}
 			}
 
@@ -113,10 +113,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			$user_agent = wc_get_user_agent();
 
-			$uri  = ! empty( $_SERVER['REQUEST_URI'] ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''; // phpcs:ignore
-			$host = ! empty( $_SERVER['HTTP_HOST'] ) ? wc_clean( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''; // phpcs:ignore
-			$url  = ! empty( $_SERVER['REQUEST_SCHEME'] ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_SCHEME'] ) ) . '://' . $host . $uri : ''; // phpcs:ignore
-
 			$wpdb->insert( // phpcs:ignore
 				$wpdb->prefix . 'afwc_hits',
 				array(
@@ -127,7 +123,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 					'type'         => $source,
 					'campaign_id'  => ! empty( $params['campaign_id'] ) ? intval( $params['campaign_id'] ) : 0,
 					'user_agent'   => ! empty( $user_agent ) ? $user_agent : '',
-					'url'          => $url,
+					'url'          => afwc_get_current_url(),
 				),
 				array( '%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s' )
 			);
@@ -262,17 +258,15 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 					}
 				}
 			}
-
 		}
 
 		/**
 		 * Function to track commision
 		 *
 		 * @param integer $affiliate_id The affiliate id.
-		 * @param integer $amount amount to be add/remove for commision.
-		 * @param mixed   $params extra params to override default params.
+		 * @param integer $amount amount to be add/remove for commission.
 		 */
-		private function track_commission( $affiliate_id = 0, $amount = 0, $params = array() ) {
+		private function track_commission( $affiliate_id = 0, $amount = 0 ) {
 			global $wpdb;
 
 			$now = gmdate( 'Y-m-d H:i:s' );
@@ -285,7 +279,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 					$affiliate_id
 				)
 				); // phpcs:ignore
-
 		}
 
 		/**
@@ -366,7 +359,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				foreach ( $plan_order as $k ) {
 					$current_plan = array_filter(
 						$afwc_plans,
-						function( $x ) use ( $k ) {
+						function ( $x ) use ( $k ) {
 							$k       = absint( $k );
 							$x['id'] = absint( $x['id'] );
 							return $x['id'] === $k;
@@ -386,7 +379,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				// remove storewide plan.
 				$ordered_plans = array_filter(
 					$ordered_plans,
-					function( $p ) use ( $default_plan_id ) {
+					function ( $p ) use ( $default_plan_id ) {
 						if ( $p['id'] !== $default_plan_id ) {
 							return $p;
 						}
@@ -519,11 +512,13 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			// set all plan meta data of calculations.
 			$afwc_plan_meta['product_commissions'] = ! empty( $set_commission ) ? $set_commission : array();
 			$afwc_plan_meta['commissions_chain']   = ! empty( $commissions ) ? $commissions : array();
-			$order->add_meta_data( 'afwc_set_commission', $afwc_plan_meta );
+
+			// `update_meta_data` is used here to fix an issue related to WooCommerce database synchronization for HPOS. Using 'add_meta_data' is causing issues.
+			$order->update_meta_data( 'afwc_set_commission', $afwc_plan_meta );
+
 			$order->save();
 
 			return $commissions;
-
 		}
 
 		/**
@@ -544,8 +539,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 					$order = wc_get_order( $order_id );
 				}
 
-				$parent_commissions = $order->get_meta( 'afwc_parent_commissions', true );
-				$parent_commissions = ! empty( $parent_commissions ) ? $parent_commissions : array();
+				$parent_commissions = array();
 
 				// loop through the plan_id_detail_map.
 				foreach ( $plan_id_detail_map as $plan_id => $plan_details ) {
@@ -602,11 +596,11 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		/**
 		 * Record referral when renewal order created
 		 *
-		 * @param  WC_Order        $renewal_order The renewal order.
-		 * @param  WC_Subscription $subscription  The subscription.
+		 * @param  WC_Order $renewal_order The renewal order.
+		 *
 		 * @return WC_Order
 		 */
-		public function handle_renewal_order_created( $renewal_order = null, $subscription = null ) {
+		public function handle_renewal_order_created( $renewal_order = null ) {
 			$this->track_conversion( $renewal_order );
 			return $renewal_order;
 		}
@@ -778,12 +772,11 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		/**
 		 * Do not copy few affiliate meta to renewal order.
 		 *
-		 * @param  mixed   $order_meta_query Order items.
-		 * @param  integer $to_order The original order id.
-		 * @param  integer $from_order The renewal order id.
+		 * @param  mixed $order_meta_query Order items.
+		 *
 		 * @return mixed $order_meta_query
 		 */
-		public function do_not_copy_meta( $order_meta_query, $to_order, $from_order ) {
+		public function do_not_copy_meta( $order_meta_query = '' ) {
 			$order_meta_query .= " AND `meta_key` NOT IN ('is_commission_recorded', 'afwc_order_valid_plans', 'afwc_set_commission', 'afwc_parent_commissions')";
 			return $order_meta_query;
 		}
@@ -863,7 +856,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			}
 
 			return $is_valid_order;
-
 		}
 
 		/**
@@ -974,7 +966,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			return ! empty( $affiliate_details ) ? $affiliate_details : array();
 		}
-
 	}
 }
 

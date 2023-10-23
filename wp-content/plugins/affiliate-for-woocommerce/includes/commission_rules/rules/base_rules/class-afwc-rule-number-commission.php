@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules/rules/base_rules/
  * @since       2.5.0
- * @version     1.0.4
+ * @version     1.0.5
  */
 
 // Exit if accessed directly.
@@ -80,7 +80,7 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 
 			if ( ! empty( $current ) && is_array( $current ) ) {
 				$current = array_map(
-					function( $c ) {
+					function ( $c ) {
 						return ( '' !== $c ) ? intval( $c ) : 0;
 					},
 					$current
@@ -91,7 +91,7 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 
 			if ( ! empty( $value ) && is_array( $value ) ) {
 				$value = array_map(
-					function( $v ) {
+					function ( $v ) {
 						return ( '' !== $v ) ? intval( $v ) : 0;
 					},
 					$value
@@ -147,7 +147,6 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 			}
 			return $res;
 		}
-
 	}
 
 }

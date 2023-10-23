@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce/
  * @since       1.0.0
- * @version     1.4.1
+ * @version     1.4.3
  */
 
 // Exit if accessed directly.
@@ -29,7 +29,6 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			add_filter( 'afwc_affiliates_refund', array( $this, 'woocommerce_affiliates_refund' ), 10, 2 );
 			add_filter( 'afwc_all_customer_ids', array( $this, 'woocommerce_all_customer_ids' ), 10, 2 );
 			add_filter( 'afwc_order_details', array( $this, 'woocommerce_order_details' ), 10, 2 );
-
 		}
 
 		/**
@@ -80,8 +79,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 				}
 
 				delete_option( $option_nm );
-			} else {
-				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
+			} elseif ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
@@ -90,20 +88,19 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 															'shop_order'
 														)
 					);
-				} else {
-					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
-														$wpdb->prepare( // phpcs:ignore
-															"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
+			} else {
+				$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
 												                        FROM {$wpdb->posts} AS posts 
 												                        JOIN {$wpdb->postmeta} AS postmeta 
 												                            ON ( posts.ID = postmeta.post_id 
 												                            	AND postmeta.meta_key = %s 
 																				posts.post_type = %s )",
-															'_order_total',
-															'shop_order'
-														)
-					);
-				}
+														'_order_total',
+														'shop_order'
+													)
+				);
 			}
 
 			if ( ! empty( $woocommerce_sales ) ) {
@@ -111,7 +108,6 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			}
 
 			return $storewide_sales;
-
 		}
 
 		/**
@@ -179,8 +175,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 				}
 
 				delete_option( $option_nm );
-			} else {
-				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
+			} elseif ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
@@ -191,22 +186,21 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 															'wc-refunded'
 														)
 					);
-				} else {
-					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
-														$wpdb->prepare( // phpcs:ignore
-															"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
+			} else {
+				$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
 												                        FROM {$wpdb->posts} AS posts 
 												                        LEFT JOIN {$wpdb->postmeta} AS postmeta 
 												                            ON ( posts.ID = postmeta.post_id 
 												                            	AND postmeta.meta_key = %s ) 
 												                        WHERE posts.post_type = %s 
 												                        	AND posts.post_status = %s",
-															'_order_total',
-															'shop_order',
-															'wc-refunded'
-														)
-					);
-				}
+														'_order_total',
+														'shop_order',
+														'wc-refunded'
+													)
+				);
 			}
 
 			if ( ! empty( $woocommerce_refunds ) ) {
@@ -214,7 +208,6 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			}
 
 			return $affiliates_refund;
-
 		}
 
 		/**
@@ -251,8 +244,8 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 															AFWC_SQL_CHARSET,
 															AFWC_SQL_COLLATION,
 															$option_order_status,
-															$from . ' 00:00:00',
-															$to . ' 23:59:59'
+															$from,
+															$to
 														)
 					);
 				} else {
@@ -276,13 +269,12 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 															AFWC_SQL_CHARSET,
 															AFWC_SQL_COLLATION,
 															$option_order_status,
-															$from . ' 00:00:00',
-															$to . ' 23:59:59'
+															$from,
+															$to
 														)
 					);
 				}
-			} else {
-				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
+			} elseif ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
 					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT IFNULL(COUNT( DISTINCT customer_id ), 0) AS customer_ids 
@@ -300,10 +292,10 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 															$option_order_status
 														)
 					);
-				} else {
-					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
-														$wpdb->prepare( // phpcs:ignore
-															"SELECT IFNULL(COUNT( DISTINCT postmeta.meta_value ), 0) AS customer_ids 
+			} else {
+				$all_customer_ids = $wpdb->get_var( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT IFNULL(COUNT( DISTINCT postmeta.meta_value ), 0) AS customer_ids 
 													                        FROM {$wpdb->postmeta} AS postmeta
 													                        	JOIN {$wpdb->posts} AS posts 
 													                        		ON ( posts.ID = postmeta.post_id 
@@ -313,16 +305,15 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 													                        	AND FIND_IN_SET ( CONVERT(posts.post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																											FROM {$wpdb->prefix}options
 																											WHERE option_name = %s ) )",
-															'_customer_user',
-															'shop_order',
-															AFWC_SQL_CHARSET,
-															AFWC_SQL_COLLATION,
-															AFWC_SQL_CHARSET,
-															AFWC_SQL_COLLATION,
-															$option_order_status
-														)
-					);
-				}
+														'_customer_user',
+														'shop_order',
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														$option_order_status
+													)
+				);
 			}
 
 			delete_option( $option_order_status );
@@ -390,9 +381,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			}
 
 			return $affiliates_order_details;
-
 		}
-
 	}
 
 }

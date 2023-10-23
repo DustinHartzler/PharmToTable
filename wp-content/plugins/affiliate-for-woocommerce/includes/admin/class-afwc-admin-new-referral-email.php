@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/admin/
  * @since    6.7.0
- * @version  1.0.1
+ * @version  1.0.2
  */
 
 // Exit if accessed directly.
@@ -61,7 +61,7 @@ if ( ! class_exists( 'AFWC_Admin_New_Referral_Email' ) ) {
 			}
 
 			$order_id          = is_callable( array( $order, 'get_id' ) ) ? $order->get_id() : 0;
-			$afwc_api          = new AFWC_API();
+			$afwc_api          = AFWC_API::get_instance();
 			$affiliate_details = is_callable( array( $afwc_api, 'get_affiliate_by_order' ) ) ? $afwc_api->get_affiliate_by_order( $order_id, 'all' ) : array();
 
 			if ( empty( $affiliate_details ) || ! is_array( $affiliate_details ) ) {
@@ -80,7 +80,7 @@ if ( ! class_exists( 'AFWC_Admin_New_Referral_Email' ) ) {
 				global $wpdb;
 				$campaign_name = $wpdb->get_var( // phpcs:ignore
 									$wpdb->prepare( // phpcs:ignore
-											"SELECT title
+										"SELECT title
 												FROM {$wpdb->prefix}afwc_campaigns
 												WHERE id = %d",
 										$campaign_id
@@ -95,9 +95,7 @@ if ( ! class_exists( 'AFWC_Admin_New_Referral_Email' ) ) {
 			} else {
 				include AFWC_PLUGIN_DIRPATH . '/templates/emails/afwc-admin-new-referral.php'; // phpcs:ignore
 			}
-
 		}
-
 	}
 
 }

@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/templates/my-account/
  * @since    5.7.0
- * @version  1.2.1
+ * @version  1.2.4
  */
 
 // Exit if accessed directly.
@@ -39,8 +39,19 @@ $referral_url_pattern = ( 'yes' === $afwc_use_pretty_referral_links ) ? ( $pname
 				<?php
 			}
 			?>
-		<p><?php echo esc_html_x( 'Your referral URL is: ', 'affiliate referral url label', 'affiliate-for-woocommerce' ); ?>
-			<code id="afwc_affiliate_link_label" title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for referral url', 'affiliate-for-woocommerce' ); ?>" onclick="afwc_copy_affiliate_link_coupon(this)"><?php echo esc_url( trailingslashit( apply_filters( 'afwc_referral_redirection_url', home_url(), $affiliate_id, array( 'source' => $affiliate_for_woocommerce ) ) ) . $referral_url_pattern ); ?><span class="afwc_ref_id_span"><?php echo esc_attr( $affiliate_identifier ); ?></code>
+		<p>
+		<?php echo esc_html_x( 'Your referral URL is: ', 'affiliate referral url label', 'affiliate-for-woocommerce' ); ?>
+			<?php
+				$affiliate_url_with_redirection = afwc_get_affiliate_url( apply_filters( 'afwc_referral_redirection_url', trailingslashit( home_url() ), $affiliate_id, array( 'source' => $affiliate_for_woocommerce ) ), '', $affiliate_identifier );
+			?>
+			<code
+				id="afwc_affiliate_link_label"
+				class="afwc-click-to-copy"
+				title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for referral url', 'affiliate-for-woocommerce' ); ?>"
+				data-ctp="<?php echo esc_url( $affiliate_url_with_redirection ); ?>"
+				>
+				<?php echo esc_url( $affiliate_url_with_redirection ); ?>
+			</code>
 		</p>
 	</div>
 	<div id="afwc_referral_coupon_container">
@@ -91,13 +102,10 @@ $referral_url_pattern = ( 'yes' === $afwc_use_pretty_referral_links ) ? ( $pname
 									?>
 									<tr>
 										<td>
-											<code id="afwc_referral_coupon" title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for coupon code', 'affiliate-for-woocommerce' ); ?>" onclick="afwc_copy_affiliate_link_coupon(this)"><?php echo esc_html( $coupon_code ); ?></code>
+											<code id="afwc_referral_coupon" class="afwc-click-to-copy" title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for coupon code', 'affiliate-for-woocommerce' ); ?>" data-ctp="<?php echo esc_attr( $coupon_code ); ?>"><?php echo esc_html( $coupon_code ); ?></code>
 										</td>
 										<td>
-											<span>
-												<?php
-													echo esc_attr__( $coupon_with_discount ); // phpcs:ignore
-												?>
+											<span> <?php echo esc_attr( $coupon_with_discount ); ?>
 											</span>
 										</td>
 									<?php
@@ -116,6 +124,21 @@ $referral_url_pattern = ( 'yes' === $afwc_use_pretty_referral_links ) ? ( $pname
 		}
 		?>
 	</div>
+	<?php if ( ! empty( $afwc_landings_pages ) ) { ?>
+		<div>
+			<p><strong><?php echo esc_html_x( 'Landing pages', 'label for landing pages', 'affiliate-for-woocommerce' ); ?></strong></p>
+			<ul class="afwc-landing-page-urls">
+			<?php
+			foreach ( $afwc_landings_pages as $landing_page_url ) {
+				if ( empty( $landing_page_url ) ) {
+					continue;
+				}
+				?>
+				<li><code class="afwc-click-to-copy" id="afwc_landing_page_link_label" title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for landing page url', 'affiliate-for-woocommerce' ); ?>" data-ctp="<?php echo esc_url( $landing_page_url ); ?>"><?php echo esc_url( $landing_page_url ); ?></code></li>
+			<?php } ?>
+			</ul>
+		</div>
+	<?php } ?>
 	<div id="afwc_custom_referral_url_container">
 		<p><strong><?php echo esc_html_x( 'Referral URL generator', 'label to generate custom referral url', 'affiliate-for-woocommerce' ); ?></strong></p>
 		<p><?php echo esc_html_x( 'Page URL', 'label for page url', 'affiliate-for-woocommerce' ); ?>:
@@ -125,8 +148,9 @@ $referral_url_pattern = ( 'yes' === $afwc_use_pretty_referral_links ) ? ( $pname
 				<?php echo wp_kses_post( $referral_url_pattern ); ?><span class="afwc_ref_id_span"><?php echo esc_attr( $affiliate_identifier ); ?></span>
 			</span>
 		</p>
-		<p><?php echo esc_html_x( 'Referral URL: ', 'custom referral url', 'affiliate-for-woocommerce' ); ?>
-			<code id="afwc_generated_affiliate_link" title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for custom referral url', 'affiliate-for-woocommerce' ); ?>" onclick="afwc_copy_affiliate_link_coupon(this)"><?php echo esc_url( trailingslashit( home_url() ) . $referral_url_pattern ); ?><span class="afwc_ref_id_span"><?php echo esc_attr( $affiliate_identifier ); ?></span></code>
+		<p>
+		<?php echo esc_html_x( 'Referral URL: ', 'custom referral url', 'affiliate-for-woocommerce' ); ?>
+			<code id="afwc_generated_affiliate_link" title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for custom referral url', 'affiliate-for-woocommerce' ); ?>" class="afwc-click-to-copy" data-ctp="<?php echo esc_url( $affiliate_url ); ?>"><?php echo esc_url( $affiliate_url ); ?></code>
 		</p>
 	</div>
 	<?php

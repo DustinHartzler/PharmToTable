@@ -67,4 +67,3 @@ if ( ! class_exists( 'AFWC_Affiliate_Commission' ) ) {
 		}
 	}
 }
-

@@ -81,7 +81,7 @@ jQuery(
 				cache: true
 			}
 		};
-		jQuery('.afwc-lifetime-commission-excludes-search').selectWoo(ltcExcludesSelect2Args);
+		jQuery('.afwc-lifetime-commission-excludes-search').select2(ltcExcludesSelect2Args);
 
 		let afwcFieldVisibility = {
 			hiddenFields: [],

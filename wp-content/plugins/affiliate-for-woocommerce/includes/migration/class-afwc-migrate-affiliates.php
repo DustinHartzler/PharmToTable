@@ -317,7 +317,6 @@ if ( ! class_exists( 'AFWC_Migrate_Affiliates' ) ) {
 				}
 			}
 		}
-
 	}
 
 	return new AFWC_Migrate_Affiliates();

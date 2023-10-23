@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.7.0
- * @version     1.1.1
+ * @version     1.1.4
  */
 
 // Exit if accessed directly.
@@ -40,7 +40,6 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			add_action( 'woocommerce_applied_coupon', array( $this, 'coupon_applied' ) );
 
 			add_action( 'wp_ajax_afwc_json_search_affiliates', array( $this, 'afwc_json_search_affiliates' ) );
-
 		}
 
 		/**
@@ -96,7 +95,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			}
 
 			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
-			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array(), $plugin_data['Version'], true );
+			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array( 'jquery', 'wp-i18n', 'select2' ), $plugin_data['Version'], true );
 			wp_enqueue_script( 'affiliate-user-search' );
 
 			wp_localize_script(
@@ -133,7 +132,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			<div class="options_group afwc-field">
 				<p class="form-field">
 					<label for="afwc_referral_coupon_of"><?php esc_attr_e( 'Assign to affiliate', 'affiliate-for-woocommerce' ); ?></label>
-					<select id="afwc_referral_coupon_of" name="afwc_referral_coupon_of" style="width: 50%;" class="wc-afw-customer-search" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="true" data-action="afwc_json_search_affiliates">
+					<select id="afwc_referral_coupon_of" name="afwc_referral_coupon_of" style="width: 50%;" class="afwc-affiliate-search" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="true" data-action="afwc_json_search_affiliates">
 						<?php
 						if ( ! empty( $user_id ) ) {
 							?>
@@ -146,7 +145,6 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 				</p>
 			</div>
 			<?php
-
 		}
 
 		/**
@@ -165,9 +163,8 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 				return;
 			}
 
-			if ( empty( $coupon ) ) {
-				$coupon = new WC_Coupon( $coupon_id );
-			}
+			// Always refresh object to get updated meta values.
+			$coupon = new WC_Coupon( intval( $coupon_id ) );
 			if ( ! $coupon instanceof WC_Coupon ) {
 				return;
 			}
@@ -249,7 +246,6 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 
 			$afwc = Affiliate_For_WooCommerce::get_instance();
 			$afwc->handle_hit( $affiliate_id );
-
 		}
 
 		/**
@@ -276,7 +272,6 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 
 			return $coupon_params;
 		}
-
 	}
 
 }

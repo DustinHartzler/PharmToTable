@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
  * @since       1.8.0
- * @version     1.4.3
+ * @version     1.4.6
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,10 +59,9 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 		/**
 		 * Render AFWC_Registration_Form
 		 *
-		 * @param mixed $atts Form attributes.
 		 * @return string $afwc_reg_form_html
 		 */
-		public function render_registration_form( $atts ) {
+		public function render_registration_form() {
 
 			// Return if block editor/Gutenberg to prevent printing response messages on the admin side.
 			$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : '';
@@ -83,36 +82,20 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 
 			$afwc_reg_form_html = '';
 			$afwc_user_values   = array();
-			$is_affiliate       = '';
+			$affiliate_status   = '';
 
 			$user = wp_get_current_user();
 			if ( is_object( $user ) && ! empty( $user->ID ) ) {
 				$afwc_user_values['afwc_reg_email'] = ! empty( $user->user_email ) ? $user->user_email : '';
-				$is_affiliate                       = afwc_is_user_affiliate( $user );
+				$affiliate_status                   = afwc_is_user_affiliate( $user );
 			}
-			if ( 'yes' === $is_affiliate ) {
-				$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-				$my_account_afwc_url = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
-				$msg                 = sprintf(
-					/* translators: Link for affiliate's dashboard */
-					esc_html__( 'You are already registered as our affiliate. Please %s to access your affiliate dashboard.', 'affiliate-for-woocommerce' ),
-					'<a href="' . esc_attr( $my_account_afwc_url ) . '">' . esc_html__( 'click here', 'affiliate-for-woocommerce' ) . '</a>'
-				);
-				$afwc_reg_form_html = '<div class="afwc-reg-form-msg">' . wp_kses_post( $msg ) . '</div>';
-			} elseif ( 'no' === $is_affiliate ) {
-				$afwc_admin_contact_email = get_option( 'afwc_contact_admin_email_address', '' );
-				if ( ! empty( $afwc_admin_contact_email ) ) {
-					$msg = sprintf(
-						/* translators: mailto link to contact affiliate manager */
-						esc_html__( 'Your previous request to join our affiliate program has been declined. Please %s for more details.', 'affiliate-for-woocommerce' ),
-						'<a target="_blank" href="mailto:' . esc_attr( $afwc_admin_contact_email ) . '">' . esc_html__( 'email affiliate manager', 'affiliate-for-woocommerce' ) . '</a>'
-					);
-				} else {
-					$msg = esc_html__( 'Your previous request to join our affiliate program has been declined. Please contact the store admin for more details.', 'affiliate-for-woocommerce' );
+
+			if ( ! empty( $affiliate_status ) && in_array( $affiliate_status, array( 'yes', 'pending', 'no' ), true ) ) {
+				$afwc_registration = AFWC_Registration_Submissions::get_instance();
+				// Message for registered, pending and rejected affiliates.
+				if ( is_callable( array( $afwc_registration, 'get_message' ) ) ) {
+					$afwc_reg_form_html = '<div class="afwc-reg-form-msg">' . wp_kses_post( $afwc_registration->get_message( $affiliate_status ) ) . '</div>';
 				}
-				$afwc_reg_form_html = '<div class="afwc-reg-form-msg">' . wp_kses_post( $msg ) . '</div>';
-			} elseif ( 'pending' === $is_affiliate ) {
-				$afwc_reg_form_html = '<div class="afwc-reg-form-msg">' . esc_html__( 'Your request is in moderation.', 'affiliate-for-woocommerce' ) . '</div>';
 			} else {
 				// Registration form fields filter.
 				$this->form_fields = get_option( 'afwc_form_fields', true );
@@ -200,7 +183,6 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 				$field_html = '<div class="afwc_reg_field_wrapper ' . $id . ' ' . $class . '"><label for="' . $id . '" class="afwc_' . $field['required'] . '">' . $field['label'] . '</label>' . $field_html . '</div>';
 			}
 			return $field_html;
-
 		}
 
 		/**
@@ -262,7 +244,6 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 					'message'        => ! empty( $response['message'] ) ? $response['message'] : _x( 'Something went wrong.', 'affiliate registration message', 'affiliate-for-woocommerce' ),
 				)
 			);
-
 		}
 
 		/**
@@ -404,8 +385,6 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 			</form>
 			<?php
 		}
-
-
 	}
 
 }

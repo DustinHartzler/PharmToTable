@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/integration/contact-form-7/
  * @since       5.4.0
- * @version     1.1.3
+ * @version     1.1.4
  */
 
 // Exit if accessed directly.
@@ -177,7 +177,6 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 				array( $this, 'render_password_fields' ),
 				array( 'name-attr' => true )
 			);
-
 		}
 
 		/**
@@ -388,12 +387,10 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 						} elseif ( 'yes' === $data['affiliate_status'] ) {
 							$message = wpcf7_get_message( 'afwc_registered_affiliate' );
 						}
-					} else {
-						if ( 'yes' === $data['affiliate_status'] ) {
+					} elseif ( 'yes' === $data['affiliate_status'] ) {
 							$message = wpcf7_get_message( 'afwc_successfully_registered_with_auto_approved' );
-						} elseif ( 'pending' === $data['affiliate_status'] ) {
-							$message = wpcf7_get_message( 'afwc_successfully_registered_without_auto_approved' );
-						}
+					} elseif ( 'pending' === $data['affiliate_status'] ) {
+						$message = wpcf7_get_message( 'afwc_successfully_registered_without_auto_approved' );
 					}
 				}
 
@@ -411,7 +408,6 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 					}
 				}
 			}
-
 		}
 
 		/**
@@ -638,7 +634,7 @@ if ( ! class_exists( 'CF7_AFWC_Compatibility' ) ) {
 					<label for="<?php echo esc_attr( $content . '-mailtag' ); ?>">
 						<?php
 						/* translators: mail tag */
-						echo sprintf( esc_html_x( 'To use the value input through this field in a mail field, you need to insert the corresponding mail-tag (%s) into the field on the Mail tab.', 'Guide for cf7 mail tag installations', 'affiliate-for-woocommerce' ), '<strong><span class="mail-tag"></span></strong>' );
+						printf( esc_html_x( 'To use the value input through this field in a mail field, you need to insert the corresponding mail-tag (%s) into the field on the Mail tab.', 'Guide for cf7 mail tag installations', 'affiliate-for-woocommerce' ), '<strong><span class="mail-tag"></span></strong>' );
 						?>
 						<input type="text" class="mail-tag code hidden" readonly="readonly" id="<?php echo esc_attr( $content . '-mailtag' ); ?>" />
 					</label>
