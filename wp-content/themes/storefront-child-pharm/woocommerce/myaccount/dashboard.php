@@ -53,7 +53,6 @@ $allowed_html = array(
 		esc_url( wc_get_endpoint_url( 'edit-address' ) ),
 		esc_url( wc_get_endpoint_url( 'edit-account' ) )
 	);
-    echo do_shortcode('[ld_profile]');
 	?>
 </p>
 
