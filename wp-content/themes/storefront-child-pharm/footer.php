@@ -37,70 +37,72 @@
                 <form action="#">
                     <div class="input-group stylish-input-group">
                         <button type="submit">
-                        <a href="https://app.monstercampaigns.com/c/g9aoffuqh8sc1kutmuzw/" target="_blank">
+							
+                        <a data-formkit-toggle="50816bd319" href="https://witty-producer-4283.ck.page/50816bd319">
                         Sign Up for Email Updates <i class="fa fa-paper-plane"></i>
                         </a>
-                        </button>
-                    </div>
-                </form>
-                <?php } ?>
-            </div>
-        </div>
-    </div>
+					</button>
+					
+				</div>
+			</form>
+			<?php } ?>
+		</div>
+	</div>
+</div>
 </div>
 <!-- End Newsletter -->
 
 <footer>
-    <div class="container">
-            <div class="row">
-
-                <div class="f-items default-padding">
-                    <!-- Footer 1 Item -->
-					<div class="col-md-4 item">
-							<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-1")) : ?>
-							<?php endif;?>
+	<div class="container">
+		<div class="row">
+			
+			<div class="f-items default-padding">
+				<!-- Footer 1 Item -->
+				<div class="col-md-4 item">
+					<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-1")) : ?>
+						<?php endif;?>
 					</div>
                     <!-- End Footer 1 Item -->
                     <!-- Footer 2 Item -->
 					<div class="col-md-4 item">
 						<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-2")) : ?>
-						<?php endif;?>
+							<?php endif;?>
+						</div>
+						<!-- End Footer 2 Item -->
+						<!-- Footer 3 Item -->
+						<div class="col-md-4 item">
+							<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-3")) : ?>
+								<?php endif;?>
+							</div>
+							<!-- End Footer 3 Item -->
+						</div>
 					</div>
-                    <!-- End Footer 2 Item -->
-                    <!-- Footer 3 Item -->
-					<div class="col-md-4 item">
-						<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-3")) : ?>
-						<?php endif;?>
-					</div>
-                    <!-- End Footer 3 Item -->
-                </div>
-            </div>
-        </div>
-        <?php }?>
-	<?php do_action('storefront_after_footer'); ?>
-
-</div><!-- #page -->
-
-	<!-- jQuery Frameworks
-	============================================= -->
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery-1.12.4.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootstrap.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/equal-height.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.appear.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.easing.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.magnific-popup.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/modernizr.custom.13711.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/owl.carousel.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/wow.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/isotope.pkgd.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/imagesloaded.pkgd.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/count-to.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/YTPlayer.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.nice-select.min.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootsnav.js"></script>
-	<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/main.js"></script>
-<?php wp_footer(); ?>
-<!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
+				</div>
+				<?php }?>
+				<?php do_action('storefront_after_footer'); ?>
+				
+			</div><!-- #page -->
+			
+			<!-- jQuery Frameworks
+			============================================= -->
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery-1.12.4.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootstrap.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/equal-height.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.appear.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.easing.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.magnific-popup.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/modernizr.custom.13711.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/owl.carousel.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/wow.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/isotope.pkgd.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/imagesloaded.pkgd.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/count-to.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/YTPlayer.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.nice-select.min.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootsnav.js"></script>
+			<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/main.js"></script>
+			<?php wp_footer(); ?>
+			<!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
 <script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
 <!-- / https://optinmonster.com -->
 
