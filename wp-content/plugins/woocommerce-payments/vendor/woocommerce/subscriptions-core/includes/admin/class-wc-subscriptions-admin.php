@@ -317,13 +317,13 @@ class WC_Subscriptions_Admin {
 			<span class="wrap">
 				<input type="text" id="_subscription_price" name="_subscription_price" class="wc_input_price wc_input_subscription_price" placeholder="<?php echo esc_attr_x( 'e.g. 5.90', 'example price', 'woocommerce-subscriptions' ); ?>" step="any" min="0" value="<?php echo esc_attr( wc_format_localized_price( $chosen_price ) ); ?>" />
 				<label for="_subscription_period_interval" class="wcs_hidden_label"><?php esc_html_e( 'Subscription interval', 'woocommerce-subscriptions' ); ?></label>
-				<select id="_subscription_period_interval" name="_subscription_period_interval" class="wc_input_subscription_period_interval">
+				<select id="_subscription_period_interval" name="_subscription_period_interval" class="wc_input_subscription_period_interval wc-enhanced-select">
 				<?php foreach ( wcs_get_subscription_period_interval_strings() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $chosen_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
 				<label for="_subscription_period" class="wcs_hidden_label"><?php esc_html_e( 'Subscription period', 'woocommerce-subscriptions' ); ?></label>
-				<select id="_subscription_period" name="_subscription_period" class="wc_input_subscription_period last" >
+				<select id="_subscription_period" name="_subscription_period" class="wc_input_subscription_period last wc-enhanced-select" >
 				<?php foreach ( wcs_get_subscription_period_strings() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $chosen_period, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
@@ -337,11 +337,11 @@ class WC_Subscriptions_Admin {
 		woocommerce_wp_select(
 			array(
 				'id'          => '_subscription_length',
-				'class'       => 'wc_input_subscription_length select short',
-				'label'       => __( 'Expire after', 'woocommerce-subscriptions' ),
+				'class'       => 'wc_input_subscription_length select short wc-enhanced-select',
+				'label'       => __( 'Stop renewing after', 'woocommerce-subscriptions' ),
 				'options'     => wcs_get_subscription_ranges( $chosen_period ),
 				'desc_tip'    => true,
-				'description' => __( 'Automatically expire the subscription after this length of time. This length is in addition to any free trial or amount of time provided before a synchronised first renewal date.', 'woocommerce-subscriptions' ),
+				'description' => __( 'Automatically stop renewing the subscription after this length of time. This length is in addition to any free trial or amount of time provided before a synchronised first renewal date.', 'woocommerce-subscriptions' ),
 			)
 		);
 
@@ -372,7 +372,7 @@ class WC_Subscriptions_Admin {
 			<span class="wrap">
 				<input type="text" id="_subscription_trial_length" name="_subscription_trial_length" class="wc_input_subscription_trial_length" value="<?php echo esc_attr( $chosen_trial_length ); ?>" />
 				<label for="_subscription_trial_period" class="wcs_hidden_label"><?php esc_html_e( 'Subscription Trial Period', 'woocommerce-subscriptions' ); ?></label>
-				<select id="_subscription_trial_period" name="_subscription_trial_period" class="wc_input_subscription_trial_period last" >
+				<select id="_subscription_trial_period" name="_subscription_trial_period" class="wc_input_subscription_trial_period last wc-enhanced-select" >
 					<?php foreach ( wcs_get_available_time_periods() as $value => $label ) { ?>
 						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $chosen_trial_period, true ); ?>><?php echo esc_html( $label ); ?></option>
 					<?php } ?>
@@ -479,7 +479,7 @@ class WC_Subscriptions_Admin {
 				<option value="variable_subscription_sign_up_fee"><?php esc_html_e( 'Subscription sign-up fee', 'woocommerce-subscriptions' ); ?></option>
 				<option value="variable_subscription_period_interval"><?php esc_html_e( 'Subscription billing interval', 'woocommerce-subscriptions' ); ?></option>
 				<option value="variable_subscription_period"><?php esc_html_e( 'Subscription period', 'woocommerce-subscriptions' ); ?></option>
-				<option value="variable_subscription_length"><?php esc_html_e( 'Expire after', 'woocommerce-subscriptions' ); ?></option>
+				<option value="variable_subscription_length"><?php esc_html_e( 'Stop renewing after', 'woocommerce-subscriptions' ); ?></option>
 				<option value="variable_subscription_trial_length"><?php esc_html_e( 'Free trial length', 'woocommerce-subscriptions' ); ?></option>
 				<option value="variable_subscription_trial_period"><?php esc_html_e( 'Free trial period', 'woocommerce-subscriptions' ); ?></option>
 			</optgroup>
@@ -1550,12 +1550,26 @@ class WC_Subscriptions_Admin {
 	}
 
 	/**
-	 * Callback for the [subscriptions] shortcode that displays subscription names for a particular user.
+	 * Displays the content for the [subscriptions] shortcode.
 	 *
-	 * @param array $attributes Shortcode attributes.
-	 * @return string
+	 * The subscriptions shortcode can be used to display customer subscriptions similar to the my account list page.
+	 * Shortcode args enable filtering by status and user ID.
+	 *
+	 * @param array $attributes shortcode attributes.
+	 * @return string The shortcode content.
 	 */
 	public static function do_subscriptions_shortcode( $attributes ) {
+
+		// Display a notice if the user isn't logged in.
+		if ( ! is_user_logged_in() ) {
+			// We cannot show notices on admin requests - eg page previews.
+			if ( is_admin() ) {
+				return;
+			}
+
+			return wc_print_notice( esc_html__( 'Please log in to your account to view your subscriptions.', 'woocommerce-subscriptions' ), 'error', [], true );
+		}
+
 		$attributes = shortcode_atts(
 			array(
 				'user_id' => 0,
@@ -1565,15 +1579,34 @@ class WC_Subscriptions_Admin {
 			'subscriptions'
 		);
 
-		$subscriptions = wcs_get_users_subscriptions( $attributes['user_id'] );
+		$subscriptions       = wcs_get_users_subscriptions( $attributes['user_id'] );
+		$apply_status_filter = 'all' !== $attributes['status'] && 'any' !== $attributes['status'];
 
-		// Limit subscriptions to the appropriate status if it's not "any" or "all".
-		if ( 'all' !== $attributes['status'] && 'any' !== $attributes['status'] ) {
-			/** @var WC_Subscription $subscription */
-			foreach ( $subscriptions as $index => $subscription ) {
-				if ( ! $subscription->has_status( $attributes['status'] ) ) {
-					unset( $subscriptions[ $index ] );
-				}
+		// Determine if the current user has permission to view the subscriptions.
+		// By default, only the user themselves can view their subscriptions.
+		$display_permissions_notice = ! empty( $attributes['user_id'] ) && get_current_user_id() !== absint( $attributes['user_id'] );
+
+		foreach ( $subscriptions as $index => $subscription ) {
+			if ( $apply_status_filter && ! $subscription->has_status( $attributes['status'] ) ) {
+				unset( $subscriptions[ $index ] );
+			}
+
+			// Remove any subscriptions the current user cannot view. WooCommerce admins can view all subscriptions.
+			if ( ! current_user_can( 'manage_woocommerce' ) && ! current_user_can( 'view_order', $subscription->get_id() ) ) {
+				unset( $subscriptions[ $index ] );
+				$display_permissions_notice = true;
+			}
+		}
+
+		// If all the subscriptions were removed and the current user doesn't have permissions, display a notice. Note: We cannot show notices on admin requests - eg page previews.
+		if ( empty( $subscriptions ) && $display_permissions_notice ) {
+			// We cannot show notices on admin requests - eg page previews.
+			if ( is_admin() ) {
+				return;
+			} elseif ( current_user_can( 'manage_woocommerce' ) ) {
+				return wc_print_notice( esc_html__( 'No subscriptions found for that customer.', 'woocommerce-subscriptions' ), 'notice', [], true );
+			} else {
+				return wc_print_notice( esc_html__( 'You do not have permission to view those subscriptions.', 'woocommerce-subscriptions' ), 'error', [], true );
 			}
 		}
 
@@ -1584,6 +1617,9 @@ class WC_Subscriptions_Admin {
 			array(
 				'subscriptions' => $subscriptions,
 				'user_id'       => $attributes['user_id'],
+				'current_page'  => 1,
+				'max_num_pages' => 1,
+				'paginate'      => false,
 			),
 			'',
 			WC_Subscriptions_Core_Plugin::instance()->get_subscriptions_core_directory( 'templates/' )

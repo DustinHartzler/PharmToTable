@@ -348,7 +348,6 @@ class Callables extends Module {
 	public function set_plugin_action_links() {
 		if (
 			! class_exists( '\DOMDocument' ) ||
-			! function_exists( 'libxml_use_internal_errors' ) ||
 			! function_exists( 'mb_convert_encoding' )
 		) {
 			return;
@@ -389,7 +388,7 @@ class Callables extends Module {
 				$action_links = array();
 			}
 			$formatted_action_links = null;
-			if ( ! empty( $action_links ) && count( $action_links ) > 0 ) {
+			if ( $action_links ) {
 				$dom_doc = new \DOMDocument();
 				foreach ( $action_links as $action_link ) {
 					// The @ is not enough to suppress errors when dealing with libxml,
@@ -642,5 +641,4 @@ class Callables extends Module {
 
 		return 'CALLABLE-DOES-NOT-EXIST';
 	}
-
 }

@@ -111,11 +111,19 @@ class WC_Payments_WooPay_Button_Handler {
 			return;
 		}
 
+		// Create WooPay button location option if it doesn't exist and enable all locations by default.
+		if ( ! array_key_exists( 'platform_checkout_button_locations', get_option( 'woocommerce_woocommerce_payments_settings' ) ) ) {
+
+			$all_locations = $this->gateway->form_fields['platform_checkout_button_locations']['options'];
+
+			$this->gateway->update_option( 'platform_checkout_button_locations', array_keys( $all_locations ) );
+
+			WC_Payments::woopay_tracker()->woopay_locations_updated( $all_locations, array_keys( $all_locations ) );
+		}
+
 		add_action( 'wp_enqueue_scripts', [ $this, 'scripts' ] );
 
 		add_filter( 'wcpay_payment_fields_js_config', [ $this, 'add_woopay_config' ] );
-
-		add_action( 'wc_ajax_wcpay_add_to_cart', [ $this, 'ajax_add_to_cart' ] );
 
 		add_action( 'wp_ajax_woopay_express_checkout_button_show_error_notice', [ $this, 'show_error_notice' ] );
 		add_action( 'wp_ajax_nopriv_woopay_express_checkout_button_show_error_notice', [ $this, 'show_error_notice' ] );
@@ -205,181 +213,6 @@ class WC_Payments_WooPay_Button_Handler {
 	}
 
 	/**
-	 * Adds the current product to the cart. Used on product detail page.
-	 */
-	public function ajax_add_to_cart() {
-		check_ajax_referer( 'wcpay-add-to-cart', 'security' );
-
-		if ( ! defined( 'WOOCOMMERCE_CART' ) ) {
-			define( 'WOOCOMMERCE_CART', true );
-		}
-
-		WC()->shipping->reset_shipping();
-
-		$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : false;
-		$quantity     = ! isset( $_POST['quantity'] ) ? 1 : absint( $_POST['quantity'] );
-		$product      = wc_get_product( $product_id );
-		$product_type = $product->get_type();
-
-		// First empty the cart to prevent wrong calculation.
-		WC()->cart->empty_cart();
-
-		$is_add_to_cart_valid = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity );
-
-		if ( ! $is_add_to_cart_valid ) {
-			// Some extensions error messages needs to be
-			// submitted to show error messages.
-			wp_send_json(
-				[
-					'error'  => true,
-					'submit' => true,
-				],
-				400
-			);
-			return;
-		}
-
-		if ( ( 'variable' === $product_type || 'variable-subscription' === $product_type ) && isset( $_POST['attributes'] ) ) {
-			$attributes = wc_clean( wp_unslash( $_POST['attributes'] ) );
-
-			$data_store   = WC_Data_Store::load( 'product' );
-			$variation_id = $data_store->find_matching_product_variation( $product, $attributes );
-
-			WC()->cart->add_to_cart( $product->get_id(), $quantity, $variation_id, $attributes );
-		}
-
-		if ( in_array( $product_type, [ 'simple', 'subscription', 'bundle', 'mix-and-match' ], true ) ) {
-			WC()->cart->add_to_cart( $product->get_id(), $quantity );
-		}
-
-		WC()->cart->calculate_totals();
-
-		$data           = [];
-		$data          += $this->build_display_items();
-		$data['result'] = 'success';
-
-		wp_send_json( $data );
-	}
-
-	/**
-	 * Builds the line items to pass to Payment Request
-	 *
-	 * @param boolean $itemized_display_items Indicates whether to show subtotals or itemized views.
-	 */
-	protected function build_display_items( $itemized_display_items = false ) {
-		if ( ! defined( 'WOOCOMMERCE_CART' ) ) {
-			define( 'WOOCOMMERCE_CART', true );
-		}
-
-		$items     = [];
-		$subtotal  = 0;
-		$discounts = 0;
-		$currency  = get_woocommerce_currency();
-
-		// Default show only subtotal instead of itemization.
-		if ( ! apply_filters( 'wcpay_payment_request_hide_itemization', true ) || $itemized_display_items ) {
-			foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-				$amount         = $cart_item['line_subtotal'];
-				$subtotal      += $cart_item['line_subtotal'];
-				$quantity_label = 1 < $cart_item['quantity'] ? ' (x' . $cart_item['quantity'] . ')' : '';
-
-				$product_name = $cart_item['data']->get_name();
-
-				$item_tax = $this->prices_exclude_tax() ? 0 : ( $cart_item['line_subtotal_tax'] ?? 0 );
-
-				$item = [
-					'label'  => $product_name . $quantity_label,
-					'amount' => WC_Payments_Utils::prepare_amount( $amount + $item_tax, $currency ),
-				];
-
-				$items[] = $item;
-			}
-		}
-
-		if ( version_compare( WC_VERSION, '3.2', '<' ) ) {
-			$discounts = wc_format_decimal( WC()->cart->get_cart_discount_total(), WC()->cart->dp );
-		} else {
-			$applied_coupons = array_values( WC()->cart->get_coupon_discount_totals() );
-
-			foreach ( $applied_coupons as $amount ) {
-				$discounts += (float) $amount;
-			}
-		}
-
-		$discounts   = wc_format_decimal( $discounts, WC()->cart->dp );
-		$tax         = wc_format_decimal( WC()->cart->tax_total + WC()->cart->shipping_tax_total, WC()->cart->dp );
-		$shipping    = wc_format_decimal( WC()->cart->shipping_total, WC()->cart->dp );
-		$items_total = wc_format_decimal( WC()->cart->cart_contents_total, WC()->cart->dp ) + $discounts;
-		$order_total = version_compare( WC_VERSION, '3.2', '<' ) ? wc_format_decimal( $items_total + $tax + $shipping - $discounts, WC()->cart->dp ) : WC()->cart->get_total( '' );
-
-		if ( $this->prices_exclude_tax() ) {
-			$items[] = [
-				'label'  => esc_html( __( 'Tax', 'woocommerce-payments' ) ),
-				'amount' => WC_Payments_Utils::prepare_amount( $tax, $currency ),
-			];
-		}
-
-		if ( WC()->cart->needs_shipping() ) {
-			$shipping_tax = $this->prices_exclude_tax() ? 0 : WC()->cart->shipping_tax_total;
-			$items[]      = [
-				'label'  => esc_html( __( 'Shipping', 'woocommerce-payments' ) ),
-				'amount' => WC_Payments_Utils::prepare_amount( $shipping + $shipping_tax, $currency ),
-			];
-		}
-
-		if ( WC()->cart->has_discount() ) {
-			$items[] = [
-				'label'  => esc_html( __( 'Discount', 'woocommerce-payments' ) ),
-				'amount' => WC_Payments_Utils::prepare_amount( $discounts, $currency ),
-			];
-		}
-
-		if ( version_compare( WC_VERSION, '3.2', '<' ) ) {
-			$cart_fees = WC()->cart->fees;
-		} else {
-			$cart_fees = WC()->cart->get_fees();
-		}
-
-		// Include fees and taxes as display items.
-		foreach ( $cart_fees as $key => $fee ) {
-			$items[] = [
-				'label'  => $fee->name,
-				'amount' => WC_Payments_Utils::prepare_amount( $fee->amount, $currency ),
-			];
-		}
-
-		return [
-			'displayItems' => $items,
-			'total'        => [
-				'label'   => $this->get_total_label(),
-				'amount'  => max( 0, apply_filters( 'wcpay_calculated_total', WC_Payments_Utils::prepare_amount( $order_total, $currency ), $order_total, WC()->cart ) ),
-				'pending' => false,
-			],
-		];
-	}
-
-	/**
-	 * Whether tax should be displayed on seperate line.
-	 * returns true if tax is enabled & display of tax in checkout is set to exclusive.
-	 *
-	 * @return boolean
-	 */
-	private function prices_exclude_tax() {
-		return wc_tax_enabled() && 'incl' !== get_option( 'woocommerce_tax_display_cart' );
-	}
-
-	/**
-	 * Gets total label.
-	 *
-	 * @return string
-	 */
-	public function get_total_label() {
-		// Get statement descriptor from API/cached account data.
-		$statement_descriptor = $this->account->get_statement_descriptor();
-		return str_replace( "'", '', $statement_descriptor ) . apply_filters( 'wcpay_payment_request_total_label_suffix', ' (via WooCommerce)' );
-	}
-
-	/**
 	 * Checks if this is a product page or content contains a product_page shortcode.
 	 *
 	 * @return boolean
@@ -444,12 +277,12 @@ class WC_Payments_WooPay_Button_Handler {
 			return 'cart';
 		}
 
-		if ( $this->is_checkout() ) {
-			return 'checkout';
-		}
-
 		if ( $this->is_pay_for_order_page() ) {
 			return 'pay_for_order';
+		}
+
+		if ( $this->is_checkout() ) {
+			return 'checkout';
 		}
 
 		return '';
@@ -583,10 +416,21 @@ class WC_Payments_WooPay_Button_Handler {
 			return;
 		}
 
+		$settings = $this->get_button_settings();
+
 		?>
 		<div id="wcpay-woopay-button" data-product_page=<?php echo esc_attr( $this->is_product() ); ?>>
-				<?php // The WooPay express checkout button React component will go here. ?>
-			</div>
+			<?php // The WooPay express checkout button React component will go here. This is rendered as disabled for now, until the page is initialized. ?>
+			<button
+				class="woopay-express-button"
+				aria-label="<?php esc_attr_e( 'WooPay', 'woocommerce-payments' ); ?>"
+				data-type="<?php echo esc_attr( $settings['type'] ); ?>"
+				data-theme="<?php echo esc_attr( $settings['theme'] ); ?>"
+				data-size="<?php echo esc_attr( $settings['size'] ); ?>"
+				style="height: <?php echo esc_attr( $settings['height'] ); ?>px"
+				disabled
+			></button>
+		</div>
 		<?php
 	}
 
@@ -603,8 +447,18 @@ class WC_Payments_WooPay_Button_Handler {
 			$is_supported = false;
 		}
 
+		// External/affiliate products are not supported.
+		if ( is_a( $product, 'WC_Product' ) && $product->is_type( 'external' ) ) {
+			$is_supported = false;
+		}
+
 		// Pre Orders products to be charged upon release are not supported.
 		if ( class_exists( 'WC_Pre_Orders_Product' ) && WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			$is_supported = false;
+		}
+
+		// WC Bookings require confirmation products are not supported.
+		if ( is_a( $product, 'WC_Product_Booking' ) && $product->get_requires_confirmation() ) {
 			$is_supported = false;
 		}
 
@@ -621,14 +475,19 @@ class WC_Payments_WooPay_Button_Handler {
 	private function has_allowed_items_in_cart() {
 		$is_supported = true;
 
+		/**
+		 * Psalm throws an error here even though we check the class existence.
+		 *
+		 * @psalm-suppress UndefinedClass
+		 */
 		// We don't support pre-order products to be paid upon release.
-		if (
-			class_exists( 'WC_Pre_Orders_Cart' ) &&
-			WC_Pre_Orders_Cart::cart_contains_pre_order() &&
-			class_exists( 'WC_Pre_Orders_Product' ) &&
-			WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Cart::get_pre_order_product() )
-		) {
-			$is_supported = false;
+		if ( class_exists( 'WC_Pre_Orders_Cart' ) && class_exists( 'WC_Pre_Orders_Product' ) ) {
+			if (
+				WC_Pre_Orders_Cart::cart_contains_pre_order() &&
+				WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Cart::get_pre_order_product() )
+			) {
+				$is_supported = false;
+			}
 		}
 
 		return apply_filters( 'wcpay_platform_checkout_button_are_cart_items_supported', $is_supported );

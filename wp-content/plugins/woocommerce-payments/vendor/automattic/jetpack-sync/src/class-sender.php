@@ -295,7 +295,7 @@ class Sender {
 
 		$this->continue_full_sync_enqueue();
 		// immediate full sync sends data in continue_full_sync_enqueue.
-		if ( false === strpos( get_class( $sync_module ), 'Full_Sync_Immediately' ) ) {
+		if ( ! str_contains( get_class( $sync_module ), 'Full_Sync_Immediately' ) ) {
 			return $this->do_sync_and_set_delays( $this->full_sync_queue );
 		} else {
 			$status = $sync_module->get_status();
@@ -531,7 +531,7 @@ class Sender {
 			}
 			$encoded_item = $this->codec->encode( $item );
 			$upload_size += strlen( $encoded_item );
-			if ( $upload_size > $this->upload_max_bytes && count( $items_to_send ) > 0 ) {
+			if ( $upload_size > $this->upload_max_bytes && array() !== $items_to_send ) {
 				break;
 			}
 			$items_to_send[ $key ] = $encode ? $encoded_item : $item;
@@ -574,6 +574,7 @@ class Sender {
 		 * Now that we're sure we are about to sync, try to ignore user abort
 		 * so we can avoid getting into a bad state.
 		 */
+		// https://plugins.trac.wordpress.org/ticket/2041
 		if ( function_exists( 'ignore_user_abort' ) ) {
 			ignore_user_abort( true );
 		}
@@ -641,11 +642,9 @@ class Sender {
 			} else {
 				// Detect if the last item ID was an error.
 				$had_wp_error = is_wp_error( end( $processed_item_ids ) );
-				if ( $had_wp_error ) {
-					$wp_error = array_pop( $processed_item_ids );
-				}
+				$wp_error     = $had_wp_error ? array_pop( $processed_item_ids ) : null;
 				// Also checkin any items that were skipped.
-				if ( count( $skipped_items_ids ) > 0 ) {
+				if ( array() !== $skipped_items_ids ) {
 					$processed_item_ids = array_merge( $processed_item_ids, $skipped_items_ids );
 				}
 				$processed_items = array_intersect_key( $items, array_flip( $processed_item_ids ) );

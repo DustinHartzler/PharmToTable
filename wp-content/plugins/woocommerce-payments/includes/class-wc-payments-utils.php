@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WCPay\Exceptions\{ Amount_Too_Small_Exception, API_Exception, Connection_Exception };
+use WCPay\Constants\Country_Code;
 
 /**
  * WC Payments Utils class
@@ -25,6 +26,11 @@ class WC_Payments_Utils {
 	 * Order meta data key that holds the currency of order's intent transaction.
 	 */
 	const ORDER_INTENT_CURRENCY_META_KEY = '_wcpay_intent_currency';
+
+	/**
+	 * Force disconnected flag name.
+	 */
+	const FORCE_DISCONNECTED_FLAG_NAME = 'wcpaydev_force_disconnected';
 
 	/**
 	 * Mirrors JS's createInterpolateElement functionality.
@@ -202,7 +208,6 @@ class WC_Payments_Utils {
 			'mga', // Malagasy Ariary.
 			'pyg', // Paraguayan Guaraní.
 			'rwf', // Rwandan Franc.
-			'ugx', // Ugandan Shilling.
 			'vnd', // Vietnamese Đồng.
 			'vuv', // Vanuatu Vatu.
 			'xaf', // Central African Cfa Franc.
@@ -213,50 +218,50 @@ class WC_Payments_Utils {
 
 	/**
 	 * List of countries enabled for Stripe platform account. See also this URL:
-	 * https://woocommerce.com/document/woopayments/compatibility/countries/#supported-countries
+	 * https://woo.com/document/woopayments/compatibility/countries/#supported-countries
 	 *
 	 * @return string[]
 	 */
 	public static function supported_countries(): array {
 		return [
-			'AE' => __( 'United Arab Emirates', 'woocommerce-payments' ),
-			'AT' => __( 'Austria', 'woocommerce-payments' ),
-			'AU' => __( 'Australia', 'woocommerce-payments' ),
-			'BE' => __( 'Belgium', 'woocommerce-payments' ),
-			'BG' => __( 'Bulgaria', 'woocommerce-payments' ),
-			'CA' => __( 'Canada', 'woocommerce-payments' ),
-			'CH' => __( 'Switzerland', 'woocommerce-payments' ),
-			'CY' => __( 'Cyprus', 'woocommerce-payments' ),
-			'CZ' => __( 'Czech Republic', 'woocommerce-payments' ),
-			'DE' => __( 'Germany', 'woocommerce-payments' ),
-			'DK' => __( 'Denmark', 'woocommerce-payments' ),
-			'EE' => __( 'Estonia', 'woocommerce-payments' ),
-			'FI' => __( 'Finland', 'woocommerce-payments' ),
-			'ES' => __( 'Spain', 'woocommerce-payments' ),
-			'FR' => __( 'France', 'woocommerce-payments' ),
-			'HR' => __( 'Croatia', 'woocommerce-payments' ),
-			'JP' => __( 'Japan', 'woocommerce-payments' ),
-			'LU' => __( 'Luxembourg', 'woocommerce-payments' ),
-			'GB' => __( 'United Kingdom (UK)', 'woocommerce-payments' ),
-			'GR' => __( 'Greece', 'woocommerce-payments' ),
-			'HK' => __( 'Hong Kong', 'woocommerce-payments' ),
-			'HU' => __( 'Hungary', 'woocommerce-payments' ),
-			'IE' => __( 'Ireland', 'woocommerce-payments' ),
-			'IT' => __( 'Italy', 'woocommerce-payments' ),
-			'LT' => __( 'Lithuania', 'woocommerce-payments' ),
-			'LV' => __( 'Latvia', 'woocommerce-payments' ),
-			'MT' => __( 'Malta', 'woocommerce-payments' ),
-			'NL' => __( 'Netherlands', 'woocommerce-payments' ),
-			'NO' => __( 'Norway', 'woocommerce-payments' ),
-			'NZ' => __( 'New Zealand', 'woocommerce-payments' ),
-			'PL' => __( 'Poland', 'woocommerce-payments' ),
-			'PT' => __( 'Portugal', 'woocommerce-payments' ),
-			'RO' => __( 'Romania', 'woocommerce-payments' ),
-			'SE' => __( 'Sweden', 'woocommerce-payments' ),
-			'SI' => __( 'Slovenia', 'woocommerce-payments' ),
-			'SK' => __( 'Slovakia', 'woocommerce-payments' ),
-			'SG' => __( 'Singapore', 'woocommerce-payments' ),
-			'US' => __( 'United States (US)', 'woocommerce-payments' ),
+			Country_Code::UNITED_ARAB_EMIRATES => __( 'United Arab Emirates', 'woocommerce-payments' ),
+			Country_Code::AUSTRIA              => __( 'Austria', 'woocommerce-payments' ),
+			Country_Code::AUSTRALIA            => __( 'Australia', 'woocommerce-payments' ),
+			Country_Code::BELGIUM              => __( 'Belgium', 'woocommerce-payments' ),
+			Country_Code::BULGARIA             => __( 'Bulgaria', 'woocommerce-payments' ),
+			Country_Code::CANADA               => __( 'Canada', 'woocommerce-payments' ),
+			Country_Code::SWITZERLAND          => __( 'Switzerland', 'woocommerce-payments' ),
+			Country_Code::CYPRUS               => __( 'Cyprus', 'woocommerce-payments' ),
+			Country_Code::CZECHIA              => __( 'Czech Republic', 'woocommerce-payments' ),
+			Country_Code::GERMANY              => __( 'Germany', 'woocommerce-payments' ),
+			Country_Code::DENMARK              => __( 'Denmark', 'woocommerce-payments' ),
+			Country_Code::ESTONIA              => __( 'Estonia', 'woocommerce-payments' ),
+			Country_Code::FINLAND              => __( 'Finland', 'woocommerce-payments' ),
+			Country_Code::SPAIN                => __( 'Spain', 'woocommerce-payments' ),
+			Country_Code::FRANCE               => __( 'France', 'woocommerce-payments' ),
+			Country_Code::CROATIA              => __( 'Croatia', 'woocommerce-payments' ),
+			Country_Code::JAPAN                => __( 'Japan', 'woocommerce-payments' ),
+			Country_Code::LUXEMBOURG           => __( 'Luxembourg', 'woocommerce-payments' ),
+			Country_Code::UNITED_KINGDOM       => __( 'United Kingdom (UK)', 'woocommerce-payments' ),
+			Country_Code::GREECE               => __( 'Greece', 'woocommerce-payments' ),
+			Country_Code::HONG_KONG            => __( 'Hong Kong', 'woocommerce-payments' ),
+			Country_Code::HUNGARY              => __( 'Hungary', 'woocommerce-payments' ),
+			Country_Code::IRELAND              => __( 'Ireland', 'woocommerce-payments' ),
+			Country_Code::ITALY                => __( 'Italy', 'woocommerce-payments' ),
+			Country_Code::LITHUANIA            => __( 'Lithuania', 'woocommerce-payments' ),
+			Country_Code::LATVIA               => __( 'Latvia', 'woocommerce-payments' ),
+			Country_Code::MALTA                => __( 'Malta', 'woocommerce-payments' ),
+			Country_Code::NETHERLANDS          => __( 'Netherlands', 'woocommerce-payments' ),
+			Country_Code::NORWAY               => __( 'Norway', 'woocommerce-payments' ),
+			Country_Code::NEW_ZEALAND          => __( 'New Zealand', 'woocommerce-payments' ),
+			Country_Code::POLAND               => __( 'Poland', 'woocommerce-payments' ),
+			Country_Code::PORTUGAL             => __( 'Portugal', 'woocommerce-payments' ),
+			Country_Code::ROMANIA              => __( 'Romania', 'woocommerce-payments' ),
+			Country_Code::SWEDEN               => __( 'Sweden', 'woocommerce-payments' ),
+			Country_Code::SLOVENIA             => __( 'Slovenia', 'woocommerce-payments' ),
+			Country_Code::SLOVAKIA             => __( 'Slovakia', 'woocommerce-payments' ),
+			Country_Code::SINGAPORE            => __( 'Singapore', 'woocommerce-payments' ),
+			Country_Code::UNITED_STATES        => __( 'United States (US)', 'woocommerce-payments' ),
 		];
 	}
 
@@ -391,6 +396,27 @@ class WC_Payments_Utils {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Apply a callback on every value in an array, regardless of the number of array dimensions.
+	 *
+	 * @param array    $array The array to map.
+	 * @param callable $callback The callback to apply.
+	 * @return array The mapped array.
+	 */
+	public static function array_map_recursive( array $array, callable $callback ): array {
+		foreach ( $array as $key => $value ) {
+			if ( \is_array( $value ) ) {
+				$value = self::array_map_recursive( $value, $callback );
+			} else {
+				$value = $callback( $value, $key, $array );
+			}
+
+			$array[ $key ] = $value;
+		}
+
+		return $array;
 	}
 
 	/**
@@ -660,6 +686,10 @@ class WC_Payments_Utils {
 			return '';
 		}
 
+		if ( strpos( $primary_id, 'seti_' ) !== false ) {
+			return '';
+		}
+
 		return add_query_arg( // nosemgrep: audit.php.wp.security.xss.query-arg -- server generated url is passed in.
 			array_merge(
 				[
@@ -699,35 +729,25 @@ class WC_Payments_Utils {
 	}
 
 	/**
-	 * Helper function to check whether the user is either in the PO experiment, or has manually enabled PO via the dev tools.
+	 * Helper function to check whether to show default new onboarding flow or as an exception disable it (if specific constant is set) .
 	 *
 	 * @return boolean
 	 */
-	public static function should_use_progressive_onboarding_flow(): bool {
-		if ( self::is_in_progressive_onboarding_treatment_mode() || WC_Payments_Features::is_progressive_onboarding_enabled() ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Check to see if the current user is in progressive onboarding experiment treatment mode.
-	 *
-	 * @return bool
-	 */
-	public static function is_in_progressive_onboarding_treatment_mode(): bool {
-		if ( ! isset( $_COOKIE['tk_ai'] ) ) {
+	public static function should_use_new_onboarding_flow(): bool {
+		if ( defined( 'WCPAY_DISABLE_NEW_ONBOARDING' ) && WCPAY_DISABLE_NEW_ONBOARDING ) {
 			return false;
 		}
 
-		$abtest = new \WCPay\Experimental_Abtest(
-			sanitize_text_field( wp_unslash( $_COOKIE['tk_ai'] ) ),
-			'woocommerce',
-			'yes' === get_option( 'woocommerce_allow_tracking' )
-		);
+		return true;
+	}
 
-		return 'treatment' === $abtest->get_variation( 'woocommerce_payments_onboarding_progressive_express_2023_v3' );
+	/**
+	 * Checks whether the Force disconnected option is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function force_disconnected_enabled(): bool {
+		return '1' === get_option( self::FORCE_DISCONNECTED_FLAG_NAME, '0' );
 	}
 
 	/**
@@ -810,15 +830,7 @@ class WC_Payments_Utils {
 			)
 		);
 
-		if ( $amount >= 0 ) {
-			return $formatted;
-		}
-
-		// Handle the subtle display difference for the negative amount between PHP wc_price `-$0.74` vs JavaScript formatCurrency `$-0.74` for the same input.
-		// Remove the minus sign, and then move it right before the number.
-		$formatted = str_replace( '-', '', $formatted );
-
-		return preg_replace( '/([0-9,\.]+)/', '-$1', $formatted );
+		return $formatted;
 	}
 
 	/**

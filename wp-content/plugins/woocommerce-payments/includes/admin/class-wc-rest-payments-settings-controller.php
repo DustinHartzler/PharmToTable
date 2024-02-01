@@ -5,6 +5,7 @@
  * @package WooCommerce\Payments\Admin
  */
 
+use WCPay\Constants\Country_Code;
 use WCPay\Fraud_Prevention\Fraud_Risk_Tools;
 use WCPay\Constants\Track_Events;
 
@@ -388,7 +389,7 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 		}
 
 		// Japan accounts require Japanese phone numbers.
-		if ( 'JP' === $this->account->get_account_country() ) {
+		if ( Country_Code::JAPAN === $this->account->get_account_country() ) {
 			if ( '+81' !== substr( $value, 0, 3 ) ) {
 				return new WP_Error(
 					'rest_invalid_pattern',
@@ -500,7 +501,7 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 				'payment_request_button_type'         => $this->wcpay_gateway->get_option( 'payment_request_button_type' ),
 				'payment_request_button_theme'        => $this->wcpay_gateway->get_option( 'payment_request_button_theme' ),
 				'is_saved_cards_enabled'              => $this->wcpay_gateway->is_saved_cards_enabled(),
-				'is_card_present_eligible'            => $this->wcpay_gateway->is_card_present_eligible(),
+				'is_card_present_eligible'            => $this->wcpay_gateway->is_card_present_eligible() && isset( WC()->payment_gateways()->get_available_payment_gateways()['cod'] ),
 				'is_woopay_enabled'                   => 'yes' === $this->wcpay_gateway->get_option( 'platform_checkout' ),
 				'show_woopay_incompatibility_notice'  => get_option( 'woopay_invalid_extension_found', false ),
 				'woopay_custom_message'               => $this->wcpay_gateway->get_option( 'platform_checkout_custom_message' ),
@@ -676,7 +677,7 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 	 * @param WP_REST_Request $request Request object.
 	 */
 	private function update_is_test_mode_enabled( WP_REST_Request $request ) {
-		// avoiding updating test mode when dev mode is enabled.
+		// Avoid updating test mode when dev mode is enabled.
 		if ( WC_Payments::mode()->is_dev() ) {
 			return;
 		}
@@ -696,7 +697,7 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 	 * @param WP_REST_Request $request Request object.
 	 */
 	private function update_is_debug_log_enabled( WP_REST_Request $request ) {
-		// avoiding updating test mode when dev mode is enabled.
+		// Avoid updating test mode when dev mode is enabled.
 		if ( WC_Payments::mode()->is_dev() ) {
 			return;
 		}
@@ -771,6 +772,11 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 		// If we are updating an anchor for the deposit schedule then we must also send through the interval.
 		if ( ! isset( $updated_fields['deposit_schedule_interval'] ) && array_intersect( array_keys( $updated_fields ), [ 'deposit_schedule_monthly_anchor', 'deposit_schedule_weekly_anchor' ] ) ) {
 			$updated_fields['deposit_schedule_interval'] = $this->wcpay_gateway->get_option( 'deposit_schedule_interval' );
+		}
+
+		// If we are updating any deposit schedule values, we should invalidate the next deposit notice dismissed notice option.
+		if ( preg_grep( '/^deposit_schedule_/', array_keys( $updated_fields ) ) ) {
+			delete_option( 'wcpay_next_deposit_notice_dismissed' );
 		}
 
 		return $this->wcpay_gateway->update_account_settings( $updated_fields );
@@ -868,6 +874,8 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 		}
 
 		$woopay_custom_message = $request->get_param( 'woopay_custom_message' );
+		$woopay_custom_message = str_replace( '[terms_of_service_link]', '[terms]', $woopay_custom_message );
+		$woopay_custom_message = str_replace( '[privacy_policy_link]', '[privacy_policy]', $woopay_custom_message );
 
 		$this->wcpay_gateway->update_option( 'platform_checkout_custom_message', $woopay_custom_message );
 	}
@@ -1017,6 +1025,7 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 	 * @return WP_REST_Response|WP_Error The response object, if this is a REST request.
 	 */
 	public function request_capability( WP_REST_Request $request = null ) {
+		$request_result          = null;
 		$id                      = $request->get_param( 'id' );
 		$capability_key_map      = $this->wcpay_gateway->get_payment_method_capability_key_map();
 		$payment_method_statuses = $this->wcpay_gateway->get_upe_enabled_payment_method_statuses();

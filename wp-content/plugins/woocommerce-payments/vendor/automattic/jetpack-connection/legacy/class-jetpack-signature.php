@@ -94,7 +94,7 @@ class Jetpack_Signature {
 			// and encoded on the Jetpack side.
 			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
 				// phpcs:ignore WordPress.Security.NonceVerification.Missing
-				if ( empty( $body ) && is_array( $_POST ) && count( $_POST ) > 0 ) {
+				if ( empty( $body ) && is_array( $_POST ) && $_POST !== array() ) {
 					$body = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				}
 			}
@@ -105,7 +105,7 @@ class Jetpack_Signature {
 
 			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
 				$put_data = json_decode( $raw_put_data, true );
-				if ( is_array( $put_data ) && count( $put_data ) > 0 ) {
+				if ( is_array( $put_data ) && $put_data !== array() ) {
 					$body = $put_data;
 				}
 			}
@@ -160,13 +160,13 @@ class Jetpack_Signature {
 
 		$signature_details = compact( 'token', 'timestamp', 'nonce', 'body_hash', 'method', 'url' );
 
-		if ( 0 !== strpos( $token, "$this->token:" ) ) {
+		if ( ! str_starts_with( $token, "$this->token:" ) ) {
 			return new WP_Error( 'token_mismatch', 'Incorrect token', compact( 'signature_details' ) );
 		}
 
 		// If we got an array at this point, let's encode it, so we can see what it looks like as a string.
 		if ( is_array( $body ) ) {
-			if ( count( $body ) > 0 ) {
+			if ( $body !== array() ) {
 				// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 				$body = json_encode( $body );
 
@@ -257,7 +257,7 @@ class Jetpack_Signature {
 		}
 		$normalized_request_pieces = $flat_normalized_request_pieces;
 
-		$normalized_request_string = join( "\n", $normalized_request_pieces ) . "\n";
+		$normalized_request_string = implode( "\n", $normalized_request_pieces ) . "\n";
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		return base64_encode( hash_hmac( 'sha1', $normalized_request_string, $this->secret, true ) );

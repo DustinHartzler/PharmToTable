@@ -5,6 +5,8 @@
  * @package WooCommerce\Payments
  */
 
+use WCPay\Constants\Country_Code;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -13,150 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC Payments Features class
  */
 class WC_Payments_Features {
-	const UPE_FLAG_NAME                     = '_wcpay_feature_upe';
-	const UPE_SPLIT_FLAG_NAME               = '_wcpay_feature_upe_split';
-	const UPE_DEFERRED_INTENT_FLAG_NAME     = '_wcpay_feature_upe_deferred_intent';
 	const WCPAY_SUBSCRIPTIONS_FLAG_NAME     = '_wcpay_feature_subscriptions';
 	const STRIPE_BILLING_FLAG_NAME          = '_wcpay_feature_stripe_billing';
 	const WOOPAY_EXPRESS_CHECKOUT_FLAG_NAME = '_wcpay_feature_woopay_express_checkout';
 	const WOOPAY_FIRST_PARTY_AUTH_FLAG_NAME = '_wcpay_feature_woopay_first_party_auth';
 	const AUTH_AND_CAPTURE_FLAG_NAME        = '_wcpay_feature_auth_and_capture';
-	const PROGRESSIVE_ONBOARDING_FLAG_NAME  = '_wcpay_feature_progressive_onboarding';
 	const PAY_FOR_ORDER_FLOW                = '_wcpay_feature_pay_for_order_flow';
-	const DEFERRED_UPE_SERVER_FLAG_NAME     = 'is_deferred_intent_creation_upe_enabled';
 	const DISPUTE_ISSUER_EVIDENCE           = '_wcpay_feature_dispute_issuer_evidence';
-
-	/**
-	 * Checks whether any UPE gateway is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function is_upe_enabled() {
-		return self::is_upe_legacy_enabled() || self::is_upe_split_enabled() || self::is_upe_deferred_intent_enabled();
-	}
-
-	/**
-	 * Returns the "type" of UPE that will be displayed at checkout.
-	 *
-	 * @return string
-	 */
-	public static function get_enabled_upe_type() {
-		// New stores created in 6.4.0 or 6.5.0, and legacy card stores that self-migrated to dUPE in 6.4.0 or 6.5.0.
-		$has_store_enabled_dupe_from_previous_plugin_version = self::has_store_enabled_dupe_from_previous_plugin_version();
-		$has_store_enabled_upe_and_dupe_server_flag          = self::has_store_enabled_upe_and_dupe_server_flag();
-
-		// Stores which first self-migrated and then had deferred intent creation UPE enabled by default.
-		if ( $has_store_enabled_dupe_from_previous_plugin_version && $has_store_enabled_upe_and_dupe_server_flag ) {
-			return 'deferred_intent_upe_without_fallback';
-		}
-
-		// Stores which have deferred intent creation UPE enabled by default.
-		if ( $has_store_enabled_upe_and_dupe_server_flag ) {
-			return 'deferred_intent_upe_without_fallback';
-		}
-
-		// Stores which self-migrated to dUPE (e.g. legacy card stores from 6.4.0 or 6.5.0).
-		if ( $has_store_enabled_dupe_from_previous_plugin_version ) {
-			return 'deferred_intent_upe_with_fallback';
-		}
-
-		if ( self::is_upe_split_enabled() ) {
-			return 'split';
-		}
-
-		if ( self::is_upe_legacy_enabled() ) {
-			return 'legacy';
-		}
-
-		return '';
-	}
-
-	/**
-	 * Checks whether the legacy UPE gateway is enabled
-	 *
-	 * @return bool
-	 */
-	public static function is_upe_legacy_enabled() {
-		return '1' === get_option( self::UPE_FLAG_NAME, '0' );
-	}
-
-	/**
-	 * Checks whether the Split-UPE gateway is enabled
-	 */
-	public static function is_upe_split_enabled() {
-		return '1' === get_option( self::UPE_SPLIT_FLAG_NAME, '0' );
-	}
-
-	/**
-	 * Checks whether the Split UPE with deferred intent creation is enabled
-	 */
-	public static function is_upe_deferred_intent_enabled() {
-		// Support new stores created in 6.4.0 or 6.5.0, and legacy card stores that migrated to deferred UPE in 6.4.0 or 6.5.0.
-		$has_store_enabled_dupe_from_previous_plugin_version = self::has_store_enabled_dupe_from_previous_plugin_version();
-		$has_store_enabled_upe_and_dupe_server_flag          = self::has_store_enabled_upe_and_dupe_server_flag();
-
-		return $has_store_enabled_dupe_from_previous_plugin_version || $has_store_enabled_upe_and_dupe_server_flag;
-	}
-
-	/**
-	 * Checks if the store has deferred intent creation UPE enabled from a previous version.
-	 * This is applicable to:
-	 * * legacy card stores that self-migrated to deferred UPE in 6.4.0 or 6.5.0
-	 * * new stores starting 6.4.0
-	 */
-	private static function has_store_enabled_dupe_from_previous_plugin_version() {
-		return '1' === get_option( self::UPE_DEFERRED_INTENT_FLAG_NAME, '0' );
-	}
-
-	/**
-	 * Checks if the store has UPE enabled and the server-side feature flag is enabled.
-	 * This is applicable to:
-	 * * Split UPE stores starting 6.4.0
-	 * * Legacy UPE stores starting 6.6.0
-	 */
-	private static function has_store_enabled_upe_and_dupe_server_flag() {
-		return ( self::is_upe_split_enabled() || self::is_upe_legacy_enabled() ) && self::is_deferred_upe_server_flag_enabled();
-	}
-
-
-	/**
-	 * Checks if the Deferred UPE server-side feature flag is enabled.
-	 * The flag should be always returned, and if it's not present, server assumes it's enabled.
-	 */
-	private static function is_deferred_upe_server_flag_enabled() {
-		$account = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY, true );
-		return is_array( $account ) && ( $account[ self::DEFERRED_UPE_SERVER_FLAG_NAME ] ?? false );
-	}
-
-	/**
-	 * Checks for the requirements to have the split-UPE enabled.
-	 */
-	private static function is_upe_split_eligible() {
-		$account = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY, true );
-		if ( empty( $account['capabilities']['sepa_debit_payments'] ) ) {
-			return true;
-		}
-
-		return 'active' !== $account['capabilities']['sepa_debit_payments'];
-	}
-
-	/**
-	 * Checks whether the UPE gateway is enabled
-	 *
-	 * @return bool
-	 */
-	public static function did_merchant_disable_upe() {
-		return 'disabled' === get_option( self::UPE_FLAG_NAME, '0' ) || 'disabled' === get_option( self::UPE_SPLIT_FLAG_NAME, '0' );
-	}
-
-	/**
-	 * Checks whether the UPE settings redesign is enabled
-	 *
-	 * @return bool
-	 */
-	public static function is_upe_settings_preview_enabled() {
-		return '1' === get_option( '_wcpay_feature_upe_settings_preview', '1' );
-	}
+	const STREAMLINE_REFUNDS_FLAG_NAME      = '_wcpay_feature_streamline_refunds';
 
 	/**
 	 * Indicates whether card payments are enabled for this (Stripe) account.
@@ -167,6 +33,15 @@ class WC_Payments_Features {
 		$account = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY, true );
 
 		return is_array( $account ) && ( $account['payments_enabled'] ?? false );
+	}
+
+	/**
+	 * Checks whether streamline refunds is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function is_streamline_refunds_enabled(): bool {
+		return '1' === get_option( self::STREAMLINE_REFUNDS_FLAG_NAME, '0' );
 	}
 
 	/**
@@ -262,7 +137,7 @@ class WC_Payments_Features {
 				]
 			);
 
-			if ( count( $wcpay_subscriptions ) > 0 ) {
+			if ( ( is_countable( $wcpay_subscriptions ) ? count( $wcpay_subscriptions ) : 0 ) > 0 ) {
 				return true;
 			}
 		}
@@ -295,7 +170,7 @@ class WC_Payments_Features {
 
 		remove_filter( 'woocommerce_product_data_store_cpt_get_products_query', $stripe_billing_meta_query_handler, 10, 2 );
 
-		if ( count( $subscription_products ) > 0 ) {
+		if ( ( is_countable( $subscription_products ) ? count( $subscription_products ) : 0 ) > 0 ) {
 			return true;
 		}
 
@@ -390,15 +265,6 @@ class WC_Payments_Features {
 	}
 
 	/**
-	 * Checks whether Progressive Onboarding is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function is_progressive_onboarding_enabled(): bool {
-		return '1' === get_option( self::PROGRESSIVE_ONBOARDING_FLAG_NAME, '0' );
-	}
-
-	/**
 	 * Checks whether the Fraud and Risk Tools feature flag is enabled.
 	 *
 	 * @return  bool
@@ -446,7 +312,7 @@ class WC_Payments_Features {
 		}
 
 		$store_base_location = wc_get_base_location();
-		return ! empty( $store_base_location['country'] ) && 'US' === $store_base_location['country'];
+		return ! empty( $store_base_location['country'] ) && Country_Code::UNITED_STATES === $store_base_location['country'];
 	}
 
 	/**
@@ -488,6 +354,15 @@ class WC_Payments_Features {
 	}
 
 	/**
+	 * Checks whether the next deposit notice on the deposits list screen has been dismissed.
+	 *
+	 * @return bool
+	 */
+	public static function is_next_deposit_notice_dismissed(): bool {
+		return '1' === get_option( 'wcpay_next_deposit_notice_dismissed', '0' );
+	}
+
+	/**
 	 * Returns feature flags as an array suitable for display on the front-end.
 	 *
 	 * @return bool[]
@@ -495,19 +370,15 @@ class WC_Payments_Features {
 	public static function to_array() {
 		return array_filter(
 			[
-				'upe'                            => self::is_upe_enabled(),
-				'upeSplit'                       => self::is_upe_split_enabled(),
-				'upeDeferred'                    => self::is_upe_deferred_intent_enabled(),
-				'upeSettingsPreview'             => self::is_upe_settings_preview_enabled(),
 				'multiCurrency'                  => self::is_customer_multi_currency_enabled(),
 				'woopay'                         => self::is_woopay_eligible(),
 				'documents'                      => self::is_documents_section_enabled(),
 				'clientSecretEncryption'         => self::is_client_secret_encryption_enabled(),
 				'woopayExpressCheckout'          => self::is_woopay_express_checkout_enabled(),
 				'isAuthAndCaptureEnabled'        => self::is_auth_and_capture_enabled(),
-				'progressiveOnboarding'          => self::is_progressive_onboarding_enabled(),
 				'isPayForOrderFlowEnabled'       => self::is_pay_for_order_flow_enabled(),
 				'isDisputeIssuerEvidenceEnabled' => self::is_dispute_issuer_evidence_enabled(),
+				'isRefundControlsEnabled'        => self::is_streamline_refunds_enabled(),
 			]
 		);
 	}
