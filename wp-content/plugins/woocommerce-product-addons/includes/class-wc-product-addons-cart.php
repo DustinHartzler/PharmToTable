@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC_Product_Addons_Cart class.
  *
  * @class    WC_Product_Addons_Cart
- * @version  6.4.4
+ * @version  6.6.0
  */
 class WC_Product_Addons_Cart {
 	/**
@@ -229,7 +229,6 @@ class WC_Product_Addons_Cart {
 				 * New filter: 'woocommerce_addons_add_order_price_to_value'
 				 *
 				 * Use this filter to display the price next to each selected add-on option.
-				 * By default, add-on prices show up only next to flat fee add-ons.
 				 *
 				 * @param boolean
 				 */
@@ -252,6 +251,12 @@ class WC_Product_Addons_Cart {
 					$addon_price = $addon['price'];
 				}
 
+				$prev_product = null;
+
+				if ( isset( $GLOBALS[ 'product' ] ) && ! is_null( $GLOBALS[ 'product' ] ) ) {
+					$prev_product = $GLOBALS[ 'product' ];
+				}
+
 				$GLOBALS[ 'product' ] = $cloned_product;
 
 				$price = html_entity_decode(
@@ -260,17 +265,24 @@ class WC_Product_Addons_Cart {
 					get_bloginfo( 'charset' )
 				);
 
-				unset( $GLOBALS[ 'product' ] );
+				if ( ! is_null( $prev_product ) ) {
+					$GLOBALS[ 'product' ] = $prev_product;
+				} else {
+					unset( $GLOBALS[ 'product' ] );
+				}
 
 				/*
 				 * If there is an add-on price, add the price of the add-on
 				 * to the selected option.
 				 */
 				if ( 'flat_fee' === $price_type && $addon['price'] && $add_price_to_value ) {
+					/* translators: %1$s flat fee addon price in order */
 					$value .= sprintf( _x( ' (+ %1$s)', 'flat fee addon price in order', 'woocommerce-product-addons' ), $price );
 				} elseif ( ( 'quantity_based' === $price_type || 'percentage_based' === $price_type ) && $addon['price'] && $add_price_to_value ) {
+					/* translators: %1$s addon price in order */
 					$value .= sprintf( _x( ' (%1$s)', 'addon price in order', 'woocommerce-product-addons' ), $price );
 				} elseif ( 'custom_price' === $addon['field_type'] ) {
+					/* translators: %1$s custom addon price in order */
 					$value = sprintf( _x( ' (%1$s)', 'custom addon price in order', 'woocommerce-product-addons' ), $price );
 				}
 
@@ -309,6 +321,17 @@ class WC_Product_Addons_Cart {
 		// WooCommerce Subscriptions is responsible for rendering these add-ons.
 		if ( isset( $cart_item_data[ 'subscription_renewal' ] ) ) {
 			return $cart_item_data;
+		}
+
+		// When paying for a subscription's initial payment, add-on data is automatically copied in $cart_item_data[ 'subscription_initial_payment' ][ 'custom_line_item_meta' ].
+		// Unlike renewals, WooCommerce Subscriptions doesn't grandfather item prices for initial payments.
+		// We need to remove the add-on data WooCommerce Subscriptions copied to the cart item data and re-add it to the cart item data.
+		if ( isset( $cart_item_data[ 'subscription_initial_payment' ][ 'custom_line_item_meta' ][ '_pao_ids' ] ) ) {
+			foreach ( $cart_item_data[ 'subscription_initial_payment' ]['custom_line_item_meta']['_pao_ids'] as $addon ) {
+				unset( $cart_item_data[ 'subscription_initial_payment' ]['custom_line_item_meta'][ $addon['key'] ] );
+			}
+
+			unset( $cart_item_data[ 'subscription_initial_payment' ]['custom_line_item_meta']['_pao_ids'] );
 		}
 
 		// Get addon data.
@@ -646,6 +669,12 @@ class WC_Product_Addons_Cart {
 
 				$add_price_to_value = apply_filters( 'woocommerce_addons_add_cart_price_to_value', false, $cart_item );
 
+				$prev_product = null;
+
+				if ( isset( $GLOBALS[ 'product' ] ) && ! is_null( $GLOBALS[ 'product' ] ) ) {
+					$prev_product = $GLOBALS[ 'product' ];
+				}
+
 				$GLOBALS[ 'product' ] = $cloned_cart_item;
 
 				if ( 0 == $addon['price'] ) {
@@ -655,15 +684,18 @@ class WC_Product_Addons_Cart {
 				} elseif ( 'flat_fee' === $addon['price_type'] && $addon['price'] ) {
 
 					$addon_price = wc_price( WC_Product_Addons_Helper::get_product_addon_price_for_display( $addon[ 'price' ], $cart_item[ 'data' ], true ) );
+					/* translators: %1$s flat fee addon price in cart */
 					$value      .= sprintf( _x( ' (+ %1$s)', 'flat fee addon price in cart', 'woocommerce-product-addons' ), $addon_price );
 
 				}  elseif ( 'custom_price' === $addon['field_type'] && $addon['price'] ) {
 
 					$addon_price        = wc_price( WC_Product_Addons_Helper::get_product_addon_price_for_display( $addon[ 'price' ], $cart_item[ 'data' ], true ) );
+					/* translators: %1$s custom addon price in cart */
 					$value             .= sprintf( _x( ' (%1$s)', 'custom price addon price in cart', 'woocommerce-product-addons' ), $addon_price );
 					$addon[ 'display' ] = $value;
 				} elseif ( 'quantity_based' === $addon['price_type'] && $addon['price'] && $add_price_to_value ) {
 					$addon_price = wc_price( WC_Product_Addons_Helper::get_product_addon_price_for_display( $addon[ 'price' ], $cart_item[ 'data' ], true ) );
+					/* translators: %1$s quantity based addon price in cart */
 					$value      .= sprintf( _x( ' (%1$s)', 'quantity based addon price in cart', 'woocommerce-product-addons' ), $addon_price );
 
 				} elseif ( 'percentage_based' === $addon['price_type'] && $addon['price'] && $add_price_to_value ) {
@@ -671,10 +703,15 @@ class WC_Product_Addons_Cart {
 					$_product = wc_get_product( $cart_item['product_id'] );
 					$_product->set_price( $price * ( $addon['price'] / 100 ) );
 					$addon_price = WC()->cart->get_product_price( $_product );
+					/* translators: %1$s percentage based addon price in cart */
 					$value      .= sprintf( _x( ' (%1$s)', 'percentage based addon price in cart', 'woocommerce-product-addons' ), $addon_price );
 				}
 
-				unset( $GLOBALS[ 'product' ] );
+				if ( ! is_null( $prev_product ) ) {
+					$GLOBALS[ 'product' ] = $prev_product;
+				} else {
+					unset( $GLOBALS[ 'product' ] );
+				}
 
 				$addon_data = array(
 					'name'    => $addon['name'],

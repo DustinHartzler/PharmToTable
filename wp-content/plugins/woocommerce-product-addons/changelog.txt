@@ -1,5 +1,36 @@
 *** Product Addons Changelog ***
 
+2023-01-24 - version 6.6.0
+* Important: Tweak - Used JSON encoding for importing/exporting add-ons. Serialized export data created by previous plugin versions will no longer work.
+* New - Added compatibility with PHP 8.3
+* Fix - Removed WooPayments express checkout buttons from product pages with add-ons due to avoid compatibility issues.
+* Fix - Removed Stripe express checkout buttons from product pages with add-ons due to avoid compatibility issues.
+* Fix - Removed PayPal smart buttons from product pages with add-ons due to avoid compatibility issues.
+* Fix - Resolved an issue that enforced min/max quantity rules even when Limit Quantity was disabled.
+* Fix - Resolved PHP warning triggered when editing a product with a deleted add-ons meta.
+* Tweak - Improved the handling of the global product object to avoid compatibility issues with other plugins using it.
+* Tweak - Defer frontend scripts.
+
+2023-12-20 - version 6.5.2
+* New - Introduced the 'woocommerce_addons_cloned_product_with_filtered_price' to allow plugins to not discount add-on prices. 
+* Fix - Resolved a styling issue with quantity-based add-on prices on the single product page. 
+
+2023-11-29 - version 6.5.1
+* Tweak - Introduced admin validation to ensure that add-on titles do not exceed 255 characters.
+* Tweak - Introduced the 'woocommerce_addons_product_page_container_classes' filter to add additional classes to the container add-on elements on the product page.
+* Tweak - Updated the description for the 'Use Global add-ons?' option.
+* Fix - Fixed the display of negative add-on prices.
+* Fix - Updated the image swatches template to display only the add-on name on hover when its price is 0.
+* Fix - Fixed a pagination issue with global add-ons.
+
+2023-10-24 - version 6.5.0
+* New - Added onboarding.
+* Tweak - Important: Re-designed Product Data > Add-ons and Products > Add-ons tabs. 
+* Tweak - Important: Updated the process of importing/exporting add-ons to require fewer clicks.
+* Tweak - Important: Moved the 'Show incomplete subtotals' setting to WooCommerce > Settings > Products > Add-ons.
+* Fix - Resolved an issue that made add-ons show up twice when paying for failed subscription orders.
+* Tweak - Declared compatibility with the cart/checkout Blocks.
+
 2023-09-19 - version 6.4.7
 * Tweak - Used admin theme colors in admin.
 * Tweak - Displayed WC Admin bar on Global Product add-ons pages.

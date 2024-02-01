@@ -969,40 +969,24 @@
 
 					if ( self.addons_price_data.length ) {
 						$.each( self.addons_price_data, function ( i, addon ) {
-							var cost, formatted_value;
-							if ( 'quantity_based' === addon.price_type ) {
-								cost            = addon.cost;
-								formatted_value =
-									0 === cost
-									? '-'
-									: self.formatMoney( cost );
+							var cost = addon.cost,
+								formatted_value;
 
-								html =
-									html +
-									'<li class="wc-pao-row-quantity-based"><div class="wc-pao-col1">' +
-									addon.name +
-									'</div><div class="wc-pao-col2"><span class="amount">' +
-									formatted_value +
-									'</span></div></li>';
+							if ( 0 === cost ) {
+								formatted_value = '-';
+							} else if ( cost > 0 ) {
+								formatted_value = self.formatMoney( cost );
 							} else {
-
-								cost = addon.cost;
-
-								formatted_value =
-									0 === cost
-										? '-'
-										: '<span class="amount">' +
-										self.formatMoney( cost ) +
-										'</span>';
-
-								html =
-									html +
-									'<li><div class="wc-pao-col1"><strong>' +
-									addon.name +
-									'</strong></div><div class="wc-pao-col2">' +
-									formatted_value +
-									'</div></li>';
+								formatted_value = '-' + self.formatMoney( Math.abs(cost) );
 							}
+
+							html =
+								html +
+								'<li><div class="wc-pao-col1"><strong>' +
+								addon.name +
+								'</strong></div><div class="wc-pao-col2"><span class="amount">' +
+								formatted_value +
+								'</span></div></li>';
 
 							if ( woocommerce_addons_params.tax_enabled && addon.is_custom_price ) {
 								has_custom_price_with_taxes = true;

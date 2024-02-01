@@ -348,12 +348,14 @@ class WC_Product_Addons_Helper {
 			$restriction_data[ 'content' ] = $addon[ 'restrictions_type' ];
 		}
 
-		if (  isset( $addon[ 'min' ] ) && '' !== $addon[ 'min' ] && $addon[ 'min' ] >= 0 ) {
-			$restriction_data[ 'min' ] = $addon[ 'min' ];
-		}
+		if ( isset( $addon[ 'restrictions' ] ) && 1 === $addon[ 'restrictions' ] ) {
+			if ( isset( $addon[ 'min' ] ) && '' !== $addon[ 'min' ] && $addon[ 'min' ] >= 0 ) {
+				$restriction_data[ 'min' ] = $addon[ 'min' ];
+			}
 
-		if (  isset( $addon[ 'max' ] ) && '' !== $addon[ 'max' ] && $addon[ 'max' ] > 0 ) {
-			$restriction_data[ 'max' ] = $addon[ 'max' ];
+			if ( isset( $addon[ 'max' ] ) && '' !== $addon[ 'max' ] && $addon[ 'max' ] > 0 ) {
+				$restriction_data[ 'max' ] = $addon[ 'max' ];
+			}
 		}
 
 		/**
@@ -475,6 +477,19 @@ class WC_Product_Addons_Helper {
 			}
 		}
 
-		return $cloned_product;
+		/*
+		 * 'woocommerce_addons_cloned_product_with_filtered_price'
+		 *
+		 * Product Add-ons creates a dummy product with a price equal to the add-on prices.
+		 * Then, it passes it through `get_price` to allow discount/price-related plugins to apply discounts.
+		 * Use this filter to add a unique identifier to the dummy product, if you'd like to prevent discounts from applying to add-on prices.
+		 *
+		 * @since 6.5.2
+		 *
+		 * @param WC_Product $cloned_product
+		 * @param WC_Product $product
+		 * @param float      $price
+		 */
+		return apply_filters( 'woocommerce_addons_cloned_product_with_filtered_price', $cloned_product, $product, $price );
 	}
 }
