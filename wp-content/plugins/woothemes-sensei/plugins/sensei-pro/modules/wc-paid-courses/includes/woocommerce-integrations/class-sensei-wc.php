@@ -349,14 +349,30 @@ class Sensei_WC {
 	 * @return boolean Whether login is required to access course.
 	 */
 	public static function require_login_for_paid_courses( $login_required, $course_id ) {
+
+		$found             = false;
+		$cache_key         = 'paid-course-requires-login-course-' . $course_id;
+		$cache_group       = 'sensei-user-access';
+		$is_login_required = wp_cache_get( $cache_key, $cache_group, false, $found );
+
+		if ( $found ) {
+			return $is_login_required;
+		}
+
+		$is_login_required = true;
+
 		if (
 			empty( $course_id )
 			|| ! Course_Enrolment_Providers::instance()->handles_enrolment( $course_id )
 		) {
-			return $login_required;
+			$is_login_required = $login_required;
 		}
 
-		return true;
+		// wp_cache_set is non-persistant by default, but in case the user has a
+		// persistant cache configured, we set the expiration time to 2 seconds.
+		wp_cache_set( $cache_key, $is_login_required, $cache_group, 2 );
+
+		return $is_login_required;
 	}
 
 	/**

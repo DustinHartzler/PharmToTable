@@ -79,7 +79,7 @@ class WooCommerce_Subscriptions
 
 		// When using custom order tables with no post sync, we need to use the subscription hooks.
 		// Otherwise, we use the post hooks.
-		if ( wcs_is_custom_order_tables_usage_enabled() && ! wcs_is_custom_order_tables_data_sync_enabled() ) {
+		if ( $this->is_custom_order_tables_usage_enabled() && ! $this->is_custom_order_tables_data_sync_enabled() ) {
 			add_action( 'woocommerce_trash_subscription', [ $this, 'maybe_trigger_subscription_trash_change' ] );
 
 			add_action( 'woocommerce_before_delete_subscription', [ $this, 'before_delete_subscription' ], 1 );
@@ -601,5 +601,32 @@ class WooCommerce_Subscriptions
 	 */
 	public function get_version() {
 		return '2.0.0';
+	}
+
+	/**
+	 * Determines whether custom order tables usage is enabled.
+	 *
+	 * @return bool
+	 */
+	private function is_custom_order_tables_usage_enabled(): bool {
+		if ( ! class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' ) ) {
+			return false;
+		}
+
+		return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+	}
+	/**
+	 * Determines whether the order tables are synchronized with WP posts.
+	 *
+	 * @return bool True if the order tables are synchronized with WP posts, false otherwise.
+	 */
+	private function is_custom_order_tables_data_sync_enabled(): bool {
+		if ( ! class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer' ) ) {
+			return false;
+		}
+
+		$data_synchronizer = wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer::class );
+
+		return $data_synchronizer && $data_synchronizer->data_sync_is_enabled();
 	}
 }

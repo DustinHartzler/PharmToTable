@@ -2,7 +2,11 @@
  * WordPress dependencies
  */
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
-import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import buttonAttributes from '../join-group-button-variation/attributes';
 
 const TEMPLATE = [
 	[
@@ -18,7 +22,52 @@ const TEMPLATE = [
 			},
 		},
 		[
-			[ 'core/column', {}, [] ],
+			[
+				'core/column',
+				{ width: '70%' },
+				[
+					[
+						'sensei-pro/group-name',
+						{
+							style: {
+								spacing: {
+									padding: {
+										top: '0',
+										bottom: '0',
+									},
+									margin: {
+										bottom: '10px',
+									},
+								},
+							},
+						},
+					],
+					[
+						'sensei-pro/group-members-count',
+						{
+							style: {
+								spacing: {
+									margin: {
+										top: '10px',
+									},
+								},
+							},
+						},
+					],
+					[
+						'sensei-pro/group-members-list',
+						{
+							style: {
+								spacing: {
+									margin: {
+										top: '18px',
+									},
+								},
+							},
+						},
+					],
+				],
+			],
 			[
 				'core/column',
 				{ verticalAlignment: 'bottom' },
@@ -26,12 +75,7 @@ const TEMPLATE = [
 					[
 						'core/buttons',
 						{ layout: { type: 'flex', justifyContent: 'right' } },
-						[
-							[
-								'core/button',
-								{ text: __( 'Join Group', 'sensei-pro' ) },
-							],
-						],
+						[ [ 'core/button', buttonAttributes ] ],
 					],
 				],
 			],

@@ -41,6 +41,7 @@
       "default": {
         "border": {
           "color": "#c7c3c34f",
+          "style":"solid",
           "width":"1px"
         },
         "spacing": {

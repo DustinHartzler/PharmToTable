@@ -261,7 +261,7 @@ setExtensionsStatus:function(e,t){return{type:"SET_EXTENSIONS_STATUS",slugs:e,st
    *
    * @param {Array} layout Extensions layout.
    */
-setLayout:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:[];return{type:"SET_LAYOUT",layout:e}},
+setLayout:function(){return{type:"SET_LAYOUT",layout:arguments.length>0&&void 0!==arguments[0]?arguments[0]:[]}},
 /**
    * Add process (update/install) to queue.
    *
@@ -565,7 +565,7 @@ function r(){(0,s.useLayoutEffect)((function(){return document.body.classList.ad
 /* harmony export */});
 /* unused harmony exports composeFetchAction, createStore */
 /* harmony import */n(9818);
-/* harmony import */var s=function(e,t){return function(){var n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:t,s=arguments.length>1?arguments[1]:void 0,r=e[s.type]||e.DEFAULT;return r(s,n)}}}
+/* harmony import */var s=function(e,t){return function(){var n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:t,s=arguments.length>1?arguments[1]:void 0;return(e[s.type]||e.DEFAULT)(s,n)}}}
 /***/,
 /***/67959:
 /***/(e,t,n)=>{"use strict";

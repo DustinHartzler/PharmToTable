@@ -19,7 +19,7 @@
  * @param {string} uncompiledValue
  * @return {string} CSS property value.
  */
-function i(r){var e,t="var:";if(null!=r&&null!==(e=r.startsWith)&&void 0!==e&&e.call(r,t)){var o=r.slice(t.length).split("|").join("--");return"var(--wp--".concat(o,")")}return r}
+function i(r){var e,t="var:";if(null!=r&&null!==(e=r.startsWith)&&void 0!==e&&e.call(r,t)){var o=r.slice(4).split("|").join("--");return"var(--wp--".concat(o,")")}return r}
 /**
  * Turn color name to CSS.
  *

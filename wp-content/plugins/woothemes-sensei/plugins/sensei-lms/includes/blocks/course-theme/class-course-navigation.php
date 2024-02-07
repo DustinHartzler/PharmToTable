@@ -282,6 +282,15 @@ class Course_Navigation {
 	private function lesson_status_icon( $status ) {
 		$icon = Sensei()->assets->get_icon( self::ICONS[ $status ], 'sensei-lms-course-navigation-lesson__status' );
 
+		/**
+		 * Filter the lesson status icon.
+		 *
+		 * @hook sensei_learning_mode_lesson_status_icon
+		 *
+		 * @param {string} $icon   The icon HTML.
+		 * @param {string} $status The lesson status.
+		 * @return {string} The icon HTML.
+		 */
 		return apply_filters( 'sensei_learning_mode_lesson_status_icon', $icon, $status );
 	}
 
@@ -311,17 +320,21 @@ class Course_Navigation {
 			$status = 'completed';
 		} else {
 			// If the lesson has a quiz, use the quiz progress.
-			$quiz_id = Sensei()->lesson->lesson_quizzes( $lesson_id );
+			$quiz_id       = Sensei()->lesson->lesson_quizzes( $lesson_id );
+			$quiz_progress = null;
 			if ( $quiz_id ) {
-				$user_progress = \Sensei()->quiz_progress_repository->get( $quiz_id, $this->user_id );
-			} else {
-				$user_progress = \Sensei()->lesson_progress_repository->get( $lesson_id, $this->user_id );
+				$quiz_progress = \Sensei()->quiz_progress_repository->get( $quiz_id, $this->user_id );
 			}
-			if ( $user_progress ) {
-				$status = $user_progress->get_status();
 
+			if ( $quiz_progress ) {
+				$status = $quiz_progress->get_status();
 				if ( in_array( $status, $in_progress_statuses, true ) ) {
 					$status = 'in-progress';
+				}
+			} else {
+				$lesson_progress = \Sensei()->lesson_progress_repository->get( $lesson_id, $this->user_id );
+				if ( $lesson_progress ) {
+					$status = $lesson_progress->get_status();
 				}
 			}
 		}

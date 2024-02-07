@@ -13,20 +13,102 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Sensei_Settings_API {
 
+	/**
+	 * Page token.
+	 *
+	 * @var string
+	 */
 	public $token;
+
+	/**
+	 * Legacy page token.
+	 *
+	 * @var string
+	 */
 	public $token_legacy;
+
+	/**
+	 * Page slug.
+	 *
+	 * @var string
+	 */
 	public $page_slug;
+
+	/**
+	 * Page name.
+	 *
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * Menu label.
+	 *
+	 * @var string
+	 */
 	public $menu_label;
+
+	/**
+	 * Settings.
+	 *
+	 * @var array
+	 */
 	public $settings;
+
+	/**
+	 * Settings sections.
+	 *
+	 * @var array
+	 */
 	public $sections;
+
+	/**
+	 * Settings fields.
+	 *
+	 * @var array
+	 */
 	public $fields;
+
+	/**
+	 * Errors.
+	 *
+	 * @var array
+	 */
 	public $errors;
 
+	/**
+	 * Whether the settings page has a range field.
+	 *
+	 * @var bool
+	 */
 	public $has_range;
+
+	/**
+	 * Whether the settings page has an imageselector field.
+	 *
+	 * @var bool
+	 */
 	public $has_imageselector;
+
+	/**
+	 * Whether the settings page has tabs.
+	 *
+	 * @var bool
+	 */
 	public $has_tabs;
+
+	/**
+	 * Settings tabs.
+	 *
+	 * @var array
+	 */
 	private $tabs;
+
+	/**
+	 * Settings version.
+	 *
+	 * @var string
+	 */
 	public $settings_version;
 
 	/**
@@ -66,6 +148,10 @@ class Sensei_Settings_API {
 		$this->tabs              = array();
 		$this->settings_version  = '';
 
+		// Set default empty values for properties.
+		$this->name       = '';
+		$this->menu_label = '';
+		$this->settings   = array();
 	}
 
 	/**
@@ -213,18 +299,24 @@ class Sensei_Settings_API {
 			$html .= '<ul id="settings-sections" class="subsubsub hide-if-no-js">' . "\n";
 
 			$sections = array();
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required here.
+			$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'default-settings';
 
 			foreach ( $this->tabs as $k => $v ) {
 				$classes = 'tab';
 
-				if ( 'default-settings' === $k ) {
+				if ( $current_tab === $k ) {
 					$classes .= ' current';
+				}
+
+				if ( ! empty( $v['external'] ) ) {
+					$classes .= ' external';
 				}
 
 				$sections[ $k ] = array(
 					'href'  => isset( $v['href'] )
 						? esc_attr( $v['href'] )
-						: admin_url( 'admin.php?page=' . $this->token . '#' . esc_attr( $k ) ),
+						: admin_url( 'admin.php?page=' . $this->token . '&tab=' . esc_attr( $k ) ),
 					'name'  => esc_attr( $v['name'] ),
 					'class' => esc_attr( $classes ),
 				);
@@ -328,7 +420,7 @@ class Sensei_Settings_API {
 	 * @access protected
 	 * @since  1.0.0
 	 * @param  array $data
-	 * @return callable,  array or string
+	 * @return callable|array|string
 	 */
 	protected function determine_method( $data, $type = 'form' ) {
 		$method = '';
@@ -493,9 +585,10 @@ class Sensei_Settings_API {
 		 *
 		 * @since 4.1.0
 		 *
-		 * @hook  sensei_settings_woocommerce_hide  Hook used to hide woocommerce promo banner and section.
+		 * @hook sensei_settings_woocommerce_hide  Hook used to hide woocommerce promo banner and section.
 		 *
-		 * @return {boolean}                        Returns a boolean value that defines if the woocommerce promo banner should be hidden.
+		 * @param {bool} $hide_woocommerce_settings Defines if the woocommerce promo banner should be hidden.
+		 * @return {bool} Returns a boolean value that defines if the woocommerce promo banner should be hidden.
 		 */
 		$hide_woocommerce_settings = apply_filters( 'sensei_settings_woocommerce_hide', false );
 		if ( 'woocommerce-settings' === $section_id && ! $hide_woocommerce_settings ) {
@@ -509,7 +602,8 @@ class Sensei_Settings_API {
 		 *
 		 * @hook  sensei_settings_content_drip_hide  Hook used to hide content drip promo banner and section.
 		 *
-		 * @return {boolean}                        Returns a boolean value that defines if the content drip promo banner should be hidden.
+		 * @param {bool} $hide_content_drip_settings Defines if the content drip promo banner should be hidden.
+		 * @return {bool} Returns a boolean value that defines if the content drip promo banner should be hidden.
 		 */
 		$hide_content_drip_settings = apply_filters( 'sensei_settings_content_drip_hide', false );
 		if ( 'sensei-content-drip-settings' === $section_id && ! $hide_content_drip_settings ) {
@@ -990,12 +1084,10 @@ class Sensei_Settings_API {
 				// Check if the field is valid.
 				$method = $this->determine_method( $v, 'check' );
 
-				if ( function_exists( $method ) ) {
+				if ( is_string( $method ) && function_exists( $method ) ) {
 					$is_valid = $method( $value );
-				} else {
-					if ( method_exists( $this, $method ) ) {
-						$is_valid = $this->$method( $value );
-					}
+				} elseif ( is_string( $method ) && method_exists( $this, $method ) ) {
+					$is_valid = $this->$method( $value );
 				}
 
 				if ( ! $is_valid ) {
@@ -1005,12 +1097,10 @@ class Sensei_Settings_API {
 
 				$method = $this->determine_method( $v, 'validate' );
 
-				if ( function_exists( $method ) ) {
+				if ( is_string( $method ) && function_exists( $method ) ) {
 					$options[ $k ] = $method( $value );
-				} else {
-					if ( method_exists( $this, $method ) ) {
-						$options[ $k ] = $this->$method( $value );
-					}
+				} elseif ( is_string( $method ) && method_exists( $this, $method ) ) {
+					$options[ $k ] = $this->$method( $value );
 				}
 			}
 		}
