@@ -3,9 +3,10 @@
  * Main class for Affiliates Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.11.0
+ * @version     1.12.6
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -30,6 +31,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			'order_details',
 			'payout_details',
 			'affiliate_details',
+			'visitor_details',
 			'update_feedback',
 			'update_payout_method',
 			'dashboard_kpi_data',
@@ -143,6 +145,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * Function to show admin dashboard.
 		 */
 		public static function afwc_dashboard_page() {
+			global $wp_roles;
 			if ( ! wp_script_is( 'afwc-admin-dashboard' ) ) {
 				wp_enqueue_script( 'afwc-admin-dashboard' );
 			}
@@ -226,7 +229,8 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			$show_admin_notice_for_dates = ( '1.2.9' >= $current_db_version && 'yes' !== $afwc_dates_migration_done ) ? true : false;
 			$default_plan_id             = afwc_get_default_commission_plan_id();
 			$is_action_scheduler_exists  = ( function_exists( 'as_schedule_single_action' ) ) ? true : false;
-			$review_link                 = 'https://woocommerce.com/products/affiliate-for-woocommerce/?review';
+			$review_link                 = 'https://woo.com/products/affiliate-for-woocommerce/?review';
+			$reg_form_page               = get_page_by_path( 'affiliates', 'OBJECT' );
 			$afwc_admin_affiliates       = new AFWC_Admin_Affiliates();
 
 			wp_localize_script(
@@ -247,6 +251,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 							'kpiData'                => wp_create_nonce( 'afwc-admin-dashboard-kpi-data' ),
 							'affiliateKPIData'       => wp_create_nonce( 'afwc-admin-affiliate-kpi-data' ),
 							'topProducts'            => wp_create_nonce( 'afwc-admin-top-products' ),
+							'visitorDetails'         => wp_create_nonce( 'afwc-admin-visitor-details' ),
 							'profileData'            => wp_create_nonce( 'afwc-admin-profile-data' ),
 							'multiTierData'          => wp_create_nonce( 'afwc-admin-multi-tier-data' ),
 							'linkLTCCustomers'       => wp_create_nonce( 'afwc-admin-link-ltc-customers' ),
@@ -254,11 +259,12 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 							'searchLTCCustomers'     => wp_create_nonce( 'afwc-admin-search-ltc-customers' ),
 						),
 						'campaign'    => array(
-							'save'              => wp_create_nonce( 'afwc-admin-save-campaign' ),
-							'delete'            => wp_create_nonce( 'afwc-admin-delete-campaign' ),
-							'fetchData'         => wp_create_nonce( 'afwc-admin-campaign-dashboard-data' ),
-							'searchRuleDetails' => wp_create_nonce( 'afwc-admin-campaign-search-rule-details' ),
-							'fetchRuleData'     => wp_create_nonce( 'afwc-admin-campaign-rule-data' ),
+							'save'                  => wp_create_nonce( 'afwc-admin-save-campaign' ),
+							'delete'                => wp_create_nonce( 'afwc-admin-delete-campaign' ),
+							'fetchData'             => wp_create_nonce( 'afwc-admin-campaign-dashboard-data' ),
+							'searchRuleDetails'     => wp_create_nonce( 'afwc-admin-campaign-search-rule-details' ),
+							'fetchRuleData'         => wp_create_nonce( 'afwc-admin-campaign-rule-data' ),
+							'createSampleCampaigns' => wp_create_nonce( 'afwc-admin-create-sample-campaigns' ),
 						),
 						'commissions' => array(
 							'save'          => wp_create_nonce( 'afwc-admin-save-commissions' ),
@@ -267,10 +273,21 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 							'savePlanOrder' => wp_create_nonce( 'afwc-admin-save-commission-order' ),
 							'extraData'     => wp_create_nonce( 'afwc-admin-extra-data' ),
 							'searchPlan'    => wp_create_nonce( 'afwc-admin-search-commission-plans' ),
+							'dismissRecurringSettingDeprecatedNotice' => wp_create_nonce( 'afwc-admin-dismiss-recurring-setting-deprecated-notice' ),
+						),
+						'onboarding'  => array(
+							'setupAffiliates'    => wp_create_nonce( 'afwc-admin-onboarding-setup-affiliates' ),
+							'setupBasicSettings' => wp_create_nonce( 'afwc-admin-onboarding-setup-basic-settings' ),
+							'setupCommissions'   => wp_create_nonce( 'afwc-admin-onboarding-setup-commissions' ),
+							'setupEmails'        => wp_create_nonce( 'afwc-admin-onboarding-setup-emails' ),
 						),
 					),
 					'settingsLink'                   => $settings_link,
 					'docLink'                        => add_query_arg( array( 'page' => 'affiliate-for-woocommerce-documentation' ), admin_url( 'admin.php' ) ),
+					'dashboardLink'                  => admin_url( 'admin.php?page=affiliate-for-woocommerce' ),
+					'regFormSettingLink'             => admin_url( 'admin.php?page=affiliate-form-settings' ),
+					'regFormPageLink'                => ! empty( $reg_form_page ) && $reg_form_page instanceof WP_Post ? get_permalink( $reg_form_page ) : '',
+					'assetsPath'                     => AFWC_PLUGIN_URL . '/assets/',
 					'currencySymbol'                 => AFWC_CURRENCY,
 					'ajaxurl'                        => admin_url( 'admin-ajax.php' ),
 					'home_url'                       => home_url(),
@@ -296,6 +313,10 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					'storeCurrencyCode'              => get_woocommerce_currency(),
 					'pname'                          => afwc_get_pname(),
 					'isPrettyReferralEnabled'        => get_option( 'afwc_use_pretty_referral_links', 'no' ),
+					'userRoles'                      => ! empty( $wp_roles->role_names ) ? $wp_roles->role_names : array(),
+					'isMultiTierEnabled'             => is_callable( array( 'AFWC_Multi_Tier', 'is_enabled' ) ) && AFWC_Multi_Tier::is_enabled(),
+					'subscriptionNotice'             => ( class_exists( 'WCS_AFWC_Compatibility' ) && is_callable( array( 'WCS_AFWC_Compatibility', 'plan_admin_notice' ) ) ) ? WCS_AFWC_Compatibility::plan_admin_notice() : '',
+					'subscriptionDescForPlan'        => ( class_exists( 'WCS_AFWC_Compatibility' ) && is_callable( array( 'WCS_AFWC_Compatibility', 'plan_description' ) ) ) ? WCS_AFWC_Compatibility::plan_description() : '',
 				)
 			);
 
@@ -343,7 +364,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			);
 
 			$func_nm = ! empty( $params['cmd'] ) ? $params['cmd'] : '';
-			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) || ! ( current_user_can( 'manage_woocommerce' ) || in_array( $func_nm, $this->common_ajax_events, true ) ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) || ! ( afwc_current_user_can_manage_affiliate() || in_array( $func_nm, $this->common_ajax_events, true ) ) ) {
 				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
 			}
 
@@ -846,7 +867,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					$affiliate_ids[] = $id;
 					$affiliates[]    = array(
 						'affiliate_id'       => $id,
-						'name'               => ( ( ! empty( $affiliate['display_name'] ) ) ? $affiliate['display_name'] : '' ),
+						'name'               => ( ( ! empty( $affiliate['display_name'] ) ) ? html_entity_decode( $affiliate['display_name'], ENT_QUOTES ) : '' ),
 						'email'              => ( ( ! empty( $affiliate['email'] ) ) ? $affiliate['email'] : '' ),
 						'earned_commissions' => ( ( empty( $params['is_export'] ) ) ? afwc_format_price( $earned_commission ) : $earned_commission ),
 						'unpaid_commissions' => ( ( empty( $params['is_export'] ) ) ? afwc_format_price( $unpaid_commission ) : $unpaid_commission ),
@@ -1058,7 +1079,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			$access = false;
 
 			// Check for admin nonce.
-			if ( current_user_can( 'manage_woocommerce' ) && wp_verify_nonce( $security, 'afwc-admin-multi-tier-data' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			if ( afwc_current_user_can_manage_affiliate() && wp_verify_nonce( $security, 'afwc-admin-multi-tier-data' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
 				$access = true;
 			}
 
@@ -1072,12 +1093,12 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 				);
 			}
 
-			$affiliate_multi_tier = new AFWC_Multi_Tier();
+			$affiliate_multi_tier = AFWC_Multi_Tier::get_instance();
 			wp_send_json(
 				array(
 					'ACK'  => 'Success',
 					'data' => array(
-						'multiTierChain' => ( $affiliate_multi_tier instanceof AFWC_Multi_Tier && is_callable( array( $affiliate_multi_tier, 'get_children_data' ) ) ) ? $affiliate_multi_tier->get_children_data( array( 'affiliate_id' => intval( $params['affiliate_id'] ) ) ) : array(),
+						'multiTierChain' => ( $affiliate_multi_tier instanceof AFWC_Multi_Tier && is_callable( array( $affiliate_multi_tier, 'get_children_tree' ) ) ) ? $affiliate_multi_tier->get_children_tree( intval( $params['affiliate_id'] ) ) : array(),
 					),
 				)
 			);
@@ -1090,6 +1111,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 */
 		public function affiliate_kpi_details( $params = array() ) {
 			check_admin_referer( 'afwc-admin-affiliate-kpi-data', 'security' );
+
 			if ( empty( $params['affiliate_id'] ) ) {
 				wp_send_json(
 					array(
@@ -1098,6 +1120,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					)
 				);
 			}
+
 			$affiliate_id = intval( $params['affiliate_id'] );
 
 			$all_time_data                    = new AFWC_Admin_Affiliates( $affiliate_id );
@@ -1153,12 +1176,19 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 */
 		public function affiliate_details( $params = array() ) {
 			check_admin_referer( 'afwc-admin-affiliate-details', 'security' );
-			$affiliate_id = ! empty( $params['affiliate_id'] ) ? intval( $params['affiliate_id'] ) : 0;
-			$is_affiliate = '';
 
-			if ( ! empty( $affiliate_id ) ) {
-				$is_affiliate = get_user_meta( $affiliate_id, 'afwc_is_affiliate', true );
+			if ( empty( $params['affiliate_id'] ) ) {
+				wp_send_json(
+					array(
+						'ACK'     => 'Error',
+						'message' => _x( 'Required parameter missing - Affiiate ID.', 'error message when fetching affiliate details', 'affiliate-for-woocommerce' ),
+					)
+				);
 			}
+
+			$affiliate_id = intval( $params['affiliate_id'] );
+			$is_affiliate = '';
+			$is_affiliate = get_user_meta( $affiliate_id, 'afwc_is_affiliate', true );
 
 			if ( 'pending' === $is_affiliate ) {
 				$current_data      = new AFWC_Admin_Affiliates( $affiliate_id );
@@ -1168,7 +1198,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					'affiliate_id' => $affiliate_id,
 					'email'        => ! empty( $details[ $affiliate_id ]['email'] ) ? $details[ $affiliate_id ]['email'] : '',
 					'edit_url'     => admin_url( 'user-edit.php?user_id=' . $affiliate_id ) . '#afwc-settings',
-					'avatar_url'   => $this->get_avatar_url( get_avatar( $affiliate_id, 32 ) ),
+					'avatar_url'   => $this->get_avatar_url( get_avatar( $affiliate_id, 60 ) ),
 					'pending'      => true,
 				);
 				wp_send_json( $affiliate_details );
@@ -1209,7 +1239,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					'edit_url'                => admin_url( 'user-edit.php?user_id=' . $affiliate_id ) . '#afwc-settings',
 					'referral_url'            => is_callable( array( $affiliate, 'get_affiliate_link' ) ) ? $affiliate->get_affiliate_link() : '',
 					'is_paypal_email'         => ( true === $is_payable && ! empty( $afwc_paypal_email ) ),
-					'avatar_url'              => $this->get_avatar_url( get_avatar( $affiliate_id, 32 ) ),
+					'avatar_url'              => $this->get_avatar_url( get_avatar( $affiliate_id, 60 ) ),
 					'formatted_join_duration' => $current_data->get_formatted_join_duration(),
 				)
 			);
@@ -1450,6 +1480,24 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					'data' => $search_list,
 				)
 			);
+		}
+
+		/**
+		 * Handler for AJAX request for getting affiliate's visitor details.
+		 *
+		 * @param array $params Params from the AJAX request.
+		 */
+		public function visitor_details( $params = array() ) {
+			check_admin_referer( 'afwc-admin-visitor-details', 'security' );
+
+			$current_data = new AFWC_Admin_Affiliates(
+				! empty( $params['affiliate_id'] ) ? $params['affiliate_id'] : 0,
+				! empty( $params['from'] ) ? $params['from'] : '',
+				! empty( $params['to'] ) ? $params['to'] : '',
+				! empty( $params['page'] ) ? intval( $params['page'] ) : 0
+			);
+
+			wp_send_json( is_callable( array( $current_data, 'get_visitor_details' ) ) ? $current_data->get_visitor_details() : array() );
 		}
 	}
 

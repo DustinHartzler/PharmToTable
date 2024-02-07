@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       5.2.0
- * @version     1.2.3
+ * @version     1.2.5
  */
 
 // Exit if accessed directly.
@@ -71,20 +71,43 @@ if ( ! class_exists( 'AFWC_Registration_Submissions' ) ) {
 		}
 
 		/**
+		 * Method to handle WC compatibility related function call from appropriate class
+		 *
+		 * @param string $function_name Function to call.
+		 * @param array  $arguments     Array of arguments passed while calling $function_name.
+		 *
+		 * @return mixed Result of function call.
+		 */
+		public function __call( $function_name = '', $arguments = array() ) {
+
+			if ( empty( $function_name ) || ! is_callable( 'SA_WC_Compatibility', $function_name ) ) {
+				return;
+			}
+
+			if ( ! empty( $arguments ) ) {
+				return call_user_func_array( 'SA_WC_Compatibility::' . $function_name, $arguments );
+			} else {
+				return call_user_func( 'SA_WC_Compatibility::' . $function_name );
+			}
+		}
+
+		/**
 		 * Get the default fields.
 		 *
 		 * @return array Return the default fields.
 		 */
 		public static function get_default_fields() {
-			return array(
-				'afwc_email'            => _x( 'Email Address', 'Title for Affiliate registration email address field', 'affiliate-for-woocommerce' ),
-				'afwc_first_name'       => _x( 'First Name', 'Title for Affiliate registration first name field', 'affiliate-for-woocommerce' ),
-				'afwc_last_name'        => _x( 'Last Name', 'Title for Affiliate registration last name field', 'affiliate-for-woocommerce' ),
-				'afwc_password'         => _x( 'Password', 'Title for Affiliate registration password field', 'affiliate-for-woocommerce' ),
-				'afwc_confirm_password' => _x( 'Confirm Password', 'Title for Affiliate registration confirmation password field', 'affiliate-for-woocommerce' ),
-				'afwc_paypal_email'     => _x( 'PayPal Email Address', 'Title for Affiliate registration PayPal email address field', 'affiliate-for-woocommerce' ),
-				'afwc_parent_id'        => _x( 'Referral affiliate user ID', 'Title for Affiliate registration parent user\'s id field', 'affiliate-for-woocommerce' ),
-				'afwc_website'          => _x( 'Website URL', 'Title for Affiliate registration website URL field', 'affiliate-for-woocommerce' ),
+			return apply_filters(
+				'afwc_registration_core_form_fields',
+				array(
+					'afwc_email'            => _x( 'Email Address', 'Title for Affiliate registration email address field', 'affiliate-for-woocommerce' ),
+					'afwc_first_name'       => _x( 'First Name', 'Title for Affiliate registration first name field', 'affiliate-for-woocommerce' ),
+					'afwc_last_name'        => _x( 'Last Name', 'Title for Affiliate registration last name field', 'affiliate-for-woocommerce' ),
+					'afwc_password'         => _x( 'Password', 'Title for Affiliate registration password field', 'affiliate-for-woocommerce' ),
+					'afwc_confirm_password' => _x( 'Confirm Password', 'Title for Affiliate registration confirmation password field', 'affiliate-for-woocommerce' ),
+					'afwc_paypal_email'     => _x( 'PayPal Email Address', 'Title for Affiliate registration PayPal email address field', 'affiliate-for-woocommerce' ),
+					'afwc_website'          => _x( 'Website URL', 'Title for Affiliate registration website URL field', 'affiliate-for-woocommerce' ),
+				)
 			);
 		}
 
@@ -378,7 +401,7 @@ if ( ! class_exists( 'AFWC_Registration_Submissions' ) ) {
 				}
 			}
 
-			return $user_fields;
+			return apply_filters( 'afwc_registration_submitted_data', $user_fields, array( 'source' => $this ) );
 		}
 
 		/**
@@ -397,11 +420,9 @@ if ( ! class_exists( 'AFWC_Registration_Submissions' ) ) {
 				return new WP_Error( 'afwc_registration_email_required', _x( 'The Email address is required.', 'email required error message', 'affiliate-for-woocommerce' ) );
 			}
 
-			$afwc = Affiliate_For_WooCommerce::get_instance();
-
 			$username = '';
 
-			if ( is_callable( array( $afwc, 'is_wc_gte_36' ) ) && $afwc->is_wc_gte_36() && ! empty( $user_data['afwc_email'] ) ) {
+			if ( is_callable( array( $this, 'is_wc_gte_34' ) ) && $this->is_wc_gte_36() && ! empty( $user_data['afwc_email'] ) ) {
 				$username = wc_create_new_customer_username(
 					$user_data['afwc_email'],
 					array(
@@ -455,18 +476,7 @@ if ( ! class_exists( 'AFWC_Registration_Submissions' ) ) {
 				update_user_meta( $user_id, 'afwc_additional_fields', $user_data['afwc_additional_fields'] );
 			}
 
-			// save parent child relation if parent cookie present.
-			$parent_affiliate_id = ! empty( $user_data['afwc_parent_id'] ) ? $user_data['afwc_parent_id'] : afwc_get_referrer_id();
-			if ( ! empty( $parent_affiliate_id ) && 'yes' === afwc_is_user_affiliate( absint( $parent_affiliate_id ) ) ) {
-				$parent_chain = get_user_meta( $parent_affiliate_id, 'afwc_parent_chain', true );
-
-				// Concat parent chain if exists and update to the parent chain meta.
-				update_user_meta(
-					$user_id,
-					'afwc_parent_chain',
-					sprintf( '%1$s|%2$s', $parent_affiliate_id, ! empty( $parent_chain ) ? $parent_chain : '' )
-				);
-			}
+			do_action( 'afwc_registration_additional_field_updates', $user_id, $user_data, array( 'source' => $this ) );
 		}
 
 		/**

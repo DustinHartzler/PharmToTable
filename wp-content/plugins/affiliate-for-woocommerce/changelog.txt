@@ -1,5 +1,109 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2024-02-02 - version 7.2.0
+* Fix: PHP 8.1.0 compatibility errors
+* Fix: Email Affiliate and Manage Affiliate icons incorrectly aligned on the affiliate's header bar [Admin]
+* Update: Affiliate's gravatar image resize [Admin]
+* Update: Attributes height and width to the affiliate's gravatar image [Admin]
+* Update: Welcome page [Admin]
+* Update: WooCommerce.com links to Woo.com
+* Update: Code improvements
+* Update: Translation description for a few strings
+* Update: POT file
+
+2024-01-25 - version 7.1.0
+* New: Sort campaigns to show active first followed by draft [Admin]
+* Fix: Special characters not decoded for the affiliate display name
+* Update: Remove usage of AFWC_TABLE_PREFIX constant
+* Update: Code improvements
+* Update: POT file
+
+2024-01-22 - version 7.0.0
+* New: WooCommerce 8.5.1 Compatible
+* New: Rule for Woo Subscriptions Parent order based commissions in commission plans
+* New: Rule for Woo Subscriptions Renewal order based commissions in commission plans
+* New: Rule for user's first order based commissions in commission plans
+* New: Single WooCommerce compatibility file
+* Fix: Adding a new rule value duplicating entry in some cases in the commission rule [Admin]
+* Update: Deprecate the "Issue recurring commission?" setting for Woo Subscriptions
+* Update: Removed the dependency of "Issue recurring commission?" setting for switched subscription order
+* Update: Remove version specific WooCommerce compatibility files
+* Update: Code improvements
+* Update: POT file
+
+2024-01-12 - version 6.37.0
+* New: Remove tailwind CSS and replace it with inline CSS in the sample campaigns
+* New: Regenerate sample campaigns [Admin]
+* Fix: Capability function check missing for the current user when fetching affiliate children chain [Admin]
+* Update: Campaigns tab description [Admin]
+* Update: Code improvements
+* Update: POT file
+
+2024-01-06 - version 6.36.1
+* Fix: The table does not exist error in dashboard widget [Admin]
+* Fix: Class name hardcoded in the error message context
+* Update: POT file
+
+2024-01-05 - version 6.36.0
+* New: Affiliate program summary dashboard widget [Admin]
+* New: Quick access link to the affiliates dashboard from the admin bar [Admin]
+* Update: Capability function for the current user to access the admin dashboard
+* Update: POT file
+
+2023-12-29 - version 6.35.0
+* New: Highlight pending affiliates in the chain in the Multi-tier tab
+* Update: Pending affiliates UI/UX consistency with multi-tier display in the affiliates listing [Admin]
+* Update: POT file
+
+2023-12-21 - version 6.34.0
+* New: WooCommerce 8.4.0 compatible
+* Fix: Variable products excluded under the Excluded products setting issues commission to all its variations
+* Fix: Parent affiliate setting not disabling for pending affiliates under the user profile [Admin]
+* Update: Code improvements
+* Update: POT file
+
+2023-12-08 - version 6.33.0
+* Fix: Multi-tier total commission amount not rounding off when setting up a commission plan [Admin]
+* Update: Link to the affiliate dashboard on the Welcome page [Admin]
+* Developer: Remove the "get_afwc_date_range()" function
+* Update: POT file
+
+2023-12-02 - version 6.32.0
+* New: WooCommerce 8.3.0 compatible
+* New: WordPress 6.4.1 compatible
+* New: Setting to disable multi-tier affiliate program
+* Fix: Not showing any content under the Referrals table in some cases under My Account > Affiliate > Reports [User]
+* Update: Affiliate report template
+* Update: POT file
+
+2023-11-20 - version 6.31.1
+* Fix: Handling of empty data in the visitors tab in the affiliate dashboard [Admin]
+* Update: Aligned the "Converted" column header to the center in the visitors tab in the affiliate dashboard [Admin]
+* Update: Code improvements [Admin]
+* Update: POT file
+
+2023-11-17 - version 6.31.0
+* New: Visitors tab to see hits/visits for affiliates in the affiliate dashboard [Admin]
+* Update: Navbar's horizontal spacing between tabs in the affiliate dashboard [Admin]
+* Update: Code improvements for duplicated code [Admin]
+* Update: POT file
+
+2023-11-09 - version 6.30.0
+* New: Onboarding for new installs [Admin]
+* Update: Label for product-specific referral click to copy button [User]
+* Update: Welcome page to remove onboarding/To get started [Admin]
+* Update: Description for all emails [Admin]
+* Update: POT file
+
+2023-10-27 - version 6.29.0
+* New: Hide the Network tab if no children are available for an affiliate under My Account > Affiliate [User]
+* Fix: PHP 8.1.0 compatibility errors
+* Fix: The decimal value from Net commission is removed after updating the commission status if the initial amount is a round number [Admin]
+* Fix: Customized affiliate redirect URL is not in the main referral URL after modifying the identifier on My Account > Affiliate > Profile [User]
+* Fix: Remove the trailing slash from the affiliate URL after updating the identifier in My Account > Affiliate > Profile [User]
+* Update: Affiliate profile template
+* Update: POT file
+
 2023-10-20 - version 6.28.0
 * New: WooCommerce 8.2.1 compatible
 * New: Rewrite payout processing module

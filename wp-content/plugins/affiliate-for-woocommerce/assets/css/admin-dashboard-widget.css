@@ -1,0 +1,91 @@
+/* phpcs:ignoreFile */
+#afwc_summary .inside {
+	padding: 0;
+	margin: 0;
+}
+#afwc-widget-container .afwc-stats-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+#afwc-widget-container .afwc-widget-section {
+	border-bottom: 0.1em solid #ccc;
+}
+#afwc-widget-container .afwc-widget-section h3 {
+	margin: 0;
+	color: #666;
+}
+#afwc-widget-container .afwc-stats-container .afwc-single-stats {
+	flex-basis: 45%;
+	text-align: center;
+	padding: 0.7em;
+	margin: 0 0.7em;
+	display: flex;
+	flex-direction: column;
+}
+#afwc-widget-container .afwc-widget-section.affiliates-referrals .afwc-stats-container > .afwc-single-stats {
+	border-right: 0.1em solid #ccc;
+}
+#afwc-widget-container .afwc-widget-section.affiliates-referrals .afwc-stats-container > .afwc-single-stats:last-child {
+	border-right: 0;
+}
+#afwc-widget-container .afwc-widget-section.affiliates-referrals > h3 {
+	border-bottom: 0.1em solid #ccc;
+}
+#afwc-widget-container h3 {
+	padding: 0.7em;
+}
+#afwc-widget-container .afwc-percentage-sales {
+	font-style: italic;
+}
+#afwc-widget-container .afwc-label {
+	font-size: 0.9em;
+	font-weight: 400;
+	color: #666;
+}
+#afwc-widget-container .afwc-value {
+	font-size: 1.1em;
+	font-weight: 700;
+	color: #333;
+	margin-bottom: 0.7em;
+}
+#afwc-widget-container .afwc-percentage-sales .afwc-value {
+	opacity: 0.8;
+}
+#afwc-widget-container .afwc-single-stats.active-affiliates > .afwc-value {
+	color: #166534;
+}
+#afwc-widget-container .afwc-single-stats.pending-affiliates > .afwc-value {
+	color: #f87171;
+}
+#afwc-widget-container .afwc-single-stats.rejected-affiliates > .afwc-value {
+	color: #ff0000;
+}
+#afwc-widget-container .affiliates-revenue {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+#afwc-widget-container .afwc-dashboard-link-section {
+	padding: 0.7em;
+}
+#afwc-widget-container .afwc-dashboard-link-section p.afwc-dashboard-links {
+	margin: 0;
+	opacity: 0.8;
+}
+#afwc-widget-container .afwc-dashboard-links a {
+	border-right: 0.1em solid #ccc;
+	color: #5850ec;
+	padding-right: 0.5em;
+	padding: 0.7em;
+}
+#afwc-widget-container .afwc-dashboard-links a > .dashicons {
+	text-decoration: none;
+	padding-left: 0.2em;
+}
+#afwc-widget-container .afwc-dashboard-links a:last-child {
+	border-right: 0;
+}
+#afwc-widget-container .afwc-dashboard-links a:first-child {
+	padding-left: 0;
+}

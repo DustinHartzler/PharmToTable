@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.2
- * @version     1.3.5
+ * @version     1.3.6
  */
 
 // Exit if accessed directly.
@@ -33,7 +33,7 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 			$this->title = 'Affiliate - Commission Paid';
 
 			// This is the description in WooCommerce email settings.
-			$this->description = __( 'This email will be sent to an affiliate when their commission/payout is processed from affiliate dashboard.', 'affiliate-for-woocommerce' );
+			$this->description = _x( 'This email will be sent to an affiliate when their commission/payout is processed from the affiliate dashboard.', 'Description for Affiliate - Commission Paid email', 'affiliate-for-woocommerce' );
 
 			// These are the default heading and subject lines that can be overridden using the settings.
 			$this->subject = 'Your affiliate commission from {site_title} is here!';
@@ -201,12 +201,13 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 		 * Initialize Settings Form Fields
 		 */
 		public function init_form_fields() {
-			$this->form_fields = array(
+			$onboarding_email_setup = get_option( 'afwc_onboarding_emails_setup', array() );
+			$this->form_fields      = array(
 				'enabled'            => array(
 					'title'   => __( 'Enable/Disable', 'affiliate-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable this email notification', 'affiliate-for-woocommerce' ),
-					'default' => 'yes',
+					'default' => ! empty( $onboarding_email_setup ) && is_array( $onboarding_email_setup ) && ! empty( $onboarding_email_setup[ $this->id ] ) ? $onboarding_email_setup[ $this->id ] : 'yes',
 				),
 				'subject'            => array(
 					'title'       => __( 'Subject', 'affiliate-for-woocommerce' ),

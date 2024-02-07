@@ -3,7 +3,7 @@
  * Main class for Affiliates Admin
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.7.1
+ * @version     1.9.3
  */
 
 // Exit if accessed directly.
@@ -1690,7 +1690,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 						// Use billing_name if found, else billing_email if found, else guest.
 						$orders_billing_name[ $detail['order_id'] ]['billing_name'] = ! empty( $detail['billing_name'] ) ? $detail['billing_name'] : ( ( ! empty( $detail['billing_email'] ) ) ? $detail['billing_email'] : __( 'Guest', 'affiliate-for-woocommerce' ) );
 
-						$orders_billing_name[ $detail['order_id'] ]['currency']     = ! empty( $detail['currency'] ) ? html_entity_decode( get_woocommerce_currency_symbol( $detail['currency'] ) ) : '';
+						$orders_billing_name[ $detail['order_id'] ]['currency']     = ! empty( $detail['currency'] ) ? html_entity_decode( get_woocommerce_currency_symbol( $detail['currency'] ), ENT_QUOTES ) : '';
 						$orders_billing_name[ $detail['order_id'] ]['currencyCode'] = ! empty( $detail['currency'] ) ? esc_html( $detail['currency'] ) : '';
 					}
 
@@ -1878,7 +1878,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 		/**
 		 * Function to get affiliate's display_name
 		 *
-		 * @return array where key is user id & value is their display name
+		 * @return array where key is user ID & value is their display name
 		 */
 		public function get_affiliates_details() {
 			global $wpdb;
@@ -1888,7 +1888,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			if ( ! empty( $this->affiliate_ids ) ) {
 
 				if ( 1 === count( $this->affiliate_ids ) ) {
-
 					$results = $wpdb->get_results( // phpcs:ignore
 												$wpdb->prepare( // phpcs:ignore
 													"SELECT ID, display_name, user_email
@@ -1900,7 +1899,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					);
 
 				} else {
-
 					$option_nm = 'afwc_display_names_affiliate_ids_' . uniqid();
 					update_option( $option_nm, implode( ',', $this->affiliate_ids ), 'no' );
 
@@ -1920,11 +1918,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				}
 			}
 
-			if ( $results ) {
-
+			if ( $results && is_array( $results ) ) {
 				foreach ( $results as $result ) {
 					$affiliates_details[ $result['ID'] ] = array(
-						'name'  => $result['display_name'],
+						'name'  => html_entity_decode( $result['display_name'], ENT_QUOTES ),
 						'email' => $result['user_email'],
 					);
 				}
@@ -1975,7 +1972,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			if ( ! empty( $products['rows'] ) ) {
 				foreach ( $products['rows'] as $id => $product ) {
 					$products['rows'][ $id ]['sales']    = ! empty( $product['sales'] ) ? afwc_format_price( $product['sales'] ) : 0;
-					$products['rows'][ $id ]['product']  = ! empty( $product['product'] ) ? html_entity_decode( $product['product'] ) : null;
+					$products['rows'][ $id ]['product']  = ! empty( $product['product'] ) ? html_entity_decode( $product['product'], ENT_QUOTES ) : null;
 					$products['rows'][ $id ]['quantity'] = ! empty( $product['qty'] ) ? intval( $product['qty'] ) : 0;
 				}
 			}
@@ -2006,18 +2003,23 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 			$customer_list = array();
 
-			foreach ( $customers as $customer ) {
-				if ( is_numeric( $customer ) ) {
-					$user_data                  = new WP_User( intval( $customer ) );
-					$customer_list[ $customer ] = array(
-						'name'  => ! empty( $user_data->display_name ) ? $user_data->display_name : '',
-						'email' => ! empty( $user_data->user_email ) ? $user_data->user_email : '',
-						'id'    => intval( $customer ),
-					);
-				} elseif ( is_email( $customer ) ) {
-					$customer_list[ $customer ] = array(
-						'email' => sanitize_email( $customer ),
-					);
+			if ( is_array( $customers ) ) {
+				foreach ( $customers as $customer ) {
+					if ( empty( $customer ) ) {
+						continue;
+					}
+					if ( is_numeric( $customer ) && 0 < intval( $customer ) ) {
+						$user_data                  = new WP_User( intval( $customer ) );
+						$customer_list[ $customer ] = array(
+							'name'  => ! empty( $user_data->display_name ) ? html_entity_decode( $user_data->display_name, ENT_QUOTES ) : '',
+							'email' => ! empty( $user_data->user_email ) ? $user_data->user_email : '',
+							'id'    => intval( $customer ),
+						);
+					} elseif ( is_email( $customer ) ) {
+						$customer_list[ $customer ] = array(
+							'email' => sanitize_email( $customer ),
+						);
+					}
 				}
 			}
 
@@ -2046,13 +2048,13 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$users = get_users( $search );
 
 			$customers = array();
-			if ( ! empty( $users ) ) {
+			if ( ! empty( $users ) && is_array( $users ) ) {
 				foreach ( $users as $user ) {
 					$user_data = ! empty( $user->data ) ? $user->data : null;
 					if ( ! empty( $user_data ) && ! empty( $user_data->ID ) && ! empty( $user_data->user_email ) ) {
 						$customers[] = array(
 							'email' => $user_data->user_email,
-							'name'  => ! empty( $user_data->display_name ) ? $user_data->display_name : '',
+							'name'  => ! empty( $user_data->display_name ) ? html_entity_decode( $user_data->display_name, ENT_QUOTES ) : '',
 							'id'    => intval( $user_data->ID ),
 							'text'  => sprintf(
 								'%1$s (#%2$d &ndash; %3$s)',
@@ -2167,6 +2169,208 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 			return $post_list;
 		}
-	}
 
+		/**
+		 * Method to get visitors report.
+		 *
+		 * @return array Visitor details for admin dashboard.
+		 */
+		public function get_visitor_details() {
+
+			$args = array(
+				'from'  => ! empty( $this->from ) ? $this->from : '',
+				'to'    => ! empty( $this->to ) ? $this->to : '',
+				'limit' => ! empty( $this->batch_limit ) ? ( intval( $this->batch_limit ) + 1 ) : 0,
+				'start' => ! empty( $this->start_limit ) ? intval( $this->start_limit ) : 0,
+			);
+
+			$visitors = new AFWC_Visitors(
+				! empty( $this->affiliate_ids ) ? $this->affiliate_ids : array(),
+				$args
+			);
+
+			$visitor_data = is_callable( array( $visitors, 'get_reports' ) ) ? $visitors->get_reports() : array();
+
+			// Handle for load more.
+			$load_more = false;
+
+			if ( ! empty( $visitor_data ) && is_array( $visitor_data ) && count( $visitor_data ) === $args['limit'] ) {
+				// Remove the extra data.
+				array_pop( $visitor_data );
+				// Enable the load more if extra data found.
+				$load_more = true;
+			}
+
+			return array(
+				'data' => ! empty( $visitor_data ) && is_array( $visitor_data ) ? $visitor_data : array(),
+				'meta' => array( 'load_more' => $load_more ),
+			);
+		}
+
+		/**
+		 * Method to get the customers count.
+		 * Distinct the customer count combined with customer's user ID and IP address.
+		 *
+		 * @throws Exception If any error during the process.
+		 * @return int Return the customer count.
+		 */
+		public function get_customers_count() {
+			global $wpdb;
+
+			try {
+				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
+					$customers_count =  $wpdb->get_var( // phpcs:ignore
+						$wpdb->prepare(
+							"SELECT IFNULL(COUNT(DISTINCT IF(user_id > 0, user_id, CONCAT_WS(':', ip, user_id))), 0) as customers_count
+								FROM {$wpdb->prefix}afwc_referrals
+								WHERE datetime BETWEEN %s AND %s
+								AND status != %s",
+							esc_sql( $this->from ),
+							esc_sql( $this->to ),
+							'draft'
+						)
+					);
+				} else {
+					$customers_count = $wpdb->get_var( // phpcs:ignore
+						$wpdb->prepare(
+							"SELECT IFNULL(COUNT(DISTINCT IF(user_id > 0, user_id, CONCAT_WS(':', ip, user_id))), 0) as customers_count
+								FROM {$wpdb->prefix}afwc_referrals
+								WHERE status != %s",
+							'draft'
+						)
+					);
+				}
+
+				// Throw if any error.
+				if ( ! empty( $wpdb->last_error ) ) {
+					throw new Exception( $wpdb->last_error );
+				}
+			} catch ( Exception $e ) {
+				Affiliate_For_WooCommerce::get_instance()->log_error( __METHOD__, ( is_callable( array( $e, 'getMessage' ) ) ) ? $e->getMessage() : '' );
+			}
+
+			return ! empty( $customers_count ) ? intval( $customers_count ) : 0;
+		}
+
+		/**
+		 * Method to get the referred orders count.
+		 * Distinct the referred order/post_id count.
+		 *
+		 * @throws Exception If any error during the process.
+		 * @return int Return the referrals count.
+		 */
+		public function get_referrals_count() {
+			global $wpdb;
+
+			try {
+				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
+					$referral_count =  $wpdb->get_var( // phpcs:ignore
+						$wpdb->prepare(
+							"SELECT IFNULL(COUNT(DISTINCT post_id), 0) as referral_count
+									FROM {$wpdb->prefix}afwc_referrals
+									WHERE datetime BETWEEN %s AND %s
+									AND status != %s",
+							esc_sql( $this->from ),
+							esc_sql( $this->to ),
+							'draft'
+						)
+					);
+				} else {
+					$referral_count =  $wpdb->get_var( // phpcs:ignore
+						$wpdb->prepare(
+							"SELECT IFNULL(COUNT(DISTINCT post_id), 0) as referral_count
+								FROM {$wpdb->prefix}afwc_referrals
+								WHERE status != %s",
+							'draft'
+						)
+					);
+				}
+
+				// Throw if any error.
+				if ( ! empty( $wpdb->last_error ) ) {
+					throw new Exception( $wpdb->last_error );
+				}
+			} catch ( Exception $e ) {
+				Affiliate_For_WooCommerce::get_instance()->log_error( __METHOD__, ( is_callable( array( $e, 'getMessage' ) ) ) ? $e->getMessage() : '' );
+			}
+
+			return ! empty( $referral_count ) ? $referral_count : 0;
+		}
+
+		/**
+		 * Method to get all affiliates count.
+		 *
+		 * @return array Return the array of all(active, pending, rejected) affiliates count.
+		 */
+		public function get_all_affiliates_count() {
+
+			$affiliates_by_usermeta   = $this->get_affiliates_by_user_meta();
+			$affiliates_by_user_roles = afwc_get_affiliates_by_user_roles();
+
+			// Merge the active affiliates from user_roles and usermeta.
+			$active_affiliates = array_unique(
+				array_merge(
+					is_array( $affiliates_by_usermeta ) && ! empty( $affiliates_by_usermeta['active_affiliates'] ) && is_array( $affiliates_by_usermeta['active_affiliates'] ) ? array_map( 'intval', $affiliates_by_usermeta['active_affiliates'] ) : array(),
+					is_array( $affiliates_by_user_roles ) && ! empty( $affiliates_by_user_roles ) ? array_map( 'intval', $affiliates_by_user_roles ) : array()
+				)
+			);
+
+			$pending_affiliates  = ( ! empty( $affiliates_by_usermeta['pending_affiliates'] ) && is_array( $affiliates_by_usermeta['pending_affiliates'] ) ) ? array_unique( array_map( 'intval', $affiliates_by_usermeta['pending_affiliates'] ) ) : array();
+			$rejected_affiliates = ( ! empty( $affiliates_by_usermeta['rejected_affiliates'] ) && is_array( $affiliates_by_usermeta['rejected_affiliates'] ) ) ? array_unique( array_map( 'intval', $affiliates_by_usermeta['rejected_affiliates'] ) ) : array();
+
+			// Remove pending and rejected affiliates from active affiliates as we give prior to user meta.
+			$active_affiliates = array_diff( $active_affiliates, $pending_affiliates, $rejected_affiliates );
+
+			return array(
+				'active_affiliates_count'   => ! empty( $active_affiliates ) ? count( $active_affiliates ) : 0,
+				'pending_affiliates_count'  => ! empty( $pending_affiliates ) ? count( $pending_affiliates ) : 0,
+				'rejected_affiliates_count' => ! empty( $rejected_affiliates ) ? count( $rejected_affiliates ) : 0,
+			);
+		}
+
+		/**
+		 * Method to get affiliates by user meta.
+		 *
+		 * @throws Exception If any error during the process.
+		 * @return array Return the array of affiliates grouped by the status.
+		 */
+		public function get_affiliates_by_user_meta() {
+			global $wpdb;
+
+			try {
+				$users = $wpdb->get_row( // phpcs:ignore
+					$wpdb->prepare(
+						"SELECT
+							DISTINCT
+								GROUP_CONCAT(CASE WHEN um.meta_value = %s THEN u.ID END) AS active_affiliates,
+								GROUP_CONCAT(CASE WHEN um.meta_value = %s THEN u.ID END) AS pending_affiliates,
+								GROUP_CONCAT(CASE WHEN um.meta_value = %s THEN u.ID END) AS rejected_affiliates
+						FROM
+							{$wpdb->prefix}usermeta um
+						JOIN
+							{$wpdb->prefix}users u ON um.user_id = u.ID
+						WHERE
+							um.meta_key = %s",
+						'yes',                   // Meta value for active affiliate.
+						'pending',               // Meta value for pending affiliate.
+						'no',                    // Meta value for rejected affiliate.
+						'afwc_is_affiliate'      // Meta key.
+					),
+					'ARRAY_A'
+				);
+				// Throw if any error.
+				if ( ! empty( $wpdb->last_error ) ) {
+					throw new Exception( $wpdb->last_error );
+				}
+			} catch ( Exception $e ) {
+				Affiliate_For_WooCommerce::get_instance()->log_error( __METHOD__, ( is_callable( array( $e, 'getMessage' ) ) ) ? $e->getMessage() : '' );
+			}
+
+			return array(
+				'active_affiliates'   => ( ! empty( $users ) && is_array( $users ) && ! empty( $users['active_affiliates'] ) ) ? explode( ',', $users['active_affiliates'] ) : array(),
+				'pending_affiliates'  => ( ! empty( $users ) && is_array( $users ) && ! empty( $users['pending_affiliates'] ) ) ? explode( ',', $users['pending_affiliates'] ) : array(),
+				'rejected_affiliates' => ( ! empty( $users ) && is_array( $users ) && ! empty( $users['rejected_affiliates'] ) ) ? explode( ',', $users['rejected_affiliates'] ) : array(),
+			);
+		}
+	}
 }

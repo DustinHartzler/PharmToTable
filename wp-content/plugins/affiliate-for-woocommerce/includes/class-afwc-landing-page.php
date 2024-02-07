@@ -5,7 +5,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/
  * @since    6.24.0
- * @version  1.0.1
+ * @version  1.0.2
  */
 
 // Exit if accessed directly.
@@ -352,7 +352,7 @@ if ( ! class_exists( 'AFWC_Landing_Page' ) ) {
 		 */
 		public function get_excluded_post_ids() {
 			// Get the excluded products from Affiliate global setting.
-			$product_ids = get_option( 'afwc_storewide_excluded_products', array() );
+			$product_ids = afwc_get_storewide_excluded_products();
 
 			$excluded_post_ids = apply_filters( 'afwc_get_excluded_landing_page_ids', $product_ids, array( 'source' => $this ) );
 

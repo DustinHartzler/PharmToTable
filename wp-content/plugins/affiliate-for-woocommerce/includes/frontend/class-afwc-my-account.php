@@ -4,7 +4,7 @@
  *
  * @package   affiliate-for-woocommerce/includes/frontend/
  * @since     1.0.0
- * @version   1.12.3
+ * @version   1.12.7
  */
 
 // Exit if accessed directly.
@@ -41,6 +41,20 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		public $afwc_tab_endpoint;
 
 		/**
+		 * Get single instance of AFWC_My_Account
+		 *
+		 * @return AFWC_My_Account Singleton object of AFWC_My_Account
+		 */
+		public static function get_instance() {
+			// Check if instance is already exists.
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
+		}
+
+		/**
 		 * Constructor
 		 */
 		private function __construct() {
@@ -67,23 +81,30 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		}
 
 		/**
-		 * Get single instance of AFWC_My_Account
+		 * Method to handle WC compatibility related function call from appropriate class
 		 *
-		 * @return AFWC_My_Account Singleton object of AFWC_My_Account
+		 * @param string $function_name Function to call.
+		 * @param array  $arguments     Array of arguments passed while calling $function_name.
+		 *
+		 * @return mixed Result of function call.
 		 */
-		public static function get_instance() {
-			// Check if instance is already exists.
-			if ( is_null( self::$instance ) ) {
-				self::$instance = new self();
+		public function __call( $function_name = '', $arguments = array() ) {
+
+			if ( empty( $function_name ) || ! is_callable( 'SA_WC_Compatibility', $function_name ) ) {
+				return;
 			}
 
-			return self::$instance;
+			if ( ! empty( $arguments ) ) {
+				return call_user_func_array( 'SA_WC_Compatibility::' . $function_name, $arguments );
+			} else {
+				return call_user_func( 'SA_WC_Compatibility::' . $function_name );
+			}
 		}
 
 		/**
 		 * Function to add affiliates endpoint to My Account.
 		 *
-		 * @see https://developer.woocommerce.com/2016/04/21/tabbed-my-account-pages-in-2-6/
+		 * @see https://developer.woo.com/2016/04/21/tabbed-my-account-pages-in-2-6/
 		 */
 		public function endpoint() {
 			add_rewrite_endpoint( $this->endpoint, EP_ROOT | EP_PAGES );
@@ -93,7 +114,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * Function to add endpoint in My Account if user is an affiliate
 		 */
 		public function afw_myaccount() {
-
 			if ( ! is_user_logged_in() ) {
 				return;
 			}
@@ -196,7 +216,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @return array $menu_items menu items.
 		 */
 		public function wc_my_account_menu_item( $menu_items = array() ) {
-
 			// Return if the affiliate endpoint does not exist.
 			if ( empty( $this->endpoint ) ) {
 				return $menu_items;
@@ -250,7 +269,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * Function to add styles.
 		 */
 		public function enqueue_styles_scripts() {
-
 			if ( ! $this->is_afwc_dashboard() ) {
 				return;
 			}
@@ -284,7 +302,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * Function to add scripts in footer.
 		 */
 		public function footer_styles_scripts() {
-
 			if ( ! $this->is_afwc_dashboard() ) {
 				return;
 			}
@@ -556,7 +573,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			}
 		}
 
-
 		/**
 		 * Function to display the affiliate dashboard.
 		 *
@@ -565,7 +581,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @return void
 		 */
 		public function afwc_dashboard_content( $user = null ) {
-
 			if ( empty( $user ) || ! $user instanceof WP_User ) {
 				$user = wp_get_current_user();
 			}
@@ -591,10 +606,15 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			global $wp;
 			$tabs = array();
 			$tabs = array(
-				'reports'    => esc_html_x( 'Reports', 'Affiliate my account tab title for report', 'affiliate-for-woocommerce' ),
-				'resources'  => esc_html_x( 'Profile', 'Affiliate my account tab title for profile', 'affiliate-for-woocommerce' ),
-				'multi-tier' => esc_html_x( 'Network', 'Affiliate my account tab title for multi-tier', 'affiliate-for-woocommerce' ),
+				'reports'   => esc_html_x( 'Reports', 'Affiliate my account tab title for report', 'affiliate-for-woocommerce' ),
+				'resources' => esc_html_x( 'Profile', 'Affiliate my account tab title for profile', 'affiliate-for-woocommerce' ),
 			);
+
+			$afwc_multi_tier = AFWC_Multi_Tier::get_instance();
+			// Add network tab only if multi tier is enabled and found any child for the current affiliate.
+			if ( ! empty( $afwc_multi_tier->is_enabled ) && is_callable( array( $afwc_multi_tier, 'get_children' ) ) && ! empty( $afwc_multi_tier->get_children( intval( $user->ID ) ) ) ) {
+				$tabs['multi-tier'] = esc_html_x( 'Network', 'Affiliate my account tab title for multi-tier', 'affiliate-for-woocommerce' );
+			}
 
 			// Add campaigns tab only if we find any active campaigns on the store for the current affiliate.
 			if ( afwc_is_campaign_active( true ) ) {
@@ -639,7 +659,11 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			} elseif ( ! empty( $wp->query_vars ) && ! empty( $wp->query_vars[ $this->afwc_tab_endpoint ] ) && 'campaigns' === $wp->query_vars[ $this->afwc_tab_endpoint ] && afwc_is_campaign_active() ) {
 				$this->campaigns_content( $user );
 			} elseif ( ! empty( $wp->query_vars ) && ! empty( $wp->query_vars[ $this->afwc_tab_endpoint ] ) && 'multi-tier' === $wp->query_vars[ $this->afwc_tab_endpoint ] ) {
-				$this->multi_tier_content( $user );
+				$afwc_multi_tier = AFWC_Multi_Tier::get_instance();
+				// Check if multi tier is enabled and affiliate has some children.
+				if ( ! empty( $afwc_multi_tier->is_enabled ) && is_callable( array( $afwc_multi_tier, 'get_children' ) ) && ! empty( $afwc_multi_tier->get_children( intval( $user->ID ) ) ) ) {
+					$this->multi_tier_content( $user );
+				}
 			} else {
 				$this->dashboard_content( $user );
 			}
@@ -652,11 +676,11 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @param WP_User $user The user object.
 		 */
 		public function dashboard_content( $user = null ) {
-			global $wpdb, $affiliate_for_woocommerce;
-
 			if ( ! is_object( $user ) || empty( $user->ID ) ) {
 				return;
 			}
+
+			global $wpdb, $affiliate_for_woocommerce;
 
 			if ( defined( 'WC_DOING_AJAX' ) && true === WC_DOING_AJAX ) {
 				check_ajax_referer( 'afwc-reload-dashboard', 'security' );
@@ -769,10 +793,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				$template_path,
 				$default_path
 			);
-
-			?>
-
-			<?php
 		}
 
 		/**
@@ -1466,7 +1486,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @param WP_User $user The user object.
 		 */
 		public function profile_resources_content( $user = null ) {
-
 			if ( ! is_object( $user ) || empty( $user->ID ) ) {
 				return;
 			}
@@ -1689,8 +1708,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * Hooks for endpoint
 		 */
 		public function endpoint_hooks() {
-			$affiliate_for_woocommerce = Affiliate_For_WooCommerce::get_instance();
-			if ( $affiliate_for_woocommerce->is_wc_gte_34() ) {
+			if ( is_callable( array( $this, 'is_wc_gte_34' ) ) && $this->is_wc_gte_34() ) {
 				add_filter( 'woocommerce_get_settings_advanced', array( $this, 'add_endpoint_account_settings' ) );
 			} else {
 				add_filter( 'woocommerce_account_settings', array( $this, 'add_endpoint_account_settings' ) );
@@ -1790,7 +1808,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @return string Show the Affiliate dashboard screen for logged in user otherwise WooCommerce login form.
 		 */
 		public function afwc_dashboard_shortcode_content() {
-
 			ob_start();
 
 			$current_user = wp_get_current_user();
@@ -1825,7 +1842,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @return array Return the array of products.
 		 */
 		public function get_products_data( $args = array() ) {
-
 			$args['limit']   = apply_filters( 'afwc_my_account_referrals_per_page', ( ! empty( $args['limit'] ) ) ? $args['limit'] : get_option( 'afwc_my_account_referrals_per_page', AFWC_MY_ACCOUNT_DEFAULT_BATCH_LIMIT ) );
 			$products_result = ( is_callable( array( 'Affiliate_For_WooCommerce', 'get_products_data' ) ) ) ? Affiliate_For_WooCommerce::get_products_data( $args ) : array();
 
@@ -1856,7 +1872,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 * @return array Return the array of payout data.
 		 */
 		public function get_payouts_data( $args = array() ) {
-
 			$payouts_result = ( is_callable( array( 'Affiliate_For_WooCommerce', 'get_affiliates_payout_history' ) ) ) ? Affiliate_For_WooCommerce::get_affiliates_payout_history( $args ) : array();
 
 			if ( empty( $payouts_result ) ) {

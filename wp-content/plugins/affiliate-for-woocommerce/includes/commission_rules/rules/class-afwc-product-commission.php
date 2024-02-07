@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.6.0
- * @version     1.2.0
+ * @version     1.2.1
  */
 
 // Exit if accessed directly.
@@ -67,42 +67,24 @@ if ( ! class_exists( 'AFWC_Product_Commission' ) ) {
 		}
 
 		/**
-		 * Method to filter the products ids for comparison.
+		 * Method to filter the products IDs for comparison.
 		 *
-		 * @param array $product_ids The product Ids.
+		 * @param array $product_ids The product IDs.
 		 *
-		 * @return array Return the product ids.
+		 * @return array Return the product IDs.
 		 */
 		public function filter_values( $product_ids = array() ) {
-			// Return if there is not any product ids to filter.
+			// Return if there is not any product IDs to filter.
 			if ( empty( $product_ids ) ) {
 				return array();
 			}
 
-			$ids = array();
-
-			foreach ( $product_ids as $product_id ) {
-
-				$product = wc_get_product( intval( $product_id ) );
-
-				// Continue the loop, if the instance is not a WooCommerce product.
-				if ( ! $product instanceof WC_Product ) {
-					continue;
-				}
-
-				if ( is_callable( array( $product, 'is_type' ) ) && $product->is_type( 'variable' ) ) {
-					// Push variation Ids if the product type is variable.
-					$ids = array_merge(
-						$ids,
-						is_callable( array( $product, 'get_children' ) ) ? $product->get_children() : array()
-					);
-				} else {
-					// Push the product id.
-					$ids[] = intval( $product_id );
-				}
-			}
-
-			return array_unique( $ids );
+			/*
+			* The below function will return the variation IDs as well as the parent variable ID for the variable product type. It may give issues when introducing the '=' operator.
+			*
+			* @since 6.34.0
+			*/
+			return afwc_get_variable_variation_product_ids( $product_ids );
 		}
 	}
 }

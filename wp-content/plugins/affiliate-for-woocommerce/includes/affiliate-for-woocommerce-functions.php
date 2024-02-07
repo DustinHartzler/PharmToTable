@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.9.2
+ * @version     1.13.2
  */
 
 // Exit if accessed directly.
@@ -103,7 +103,7 @@ function afwc_get_payout_methods( $method = '' ) {
  */
 function afwc_get_tablename( $name ) {
 	global $wpdb;
-	return $wpdb->prefix . AFWC_TABLE_PREFIX . $name;
+	return $wpdb->prefix . 'afwc_' . $name;
 }
 
 /**
@@ -147,82 +147,6 @@ function afwc_get_campaign_id() {
  */
 function afwc_get_hit_id() {
 	return ! empty( $_COOKIE[ AFWC_HIT_COOKIE_NAME ] ) ? intval( wc_clean( wp_unslash( $_COOKIE[ AFWC_HIT_COOKIE_NAME ] ) ) ) : 0; // phpcs:ignore
-}
-
-
-/**
- * Get date range for smart date selector
- * TODO:: Not in use
- *
- * @param  string $date_range The date range.
- * @param  string $format     The format.
- * @return array
- */
-function get_afwc_date_range( $date_range = '', $format = 'd-M-Y' ) {
-	if ( empty( $date_range ) ) {
-		return array();
-	}
-	$today            = gmdate( $format, Affiliate_For_WooCommerce::get_offset_timestamp() );
-	$date             = new DateTime( $today );
-	$date_from        = $date;
-	$date_to          = $date;
-	$offset_timestamp = Affiliate_For_WooCommerce::get_offset_timestamp();
-	switch ( $date_range ) {
-		case 'today':
-			$from_date = $today;
-			$to_date   = $today;
-			break;
-
-		case 'yesterday':
-			$from_date = gmdate( $format, Affiliate_For_WooCommerce::get_offset_timestamp( strtotime( '-1 second', strtotime( 'today' ) ) ) );
-			$to_date   = $from_date;
-			break;
-
-		case 'this_week':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, gmdate( 'm', $offset_timestamp ), gmdate( 'd', $offset_timestamp ) - intval( get_option( 'start_of_week' ) ) - 1, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = $today;
-			break;
-
-		case 'last_week':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, gmdate( 'm', $offset_timestamp ), gmdate( 'd', $offset_timestamp ) - intval( get_option( 'start_of_week' ) ) - 8, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = gmdate( $format, mktime( 0, 0, 0, gmdate( 'm', $offset_timestamp ), gmdate( 'd', $offset_timestamp ) - intval( get_option( 'start_of_week' ) ) - 2, gmdate( 'Y', $offset_timestamp ) ) );
-			break;
-
-		case 'this_month':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, gmdate( 'n', $offset_timestamp ), 1, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = $today;
-			break;
-
-		case 'last_month':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, gmdate( 'n', $offset_timestamp ) - 1, 1, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = gmdate( $format, strtotime( '-1 second', strtotime( gmdate( 'm', $offset_timestamp ) . '/01/' . gmdate( 'Y', $offset_timestamp ) . ' 00:00:00' ) ) );
-			break;
-
-		case 'three_months':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, gmdate( 'n', $offset_timestamp ) - 2, 1, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = $today;
-			break;
-
-		case 'six_months':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, gmdate( 'n', $offset_timestamp ) - 5, 1, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = $today;
-			break;
-
-		case 'this_year':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, 1, 1, gmdate( 'Y', $offset_timestamp ) ) );
-			$to_date   = $today;
-			break;
-
-		case 'last_year':
-			$from_date = gmdate( $format, mktime( 0, 0, 0, 1, 1, gmdate( 'Y', $offset_timestamp ) - 1 ) );
-			$to_date   = gmdate( $format, strtotime( '-1 second', strtotime( '01/01/' . gmdate( 'Y', $offset_timestamp ) . ' 00:00:00' ) ) );
-			break;
-	}
-
-	return array(
-		'from' => $from_date,
-		'to'   => $to_date,
-	);
 }
 
 /**
@@ -502,13 +426,14 @@ function afwc_get_user_tags_id_name_map() {
  * Get commission plans available
  *
  * @param string $status commission to fetch.
- * @return array $rules
+ *
+ * @return array Return the array of plans.
  */
-function afwc_get_commission_plans( $status ) {
+function afwc_get_commission_plans( $status = '' ) {
 	global $wpdb;
-	$status     = ! empty( $status ) ? $status : 'Active';
-	$status     = ucfirst( $status );
-	$afwc_rules = $wpdb->get_results( // phpcs:ignore
+	$status = ! empty( $status ) ? $status : 'Active';
+	$status = ucfirst( $status );
+	$plans = $wpdb->get_results( // phpcs:ignore
 		$wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}afwc_commission_plans WHERE status = %s",
 			$status
@@ -516,7 +441,7 @@ function afwc_get_commission_plans( $status ) {
 		ARRAY_A
 	);
 
-	return $afwc_rules;
+	return apply_filters( 'afwc_commission_plans_details', ! empty( $plans ) ? $plans : array() );
 }
 
 /**
@@ -586,68 +511,6 @@ function afwc_get_default_plan_details() {
 		ARRAY_A
 	);
 	return ( ! empty( $default_plan_details ) && is_array( $default_plan_details ) ) ? reset( $default_plan_details ) : array();
-}
-
-/**
- * Get array of parent chain by user id.
- *
- * @param  int|string $user_id User id.
- * @return array $user_parents
- */
-function afwc_get_parent_chain( $user_id = 0 ) {
-	if ( empty( $user_id ) ) {
-		return array();
-	}
-	$user_parents = get_user_meta( $user_id, 'afwc_parent_chain', true );
-	return ! empty( $user_parents ) ? array_filter( explode( '|', $user_parents ) ) : array();
-}
-
-/**
- * Get Children tree
- *
- * @param int|string $user_id User id.
- * @param bool       $is_tree If return value should be with children's parent tree or only child ids.
- *
- * @return array
- */
-function afwc_get_children( $user_id = 0, $is_tree = false ) {
-	if ( empty( $user_id ) ) {
-		return array();
-	}
-
-	global $wpdb;
-
-	$children = $wpdb->get_col( // phpcs:ignore
-		$wpdb->prepare(
-			"SELECT DISTINCT um.user_id
-		FROM {$wpdb->prefix}usermeta as um
-		WHERE ( um.meta_key = %s AND um.meta_value LIKE %s )",
-			esc_sql( 'afwc_parent_chain' ),
-			esc_sql( '%' . $wpdb->esc_like( $user_id . '|' ) . '%' )
-		)
-	);
-
-	$children_tree = array();
-
-	if ( ! empty( $children ) ) {
-		foreach ( $children as $child ) {
-			$parent_chain = afwc_get_parent_chain( $child );
-			// Check if parent chain exists.
-			if ( ! empty( $parent_chain ) ) {
-				// Double verify if current user_id exists in the parent chain.
-				if ( in_array( strval( $user_id ), $parent_chain, true ) ) {
-					if ( $is_tree ) {
-						// Assign the parent chain of each child.
-						$children_tree[ $child ] = $parent_chain;
-					} else {
-						// Assign only id of the child.
-						$children_tree[] = $child;
-					}
-				}
-			}
-		}
-	}
-	return apply_filters( 'afwc_get_children', $children_tree );
 }
 
 /**
@@ -852,7 +715,7 @@ if ( ! function_exists( 'afwc_get_product_affiliate_url' ) ) {
 		}
 
 		if ( ! $force_generate ) {
-			$excluded_products = get_option( 'afwc_storewide_excluded_products', array() );
+			$excluded_products = afwc_get_storewide_excluded_products();
 
 			// Return if the product is listed under excluded products for commission.
 			if ( ! empty( $excluded_products ) && is_array( $excluded_products ) ) {
@@ -885,5 +748,99 @@ if ( ! function_exists( 'afwc_get_product_affiliate_url' ) ) {
 		$identifier = ( $affiliate instanceof AFWC_Affiliate && is_callable( array( $affiliate, 'get_identifier' ) ) ) ? $affiliate->get_identifier() : '';
 
 		return afwc_get_affiliate_url( $product_link, '', $identifier );
+	}
+}
+
+if ( ! function_exists( 'afwc_get_storewide_excluded_products' ) ) {
+	/**
+	 * Function to get storewide excluded products.
+	 *
+	 * @return array Returns the array of product IDs otherwise empty array.
+	 */
+	function afwc_get_storewide_excluded_products() {
+		$excluded_products = get_option( 'afwc_storewide_excluded_products', array() );
+
+		if ( empty( $excluded_products ) || ! is_array( $excluded_products ) ) {
+			return array();
+		}
+
+		return afwc_get_variable_variation_product_ids( $excluded_products );
+	}
+}
+
+
+if ( ! function_exists( 'afwc_get_variable_variation_product_ids' ) ) {
+	/**
+	 * Function to get variable product IDs.
+	 * This will return the parent product's ID as well as all its variation IDs for variable products.
+	 *
+	 * @param array $product_ids Array of product IDs.
+	 *
+	 * @return array The updated array of product IDs with variable + variations.
+	 */
+	function afwc_get_variable_variation_product_ids( $product_ids = array() ) {
+		if ( empty( $product_ids ) || ! is_array( $product_ids ) ) {
+			return array();
+		}
+
+		$ids = array();
+
+		foreach ( $product_ids as $product_id ) {
+			$product = wc_get_product( intval( $product_id ) );
+
+			// Continue the loop, if the instance is not a WooCommerce product.
+			if ( ! $product instanceof WC_Product ) {
+				continue;
+			}
+
+			// Push the product ID.
+			$ids[] = intval( $product_id );
+
+			if ( is_callable( array( $product, 'is_type' ) ) && $product->is_type( 'variable' ) ) {
+				// Push respective variation IDs if the product type is variable.
+				$ids = array_merge(
+					$ids,
+					is_callable( array( $product, 'get_children' ) ) ? array_map( 'intval', $product->get_children() ) : array()
+				);
+			}
+		}
+
+		return array_unique( $ids );
+	}
+}
+
+if ( ! function_exists( 'afwc_current_user_can_manage_affiliate' ) ) {
+	/**
+	 * Function to check whether current user can manage affiliate.
+	 *
+	 * @return bool Returns true if current user can manage affiliate otherwise false.
+	 */
+	function afwc_current_user_can_manage_affiliate() {
+		return current_user_can( 'manage_woocommerce' ); // phpcs:ignore WordPress.WP.Capabilities.Unknown
+	}
+}
+
+if ( ! function_exists( 'afwc_get_affiliates_by_user_roles' ) ) {
+	/**
+	 * Function to get the affiliate IDs by affiliate user roles.
+	 *
+	 * @return array Return the array of affiliate IDs otherwise empty array if there is no user roles for affiliates.
+	 */
+	function afwc_get_affiliates_by_user_roles() {
+
+		$affiliate_roles = get_option( 'affiliate_users_roles', array() );
+
+		if ( empty( $affiliate_roles ) ) {
+			return array();
+		}
+
+		$user_ids = get_users(
+			array(
+				'role__in' => $affiliate_roles,
+				'fields'   => 'ID',
+			)
+		);
+
+		return ! empty( $user_ids ) && is_array( $user_ids ) ? array_map( 'intval', $user_ids ) : array();
 	}
 }

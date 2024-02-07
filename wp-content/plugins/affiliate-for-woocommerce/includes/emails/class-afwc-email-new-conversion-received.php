@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.3.0
- * @version     1.2.3
+ * @version     1.2.4
  */
 
 // Exit if accessed directly.
@@ -33,7 +33,7 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 			$this->title = 'Affiliate - New Conversion Received';
 
 			// This is the description in WooCommerce email settings.
-			$this->description = __( 'This email will be sent to an affiliate when an order is placed using their referral link/coupon i.e. on a new conversion.', 'affiliate-for-woocommerce' );
+			$this->description = _x( 'This email will be sent to an affiliate when an order is placed using their referral link/coupon, i.e., on a new conversion.', 'Description for Affiliate - New Conversion Received email', 'affiliate-for-woocommerce' );
 
 			// These are the default heading and subject lines that can be overridden using the settings.
 			$this->subject = '{site_title} - new order from your referral 👍';
@@ -196,12 +196,13 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 		 * Initialize Settings Form Fields
 		 */
 		public function init_form_fields() {
-			$this->form_fields = array(
+			$onboarding_email_setup = get_option( 'afwc_onboarding_emails_setup', array() );
+			$this->form_fields      = array(
 				'enabled'            => array(
 					'title'   => __( 'Enable/Disable', 'affiliate-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable this email notification', 'affiliate-for-woocommerce' ),
-					'default' => 'yes',
+					'default' => ! empty( $onboarding_email_setup ) && is_array( $onboarding_email_setup ) && ! empty( $onboarding_email_setup[ $this->id ] ) ? $onboarding_email_setup[ $this->id ] : 'yes',
 				),
 				'subject'            => array(
 					'title'       => __( 'Subject', 'affiliate-for-woocommerce' ),

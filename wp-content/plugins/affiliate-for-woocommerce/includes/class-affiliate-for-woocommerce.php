@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.13.2
+ * @version     1.15.3
  */
 
 // Exit if accessed directly.
@@ -79,18 +79,19 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 *
 		 * @param string $function_name Function to call.
 		 * @param array  $arguments     Array of arguments passed while calling $function_name.
+		 *
 		 * @return mixed Result of function call.
 		 */
 		public function __call( $function_name = '', $arguments = array() ) {
 
-			if ( ! is_callable( 'SA_WC_Compatibility_3_9', $function_name ) ) {
+			if ( empty( $function_name ) || ! is_callable( 'SA_WC_Compatibility', $function_name ) ) {
 				return;
 			}
 
 			if ( ! empty( $arguments ) ) {
-				return call_user_func_array( 'SA_WC_Compatibility_3_9::' . $function_name, $arguments );
+				return call_user_func_array( 'SA_WC_Compatibility::' . $function_name, $arguments );
 			} else {
-				return call_user_func( 'SA_WC_Compatibility_3_9::' . $function_name );
+				return call_user_func( 'SA_WC_Compatibility::' . $function_name );
 			}
 		}
 
@@ -107,9 +108,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 			if ( ! defined( 'AFWC_HIT_COOKIE_NAME' ) ) {
 				define( 'AFWC_HIT_COOKIE_NAME', 'afwc_hit' );
-			}
-			if ( ! defined( 'AFWC_TABLE_PREFIX' ) ) {
-				define( 'AFWC_TABLE_PREFIX', 'afwc_' );
 			}
 			if ( ! defined( 'AFWC_PLUGIN_BASENAME' ) ) {
 				define( 'AFWC_PLUGIN_BASENAME', plugin_basename( dirname( AFWC_PLUGIN_FILE ) ) );
@@ -252,6 +250,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 * Includes
 		 */
 		public function includes() {
+			include_once 'integration/woocommerce/compat/class-sa-wc-compatibility.php';
 			include_once 'affiliate-for-woocommerce-functions.php';
 
 			// start.
@@ -284,8 +283,13 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				include_once 'admin/class-afwc-admin-notifications.php';
 				include_once 'admin/class-afwc-admin-affiliate-users.php';
 				include_once 'admin/class-afwc-admin-link-unlink-in-order.php';
-				include_once 'admin/class-afwc-multi-tier.php';
 				include_once 'admin/class-afwc-admin-housekeeping.php';
+				include_once 'admin/class-afwc-onboarding.php';
+
+				// Admin Dashboard widget should be displayed if current user can mange affiliates.
+				if ( afwc_current_user_can_manage_affiliate() ) {
+					include_once 'admin/class-afwc-admin-dashboard-widget.php';
+				}
 			}
 
 			include_once 'admin/class-afwc-admin-new-referral-email.php';
@@ -310,32 +314,29 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			include_once 'integration/woocommerce/class-afwc-integration-woocommerce.php';
 			include_once 'class-afwc-affiliate.php';
 			include_once 'class-afwc-api.php';
-			include_once 'integration/woocommerce/compat/class-sa-wc-compatibility-3-5.php';
-			include_once 'integration/woocommerce/compat/class-sa-wc-compatibility-3-6.php';
-			include_once 'integration/woocommerce/compat/class-sa-wc-compatibility-3-7.php';
-			include_once 'integration/woocommerce/compat/class-sa-wc-compatibility-3-8.php';
-			include_once 'integration/woocommerce/compat/class-sa-wc-compatibility-3-9.php';
 
 			include_once 'class-afwc-coupon.php';
+			include_once 'class-afwc-db-upgrade.php';
+			include_once 'class-afwc-emails.php';
+			include_once 'class-afwc-registration-submissions.php';
+			include_once 'class-afwc-rewrite-rules.php';
+			include_once 'class-afwc-landing-page.php';
+			include_once 'class-afwc-merge-tags.php';
+			include_once 'class-afwc-visitors.php';
+			include_once 'class-afwc-multi-tier.php';
+			include_once 'payouts/class-afwc-payout-handler.php';
 
 			include_once 'frontend/class-afwc-my-account.php';
 			include_once 'frontend/class-afwc-registration-form.php';
-
-			include_once 'class-afwc-db-upgrade.php';
-
-			include_once 'class-afwc-emails.php';
-
-			include_once 'class-afwc-registration-submissions.php';
-
-			include_once 'class-afwc-rewrite-rules.php';
 
 			if ( 'yes' === get_option( 'woocommerce_analytics_enabled' ) ) {
 				include_once 'integration/woocommerce/analytics/class-afwc-wc-orders-analytics.php';
 			}
 
-			include_once 'class-afwc-landing-page.php';
-			include_once 'class-afwc-merge-tags.php';
-			include_once 'payouts/class-afwc-payout-handler.php';
+			// Admin bar link should be displayed if option is enabled and current user can mange affiliates.
+			if ( 'yes' === get_option( 'afwc_show_admin_bar_menu', 'yes' ) && afwc_current_user_can_manage_affiliate() ) {
+				include_once 'class-afwc-admin-bar-menu.php';
+			}
 		}
 
 		/**
@@ -766,7 +767,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			$args['limit']  = ( ! empty( $args['limit'] ) ) ? $args['limit'] : AFWC_MY_ACCOUNT_DEFAULT_BATCH_LIMIT;
 			$args['offset'] = ( ! empty( $args['offset'] ) ) ? $args['offset'] : 0;
 
-			$afwc_excluded_products = get_option( 'afwc_storewide_excluded_products', array() );
+			$afwc_excluded_products = afwc_get_storewide_excluded_products();
 
 			$prefixed_statuses   = afwc_get_prefixed_order_statuses();
 			$option_order_status = 'afwc_order_statuses_' . uniqid();
@@ -1450,43 +1451,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		}
 
 		/**
-		 * Get affiliate parents for commissions.
-		 *
-		 * @param int $user_id User id.
-		 * @return array.
-		 */
-		public function afwc_get_parents_for_commissions( $user_id = 0 ) {
-			global $wpdb;
-			$parents = afwc_get_parent_chain( $user_id );
-			if ( empty( $parents ) ) {
-				return array();
-			}
-
-			$args = array(
-				'include' => $parents,
-			);
-
-			$af_parents = $this->get_affiliates( $args );
-
-			if ( empty( $af_parents ) ) {
-				return array();
-			}
-
-			$af_parents             = is_array( $af_parents ) ? array_filter( array_keys( $af_parents ), 'intval' ) : array();
-			$parents_for_commisions = array();
-
-			foreach ( $parents as $parent ) {
-				// Break if the parents are not in parent chain.
-				if ( ! in_array( intval( $parent ), $af_parents, true ) ) {
-					break;
-				}
-				$parents_for_commisions[] = $parent;
-			}
-
-			return ! empty( $parents_for_commisions ) ? $parents_for_commisions : array();
-		}
-
-		/**
 		 * Function to get template base directory for Affiliate For WooCommerce' templates
 		 *
 		 * @param  string $template_name Template name.
@@ -1602,7 +1566,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				<?php
 				if ( ! empty( $affiliate_id ) ) {
 					?>
-					<option value="<?php echo esc_attr( $affiliate_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+					<option value="<?php echo esc_attr( $affiliate_id ); ?>" selected="selected"><?php echo esc_html( wp_kses_post( $user_string ) ); ?><option>
 					<?php
 				}
 				?>
@@ -1690,7 +1654,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			$style = ! empty( $args['style'] ) ? $args['style'] : '';
 			$label = apply_filters(
 				'afwc_product_referral_link_label',
-				_x( 'Click to copy affiliate link', 'text for copying the product affiliate link', 'affiliate-for-woocommerce' ),
+				_x( 'Click to copy referral link', "text to copy the affiliate's product-specific referral link", 'affiliate-for-woocommerce' ),
 				array(
 					'product_id' => $product_id,
 					'source'     => $this,
@@ -1746,6 +1710,29 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				)
 			);
 		}
-	}
 
+		/**
+		 * Method to log errors during any process within a function or method.
+		 *
+		 * @param string $callable_name  The name of the function or method.
+		 * @param string $error          The error message.
+		 *
+		 * @return void.
+		 */
+		public function log_error( $callable_name = '', $error = '' ) {
+			$this->log(
+				'error',
+				sprintf(
+					/* translators: 1: Callable name 2: Error message */
+					_x(
+						'Error in %1$s. Details: %2$s',
+						'Error message details',
+						'affiliate-for-woocommerce'
+					),
+					! empty( $callable_name ) ? $callable_name : '',
+					! empty( $error ) ? $error : ''
+				)
+			);
+		}
+	}
 }

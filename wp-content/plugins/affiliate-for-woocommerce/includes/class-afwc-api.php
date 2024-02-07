@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/
  * @since    1.10.0
- * @version  1.9.8
+ * @version  1.10.0
  */
 
 // Exit if accessed directly.
@@ -27,21 +27,43 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		private static $instance = null;
 
 		/**
+		 * Get single instance of AFWC_API
+		 *
+		 * @return AFWC_API Singleton object of AFWC_API
+		 */
+		public static function get_instance() {
+			// Check if instance is already exists.
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
+		}
+
+		/**
 		 * Constructor
 		 */
-		public function __construct() {
+		private function __construct() {
 			/*
 			 * Used "woocommerce_checkout_update_order_meta" action instead of "woocommerce_new_order" hook. Because don't get the whole
 			 * order data on "woocommerce_new_order" hook.
 			 *
 			 * Checked woocommerce "includes/class-wc-checkout.php" file and then after use this hook
 			 *
+			 * @since 7.0.0 Used "woocommerce_checkout_order_processed" action instead of "woocommerce_checkout_update_order_meta" to trigger
+			 * the action after subscription is created.
+			 *
 			 * Track referral before completion of Order with status "Pending"
-			 * When Order Complets, Change referral status from Pending to Unpaid
+			 * When Order Completes, Change referral status from Pending to Unpaid
 			 */
-			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'track_conversion' ) );
+			add_action( 'woocommerce_checkout_order_processed', array( $this, 'track_conversion' ), 110 );
+
 			// Support for WooCommerce checkout block.
-			add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'track_conversion' ) );
+			if ( is_callable( array( $this, 'is_wc_gte_64' ) ) && $this->is_wc_gte_64() ) {
+				add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'track_conversion' ), 110 );
+			} elseif ( is_callable( array( $this, 'is_wc_gte_60' ) ) && $this->is_wc_gte_60() ) {
+				add_action( 'woocommerce_blocks_checkout_order_processed', array( $this, 'track_conversion' ), 110 );
+			}
 
 			if ( class_exists( 'WC_Subscriptions_Core_Plugin' ) || class_exists( 'WC_Subscriptions' ) ) {
 				add_filter( 'wcs_renewal_order_created', array( $this, 'handle_renewal_order_created' ) );
@@ -59,17 +81,24 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		}
 
 		/**
-		 * Get single instance of AFWC_API
+		 * Method to handle WC compatibility related function call from appropriate class
 		 *
-		 * @return AFWC_API Singleton object of AFWC_API
+		 * @param string $function_name Function to call.
+		 * @param array  $arguments     Array of arguments passed while calling $function_name.
+		 *
+		 * @return mixed Result of function call.
 		 */
-		public static function get_instance() {
-			// Check if instance is already exists.
-			if ( is_null( self::$instance ) ) {
-				self::$instance = new self();
+		public function __call( $function_name = '', $arguments = array() ) {
+
+			if ( empty( $function_name ) || ! is_callable( 'SA_WC_Compatibility', $function_name ) ) {
+				return;
 			}
 
-			return self::$instance;
+			if ( ! empty( $arguments ) ) {
+				return call_user_func_array( 'SA_WC_Compatibility::' . $function_name, $arguments );
+			} else {
+				return call_user_func( 'SA_WC_Compatibility::' . $function_name );
+			}
 		}
 
 		/**
@@ -148,7 +177,8 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			if ( is_object( $order ) && $order instanceof WC_Order ) {
 				$oid = is_callable( array( $order, 'get_id' ) ) ? intval( $order->get_id() ) : 0;
 			} elseif ( is_numeric( $order ) ) {
-				$oid = intval( $order );
+				$oid   = intval( $order );
+				$order = wc_get_order( $oid );
 			}
 
 			if ( 0 !== $oid ) {
@@ -327,7 +357,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			$affiliate_obj = new AFWC_Affiliate( $affiliate_id );
 			$affiliate_tag = is_callable( array( $affiliate_obj, 'get_tags' ) ) ? $affiliate_obj->get_tags() : array();
 
-			$afwc_excluded_products = get_option( 'afwc_storewide_excluded_products' );
+			$afwc_excluded_products = afwc_get_storewide_excluded_products();
 
 			$used_coupons = ( is_callable( array( $order, 'get_coupon_codes' ) ) ) ? $order->get_coupon_codes() : array();
 
@@ -338,9 +368,18 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			$context['product_category']     = $product_cat_ids;
 			$context['category_prod_id_map'] = $category_prod_id_map;
 			$context['referral_medium']      = ( is_callable( array( $affiliate_for_woocommerce, 'get_referral_type' ) ) ) ? $affiliate_for_woocommerce->get_referral_type( $affiliate_id, $used_coupons ) : '';
+			$context['user_first_order']     = $this->is_user_first_purchaser( $order ) ? 'yes' : 'no';
 
+			$context = apply_filters(
+				'afwc_referral_order_context',
+				$context,
+				array(
+					'order_id' => $order_id,
+					'source'   => $this,
+				)
+			);
 			// set commission for already excluded.
-			if ( ! empty( $afwc_excluded_products ) ) {
+			if ( ! empty( $afwc_excluded_products ) && is_array( $afwc_excluded_products ) ) {
 				foreach ( $afwc_excluded_products as $id ) {
 					$set_commission[ $id ] = 0;
 				}
@@ -502,7 +541,8 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				}
 				$amount = ( $total_for_commission * $storewide_commission_amt ) / 100;
 			}
-			$afwc_parent_commissions = $this->track_multi_tier_commissions( $affiliate_id, $plan_id_detail_map, $order_id, $order );
+
+			$afwc_parent_commissions = ( ( is_callable( array( 'AFWC_Multi_Tier', 'is_enabled' ) ) && AFWC_Multi_Tier::is_enabled() ) ) ? $this->track_multi_tier_commissions( $affiliate_id, $plan_id_detail_map, $order_id, $order ) : array();
 
 			// fetch the entire chain of affiliate parent here and send it in commissions array.
 			$commissions = ! empty( $afwc_parent_commissions ) ? $afwc_parent_commissions : array();
@@ -528,11 +568,21 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @param  array   $plan_id_detail_map valid plan id and total to calculate commission on.
 		 * @param  integer $order_id order id.
 		 * @param  object  $order The Order object.
+		 *
+		 * @return array The parent commissions.
 		 */
 		public function track_multi_tier_commissions( $affiliate_id = 0, $plan_id_detail_map = array(), $order_id = 0, $order = null ) {
+
+			if ( empty( $affiliate_id ) ) {
+				return array();
+			}
+
+			$affiliate_id = intval( $affiliate_id );
+
 			// fetch details for multi-tier.
-			$afwc         = Affiliate_For_WooCommerce::get_instance();
-			$parent_chain = $afwc->afwc_get_parents_for_commissions( $affiliate_id );
+			$afwc_multi_tier = AFWC_Multi_Tier::get_instance();
+			$parent_chain    = is_callable( array( $afwc_multi_tier, 'get_parents_for_commissions' ) ) ? $afwc_multi_tier->get_parents_for_commissions( $affiliate_id ) : array();
+
 			if ( ! empty( $parent_chain ) && ! empty( $plan_id_detail_map ) ) {
 
 				if ( empty( $order ) && ! empty( $order_id ) ) {
@@ -965,6 +1015,194 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			}
 
 			return ! empty( $affiliate_details ) ? $affiliate_details : array();
+		}
+
+		/**
+		 * Method to check if the given order's user is a first purchaser.
+		 *
+		 * @param WC_Order|int $order Order object or order ID.
+		 *
+		 * @return bool True if the user is a first-time purchaser, false otherwise.
+		 */
+		public function is_user_first_purchaser( $order = null ) {
+
+			if ( empty( $order ) ) {
+				return false;
+			}
+
+			if ( is_numeric( $order ) ) {
+				$order = wc_get_order( intval( $order ) );
+			}
+
+			if ( ! $order instanceof WC_Order ) {
+				return false;
+			}
+
+			$current_user_id = get_current_user_id();
+			$billing_email   = is_callable( array( $order, 'get_billing_email' ) ) ? $order->get_billing_email() : '';
+
+			if ( empty( $current_user_id ) && empty( $billing_email ) ) {
+				return false;
+			}
+
+			$user_order_list = $this->get_orders_by_customer(
+				array(
+					'customer_id'   => ! empty( $current_user_id ) ? intval( $current_user_id ) : 0,
+					'billing_email' => is_callable( array( $order, 'get_billing_email' ) ) ? $order->get_billing_email() : '',
+				)
+			);
+
+			if ( empty( $user_order_list ) || ! is_array( $user_order_list ) ) {
+				// Return true if user does not have any order.
+				return true;
+			}
+
+			$order_id = is_callable( array( $order, 'get_id' ) ) ? intval( $order->get_id() ) : 0;
+
+			// Remove the current order_id from the user order list.
+			$key = array_search( $order_id, $user_order_list, true );
+			if ( false !== $key ) {
+				unset( $user_order_list[ $key ] );
+			}
+
+			// Return true if does not have any old order otherwise false.
+			return empty( $user_order_list );
+		}
+
+		/**
+		 * Method to get a list of order IDs for a specific customer based on provided parameters.
+		 *
+		 * @param array $args Array of parameters.
+		 *
+		 * @throws Exception If any error during the process.
+		 * @return array List of order IDs for the specified customer.
+		 */
+		public function get_orders_by_customer( $args = array() ) {
+			global $wpdb;
+
+			if ( empty( $args ) || ! is_array( $args ) ) {
+				return array();
+			}
+
+			$customer_id   = ! empty( $args['customer_id'] ) ? intval( $args['customer_id'] ) : 0;
+			$billing_email = ! empty( $args['billing_email'] ) ? sanitize_email( $args['billing_email'] ) : '';
+
+			if ( empty( $customer_id ) && empty( $billing_email ) ) {
+				return array();
+			}
+
+			$orders = array();
+
+			try {
+				if ( is_callable( 'afwc_is_hpos_enabled' ) && afwc_is_hpos_enabled() ) {
+					// DB Queries for HPOS setup.
+					if ( ! empty( $customer_id ) && ! empty( $billing_email ) ) {
+						// DB Query if both customer ID and billing email are provided.
+						$orders = $wpdb->get_results( // phpcs:ignore
+							$wpdb->prepare(
+								"SELECT id AS order_id
+									FROM {$wpdb->prefix}wc_orders
+									WHERE
+										type = %s
+										AND ( customer_id = %s OR billing_email = %s )",
+								'shop_order',
+								esc_sql( $customer_id ),
+								esc_sql( $billing_email )
+							),
+							'ARRAY_A'
+						);
+					} elseif ( ! empty( $customer_id ) ) {
+						// DB Queries if only customer ID is provided.
+						$orders = $wpdb->get_results( // phpcs:ignore
+							$wpdb->prepare(
+								"SELECT id AS order_id
+									FROM {$wpdb->prefix}wc_orders
+									WHERE type = %s AND customer_id = %d",
+								'shop_order',
+								esc_sql( $customer_id )
+							),
+							'ARRAY_A'
+						);
+					} elseif ( ! empty( $billing_email ) ) {
+						// DB Queries if only billing email is provided.
+						$orders = $wpdb->get_results( // phpcs:ignore
+							$wpdb->prepare(
+								"SELECT id AS order_id
+									FROM {$wpdb->prefix}wc_orders
+									WHERE type = %s AND billing_email = %s",
+								'shop_order',
+								esc_sql( $billing_email )
+							),
+							'ARRAY_A'
+						);
+					}
+				} else {
+					// Queries for non-HPOS setup.
+					if ( ! empty( $customer_id ) && ! empty( $billing_email ) ) {
+						// DB Query if both customer ID and billing email are provided.
+						$orders = $wpdb->get_results( // phpcs:ignore
+							$wpdb->prepare(
+								"SELECT pm.post_id AS order_id
+								FROM {$wpdb->prefix}postmeta AS pm
+									INNER JOIN {$wpdb->prefix}posts AS p ON pm.post_id = p.ID
+								WHERE
+									p.post_type = %s
+									AND ( ( pm.meta_key = %s AND pm.meta_value = %d )
+										OR ( pm.meta_key = %s AND pm.meta_value = %s ) 
+									)",
+								'shop_order',
+								'_customer_user',
+								esc_sql( $customer_id ),
+								'_billing_email',
+								esc_sql( $billing_email )
+							),
+							'ARRAY_A'
+						);
+					} else {
+						// DB Query if any of one value is provided from customer id or billing email.
+						$meta_data = array(
+							array(
+								'key'   => '_customer_user',
+								'value' => $customer_id,
+							),
+							array(
+								'key'   => '_billing_email',
+								'value' => $billing_email,
+							),
+						);
+
+						foreach ( $meta_data as $meta ) {
+							if ( empty( $meta['value'] ) ) {
+								continue;
+							}
+							$orders = $wpdb->get_results( // phpcs:ignore
+								$wpdb->prepare(
+									"SELECT pm.post_id AS order_id
+									FROM {$wpdb->prefix}postmeta AS pm
+										INNER JOIN {$wpdb->prefix}posts AS p ON pm.post_id = p.ID
+										WHERE p.post_type = %s
+										AND ( pm.meta_key = %s AND pm.meta_value = %s )",
+									'shop_order',
+									esc_sql( $meta['key'] ),
+									esc_sql( $meta['value'] )
+								),
+								'ARRAY_A'
+							);
+						}
+					}
+				}
+
+				// Throw if any error.
+				if ( ! empty( $wpdb->last_error ) ) {
+					throw new Exception( $wpdb->last_error );
+				}
+			} catch ( Exception $e ) {
+				Affiliate_For_WooCommerce::get_instance()->log_error( __METHOD__, ( is_callable( array( $e, 'getMessage' ) ) ) ? $e->getMessage() : '' );
+			}
+
+			// Process the results and return the list of order IDs.
+			$order_ids = ! empty( $orders ) && is_array( $orders ) ? array_column( $orders, 'order_id' ) : array();
+			return ! empty( $order_ids ) && is_array( $order_ids ) ? array_unique( array_map( 'intval', $order_ids ) ) : array();
 		}
 	}
 }

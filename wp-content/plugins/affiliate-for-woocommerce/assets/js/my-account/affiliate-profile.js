@@ -97,9 +97,10 @@ jQuery(function(){
 								if( jQuery('.afwc_ref_id_span').length > 0 ) {
 									jQuery('.afwc_ref_id_span').text(referralIdentifier);
 								}
-								if( jQuery('#afwc_affiliate_link_label').length > 0 && homeURL && pName ) {
-									let refURL =  ( 'yes' == isPrettyReferral ) ? ( `${homeURL}${pName}/${referralIdentifier}/` ) : ( `${homeURL}?${pName}=${referralIdentifier}` )
-									jQuery('#afwc_affiliate_link_label').text(refURL).attr('data-ctp', refURL);
+								let affiliateLinkElement = jQuery('#afwc_affiliate_link_label');
+								if( affiliateLinkElement.length > 0 && homeURL ) {
+									let refURL = afwcGetAffiliateURL(affiliateLinkElement.attr('data-redirect') || homeURL);
+									affiliateLinkElement.text(refURL).attr('data-ctp', refURL);
 								}
 								afwcGenerateLink();
 							} else if ( 'no' === response.success && response.message ) {
@@ -113,21 +114,30 @@ jQuery(function(){
 		}
 	})
 
-	function afwcGenerateLink(){
-		let path                  = jQuery('#afwc_affiliate_link').val() || '';
-		// Remove the slash at the end of pageURL.
-		let pageURL               = (homeURL + path).replace(/\/$/, "");
+	function afwcGetAffiliateURL(targetURL = ''){
+		if(!targetURL){
+			return '';
+		}
+		targetURL = targetURL.replace(/\/$/, "");
 		let affiliateIdentifier   = jQuery('#afwc_id_change_wrap code').text();
-		let affiliateReferralLink = '';
-		if ( -1 === pageURL.indexOf( '?' ) ) {
-			affiliateReferralLink = pageURL + ( 'yes' == isPrettyReferral ? ( '/' + pName + '/' + affiliateIdentifier ) : ( '/?'+ pName + '=' + affiliateIdentifier ) );
+		let generatedLink = '';
+		
+		if ( -1 === targetURL.indexOf( '?' ) ) {
+			generatedLink = targetURL + ( 'yes' == isPrettyReferral ? ( '/' + pName + '/' + affiliateIdentifier + '/' ) : ( '/?'+ pName + '=' + affiliateIdentifier ) );
 		} else {
 			if ( 'yes' == isPrettyReferral ) {
-				affiliateReferralLink = ( pageURL.substring( 0, pageURL.indexOf('?') ) ).replace(/\/$/, "") + '/' + pName + '/' + affiliateIdentifier + '/?'+ ( pageURL.substring( pageURL.indexOf('?') + 1 ) );
+				generatedLink = ( targetURL.substring( 0, targetURL.indexOf('?') ) ).replace(/\/$/, "") + '/' + pName + '/' + affiliateIdentifier + '/?'+ ( targetURL.substring( targetURL.indexOf('?') + 1 ) );
 			} else {
-				affiliateReferralLink = pageURL + '&' + pName+'='+affiliateIdentifier;
+				generatedLink = targetURL + '&' + pName+'='+affiliateIdentifier;
 			}
 		}
+
+		return generatedLink;
+	}
+
+	function afwcGenerateLink(){
+		let path                  = jQuery('#afwc_affiliate_link').val() || '';
+		affiliateReferralLink = homeURL ? afwcGetAffiliateURL( homeURL + path ) : '';
 		jQuery('#afwc_generated_affiliate_link').text(affiliateReferralLink).attr('data-ctp', affiliateReferralLink);
 	}
 });

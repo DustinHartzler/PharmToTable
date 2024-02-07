@@ -1,23 +1,23 @@
 <?php
 /**
  * Plugin Name: Affiliate For WooCommerce
- * Plugin URI: https://woocommerce.com/products/affiliate-for-woocommerce/
+ * Plugin URI: https://woo.com/products/affiliate-for-woocommerce/
  * Description: The best affiliate management plugin for WooCommerce. Track, manage and payout affiliate commissions easily.
- * Version: 6.28.0
+ * Version: 7.2.0
  * Author: StoreApps
  * Author URI: https://www.storeapps.org/
  * Developer: StoreApps
  * Developer URI: https://www.storeapps.org/
  * Requires at least: 5.0.0
- * Tested up to: 6.3.2
+ * Tested up to: 6.4.3
  * WC requires at least: 4.0.0
- * WC tested up to: 8.2.1
+ * WC tested up to: 8.5.2
  * Text Domain: affiliate-for-woocommerce
  * Domain Path: /languages/
  * Woo: 4830848:0f21ae7f876a631d2db8952926715502
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
- * Copyright (c) 2019-2023 StoreApps All rights reserved.
+ * Copyright (c) 2019-2024 StoreApps All rights reserved.
  *
  * @package affiliate-for-woocommerce
  */
@@ -35,6 +35,10 @@ function affiliate_for_woocommerce_activate() {
 	include_once 'includes/class-afwc-install.php';
 	add_option( 'afwc_default_commission_status', 'unpaid', '', 'no' );
 	add_option( 'afwc_do_activation_redirect', true, '', 'no' );
+	if ( get_option( '_afwc_current_db_version' ) ) {
+		// Flag the onboarding complete if plugin is not activated first time.
+		update_option( 'afwc_onboarding_completed', true );
+	}
 	add_option( 'afwc_pname', 'ref', '', 'no' );
 	update_option( 'afwc_flushed_rules', 1, 'no' );
 }
@@ -43,7 +47,19 @@ function affiliate_for_woocommerce_activate() {
  * Handle redirect
  */
 function afwc_redirect() {
-	if ( get_option( 'afwc_do_activation_redirect', false ) ) {
+	$activation_redirect  = get_option( 'afwc_do_activation_redirect', false );
+	$onboarding_completed = get_option( 'afwc_onboarding_completed', false );
+
+	// Redirect to onboarding for first time after plugin activation.
+	if ( ! empty( $activation_redirect ) && empty( $onboarding_completed ) ) {
+		update_option( 'afwc_onboarding_completed', true, 'no' );
+		delete_option( 'afwc_do_activation_redirect' );
+		wp_safe_redirect( admin_url( 'admin.php?page=affiliate-for-woocommerce#!/onboarding' ) );
+		exit;
+	}
+
+	// If onboarding is completed, redirect to documentation page after plugin activation.
+	if ( ! empty( $activation_redirect ) && ! empty( $onboarding_completed ) ) {
 		delete_option( 'afwc_do_activation_redirect' );
 		wp_safe_redirect( admin_url( 'admin.php?page=affiliate-for-woocommerce-documentation' ) );
 		exit;

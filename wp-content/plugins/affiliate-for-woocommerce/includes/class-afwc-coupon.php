@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.7.0
- * @version     1.1.4
+ * @version     1.1.5
  */
 
 // Exit if accessed directly.
@@ -136,7 +136,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 						<?php
 						if ( ! empty( $user_id ) ) {
 							?>
-							<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+							<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( wp_kses_post( $user_string ) ); ?><option>
 							<?php
 						}
 						?>

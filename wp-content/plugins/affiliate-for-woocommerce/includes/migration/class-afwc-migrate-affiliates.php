@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/migration/
  * @since       1.0.0
- * @version     1.2.2
+ * @version     1.2.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -277,7 +277,7 @@ if ( ! class_exists( 'AFWC_Migrate_Affiliates' ) ) {
 
 					foreach ( $statuses as $order_status => $order_ids ) {
 
-						if ( SA_WC_Compatibility_3_9::is_wc_gte_25() && strpos( $order_status, 'wc-' ) === 0 ) {
+						if ( is_callable( array( 'SA_WC_Compatibility', 'is_wc_gte_25' ) ) && SA_WC_Compatibility::is_wc_gte_25() && strpos( $order_status, 'wc-' ) === 0 ) {
 							$order_status = substr( $order_status, 3 );
 						}
 

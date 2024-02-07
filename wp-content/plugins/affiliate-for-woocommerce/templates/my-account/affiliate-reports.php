@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/templates/my-account/
  * @since    6.25.0
- * @version  1.0.0
+ * @version  1.0.1
  */
 
 // Exit if accessed directly.
@@ -189,7 +189,7 @@ $unpaid_commission_percentage_style = ( empty( $unpaid_commission_percentage ) )
 				<tfoot>
 					<tr>
 						<td colspan="<?php echo esc_attr( $referrals_colspan ); ?>">
-							<a id="afwc_load_more_referrals" data-max_record="<?php echo esc_attr( $referrals['total_count'] ); ?>"><?php echo esc_html_x( 'Load more', 'Referral load more link text in my account', 'affiliate-for-woocommerce' ); ?></button>
+							<a id="afwc_load_more_referrals" data-max_record="<?php echo esc_attr( $referrals['total_count'] ); ?>"><?php echo esc_html_x( 'Load more', 'Referral load more link text in my account', 'affiliate-for-woocommerce' ); ?></a>
 						</td>
 					</tr>
 				</tfoot>
@@ -281,7 +281,7 @@ $unpaid_commission_percentage_style = ( empty( $unpaid_commission_percentage ) )
 				<tfoot>
 					<tr>
 						<td colspan="4">
-							<a id="afwc_load_more_payouts" data-max_record="<?php echo esc_attr( intval( $payouts['total_count'] ) ); ?>"><?php echo esc_html_x( 'Load more', 'Payout load more link text in my account', 'affiliate-for-woocommerce' ); ?></button>
+							<a id="afwc_load_more_payouts" data-max_record="<?php echo esc_attr( intval( $payouts['total_count'] ) ); ?>"><?php echo esc_html_x( 'Load more', 'Payout load more link text in my account', 'affiliate-for-woocommerce' ); ?></a>
 						</td>
 					</tr>
 				</tfoot>

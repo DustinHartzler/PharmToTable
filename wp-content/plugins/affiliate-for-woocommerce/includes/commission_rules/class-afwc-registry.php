@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.2.0
+ * @version     1.2.1
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 	class AFWC_Registry {
 
 		/**
-		 * Variable to hold possible registry classes
+		 * Variable to hold default registry classes.
 		 *
 		 * @var $registry
 		 */
@@ -32,8 +32,8 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 				'product'          => 'AFWC_Product_Commission',
 				'product_category' => 'AFWC_Product_Category_Commission',
 				'referral_medium'  => 'AFWC_Referral_Medium_Commission',
+				'user_first_order' => 'AFWC_User_First_Order_Commission',
 			),
-
 		);
 
 		/**
@@ -43,7 +43,11 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 		 */
 		public static function get_registry() {
 			return array_merge(
-				self::$registry,
+				apply_filters(
+					'afwc_commission_rule_registry',
+					! empty( self::$registry ) ? self::$registry : array(),
+					array( 'source' => new self() )
+				),
 				array( 'meta' => array( 'rule_group_titles' => self::get_rule_group_titles() ) )
 			);
 		}
@@ -54,10 +58,15 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 		 * @return array
 		 */
 		private static function get_rule_group_titles() {
-			return array(
-				'affiliate' => _x( 'Affiliate', 'Commission group title for affiliate rules', 'affiliate-for-woocommerce' ),
-				'product'   => _x( 'Product', 'Commission group title for product rules', 'affiliate-for-woocommerce' ),
-				'medium'    => _x( 'Medium', 'Commission group title for medium rules', 'affiliate-for-woocommerce' ),
+			return apply_filters(
+				'afwc_commission_rule_group_title',
+				array(
+					'affiliate' => _x( 'Affiliate', 'Commission group title for affiliate rules', 'affiliate-for-woocommerce' ),
+					'product'   => _x( 'Product', 'Commission group title for product rules', 'affiliate-for-woocommerce' ),
+					'medium'    => _x( 'Medium', 'Commission group title for medium rules', 'affiliate-for-woocommerce' ),
+					'user'      => _x( 'User', 'Commission group title for user rules', 'affiliate-for-woocommerce' ),
+				),
+				array( 'source' => new self() )
 			);
 		}
 
@@ -74,6 +83,7 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 
 				$rules_arr   = array();
 				$props_count = ! empty( $props ) ? count( $props ) : 0;
+				$registry    = self::get_registry();
 				if ( ! empty( $props_count ) ) {
 					for ( $i = 0; $i < $props_count; $i++ ) {
 						$r = $props[ $i ];
@@ -81,9 +91,11 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 							$new1 = new AFWC_Rule_Group( $r );
 							array_push( $rules_arr, $new1 );
 						} elseif ( ! empty( $r['operator'] ) && ! empty( $r['type'] ) ) {
-							$classname = self::$registry['rule'][ $r['type'] ];
-							$new1      = new $classname( $r );
-							array_push( $rules_arr, $new1 );
+							$classname = ( ! empty( $registry ) && is_array( $registry ) && ! empty( $registry['rule'][ $r['type'] ] ) ) ? $registry['rule'][ $r['type'] ] : '';
+							$new1      = ! empty( $classname ) && class_exists( $classname ) ? new $classname( $r ) : null;
+							if ( ! empty( $new1 ) && is_object( $new1 ) ) {
+								array_push( $rules_arr, $new1 );
+							}
 						}
 					}
 				}

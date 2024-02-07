@@ -4,7 +4,7 @@
  *
  * @package   affiliate-for-woocommerce/includes/emails/
  * @since     6.4.0
- * @version   1.0.0
+ * @version   1.0.1
  */
 
 // Exit if accessed directly.
@@ -33,7 +33,7 @@ if ( ! class_exists( 'AFWC_Email_Affiliate_Pending_Request' ) ) {
 			$this->title = 'Affiliate - Pending Request';
 
 			// This is the description in WooCommerce email settings.
-			$this->description = _x( 'This email will be sent to an affiliate after the registration form is submitted and their request to join the affiliate program is in pending status.', 'description for affiliate pending request email', 'affiliate-for-woocommerce' );
+			$this->description = _x( "This email will be sent to an affiliate after the registration form is submitted, and their request to join your affiliate program is in 'Pending' status.", 'description for affiliate pending request email', 'affiliate-for-woocommerce' );
 
 			// These are the default heading and subject lines that can be overridden using the settings.
 			$this->subject = 'Your affiliate request on {site_title} is under review';
@@ -177,12 +177,13 @@ if ( ! class_exists( 'AFWC_Email_Affiliate_Pending_Request' ) ) {
 		 * Initialize Settings Form Fields
 		 */
 		public function init_form_fields() {
-			$this->form_fields = array(
+			$onboarding_email_setup = get_option( 'afwc_onboarding_emails_setup', array() );
+			$this->form_fields      = array(
 				'enabled'            => array(
 					'title'   => _x( 'Enable/Disable', 'title for enable/disable the affiliate pending request email', 'affiliate-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => _x( 'Enable this email notification', 'label for enable/disable the affiliate pending request email', 'affiliate-for-woocommerce' ),
-					'default' => 'yes',
+					'default' => ! empty( $onboarding_email_setup ) && is_array( $onboarding_email_setup ) && ! empty( $onboarding_email_setup[ $this->id ] ) ? $onboarding_email_setup[ $this->id ] : 'yes',
 				),
 				'subject'            => array(
 					'title'       => _x( 'Subject', 'title for the subject of the affiliate pending request email', 'affiliate-for-woocommerce' ),

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.5.0
+ * @version     1.6.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -54,13 +54,9 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 			add_action( 'personal_options_update', array( $this, 'save_afwc_can_be_affiliate' ) );
 			add_action( 'edit_user_profile_update', array( $this, 'save_afwc_can_be_affiliate' ) );
 
-			// Delete parent chain when deleting a user.
-			add_action( 'delete_user', array( $this, 'delete_parent_chain_meta' ) );
-
 			add_action( 'admin_footer', array( $this, 'styles_scripts' ) );
 
 			add_action( 'wp_ajax_afwc_json_search_tags', array( $this, 'afwc_json_search_tags' ) );
-			add_action( 'wp_ajax_afwc_json_search_parent_affiliates', array( $this, 'afwc_json_search_parent_affiliates' ) );
 		}
 
 		/**
@@ -277,165 +273,19 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 							</tr>
 							<?php
 						}
-						if ( ( 'not_registered' !== $is_affiliate ) && ( 'no' !== $is_affiliate ) ) {
-							$parent_chain = afwc_get_parent_chain( $user_id );
-							$parent_id    = ! empty( $parent_chain ) && is_array( $parent_chain ) ? intval( current( $parent_chain ) ) : 0;
-							?>
-							<tr>				
-								<th><label for="afwc_parent_id"><?php echo esc_html__( 'Parent affiliate', 'affiliate-for-woocommerce' ); ?></label></th>
-								<td>
-									<select id="afwc_parent_id" name="afwc_parent_id" style="width: 50%;" class="wc-afw-parent-name-search" data-placeholder="<?php esc_attr_e( 'Search for a parent affiliate', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="true" data-user="<?php echo esc_attr( $user_id ); ?>" data-action="afwc_json_search_parent_affiliates" <?php echo esc_attr( 'yes' === $is_affiliate ? '' : 'disabled' ); ?>>
-									<?php
-									if ( ! empty( $parent_id ) ) {
-										$parent = get_user_by( 'id', $parent_id );
-										if ( $parent instanceof WP_User && ! empty( $parent->user_email ) ) {
-											?>
-											<option value="<?php echo esc_attr( $parent_id ); ?>" selected="<?php echo esc_attr( 'selected' ); ?>" >
-												<?php echo esc_html( htmlspecialchars( wp_kses_post( sprintf( '%1$s (#%2$d &ndash; %3$s)', ( ! empty( $parent->display_name ) ? $parent->display_name : '' ), absint( $parent_id ), $parent->user_email ) ) ) ); ?>
-											</option>
-											<?php
-										}
-									}
-									?>
-									</select>
-									<p class="description"><?php esc_html_e( 'The commission will be distributed to this parent affiliate on a multi-tier commission plan.', 'affiliate-for-woocommerce' ); ?></p>
-									<?php
-									if ( 'pending' === $is_affiliate ) {
-										?>
-										<input name="<?php echo esc_attr( 'afwc_pending_parent_id' ); ?>" type="<?php echo esc_attr( 'hidden' ); ?>" value="<?php echo esc_attr( $parent_id ); ?>" />
-										<?php
-									}
-									?>
-								</td>
-							</tr>
-							<?php
-						}
-						?>
+						do_action(
+							'afwc_admin_edit_user_profile_section',
+							$user_id,
+							array(
+								'status' => $is_affiliate,
+								'source' => $this,
+							)
+						);
+			?>
 				</table>
 				<p class="afwc-form-description afwc-update-desc"> <?php echo esc_html_e( 'Note: Click on Update User button to save changes.', 'affiliate-for-woocommerce' ); ?> </p>
 			</div>
 			<?php
-		}
-
-		/**
-		 * Function to assign parent.
-		 *
-		 * @param int|string $user_id    User id.
-		 * @param int|string $parent_id  Parent Id.
-		 *
-		 * @return void.
-		 */
-		public function assign_parent( $user_id = 0, $parent_id = 0 ) {
-			if ( empty( $user_id ) || empty( $parent_id ) ) {
-				return;
-			}
-			$user_id   = absint( $user_id );
-			$parent_id = absint( $parent_id );
-
-			if ( 'yes' === afwc_is_user_affiliate( $user_id ) && 'yes' === afwc_is_user_affiliate( $parent_id ) ) {
-				$parent_chain = afwc_get_parent_chain( $parent_id );
-				// Check if the user id is contains under parent chain.
-				$user_pos = array_search( $user_id, $parent_chain ); // phpcs:ignore
-				if ( false !== $user_pos ) {
-					// Remove the parents after the position of user id.
-					$parent_chain = array_splice( $parent_chain, 0, $user_pos );
-					if ( ! empty( $parent_chain ) ) {
-						// Update the parent chain of the parent.
-						update_user_meta( $parent_id, 'afwc_parent_chain', implode( '|', $parent_chain ) . '|' );
-					} else {
-						delete_user_meta( $parent_id, 'afwc_parent_chain' );
-					}
-					// Update parent chain of the user.
-					$this->update_parent_chain_of_children( $parent_id );
-				}
-				$parent_chain = ! empty( $parent_chain ) ? array_filter( $parent_chain ) : array();
-				$parent_chain = ! empty( $parent_chain ) ? implode( '|', $parent_chain ) : '';
-				// Concatenate parent id and parent's parent chain.
-				$new_parent_chain = ( ! empty( $parent_chain ) ) ? $parent_id . '|' . $parent_chain : $parent_id;
-				update_user_meta( $user_id, 'afwc_parent_chain', $new_parent_chain . '|' );
-				$this->update_parent_chain_of_children( $user_id );
-			}
-		}
-
-		/**
-		 * Function to remove parents.
-		 * Delete the parent chain of the user.
-		 * Update the parent chain of the all children of the user.
-		 *
-		 * @param int|string $user_id  Array of parent chain.
-		 * @param array      $args     The Arguments.
-		 *
-		 * @return void.
-		 */
-		public function remove_parent( $user_id = 0, $args = array() ) {
-
-			if ( ! empty( $user_id ) ) {
-				// Delete the parent chain of the user.
-				delete_user_meta( $user_id, 'afwc_parent_chain' );
-				// Update the parent chain of all children.
-				$this->update_parent_chain_of_children( $user_id, $args );
-			}
-		}
-
-		/**
-		 * Function to update parent chain of all children by user_id.
-		 *
-		 * @param int|string $user_id  User id.
-		 * @param array      $filters  The Filters.
-		 *
-		 * @return void.
-		 */
-		public function update_parent_chain_of_children( $user_id = 0, $filters = array() ) {
-			if ( empty( $user_id ) ) {
-				return;
-			}
-			// Prevent if the user is not an affiliate user.
-			if ( 'yes' !== afwc_is_user_affiliate( $user_id ) ) {
-				return;
-			}
-
-			$children_tree = afwc_get_children( $user_id, true );
-
-			if ( ! empty( $children_tree ) ) {
-				$user_parents = afwc_get_parent_chain( $user_id );
-				foreach ( $children_tree as $child_id => $child_tree ) {
-					if ( is_array( $child_tree ) ) {
-						// Get the position of the user from the child tree.
-						$user_pos = array_search( $user_id, $child_tree ); // phpcs:ignore
-						// Get parents till the user position.
-						$parents_till_user_pos = array_splice( $child_tree, 0, $user_pos + 1 );
-						// Merge parents with user's parents.
-						$new_parent_chain = array_merge( $parents_till_user_pos, $user_parents );
-						$new_parent_chain = $this->filter_parent_chain( $new_parent_chain, $filters );
-						$new_parent_chain = is_array( $new_parent_chain ) ? implode( '|', $new_parent_chain ) : '';
-
-						if ( ! empty( $new_parent_chain ) ) {
-							$new_parent_chain = $new_parent_chain . '|';
-							// Update the new parent chain.
-							update_user_meta( $child_id, 'afwc_parent_chain', $new_parent_chain );
-						} else {
-							delete_user_meta( $child_id, 'afwc_parent_chain' );
-						}
-					}
-				}
-			}
-		}
-
-		/**
-		 * Filter the parent chain array
-		 *
-		 * @param array $chain   Array of parent chain.
-		 * @param array $args    The arguments.
-		 *
-		 * @return array.
-		 */
-		public function filter_parent_chain( $chain = array(), $args = array() ) {
-
-			if ( isset( $args['excludes'] ) ) {
-				$chain = ( ! empty( $args['excludes'] ) ) ? array_diff( $chain, $args['excludes'] ) : $chain;
-			}
-
-			return $chain;
 		}
 
 		/**
@@ -456,10 +306,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 			$post_afwc_is_affiliate      = ( isset( $_POST['afwc_is_affiliate'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_is_affiliate'] ) ) : ''; // phpcs:ignore
 			$post_afwc_paypal_email      = ( isset( $_POST['afwc_paypal_email'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_paypal_email'] ) ) : ''; // phpcs:ignore
 			$post_afwc_user_tags         = ( isset( $_POST['afwc_user_tags'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_user_tags'] ) ) : array(); // phpcs:ignore
-			$post_afwc_parent_affiliate  = ( isset( $_POST['afwc_parent_id'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_parent_id'] ) ) : 0; // phpcs:ignore
-			$post_afwc_pending_parent_id = ( isset( $_POST['afwc_pending_parent_id'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_pending_parent_id'] ) ) : 0; // phpcs:ignore
-
-			$old_is_affiliate = afwc_is_user_affiliate( intval( $user_id ) );
+			$old_is_affiliate       = afwc_is_user_affiliate( intval( $user_id ) );
 
 			if ( 'yes' === $post_afwc_is_affiliate ) {
 				$afwc_registration = AFWC_Registration_Submissions::get_instance();
@@ -480,17 +327,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						);
 					}
 				}
-
-				// Check if the pending parent id is exists.
-				if ( empty( $post_afwc_pending_parent_id ) ) {
-					if ( ! empty( $post_afwc_parent_affiliate ) ) {
-						// Assign new parent to the user.
-						$this->assign_parent( $user_id, $post_afwc_parent_affiliate );
-					} else {
-						// Remove parent, if $post_afwc_parent_affiliate is empty.
-						$this->remove_parent( $user_id );
-					}
-				}
 			} else {
 
 				// Set 'no'(reject) if posted affiliate status is empty and user had assigned to affiliate.
@@ -498,11 +334,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 
 				// Prevent the action if there is not triggered any action.
 				if ( ! empty( $post_afwc_is_affiliate ) ) {
-
-					// Delete parent chain if the user is assigned to an affiliate.
-					if ( 'yes' === $old_is_affiliate ) {
-						$this->delete_parent_chain_meta( $user_id );
-					}
 
 					if ( 'not_registered' === $post_afwc_is_affiliate ) {
 						delete_user_meta( $user_id, 'afwc_is_affiliate' );
@@ -529,23 +360,19 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 					}
 				}
 			}
-			wp_set_object_terms( $user_id, $post_afwc_user_tags, 'afwc_user_tags' );
-		}
 
-		/**
-		 * Delete parent chain by user id.
-		 *
-		 * @param int $user_id User id.
-		 *
-		 * @return void.
-		 */
-		public function delete_parent_chain_meta( $user_id = 0 ) {
-			if ( ! empty( $user_id ) ) {
-				$filter = array(
-					'excludes' => array( $user_id ),
-				);
-				$this->remove_parent( $user_id, $filter );
-			}
+			wp_set_object_terms( $user_id, $post_afwc_user_tags, 'afwc_user_tags' );
+
+			do_action(
+				'afwc_admin_affiliate_profile_update',
+				$user_id,
+				$_POST,
+				array(
+					'new_status' => $post_afwc_is_affiliate,
+					'old_status' => $old_is_affiliate,
+					'source'     => $this,
+				)
+			);
 		}
 
 		/**
@@ -580,37 +407,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 		}
 
 		/**
-		 * Search for affiliate parent and return
-		 *
-		 * @return void
-		 */
-		public function afwc_json_search_parent_affiliates() {
-			check_admin_referer( 'afwc-search-parent', 'security' );
-
-			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
-				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
-			}
-
-			$term     = ( ! empty( $_GET['term'] ) ) ? (string) urldecode( stripslashes( wp_strip_all_tags( $_GET ['term'] ) ) ) : ''; // phpcs:ignore
-			$user_id  = ( ! empty( $_GET['user_id'] ) ) ? absint( stripslashes( wp_strip_all_tags( $_GET ['user_id'] ) ) ) : 0; // phpcs:ignore
-			if ( empty( $term ) ) {
-				wp_die();
-			}
-			$excludes = array( $user_id );
-			$excludes = apply_filters( 'afwc_exclude_parent_for_affiliate', $excludes, $user_id );
-			$afwc     = Affiliate_For_WooCommerce::get_instance();
-			$args     = array(
-				'search'  => '*' . $term . '*',
-				'exclude' => $excludes,
-			);
-			$users    = $afwc->get_affiliates( $args );
-			$users    = ! empty( $users ) ? $users : array();
-
-			echo wp_json_encode( $users );
-			wp_die();
-		}
-
-		/**
 		 * Search for affiliate tags and return
 		 *
 		 * @return void
@@ -618,7 +414,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 		public function afwc_json_search_tags() {
 			check_admin_referer( 'afwc-search-tags', 'security' );
 
-			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			if ( ! afwc_current_user_can_manage_affiliate() ) {
 				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
 			}
 

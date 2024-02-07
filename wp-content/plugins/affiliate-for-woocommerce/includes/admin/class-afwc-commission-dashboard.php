@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.5.0
- * @version     1.3.7
+ * @version     1.4.0
  */
 
 // Exit if accessed directly.
@@ -59,13 +59,14 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		public function __construct() {
 			add_action( 'wp_ajax_afwc_commission_controller', array( $this, 'request_handler' ) );
 			add_action( 'wp_ajax_afwc_json_search_rule_values', array( $this, 'afwc_json_search_rule_values' ), 1, 2 );
+			add_action( 'wp_ajax_afwc_dismiss_recurring_setting_deprecated_notice', array( $this, 'dismiss_recurring_setting_deprecated_notice' ) );
 		}
 
 		/**
 		 * Function to handle all ajax request
 		 */
 		public function request_handler() {
-			if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
+			if ( ! afwc_current_user_can_manage_affiliate() || empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
 				return;
 			}
 
@@ -334,7 +335,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 
 			check_admin_referer( 'afwc-admin-search-commission-plans', 'security' );
 
-			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			if ( ! afwc_current_user_can_manage_affiliate() ) {
 				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
 			}
 
@@ -613,6 +614,24 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			);
 
 			return empty( $status ) ? $statuses : ( ! empty( $statuses[ $status ] ) ? $statuses[ $status ] : '' );
+		}
+
+		/**
+		 * Method to dismiss the recurring setting deprecated notice.
+		 *
+		 * @return void
+		 */
+		public function dismiss_recurring_setting_deprecated_notice() {
+
+			check_admin_referer( 'afwc-admin-dismiss-recurring-setting-deprecated-notice', 'security' );
+
+			delete_option( 'afwc_show_subscription_admin_dashboard_notice' );
+
+			wp_send_json(
+				array(
+					'ACK' => true,
+				)
+			);
 		}
 	}
 

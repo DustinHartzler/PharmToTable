@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce-subscriptions/
  * @since       6.1.0
- * @version     1.2.3
+ * @version     1.3.0
  */
 
 // Exit if accessed directly.
@@ -35,6 +35,10 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 			add_filter( 'afwc_id_for_order', array( $this, 'get_affiliate_id_for_subscription_order' ), 9, 2 );
 			add_filter( 'afwc_add_referral_in_admin_emails_setting_description', array( $this, 'referral_in_admin_emails_setting_description' ), 10, 1 );
 			add_filter( 'afwc_allowed_emails_for_referral_details', array( $this, 'allowed_subscription_email' ) );
+			add_filter( 'afwc_referral_order_context', array( $this, 'referral_order_contexts' ), 9, 2 );
+			// Add the subscription commission rule.
+			add_filter( 'afwc_commission_rule_group_title', array( $this, 'commission_rule_group_title' ), 9 );
+			add_filter( 'afwc_commission_rule_registry', array( $this, 'commission_rule_registry' ), 9 );
 		}
 
 		/**
@@ -103,29 +107,33 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 
 			$wc_subscriptions_options = array(
 				array(
-					'name'          => _x( 'Issue recurring commission?', 'recurring commission setting title', 'affiliate-for-woocommerce' ),
-					'desc'          => _x( 'Enable this to give affiliate commissions for subscription recurring/renewal orders', 'recurring commission setting description', 'affiliate-for-woocommerce' ),
-					'desc_tip'      => _x( 'Disabling this will issue commission only to subscription\'s parent/first order.', 'recurring commission setting description tip', 'affiliate-for-woocommerce' ),
-					'id'            => 'is_recurring_commission',
-					'type'          => 'checkbox',
-					'default'       => 'no',
-					'checkboxgroup' => 'start',
-					'autoload'      => false,
+					'name'              => _x( 'Issue recurring commission?', 'recurring commission setting title', 'affiliate-for-woocommerce' ),
+					'desc'              => _x( 'Enable this to give affiliate commissions for subscription recurring/renewal orders', 'recurring commission setting description', 'affiliate-for-woocommerce' ),
+					'desc_tip'          => 'no' === get_option( 'is_recurring_commission', 'no' ) ?
+						_x(
+							"We have deprecated this setting. Since you had it disabled, we have automatically created a new plan for you: 'Do not issue recurring commission as Issue recurring commission? is disabled'. Please review the plan for more details.",
+							'recurring commission setting description tip',
+							'affiliate-for-woocommerce'
+						)
+						: _x(
+							'We have deprecated this setting. To stop recurring/renewal commissions, create a new commission plan and add a rule: Renewal >= 0 and set the commission = 0.',
+							'recurring commission setting description tip',
+							'affiliate-for-woocommerce'
+						),
+					'id'                => 'is_recurring_commission',
+					'type'              => 'checkbox',
+					'default'           => 'no',
+					'checkboxgroup'     => 'start',
+					'autoload'          => false,
+					'custom_attributes' => array(
+						'disabled' => 'disabled',
+					),
 				),
 			);
 
 			array_splice( $settings, ( count( $settings ) - 1 ), 0, $wc_subscriptions_options );
 
 			return $settings;
-		}
-
-		/**
-		 * Function to check if recurring commission setting is enabled.
-		 *
-		 * @return string Return yes if enabled, otherwise no.
-		 */
-		public function afwc_is_recurring_commission() {
-			return get_option( 'is_recurring_commission', 'no' );
 		}
 
 		/**
@@ -143,7 +151,7 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 		 * @param int   $affiliate_id The affiliate ID.
 		 * @param array $args The arguments.
 		 *
-		 * @return int Return the affiliate ID from the parent subscription if the order type is switch or renewal otherwise default.
+		 * @return int Return the affiliate ID from the parent subscription if the order type is renewal otherwise default.
 		 */
 		public function get_affiliate_id_for_subscription_order( $affiliate_id = 0, $args = array() ) {
 			if ( empty( $args ) || empty( $args['order_id'] ) ) {
@@ -152,17 +160,10 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 
 			$order_id = intval( $args['order_id'] );
 
-			$sub_types = array( 'switch', 'renewal' );
+			$sub_types = array( 'renewal' );
 
 			if ( ! wcs_order_contains_subscription( $order_id, $sub_types ) ) {
 				return $affiliate_id;
-			}
-
-			if ( wcs_order_contains_renewal( $order_id ) ) {
-				// Don't assign affiliate to the recurring commission order if recurring commission is disabled.
-				if ( 'no' === $this->afwc_is_recurring_commission() ) {
-					return 0;
-				}
 			}
 
 			$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => $sub_types ) );
@@ -195,9 +196,7 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 				return '';
 			}
 
-			$description = 'no' === $this->afwc_is_recurring_commission() ? _x( 'Include affiliate referral details in the WooCommerce New order, WooCommerce Subscriptions Switched emails (if enabled)', 'Admin setting description', 'affiliate-for-woocommerce' ) : _x( 'Include affiliate referral details in the WooCommerce New order, WooCommerce Subscriptions New Renewal Order & Subscription Switched emails (if enabled)', 'Admin setting description', 'affiliate-for-woocommerce' );
-
-			return $description;
+			return _x( 'Include affiliate referral details in the WooCommerce New order and WooCommerce Subscriptions New Renewal Order', 'Admin setting description', 'affiliate-for-woocommerce' );
 		}
 
 		/**
@@ -208,15 +207,114 @@ if ( ! class_exists( 'WCS_AFWC_Compatibility' ) ) {
 		 * @return array The allowed emails.
 		 */
 		public function allowed_subscription_email( $emails = array() ) {
-			if ( 'no' === $this->afwc_is_recurring_commission() ) {
-				return $emails;
-			}
 
 			if ( is_array( $emails ) ) {
 				array_push( $emails, 'new_renewal_order', 'new_switch_order' );
 			}
 
 			return $emails;
+		}
+
+		/**
+		 * Return the commission plan contexts subscription.
+		 *
+		 * @param array $contexts The array of contexts.
+		 * @param array $args The arguments.
+		 *
+		 * @return array The modified array of contexts.
+		 */
+		public function referral_order_contexts( $contexts = array(), $args = array() ) {
+			$order_id = ! empty( $args['order_id'] ) ? intval( $args['order_id'] ) : 0;
+
+			if ( empty( $order_id ) || ! is_array( $contexts ) ) {
+				return $contexts;
+			}
+
+			$contexts['subscription_parent'] = wcs_order_contains_subscription( $order_id, array( 'parent' ) ) ? 'yes' : 'no';
+
+			$subscription_count = -1;
+			if ( wcs_order_contains_renewal( $order_id ) ) {
+
+				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => array( 'renewal' ) ) );
+
+				if ( ! empty( $subscriptions ) ) {
+					// Get the last subscription form the order.
+					$subscription      = is_array( $subscriptions ) ? end( $subscriptions ) : $subscriptions;
+					$renewal_order_ids = $subscription instanceof WC_Subscription && is_callable( array( $subscription, 'get_related_orders' ) ) ? $subscription->get_related_orders( 'ids', array( 'renewal' ) ) : 0;
+
+					if ( ! empty( $renewal_order_ids ) && is_array( $renewal_order_ids ) ) {
+						$subscription_count = count( $renewal_order_ids );
+					}
+				}
+			}
+
+			$contexts['subscription_renewal'] = $subscription_count;
+
+			return $contexts;
+		}
+
+		/**
+		 * Return the commission rule group title for subscription.
+		 *
+		 * @param array $titles The array of titles.
+		 *
+		 * @return array The modified array of titles.
+		 */
+		public function commission_rule_group_title( $titles = array() ) {
+			if ( ! is_array( $titles ) ) {
+				return $titles;
+			}
+
+			$titles['subscription'] = _x( 'Subscription', 'Commission group title for subscription rules', 'affiliate-for-woocommerce' );
+			return $titles;
+		}
+
+		/**
+		 * Return the commission rule registries.
+		 *
+		 * @param array $registries The array of registries.
+		 *
+		 * @return array The modified array of registries.
+		 */
+		public function commission_rule_registry( $registries = array() ) {
+			if ( ! is_array( $registries ) || ! is_array( $registries['rule'] ) ) {
+				return $registries;
+			}
+
+			$registries['rule']['subscription_parent']  = 'AFWC_Subscription_Parent_Commission';
+			$registries['rule']['subscription_renewal'] = 'AFWC_Subscription_Renewal_Commission';
+			return $registries;
+		}
+
+		/**
+		 * Method to get subscription related description in the plans sidebar.
+		 *
+		 * @return string Return the description.
+		 */
+		public static function plan_description() {
+			return _x(
+				'To stop recurring commissions on subscription renewals, create a new commission plan and add a rule: Renewal >= 0 and set the commission = 0. Set this plan at the top to give priority over other plans.',
+				'Plan description for renewal commission',
+				'affiliate-for-woocommerce'
+			);
+		}
+
+		/**
+		 * Method to get subscription related admin notice of plan dashboard.
+		 *
+		 * @return string Return the notice text.
+		 */
+		public static function plan_admin_notice() {
+
+			if ( 'no' === get_option( 'afwc_show_subscription_admin_dashboard_notice', 'no' ) ) {
+				return '';
+			}
+
+			return _x(
+				"We have deprecated the Issue recurring commission setting. Since you had the setting disabled, we have automatically created a new plan for you 'Do not issue recurring commission as Issue recurring commission? is disabled'. Please review the plan for more details.",
+				'Admin notice for Issue recurring commission deprecated',
+				'affiliate-for-woocommerce'
+			);
 		}
 	}
 

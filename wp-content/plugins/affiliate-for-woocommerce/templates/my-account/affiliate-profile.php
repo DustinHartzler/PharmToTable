@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/templates/my-account/
  * @since    5.7.0
- * @version  1.2.4
+ * @version  1.2.5
  */
 
 // Exit if accessed directly.
@@ -42,13 +42,15 @@ $referral_url_pattern = ( 'yes' === $afwc_use_pretty_referral_links ) ? ( $pname
 		<p>
 		<?php echo esc_html_x( 'Your referral URL is: ', 'affiliate referral url label', 'affiliate-for-woocommerce' ); ?>
 			<?php
-				$affiliate_url_with_redirection = afwc_get_affiliate_url( apply_filters( 'afwc_referral_redirection_url', trailingslashit( home_url() ), $affiliate_id, array( 'source' => $affiliate_for_woocommerce ) ), '', $affiliate_identifier );
+				$affiliate_redirection          = apply_filters( 'afwc_referral_redirection_url', trailingslashit( home_url() ), $affiliate_id, array( 'source' => $affiliate_for_woocommerce ) );
+				$affiliate_url_with_redirection = afwc_get_affiliate_url( $affiliate_redirection, '', $affiliate_identifier );
 			?>
 			<code
 				id="afwc_affiliate_link_label"
 				class="afwc-click-to-copy"
 				title="<?php echo esc_attr_x( 'Click to copy', 'click to copy label for referral url', 'affiliate-for-woocommerce' ); ?>"
 				data-ctp="<?php echo esc_url( $affiliate_url_with_redirection ); ?>"
+				data-redirect="<?php echo esc_url( $affiliate_redirection ); ?>"
 				>
 				<?php echo esc_url( $affiliate_url_with_redirection ); ?>
 			</code>

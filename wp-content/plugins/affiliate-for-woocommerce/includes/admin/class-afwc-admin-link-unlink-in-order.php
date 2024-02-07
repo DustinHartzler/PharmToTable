@@ -4,7 +4,7 @@
  *
  * @package  affiliate-for-woocommerce/includes/admin/
  * @since    2.1.1
- * @version  1.3.8
+ * @version  1.3.9
  */
 
 // Exit if accessed directly.
@@ -148,7 +148,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 						<?php
 						if ( ! empty( $user_id ) ) {
 							?>
-							<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+							<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( wp_kses_post( $user_string ) ); ?><option>
 							<?php
 						}
 						?>

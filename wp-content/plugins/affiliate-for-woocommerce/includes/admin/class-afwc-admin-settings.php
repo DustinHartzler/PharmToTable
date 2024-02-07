@@ -4,9 +4,10 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.4.8
+ * @version     1.4.10
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -159,7 +160,7 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 				array(
 					'title' => _x( 'Affiliate For WooCommerce Settings', 'Plugin setting tab name', 'affiliate-for-woocommerce' ),
 					/* translators: Link Affiliate For WooCommerce Settings documentation */
-					'desc'  => sprintf( _x( 'Use these options to configure the way plugin works. Learn more from %1$sdocumentation%2$s.', 'setting description with documentation link', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/settings/">', '</a>' ),
+					'desc'  => sprintf( _x( 'Use these options to configure the way plugin works. Learn more from %1$sdocumentation%2$s.', 'setting description with documentation link', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woo.com/document/affiliate-for-woocommerce/settings/">', '</a>' ),
 					'type'  => 'title',
 					'id'    => 'afwc_admin_settings',
 				),
@@ -348,6 +349,15 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 					'type'     => 'checkbox',
 					'default'  => 'no',
 					'autoload' => false,
+				),
+				array(
+					'name'     => _x( 'Multi-tier affiliate program', 'Admin setting name', 'affiliate-for-woocommerce' ),
+					'desc'     => _x( 'Allow existing affiliates to invite others to join your affiliate program, earning extra commissions from their referrals.', 'Admin setting description', 'affiliate-for-woocommerce' ),
+					'desc_tip' => _x( 'Existing (parent) affiliates will receive commissions on referrals of children affiliates - as long as active. Disabling this will remove the relationship as well as prevent commissions.', 'Admin setting description tip', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_enable_multi_tier',
+					'type'     => 'checkbox',
+					'default'  => 'yes',
+					'autoload' => true, // The autoload is enabled as this option is using in every corner of the plugin.
 				),
 				// phpcs:disable
 				// array(

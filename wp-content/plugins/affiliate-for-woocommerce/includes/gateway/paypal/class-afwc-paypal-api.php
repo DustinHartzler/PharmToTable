@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
  * @since       4.0.0
- * @version     1.2.3
+ * @version     1.2.4
  */
 
 // Exit if accessed directly.
@@ -365,7 +365,7 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 				'value'    => 'no',
 				'desc'     => __( 'Disabled', 'affiliate-for-woocommerce' ),
 				/* translators: 1: Location of the API Credentials */
-				'desc_tip' => sprintf( __( 'To enable, follow all the requirements mentioned %s.', 'affiliate-for-woocommerce' ), '<a href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/" target="_blank">' . __( 'here', 'affiliate-for-woocommerce' ) . '</a>' ),
+				'desc_tip' => sprintf( __( 'To enable, follow all the requirements mentioned %s.', 'affiliate-for-woocommerce' ), '<a href="https://woo.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/" target="_blank">' . __( 'here', 'affiliate-for-woocommerce' ) . '</a>' ),
 			);
 
 			if ( true === $this->is_set_credentials( $this->payout_method ) ) {
@@ -379,7 +379,7 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 				);
 
 				/* translators: 1: Location of the PayPal Payout Documentation */
-				$payout_deprecated_html = ( 'paypal_masspay' === $this->payout_method ) ? '<p class="notice notice-warning" style="width: fit-content;padding: 5px 8px;">' . sprintf( __( '[PayPal Payouts] PayPal have deprecated MassPay API and it will be removed soon. So we recommend you switch to a new Payout API for smoother commission payouts. Refer to %s for more details.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( 'https://woocommerce.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/' ) . '" target="_blank">' . esc_html__( 'this doc', 'affiliate-for-woocommerce' ) . '</a>' ) . ' </p>' : '';
+				$payout_deprecated_html = ( 'paypal_masspay' === $this->payout_method ) ? '<p class="notice notice-warning" style="width: fit-content;padding: 5px 8px;">' . sprintf( __( '[PayPal Payouts] PayPal have deprecated MassPay API and it will be removed soon. So we recommend you switch to a new Payout API for smoother commission payouts. Refer to %s for more details.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( 'https://woo.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/' ) . '" target="_blank">' . esc_html__( 'this doc', 'affiliate-for-woocommerce' ) . '</a>' ) . ' </p>' : '';
 
 				$status = array(
 					'value'    => 'yes',
