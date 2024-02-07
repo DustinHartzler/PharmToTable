@@ -2,11 +2,8 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
-use SeriouslySimplePodcasting\Renderers\Renderer;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
-use stdClass;
-use WP_Query;
 
 use WP_Term;
 
@@ -497,30 +494,6 @@ class Frontend_Controller {
 		return $this->players_controller->episode_meta_details( $episode_id, $context, $return );
 	}
 
-
-	/**
-	 * Get size of media file
-	 * @param  string  $file File name & path
-	 * @return boolean       File size on success, boolean false on failure
-	 * @deprecated
-	 */
-	public function get_file_size( $file = '' ) {
-		return $this->episode_repository->get_file_size( $file );
-	}
-
-	/**
-	 * Returns a local file path for the given file URL if it's local. Otherwise
-	 * returns the original URL
-	 *
-	 * @param    string    file
-	 * @return   string    file or local file path
-	 *
-	 * @deprecated
-	 */
-	function get_local_file_path( $file ) {
-		return $this->episode_repository->get_local_file_path( $file );
-	}
-
 	/**
 	 * Add the meta data to the episode excerpt
 	 * @param  string $excerpt Existing excerpt
@@ -732,112 +705,6 @@ class Frontend_Controller {
 		return apply_filters( 'ssp_episode_image_url', $image_url, $post_id );
 	}
 
-
-	/**
-	 * Gets podcast query
-	 * @param  mixed $args Arguments to be passed to the query.
-	 * @return mixed       Array if true, boolean if false.
-	 * Todo: refactoring
-	 * @see ss_get_podcast()
-	 */
-	public function get_podcast( $args = '' ) {
-		$defaults = array(
-			'title' => '',
-			'content' => 'series',
-			'series' => ''
-		);
-
-		$args = apply_filters( 'ssp_get_podcast_args', wp_parse_args( $args, $defaults ) );
-
-		$query = array();
-
-		if ( 'episodes' == $args['content'] ) {
-
-			// Get selected series
-			$podcast_series = '';
-			if ( isset( $args['series'] ) && $args['series'] ) {
-				$podcast_series = $args['series'];
-			}
-
-			// Get query args
-			$query_args = apply_filters( 'ssp_get_podcast_query_args', ssp_episodes( -1, $podcast_series, true, '' ) );
-
-			// The Query
-			$query = get_posts( $query_args );
-
-			// The Display
-			if ( ! is_wp_error( $query ) && is_array( $query ) && count( $query ) > 0 ) {
-				foreach ( $query as $k => $v ) {
-					// Get the URL
-					$query[$k]->url = get_permalink( $v->ID );
-				}
-			} else {
-				$query = false;
-			}
-
-		} else {
-
-			$terms = get_terms( 'series' );
-
-			if ( count( $terms ) > 0) {
-
-				foreach ( $terms as $term ) {
-					$query[ $term->term_id ] = new stdClass();
-					$query[ $term->term_id ]->title = $term->name;
-					$query[ $term->term_id ]->url = get_term_link( $term );
-
-					$query_args = apply_filters( 'ssp_get_podcast_series_query_args', ssp_episodes( -1, $term->slug, true, '' ) );
-
-					$posts = get_posts( $query_args );
-
-					$count = count( $posts );
-					$query[ $term->term_id ]->count = $count;
-				}
-			}
-
-		}
-
-		$query['content'] = $args['content'];
-
-		return $query;
-	}
-
-	/**
-	 * Get episode from audio file
-	 * @param  string $file File name & path
-	 * @return object       Episode post object
-	 */
-	public function get_episode_from_file( $file = '' ) {
-		global $post;
-
-		$episode = false;
-
-		if ( $file != '' ) {
-
-			$post_types = ssp_post_types( true );
-
-			$args = array(
-				'post_type' => $post_types,
-				'post_status' => 'publish',
-				'posts_per_page' => 1,
-				'meta_key' => 'audio_file',
-				'meta_value' => $file
-			);
-
-			$qry = new WP_Query( $args );
-
-			if ( $qry->have_posts() ) {
-				while ( $qry->have_posts() ) { $qry->the_post();
-					$episode = $post;
-					break;
-				}
-			}
-		}
-
-		return apply_filters( 'ssp_episode_from_file', $episode, $file );
-
-	}
-
 	/**
 	 * Download file from `podcast_episode` query variable
 	 * @return void
@@ -863,26 +730,14 @@ class Frontend_Controller {
 				return;
 			}
 
-			// Do we have newlines?
-			$parts = false;
-			if( is_string( $episode ) ) {
-				$parts = explode( "\n", $episode );
+			$file = $this->get_enclosure( $episode_id );
+			if ( false !== strpos( $file, "\n" ) ) {
+				$parts = explode( "\n", $file );
+				$file  = $parts[0];
 			}
 
-			if ( $parts && is_array( $parts ) && count( $parts ) > 1 ) {
-				$file = $parts[0];
-			} else {
-				// Get audio file for download
-				$file = $this->get_enclosure( $episode_id );
-			}
 
-			// Ensure that $file is a valid URL
-			$is_url = boolval( filter_var( $file, FILTER_VALIDATE_URL ) );
-
-			// Exit if no file is found
-			if ( ! $is_url ) {
-				$this->send_404();
-			}
+			$this->validate_file( $file );
 
 			// Get file referrer
 			$referrer = '';
@@ -905,8 +760,14 @@ class Frontend_Controller {
 			header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 			header( "Robots: none" );
 
+			$original_file = $file;
+
+			// Dynamically change the file URL. Is used internally for Ads.
+			$file = apply_filters( 'ssp_enclosure_url', $file, $episode_id, $referrer );
+			$this->validate_file( $file );
+
 			// Check file referrer
-			if( 'download' == $referrer ) {
+			if( 'download' == $referrer && $file == $original_file ) {
 
 				// Set size of file
 				// Do we have anything in Cache/DB?
@@ -965,6 +826,21 @@ class Frontend_Controller {
 			// Exit to prevent other processes running later on
 			exit;
 
+		}
+	}
+
+	/**
+	 * @param string $file
+	 *
+	 * @return void
+	 */
+	protected function validate_file( $file ) {
+		// Ensure that $file is a URL
+		$is_url = is_string( $file ) && ( 0 === strpos( $file, 'http' ) );
+
+		// Exit if file is not URL
+		if ( ! $is_url ) {
+			$this->send_404();
 		}
 	}
 

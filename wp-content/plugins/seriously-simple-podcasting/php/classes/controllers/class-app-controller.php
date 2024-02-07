@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Main plugin class
  *
- * @author      Hugh Lashbrooke, Sergey Zakharchenko
+ * @author      Hugh Lashbrooke, Serhiy Zakharchenko
  * @category    Class
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       1.0
@@ -98,6 +98,11 @@ class App_Controller {
 	public $podcast_post_types_controller;
 
 	/**
+	 * @var Series_Controller
+	 * */
+	public $series_controller;
+
+	/**
 	 * @var Settings_Controller
 	 * */
 	public $settings_controller;
@@ -111,6 +116,11 @@ class App_Controller {
 	 * @var Rest_Api_Controller $rest_controller
 	 * */
 	public $rest_controller;
+
+	/**
+	 * @var Ads_Controller
+	 * */
+	public $ads_controller;
 
 
 	// Handlers.
@@ -200,12 +210,7 @@ class App_Controller {
 	 * Admin_Controller constructor.
 	 */
 	public function __construct() {
-
-		if ( ! ssp_is_php_version_ok() ) {
-			return;
-		}
-
-		if ( ! ssp_is_vendor_ok() ) {
+		if ( ! $this->check() ) {
 			return;
 		}
 
@@ -213,6 +218,25 @@ class App_Controller {
 
 		$this->init_useful_variables();
 		$this->bootstrap();
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function check() {
+		if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) {
+			return false;
+		}
+
+		if ( ! ssp_is_php_version_ok() ) {
+			return false;
+		}
+
+		if ( ! ssp_is_vendor_ok() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -225,19 +249,17 @@ class App_Controller {
 
 		$this->renderer = new Renderer();
 
-		$this->feed_handler = new Feed_Handler();
+		$this->logger = new Log_Helper();
 
 		$this->settings_handler = new Settings_Handler();
 
+		$this->feed_handler = new Feed_Handler( $this->settings_handler, $this->renderer );
+
 		$this->options_handler = new Options_Handler();
 
-		$this->episode_repository = new Episode_Repository();
+		$this->episode_repository = new Episode_Repository( $this->feed_handler );
 
-		$this->castos_handler = new Castos_Handler();
-
-		$this->upgrade_handler = new Upgrade_Handler( $this->episode_repository, $this->castos_handler );
-
-		$this->feed_controller = new Feed_Controller( $this->feed_handler, $this->renderer );
+		$this->castos_handler = new Castos_Handler( $this->feed_handler, $this->logger );
 
 		$this->onboarding_controller = new Onboarding_Controller( $this->renderer, $this->settings_handler );
 
@@ -245,15 +267,11 @@ class App_Controller {
 
 		$this->roles_handler = new Roles_Handler();
 
-		$this->cpt_podcast_handler = new CPT_Podcast_Handler( $this->roles_handler );
+		$this->cpt_podcast_handler = new CPT_Podcast_Handler( $this->roles_handler, $this->feed_handler );
 
-		$this->logger = new Log_Helper();
-
-		$this->shortcodes_controller = new Shortcodes_Controller( $this->file, $this->version  );
+		$this->shortcodes_controller = new Shortcodes_Controller( $this->file, $this->version );
 
 		$this->widgets_controller = new Widgets_Controller( $this->file, $this->version );
-
-		$this->cron_controller = new Cron_Controller( $this->castos_handler, $this->episode_repository, $this->upgrade_handler );
 
 		$this->ajax_handler = new Ajax_Handler( $this->castos_handler );
 
@@ -262,7 +280,14 @@ class App_Controller {
 		$this->admin_notices_handler = new Admin_Notifications_Handler( $this->token );
 
 		$this->assets_controller = new Assets_Controller();
-		$this->series_handler = new Series_Handler( $this->admin_notices_handler );
+
+		$this->series_handler    = new Series_Handler( $this->admin_notices_handler, $this->roles_handler, $this->castos_handler, $this->settings_handler, $this->episode_repository );
+
+		$this->upgrade_handler = new Upgrade_Handler( $this->episode_repository, $this->castos_handler, $this->series_handler );
+
+		$this->feed_controller = new Feed_Controller( $this->feed_handler, $this->renderer );
+
+		$this->cron_controller = new Cron_Controller( $this->castos_handler, $this->episode_repository, $this->upgrade_handler );
 
 		if ( is_admin() ) {
 			$this->admin_notices_handler->bootstrap();
@@ -287,7 +312,11 @@ class App_Controller {
 			$this->series_handler
 		);
 
+		$this->series_controller = new Series_Controller( $this->series_handler, $this->castos_handler, $this->settings_handler );
+
 		$this->review_controller = new Review_Controller( $this->admin_notices_handler, $this->renderer );
+
+		$this->ads_controller = new Ads_Controller( $this->castos_handler );
 
 
 		// todo: further refactoring - get rid of global here
@@ -313,7 +342,7 @@ class App_Controller {
 
 		// Elementor integration.
 		if ( ssp_is_elementor_ok() ) {
-			new Elementor_Widgets();
+			new Elementor_Widgets( $this->episode_repository );
 		}
 
 		// Yoast Schema integration.
@@ -378,7 +407,7 @@ class App_Controller {
 
 		// Only load WP REST API Endpoints if the WordPress version is newer than 4.7.
 		if ( version_compare( $wp_version, '4.7', '>=' ) ) {
-			$this->rest_controller = new Rest_Api_Controller( $this->episode_repository );
+			$this->rest_controller = new Rest_Api_Controller( $this->episode_repository, $this->series_handler );
 		}
 	}
 
@@ -391,31 +420,24 @@ class App_Controller {
 		// Setup custom permalink structures.
 		add_action( 'init', array( $this, 'setup_permastruct' ), 10 );
 
-		// Run any updates required
-		add_action( 'init', array( $this, 'maybe_run_plugin_updates' ), 11 );
-
-		// Dismiss the categories update screen
-		add_action( 'init', array( $this, 'dismiss_categories_update' ) ); //todo: can we move it to 'admin_init'?
-
-		// Dismiss the categories update screen
-		add_action( 'init', array( $this, 'disable_elementor_template_notice' ) );
 
 		// Hide WP SEO footer text for podcast RSS feed.
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wp_seo_rss_footer' ) );
 
 		if ( is_admin() ) {
+
+			// Run any updates required
+			add_action( 'admin_init', array( $this, 'maybe_run_plugin_updates' ), 11 );
+
+			// Dismiss the categories update screen
+			add_action( 'admin_init', array( $this, 'dismiss_categories_update' ) );
+
+			// Dismiss the categories update screen
+			add_action( 'admin_init', array( $this, 'disable_elementor_template_notice' ) );
+
 			// process the import form submission
 			add_action( 'admin_init', array( $this, 'submit_import_form' ) );
 
-			// Series list table.
-			add_filter( 'manage_edit-series_columns', array( $this, 'edit_series_columns' ) );
-			add_filter( 'manage_series_custom_column', array( $this, 'add_series_columns' ), 1, 3 );
-
-			// Series term meta forms
-			add_action( 'series_add_form_fields', array( $this, 'add_series_term_meta_fields' ), 10, 2 );
-			add_action( 'series_edit_form_fields', array( $this, 'edit_series_term_meta_fields' ), 10, 2 );
-			add_action( 'created_series', array( $this, 'save_series_meta' ), 10, 2 );
-			add_action( 'edited_series', array( $this, 'update_series_meta' ), 10, 2 );
 
 			// Dashboard widgets.
 			add_action( 'wp_dashboard_setup', array( $this, 'ssp_dashboard_setup' ) );
@@ -465,286 +487,12 @@ class App_Controller {
 	}
 
 	/**
-	 * Adds series term metaboxes to the new series form.
-	 */
-	public function add_series_term_meta_fields( $taxonomy ) {
-		// Add series image upload metabox.
-		$this->series_image_uploader( $taxonomy );
-	}
-
-	/**
 	 * @return Settings_Handler|Service
 	 */
 	public function get_settings_handler() {
 		return $this->get_service( 'settings_handler' );
 	}
 
-	/**
-	 * @param \WP_Term $term
-	 *
-	 * @return void
-	 *
-	 * // Todo: move all the Series-related functions to the separate class
-	 */
-	protected function show_feed_info( $term ) {
-		$edit_feed_url = sprintf(
-			'edit.php?post_type=%s&page=podcast_settings&tab=feed-details&feed-series=%s',
-			SSP_CPT_PODCAST,
-			$term->slug
-		);
-		$edit_feed_url = admin_url( $edit_feed_url );
-
-		$feed_fields = $this->get_settings_handler()->get_feed_fields();
-
-		?>
-		<tr class="form-field term-upload-wrap">
-			<th scope="row">
-				<label><?php echo __( 'Podcast Feed Details', 'seriously-simple-podcasting' ) ?></label>
-				<p><a class="view-feed-link" href="<?php echo esc_url( $edit_feed_url ) ?>">
-						<span class="dashicons dashicons-edit"></span>
-						<?php echo __( 'Edit Feed Settings', 'seriously-simple-podcasting' ) ?></a></p>
-				<p><a class="view-feed-link" href="<?php echo esc_url( ssp_get_feed_url( $term->slug ) ); ?>" target="_blank">
-						<span class="dashicons dashicons-rss"></span>
-						<?php echo __( 'View feed', 'seriously-simple-podcasting' ) ?>
-					</a></p>
-			</th>
-			<td>
-				<table style="border: 1px solid #ccc; width: 100%; padding: 0 10px;">
-					<?php foreach ( $feed_fields as $field ) :
-						$value = ssp_get_option( $field['id'], '', $term->term_id );
-						if ( ! $value ) {
-							$value = ssp_get_option( $field['id'] );
-						}
-						if ( ! $value || ! is_string( $value ) ) {
-							continue;
-						}
-						if ( 'image' === $field['type'] ) {
-							$value = sprintf('<img src="%s" style="width: 100px;">', $value );
-						}
-						?>
-						<tr>
-							<th><?php echo $field['label']; ?>:</th>
-							<td><?php echo $value; ?></td>
-						</tr>
-					<?php endforeach; ?>
-				</table>
-			</td>
-		</tr>
-		<?php
-	}
-
-	/**
-	 * Adds series term metaboxes to the edit series form.
-	 */
-	public function edit_series_term_meta_fields( $term, $taxonomy ) {
-		// Add series image edit/upload metabox.
-		$this->series_image_uploader( $taxonomy, 'UPDATE', $term );
-		$this->show_feed_info( $term );
-	}
-
-	/**
-	 * @since 2.7.3
-	 *
-	 * @param \WP_Term $term
-	 *
-	 * @return int|null
-	 */
-	public function get_series_image_id( $term = null ) {
-		if ( empty( $term ) ) {
-			return null;
-		}
-
-		return get_term_meta( $term->term_id, $this->token . '_series_image_settings', true );
-	}
-
-	/**
-	 * @since 2.7.3
-	 *
-	 * @param \WP_Term $term
-	 *
-	 * @return int|null
-	 */
-	public function get_series_image_src( $term ) {
-		return ssp_get_podcast_image_src( $term );
-	}
-
-	/**
-	 * Series Image Uploader metabox for add/edit.
-	 */
-	public function series_image_uploader( $taxonomy, $mode = 'CREATE', $term = null ) {
-		$series_settings = $this->token . '_series_image_settings';
-
-		$default_image = esc_url( $this->assets_url . 'images/no-image.png' );
-		$media_id      = $this->get_series_image_id( $term ) ?: '';
-		$src           = $this->get_series_image_src( $term );
-		$image_width   = "auto";
-		$image_height  = "auto";
-
-		$series_img_title = __( 'Podcast Image', 'seriously-simple-podcasting' );
-		$upload_btn_text  = __( 'Choose podcast image', 'seriously-simple-podcasting' );
-		$upload_btn_value = __( 'Add Image', 'seriously-simple-podcasting' );
-		$upload_btn_title = __( 'Choose an image file', 'seriously-simple-podcasting' );
-		$series_img_desc  = __( "Set an image as the artwork for the podcast page. No image will be set if not provided.", 'seriously-simple-podcasting' );
-		$series_img_form_label = <<<HTML
-<label>{$series_img_title}</label>
-HTML;
-
-		$series_img_form_fields = <<<HTML
-<img id="{$taxonomy}_image_preview" data-src="{$default_image}" src="$src" width="{$image_width}" height="{$image_height}" />
-<div>
-	<input type="hidden" id="{$taxonomy}_image_id" name="{$series_settings}" value="{$media_id}" />
-	<button id="{$taxonomy}_upload_image_button" class="button" data-uploader_title="{$upload_btn_title}" data-uploader_button_text="{$upload_btn_text}"><span class="dashicons dashicons-format-image"></span> {$upload_btn_value}</button>
-	<button id="{$taxonomy}_remove_image_button" class="button">&times;</button>
-</div>
-<p class="description">{$series_img_desc}</p>
-HTML;
-
-		if ( $mode == 'CREATE' ) {
-			echo <<<HTML
-<div class="form-field term-upload-wrap">
-	{$series_img_form_label}
-	{$series_img_form_fields}
-</div>
-HTML;
-		} else if ( $mode == 'UPDATE' ) {
-			echo <<<HTML
-<tr class="form-field term-upload-wrap">
-	<th scope="row">{$series_img_form_label}</th>
-	<td>
-		{$series_img_form_fields}
-	</td>
-</tr>
-HTML;
-		}
-	}
-
-	/**
-	 * Hook to allow saving series meta data.
-	 */
-	public function save_series_meta( $term_id, $tt_id ) {
-		$this->insert_update_series_meta( $term_id, $tt_id );
-		$this->save_series_data_to_feed( $term_id );
-	}
-
-	/**
-	 * Hook to allow updating the series meta data.
-	 */
-	public function update_series_meta( $term_id, $tt_id ) {
-		$this->insert_update_series_meta( $term_id, $tt_id );
-		$this->save_series_data_to_feed( $term_id );
-	}
-
-	/**
-	 * Main method for saving or updating Series data.
-	 */
-	public function insert_update_series_meta( $term_id, $tt_id ) {
-		$series_settings = $this->token . '_series_image_settings';
-		$prev_media_id   = get_term_meta( $term_id, $series_settings, true );
-		$media_id        = sanitize_title( $_POST[ $series_settings ] );
-		update_term_meta( $term_id, $series_settings, $media_id, $prev_media_id );
-	}
-
-	/**
-	 * Store the Series Feed title as the Series name
-	 *
-	 * @param $term_id
-	 */
-	public function save_series_data_to_feed( $term_id ) {
-		$term                    = get_term( $term_id );
-		$title_option_name       = 'ss_podcasting_data_title_' . $term_id;
-		$subtitle_option_name    = 'ss_podcasting_data_subtitle_' . $term_id;
-		$description_option_name = 'ss_podcasting_data_description_' . $term_id;
-		if ( ! empty( $term->name ) ) {
-			update_option( $title_option_name, $term->name );
-		}
-		if ( ! empty( $term->description ) ) {
-			update_option( $subtitle_option_name, $term->description );
-			update_option( $description_option_name, $term->description );
-		}
-		if ( ! ssp_is_connected_to_castos() ) {
-			return;
-		}
-		// push the series to Castos as a Podcast
-		$series_data              = $this->castos_handler->get_series_data_for_castos( $term_id );
-		$series_data['series_id'] = $term_id;
-		$this->castos_handler->update_podcast_data( $series_data );
-	}
-
-	/**
-	 * Register columns for series list table
-	 *
-	 * @param  array $columns Default columns
-	 *
-	 * @return array          Modified columns
-	 */
-	public function edit_series_columns( $columns ) {
-
-		unset( $columns['description'] );
-		unset( $columns['posts'] );
-
-		$columns['series_image']    = __( 'Podcast Image', 'seriously-simple-podcasting' );
-		$columns['series_feed_url'] = __( 'Podcast feed URL', 'seriously-simple-podcasting' );
-		$columns['posts']           = __( 'Episodes', 'seriously-simple-podcasting' );
-		$columns = apply_filters( 'ssp_admin_columns_series', $columns );
-
-		return $columns;
-	}
-
-	/**
-	 * Display column data in series list table
-	 *
-	 * @param string $column_data Default column content
-	 * @param string $column_name Name of current column
-	 * @param integer $term_id ID of term
-	 *
-	 * @return string
-	 */
-	public function add_series_columns( $column_data, $column_name, $term_id ) {
-
-		switch ( $column_name ) {
-			case 'series_feed_url':
-				$series   = get_term( $term_id, 'series' );
-				$feed_url = $this->get_series_feed_url( $series );
-
-				$column_data = '<a href="' . esc_attr( $feed_url ) . '" target="_blank">' . esc_html( $feed_url ) . '</a>';
-				break;
-			case 'series_image':
-				$series = get_term( $term_id, 'series' );
-				$source = $this->get_series_image_src( $series );
-				$column_data      = <<<HTML
-<img id="{$series->name}_image_preview" src="{$source}" width="auto" height="auto" style="max-width:50px;" />
-HTML;
-				break;
-		}
-
-		return $column_data;
-	}
-
-	/**
-	 * @since 2.7.3
-	 *
-	 * @param \WP_Term $term
-	 *
-	 * @return string
-	 */
-	public function get_series_feed_url( $term ){
-		$series_slug = $term->slug;
-
-		if ( get_option( 'permalink_structure' ) ) {
-			$feed_slug = apply_filters( 'ssp_feed_slug', $this->token );
-			$feed_url  = $this->home_url . 'feed/' . $feed_slug . '/' . $series_slug;
-		} else {
-			$feed_url = add_query_arg(
-				array(
-					'feed'           => $this->token,
-					'podcast_series' => $series_slug,
-				),
-				$this->home_url
-			);
-		}
-
-		return $feed_url;
-	}
 
 
 	/**
@@ -922,8 +670,11 @@ HTML;
 	public function activate() {
 		// Setup all custom URL rules
 		$this->podcast_post_types_controller->register_post_type();
+		$this->series_controller->register_taxonomy();
 		// Setup feed
 		$this->feed_controller->add_feed();
+		// Setup the Primary Podcast
+		$this->series_controller->enable_default_series();
 		// Setup permalink structure
 		$this->setup_permastruct();
 		// Flush permalinks

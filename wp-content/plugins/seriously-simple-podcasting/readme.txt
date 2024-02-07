@@ -1,10 +1,10 @@
 === Seriously Simple Podcasting ===
 Contributors: PodcastMotor, psykro, zahardoc, simondowdles, hlashbrooke, whyisjake
 Tags: podcast, audio, video, vodcast, rss, mp3, mp4, feed, itunes, podcasting, media, stitcher, google play, playlist
-Requires at least: 4.4
-Tested up to: 6.3
-Requires PHP: 5.6
-Stable tag: 2.23.0
+Requires at least: 5.3
+Tested up to: 6.4
+Requires PHP: 7.4
+Stable tag: 3.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -161,13 +161,64 @@ You can find complete user and developer documentation (along with the FAQs) on 
 
 == Changelog ==
 
+= 3.0.1 =
+* 2024-02-07
+* UPDATE SUMMARY: Resolved PHP error in podcast Yoast SEO schema generation
+* [FIX] Resolved PHP error on podcast pages if Yoast SEO plugin is enabled
+
+= 3.0.0 =
+* 2024-02-06
+* UPDATE SUMMARY: Use Default Podcast term as the default feed and other improvements
+* [UPDATE] Use Default Podcast term as the default feed
+* [UPDATE] Show settings banner for Castos users
+* [UPDATE] Made settings placeholders less visible to avoid confusion with values
+* [UPDATE] Removed Second Line theme extension
+* [UPDATE] Improved synchronization with Castos
+* [UPDATE] Added alt text to the player loader image
+* [UPDATE] 404 page for the not existing podcast feeds
+* [UPDATE] Code refactoring
+* [FIX] Fixed lost description formatting in Classic Editor
+* [FIX] Do not use admin email as the default email in feeds
+
+
+= 2.25.3 =
+* 2023-12-01
+* UPDATE SUMMARY: Fixed Seriously Simple Transcripts plugin support
+* [FIX] Fixed a file button, that is used by Seriously Simple Transcripts plugin
+
+= 2.25.2 =
+* 2023-11-18
+* UPDATE SUMMARY: Fixed missing iTunes Field labels
+* [FIX] Fixed missing iTunes Field labels
+
+= 2.25.1 =
+* 2023-11-16
+* [FIX] Castos original filename style fix
+
+= 2.25.0 =
+* 2023-11-16
+* UPDATE SUMMARY: Save and display original Castos file name, V4V improvements, minor enhancements
+* [UPDATE] Save and display original Castos file name
+* [UPDATE] V4V: custom value and key
+* [UPDATE] Added the date formatting filter
+* [UPDATE] Refactoring: moved metabox fields to separate templates
+* [FIX] Feed: fixed <googleplay:description> tag
+
+= 2.24.0 =
+* 2023-10-24
+* UPDATE SUMMARY: Implemented Castos Ads, bug fixes
+* [UPDATE] Implemented Castos Ads
+* [UPDATE] Updated <itunes:explicit> tag on episode level to true or false
+* [FIX] Fixed enclosure not working for some customers from 2.23.0
+* [FIX] Fixed infinite sync attempts for episodes with wrong file ID
+
 = 2.23.0 =
 * 2023-10-02
 * UPDATE SUMMARY: Improved the Castos sync process
 * [UPDATE] Improved the Castos sync process
 * [UPDATE] Settings style improvements
 * [UPDATE] Delete audio file data when the episode is trashed
-* [UPDATE] Updated itunes:explicit tag values
+* [UPDATE] Updated <itunes:explicit> tag values
 * [UPDATE] Code refactoring
 * [FIX] Fixed WP assets conflict on widgets page
 

@@ -2,6 +2,7 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
+use SeriouslySimplePodcasting\Entities\Castos_File_Data;
 use SeriouslySimplePodcasting\Entities\Sync_Status;
 use SeriouslySimplePodcasting\Handlers\Admin_Notifications_Handler;
 use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
@@ -107,6 +108,9 @@ class Podcast_Post_Types_Controller {
 		// Update podcast details to Castos when a post is updated or saved
 		add_action( 'save_post', array( $this, 'sync_episode' ), 20, 2 );
 
+		// Assign default series if no series was specified
+		add_action( 'save_post', array( $this, 'maybe_assign_default_series' ), 20 );
+
 		// Notify Podping if new episode has been published, or if new series is assigned to the episode
 		add_action( 'wp_after_insert_post', array( $this, 'notify_podping' ), 10, 4 );
 		add_action( 'added_term_relationship', array( $this, 'notify_podping_on_series_added' ), 10, 3 );
@@ -143,7 +147,6 @@ class Podcast_Post_Types_Controller {
 	 */
 	public function register_post_type() {
 		$this->cpt_podcast_handler->register_post_type();
-		$this->cpt_podcast_handler->register_taxonomies();
 	}
 
 	/**
@@ -357,6 +360,32 @@ class Podcast_Post_Types_Controller {
 	}
 
 	/**
+	 * @param int $post_id
+	 *
+	 * @return void
+	 */
+	public function maybe_assign_default_series( $post_id ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		$post = get_post( $post_id );
+		if ( ! in_array( $post->post_type, ssp_post_types() ) ) {
+			return;
+		} elseif ( $post->post_type != SSP_CPT_PODCAST ) {
+			// If it's a not a podcast post, make sure it has the enclosure file.
+			if ( ! $this->episode_repository->get_enclosure( $post_id ) ) {
+				return;
+			}
+		}
+
+		$series_id = ssp_get_episode_series_id( $post_id, 0 );
+		if ( ! $series_id ) {
+			$default_series_id = ssp_get_default_series_id();
+			wp_set_object_terms( $post_id, array( $default_series_id ), ssp_series_taxonomy() );
+		}
+	}
+
+	/**
 	 * Save episode meta box content
 	 *
 	 * @param integer $post_id ID of post
@@ -462,7 +491,7 @@ class Podcast_Post_Types_Controller {
 	 * @return bool
 	 */
 	public function save_podcast_action_check( $post ){
-		$podcast_post_types = ssp_post_types( true );
+		$podcast_post_types = ssp_post_types();
 
 		// Post type check
 		if (  ( 'trash' === $post->post_status ) || ! in_array( $post->post_type, $podcast_post_types ) ) {
@@ -529,8 +558,6 @@ class Podcast_Post_Types_Controller {
 	 * @param \WP_Post $post
 	 *
 	 * @return void
-	 *
-	 * Todo: use renderer for all the fields
 	 */
 	public function meta_box_content( $post ) {
 
@@ -546,7 +573,7 @@ class Podcast_Post_Types_Controller {
 			$renderer = ssp_renderer();
 
 			foreach ( $field_data as $k => $v ) {
-				$data  = $v['default'];
+				$data  = isset( $v['default'] ) ? $v['default'] : '';
 				$saved = get_post_meta( $post_id, $k, true );
 				if ( $saved ) {
 					$data = $saved;
@@ -557,57 +584,35 @@ class Podcast_Post_Types_Controller {
 					$class = $v['class'];
 				}
 
-				$disabled = false;
-				if ( isset( $v['disabled'] ) && $v['disabled'] ) {
-					$disabled = true;
-				}
-
 				switch ( $v['type'] ) {
 					case 'sync_status':
-						$status = $this->episode_repository->get_episode_sync_status( $post_id );
+						try {
+							$status = $this->episode_repository->get_episode_sync_status( $post_id );
+						} catch ( \Exception $e ) {
+							$status = Sync_Status::SYNC_STATUS_NONE;
+						}
 						$html .= $renderer->fetch( 'metafields/sync-status', compact( 'status' ) );
 						break;
 
 					case 'file':
-						$upload_button = '<input type="button" class="button" id="upload_' . esc_attr( $k ) . '_button" value="' . __( 'Upload File', 'seriously-simple-podcasting' ) . '" data-uploader_title="' . __( 'Choose a file', 'seriously-simple-podcasting' ) . '" data-uploader_button_text="' . __( 'Insert podcast file', 'seriously-simple-podcasting' ) . '" />';
-
-						$html .= '<p><label class="ssp-episode-details-label" for="' . esc_attr( $k ) . '">' .
-						         wp_kses_post( $v['name'] ) . '</label></p>';
-
-						$html .= '<p><input name="' . esc_attr( $k ) . '" type="text" id="upload_' . esc_attr( $k ) . '" value="' . esc_attr( $data ) . '" />
-									' . $upload_button . '
-									<br/>
-									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/file', compact( 'k', 'v', 'data' ) );
 						break;
+
 					case 'episode_file':
-						$upload_button = '<input type="button" class="button" id="upload_' . esc_attr( $k ) . '_button" value="' . __( 'Upload File', 'seriously-simple-podcasting' ) . '" data-uploader_title="' . __( 'Choose a file', 'seriously-simple-podcasting' ) . '" data-uploader_button_text="' . __( 'Insert podcast file', 'seriously-simple-podcasting' ) . '" />';
-						if ( ssp_is_connected_to_castos() ) {
-							$upload_button = '<div id="ssp_upload_container" style="display: inline;">';
-							$upload_button .= '  <button class="button" id="ssp_select_file" href="javascript:">Select file</button>';
-							$upload_button .= '</div>';
-						}
-
-						$html .= '<p>
-									<label class="ssp-episode-details-label" for="' . esc_attr( $k ) . '">' . wp_kses_post( $v['name'] ) . '</label>';
-
-						if ( ssp_is_connected_to_castos() ) {
-							$html .= '<div id="ssp_upload_notification">' . __( 'An error has occurred with the file upload functionality. Please check your site for any plugin or theme conflicts.', 'seriously-simple-podcasting' ) . '</div>';
-						}
-
-						$html .= '<input name="' . esc_attr( $k ) . '" type="text" id="upload_' . esc_attr( $k ) . '" value="' . esc_attr( $data ) . '" />
-									' . $upload_button . '
-									<br/>
-									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$is_castos = ssp_is_connected_to_castos();
+						$file_data = new Castos_File_Data(
+							json_decode( get_post_meta( $post_id, 'castos_file_data', true ), true )
+						);
+						$html .= $renderer->fetch(
+							'metafields/episode_file',
+							compact( 'k', 'v', 'data', 'is_castos', 'file_data' )
+						);
 						break;
 
 					case 'image':
 						$label = $v['name'];
 						$description = $v['description'];
-
 						$html .= $renderer->fetch( 'metafields/image', compact( 'label', 'description', 'data', 'k' ) );
-
 						break;
 
 					case 'checkbox':
@@ -615,76 +620,31 @@ class Podcast_Post_Types_Controller {
 						break;
 
 					case 'radio':
-						$html .= '<p>
-									<span class="ssp-episode-details-label">' . wp_kses_post( $v['name'] ) . '</span><br/>';
-						foreach ( $v['options'] as $option => $label ) {
-							$html .= '<input style="vertical-align: bottom;" name="' . esc_attr( $k ) . '" type="radio" class="' . esc_attr( $class ) . '" id="' . esc_attr( $k ) . '_' . esc_attr( $option ) . '" ' . checked( $option, $data, false ) . ' value="' . esc_attr( $option ) . '" />
-										<label style="margin-right:10px;" for="' . esc_attr( $k ) . '_' . esc_attr( $option ) . '">' . esc_html( $label ) . '</label>' . "\n";
-						}
-						$html .= '<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/radio', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					case 'select':
-						$html .= '<p>
-									<span class="ssp-episode-details-label">' . wp_kses_post( $v['name'] ) . '</span><br/>';
-						$html .= '<select name="' . esc_attr( $k ) . '" class="' . esc_attr( $class ) . '" id="' . esc_attr( $k ) . '_' . esc_attr( $option ) . '">';
-						foreach ( $v['options'] as $option => $label ) {
-							$html .= '<option ' . selected( $option, $data, false ) . ' value="' . esc_attr( $option ) . '">' . esc_attr( $label ) . '</option>';
-						}
-						$html .= '</select>';
-						$html .= '<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/select', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					case 'datepicker':
-						$display_date = '';
-						if ( $data ) {
-							$display_date = date( 'j F, Y', strtotime( $data ) );
-						}
-						$html .= '<p class="hasDatepicker">
-									<label class="ssp-episode-details-label" for="' . esc_attr( $k ) . '_display">' . wp_kses_post( $v['name'] ) . '</label>
-									<br/>
-									<input type="text" id="' . esc_attr( $k ) . '_display" class="ssp-datepicker ' . esc_attr( $class ) . '" value="' . esc_attr( $display_date ) . '" />
-									<input name="' . esc_attr( $k ) . '" id="' . esc_attr( $k ) . '" type="hidden" value="' . esc_attr( $data ) . '" />
-									<br/>
-									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/datepicker', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					case 'textarea':
-						ob_start();
-						echo '<p><label class="ssp-episode-details-label" for="' . esc_attr( $k ) . '">' . wp_kses_post( $v['name'] ) . '</label><br/>';
-						wp_editor( $data, $k, array( 'editor_class' => esc_attr( $class ) ) );
-						echo '<br/><span class="description">' . wp_kses_post( $v['description'] ) . '</span></p>' . "\n";
-						$html .= ob_get_clean();
-
+						$html .= $renderer->fetch( 'metafields/textarea', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					case 'hidden':
-						$html .= '<p>
-									<input name="' . esc_attr( $k ) . '" type="hidden" id="' . esc_attr( $k ) . '" value="' . esc_attr( $data ) . '" />
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/hidden', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					case 'number':
-						$html .= '<p>
-									<label class="ssp-episode-details-label" for="' . esc_attr( $k ) . '">' . wp_kses_post( $v['name'] ) . '</label>
-									<br/>
-									<input name="' . esc_attr( $k ) . '" type="number" min="0" id="' . esc_attr( $k ) . '" class="' . esc_attr( $class ) . '" value="' . esc_attr( $data ) . '" />
-									<br/>
-									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/number', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 
 					default:
-						$html .= '<p>
-									<label class="ssp-episode-details-label" for="' . esc_attr( $k ) . '">' . wp_kses_post( $v['name'] ) . '</label>
-									<br/>
-									<input name="' . esc_attr( $k ) . '" type="text" id="' . esc_attr( $k ) . '" class="' . esc_attr( $class ) . '" value="' . esc_attr( $data ) . '" />
-									<br/>
-									<span class="description">' . wp_kses_post( $v['description'] ) . '</span>
-								</p>' . "\n";
+						$html .= $renderer->fetch( 'metafields/text', compact( 'k', 'v', 'class', 'data' ) );
 						break;
 				}
 
@@ -721,17 +681,14 @@ class Podcast_Post_Types_Controller {
 		}
 
 		/**
-		 * Don't trigger this when the post is trashed
-		 */
-		if ( 'trash' === $post->post_status ) {
-			return;
-		}
-
-		/**
 		 * Only trigger this if the post is published or scheduled
 		 */
 		$disallowed_statuses = array( 'draft', 'pending', 'private', 'trash', 'auto-draft' );
 		if ( in_array( $post->post_status, $disallowed_statuses, true ) ) {
+			return;
+		}
+
+		if ( empty( $post->ID ) || empty( $post->post_title ) ) {
 			return;
 		}
 
@@ -759,8 +716,11 @@ class Podcast_Post_Types_Controller {
 			$this->episode_repository->update_episode_sync_status( $post->ID, Sync_Status::SYNC_STATUS_SYNCED );
 			$this->episode_repository->delete_sync_error( $post->ID );
 		} else {
-			// schedule uploading with a cronjob
-			update_post_meta( $id, 'podmotor_schedule_upload', true );
+			// Schedule uploading with a cronjob.1
+			// If it's 404, something wrong with the file ID. We don't try to reupload it since result will be the same.
+			if ( 404 != $response['code'] ) {
+				update_post_meta( $id, 'podmotor_schedule_upload', true );
+			}
 			$this->admin_notices_handler->add_predefined_flash_notice(
 				Admin_Notifications_Handler::NOTICE_API_EPISODE_ERROR
 			);

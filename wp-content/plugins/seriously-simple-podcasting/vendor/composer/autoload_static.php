@@ -4,10 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit37fa4ef78a71f336467a25d99834a016
+class ComposerStaticInit218361125a0f52104854c7b4c9b007d1
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'SeriouslySimplePodcasting\\Controllers\\Ads_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-ads-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\App_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-app-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Assets_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-assets-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-controller.php',
@@ -22,12 +23,16 @@ class ComposerStaticInit37fa4ef78a71f336467a25d99834a016
         'SeriouslySimplePodcasting\\Controllers\\Podcast_Post_Types_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-podcast-post-types-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Review_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-review-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Schema_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-schema-controller.php',
+        'SeriouslySimplePodcasting\\Controllers\\Series_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-series-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Settings_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-settings-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Shortcodes_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-shortcodes-controller.php',
         'SeriouslySimplePodcasting\\Controllers\\Widgets_Controller' => __DIR__ . '/../..' . '/php/classes/controllers/class-widgets-controller.php',
         'SeriouslySimplePodcasting\\Entities\\API_File_Data' => __DIR__ . '/../..' . '/php/classes/entities/class-api-file-data.php',
+        'SeriouslySimplePodcasting\\Entities\\API_Podcast' => __DIR__ . '/../..' . '/php/classes/entities/class-api-podcast.php',
         'SeriouslySimplePodcasting\\Entities\\Abstract_API_Entity' => __DIR__ . '/../..' . '/php/classes/entities/class-abstract-api-entity.php',
         'SeriouslySimplePodcasting\\Entities\\Abstract_Entity' => __DIR__ . '/../..' . '/php/classes/entities/class-abstract-entity.php',
+        'SeriouslySimplePodcasting\\Entities\\Castos_File_Data' => __DIR__ . '/../..' . '/php/classes/entities/class-castos-file-data.php',
+        'SeriouslySimplePodcasting\\Entities\\Episode_File_Data' => __DIR__ . '/../..' . '/php/classes/entities/class-episode-file-data.php',
         'SeriouslySimplePodcasting\\Entities\\Failed_Sync_Episode' => __DIR__ . '/../..' . '/php/classes/entities/class-failed-sync-episode.php',
         'SeriouslySimplePodcasting\\Entities\\Sync_Status' => __DIR__ . '/../..' . '/php/classes/entities/class-sync-status.php',
         'SeriouslySimplePodcasting\\Handlers\\Admin_Notifications_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-admin-notifications-handler.php',
@@ -41,6 +46,7 @@ class ComposerStaticInit37fa4ef78a71f336467a25d99834a016
         'SeriouslySimplePodcasting\\Handlers\\RSS_Import_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-rss-import-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Roles_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-roles-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Series_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-series-handler.php',
+        'SeriouslySimplePodcasting\\Handlers\\Series_Walker' => __DIR__ . '/../..' . '/php/classes/handlers/class-series-walker.php',
         'SeriouslySimplePodcasting\\Handlers\\Settings_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-settings-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\UUID_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-uuid-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Upgrade_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-upgrade-handler.php',
@@ -61,10 +67,12 @@ class ComposerStaticInit37fa4ef78a71f336467a25d99834a016
         'SeriouslySimplePodcasting\\Integrations\\Woocommerce\\WC_Memberships_Integrator' => __DIR__ . '/../..' . '/php/classes/integrations/woocommerce/class-wc-memberships-integrator.php',
         'SeriouslySimplePodcasting\\Integrations\\Yoast\\Schema\\PodcastEpisode' => __DIR__ . '/../..' . '/php/classes/integrations/yoast/schema/class-podcast-episode.php',
         'SeriouslySimplePodcasting\\Integrations\\Yoast\\Schema\\PodcastSeries' => __DIR__ . '/../..' . '/php/classes/integrations/yoast/schema/class-podcast-series.php',
-        'SeriouslySimplePodcasting\\Interfaces\\Service' => __DIR__ . '/../..' . '/php/classes/interfaces/interface-handler.php',
+        'SeriouslySimplePodcasting\\Interfaces\\Service' => __DIR__ . '/../..' . '/php/classes/interfaces/interface-service.php',
+        'SeriouslySimplePodcasting\\Interfaces\\Singleton' => __DIR__ . '/../..' . '/php/classes/interfaces/interface-singleton.php',
         'SeriouslySimplePodcasting\\Renderers\\Renderer' => __DIR__ . '/../..' . '/php/classes/renderers/class-renderer.php',
         'SeriouslySimplePodcasting\\Renderers\\Settings_Renderer' => __DIR__ . '/../..' . '/php/classes/renderers/class-settings-renderer.php',
         'SeriouslySimplePodcasting\\Repositories\\Episode_Repository' => __DIR__ . '/../..' . '/php/classes/repositories/class-episode-repository.php',
+        'SeriouslySimplePodcasting\\Repositories\\Series_Repository' => __DIR__ . '/../..' . '/php/classes/repositories/class-series-repository.php',
         'SeriouslySimplePodcasting\\Rest\\Episodes_Rest_Controller' => __DIR__ . '/../..' . '/php/classes/rest/class-episodes-rest-controller.php',
         'SeriouslySimplePodcasting\\Rest\\Rest_Api_Controller' => __DIR__ . '/../..' . '/php/classes/rest/class-rest-api-controller.php',
         'SeriouslySimplePodcasting\\ShortCodes\\Player' => __DIR__ . '/../..' . '/php/classes/shortcodes/class-player.php',
@@ -86,7 +94,7 @@ class ComposerStaticInit37fa4ef78a71f336467a25d99834a016
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit37fa4ef78a71f336467a25d99834a016::$classMap;
+            $loader->classMap = ComposerStaticInit218361125a0f52104854c7b4c9b007d1::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -69,7 +69,6 @@ class Castos_Blocks {
 
 		if ( ! file_exists( SSP_PLUGIN_PATH . 'build/index.asset.php' ) ) {
 			if ( is_admin() ) {
-				$this->admin_notices_handler = new Admin_Notifications_Handler( SSP_CPT_PODCAST );
 				add_action( 'admin_notices', array( $this->admin_notices_handler, 'blocks_error_notice' ) );
 			}
 
@@ -94,7 +93,7 @@ class Castos_Blocks {
 
 		$query_args = array(
 			'post_type'      => ssp_post_types(),
-			'podcast_id'     => intval( $attributes['selectedPodcast'] ),
+			'podcast_id'     => ( '' === $attributes['selectedPodcast'] ) ? -1 : intval( $attributes['selectedPodcast'] ),
 			'posts_per_page' => intval( $attributes['postsPerPage'] ?: get_option( 'posts_per_page', 10 ) ),
 			'paged'          => $paged,
 			'orderby'        => in_array( $attributes['orderBy'], $allowed_order_by ) ? $attributes['orderBy'] : 'date',
@@ -155,8 +154,13 @@ class Castos_Blocks {
 
 		$query_args = wp_parse_args( $args, $defaults );
 
+		// Fix for the new Default Series, now 0 becomes default series ID
+		if ( ! $query_args['podcast_id'] ) {
+			$query_args['podcast_id'] = ssp_get_default_series_id();
+		}
+
 		// -1 stands for all episodes ( option "-- All --" )
-		if ( - 1 !== $query_args['podcast_id'] ) {
+		if ( - 1 != $query_args['podcast_id'] ) {
 			$tax_query = array(
 				'taxonomy' => ssp_series_taxonomy(),
 			);
@@ -298,6 +302,8 @@ class Castos_Blocks {
 			}
 		} );
 
+		$default_series_id = ssp_get_default_series_id();
+
 		register_block_type(
 			'seriously-simple-podcasting/podcast-list',
 			array(
@@ -353,21 +359,24 @@ class Castos_Blocks {
 									'label' => __( '-- All --', 'seriously-simple-podcasting' ),
 									'value' => - 1,
 								),
-								array(
-									'label' => __( 'Default', 'seriously-simple-podcasting' ),
-									'value' => 0,
-								),
 							),
-							array_map( function ( $item ) {
+							array_map( function ( $item ) use ( $default_series_id ) {
+								$label = $default_series_id === $item->term_id ?
+									     ssp_get_default_series_name( $item->name ) :
+									     $item->name;
 								return array(
-									'label' => $item->name,
+									'label' => $label,
 									'value' => $item->term_id,
 								);
 							}, ssp_get_podcasts() ) ),
 					),
 					'selectedPodcast' => array(
 						'type'    => 'string',
-						'default' => '',
+						'default' => '-1',
+					),
+					'defaultPodcastId' => array(
+						'type'    => 'string',
+						'default' => $default_series_id,
 					),
 					// Use string everywhere instead of number because of the WP bug.
 					// It doesn't show the saved value in the admin after page refresh.

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Feed Controller Class
  *
- * @author      Jonathan Bossenger, Sergey Zakharchenko
+ * @author      Jonathan Bossenger, Serhiy Zakharchenko
  * @category    Class
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       1.20.7
@@ -40,11 +40,11 @@ class Feed_Controller {
 	 * */
 	protected $renderer;
 
-
 	/**
 	 * Admin_Controller constructor.
 	 *
 	 * @param Feed_Handler $feed_handler
+	 * @param Renderer $renderer
 	 */
 	public function __construct( $feed_handler, $renderer ) {
 		$this->init_useful_variables();
@@ -146,15 +146,27 @@ class Feed_Controller {
 	 *
 	 * @return string
 	 */
-	public function get_podcast_feed() {
+	public function get_podcast_feed( $series_id = null ) {
 
 		do_action( 'ssp_before_feed' );
 
 		$this->feed_handler->suppress_errors();
 
-		$podcast_series = $this->feed_handler->get_podcast_series();
+		if ( $series_id ) {
+			$term = get_term_by( 'id', $series_id, ssp_series_taxonomy() );
+			$series_slug = $term->slug;
+		} else {
+			$series_slug = $this->feed_handler->get_series_slug();
+			$series_id = $this->feed_handler->get_series_id( $series_slug );
+		}
 
-		$series_id = $this->feed_handler->get_series_id( $podcast_series );
+		if ( ! $series_slug ) {
+			$this->feed_handler->redirect_default_feed();
+		}
+
+		if ( ! $series_id ) {
+			$this->feed_handler->render_feed_404();
+		}
 
 		$this->feed_handler->maybe_redirect_to_the_new_feed( $series_id );
 
@@ -212,15 +224,15 @@ class Feed_Controller {
 
 		$podcast_value = $this->feed_handler->get_podcast_value( $series_id );
 
-		$guid = $this->feed_handler->get_guid( $podcast_series );
+		$guid = $this->feed_handler->get_guid( $series_slug );
 
 		$pub_date_type = $this->feed_handler->get_pub_date_type( $series_id );
 
 		$stylesheet_url = $this->feed_handler->get_stylesheet_url();
 
-		$qry = $this->feed_handler->get_feed_query( $podcast_series, $exclude_series, $pub_date_type );
+		$qry = $this->feed_handler->get_feed_query( $series_slug, $exclude_series, $pub_date_type );
 
-		$feed_link = $this->feed_handler->get_feed_link( $podcast_series );
+		$feed_link = $this->feed_handler->get_feed_link( $series_slug );
 
 		$home_url = $this->home_url;
 
@@ -298,10 +310,10 @@ class Feed_Controller {
 		$ep_explicit   = $this->feed_handler->get_feed_item_explicit_flag( $post_id );
 
 		if ( $ep_explicit && $ep_explicit == 'on' ) {
-			$itunes_explicit_flag     = 'yes';
+			$itunes_explicit_flag     = 'true';
 			$googleplay_explicit_flag = 'Yes';
 		} else {
-			$itunes_explicit_flag     = 'clean';
+			$itunes_explicit_flag     = 'false';
 			$googleplay_explicit_flag = 'No';
 		}
 

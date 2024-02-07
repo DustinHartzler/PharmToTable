@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @author Sergey Zakharchenko
+ * @author Serhiy Zakharchenko
  * @package SeriouslySimplePodcasting
  * */
 class Settings_Renderer implements Service {
@@ -44,7 +44,7 @@ class Settings_Renderer implements Service {
 	 *
 	 * @return string
 	 * @since 2.9.3 Moved this function from the settings_controller.
-	 * @since 2.15.0 Splitted into multiple render functions
+	 * @since 2.15.0 Split into multiple render functions
 	 */
 	public function render_field( $field, $data, $option_name, $default_option_name = '' ) {
 
@@ -551,9 +551,16 @@ class Settings_Renderer implements Service {
 	 */
 	protected function render_feed_link() {
 		// Set feed URL based on site's permalink structure
-		$url = ssp_get_feed_url();
+		$links = '';
+		$default_podcast_id = ssp_get_default_series_id();
+		foreach ( ssp_get_podcasts() as $podcast ) {
+			$url   = ssp_get_feed_url( $podcast->slug );
+			$link = '<a href="' . esc_url( $url ) . '" target="_blank">' . $url . '</a>' . '<br />';
+			$name = ( $podcast->term_id === $default_podcast_id ) ? ssp_get_default_series_name( $podcast->name ) : $podcast->name;
+			$links .= sprintf(__('%1$s: %2$s', 'seriously-simple-podcasting'), $name, $link );
+		}
 
-		return '<a href="' . esc_url( $url ) . '" target="_blank">' . $url . '</a>';
+		return $links;
 	}
 
 	protected function render_feed_link_series() {

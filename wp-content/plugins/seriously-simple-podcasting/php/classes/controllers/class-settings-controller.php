@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Handles plugin settings page
  *
- * @author      Hugh Lashbrooke, Sergey Zakharchenko
+ * @author      Hugh Lashbrooke, Serhiy Zakharchenko
  * @category    Class
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       2.0
@@ -119,9 +119,6 @@ class Settings_Controller {
 
 		//Todo: Can we use pre_update_option_ss_podcasting_data_title action instead?
 		add_action( 'admin_init', array( $this, 'maybe_feed_saved' ), 11 );
-
-		// Exclude series feed from the default feed
-		add_action( 'create_series', array( $this, 'exclude_feed_from_default' ) );
 
 		// Register podcast settings.
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -258,16 +255,6 @@ class Settings_Controller {
 	 */
 	public function maybe_feed_saved() {
 		$this->series_handler->maybe_save_series();
-	}
-
-	/**
-	 * Adding it here, and not via default settings for the backward compatibility.
-	 * So if users have their old series included in the default feed, it should not affect them.
-	 * */
-	public function exclude_feed_from_default( $term_id ) {
-		$option_name = 'ss_podcasting_exclude_feed_' . $term_id;
-
-		update_option( $option_name, 'on' );
 	}
 
 	/**
@@ -585,35 +572,16 @@ class Settings_Controller {
 	 */
 	public function display_field( $args ) {
 
-		$field = $args['field'];
+		$field         = $args['field'];
+		$option_name   = $default_option_name = $this->settings_base . $field['id'];
+		$is_feed_field = isset( $args['feed-series'] ) && $args['feed-series'];
 
-		$option_name = $this->settings_base . $field['id'];
-
-		$default = isset( $field['default'] ) ? $field['default'] : '';
-
-		$default_option_name = $option_name;
-
-		// Get option value
-		$data = get_option( $option_name, $default );
-
-		// Get specific series data if applicable
-		// Todo: use ssp_field_data filter instead
-		if ( isset( $args['feed-series'] ) && $args['feed-series'] ) {
-
-			// Set placeholder to default feed option with specified default fallback
-			if ( $data ) {
-				$field['placeholder'] = $data;
-
-				if ( in_array( $field['type'], array( 'checkbox', 'select', 'image' ), true ) ) {
-					$default = $data;
-				}
-			}
-
-			// Append series ID to option name
-			$option_name .= '_' . $args['feed-series'];
-
-			// Get series-specific option
-			$data = get_option( $option_name, $default );
+		if ( $is_feed_field ) {
+			$series_id   = $args['feed-series'];
+			$option_name .= '_' . $series_id;
+			$data = $this->settings_handler->get_feed_option( $field, $series_id );
+		} else {
+			$data = get_option( $option_name, isset( $field['default'] ) ? $field['default'] : '' );
 		}
 
 		$data = apply_filters( 'ssp_field_data', $data, $args );
@@ -731,8 +699,12 @@ class Settings_Controller {
 					$tab_link = remove_query_arg( 'settings-updated', $tab_link );
 				}
 
-				if ( isset( $_GET['feed-series'] ) ) {
-					$tab_link = remove_query_arg( 'feed-series', $tab_link );
+				if ( 'feed-details' === $section ) {
+					$default_series_id = ssp_get_default_series_id();
+					$default_series    = get_term_by( 'id', $default_series_id, ssp_series_taxonomy() );
+					$tab_link          = add_query_arg( 'feed-series', $default_series->slug, $tab_link );
+				} else {
+					$tab_link          = remove_query_arg( 'feed-series', $tab_link );
 				}
 
 				$title = isset( $data['tab_title'] ) ? $data['tab_title'] : $data['title'];
@@ -869,33 +841,33 @@ class Settings_Controller {
 
 		$html = '';
 
-		// Series submenu for feed details
-		$series = get_terms( 'series', array( 'hide_empty' => false ) );
+		$series = $this->series_handler->get_feed_details_series();
 
 		if ( empty( $series ) ) {
 			return $html;
 		}
 
 		$current_series = $this->get_current_series();
-		$series_class   = 'default' === $current_series ? 'current' : '';
 
 		$html .= '<div class="feed-series-list-container">' . "\n";
 		$html .= '<span id="feed-series-toggle" class="series-open" title="' . __( 'Toggle series list display', 'seriously-simple-podcasting' ) . '"></span>' . "\n";
 
 		$html .= '<ul id="feed-series-list" class="subsubsub series-open">' . "\n";
-		$html .= '<li><a href="' . add_query_arg( array(
-				'feed-series'      => 'default',
-				'settings-updated' => false
-			) ) . '" class="' . $series_class . '">' . __( 'Default feed', 'seriously-simple-podcasting' ) . '</a></li>';
 
-		foreach ( $series as $s ) {
+		foreach ( $series as $k => $s ) {
 			$series_class = $current_series === $s->slug ? 'current' : '';
 
 			$html .= '<li>' . "\n";
-			$html .= ' | <a href="' . esc_url( add_query_arg( array(
+			if( 0 !== $k ){
+				$html .= ' | ';
+			}
+
+			$name = 0 === $k ? $this->series_handler->default_series_name( $s->name ) : $s->name;
+
+			$html .= '<a href="' . esc_url( add_query_arg( array(
 					'feed-series'      => $s->slug,
 					'settings-updated' => false
-				) ) ) . '" class="' . $series_class . '">' . $s->name . '</a>' . "\n";
+				) ) ) . '" class="' . $series_class . '">' . $name . '</a>' . "\n";
 			$html .= '</li>' . "\n";
 		}
 
@@ -973,13 +945,18 @@ class Settings_Controller {
 		return null;
 	}
 
-
+	/**
+	 * @return string
+	 */
 	public function render_seriously_simple_sidebar() {
 		$image_dir = $this->assets_url . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR;
-		ob_start();
-		include $this->template_path . DIRECTORY_SEPARATOR . 'settings-sidebar.php';
+		$link      = 'https://castos.com/1ksubs?utm_source=WordPress&utm_medium=Settings&utm_campaign=Banner';
+		$is_connected = ssp_is_connected_to_castos();
+		$img = $is_connected ?
+			'<a href="' . $link . '" target="_blank"><img src="' . $image_dir . 'castos-connected-banner.jpg"></a>' :
+			'<img src="' . $image_dir . 'castos-plugin-settings-banner.jpg">';
 
-		return ob_get_clean();
+		return $this->renderer->fetch( 'settings-sidebar', compact( 'img', 'is_connected' ) );
 	}
 
 	public function render_seriously_simple_extensions() {
@@ -1067,14 +1044,6 @@ class Settings_Controller {
 				),
 				'thickbox'    => true,
 				'description' => __( 'The Genesis compatibility add-on for Seriously Simple Podcasting gives you full support for the Genesis theme framework. It adds support to the podcast post type for the features that Genesis requires. If you are using Genesis and Seriously Simple Podcasting together then this plugin will make your website look and work much more smoothly.', 'seriously-simple-podcasting' ),
-			),
-			'second-line'          => array(
-				'title'       => __( 'Second Line Themes', 'seriously-simple-podcasting' ),
-				'image'       => $image_dir . 'second-line-themes.png',
-				'url'         => 'https://secondlinethemes.com/?utm_source=ssp-settings',
-				'description' => __( 'Looking for a dedicated podcast theme to use with Seriously Simple Podcasting? Check out SecondLineThemes!', 'seriously-simple-podcasting' ),
-				'new_window'  => true,
-				'button_text' => __( 'Get Second Line Themes', 'seriously-simple-podcasting' ),
 			),
 			'paid-memberships-pro' => array(
 				'title'       => __( 'Paid Memberships Pro', 'seriously-simple-podcasting' ),

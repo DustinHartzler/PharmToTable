@@ -3,6 +3,7 @@
 namespace SeriouslySimplePodcasting\Rest;
 
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
+use SeriouslySimplePodcasting\Handlers\Series_Handler;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 
 /**
@@ -18,6 +19,11 @@ class Rest_Api_Controller {
 	 * @var Episode_Repository $episode_repository
 	 * */
 	protected $episode_repository;
+
+	/**
+	 * @var Series_Handler
+	 * */
+	protected $series_handler;
 
 	/**
 	 * Gets the default podcast data
@@ -36,7 +42,7 @@ class Rest_Api_Controller {
 		$podcast['subtitle']        = get_option( 'ss_podcasting_data_subtitle', get_bloginfo( 'description' ) );
 		$podcast['author']          = get_option( 'ss_podcasting_data_author', get_bloginfo( 'name' ) );
 		$podcast['owner_name']      = get_option( 'ss_podcasting_data_owner_name', get_bloginfo( 'name' ) );
-		$podcast['owner_email']     = get_option( 'ss_podcasting_data_owner_email', get_bloginfo( 'admin_email' ) );
+		$podcast['owner_email']     = get_option( 'ss_podcasting_data_owner_email', '' );
 		$podcast['explicit_option'] = get_option( 'ss_podcasting_explicit', '' );
 		$podcast['complete_option'] = get_option( 'ss_podcasting_complete', '' );
 		$podcast['image']           = get_option( 'ss_podcasting_data_image', '' );
@@ -44,6 +50,7 @@ class Rest_Api_Controller {
 		$podcast['category2']       = ssp_get_feed_category_output( 2, $series_id );
 		$podcast['category3']       = ssp_get_feed_category_output( 3, $series_id );
 		$podcast['guid']            = get_option( 'ss_podcasting_data_guid', '' );
+		$podcast['ads_enabled']     = 'on' === ssp_get_option( 'enable_ads', 'off' );
 
 		return $podcast;
 	}
@@ -53,9 +60,10 @@ class Rest_Api_Controller {
 	 *
 	 * @param Episode_Repository $episode_repository
 	 */
-	public function __construct( $episode_repository ) {
+	public function __construct( $episode_repository, $series_handler ) {
 
 		$this->episode_repository = $episode_repository;
+		$this->series_handler = $series_handler;
 
 
 		// Register custom REST API routes.
@@ -77,11 +85,45 @@ class Rest_Api_Controller {
 
 		add_filter( 'rest_post_dispatch', array( $this, 'maybe_add_ssp_version' ), 10, 3 );
 
+		add_action( 'rest_prepare_' . SSP_CPT_PODCAST, array( $this, 'default_series_response' ) );
+
 		$post_types = ssp_post_types( true, false );
 		foreach ( $post_types as $post_type ) {
 			add_filter( 'rest_prepare_' . $post_type, array( $this, 'rest_prepare_excerpt' ), 10, 3 );
 		}
 
+		$series_taxonomy = ssp_series_taxonomy();
+
+		add_filter( "rest_prepare_{$series_taxonomy}", array( $this, 'change_default_series_title' ), 10, 2 );
+	}
+
+	/**
+	 *
+	 * @param \WP_REST_Response $response
+	 * @param \WP_Term $item
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function change_default_series_title( $response, $item ) {
+		if ( ssp_get_default_series_id() === $item->term_id ) {
+			$item->name             = $this->series_handler->default_series_name( $item->name );
+			$response->data['name'] = $item->name;
+		}
+
+		return $response;
+	}
+
+	/**
+	 * @param \WP_REST_Response $response
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function default_series_response( $response ) {
+		if ( empty( $response->data['series'] ) ) {
+			$response->data['series'][] = ssp_get_default_series_id();
+		}
+
+		return $response;
 	}
 
 	/**
@@ -181,6 +223,7 @@ class Rest_Api_Controller {
 
 	/**
 	 * Updates a podcast after a Castos import
+	 * @deprecated
 	 *
 	 * @return array
 	 */
@@ -478,12 +521,11 @@ class Rest_Api_Controller {
 	public function get_episode_player_data( $object, $field_name, $request ) {
 		if ( ! empty( $object['id'] ) ) {
 			$options_handler    = new Options_Handler();
-			$episode_repository = new Episode_Repository();
 			$episode_id         = $object['id'];
 			$player_data        = array(
 				'playerMode'    => get_option( 'ss_podcasting_player_mode', 'dark' ),
 				'subscribeUrls' => $options_handler->get_subscribe_urls( $episode_id, 'rest_api' ),
-				'rssFeedUrl'    => $episode_repository->get_feed_url( $episode_id ),
+				'rssFeedUrl'    => $this->episode_repository->get_feed_url( $episode_id ),
 				'embedCode'     => preg_replace( '/(\r?\n){2,}/', '\n\n', get_post_embed_html( 500, 350, $episode_id ) ),
 			);
 

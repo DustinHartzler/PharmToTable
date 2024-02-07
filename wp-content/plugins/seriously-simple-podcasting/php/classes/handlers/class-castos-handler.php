@@ -2,8 +2,12 @@
 
 namespace SeriouslySimplePodcasting\Handlers;
 
+
+use Exception;
 use SeriouslySimplePodcasting\Entities\API_File_Data;
+use SeriouslySimplePodcasting\Entities\API_Podcast;
 use SeriouslySimplePodcasting\Entities\Sync_Status;
+use SeriouslySimplePodcasting\Entities\Episode_File_Data;
 use SeriouslySimplePodcasting\Helpers\Log_Helper;
 use SeriouslySimplePodcasting\Interfaces\Service;
 
@@ -62,11 +66,23 @@ class Castos_Handler implements Service {
 
 	/**
 	 * Castos_Handler constructor.
+	 *
+	 * @param Feed_Handler $feed_handler
+	 * @param Log_Helper $log_helper
 	 */
-	public function __construct() {
-		$this->feed_handler = new Feed_Handler();
-		$this->logger       = new Log_Helper();
-		$this->api_token    = get_option( 'ss_podcasting_podmotor_account_api_token', '' );
+	public function __construct( $feed_handler, $log_helper ) {
+		$this->feed_handler = $feed_handler;
+		$this->logger       = $log_helper;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function api_token(){
+		if ( ! isset( $this->api_token ) ) {
+			$this->api_token = get_option( 'ss_podcasting_podmotor_account_api_token', '' );
+		}
+		return $this->api_token;
 	}
 
 	/**
@@ -180,7 +196,7 @@ class Castos_Handler implements Service {
 		$this->logger->log( $api_url );
 
 		$post_body = array(
-			'api_token' => $this->api_token,
+			'api_token' => $this->api_token(),
 		);
 		$this->logger->log( $post_body );
 
@@ -210,7 +226,7 @@ class Castos_Handler implements Service {
 	 * Upload Podcast episode data to Seriously Simple Hosting
 	 * Should only happen once the file has been uploaded to Seriously Simple Hosting Storage
 	 *
-	 * @param $post
+	 * @param \WP_Post $post
 	 *
 	 * @return array
 	 */
@@ -218,7 +234,7 @@ class Castos_Handler implements Service {
 
 		$this->setup_default_response();
 
-		if ( empty( $post ) ) {
+		if ( empty( $post ) || empty( $post->ID ) || empty( $post->post_title ) ) {
 			$this->update_response( 'message', 'Invalid Podcast data' );
 			$this->logger->log( 'Invalid Podcast data when uploading podcast data' );
 
@@ -238,14 +254,14 @@ class Castos_Handler implements Service {
 
 		$api_url             = SSP_CASTOS_APP_URL . 'api/v2/posts/create';
 		$podmotor_episode_id = get_post_meta( $post->ID, 'podmotor_episode_id', true );
-		if ( ! empty( $podmotor_episode_id ) ) {
+		if ( $podmotor_episode_id ) {
 			$api_url = SSP_CASTOS_APP_URL . 'api/v2/posts/update';
 		}
 
 		$series_id = ssp_get_episode_series_id( $post->ID );
 
 		$post_body = array(
-			'token'          => $this->api_token,
+			'token'          => $this->api_token(),
 			'post_id'        => $post->ID,
 			'post_title'     => $post->post_title,
 			'post_content'   => $this->get_episode_content( $post->ID, $series_id ),
@@ -290,6 +306,10 @@ class Castos_Handler implements Service {
 		);
 
 		$app_response = wp_remote_post( $api_url, $options );
+
+		if ( isset( $app_response['response']['code'] ) ) {
+			$this->update_response( 'code', intval( $app_response['response']['code'] ) );
+		}
 
 		$this->logger->log( 'Upload Podcast app_response', $app_response );
 
@@ -393,7 +413,7 @@ class Castos_Handler implements Service {
 	 * @param string $url
 	 *
 	 * @return API_File_Data
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function get_file_data( $url ) {
 		$this->logger->log( __METHOD__ );
@@ -432,7 +452,7 @@ class Castos_Handler implements Service {
 		$api_url = SSP_CASTOS_APP_URL . 'api/v2/posts/delete';
 
 		$post_body = array(
-			'token' => $this->api_token,
+			'token' => $this->api_token(),
 			'id'    => $episode_id,
 		);
 
@@ -442,6 +462,9 @@ class Castos_Handler implements Service {
 				'method'  => 'DELETE',
 				'timeout' => 45,
 				'body'    => $post_body,
+				'headers' => array(
+					'X-SSP-VERSION' => ssp_version(),
+				),
 			)
 		);
 
@@ -471,13 +494,16 @@ class Castos_Handler implements Service {
 
 		$this->logger->log( 'API URL', $api_url );
 
-		$podcast_data['token'] = $this->api_token;
+		$podcast_data['token'] = $this->api_token();
 
 		$app_response = wp_remote_post(
 			$api_url,
 			array(
 				'timeout' => 45,
 				'body'    => $podcast_data,
+				'headers' => array(
+					'X-SSP-VERSION' => ssp_version(),
+				),
 			)
 		);
 
@@ -505,6 +531,23 @@ class Castos_Handler implements Service {
 		return $this->response;
 	}
 
+
+	/**
+	 * @return API_Podcast[]
+	 */
+	public function get_podcast_items(){
+		$podcasts              = $this->get_podcasts();
+		$items = array();
+		if( ! isset( $podcasts['data']['podcast_list'] ) || !is_array($podcasts['data']['podcast_list']) ) {
+			return $items;
+		}
+
+		foreach ( $podcasts['data']['podcast_list'] as $data ) {
+			$items[] = new API_Podcast( $data );
+		}
+		return $items;
+	}
+
 	public function get_podcasts() {
 		if ( $this->cached_podcasts_response ) {
 			return $this->cached_podcasts_response;
@@ -519,8 +562,11 @@ class Castos_Handler implements Service {
 		$api_payload = array(
 			'timeout' => 45,
 			'body'    => array(
-				'token'        => $this->api_token,
+				'token'        => $this->api_token(),
 				'show_details' => true,
+			),
+			'headers' => array(
+				'X-SSP-VERSION' => ssp_version(),
 			),
 		);
 
@@ -546,11 +592,52 @@ class Castos_Handler implements Service {
 		return $this->response;
 	}
 
+
+	/**
+	 * @param int $series_id
+	 *
+	 * @return array|null
+	 * @throws Exception
+	 */
+	public function update_default_series_id( $series_id ) {
+
+		$podcast = $this->get_podcast_by_series( 0 );
+		if ( ! $podcast ) {
+			return null;
+		}
+
+		$api_url = 'api/v2/podcasts/' . $podcast->id;
+
+		$args = array(
+			'series_id' => $series_id,
+		);
+
+		return $this->send_request( $api_url, $args, 'POST' );
+	}
+
+	/**
+	 * @param $series_id
+	 *
+	 * @return API_Podcast|null
+	 */
+	public function get_podcast_by_series( $series_id ) {
+		$podcasts = $this->get_podcast_items();
+
+		foreach ( $podcasts as $podcast ) {
+			if( $series_id === $podcast->series_id){
+				return $podcast;
+			}
+		}
+
+		return null;
+	}
+
+
 	/**
 	 * @param $series_id
 	 *
 	 * @return Sync_Status
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function get_podcast_sync_status( $series_id ) {
 		if ( ! empty( $this->cached_podcast_statuses[ $series_id ] ) ) {
@@ -576,7 +663,7 @@ class Castos_Handler implements Service {
 	 * @param array $castos_podcast
 	 *
 	 * @return Sync_Status
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function retrieve_sync_status_by_podcast_data( $castos_podcast ) {
 		$map    = array(
@@ -601,6 +688,7 @@ class Castos_Handler implements Service {
 	 * @param int $podcast_id
 	 *
 	 * @return array
+	 * @throws Exception
 	 */
 	public function get_podcast_subscribers( $podcast_id ) {
 		$this->logger->log( __METHOD__ );
@@ -636,6 +724,33 @@ class Castos_Handler implements Service {
 		}
 
 		return ! empty( $res['subscriptions'] ) ? $res['subscriptions'] : array();
+	}
+
+
+	/**
+	 * @param $castos_episode_id
+	 *
+	 * @return Episode_File_Data
+	 * @throws Exception
+	 */
+	public function get_episode_file_data( $castos_episode_id ) {
+		$this->logger->log( __METHOD__ );
+
+		$cache_key = 'ssp_castos_api_episode_ads_' . $castos_episode_id;
+
+		$file_data = wp_cache_get( $cache_key );
+
+		if ( $file_data ) {
+			return $file_data;
+		}
+
+		$res = $this->send_request( sprintf( 'api/v2/ssp/episodes/%d/file', $castos_episode_id ) );
+
+		$file_data = new Episode_File_Data( $res );
+
+		wp_cache_add( $cache_key, $file_data, '', MINUTE_IN_SECONDS );
+
+		return $file_data;
 	}
 
 
@@ -778,7 +893,7 @@ class Castos_Handler implements Service {
 						'podcast_id' => $podcast_id,
 					);
 				}
-				$res = $this->send_request( sprintf( 'api/v2/revoke-private-subscribers' ), compact( 'subscribers' ), 'POST' );
+				$res = $this->send_request( 'api/v2/revoke-private-subscribers', compact( 'subscribers' ), 'POST' );
 
 				if ( ! empty( $res['success'] ) ) {
 					$count += count( $subscribers );
@@ -826,10 +941,10 @@ class Castos_Handler implements Service {
 	 */
 	protected function send_request( $api_url, $args = array(), $method = 'GET' ) {
 
-		$token = apply_filters( 'ssp_castos_api_token', $this->api_token, $api_url, $args, $method );
+		$token = apply_filters( 'ssp_castos_api_token', $this->api_token(), $api_url, $args, $method );
 
-		if ( empty( $this->api_token ) ) {
-			throw new \Exception( __( 'Castos arguments not set', 'seriously-simple-podcasting' ) );
+		if ( empty( $this->api_token() ) ) {
+			throw new Exception( __( 'Castos arguments not set', 'seriously-simple-podcasting' ) );
 		}
 
 		$this->setup_default_response();
@@ -852,6 +967,9 @@ class Castos_Handler implements Service {
 				'timeout' => self::TIMEOUT,
 				'method'  => $method,
 				'body'    => $body,
+				'headers' => array(
+					'X-SSP-VERSION' => ssp_version(),
+				),
 			)
 		);
 
@@ -864,7 +982,9 @@ class Castos_Handler implements Service {
 			return null;
 		}
 
-		$res = (array) json_decode( wp_remote_retrieve_body( $app_response ), true );
+		$res = json_decode( wp_remote_retrieve_body( $app_response ), true );
+		$res = is_array( $res ) ? $res : array();
+
 		if ( isset( $app_response['response'] ) && is_array( $app_response['response'] ) ) {
 			$res = array_merge( $app_response['response'], $res );
 		}
@@ -880,91 +1000,24 @@ class Castos_Handler implements Service {
 	 *
 	 * @return array
 	 */
-	public function get_series_data_for_castos( $series_id ) {
+	public function generate_series_data_for_castos( $series_id ) {
 
 		$podcast = array();
 
-		// Podcast title
-		$title = ssp_get_option( 'data_title', get_bloginfo( 'name' ) );
-
-		$series_title = ssp_get_option( 'data_title', '', $series_id );
-		if ( $series_title ) {
-			$title = $series_title;
-		}
-		$podcast['podcast_title'] = $title;
-
-		// Podcast description
-		$description        = ssp_get_option( 'data_description', get_bloginfo( 'description' ) );
-		$series_description = ssp_get_option( 'data_description', '', $series_id );
-		if ( $series_description ) {
-			$description = $series_description;
-		}
-		$podcast_description            = mb_substr( wp_strip_all_tags( $description ), 0, 3999 );
-		$podcast['podcast_description'] = $podcast_description;
-
-		// Podcast author
-		$author        = ssp_get_option( 'data_author', get_bloginfo( 'name' ) );
-		$series_author = ssp_get_option( 'data_author', '', $series_id );
-		if ( $series_author ) {
-			$author = $series_author;
-		}
-		$podcast['author_name'] = $author;
-
-		// Podcast owner name
-		$owner_name        = ssp_get_option( 'data_owner_name', get_bloginfo( 'name' ) );
-		$series_owner_name = ssp_get_option( 'data_owner_name', '', $series_id );
-		if ( $series_owner_name ) {
-			$owner_name = $series_owner_name;
-		}
-		$podcast['podcast_owner'] = $owner_name;
-
-		// Podcast owner email address
-		$owner_email        = ssp_get_option( 'data_owner_email', get_bloginfo( 'admin_email' ) );
-		$series_owner_email = ssp_get_option( 'data_owner_email', '', $series_id );
-		if ( $series_owner_email ) {
-			$owner_email = $series_owner_email;
-		}
-		$podcast['owner_email'] = $owner_email;
-
-		// Podcast explicit setting
-		$explicit_option = ssp_get_option( 'ss_podcasting_explicit', '', $series_id );
-		if ( 'on' === $explicit_option ) {
-			$podcast['explicit'] = 1;
-		} else {
-			$podcast['explicit'] = 0;
-		}
-
-		// Podcast language
-		$language        = ssp_get_option( 'data_language', get_bloginfo( 'language' ) );
-		$series_language = ssp_get_option( 'data_language', '', $series_id );
-		if ( $series_language ) {
-			$language = $series_language;
-		}
-		$podcast['language'] = $language;
-
-		// Podcast cover image
-		$image        = ssp_get_option( 'data_image' );
-		$series_image = ssp_get_option( 'data_image', 'no-image', $series_id );
-		if ( 'no-image' !== $series_image ) {
-			$image = $series_image;
-		}
-		$podcast['cover_image'] = $image;
-
-		// Podcast copyright string
-		$copyright        = ssp_get_option( 'data_copyright', '&#xA9; ' . date( 'Y' ) . ' ' . get_bloginfo( 'name' ) );
-		$series_copyright = ssp_get_option( 'data_copyright', '', $series_id );
-		if ( $series_copyright ) {
-			$copyright = $series_copyright;
-		}
-		$podcast['copyright'] = $copyright;
+		$podcast['podcast_title']       = $this->feed_handler->get_podcast_title( $series_id );
+		$podcast['podcast_description'] = $this->feed_handler->get_podcast_description( $series_id );
+		$podcast['author_name']         = $this->feed_handler->get_podcast_author( $series_id );
+		$podcast['podcast_owner']       = $this->feed_handler->get_podcast_owner_name( $series_id );
+		$podcast['owner_email']         = $this->feed_handler->get_podcast_owner_email( $series_id );
+		$podcast['explicit']            = 'on' == $this->feed_handler->get_feed_item_explicit_flag( $series_id ) ? 1 : 0;
+		$podcast['language']            = $this->feed_handler->get_podcast_language( $series_id );
+		$podcast['cover_image']         = $this->feed_handler->get_feed_image( $series_id );
+		$podcast['copyright']           = $this->feed_handler->get_podcast_copyright( $series_id );
 
 		// Podcast Categories
-		$itunes_category1            = ssp_get_feed_category_output( 1, $series_id );
-		$itunes_category2            = ssp_get_feed_category_output( 2, $series_id );
-		$itunes_category3            = ssp_get_feed_category_output( 3, $series_id );
-		$podcast['itunes_category1'] = $itunes_category1['category'];
-		$podcast['itunes_category2'] = $itunes_category2['category'];
-		$podcast['itunes_category3'] = $itunes_category3['category'];
+		$podcast['itunes_category1'] = $this->get_castos_category( 1, $series_id );
+		$podcast['itunes_category2'] = $this->get_castos_category( 2, $series_id );
+		$podcast['itunes_category3'] = $this->get_castos_category( 3, $series_id );
 		$podcast['itunes']           = ssp_get_option( 'itunes_url', '', $series_id );
 		$podcast['google_play']      = ssp_get_option( 'google_play_url', '', $series_id );
 		$guid                        = ssp_get_option( 'data_guid', '', $series_id );
@@ -979,5 +1032,17 @@ class Castos_Handler implements Service {
 		}
 
 		return $podcast;
+	}
+
+	/**
+	 * @param int $number
+	 * @param int $series_id
+	 *
+	 * @return string
+	 */
+	private function get_castos_category( $number, $series_id ) {
+		$output = ssp_get_feed_category_output( $number, $series_id );
+
+		return $this->feed_handler->get_castos_category_name( $output['category'], $output['subcategory'] );
 	}
 }

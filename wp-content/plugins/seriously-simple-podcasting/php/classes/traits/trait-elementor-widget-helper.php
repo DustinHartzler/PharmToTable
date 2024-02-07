@@ -6,6 +6,7 @@ namespace SeriouslySimplePodcasting\Traits;
 
 use Elementor\Controls_Manager;
 use SeriouslySimplePodcasting\Renderers\Renderer;
+use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,9 +22,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait Elementor_Widget_Helper {
 
 	protected $select_podcast_settings;
+
+	/**
+	 * @var Renderer
+	 * */
 	protected $renderer;
 
-	protected function get_select_podcast_settings() {
+	/**
+	 * @var Episode_Repository $episode_repository
+	 * */
+	protected $episode_repository;
+
+	protected function get_select_podcast_settings( $show_all_podcasts = true ) {
 		if ( $this->select_podcast_settings ) {
 			return $this->select_podcast_settings;
 		}
@@ -34,26 +44,27 @@ trait Elementor_Widget_Helper {
 			)
 		);
 
-		$series_options = array(
-			0 => 'Default',
-		);
+		$series_options = $show_all_podcasts ? array(
+			0 => __( 'All podcasts', 'seriously-simple-podcasting' ),
+		) : array();
+
+		$default_series_id = ssp_get_default_series_id();
 
 		if ( ! empty( $series ) ) {
 			foreach ( $series as $term ) {
 				if ( is_object( $term ) ) {
-					$series_options[ $term->term_id ] = $term->name;
+					$term_name = ( $default_series_id === $term->term_id ) ? ssp_get_default_series_name( $term->name ): $term->name;
+					$series_options[ $term->term_id ] = $term_name;
 				}
 			}
 		}
-
-		$series_options_ids = array_keys( $series_options );
 
 		$this->select_podcast_settings = array(
 			'label'    => __( 'Select Podcast', 'seriously-simple-podcasting' ),
 			'type'     => Controls_Manager::SELECT2,
 			'options'  => $series_options,
 			'multiple' => false,
-			'default'  => array_shift( $series_options_ids )
+			'default'  => $default_series_id
 		);
 
 		return $this->select_podcast_settings;
@@ -140,5 +151,16 @@ trait Elementor_Widget_Helper {
 		}
 
 		return $this->renderer;
+	}
+
+	/**
+	 * @return Episode_Repository
+	 */
+	protected function episode_repository() {
+		if ( ! isset( $this->episode_repository ) ) {
+			$this->episode_repository = ssp_get_service( 'episode_repository' );
+		}
+
+		return $this->episode_repository;
 	}
 }

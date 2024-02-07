@@ -1,16 +1,23 @@
 <?php
+
 /**
  * Abstract Entity.
  *
  * @package SeriouslySimplePodcasting
+ * @since 2.23.0
  * */
 
 namespace SeriouslySimplePodcasting\Entities;
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Class Entity.
  * Abstract entity class.
  * @since 2.23.0
+ * @author Serhiy Zakharchenko
  */
 abstract class Abstract_Entity {
     /**
@@ -47,6 +54,7 @@ abstract class Abstract_Entity {
 
     protected function guess_property_type( $val ) {
         if ( is_numeric( $val ) ) {
+			$val = strval( $val );
             $val = ( false === strpos( '.', $val ) || false === strpos( ',', $val ) ) ?
                 intval( $val ) :
                 floatval( $val );
@@ -54,6 +62,4 @@ abstract class Abstract_Entity {
 
         return $val;
     }
-
 }
-

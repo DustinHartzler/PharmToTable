@@ -56,6 +56,10 @@ jQuery( document ).ready( function ( $ ) {
 	 * If the upload_credentials object isn't available
 	 */
 	if ( typeof upload_credentials != "undefined" ) {
+		initUploader();
+	}
+
+	function initUploader(){
 		/**
 		 * Creates instance of plupload
 		 * @type {module:plupload.Uploader}
@@ -144,17 +148,22 @@ jQuery( document ).ready( function ( $ ) {
 			notificationBar( 'Uploading file to Castos Hosting Complete.' );
 			var response = JSON.parse(result.response);
 			if ( response.status === 200 ) {
-				var file = response.file;
-				/**
-				 * @todo sanitize file name ???
-				 */
+				var file = response.file,
+					fileName = up.files[0].name;
+
 				$( "#podmotor_file_id" ).val( file.id );
 				$( "#filesize_raw" ).val( file.file_size );
 				$( "#filesize" ).val( plupload.formatSize( file.file_size ) );
 				$( "#duration" ).val( file.file_duration );
 				$( '#upload_audio_file' ).val( file.file_path );
 				$( '.peek-a-bar' ).fadeOut( 5000 );
+				$('#castos_file_data').val(JSON.stringify({
+					path: file.file_path,
+					name: fileName
+				}));
+				$('#castos_file_name').html( fileName ).parent().show();
 			}
+			uploader.splice();
 		} );
 
 		/**
@@ -163,6 +172,5 @@ jQuery( document ).ready( function ( $ ) {
 		uploader.bind( 'UploadComplete', function ( up, files ) {
 			$( '.peek-a-bar' ).fadeOut( 5000 );
 		} );
-
 	}
 });

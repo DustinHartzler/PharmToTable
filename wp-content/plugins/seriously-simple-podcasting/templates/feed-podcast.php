@@ -97,8 +97,9 @@ if ( $stylesheet_url ) {
 		?><itunes:summary><?php echo esc_html( $description ); ?></itunes:summary>
 		<itunes:owner>
 			<itunes:name><?php echo esc_html( $owner_name ); ?></itunes:name>
-			<itunes:email><?php echo esc_html( $owner_email ); ?></itunes:email>
-		</itunes:owner>
+		<?php if ( $owner_email ) :
+			?>	<itunes:email><?php echo esc_html( $owner_email ); ?></itunes:email>
+		<?php endif; ?></itunes:owner>
 		<itunes:explicit><?php echo esc_html( $itunes_explicit ); ?></itunes:explicit>
 		<?php if ( $complete ) : ?>
 			<itunes:complete><?php echo esc_html( $complete ); ?></itunes:complete>
@@ -143,10 +144,11 @@ if ( $stylesheet_url ) {
 			?><itunes:new-feed-url><?php echo esc_url( $new_feed_url ); ?></itunes:new-feed-url>
 		<?php endif;
 
-		if ( 'off' === $turbo ) :
+		if ( 'on' !== $turbo ) :
 			?><googleplay:author><![CDATA[<?php echo esc_html( $author ); ?>]]></googleplay:author>
-			<googleplay:email><?php echo esc_html( $owner_email ); ?></googleplay:email>
-			<googleplay:description><?php echo esc_html( $podcast_description ); ?></googleplay:description>
+			<?php if ( $owner_email ) :
+			?><googleplay:email><?php echo esc_html( $owner_email ); ?></googleplay:email><?php endif ?>
+			<googleplay:description><?php echo esc_html( $description ); ?></googleplay:description>
 			<googleplay:explicit><?php echo esc_html( $googleplay_explicit ); ?></googleplay:explicit>
 			<?php if ( $image ) :
 			?><googleplay:image href="<?php echo esc_url( $image ); ?>"></googleplay:image>
@@ -154,7 +156,8 @@ if ( $stylesheet_url ) {
 		endif;
 
 		if ( 'yes' === $locked ) :
-			?><podcast:locked owner="<?php echo esc_html( $owner_email ) ?>"><?php echo esc_html( $locked ) ?></podcast:locked>
+			?><podcast:locked<?php echo $owner_email ? ' owner="' . esc_html( $owner_email ) . '"' : '' ?>><?php
+			echo esc_html( $locked ) ?></podcast:locked>
 		<?php endif;
 
 		if ( $funding && ! empty( $funding['url'] ) && ! empty( $funding['title'] ) ) :
@@ -162,19 +165,23 @@ if ( $stylesheet_url ) {
 		<?php endif;
 
 		if ( $podcast_value && ! empty( $podcast_value['recipient'] ) ) :
+			$name = empty( $podcast_value['name'] ) ? 'podcaster' : $podcast_value['name'];
 		?><podcast:value type="lightning" method="keysend" suggested="0.00000020000">
-			<podcast:valueRecipient name="podcaster" address="<?php echo esc_attr( $podcast_value['recipient'] ) ?>" split="100" type="node"/>
-		</podcast:value>
+			<?php if ( empty( $podcast_value['custom_key'] ) || empty( $podcast_value['custom_value'] ) ) :
+			?><podcast:valueRecipient name="<?php echo esc_attr( $name ) ?>" address="<?php echo esc_attr( $podcast_value['recipient'] ) ?>" split="100" type="node" />
+			<?php else :
+			?><podcast:valueRecipient name="<?php echo esc_attr( $name ) ?>" address="<?php echo esc_attr( $podcast_value['recipient'] ) ?>" split="100" type="node" customKey="<?php
+			echo esc_attr( $podcast_value['custom_key'] ) ?>" customValue="<?php echo esc_attr( $podcast_value['custom_value'] ) ?>" />
+		<?php    endif
+		?></podcast:value>
 		<?php endif;
 
 		if ( $guid ) :
 		?><podcast:guid><?php echo esc_attr( $guid ) ?></podcast:guid>
-		<?php endif;
-		?>
+		<?php endif; ?>
 
 		<!-- podcast_generator="SSP by Castos/<?php echo SSP_VERSION ?>" Seriously Simple Podcasting plugin for WordPress (https://wordpress.org/plugins/seriously-simple-podcasting/) -->
 		<?php
-
 
 		// Prevent WP core from outputting an <image> element
 		remove_action( 'rss2_head', 'rss2_site_icon' );

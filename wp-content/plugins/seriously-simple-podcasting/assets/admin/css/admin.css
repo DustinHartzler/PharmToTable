@@ -210,6 +210,8 @@ textarea#episode_embed_code {
   border-radius: 4px;
   border: 1px solid #CBD5E1;
   padding: 0 10px; }
+  .ssp-settings input::placeholder {
+    color: #9CA3AF; }
   .ssp-settings h2 {
     border-bottom: 1px solid #CBD5E1;
     padding: 15px 10px 12px;
@@ -331,6 +333,10 @@ textarea#episode_embed_code {
 
 .ssp-external-feed-message.import-error h3 {
   color: #DF4E4F; }
+
+.episode-file-description__filename {
+  font-weight: bold;
+  margin: 5px 0 10px; }
 
 /* latin-ext */
 @font-face {

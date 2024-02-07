@@ -3,10 +3,12 @@
 namespace SeriouslySimplePodcasting\Controllers;
 
 // Exit if accessed directly.
+use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
 use SeriouslySimplePodcasting\Handlers\Roles_Handler;
 use SeriouslySimplePodcasting\Handlers\Settings_Handler;
 use SeriouslySimplePodcasting\Renderers\Renderer;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * SSP Onboarding Controller
  *
- * @author      Sergey Zakharchenko
+ * @author      Serhiy Zakharchenko
  * @category    Class
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       5.7.0
@@ -53,13 +55,27 @@ class Onboarding_Controller {
 		add_action( 'admin_menu', array( $this, 'register_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'activated_plugin', array( $this, 'maybe_start_onboarding' ) );
+		add_action( 'admin_init', array( $this, 'fix_deprecated_warning' ) );
+	}
+
+	/**
+	 * Fix PHP deprecated warning for new WordPress installations on the first onboarding step.
+	 * */
+	public function fix_deprecated_warning() {
+		$page = filter_input(INPUT_GET, 'page');
+		if ( $page && ( false !== strpos( $page, self::ONBOARDING_BASE_SLUG ) ) ) {
+			global $title;
+			if ( ! isset( $title ) ) {
+				$title = '';
+			}
+		}
 	}
 
 	public function maybe_start_onboarding( $plugin ) {
 		if ( $plugin !== plugin_basename( $this->file ) ) {
 			return;
 		}
-		$title = $this->get_field( 'data_title' );
+		$title = ssp_get_option( 'data_title', '', ssp_get_default_series_id() );
 		if ( ! $title ) {
 			wp_redirect( admin_url( sprintf( 'admin.php?page=%s-1', self::ONBOARDING_BASE_SLUG ) ) );
 			exit();
@@ -158,9 +174,10 @@ class Onboarding_Controller {
 			$step_urls[ $page_number ] = $this->get_step_url( $page_number );
 		}
 		$data['step_urls'] = $step_urls;
+		$series_id = ( 4 === $step_number ) ? 0 : ssp_get_default_series_id();
 
 		foreach ( $this->get_step_fields( $step_number ) as $field_name ) {
-			$data[ $field_name ] = $this->get_field( $field_name );
+			$data[ $field_name ] = ssp_get_option( $field_name, '', $series_id );
 		}
 
 		return $data;
@@ -206,14 +223,38 @@ class Onboarding_Controller {
 	protected function save_step( $step_number ) {
 		$nonce = filter_input( INPUT_POST, 'nonce' );
 		if ( ! wp_verify_nonce( $nonce, 'ssp_onboarding_' . $step_number ) ) {
-			return false;
+			return;
 		}
+
+		$default_series_id = ssp_get_default_series_id();
+
+		$series_id = ( 4 === $step_number ) ? 0 : $default_series_id;
 		foreach ( $this->get_step_fields( $step_number ) as $field_id ) {
 			$val = filter_input( INPUT_POST, $field_id );
 			if ( $val ) {
-				$this->set_field( $field_id, $val );
+				ssp_update_option( $field_id, $val, $series_id );
 			}
 		}
+
+		if( 1 === $step_number ){
+			$this->update_default_series_name( $default_series_id );
+			ssp_add_option( 'series_slug', CPT_Podcast_Handler::DEFAULT_SERIES_SLUG );
+		}
+	}
+
+	/**
+	 * @param int $series_id
+	 *
+	 * @return array|WP_Error
+	 */
+	protected function update_default_series_name( $series_id ) {
+		$series = get_term_by( 'id', $series_id, ssp_series_taxonomy() );
+		$name   = ssp_get_option( 'data_title', get_bloginfo('name'), $series_id );
+		$slug   = wp_unique_term_slug( sanitize_title( $name ), $series );
+		return wp_update_term( $series_id, ssp_series_taxonomy(), array(
+			'name' => $name,
+			'slug' => $slug,
+		) );
 	}
 
 	/**
@@ -223,25 +264,6 @@ class Onboarding_Controller {
 	 */
 	protected function get_page_slug( $page_number ) {
 		return sprintf( '%s-%d', self::ONBOARDING_BASE_SLUG, $page_number );
-	}
-
-	/**
-	 * @param $field_id
-	 *
-	 * @return false|mixed|void
-	 */
-	protected function get_field( $field_id ) {
-		return $this->settings_handler->get_field( $field_id );
-	}
-
-	/**
-	 * @param $field_id
-	 * @param $value
-	 *
-	 * @return bool
-	 */
-	protected function set_field( $field_id, $value ) {
-		return $this->settings_handler->set_field( $field_id, $value );
 	}
 
 	/**

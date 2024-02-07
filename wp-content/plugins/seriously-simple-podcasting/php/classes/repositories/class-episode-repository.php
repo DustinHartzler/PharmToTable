@@ -4,6 +4,7 @@ namespace SeriouslySimplePodcasting\Repositories;
 
 use SeriouslySimplePodcasting\Entities\Failed_Sync_Episode;
 use SeriouslySimplePodcasting\Entities\Sync_Status;
+use SeriouslySimplePodcasting\Handlers\Feed_Handler;
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
 use SeriouslySimplePodcasting\Interfaces\Service;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
@@ -28,12 +29,18 @@ class Episode_Repository implements Service {
 	const META_SYNC_ERROR = 'ssp_sync_episode_error';
 
 	/**
+	 * @var Feed_Handler $feed_handler
+	 * */
+	protected $feed_handler;
+
+	/**
 	 * @var \wpdb $db
 	 * */
 	protected $db;
 
-	public function __construct() {
+	public function __construct( $feed_handler ) {
 		$this->init_useful_variables();
+		$this->feed_handler = $feed_handler;
 
 		global $wpdb;
 		$this->db = $wpdb;
@@ -205,7 +212,7 @@ class Episode_Repository implements Service {
 	 *
 	 * @return int[]|\WP_Post[]
 	 */
-	public function get_playlist_episodes( $atts ) {
+	public function get_episodes( $atts ) {
 		// Get all podcast post types
 		$podcast_post_types = ssp_post_types( true );
 
@@ -256,6 +263,17 @@ class Episode_Repository implements Service {
 	}
 
 	/**
+	 * @param array $atts
+	 * @depreacted
+	 * @use self::get_episodes() instead
+	 *
+	 * @return int[]|\WP_Post[]
+	 */
+	public function get_playlist_episodes( $atts ) {
+		return $this->get_episodes( $atts );
+	}
+
+	/**
 	 * @param int $podcast_id
 	 *
 	 * @return \WP_Post[]
@@ -269,16 +287,9 @@ class Episode_Repository implements Service {
 			'post_status'    => 'publish',
 			'post_type'      => $podcast_post_types,
 			'posts_per_page' => $max,
-			/*'tax_query'      => array(
-				array(
-					'taxonomy' => ssp_series_taxonomy(),
-					'field'    => 'term_id',
-					'terms'    => $podcast_id,
-				),
-			),*/
 		);
 
-		$tax_query                 = ( 0 === $podcast_id ) ?
+		$tax_query = ( 0 === $podcast_id ) ?
 			array(
 				'taxonomy' => ssp_series_taxonomy(),
 				'operator' => 'NOT EXISTS'
@@ -511,15 +522,7 @@ class Episode_Repository implements Service {
 	public function get_podcast_title( $episode_id ) {
 		$series_id = $this->get_episode_series_id( $episode_id );
 
-		if ( $series_id ) {
-			$title = get_option( 'ss_podcasting_data_title_' . $series_id );
-		}
-
-		if ( empty( $title ) ) {
-			$title = get_option( 'ss_podcasting_data_title' );
-		}
-
-		return $title;
+		return $this->feed_handler->get_podcast_title( $series_id );
 	}
 
 
@@ -638,6 +641,7 @@ class Episode_Repository implements Service {
 
 	protected function format_post_date( $post_date, $format = 'M j, Y' ) {
 		$timestamp = strtotime( $post_date );
+		$format    = apply_filters( 'ssp_date_format', $format );
 
 		return date( $format, $timestamp );
 	}
@@ -893,6 +897,26 @@ class Episode_Repository implements Service {
 	}
 
 	/**
+	 * @return int[]
+	 */
+	public function get_orphan_episode_ids() {
+		$series_terms = get_terms(
+			array(
+				'taxonomy'   => ssp_series_taxonomy(),
+				'hide_empty' => false,
+				'fields'     => 'all',
+			)
+		);
+
+		$series_terms = array_column( $series_terms, 'slug' );
+
+		$args           = ssp_episodes( - 1, '', true, '', $series_terms );
+		$args['fields'] = 'ids';
+
+		return get_posts( $args );
+	}
+
+	/**
 	 * Get the type of podcast episode (audio or video)
 	 *
 	 * @param int $episode_id ID of episode
@@ -1086,5 +1110,42 @@ class Episode_Repository implements Service {
 		$file = str_replace( $site_url, $site_root, $url );
 
 		return $file;
+	}
+
+
+	/**
+	 * Get episode from audio file
+	 * @param  string $file File name & path
+	 * @return object       Episode post object
+	 */
+	public function get_episode_from_file( $file = '' ) {
+		global $post;
+
+		$episode = false;
+
+		if ( $file != '' ) {
+
+			$post_types = ssp_post_types( true );
+
+			$args = array(
+				'post_type' => $post_types,
+				'post_status' => 'publish',
+				'posts_per_page' => 1,
+				'meta_key' => 'audio_file',
+				'meta_value' => $file
+			);
+
+			$qry = new WP_Query( $args );
+
+			if ( $qry->have_posts() ) {
+				while ( $qry->have_posts() ) { $qry->the_post();
+					$episode = $post;
+					break;
+				}
+			}
+		}
+
+		return apply_filters( 'ssp_episode_from_file', $episode, $file );
+
 	}
 }

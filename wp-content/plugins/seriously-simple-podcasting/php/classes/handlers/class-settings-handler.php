@@ -12,6 +12,16 @@ use SeriouslySimplePodcasting\Interfaces\Service;
 class Settings_Handler implements Service {
 
 	/**
+	 * @var array
+	 * */
+	protected $feed_fields;
+
+	/**
+	 * @var int
+	 * */
+	protected $default_series_id;
+
+	/**
 	 * Build settings fields
 	 *
 	 * @return array Fields to be displayed on settings page.
@@ -76,7 +86,11 @@ class Settings_Handler implements Service {
 		// translators: placeholders are simply html tags to break up the content.
 		return array(
 			'title'       => __( 'Feed details', 'seriously-simple-podcasting' ),
-			'description' => sprintf( __( 'This data will be used in the feed for your podcast so your listeners will know more about it before they subscribe.%1$sAll of these fields are optional, but it is recommended that you fill in as many of them as possible. Blank fields will use the assigned defaults in the feed.%2$s', 'seriously-simple-podcasting' ), '<br/><em>', '</em>' ),
+			'description' => sprintf(
+				__( 'This data will be used in the feed for your podcast so your listeners will know more about it before they subscribe. %1$sIt is recommended that you fill in as many fields as possible (that apply to your podcast), however, some fields are required to satisfy Podcast RSS validation requirements.%2$s%3$sTo learn more about Podcast RSS Feed requirements, %4$sclick here%5$s.', 'seriously-simple-podcasting' ),
+				'<br/><em>', '</em>', '<br/>',
+				'<a target="_blank" href="https://support.castos.com/article/196-podcast-rss-feed-requirements">', '</a>'
+			),
 			'fields'      => $this->get_feed_fields(),
 		);
 	}
@@ -125,9 +139,25 @@ class Settings_Handler implements Service {
 	 * @return array
 	 */
 	public function get_hosting_settings() {
-		$podcast_options[0] = __( 'Default Podcast', 'seriously-simple-podcasting' );
+		$podcast_options = $this->get_podcasts_list();
+
+		return ssp_config( 'settings/hosting', compact( 'podcast_options' ) );
+	}
+
+	/**
+	 * @return array|false
+	 */
+	protected function get_podcasts_list() {
+		$default_podcast_id = $this->default_series_id();
 		$podcasts           = ssp_get_podcasts();
-		$podcast_options    += array_combine(
+		foreach ( $podcasts as $podcast ) {
+			if ( $default_podcast_id === $podcast->term_id ) {
+				$podcast->name = ssp_get_default_series_name( $podcast->name );
+				break;
+			}
+		}
+
+		return array_combine(
 			array_map( function ( $i ) {
 				return $i->term_id;
 			}, $podcasts ),
@@ -135,8 +165,6 @@ class Settings_Handler implements Service {
 				return $i->name;
 			}, $podcasts )
 		);
-
-		return ssp_config( 'settings/hosting', compact( 'podcast_options' ) );
 	}
 
 	/**
@@ -185,29 +213,162 @@ class Settings_Handler implements Service {
 	}
 
 	/**
-	 * @return array
+	 * @param string $id
+	 *
+	 * @return array|null
 	 */
-	public function get_feed_fields() {
-		$title  = $this->get_current_feed_option( 'data_title' );
-		$author = $this->get_current_feed_option( 'data_author' );
+	public function get_field_by_id( $id ) {
+		$feed_fields = $this->get_feed_fields();
 
-		$feed_details_fields     = ssp_config( 'settings/feed', compact( 'title', 'author' ) );
-		$subscribe_options_array = $this->get_subscribe_field_options();
+		foreach ( $feed_fields as $feed_field ) {
+			if ( $id === $feed_field['id'] ) {
+				return $feed_field;
+			}
+		}
 
-		return array_merge( $feed_details_fields, $subscribe_options_array );
+		return null;
 	}
 
 	/**
-	 * This function gets option value for the feed details page ( Podcasting -> Settings -> Feed Details )
+	 * Gets the feed option, if it's empty, tries to get options from the default feed in some cases.
 	 *
-	 * @param string $option
+	 * Since version 3.0, we use the Default Series settings, that should replace the default feed settings
+	 *
+	 * @param string|array $field
+	 * @param int $series_id
+	 * @param string $default
+	 *
+	 * @return string|null
+	 * @since 3.0.0
+	 */
+	public function get_feed_option( $field, $series_id, $default = '' ) {
+
+		if ( is_string( $field ) ) {
+			$field = $this->get_field_by_id( $field );
+		}
+
+		$option = $field['id'];
+
+		if ( 'data_image' === $option ) {
+			return $this->get_feed_image( $series_id );
+		}
+
+		if ( 'data_title' === $option ) {
+			return $this->get_feed_title( $series_id );
+		}
+
+		$data = ssp_get_option( $option, null, $series_id );
+
+		// For empty values, propagate some settings from the default feed
+		if ( ! isset( $data ) ) {
+			$propagate_exclusions = array( 'exclude_feed', 'redirect_feed' );
+			$propagated_types     = array( 'checkbox', 'select' );
+			$propagate            = in_array( $field['type'], $propagated_types, true ) &&
+			                        ! in_array( $field['id'], $propagate_exclusions, true );
+			$default_series_id    = $this->default_series_id();
+
+			if ( $propagate && ( $series_id != $default_series_id ) ) {
+				$data = ssp_get_option( $option, null, $default_series_id );
+			}
+		}
+
+		if ( ! isset( $data ) ) {
+			$data = isset( $field['default'] ) ? $field['default'] : $default;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function default_series_id() {
+		if ( ! isset( $this->default_series_id ) ) {
+			$this->default_series_id = ssp_get_default_series_id();
+		}
+
+		return $this->default_series_id;
+	}
+
+	/**
+	 * @param int $series_id
 	 *
 	 * @return string
 	 */
-	protected function get_current_feed_option( $option ) {
-		$podcast_id = $this->get_current_feed_settings_podcast_id();
+	public function get_feed_title( $series_id ) {
+		$title = ssp_get_option( 'data_title', '', $series_id );
+		if ( ! $title ) {
+			$term = get_term_by( 'id', $series_id, ssp_series_taxonomy() );
+			if ( ! empty( $term->name ) ) {
+				$title = $term->name;
+			}
+		}
+		if ( ! $title ) {
+			$title = get_bloginfo( 'name' );
+		}
 
-		return ssp_get_option( $option, '', $podcast_id );
+		return $title;
+	}
+
+	/**
+	 * @param int $series_id
+	 *
+	 * @return string
+	 */
+	public function get_feed_image( $series_id ){
+		// If it's series feed, try to use its own feed image.
+		if ( $series_id ) {
+			$image = ssp_get_option( 'data_image', null, $series_id );
+		}
+
+		// If couldn't show the series feed image, try to use the series taxonomy image
+		if ( ! isset( $image ) || ! ssp_is_feed_image_valid( $image ) ) {
+			$image = ssp_get_podcast_image_src( get_term_by( 'id', $series_id, ssp_series_taxonomy() ), 'full' );
+		}
+
+		// If couldn't show the series image, try to use the default series cover image.
+		if ( ! isset( $image ) || ! ssp_is_feed_image_valid( $image ) ) {
+			$image = ssp_get_option( 'data_image', null, ssp_get_default_series_id() );
+		}
+
+		if ( ! isset( $image ) || ! ssp_is_feed_image_valid( $image ) ) {
+			$image = '';
+		}
+
+		return $image;
+	}
+
+
+	/**
+	 * @param int|null $podcast_id
+	 *
+	 * @return array
+	 */
+	public function get_feed_fields( $podcast_id = null ) {
+		if ( $this->feed_fields ) {
+			return $this->feed_fields;
+		}
+
+		$podcast_id       = $podcast_id ?: $this->get_current_series_id();
+		$title            = ssp_get_option( 'data_title', '', $podcast_id );
+		$author           = ssp_get_option( 'data_author', '', $podcast_id );
+		$site_title       = get_bloginfo( 'name' );
+		$site_description = get_bloginfo( 'description' );
+		$categories       = ssp_config( 'settings/feed-categories' );
+		$subcategories    = ssp_config( 'settings/feed-subcategories' );
+		$language         = get_bloginfo( 'language' );
+		$is_default       = $podcast_id === $this->default_series_id();
+
+		$feed_details_fields = ssp_config(
+			'settings/feed',
+			compact( 'title', 'author', 'site_title', 'site_description', 'categories', 'subcategories', 'language', 'is_default' )
+		);
+
+		$subscribe_options_array = $this->get_subscribe_field_options( $podcast_id );
+
+		$this->feed_fields = array_merge( $feed_details_fields, $subscribe_options_array );
+
+		return $this->feed_fields;
 	}
 
 	/**
@@ -215,15 +376,17 @@ class Settings_Handler implements Service {
 	 *
 	 * @return int
 	 */
-	protected function get_current_feed_settings_podcast_id() {
+	protected function get_current_series_id() {
 		$podcast_slug = filter_input( INPUT_GET, 'feed-series' );
-		if ( ! $podcast_slug ) {
-			return 0;
+		if ( $podcast_slug ) {
+			$podcast = get_term_by( 'slug', $podcast_slug, 'series' );
+
+			return isset( $podcast->term_id ) ? $podcast->term_id : 0;
 		}
 
-		$podcast = get_term_by( 'slug', $podcast_slug, 'series' );
+		$term_id = filter_input( INPUT_GET, 'tag_ID', FILTER_VALIDATE_INT );
 
-		return isset( $podcast->term_id ) ? $podcast->term_id : 0;
+		return $term_id;
 	}
 
 	/**
@@ -277,9 +440,11 @@ class Settings_Handler implements Service {
 	/**
 	 * Builds the array of field settings for the subscribe links, based on the options stored in the options table.
 	 *
+	 * @param int $series_id
+	 *
 	 * @return array
 	 */
-	public function get_subscribe_field_options() {
+	public function get_subscribe_field_options( $series_id ) {
 		$subscribe_field_options[] = array(
 			'id'          => '',
 			'label'       => __( 'Subscribe button links', 'seriously-simple-podcasting' ),
@@ -296,24 +461,14 @@ class Settings_Handler implements Service {
 			return $subscribe_field_options;
 		}
 
-		if ( isset( $_GET['feed-series'] ) && 'default' !== $_GET['feed-series'] ) {
-			$feed_series_slug = sanitize_text_field( $_GET['feed-series'] );
-			$series           = get_term_by( 'slug', $feed_series_slug, 'series' );
-			$series_id        = $series->ID;
-		}
-
 		foreach ( $subscribe_options as $option_key ) {
-			if ( isset( $available_subscribe_options[ $option_key ] ) ) {
-				if ( isset( $series_id ) ) {
-					$field_id = $option_key . '_url_' . $series_id;
-					$value    = get_option( 'ss_podcasting_' . $field_id );
-				} else {
-					$field_id = $option_key . '_url';
-					$value    = get_option( 'ss_podcasting_' . $field_id );
-				}
-			} else {
+			if ( ! isset( $available_subscribe_options[ $option_key ] ) ) {
 				continue;
 			}
+
+			$field_id = $option_key . '_url';
+			$value = ssp_get_option( $field_id, '', $series_id );
+
 			$subscribe_field_options[] = array(
 				'id'          => $field_id,
 				// translators: %s: Service title eg iTunes
@@ -330,31 +485,5 @@ class Settings_Handler implements Service {
 		}
 
 		return $subscribe_field_options;
-	}
-
-	/**
-	 * Get the field option
-	 *
-	 * @param $field_id
-	 * @param bool $default
-	 *
-	 * @return false|mixed|void
-	 * @since 5.7.0
-	 */
-	public function get_field( $field_id, $default = false ) {
-		return get_option( 'ss_podcasting_' . $field_id, $default );
-	}
-
-	/**
-	 * Set the field option
-	 *
-	 * @param string $field_id
-	 * @param string $value
-	 *
-	 * @return bool
-	 * @since 5.7.0
-	 */
-	public function set_field( $field_id, $value ) {
-		return update_option( 'ss_podcasting_' . $field_id, $value );
 	}
 }
