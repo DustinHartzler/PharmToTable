@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "appsero/client",
-            "version": "dev-develop",
-            "version_normalized": "dev-develop",
+            "version": "v2.0.1",
+            "version_normalized": "2.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "e62563b26f6b5a65556f929578b313d7652eb59d"
+                "reference": "b87e7593c6295748e88cdbfc92a638c8a73462ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/e62563b26f6b5a65556f929578b313d7652eb59d",
-                "reference": "e62563b26f6b5a65556f929578b313d7652eb59d",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/b87e7593c6295748e88cdbfc92a638c8a73462ce",
+                "reference": "b87e7593c6295748e88cdbfc92a638c8a73462ce",
                 "shasum": ""
             },
             "require": {
@@ -26,8 +26,7 @@
                 "tareq1988/wp-php-cs-fixer": "dev-master",
                 "wp-coding-standards/wpcs": "dev-develop"
             },
-            "time": "2023-09-05T10:39:53+00:00",
-            "default-branch": true,
+            "time": "2024-01-16T11:20:48+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -54,7 +53,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Appsero/client/issues",
-                "source": "https://github.com/Appsero/client/tree/develop"
+                "source": "https://github.com/Appsero/client/tree/v2.0.1"
             },
             "install-path": "../appsero/client"
         },

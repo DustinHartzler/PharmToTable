@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6a973351fb2188943744d0beecbe3742
+class ComposerStaticInitae41473480964076004685d13adb712a
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -32,7 +32,6 @@ class ComposerStaticInit6a973351fb2188943744d0beecbe3742
         'Appsero\\Client' => __DIR__ . '/..' . '/appsero/client/src/Client.php',
         'Appsero\\Insights' => __DIR__ . '/..' . '/appsero/client/src/Insights.php',
         'Appsero\\License' => __DIR__ . '/..' . '/appsero/client/src/License.php',
-        'Appsero\\Updater' => __DIR__ . '/..' . '/appsero/client/src/Updater.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Installers\\AglInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AglInstaller.php',
         'Composer\\Installers\\AimeosInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AimeosInstaller.php',
@@ -141,9 +140,9 @@ class ComposerStaticInit6a973351fb2188943744d0beecbe3742
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6a973351fb2188943744d0beecbe3742::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6a973351fb2188943744d0beecbe3742::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6a973351fb2188943744d0beecbe3742::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitae41473480964076004685d13adb712a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitae41473480964076004685d13adb712a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitae41473480964076004685d13adb712a::$classMap;
 
         }, null, ClassLoader::class);
     }

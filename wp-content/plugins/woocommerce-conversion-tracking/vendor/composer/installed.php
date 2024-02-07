@@ -11,14 +11,12 @@
     ),
     'versions' => array(
         'appsero/client' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
+            'pretty_version' => 'v2.0.1',
+            'version' => '2.0.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../appsero/client',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'reference' => 'e62563b26f6b5a65556f929578b313d7652eb59d',
+            'aliases' => array(),
+            'reference' => 'b87e7593c6295748e88cdbfc92a638c8a73462ce',
             'dev_requirement' => false,
         ),
         'composer/installers' => array(
