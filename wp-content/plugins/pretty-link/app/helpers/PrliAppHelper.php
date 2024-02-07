@@ -27,5 +27,29 @@ class PrliAppHelper {
       $label
     );
   }
+
+  public static function wp_pages_dropdown($field_name, $page_id = 0, $auto_page = false, $empty_option = false) {
+    $pages = PrliUtils::get_pages();
+    $selected_page_id = isset($_POST[$field_name]) ? sanitize_text_field(wp_unslash($_POST[$field_name])) : $page_id;
+    ?>
+    <select name="<?php echo esc_attr($field_name); ?>" id="<?php echo esc_attr($field_name); ?>">
+      <?php if($empty_option) : ?>
+        <option value=""><?php echo esc_html($empty_option); ?></option>
+      <?php endif ?>
+      <?php if($auto_page) : ?>
+        <option value="auto_create_page"><?php esc_html_e('- Auto Create New Page -', 'pretty-link'); ?></option>
+      <?php endif; ?>
+      <?php foreach($pages as $page) : ?>
+        <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($selected_page_id, $page->ID); ?>><?php echo esc_html($page->post_title); ?></option>
+      <?php endforeach; ?>
+    </select>
+    <?php if(is_numeric($selected_page_id)) : ?>
+      <?php $permalink = get_permalink($selected_page_id); ?>
+      <?php if($permalink) : ?>
+        <a href="<?php echo esc_url(admin_url("post.php?post={$selected_page_id}&action=edit")); ?>" target="_blank" class="button"><?php esc_html_e('Edit', 'pretty-link'); ?></a>
+        <a href="<?php echo esc_url($permalink); ?>" target="_blank" class="button"><?php esc_html_e('View', 'pretty-link'); ?></a>
+      <?php endif; ?>
+    <?php endif;
+  }
 }
 

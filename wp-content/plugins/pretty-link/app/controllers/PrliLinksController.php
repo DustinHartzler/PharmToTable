@@ -13,6 +13,7 @@ class PrliLinksController extends PrliBaseController {
     add_action( 'transition_post_status', array($this, 'transition_cpt_status'), 10, 3 );
     add_filter( 'redirect_post_location', array($this, 'redirect_post_location'), 10, 2 );
     add_action( 'admin_notices', array($this, 'link_saved_admin_notice') );
+    add_action( 'admin_notices', array($this, 'fee_admin_notice') );
     add_action( 'wp_ajax_validate_pretty_link', array($this,'ajax_validate_pretty_link') );
     add_action( 'wp_ajax_reset_pretty_link', array($this,'ajax_reset_pretty_link') );
     add_action( 'wp_ajax_prli_quick_create', array($this, 'ajax_quick_create'));
@@ -21,6 +22,7 @@ class PrliLinksController extends PrliBaseController {
     add_filter( 'posts_search', array($this, 'search_links_table') );
 
     // Links table join
+    add_filter( 'posts_where', array($this, 'prettypay_links_filter') );
     add_filter( 'posts_fields', array($this, 'add_clicks_to_select') );
     add_filter( 'posts_join', array($this,'join_links_to_posts') );
 
@@ -42,12 +44,17 @@ class PrliLinksController extends PrliBaseController {
     add_action('bulk_edit_custom_box', array($this, 'quick_bulk_edit_add'), 10, 2);
     add_action('save_post', array($this, 'save_quick_edit'), 10, 2);
     add_action('wp_ajax_prli_links_list_save_bulk_edit', array($this, 'save_bulk_edit'));
-
+    add_filter('admin_body_class', array($this, 'add_post_status_body_class'));
     add_filter('post_row_actions', array($this, 'add_row_actions'), 10, 2);
 
     if(!($snapshot_timestamp = wp_next_scheduled('prli_cleanup_visitor_locks_worker'))) {
       wp_schedule_event( time(), 'prli_cleanup_visitor_locks_interval', 'prli_cleanup_visitor_locks_worker' );
     }
+
+    // PrettyPay links
+    add_filter('admin_url', array($this, 'add_new_prettypay_link_url'), 10, 2);
+    add_filter('submenu_file', array($this, 'highlight_prettypay_menu_item'));
+    add_action('current_screen', array($this, 'maybe_change_post_type_labels'));
   }
 
   public function register_post_type() {
@@ -57,6 +64,7 @@ class PrliLinksController extends PrliBaseController {
       'labels' => array(
         'name'               => esc_html__('Pretty Links', 'pretty-link'),
         'singular_name'      => esc_html__('Pretty Link', 'pretty-link'),
+        'add_new'            => esc_html__('Add New', 'pretty-link'),
         'add_new_item'       => esc_html__('Add New Pretty Link', 'pretty-link'),
         'edit_item'          => esc_html__('Edit Pretty Link', 'pretty-link'),
         'new_item'           => esc_html__('New Pretty Link', 'pretty-link'),
@@ -179,6 +187,7 @@ class PrliLinksController extends PrliBaseController {
     $values['slug'] = (isset($_REQUEST['slug'])?sanitize_text_field(stripslashes($_REQUEST['slug'])):$prli_link->generateValidSlug());
     $values['name'] = (isset($_REQUEST['name'])?sanitize_text_field(stripslashes($_REQUEST['name'])):'');
     $values['description'] = (isset($_REQUEST['description'])?sanitize_textarea_field(stripslashes($_REQUEST['description'])):'');
+    $values['prettypay_link'] = !empty($_REQUEST['prettypay']);
 
     $values['track_me'] = ((isset($_REQUEST['track_me']) and $_REQUEST['track_me'] == 'on') or (!isset($_REQUEST['track_me']) and $prli_options->link_track_me == '1'));
     $values['nofollow'] = ((isset($_REQUEST['nofollow']) and $_REQUEST['nofollow'] == 'on') or (!isset($_REQUEST['nofollow']) and $prli_options->link_nofollow == '1'));
@@ -213,11 +222,11 @@ class PrliLinksController extends PrliBaseController {
       }
     }
 
-    return $values;
+    return apply_filters('prli_setup_new_vars', $values);
   }
 
   public function setup_edit_vars($record) {
-    global $prli_link, $prli_link_meta;
+    global $prli_link_meta;
 
     $values = array();
     $values['link_id'] = isset($record->id) ? $record->id : null;
@@ -228,6 +237,7 @@ class PrliLinksController extends PrliBaseController {
     $values['track_me'] = ((isset($_REQUEST['track_me']) or $record->track_me) and ((isset($_REQUEST['track_me']) and $_REQUEST['track_me'] == 'on') or $record->track_me == 1));
     $values['nofollow'] = ((isset($_REQUEST['nofollow']) and $_REQUEST['nofollow'] == 'on') or (isset($record->nofollow) && $record->nofollow == 1));
     $values['sponsored'] = ((isset($_REQUEST['sponsored']) and $_REQUEST['sponsored'] == 'on') or (isset($record->sponsored) && $record->sponsored == 1));
+    $values['prettypay_link'] = $record->prettypay_link == 1;
 
     $values['groups'] = array();
 
@@ -257,11 +267,11 @@ class PrliLinksController extends PrliBaseController {
       $values['google_tracking'] = (($prli_link_meta->get_link_meta($record->id, 'google_tracking', true) == 1)?true:false);
     }
 
-    return $values;
+    return apply_filters('prli_setup_edit_vars', $values, $record);
   }
 
   public static function save_cpt_link() {
-    global $post, $post_id, $typenow, $prli_link, $prli_group;
+    global $post, $post_id, $typenow, $prli_link, $prli_link_meta;
 
     # Skip ajax
     if(defined('DOING_AJAX')) {
@@ -329,11 +339,17 @@ class PrliLinksController extends PrliBaseController {
    * @return string
    */
   public function redirect_post_location($location, $post_id) {
-    if (get_post_type($post_id) == PrliLink::$cpt) {
-      $location = add_query_arg(array(
+    if(get_post_type($post_id) == PrliLink::$cpt) {
+      $args = array(
         'post_type' => PrliLink::$cpt,
         'message' => stripos($location, 'message=6') === false ? 1 : 6
-      ), admin_url('edit.php'));
+      );
+
+      if(!empty($_REQUEST['prettypay_link'])) {
+        $args['prettypay'] = 1;
+      }
+
+      $location = add_query_arg($args, admin_url('edit.php'));
     }
 
     return $location;
@@ -345,13 +361,31 @@ class PrliLinksController extends PrliBaseController {
   public function link_saved_admin_notice() {
     $screen = get_current_screen();
 
-    if ($screen instanceof WP_Screen && $screen->id == 'edit-pretty-link' && isset($_GET['message'])) {
+    if($screen instanceof WP_Screen && $screen->id == 'edit-pretty-link' && isset($_GET['message'])) {
       $message = (int) $_GET['message'];
 
-      if ($message == 1) {
-        printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html__('Pretty Link updated.', 'pretty-link'));
-      } elseif ($message == 6) {
-        printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html__('Pretty Link created.', 'pretty-link'));
+      if($message == 1) {
+        $message = !empty($_REQUEST['prettypay']) ? __('PrettyPay™ Link updated.', 'pretty-link') : __('Pretty Link updated.', 'pretty-link');
+        printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html($message));
+      }
+      elseif($message == 6) {
+        $message = !empty($_REQUEST['prettypay']) ? __('PrettyPay™ Link created.', 'pretty-link') : __('Pretty Link created.', 'pretty-link');
+        printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html($message));
+      }
+    }
+  }
+
+  public function fee_admin_notice() {
+    global $plp_update;
+
+    if(isset($_GET['prettypay']) && $_GET['prettypay'] == '1') {
+      $license = $plp_update->get_license_info();
+      $license = is_array($license) && isset($license['license_key']) && is_array($license['license_key']);
+
+      $is_dismissed = get_transient('prli_dismiss_notice_fee_3');
+
+      if(!$is_dismissed && !$license && PrliStripeConnect::is_active()) {
+        include_once PRLI_VIEWS_PATH . "/prettypay/fee_notice.php";
       }
     }
   }
@@ -733,8 +767,12 @@ class PrliLinksController extends PrliBaseController {
       if( $link->redirect_type !== 'pixel' ) {
         $new_actions['tweet'] = PrliLinksHelper::link_action_tweet($link, __('Tweet', 'pretty-link'));
         $new_actions['email'] = PrliLinksHelper::link_action_email($link, __('Email', 'pretty-link'));
-        $new_actions['url']   = PrliLinksHelper::link_action_visit_target($link, __('Target &raquo;', 'pretty-link'));
-        $new_actions['pl']    = PrliLinksHelper::link_action_visit_pretty_link($link, __('Pretty Link &raquo;', 'pretty-link'));
+
+        if($link->redirect_type !== 'prettypay_link_stripe') {
+          $new_actions['url'] = PrliLinksHelper::link_action_visit_target($link, __('Target &raquo;', 'pretty-link'));
+        }
+
+        $new_actions['pl'] = PrliLinksHelper::link_action_visit_pretty_link($link, $link->prettypay_link ? __('PrettyPay™ Link &raquo;', 'pretty-link') : __('Pretty Link &raquo;', 'pretty-link'));
       }
 
       $plp_update = new PrliUpdateController();
@@ -763,7 +801,7 @@ class PrliLinksController extends PrliBaseController {
           }
         }
 
-        if($plp_options->enable_link_health && $link->redirect_type != 'pixel') {
+        if($plp_options->enable_link_health && !in_array($link->redirect_type, array('pixel', 'prettypay_link_stripe'), true)) {
           $new_actions['link_health'] = $plp_links_ctrl->health_status_link($link->id);
         }
       }
@@ -772,6 +810,20 @@ class PrliLinksController extends PrliBaseController {
     }
 
     return $actions;
+  }
+
+  public function add_post_status_body_class($body_class) {
+    $current_screen = get_current_screen();
+
+    if($current_screen instanceof WP_Screen && $current_screen->post_type == PrliLink::$cpt && $current_screen->id == 'edit-pretty-link') {
+      $post_status = isset($_GET['post_status']) ? esc_attr(sanitize_text_field(wp_unslash($_GET['post_status']))) : '';
+
+      if($post_status) {
+        $body_class .= " prli-post-status-$post_status ";
+      }
+    }
+
+    return $body_class;
   }
 
   public function ajax_reset_pretty_link() {
@@ -919,6 +971,21 @@ class PrliLinksController extends PrliBaseController {
     return $fields;
   }
 
+  public function prettypay_links_filter($where) {
+    global $typenow;
+
+    if($typenow == PrliLink::$cpt && is_admin()) {
+      if(!empty($_REQUEST['prettypay'])) {
+        $where .= " AND li.prettypay_link = 1";
+      }
+      else {
+        $where .= " AND li.prettypay_link <> 1";
+      }
+    }
+
+    return $where;
+  }
+
   // Join for searching
   public function join_links_to_posts($join) {
     global $wpdb, $typenow;
@@ -956,17 +1023,60 @@ class PrliLinksController extends PrliBaseController {
     return $where;
   }
 
-  // Only keep the All & Trash quick links
+  // Override the views since we need separate counts for PrettyPay and non-PrettyPay links
   public function modify_quick_links($views) {
-    global $plp_update;
+    global $prli_link, $plp_update;
 
-    $view_keys = array_keys($views);
-    $keep_keys = array('all','trash');
+    $num_links = $prli_link->count_links((int) !empty($_REQUEST['prettypay']));
+    $total_links = array_sum((array) $num_links);
 
-    foreach($view_keys as $view_key) {
-      if(!in_array($view_key,$keep_keys)) {
-        unset($views[$view_key]);
-      }
+    // Subtract post types that are not included in the admin all list.
+    foreach(get_post_stati(array('show_in_admin_all_list' => false)) as $state) {
+      $total_links -= $num_links->$state;
+    }
+
+    $all_label = sprintf(
+      /* translators: %s: number of links */
+      esc_html__('All %s', 'pretty-link'),
+      sprintf(
+        '<span class="count">(%s)</span>',
+        number_format_i18n($total_links)
+      )
+    );
+
+    $trash_label = sprintf(
+      /* translators: %s: number of links in the trash */
+      esc_html__('Trash %s', 'pretty-link'),
+      sprintf(
+        '<span class="count">(%s)</span>',
+        number_format_i18n($num_links->trash)
+      )
+    );
+
+    $all_args = array('post_type' => PrliLink::$cpt);
+    $trash_args = array('post_type' => PrliLink::$cpt, 'post_status' => 'trash');
+
+    if(!empty($_REQUEST['prettypay'])) {
+      $all_args['prettypay'] = 1;
+      $trash_args['prettypay'] = 1;
+    }
+
+    $views = array(
+      'all' => sprintf(
+        '<a href="%s"%s>%s</a>',
+        esc_url(add_query_arg($all_args, 'edit.php')),
+        !isset($_REQUEST['post_status']) || $_REQUEST['post_status'] != 'trash' ? ' class="current" aria-current="page"' : '',
+        $all_label
+      )
+    );
+
+    if(!empty($num_links->trash)) {
+      $views['trash' ] = sprintf(
+        '<a href="%s"%s>%s</a>',
+        esc_url(add_query_arg($trash_args, 'edit.php')),
+        isset($_REQUEST['post_status']) && $_REQUEST['post_status'] == 'trash' ? ' class="current" aria-current="page"' : '',
+        $trash_label
+      );
     }
 
     if(!PrliUtils::is_authorized()) {
@@ -1019,4 +1129,101 @@ class PrliLinksController extends PrliBaseController {
     return $orderby;
   }
 
+  public function add_new_prettypay_link_url($url, $path) {
+    if($path == 'post-new.php?post_type=pretty-link') {
+      if(!empty($_REQUEST['prettypay'])) {
+        $url = add_query_arg(array('prettypay' => 1), $url);
+      }
+      else {
+        global $prli_link;
+        $post_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+
+        if($post_id > 0 && $prli_link->is_post_prettypay_link($post_id)) {
+          $url = add_query_arg(array('prettypay' => 1), $url);
+        }
+      }
+    }
+
+    return $url;
+  }
+
+  public function highlight_prettypay_menu_item($submenu_file) {
+    if(!empty($_REQUEST['prettypay'])) {
+      $submenu_file = 'edit.php?post_type=pretty-link&amp;prettypay=1';
+    }
+    else {
+      global $typenow, $pagenow, $prli_link;
+
+      if($typenow == PrliLink::$cpt && $pagenow == 'post.php') {
+        $post_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+
+        if($post_id > 0 && $prli_link->is_post_prettypay_link($post_id)) {
+          $submenu_file = 'edit.php?post_type=pretty-link&amp;prettypay=1';
+        }
+      }
+    }
+
+    return $submenu_file;
+  }
+
+  public function maybe_change_post_type_labels($current_screen) {
+    if($current_screen->post_type == PrliLink::$cpt) {
+      global $wp_post_types, $prli_link;
+
+      if(isset($wp_post_types[PrliLink::$cpt]) && $wp_post_types[PrliLink::$cpt] instanceof WP_Post_Type) {
+        $post_type_object = $wp_post_types[PrliLink::$cpt];
+
+        if(isset($post_type_object->labels) && is_object($post_type_object->labels)) {
+          $is_prettypay = false;
+
+          if(!empty($_REQUEST['prettypay'])) {
+            $is_prettypay = true;
+          }
+          elseif(isset($_GET['post'], $_GET['action']) && $_GET['action'] == 'edit') {
+            $is_prettypay = $prli_link->is_post_prettypay_link((int) $_GET['post']);
+          }
+
+          if($is_prettypay) {
+            $labels = array(
+              'name' => esc_html__('PrettyPay™ Links', 'pretty-link'),
+              'singular_name' => esc_html__('PrettyPay™ Link', 'pretty-link'),
+              'add_new_item' => esc_html__('Add New PrettyPay™ Link', 'pretty-link'),
+              'edit_item' => esc_html__('Edit PrettyPay™ Link', 'pretty-link'),
+              'new_item' => esc_html__('New PrettyPay™ Link', 'pretty-link'),
+              'view_item' => esc_html__('View PrettyPay™ Link', 'pretty-link'),
+              'search_items' => esc_html__('Search PrettyPay™ Links', 'pretty-link'),
+              'not_found' => esc_html__('No PrettyPay™ Links found', 'pretty-link'),
+              'not_found_in_trash' => esc_html__('No PrettyPay™ Links found in Trash', 'pretty-link'),
+              'parent_item_colon' => esc_html__('Parent PrettyPay™ Link:', 'pretty-link'),
+            );
+
+            foreach($labels as $key => $label) {
+              if(isset($post_type_object->labels->$key)) {
+                $post_type_object->labels->$key = $label;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public static function show_prettypay_popup() {
+    $account_email = get_option( PrliAuthConnectHelper::OPTION_KEY_AUTH_ACCOUNT_EMAIL );
+    $secret = get_option( PrliAuthConnectHelper::OPTION_KEY_AUTH_ACCOUNT_SECRET );
+    $site_uuid = get_option( PrliAuthConnectHelper::OPTION_KEY_AUTH_ACCOUNT_SITE_UUID );
+    $id = PrliStripeConnect::get_method_id();
+
+    if( $account_email && $secret && $site_uuid ) {
+      $stripe_connect_url = PrliStripeConnect::get_stripe_connect_url();
+    } else {
+      $return_url = admin_url('edit.php?post_type=pretty-link&page=pretty-link-options&nav_action=payments');
+      $stripe_connect_url = PrliAuthenticatorController::get_auth_connect_url( $return_url, array(
+        'stripe_connect' => 'true',
+        'method_id' => $id
+      ));
+    }
+
+    include_once PRLI_VIEWS_PATH . "/admin/popups/prettypay.php";
+  }
 }

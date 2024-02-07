@@ -786,7 +786,6 @@ class PrliUpdateController {
     $license_info = get_site_transient('prli_license_info');
     $mothership_license = $this->mothership_license;
 
-
     if(!$license_info && !empty($mothership_license)) {
       try {
         $domain = urlencode(PrliUtils::site_domain());

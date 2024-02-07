@@ -28,6 +28,7 @@ class PrliAppController extends PrliBaseController {
     add_action('custom_menu_order', array($this,'admin_menu_order'));
     add_action('menu_order', array($this,'admin_menu_order'));
     add_action('menu_order', array($this,'admin_submenu_order'));
+    add_filter('display_post_states', array($this, 'add_post_states'), 10, 2);
 
     //Where the magic happens when not in wp-admin nor !GET request
     if(isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == 'GET' && !is_admin()) {
@@ -48,7 +49,9 @@ class PrliAppController extends PrliBaseController {
     add_action('in_admin_header', array($this,'pl_admin_header'), 0);
 
     add_action('wp_ajax_pl_dismiss_upgrade_header', array($this, 'dismiss_upgrade_header'));
+    add_action('wp_ajax_prli_dismiss_notice', array($this, 'dismiss_notice'));
     add_action('wp_ajax_prli_dismiss_daily_notice', array($this, 'dismiss_daily_notice'));
+    add_action('wp_ajax_prli_dismiss_monthly_notice', array($this, 'dismiss_monthly_notice'));
 
     // Admin footer text.
     add_filter('admin_footer_text', array($this, 'admin_footer'), 1, 2);
@@ -72,54 +75,69 @@ class PrliAppController extends PrliBaseController {
 
 
   public function pl_admin_header() {
-    global $current_screen, $plp_update;
+    global $plp_update;
 
     if($this->on_pretty_link_page()) {
       $dismissed = get_option( 'pl_dismiss_upgrade_header', false );
-      if ( ! empty( $dismissed ) ) {
-        return;
-      }
-      ?>
-      <?php if ( ! $plp_update->is_installed() ) : ?>
+
+      if(empty($dismissed) && !$plp_update->is_installed()) : ?>
         <div class="pl-upgrade-header" id="pl-upgrade-header">
           <span id="close-pl-upgrade-header">X</span>
           <?php _e( 'You\'re using Pretty Links Lite. To unlock more features, consider <a href="https://prettylinks.com/pl/main-menu/upgrade?plugin-upgrade-header">upgrading to Pro.</a>', 'pretty-link' ); ?>
         </div>
-      <?php endif; ?>
-      <div id="pl-admin-header"><img class="pl-logo" src="<?php echo PRLI_IMAGES_URL . '/pretty-links-logo-color-white.svg'; ?>" /></div>
-      <script>
-        jQuery(document).ready(function($) {
-          $('#close-pl-upgrade-header').on('click', function() {
-            var upgradeHeader = $('#pl-upgrade-header');
-            upgradeHeader.fadeOut();
-            $.ajax({
-              url: ajaxurl,
-              type: 'POST',
-              data: {
-                action: 'pl_dismiss_upgrade_header',
-                nonce: "<?php echo wp_create_nonce( 'pl_dismiss_upgrade_header' ); ?>"
-              },
-            })
-            .done(function() {
-              console.log("success");
-            })
-            .fail(function() {
-              console.log("error");
-            })
-            .always(function() {
-              console.log("complete");
+        <script>
+          jQuery(document).ready(function($) {
+            $('#close-pl-upgrade-header').on('click', function() {
+              var upgradeHeader = $('#pl-upgrade-header');
+              upgradeHeader.fadeOut();
+              $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                  action: 'pl_dismiss_upgrade_header',
+                  nonce: "<?php echo wp_create_nonce( 'pl_dismiss_upgrade_header' ); ?>"
+                },
+              })
+              .done(function() {
+                console.log("success");
+              })
+              .fail(function() {
+                console.log("error");
+              })
+              .always(function() {
+                console.log("complete");
+              });
             });
           });
-        });
-      </script>
+        </script>
+      <?php endif; ?>
+      <div id="pl-admin-header"><img class="pl-logo" src="<?php echo PRLI_IMAGES_URL . '/pretty-links-logo-color-white.svg'; ?>" /></div>
       <?php
     }
+  }
+
+  public function dismiss_notice() {
+    if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      $notice = sanitize_key($_POST['notice']);
+      update_option("prli_dismiss_notice_$notice", true);
+    }
+
+    wp_send_json_success();
   }
 
   public function dismiss_daily_notice() {
     if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
       $notice = sanitize_key($_POST['notice']);
       set_transient("prli_dismiss_notice_{$notice}", true, DAY_IN_SECONDS);
+    }
+
+    wp_send_json_success();
+  }
+
+  public function dismiss_monthly_notice() {
+    if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      $notice = sanitize_key($_POST['notice']);
+      set_transient("prli_dismiss_notice_{$notice}", true, DAY_IN_SECONDS * 30);
     }
 
     wp_send_json_success();
@@ -138,6 +156,15 @@ class PrliAppController extends PrliBaseController {
     $role = PrliUtils::get_minimum_role();
 
     $pl_link_cpt = PrliLink::$cpt;
+
+    add_submenu_page(
+      "edit.php?post_type={$pl_link_cpt}",
+      esc_html__('PrettyPay™ Links', 'pretty-link'),
+      esc_html__('PrettyPay™ Links', 'pretty-link') . PrliUtils::new_badge(),
+      $role,
+      'prettypay-links',
+      PrliStripeHelper::is_connection_active() ? '__return_empty_string' : array(PrliLinksController::class, 'show_prettypay_popup')
+    );
 
     if(!$plp_update->is_installed()) {
       add_submenu_page(
@@ -294,6 +321,7 @@ class PrliAppController extends PrliBaseController {
 
     $include_array = array(
       $slug,
+      'prettypay-links',
       "post-new.php?post_type={$pl_link_cpt}",
       "edit.php?post_type={$pl_link_cpt}&page=pretty-link-upgrade-categories",
       "edit.php?post_type={$pl_link_cpt}&page=pretty-link-upgrade-tags",
@@ -317,6 +345,13 @@ class PrliAppController extends PrliBaseController {
 
     foreach($submenu[$slug] as $sub) {
       $include_order = array_search($sub[2], $include_array);
+
+      if($sub[2] == $slug && !empty($_REQUEST['prettypay'])) {
+        $sub[0] = esc_html__('Pretty Links', 'pretty-link');
+      }
+      elseif($sub[2] == 'prettypay-links' && PrliStripeHelper::is_connection_active()) {
+        $sub[2] = $slug . '&amp;prettypay=1';
+      }
 
       if(false !== $include_order) {
         $new_order[$include_order] = $sub;
@@ -363,18 +398,14 @@ class PrliAppController extends PrliBaseController {
                       PRLI_VENDOR_LIB_URL.'/fontello/css/pretty-link.css',
                       array(), PRLI_VERSION );
 
-    if ($this->should_enqueue_block_editor_scripts()) {
-      $prereqs = ['wp-i18n', 'wp-element', 'wp-compose', 'wp-components'];
-
-      if ($current_screen->id != 'widgets') {
-        $prereqs[] = 'wp-editor';
-      }
+    if($this->should_enqueue_block_editor_scripts()) {
+      $asset = include PRLI_JS_PATH . '/build/editor.asset.php';
 
       wp_enqueue_script(
         'pretty-link-richtext-format',
         PRLI_JS_URL . '/build/editor.js',
-        $prereqs,
-        PRLI_VERSION,
+        $asset['dependencies'],
+        $asset['version'],
         true
       );
 
@@ -382,7 +413,7 @@ class PrliAppController extends PrliBaseController {
         'homeUrl' => trailingslashit(get_home_url())
       ));
 
-      do_action('prli_enqueue_block_scripts', $prereqs);
+      do_action('prli_enqueue_block_scripts', $asset['dependencies']);
     }
 
     // If we're in 3.8 now then use a font for the admin image
@@ -392,6 +423,12 @@ class PrliAppController extends PrliBaseController {
     }
 
     wp_enqueue_style('prli-admin-global', PRLI_CSS_URL . '/admin_global.css', array(), PRLI_VERSION);
+    wp_enqueue_script('prli-admin-global', PRLI_JS_URL . '/admin_global.js', array('jquery'), PRLI_VERSION);
+
+    wp_localize_script('prli-admin-global', 'PrliAdminGlobal', array(
+      'ajax_url' => admin_url('admin-ajax.php'),
+      'dismiss_notice_nonce' => wp_create_nonce('prli_dismiss_notice')
+    ));
 
     $is_pl_page           = $this->is_pretty_link_page();
     $is_link_page         = $this->is_pretty_link_link_page();
@@ -404,14 +441,12 @@ class PrliAppController extends PrliBaseController {
 
       if(!$is_link_listing_page) {
         wp_register_style('pl-ui-smoothness', PRLI_VENDOR_LIB_URL.'/jquery-ui/jquery-ui.min.css', array(), '1.11.4');
-        wp_register_style('prli-simplegrid', PRLI_CSS_URL.'/simplegrid.css', array(), PRLI_VERSION);
         wp_register_style('prli-social', PRLI_CSS_URL.'/social_buttons.css', array(), PRLI_VERSION);
 
         $prli_admin_shared_prereqs = array_merge(
           $prli_admin_shared_prereqs,
           array(
             'pl-ui-smoothness',
-            'prli-simplegrid',
             'prli-social',
           )
         );
@@ -448,15 +483,6 @@ class PrliAppController extends PrliBaseController {
           'prli-tooltip'
         ),
         PRLI_VERSION
-      );
-
-      wp_localize_script(
-        'prli-admin-shared',
-        'PrliAdminShared',
-        array(
-          'ajax_url' => admin_url('admin-ajax.php'),
-          'dismiss_notice_nonce' => wp_create_nonce('prli_dismiss_notice')
-        )
       );
 
       if($is_link_edit_page || $is_link_new_page) {
@@ -505,9 +531,30 @@ class PrliAppController extends PrliBaseController {
         )
       );
       wp_localize_script( 'prli-admin-link-list', 'PrliLinkList', $links_js_obj );
+
+      if($is_link_edit_page) {
+        wp_enqueue_style('fontello-animation', PRLI_VENDOR_LIB_URL.'/fontello/css/animation.css', array(), PRLI_VERSION);
+        wp_enqueue_style('select2', PRLI_JS_URL . '/vendor/select2/select2.min.css', array(), '4.0.13');
+        wp_enqueue_style('select2-prli-theme', PRLI_CSS_URL . '/select2-prli-theme.css', array(), PRLI_VERSION);
+        wp_enqueue_script('select2', PRLI_JS_URL . '/vendor/select2/select2.min.js', array(), '4.0.13', true);
+        wp_enqueue_script('pl-prettypay-link-stripe', PRLI_JS_URL . '/admin_prettypay_link_stripe.js', array('jquery'), PRLI_VERSION, true);
+
+        wp_localize_script('pl-prettypay-link-stripe', 'PrliPrettyPayLinkStripe', array(
+          'ajax_url' => admin_url('admin-ajax.php'),
+          'find_or_add_product' => __('Find or add a product...', 'pretty-link'),
+          'search_stripe_prices_nonce' => wp_create_nonce('prli_search_stripe_prices'),
+          'select_shipping_countries' => __('Select shipping countries', 'pretty-link') . '*',
+          'add_product_nonce' => wp_create_nonce('prli_stripe_add_product'),
+          'this_field_is_required' => __('This field is required', 'pretty-link'),
+        ));
+      }
     }
 
     if( preg_match('/_page_pretty-link-options$/', $hook) ) {
+      wp_enqueue_style('fontello-animation', PRLI_VENDOR_LIB_URL.'/fontello/css/animation.css', array(), PRLI_VERSION);
+      wp_enqueue_style('select2', PRLI_JS_URL . '/vendor/select2/select2.min.css', array(), '4.0.13');
+      wp_enqueue_style('select2-prli-theme', PRLI_CSS_URL . '/select2-prli-theme.css', array(), PRLI_VERSION);
+      wp_enqueue_script('select2', PRLI_JS_URL . '/vendor/select2/select2.min.js', array(), '4.0.13', true);
       wp_enqueue_style('wp-color-picker');
       wp_enqueue_script('wp-color-picker');
       wp_enqueue_style('pl-options', PRLI_CSS_URL.'/admin_options.css', null, PRLI_VERSION);
@@ -889,5 +936,15 @@ class PrliAppController extends PrliBaseController {
   public function is_pretty_link_new_page() {
     $hook = $this->get_screen_id();
     return ($hook == $this->screens['add-edit']);
+  }
+
+  public function add_post_states($post_states, $post) {
+    global $prli_options;
+
+    if($prli_options->prettypay_thank_you_page_id == $post->ID) {
+      $post_states['prli_prettypay_thank_you_page'] = __('PrettyPay™ Thank You Page', 'pretty-link');
+    }
+
+    return $post_states;
   }
 }

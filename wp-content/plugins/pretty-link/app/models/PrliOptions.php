@@ -33,6 +33,9 @@ class PrliOptions
 
   public $bookmarklet_auth;
 
+  public $prettypay_thank_you_page_id;
+  public $prettypay_default_currency;
+
   public function __construct($options_array = array()) {
     // Set values from array
     foreach($options_array as $key => $value) {
@@ -349,6 +352,14 @@ class PrliOptions
 
     if(!isset($this->extended_tracking)) {
       $this->extended_tracking = 'normal';
+    }
+
+    if(!isset($this->prettypay_thank_you_page_id)) {
+      $this->prettypay_thank_you_page_id = '';
+    }
+
+    if(!isset($this->prettypay_default_currency)) {
+      $this->prettypay_default_currency = 'USD';
     }
   }
 

@@ -3,7 +3,7 @@
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL using your website and brand!
-Version: 3.5.3
+Version: 3.6.3
 Author: Pretty Links
 Author URI: http://prettylinks.com
 Text Domain: pretty-link
@@ -51,6 +51,7 @@ define('PRLI_CSS_URL',PRLI_URL.'/css');
 define('PRLI_JS_URL',PRLI_URL.'/js');
 define('PRLI_IMAGES_URL',PRLI_URL.'/images');
 define('PRLI_VENDOR_LIB_URL',PRLI_URL.'/vendor/lib');
+define('PRLI_SCRIPT_URL',site_url('/index.php?plugin=prli'));
 
 define('PRLI_BROWSER_URL','https://d14715w921jdje.cloudfront.net/browser');
 define('PRLI_OS_URL','https://d14715w921jdje.cloudfront.net/os');
@@ -196,7 +197,7 @@ $prli_utils     = new PrliUtils();
 
 global $prli_db_version, $plp_db_version;
 
-$prli_db_version = 23; // this is the version of the database we're moving to
+$prli_db_version = 24; // this is the version of the database we're moving to
 $plp_db_version = 11; // this is the version of the database we're moving to
 
 global $prli_app_controller;

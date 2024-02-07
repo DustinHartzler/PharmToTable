@@ -22,6 +22,10 @@ class PrliLinksHelper {
   public static function link_list_icons($link) {
     do_action('prli_list_icon',$link->id);
 
+    if($link->prettypay_link) : ?>
+      <i title="<?php esc_attr_e('PrettyPay™ Link', 'pretty-link'); ?>" class="pl-icon-basket pl-list-icon"></i><?php
+    endif;
+
     switch( $link->redirect_type ):
       case 'prettybar': ?>
         <i title="<?php esc_attr_e('PrettyBar Redirection', 'pretty-link'); ?>" class="pl-icon-star pl-list-icon"></i><?php

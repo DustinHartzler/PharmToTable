@@ -1,10 +1,11 @@
 === Pretty Links - Affiliate Links, Link Branding, Link Tracking & Marketing Plugin ===
 Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
-Tags: affiliate links, link branding, link shortner, link tracking, redirects, affiliate, affiliate marketing, affiliates, short links, shorten, shortening, shortlink, shortlinks, shorturl, shrinking, marketing, marketing plugin, cloak, cloaker, cloaking, 301, 302, 307, 404, bit.ly, bitly, tinyurl, link cloaking, link redirection, link shortener, links, pretty links, url redirection, url shortener, urls, seo, slug, slugs
+Tags: affiliate links, link branding, link shortner, link tracking, redirects, affiliate, affiliate marketing, affiliates, short links, shorten, shortening, shortlink, shortlinks, shorturl, shrinking, marketing, marketing plugin, cloak, cloaker, cloaking, 301, 302, 307, 404, bit.ly, bitly, tinyurl, link cloaking, link redirection, link shortener, links, pretty links, url redirection, url shortener, urls, seo, slug, slugs, payments, checkout, stripe
 Requires at least: 5.1
-Tested up to: 6.3
-Stable tag: 3.5.3
+Requires PHP: 7.0
+Tested up to: 6.4
+Stable tag: 3.6.3
 
 🌠 The best WordPress link management, branding, tracking & sharing plugin. Easily make pretty & trackable shortlinks. 🔗
 
@@ -35,6 +36,9 @@ http://blairwilliams.com/w7a
 **[🔗 Create clean, simple URLs that redirect to any other URL](https://prettylinks.com/about#pl-link-setup?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
 Easily turn your long URLs into short ones within a matter of seconds.
 
+**[💰 Seamless Stripe Sales](https://prettylinks.com/docs/prettypay-links/?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**\*
+Create a branded, one-click path to payment with NEW PrettyPay™ Links. Share your link and start selling anywhere – instantly.
+
 **[🔃 Supports 301, 302, and 307 redirects](https://prettylinks.com/about#pl-redirect-types?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
 Redirect users using one of our three redirect types: 301 (Permanent), 302 (Temporary), and 307 (Temporary).
 
@@ -57,6 +61,8 @@ No need to guess where everything is located. Pretty Links makes the setup and l
 Need to download click data for your links? Pretty Links has you covered. The plugin will generate a CSV containing all the information you need to successfully manage your links.
 
 ... and so much more! [Visit our site](https://prettylinks.com?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=home) to learn more about what Pretty Links can do for you.
+
+\* Pro users benefit from no added payment processing fees, while a small 3% fee is added per-transaction for free users.
 
 ## Pretty Links Pro 💪
 
@@ -131,6 +137,28 @@ Yes! Pretty Links is ready for translation. See our [Translating Pretty Links](h
 4. Click Tracking
 
 == Changelog ==
+= 3.6.3 =
+* Add section for PrettyPay™ within the Welcome and Complete steps for in-plugin onboarding
+* Add notice of 3% fee to PrettyPay™ Links sub-page for free users
+* Add support for ISO encoding when pulling in title from pretty link's target URL
+* Fix PHP 8 deprecation warnings
+* Fix database error on initial plugin activation
+* Fix body class on Pretty Links page not being escaped
+* Pro: Add filter hook for invalid response codes in Link Health
+
+= 3.6.2 = 
+* Fix PrettyPay™ auto-creating Thank You pages
+
+= 3.6.1 =
+* WP 6.4 Compatibility
+* Saving settings would break in some cases
+* Show proper error when saving Customer Portal failed
+* Link Inserter broken due to missing lodash
+
+= 3.6.0 =
+* Launching all-new PrettyPay™ Links
+* PHP 8.2 compatibility fixes
+
 = 3.5.3 =
 * Fix scheduling and how empty images are displayed within in-plugin notifications
 * Replace feature images on onboarding welcome page
