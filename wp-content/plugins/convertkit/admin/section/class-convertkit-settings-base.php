@@ -290,6 +290,32 @@ abstract class ConvertKit_Settings_Base {
 	}
 
 	/**
+	 * Returns a textarea field.
+	 *
+	 * @since   2.3.5
+	 *
+	 * @param   string            $name           Name.
+	 * @param   string            $value          Value.
+	 * @param   bool|string|array $description    Description (false|string|array).
+	 * @param   bool|array        $css_classes    CSS Classes (false|array).
+	 * @return  string                              HTML Field
+	 */
+	public function get_textarea_field( $name, $value = '', $description = false, $css_classes = false ) {
+
+		$html = sprintf(
+			'<textarea class="%s" id="%s" name="%s[%s]">%s</textarea>',
+			( is_array( $css_classes ) ? implode( ' ', $css_classes ) : 'regular-text' ),
+			$name,
+			$this->settings_key,
+			$name,
+			$value
+		);
+
+		return $html . $this->get_description( $description );
+
+	}
+
+	/**
 	 * Returns a date field.
 	 *
 	 * @since   2.2.8
@@ -435,7 +461,7 @@ abstract class ConvertKit_Settings_Base {
 		}
 
 		// Return description lines in a paragraph, using breaklines for each description entry in the array.
-		return '<p class="description">' . implode( '<br />', $description );
+		return '<p class="description">' . implode( '<br />', $description ) . '</p>';
 
 	}
 
@@ -467,15 +493,6 @@ abstract class ConvertKit_Settings_Base {
 	 * @return  array               Sanitized Settings with Defaults
 	 */
 	public function sanitize_settings( $settings ) {
-
-		// If a Form or Landing Page was specified, request a review.
-		// This can safely be called multiple times, as the review request
-		// class will ensure once a review request is dismissed by the user,
-		// it is never displayed again.
-		if ( ( isset( $settings['page_form'] ) && $settings['page_form'] ) ||
-			( isset( $settings['post_form'] ) && $settings['post_form'] ) ) {
-			WP_ConvertKit()->get_class( 'review_request' )->request_review();
-		}
 
 		// Merge settings with defaults.
 		$settings = wp_parse_args( $settings, $this->settings->get_defaults() );

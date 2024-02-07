@@ -157,17 +157,21 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 
 		// Define description for the 'Enabled' setting.
 		// If enabled, include the next scheduled date and time the Plugin will import broadcasts.
+		// If the next scheduled timestamp is 1, the event is running now.
 		$enabled_description = '';
-		if ( $this->settings->enabled() && $posts->get_cron_event_next_scheduled() ) {
+		if ( $this->settings->enabled() && $posts->get_cron_event_next_scheduled() && $posts->get_cron_event_next_scheduled() > 1 ) {
 			$enabled_description = sprintf(
-				'%s %s',
+				'%s %s<br />%s <strong>%s</strong> %s',
 				esc_html__( 'Broadcasts will next import at approximately ', 'convertkit' ),
 				// The cron event's next scheduled timestamp is always in UTC.
 				// Display it converted to the WordPress site's timezone.
 				get_date_from_gmt(
 					gmdate( 'Y-m-d H:i:s', $posts->get_cron_event_next_scheduled() ),
 					get_option( 'date_format' ) . ' ' . get_option( 'time_format' )
-				)
+				),
+				esc_html__( 'Broadcasts', 'convertkit' ),
+				esc_html__( 'must', 'convertkit' ),
+				esc_html__( 'have their "Enabled on public feeds" setting enabled in ConvertKit, to be eligible for import.', 'convertkit' )
 			);
 		}
 
@@ -197,6 +201,32 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 		}
 
 		add_settings_field(
+			'post_status',
+			__( 'Status', 'convertkit' ),
+			array( $this, 'post_status_callback' ),
+			$this->settings_key,
+			$this->name,
+			array(
+				'name'        => 'post_status',
+				'label_for'   => 'post_status',
+				'description' => __( 'The WordPress Post status to assign imported public broadcasts to.', 'convertkit' ),
+			)
+		);
+
+		add_settings_field(
+			'author_id',
+			__( 'Author', 'convertkit' ),
+			array( $this, 'author_id_callback' ),
+			$this->settings_key,
+			$this->name,
+			array(
+				'name'        => 'author_id',
+				'label_for'   => 'author_id',
+				'description' => __( 'The WordPress User to set as the author for WordPress Posts created from imported public broadcasts.', 'convertkit' ),
+			)
+		);
+
+		add_settings_field(
 			'category_id',
 			__( 'Category', 'convertkit' ),
 			array( $this, 'category_callback' ),
@@ -205,7 +235,21 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 			array(
 				'name'        => 'category_id',
 				'label_for'   => 'category_id',
-				'description' => __( 'The category to assign imported broadcasts to.', 'convertkit' ),
+				'description' => __( 'The category to assign imported public broadcasts to.', 'convertkit' ),
+			)
+		);
+
+		add_settings_field(
+			'import_thumbnail',
+			__( 'Include Thumbnail', 'convertkit' ),
+			array( $this, 'import_thumbnail_callback' ),
+			$this->settings_key,
+			$this->name,
+			array(
+				'name'        => 'import_thumbnail',
+				'label_for'   => 'import_thumbnail',
+				'label'       => __( 'If enabled, the Broadcast\'s thumbnail will be used as the WordPress Post\'s featured image.', 'convertkit' ),
+				'description' => '',
 			)
 		);
 
@@ -218,7 +262,7 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 			array(
 				'name'        => 'published_at_min_date',
 				'label_for'   => 'published_at_min_date',
-				'description' => __( 'The earliest date to import broadcasts from, based on the broadcast\'s published date and time.', 'convertkit' ),
+				'description' => __( 'The earliest date to import public broadcasts from, based on the broadcast\'s published date and time.', 'convertkit' ),
 			)
 		);
 
@@ -259,7 +303,7 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 
 		?>
 		<span class="convertkit-beta-label"><?php esc_html_e( 'Beta', 'convertkit' ); ?></span>
-		<p class="description"><?php esc_html_e( 'Defines whether public broadcasts created in ConvertKit should automatically be published on this site as WordPress Posts, and whether to enable options to create draft ConvertKit Broadcasts from WordPress Posts.', 'convertkit' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Defines whether public broadcasts ("Enabled on public feeds") in ConvertKit should automatically be published on this site as WordPress Posts, and whether to enable options to create draft ConvertKit Broadcasts from WordPress Posts.', 'convertkit' ); ?></p>
 		<?php
 
 	}
@@ -320,6 +364,58 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 	}
 
 	/**
+	 * Renders the input for the status setting.
+	 *
+	 * @since   2.3.4
+	 *
+	 * @param   array $args   Setting field arguments (name,description).
+	 */
+	public function post_status_callback( $args ) {
+
+		// Build field.
+		$select_field = $this->get_select_field(
+			$args['name'],
+			$this->settings->post_status(),
+			get_post_statuses(),
+			$args['description'],
+			array(
+				'enabled',
+				'convertkit-select2',
+			)
+		);
+
+		// Output field.
+		echo '<div class="convertkit-select2-container">' . $select_field . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput
+
+	}
+
+	/**
+	 * Renders the input for the author setting.
+	 *
+	 * @since   2.3.9
+	 *
+	 * @param   array $args   Setting field arguments (name,description).
+	 */
+	public function author_id_callback( $args ) {
+
+		// Build field.
+		$select_field = wp_dropdown_users(
+			array(
+				'echo'             => false,
+				'selected'         => $this->settings->author_id(),
+				'include_selected' => true,
+				'name'             => $this->settings_key . '[' . $args['name'] . ']',
+				'id'               => $this->settings_key . '_' . $args['name'],
+				'class'            => 'enabled convertkit-select2',
+			)
+		);
+
+		// Output field.
+		echo '<div class="convertkit-select2-container">' . $select_field . '</div>' . $this->get_description( $args['description'] ); // phpcs:ignore WordPress.Security.EscapeOutput
+
+	}
+
+	/**
 	 * Renders the input for the category setting.
 	 *
 	 * @since   2.2.9
@@ -337,7 +433,7 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 				'name'             => $this->settings_key . '[' . $args['name'] . ']',
 				'id'               => $this->settings_key . '_' . $args['name'],
 				'class'            => 'convertkit-select2 enabled',
-				'selected'         => $this->settings->get_by_key( $args['name'] ),
+				'selected'         => $this->settings->category_id(),
 				'taxonomy'         => 'category',
 				'hide_empty'       => false,
 			)
@@ -345,6 +441,29 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 
 		// Output field.
 		echo '<div class="convertkit-select2-container">' . $select_field . '</div>' . $this->get_description( $args['description'] ); // phpcs:ignore WordPress.Security.EscapeOutput
+
+	}
+
+	/**
+	 * Renders the input for the Import Thumbnail setting.
+	 *
+	 * @since   2.4.1
+	 *
+	 * @param   array $args   Setting field arguments (name,description).
+	 */
+	public function import_thumbnail_callback( $args ) {
+
+		// Output field.
+		echo $this->get_checkbox_field( // phpcs:ignore WordPress.Security.EscapeOutput
+			$args['name'],
+			'on',
+			$this->settings->import_thumbnail(), // phpcs:ignore WordPress.Security.EscapeOutput
+			$args['label'],  // phpcs:ignore WordPress.Security.EscapeOutput
+			$args['description'], // phpcs:ignore WordPress.Security.EscapeOutput
+			array(
+				'enabled',
+			)
+		);
 
 	}
 
@@ -360,7 +479,7 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 		// Output field.
 		echo $this->get_date_field( // phpcs:ignore WordPress.Security.EscapeOutput
 			$args['name'],
-			esc_attr( $this->settings->get_by_key( $args['name'] ) ),
+			esc_attr( $this->settings->published_at_min_date() ),
 			$args['description'], // phpcs:ignore WordPress.Security.EscapeOutput
 			array(
 				'enabled',
@@ -404,6 +523,31 @@ class ConvertKit_Admin_Settings_Broadcasts extends ConvertKit_Settings_Base {
 			$this->settings->no_styles(), // phpcs:ignore WordPress.Security.EscapeOutput
 			$args['description'] // phpcs:ignore WordPress.Security.EscapeOutput
 		);
+
+	}
+
+	/**
+	 * Sanitizes the settings prior to being saved.
+	 *
+	 * @since   2.4.1
+	 *
+	 * @param   array $settings   Submitted Settings Fields.
+	 * @return  array               Sanitized Settings with Defaults
+	 */
+	public function sanitize_settings( $settings ) {
+
+		// If the 'Include Thumbnail' setting isn't checked, it won't be included
+		// in the array of settings, and the defaults will enable this.
+		// Therefore, if the setting doesn't exist, set it to blank.
+		if ( ! array_key_exists( 'import_thumbnail', $settings ) ) {
+			$settings['import_thumbnail'] = '';
+		}
+
+		// Merge settings with defaults.
+		$settings = wp_parse_args( $settings, $this->settings->get_defaults() );
+
+		// Return settings to be saved.
+		return $settings;
 
 	}
 

@@ -107,14 +107,6 @@ class ConvertKit_Forminator_Admin_Settings extends ConvertKit_Settings_Base {
 			return;
 		}
 
-		// Build array of select options.
-		$options = array(
-			'default' => __( 'None', 'convertkit' ),
-		);
-		foreach ( $forms->get() as $form ) {
-			$options[ esc_attr( $form['id'] ) ] = esc_html( $form['name'] );
-		}
-
 		// Get Creator Network Recommendations script.
 		$creator_network_recommendations_enabled = $creator_network_recommendations->enabled();
 
@@ -123,7 +115,7 @@ class ConvertKit_Forminator_Admin_Settings extends ConvertKit_Settings_Base {
 
 		// Bail with an error if no Forminator Forms exist.
 		if ( ! $forminator_forms ) {
-			$this->output_error( __( 'No Forminator Forms exist in the Forminator Plugin.', 'convertkit' ) );
+			$this->output_error( __( 'No Forminator Forms or Quizzes exist in the Forminator Plugin.', 'convertkit' ) );
 			$this->render_container_end();
 			return;
 		}
@@ -139,10 +131,14 @@ class ConvertKit_Forminator_Admin_Settings extends ConvertKit_Settings_Base {
 			// Build row.
 			$table_row = array(
 				'title' => $forminator_form['name'],
-				'form'  => $this->get_select_field(
-					$forminator_form['id'],
+				'form'  => $forms->get_select_field_all(
+					'_wp_convertkit_integration_forminator_settings[' . $forminator_form['id'] . ']',
+					'_wp_convertkit_integration_forminator_settings_' . $forminator_form['id'] . '',
+					false,
 					(string) $this->settings->get_convertkit_form_id_by_forminator_form_id( $forminator_form['id'] ),
-					$options
+					array(
+						'default' => __( 'None', 'convertkit' ),
+					)
 				),
 			);
 
@@ -195,18 +191,31 @@ class ConvertKit_Forminator_Admin_Settings extends ConvertKit_Settings_Base {
 		$forms = array();
 
 		// Get all forms using Forminator API class.
-		$results = Forminator_API::get_forms( null, 1, -1 );
-
-		// Bail if no results.
-		if ( ! count( $results ) ) {
-			return false;
-		}
-
-		foreach ( $results as $forminator_form ) {
+		foreach ( Forminator_API::get_forms( null, 1, -1 ) as $forminator_form ) {
 			$forms[] = array(
 				'id'   => $forminator_form->id,
-				'name' => $forminator_form->name,
+				'name' => sprintf(
+					'%s: %s',
+					esc_html__( 'Form', 'convertkit' ),
+					$forminator_form->name
+				),
 			);
+		}
+
+		foreach ( Forminator_API::get_quizzes( null, 1, -1 ) as $forminator_form ) {
+			$forms[] = array(
+				'id'   => $forminator_form->id,
+				'name' => sprintf(
+					'%s: %s',
+					esc_html__( 'Quiz', 'convertkit' ),
+					$forminator_form->name
+				),
+			);
+		}
+
+		// If no Forms or Quizzes were found in Forminator, return false.
+		if ( ! count( $forms ) ) {
+			return false;
 		}
 
 		return $forms;

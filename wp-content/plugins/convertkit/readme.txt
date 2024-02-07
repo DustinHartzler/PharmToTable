@@ -1,21 +1,21 @@
-=== ConvertKit - Email Marketing, Email Newsletter, Subscribers and Landing Pages ===
+=== ConvertKit - Email Newsletter, Email Marketing, Subscribers and Landing Pages ===
 Contributors: nathanbarry, growdev, travisnorthcutt, ggwicz
 Donate link: https://convertkit.com
 Tags: email marketing, email newsletter, newsletter, subscribers, membership
 Requires at least: 5.0
-Tested up to: 6.3.2
+Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.3.3
+Stable tag: 2.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-[ConvertKit](https://convertkit.com?utm_source=wordpress&utm_term=en_US&utm_content=readme) makes it easy to create, send and manage your email marketing campaigns; grow your email subscribers lists; send targeted newsletters; sell more products and build your membership site - all by easily embedding email marketing / email subscriber forms anywhere on your WordPress web site.
+[ConvertKit](https://convertkit.com?utm_source=wordpress&utm_term=en_US&utm_content=readme) makes it easy to create, send and manage your email marketing campaigns; grow your email subscribers lists; send targeted email newsletters; sell more products and build your membership site - all by easily embedding email marketing / email subscriber forms anywhere on your WordPress web site.
 
 **New to ConvertKit? [Creating an account](https://app.convertkit.com/users/signup?plan=1k&utm_source=wordpress&utm_term=en_US&utm_content=readme) is 100% free for your first 1,000 subscribers, making ConvertKit an email marketing solution for everyone - whether you're new to email marketing or a seasoned professional email marketer.**
 
-### Email Marketing and Email Newsletter Features
+### Email Newsletter and Email Marketing Features
 
 - Design [email newsletter subscription forms](https://convertkit.com/features/forms?utm_source=wordpress&utm_term=en_US&utm_content=readme) in ConvertKit, automatically appending them to any WordPress post or page, or displaying forms within your WordPress content using the supplied Gutenberg block and shortcode options. Perfect for building your email subscriber lists.
 - Build [landing pages](https://convertkit.com/features/landing-pages?utm_source=wordpress&utm_term=en_US&utm_content=readme) in ConvertKit, and display them on a WordPress page to capture email subscribers
@@ -46,7 +46,7 @@ Start collecting email subscribers today!
 
 ### Send Email Newsletters
 
-Use ConvertKit's [email marketing](https://convertkit.com/features/email-marketing?utm_source=wordpress&utm_term=en_US&utm_content=readme) feature to build and send emails and newsletters to your subscribers and leads.
+Use ConvertKit's [email marketing](https://convertkit.com/features/email-marketing?utm_source=wordpress&utm_term=en_US&utm_content=readme) feature to build and send email newsletters to your subscribers and leads, with options to send email newsletters to segments of your subscriber list.
 
 Embed existing email newsletters on your WordPress web site, ensuring visitors never miss your email newsletter content, by:
 
@@ -55,21 +55,27 @@ Embed existing email newsletters on your WordPress web site, ensuring visitors n
 
 = Landing Pages =
 
-Embed [landing pages](https://convertkit.com/features/landing-pages?utm_source=wordpress&utm_term=en_US&utm_content=readme), designed in ConvertKit, on your WordPress web site, choosing from a variety of designs, customisable to your branding and ideal for building your email marketing list or selling a product.
+Design [landing pages](https://convertkit.com/features/landing-pages?utm_source=wordpress&utm_term=en_US&utm_content=readme) in ConvertKit's intuitive editor, choosing from a variety of designs, customisable to your branding and ideal for building your email marketing list or selling a product.
 
-Create or edit a WordPress Page, choose the ConvertKit landing page from the ConvertKit meta box settings to display, and you're all set to begin growing your email subscribers list.
+Landing pages can then be embedded on your WordPress web site. Simply create or edit a WordPress Page, choose the ConvertKit landing page from the ConvertKit meta box settings to display, and you're all set to begin growing your email subscribers list.
 
 = Sell Products =
 
 Embed buttons (or link text) to sell your ConvertKit Products in seconds - whether that's digital goods, paid email newsletters, music, coaching and more.
 
-### Membership Sites
+### List Email Newsletters
 
-Using the Member Content functionality on Pages, email subscribers are required to purchase a [ConvertKit Product](https://convertkit.com/features/commerce) to access your content - whether that's a course, ebook, digital download, album, presets, coaching and more - all without leaving your web site. 
+Automatically publish your past email newsletters to WordPress Posts, defining a WordPress author, category and cut-off date within the Plugin's settings.
 
-Once purchased, subscribers access their membership by entering their email address, receiving a one time passcode by email and clicking the link in the email. That's it - no complex membership plugins or payment gateways to configure.
+Prefer to just list existing broadcasts, each linked to your ConvertKit profile? Use the Broadcasts block or shortcode to embed your existing newsletters in any WordPress Page, Post or Custom Post Type.
 
-There's no limit to the number of ConvertKit Products you can create, and each can be assigned to one or more WordPress Pages, instantly turning them into membership only content. 
+### Paid (and free) Membership Sites
+
+Require email subscribers to either purchase a [ConvertKit Product](https://convertkit.com/features/commerce), or subscribe for free, to access your content with ConvertKit's Member Content feature - whether that's a course, ebook, digital download, album, presets, coaching and more. 
+
+Subscribers access their membership by entering their email address, receiving a one time passcode by email and clicking the link in the email. That's it - no complex paid membership plugins or payment gateways to configure.
+
+There's no limit to the number of ConvertKit Products you can create, and each can be assigned to one or more WordPress Pages and Posts, instantly turning them into membership only content for your paid subscribers. 
 
 = Plugin Integrations =
 
@@ -105,7 +111,7 @@ Full Plugin documentation can be found [here](https://help.convertkit.com/en/art
 
 == Configuration ==
 
-1. Configure the plugin by navigating to Settings > ConvertKit in the WordPress Administration Menu, entering your [API Key](https://app.convertkit.com/account_settings/advanced_settings?utm_source=wordpress&utm_term=en_US&utm_content=readme) and defining the default forms to display on Pages, Posts and/or Custom Post Types
+1. Configure the plugin by navigating to `Settings > ConvertKit` in the WordPress Administration Menu, entering your [API Key](https://app.convertkit.com/account_settings/advanced_settings?utm_source=wordpress&utm_term=en_US&utm_content=readme) and defining the default forms to display on Pages, Posts and/or Custom Post Types
 2. (Optional) choose a specific Form to display when editing a Page, Post or Custom Post Type in the Page/Post/Custom Post Type's ConvertKit settings
 3. (Optional) use the ConvertKit Form Shortcode or Block to insert Forms into your Page, Post or Custom Post Type content
 
@@ -122,21 +128,86 @@ Either:
 - Navigate to the Plugin's Settings at `Settings > ConvertKit`
 - Click the refresh button displayed next to the Form, Landing Page or Tag fields when creating/editing Pages or Posts
 
+= How do I automatically import ConvertKit Broadcasts to WordPress Posts? =
+
+To import your past (and future) email newsletters from ConvertKit to WordPress:
+
+- Navigate to the Plugin's Settings at `Settings > ConvertKit`
+- Click the `Broadcasts` tab
+- Tick the `Enable Automatic Import` option
+- Configure other settings as necessary, and click `Save Changes` when done
+
 = Where can I find the Plugin's Documentation? =
 
 Full Plugin documentation can be found [here](https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin?utm_source=wordpress&utm_content=readme).
 
 == Screenshots ==
 
-1. Create and customize stunning forms and landing pages in ConvertKit
+1. Create and customize stunning email subscription forms and landing pages in ConvertKit
 2. Manage the WordPress plugin from a simple settings page in the WordPress admin
-3. Append ConvertKit forms to Pages, Posts or other custom post types
+3. Append ConvertKit forms to Pages, Posts or other Custom Post Types
 4. Configure a specific ConvertKit form to display on a specific Page or Post
-5. Configure a ConvertKit landing page to be used in place of a WordPress Page
-6. Set up form and landing page automations in ConvertKit
-7. Track subscriber growth
+5. Display your ConvertKit forms anywhere on your WordPress web site using the form block / shortcode
+6. Configure a ConvertKit landing page to be used in place of a WordPress Page, to capture email subscribers
+7. Automatically import your past email newsletters to WordPress Posts
+8. Create your paid membership site by assigning paid ConvertKit Products to your existing WordPress content 
+9. Set up form and landing page automations in ConvertKit
+10. Track subscriber growth
 
 == Changelog ==
+
+### 2.4.3 2024-01-31
+* Added: Settings: Option to specify Default Form on public Custom Post Types
+* Added: Custom Posts: Option to specify Form and Tag on individual public Custom Post Types
+* Added: Member Content: Support for Member Content functionality on public Custom Post Types
+* Added: Removed jQuery as a dependency from Bulk Edit, Quick Edit and TinyMCE JS
+* Fix: Divi: Allow scrolling when editing using the Divi Builder in tablet or mobile view
+* Fix: Jetpack Boost: Prevent inline Forms from displaying in footer when added to a Page or Widget area when Jetpack Boost Plugin active
+* Fix: Settings: Remove whitespaces from API Key and Secret when saving
+* Fix: Broadcasts (Beta): Improve descriptions to make clear that only public Broadcasts are imported to WordPress
+
+### 2.4.2 2024-01-22
+* Added: Member Content: Option to permit search engines to crawl Member Content at `ConvertKit > Member Content > Permit Search Engine Crawlers`
+* Added: Removed jQuery from frontend JS and as a dependency
+* Fix: Site Editor: Use `enqueue_block_assets` hook instead of `enqueue_block_editor_assets` hook
+* Updated: WordPress Libraries to 1.4.1
+
+### 2.4.1 2024-01-08
+* Added: Broadcasts (Beta): Option to store ConvertKit Broadcast thumbnails as WordPress Post's Featured Image
+* Added: Products: Block and Shortcode: Option to include a discount code
+* Added: Products: Block and Shortcode: Option to disable modal on mobile. Recommended if the ConvertKit Product is a digital download (PDF) being purchased on mobile, to ensure the subscriber can immediately download the PDF once purchased.
+
+### 2.4.0 2023-12-06
+* Fix: ConvertKit Error: Could not load Plugin class `output` when editing, quick or bulk editing a Post.
+
+### 2.3.9 2023-12-04
+* Added: Settings: Display ConvertKit Form's format (inline, slide in, sticky bar, modal) where a `select` dropdown option is presented
+* Fix: Settings: Default Form (Site Wide): If defined, honor non-inline Form specified at Page, Post or Post Category level, to avoid two non-inline forms displaying
+* Fix: Settings: Moved Documentation tab to Help link in header, for compat. with smaller screen resolutions
+
+### 2.3.8 2023-11-20
+* Added: Member Content: Display log in and authentication code forms in modal to better match ConvertKit
+* Added: Broadcasts (Beta): Define WordPress Post Author when importing ConvertKit Broadcasts
+* Fix: Broadcasts (Beta): Don't show next scheduled date and time immediately after clicking `Import Now`
+* Fix: PHP Warning: Use of deprecated `FILTER_SANITIZE_STRING`
+
+### 2.3.7 2023-11-09
+* Added: Member Content: Output manual or generated excerpt if no read more tag present in the Post's content
+* Fix: Member Content: Force padding on buttons to prevent Themes overriding button layout
+* Fix: Member Content: Add `required` attribute on form fields
+
+### 2.3.6 2023-11-02
+* Added: Member Content: Updated UI of gated content screens to better match ConvertKit
+* Added: Settings: Member Content: Separate text settings can be configured for display when restricting by ConvertKit Tag
+
+### 2.3.5 2023-10-30
+* Added: Member Content: Improve UI of authentication code screen
+* Fix: Don't attempt to append ConvertKit Forms to unsupported Post Types
+
+### 2.3.4 2023-10-24
+* Added: Broadcasts (Beta): Define WordPress Post status (Draft, Pending Review, Private or Published) when importing ConvertKit Broadcasts
+* Added: Settings: General: Option to display a site wide non-inline form
+* Updated: WordPress Libraries to 1.4.0
 
 ### 2.3.3 2023-10-18
 * Added: Broadcasts (Beta): Option to export WordPress Posts to draft ConvertKit Broadcasts

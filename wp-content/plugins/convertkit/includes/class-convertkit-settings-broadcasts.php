@@ -65,31 +65,6 @@ class ConvertKit_Settings_Broadcasts {
 	}
 
 	/**
-	 * Returns Broadcasts settings value for the given key.
-	 *
-	 * @since   2.2.9
-	 *
-	 * @param   string $key    Setting Key.
-	 * @return  string          Value
-	 */
-	public function get_by_key( $key ) {
-
-		// If the setting doesn't exist, bail.
-		if ( ! array_key_exists( $key, $this->settings ) ) {
-			return '';
-		}
-
-		// If the setting is empty, fallback to the default.
-		if ( empty( $this->settings[ $key ] ) ) {
-			$defaults = $this->get_defaults();
-			return $defaults[ $key ];
-		}
-
-		return $this->settings[ $key ];
-
-	}
-
-	/**
 	 * Returns whether Broadcasts are enabled in the Plugin settings.
 	 *
 	 * @since   2.2.9
@@ -116,6 +91,19 @@ class ConvertKit_Settings_Broadcasts {
 	}
 
 	/**
+	 * Returns the WordPress Post Status to assign to Posts created from imported Broadcasts.
+	 *
+	 * @since   2.3.4
+	 *
+	 * @return  string
+	 */
+	public function post_status() {
+
+		return $this->settings['post_status'];
+
+	}
+
+	/**
 	 * Returns the WordPress Category ID to assign imported Broadcasts to.
 	 *
 	 * @since   2.2.9
@@ -125,6 +113,19 @@ class ConvertKit_Settings_Broadcasts {
 	public function category_id() {
 
 		return $this->settings['category_id'];
+
+	}
+
+	/**
+	 * Returns whether to import the thumbnail to the Featured Image.
+	 *
+	 * @since   2.4.1
+	 *
+	 * @return  bool
+	 */
+	public function import_thumbnail() {
+
+		return ( $this->settings['import_thumbnail'] === 'on' ? true : false );
 
 	}
 
@@ -208,7 +209,9 @@ class ConvertKit_Settings_Broadcasts {
 		$defaults = array(
 			'enabled'               => '',
 			'author_id'             => get_current_user_id(),
+			'post_status'           => 'publish',
 			'category_id'           => '',
+			'import_thumbnail'      => 'on',
 
 			// By default, only import Broadcasts as Posts for the last 30 days.
 			'published_at_min_date' => gmdate( 'Y-m-d', strtotime( '-30 days' ) ),
@@ -223,7 +226,7 @@ class ConvertKit_Settings_Broadcasts {
 		 *
 		 * @since   2.2.9
 		 *
-		 * @param   array   $defaults
+		 * @param   array   $defaults   Default settings.
 		 */
 		$defaults = apply_filters( 'convertkit_settings_broadcasts_get_defaults', $defaults );
 
