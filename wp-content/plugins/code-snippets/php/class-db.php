@@ -62,11 +62,11 @@ class DB {
 	/**
 	 * Validate a provided 'network' or 'multisite' param, converting it to a boolean.
 	 *
-	 * @param bool|null|mixed $network Network argument value.
+	 * @param bool|null $network Network argument value.
 	 *
 	 * @return bool Sanitized value.
 	 */
-	public static function validate_network_param( $network = null ): bool {
+	public static function validate_network_param( ?bool $network = null ): bool {
 
 		// If multisite is not active, then assume the value is false.
 		if ( ! is_multisite() ) {
@@ -84,12 +84,12 @@ class DB {
 	/**
 	 * Return the appropriate snippet table name
 	 *
-	 * @param bool|null|mixed $is_network Whether retrieve the multisite table name (true) or the site table name (false).
+	 * @param bool|null $is_network Whether retrieve the multisite table name (true) or the site table name (false).
 	 *
 	 * @return string The snippet table name
 	 * @since 2.0
 	 */
-	public function get_table_name( $is_network = null ): string {
+	public function get_table_name( ?bool $is_network = null ): string {
 		$is_network = is_bool( $is_network ) ? $is_network : self::validate_network_param( $is_network );
 		return $is_network ? $this->ms_table : $this->table;
 	}
@@ -176,7 +176,7 @@ class DB {
 				scope       VARCHAR(15)  NOT NULL DEFAULT 'global',
 				priority    SMALLINT     NOT NULL DEFAULT 10,
 				active      TINYINT(1)   NOT NULL DEFAULT 0,
-				modified    DATETIME     NOT NULL DEFAULT '0000-00-00 00:00:00',
+				modified    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				revision    BIGINT(20)   NOT NULL DEFAULT 1,
 				cloud_id    VARCHAR(255) NULL,
 				PRIMARY KEY  (id),

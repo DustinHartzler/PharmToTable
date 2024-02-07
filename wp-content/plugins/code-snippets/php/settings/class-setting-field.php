@@ -78,7 +78,7 @@ class Setting_Field {
 	public function __get( string $argument ) {
 
 		if ( 'input_name' === $argument ) {
-			return sprintf( 'code_snippets_settings[%s][%s]', $this->section, $this->field_id );
+			return sprintf( '%s[%s][%s]', OPTION_NAME, $this->section, $this->field_id );
 		}
 
 		return $this->args[ $argument ];
@@ -156,20 +156,18 @@ class Setting_Field {
 	/**
 	 * Render a checkbox field for a setting
 	 *
-	 * @since 2.0.0
-	 *
 	 * @return void
+	 * @since 2.0.0
 	 */
 	public function render_checkbox_field() {
-		$this->render_checkbox( $this->input_name, $this->label, $this->get_saved_value() );
+		$this->render_checkbox( $this->input_name, $this->label, $this->get_saved_value() ?? false );
 	}
 
 	/**
 	 * Render a checkbox field for a setting
 	 *
-	 * @since 2.0.0
-	 *
 	 * @return void
+	 * @since 2.0.0
 	 */
 	public function render_checkboxes_field() {
 		$saved_value = $this->get_saved_value();
@@ -231,7 +229,7 @@ class Setting_Field {
 	}
 
 	/**
-	 * Render a number select field for an editor setting
+	 * Render a number select field for an editor setting.
 	 *
 	 * @since 3.0.0
 	 */
@@ -249,5 +247,18 @@ class Setting_Field {
 		}
 
 		echo '</select>';
+	}
+
+	/**
+	 * Render a button link.
+	 *
+	 * @since 3.5.1
+	 */
+	private function render_action_field() {
+		printf(
+			'<button type="submit" name="%s" class="button">%s</button>',
+			esc_attr( $this->input_name ),
+			esc_html( $this->label ? $this->label : $this->name )
+		);
 	}
 }

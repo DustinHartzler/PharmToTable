@@ -56,7 +56,7 @@ function clean_snippets_cache( string $table_name ) {
  *
  * @since 2.0
  */
-function get_snippets( array $ids = array(), bool $network = null ): array {
+function get_snippets( array $ids = array(), ?bool $network = null ): array {
 	global $wpdb;
 
 	// If only one ID has been passed in, defer to the get_snippet() function.
@@ -176,7 +176,7 @@ function code_snippets_build_tags_array( $tags ): array {
  *
  * @since 2.0.0
  */
-function get_snippet( int $id = 0, bool $network = null ): Snippet {
+function get_snippet( int $id = 0, ?bool $network = null ): Snippet {
 	global $wpdb;
 
 	$id = absint( $id );
@@ -220,8 +220,8 @@ function get_snippet( int $id = 0, bool $network = null ): Snippet {
  * @return boolean Whether an update was performed.
  */
 function update_shared_network_snippets( array $snippets ): bool {
-	$shared = [];
-	$unshared = [];
+	$shared_ids = [];
+	$unshared_ids = [];
 
 	if ( ! is_multisite() ) {
 		return false;
@@ -230,37 +230,37 @@ function update_shared_network_snippets( array $snippets ): bool {
 	foreach ( $snippets as $snippet ) {
 		if ( $snippet->shared_network ) {
 			if ( $snippet->active ) {
-				$shared[] = $snippet;
+				$shared_ids[] = $snippet->id;
 			} else {
-				$unshared[] = $snippet;
+				$unshared_ids[] = $snippet->id;
 			}
 		}
 	}
 
-	if ( ! $shared && ! $unshared ) {
+	if ( ! $shared_ids && ! $unshared_ids ) {
 		return false;
 	}
 
-	$shared_snippets = get_site_option( 'shared_network_snippets', [] );
-	$updated_shared_snippets = array_values( array_diff( array_merge( $shared_snippets, $shared ), $unshared ) );
+	$existing_shared_ids = get_site_option( 'shared_network_snippets', [] );
+	$updated_shared_ids = array_values( array_diff( array_merge( $existing_shared_ids, $shared_ids ), $unshared_ids ) );
 
-	if ( $shared_snippets === $updated_shared_snippets ) {
+	if ( $existing_shared_ids === $updated_shared_ids ) {
 		return false;
 	}
 
-	update_site_option( 'shared_network_snippets', $updated_shared_snippets );
+	update_site_option( 'shared_network_snippets', $updated_shared_ids );
 
 	// Deactivate the snippet on all sites if necessary.
-	if ( $unshared ) {
+	if ( $unshared_ids ) {
 		$sites = get_sites( [ 'fields' => 'ids' ] );
 
 		foreach ( $sites as $site ) {
 			switch_to_blog( $site );
-			$active_shared_snippets = get_option( 'active_shared_network_snippets' );
+			$active_shared_ids = get_option( 'active_shared_network_snippets' );
 
-			if ( is_array( $active_shared_snippets ) ) {
-				$active_shared_snippets = array_diff( $active_shared_snippets, $unshared );
-				update_option( 'active_shared_network_snippets', $active_shared_snippets );
+			if ( is_array( $active_shared_ids ) ) {
+				$active_shared_ids = array_diff( $active_shared_ids, $unshared_ids );
+				update_option( 'active_shared_network_snippets', $active_shared_ids );
 			}
 
 			clean_active_snippets_cache( code_snippets()->db->ms_table );
@@ -282,7 +282,7 @@ function update_shared_network_snippets( array $snippets ): bool {
  * @return Snippet|string Snippet object on success, error message on failure.
  * @since 2.0.0
  */
-function activate_snippet( int $id, bool $network = null ) {
+function activate_snippet( int $id, ?bool $network = null ) {
 	global $wpdb;
 	$network = DB::validate_network_param( $network );
 	$table_name = code_snippets()->db->get_table_name( $network );
@@ -329,7 +329,7 @@ function activate_snippet( int $id, bool $network = null ) {
  *
  * @since 2.0.0
  */
-function activate_snippets( array $ids, bool $network = null ) {
+function activate_snippets( array $ids, ?bool $network = null ): ?array {
 	global $wpdb;
 	$network = DB::validate_network_param( $network );
 	$table_name = code_snippets()->db->get_table_name( $network );
@@ -386,7 +386,7 @@ function activate_snippets( array $ids, bool $network = null ) {
  *
  * @since 2.0.0
  */
-function deactivate_snippet( int $id, bool $network = null ) {
+function deactivate_snippet( int $id, ?bool $network = null ): ?Snippet {
 	global $wpdb;
 	$network = DB::validate_network_param( $network );
 	$table = code_snippets()->db->get_table_name( $network );
@@ -427,7 +427,7 @@ function deactivate_snippet( int $id, bool $network = null ) {
  *
  * @since 2.0.0
  */
-function delete_snippet( int $id, bool $network = null ): bool {
+function delete_snippet( int $id, ?bool $network = null ): bool {
 	global $wpdb;
 	$network = DB::validate_network_param( $network );
 	$table = code_snippets()->db->get_table_name( $network );
@@ -498,6 +498,7 @@ function save_snippet( $snippet ) {
 
 	// Update the last modification date if necessary.
 	$snippet->update_modified();
+	$snippet->increment_revision();
 
 	if ( 'php' === $snippet->type ) {
 		// Remove tags from beginning and end of snippet.
@@ -514,10 +515,10 @@ function save_snippet( $snippet ) {
 		}
 	}
 
-	// Increment the revision number.
-	$snippet->increment_revision();
+	// Shared network snippets are always considered inactive.
+	$snippet->active = $snippet->active && ! $snippet->shared_network;
 
-	// Build the list of data to insert. Shared network snippets are always considered inactive.
+	// Build the list of data to insert.
 	$data = [
 		'name'        => $snippet->name,
 		'description' => $snippet->desc,
@@ -525,7 +526,7 @@ function save_snippet( $snippet ) {
 		'tags'        => $snippet->tags_list,
 		'scope'       => $snippet->scope,
 		'priority'    => $snippet->priority,
-		'active'      => intval( $snippet->active && ! $snippet->shared_network ),
+		'active'      => intval( $snippet->active ),
 		'modified'    => $snippet->modified,
 		'revision'    => $snippet->revision,
 		'cloud_id'    => $snippet->cloud_id ? $snippet->cloud_id : null,
@@ -679,7 +680,7 @@ function execute_active_snippets(): bool {
  *
  * @since 3.5.0
  */
-function get_snippet_by_cloud_id( $cloud_id, $multisite = null ) {
+function get_snippet_by_cloud_id( string $cloud_id, ?bool $multisite = null ): ?Snippet {
 	global $wpdb;
 
 	$multisite = DB::validate_network_param( $multisite );
@@ -711,7 +712,7 @@ function get_snippet_by_cloud_id( $cloud_id, $multisite = null ) {
  * @param array<string, mixed> $fields     An array of fields mapped to their values.
  * @param bool|null            $network    Update in network-wide (true) or site-wide (false) table.
  */
-function update_snippet_fields( $snippet_id, $fields, $network = null ) {
+function update_snippet_fields( int $snippet_id, array $fields, ?bool $network = null ) {
 	global $wpdb;
 
 	$table = code_snippets()->db->get_table_name( $network );
@@ -733,6 +734,6 @@ function update_snippet_fields( $snippet_id, $fields, $network = null ) {
 	// Update the snippet in the database.
 	$wpdb->update( $table, $clean_fields, array( 'id' => $snippet->id ), null, array( '%d' ) );
 
-	do_action( 'code_snippets/update_snippet', $snippet->id, $table );
+	do_action( 'code_snippets/update_snippet', $snippet, $table );
 	clean_snippets_cache( $table );
 }

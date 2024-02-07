@@ -4,8 +4,8 @@ Donate link: https://codesnippets.pro
 Tags: snippets, functions, multisite, code, php, html, css, javascript
 License: MIT
 License URI: license.txt
-Stable tag: 3.5.0
-Tested up to: 6.3.1
+Stable tag: 3.6.2
+Tested up to: 6.4
 
 An easy, clean and simple way to run code snippets on your site.
 
@@ -119,6 +119,9 @@ You can get help with Code Snippets, report bugs or errors, and suggest new feat
 = How can I help contribute to the development of the Code Snippets plugin? =
 The best way to do this is to fork the [repository on GitHub](https://github.com/codesnippetspro/code-snippets) and send a pull request.
 
+= How can I report security bugs found in this plugin? =
+You can report security bugs found in the source code of this plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/code-snippets). The Patchstack team will assist with verification, triage, and notification of security vulnerabilities.
+
 == Screenshots ==
 
 1. Managing existing snippets
@@ -127,6 +130,38 @@ The best way to do this is to fork the [repository on GitHub](https://github.com
 4. Importing snippets from an export file
 
 == Changelog ==
+
+= 3.6.2 (08 Nov 2023) =
+* Fixed: Error when attempting to save shared network snippets marked as active.
+* Fixed: Type error when rendering checkbox fields without a stored or default value.
+* Fixed: Removed automatic encoding of code content.
+* Fixed: Label for snippet sharing input incorrectly linked to input field.
+* Fixed: Error when attempting to download export files from Edit menu.
+* Fixed: Issue loading Freemius string overrides too early. (PRO)
+* Fixed: Fix redirect URL when connecting with OAuth on subdirectory or HTTPS sites. (PRO)
+
+= 3.6.1 (07 Nov 2023) =
+* Fixed: Issue accessing fields on Snippets class.
+
+= 3.6.0 (07 Nov 2023) =
+* Updated minimum PHP requirement to 7.4.
+
+* Added: Ability to authenticate with Code Snippets Cloud using OAuth. (PRO)
+* Added: Integration with GPT AI for generating snippets. (PRO)
+* Added: Ability to generate line-by-line descriptions of snippet code with GPT AI. (PRO)
+* Added: Ability to generate tags and description text from existing snippet code with GPT AI. (PRO)
+
+* Improved: Ensure that the URL of the edit snippet page changes when adding a new snippet.
+* Improved: Snippet tags will automatically be added when focus is lost on the tags field.
+* Improved: Added debug settings menu for manually performing problem-solving actions.
+* Fixed: Moved active status border on edit name field to left-hand side.
+* Added: Filter to disable scroll-into-view functionality for edit page notices.
+* Fixed: New notices will not scroll if already at top of page.
+* Fixed: Potential CSRF vulnerability allowing an authenticated user to reset settings.
+
+= 3.5.1 (15 Sep 2023) =
+* Fixed: Undefined array key error when accessing plugin settings page. (PRO)
+* Fixed: Issue registering API endpoints affecting edit post screen. (PRO)
 
 = 3.5.0 (14 Sep 2023) =
 * Added: Support for the Code Snippets Cloud API.
@@ -235,60 +270,4 @@ thanks to contributions made by [Amaral Krichman](https://github.com/karmaral).
 * Added: Icon to 'Go Pro' button indicating it opens an external tab.
 * Improved: Allow display styles in snippet descriptions.
 
-= 3.0.1 (14 May 2022) =
-* Fixed: Incompatibility issue with earlier versions of PHP.
-
-= 3.0.0 (14 May 2022) =
-
-__Added__
-
-* Added: HTML content snippets for displaying as shortcodes or including in the page head or footer area.
-* Added: Notice reminding users to upgrade unsupported PHP versions.
-* Added: Visual settings to add attributes to shortcodes.
-* Added: Shortcode buttons to the post and page content editors.
-* Added: Basic REST API endpoints.
-* Added: Snippet type column to the snippets table.
-* Added: Snippet type badges to Edit and Add New Snippet pages.
-* Added: Setting to control whether the current line of the code editor is highlighted.
-* Added: Display a warning when saving a snippet with missing title or code.
-* Added: Add suffix to title of cloned snippets.
-
-__Changed__
-
-* Improved: Updated plugin code to use namespaces, preventing name collisions with other plugins.
-* Improved: Added key for the 'active' and 'scope' database table columns to speed up queries.
-* Improved: Redirect from edit menu if not editing a valid snippet.
-* Improved: Moved activation switch into its own table column.
-* Improved: Updated code documentation according to WordPress standards.
-* Improved: Added snippet type labels to the tabs on the Snippets page.
-* Improved: Split settings page into tabs.
-* Improved: Use the version of CodeMirror included with WordPress where possible to inherit the additional built-in features.
-* Improved: Added hover effect to priority settings in the snippets table to show that they are editable.
-* Fixed: Snippets table layout on smaller screens.
-
-__Deprecated__
-
-* Removed: Deprecated functions and compatibility code for unsupported PHP versions.
-* Removed: Option to disable snippet scopes.
-
-__New in Pro__
-
-* Added: CSS style snippets for the site front-end and admin area.
-* Added: JavaScript snippets for the site head and body area on the front-end.
-* Added: Browser cache versioning for CSS and JavaScript snippets.
-* Added: Support for exporting and downloading CSS and JavaScript snippets.
-* Added: Support for highlighting code on the front-end.
-* Added: Editor syntax highlighting for CSS, JavaScript and HTML snippets.
-* Added: Button to preview full file when editing CSS or JavaScript snippets.
-* Added: Option to minify CSS and JavaScript snippets.
-* Added: Gutenberg editor block for displaying content snippets.
-* Added: Gutenberg editor block for displaying snippet source code.
-* Added: Elementor widget for displaying content snippets.
-* Added: Elementor widget for displaying snippet source code.
-
 **[The full changelog is available on GitHub](https://github.com/codesnippetspro/code-snippets/blob/master/CHANGELOG.md)**
-
-== Upgrade Notice ==
-
-= 3.5.0 =
-Code Snippets Cloud is here! Share snippets and synchronise between sites.

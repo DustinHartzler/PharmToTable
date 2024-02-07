@@ -2,9 +2,8 @@
 
 namespace Code_Snippets;
 
-use Code_Snippets\REST_API\Snippets_REST_Controller;
 use Code_Snippets\Cloud\Cloud_API;
-
+use Code_Snippets\REST_API\Snippets_REST_Controller;
 
 /**
  * The main plugin class
@@ -81,7 +80,8 @@ class Plugin {
 			add_filter( 'admin_url', array( $this, 'add_safe_mode_query_var' ) );
 		}
 
-		add_action( 'rest_api_init', [ $this, 'register_rest_api_controllers' ] );
+		add_action( 'rest_api_init', [ $this, 'init_rest_api' ] );
+		add_action( 'allowed_redirect_hosts', [ $this, 'allow_code_snippets_redirect' ] );
 	}
 
 	/**
@@ -124,15 +124,10 @@ class Plugin {
 	 * Register custom REST API controllers.
 	 *
 	 * @return void
-	 *
-	 * @since 3.4.0
 	 */
-	public function register_rest_api_controllers() {
-		$controllers = [ new Snippets_REST_Controller() ];
-
-		foreach ( $controllers as $controller ) {
-			$controller->register_routes();
-		}
+	public function init_rest_api() {
+		$snippets_controller = new Snippets_REST_Controller();
+		$snippets_controller->register_routes();
 	}
 
 	/**
@@ -226,6 +221,19 @@ class Plugin {
 			absint( $snippet_id ),
 			$this->get_menu_url( 'edit', $context )
 		);
+	}
+
+	/**
+	 * Allow redirecting to the Code Snippets site.
+	 *
+	 * @param array<string> $hosts Allowed hosts.
+	 *
+	 * @return array Modified allowed hosts.
+	 */
+	public function allow_code_snippets_redirect( array $hosts ): array {
+		$hosts[] = 'codesnippets.pro';
+		$hosts[] = 'snipco.de';
+		return $hosts;
 	}
 
 	/**
@@ -343,7 +351,12 @@ class Plugin {
 					'snippets' => esc_url_raw( rest_url( Snippets_REST_Controller::get_base_route() ) ),
 					'nonce'    => wp_create_nonce( 'wp_rest' ),
 				],
-				'pluginUrl'  => plugins_url( '', PLUGIN_FILE ),
+				'urls'       => [
+					'plugin' => plugins_url( '', PLUGIN_FILE ),
+					'manage' => $this->get_menu_url(),
+					'edit'   => $this->get_menu_url( 'edit' ),
+					'addNew' => $this->get_menu_url( 'add' ),
+				],
 			]
 		);
 	}

@@ -16,21 +16,27 @@ declare global {
 		code_snippets_editor_preview?: CodeEditorInstance
 		readonly code_snippets_editor_settings: EditorOption[]
 		readonly CODE_SNIPPETS?: {
-			pluginUrl: string
 			isLicensed: boolean
 			restAPI: {
 				base: string
-				nonce: string
 				snippets: string
+				cloud: string
+				nonce: string
+				localToken: string
+			}
+			urls: {
+				plugin: string
+				manage: string
+				addNew: string
+				edit: string
 			}
 		}
 		readonly CODE_SNIPPETS_EDIT?: {
 			snippet: Snippet
-			menuUrl: string
-			addNewUrl: string
 			isPreview: boolean
 			enableTags: boolean
 			enableDownloads: boolean
+			scrollToNotices: boolean
 			extraSaveButtons: boolean
 			activateByDefault: boolean
 			enableDescription: boolean

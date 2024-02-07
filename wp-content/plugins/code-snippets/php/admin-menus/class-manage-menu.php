@@ -3,6 +3,7 @@
 namespace Code_Snippets;
 
 use Code_Snippets\Cloud\Cloud_Search_List_Table;
+use function Code_Snippets\Settings\get_setting;
 
 /**
  * This class handles the manage snippets menu
@@ -49,6 +50,7 @@ class Manage_Menu extends Admin_Menu {
 			add_action( 'network_admin_menu', array( $this, 'register_compact_menu' ), 2 );
 		}
 
+		add_action( 'admin_menu', array( $this, 'register_upgrade_menu' ), 500 );
 		add_filter( 'set-screen-option', array( $this, 'save_screen_option' ), 10, 3 );
 		add_action( 'wp_ajax_update_code_snippet', array( $this, 'ajax_callback' ) );
 	}
@@ -74,6 +76,60 @@ class Manage_Menu extends Admin_Menu {
 
 		// Register the sub-menu.
 		parent::register();
+	}
+
+	/**
+	 * Register the 'upgrade' menu item.
+	 *
+	 * @return void
+	 */
+	public function register_upgrade_menu() {
+		if ( get_setting( 'general', 'hide_upgrade_menu' ) ) {
+			return;
+		}
+
+		$menu_title = sprintf(
+			'<span class="button button-primary code-snippets-upgrade-button">%s %s</span>',
+			_x( 'Go Pro', 'top-level menu label', 'code-snippets' ),
+			'<span class="dashicons dashicons-external"></span>'
+		);
+
+		$hook = add_submenu_page(
+			code_snippets()->get_menu_slug(),
+			__( 'Upgrade to Pro', 'code-snippets' ),
+			$menu_title,
+			code_snippets()->get_cap(),
+			'code_snippets_upgrade',
+			'__return_empty_string',
+			100
+		);
+
+		add_action( "load-$hook", [ $this, 'load_upgrade_menu' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_menu_button_css' ] );
+	}
+
+	/**
+	 * Print CSS required for the upgrade button.
+	 *
+	 * @return void
+	 */
+	public function enqueue_menu_button_css() {
+		wp_enqueue_style(
+			'code-snippets-menu-button',
+			plugins_url( 'dist/menu-button.css', PLUGIN_FILE ),
+			[],
+			PLUGIN_VERSION
+		);
+	}
+
+	/**
+	 * Redirect the user upon opening the upgrade menu.
+	 *
+	 * @return void
+	 */
+	public function load_upgrade_menu() {
+		wp_safe_redirect( 'https://snipco.de/JE2f' );
+		exit;
 	}
 
 	/**

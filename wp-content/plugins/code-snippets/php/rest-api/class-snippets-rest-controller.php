@@ -24,7 +24,7 @@ use const Code_Snippets\REST_API_NAMESPACE;
  * @since   3.4.0
  * @package Code_Snippets
  */
-class Snippets_REST_Controller extends WP_REST_Controller {
+final class Snippets_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * Current API version.
@@ -347,11 +347,7 @@ class Snippets_REST_Controller extends WP_REST_Controller {
 	 */
 	protected function build_export( WP_REST_Request $request ): Export {
 		$item = $this->prepare_item_for_database( $request );
-
-		$ids = [ $item->id ];
-		$table_name = code_snippets()->db->get_table_name( $item->network );
-
-		return new Export( $ids, $table_name );
+		return new Export( [ $item->id ], $item->network );
 	}
 
 	/**
@@ -389,7 +385,7 @@ class Snippets_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return Snippet The prepared item.
 	 */
-	protected function prepare_item_for_database( $request, Snippet $item = null ) {
+	protected function prepare_item_for_database( $request, Snippet $item = null ): ?Snippet {
 		if ( ! $item instanceof Snippet ) {
 			$item = new Snippet();
 		}
@@ -398,10 +394,6 @@ class Snippets_REST_Controller extends WP_REST_Controller {
 			if ( isset( $request[ $field ] ) ) {
 				$item->set_field( $field, $request[ $field ] );
 			}
-		}
-
-		if ( ! empty( $request['encoded'] ) ) {
-			$item->code = html_entity_decode( $item->code );
 		}
 
 		return $item;

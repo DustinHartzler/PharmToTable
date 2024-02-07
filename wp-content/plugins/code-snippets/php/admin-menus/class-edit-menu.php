@@ -22,7 +22,7 @@ class Edit_Menu extends Admin_Menu {
 	/**
 	 * The snippet object currently being edited
 	 *
-	 * @var Snippet
+	 * @var Snippet|null
 	 * @see Edit_Menu::load_snippet_data()
 	 */
 	protected $snippet = null;
@@ -162,6 +162,7 @@ class Edit_Menu extends Admin_Menu {
 			'wp-i18n',
 			'wp-api-fetch',
 			'wp-components',
+			'wp-block-editor',
 		];
 
 		wp_enqueue_style(
@@ -191,12 +192,11 @@ class Edit_Menu extends Admin_Menu {
 			'CODE_SNIPPETS_EDIT',
 			[
 				'snippet'           => $this->snippet->get_fields(),
-				'menuUrl'           => $plugin->get_menu_url(),
-				'addNewUrl'         => $plugin->get_menu_url( 'add' ),
 				'pageTitleActions'  => $plugin->is_compact_menu() ? $this->page_title_action_links( [ 'manage', 'import', 'settings' ] ) : [],
 				'isPreview'         => isset( $_REQUEST['preview'] ),
 				'activateByDefault' => get_setting( 'general', 'activate_by_default' ),
 				'editorTheme'       => get_setting( 'editor', 'theme' ),
+				'scrollToNotices'   => apply_filters( 'code_snippets/scroll_to_notices', true ),
 				'extraSaveButtons'  => apply_filters( 'code_snippets/extra_save_buttons', true ),
 				'enableDownloads'   => apply_filters( 'code_snippets/enable_downloads', true ),
 				'enableDescription' => $desc_enabled,

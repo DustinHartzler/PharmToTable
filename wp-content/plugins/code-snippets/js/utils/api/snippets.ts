@@ -5,7 +5,6 @@ import { ExportSnippets } from '../../types/ExportSnippets'
 import { Snippet } from '../../types/Snippet'
 import { isNetworkAdmin } from '../general'
 import { useAxios } from './axios'
-import { encodeSnippetCode } from '../snippets'
 
 const ROUTE_BASE = window.CODE_SNIPPETS?.restAPI.snippets
 
@@ -13,7 +12,7 @@ const AXIOS_CONFIG: CreateAxiosDefaults = {
 	headers: { 'X-WP-Nonce': window.CODE_SNIPPETS?.restAPI.nonce }
 }
 
-export interface Snippets {
+export interface SnippetsAPI {
 	fetchAll: (network?: boolean | null) => Promise<AxiosResponse<Snippet[]>>
 	fetch: (snippetId: number, network?: boolean | null) => Promise<AxiosResponse<Snippet>>
 	create: (snippet: Snippet) => Promise<AxiosResponse<Snippet>>
@@ -31,10 +30,10 @@ const buildURL = ({ id, network }: Snippet, action?: string) =>
 		{ network: network ? true : undefined }
 	)
 
-export const useSnippetsAPI = (): Snippets => {
+export const useSnippetsAPI = (): SnippetsAPI => {
 	const { get, post, del } = useAxios(AXIOS_CONFIG)
 
-	return useMemo((): Snippets => ({
+	return useMemo((): SnippetsAPI => ({
 		fetchAll: network =>
 			get<Snippet[]>(addQueryArgs(ROUTE_BASE, { network })),
 
@@ -42,10 +41,10 @@ export const useSnippetsAPI = (): Snippets => {
 			get<Snippet>(addQueryArgs(`${ROUTE_BASE}/${snippetId}`, { network })),
 
 		create: snippet =>
-			post<Snippet, Snippet>(`${ROUTE_BASE}`, encodeSnippetCode(snippet)),
+			post<Snippet, Snippet>(`${ROUTE_BASE}`, snippet),
 
 		update: snippet =>
-			post<Snippet, Snippet>(buildURL(snippet), encodeSnippetCode(snippet)),
+			post<Snippet, Snippet>(buildURL(snippet), snippet),
 
 		delete: (snippet: Snippet) =>
 			del(buildURL(snippet)),

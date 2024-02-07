@@ -1,8 +1,7 @@
 import classnames from 'classnames'
-import React, { Dispatch, MouseEventHandler, ReactNode, SetStateAction, useEffect, useRef } from 'react'
+import React, { MouseEventHandler, ReactNode, useEffect } from 'react'
 import { __, sprintf } from '@wordpress/i18n'
-import { SnippetInputProps } from '../../types/SnippetInputProps'
-import { Notice } from '../../types/Notice'
+import { useSnippetForm } from '../SnippetForm/context'
 
 interface DismissibleNoticeProps {
 	classNames?: classnames.Argument
@@ -11,11 +10,15 @@ interface DismissibleNoticeProps {
 }
 
 const DismissibleNotice: React.FC<DismissibleNoticeProps> = ({ classNames, onRemove, children }) => {
-	const ref = useRef<HTMLDivElement>(null)
-	useEffect(() => ref?.current?.scrollIntoView({ behavior: 'smooth' }), [ref])
+
+	useEffect(() => {
+		if (window.CODE_SNIPPETS_EDIT?.scrollToNotices) {
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+	}, [])
 
 	return (
-		<div id="message" className={classnames('notice fade is-dismissible', classNames)} ref={ref}>
+		<div id="message" className={classnames('notice fade is-dismissible', classNames)}>
 			<>{children}</>
 
 			<button type="button" className="notice-dismiss" onClick={event => {
@@ -28,16 +31,13 @@ const DismissibleNotice: React.FC<DismissibleNoticeProps> = ({ classNames, onRem
 	)
 }
 
-export interface NoticesProps extends SnippetInputProps {
-	notice: Notice | undefined
-	setNotice: Dispatch<SetStateAction<Notice | undefined>>
-}
+export const Notices: React.FC = () => {
+	const { currentNotice, setCurrentNotice, snippet, setSnippet } = useSnippetForm()
 
-export const Notices: React.FC<NoticesProps> = ({ notice, setNotice, snippet, setSnippet }) =>
-	<>
-		{notice ?
-			<DismissibleNotice classNames={notice[0]} onRemove={() => setNotice(undefined)}>
-				<p>{notice[1]}</p>
+	return <>
+		{currentNotice ?
+			<DismissibleNotice classNames={currentNotice[0]} onRemove={() => setCurrentNotice(undefined)}>
+				<p>{currentNotice[1]}</p>
 			</DismissibleNotice> :
 			null}
 
@@ -58,3 +58,4 @@ export const Notices: React.FC<NoticesProps> = ({ notice, setNotice, snippet, se
 			</DismissibleNotice> :
 			null}
 	</>
+}
