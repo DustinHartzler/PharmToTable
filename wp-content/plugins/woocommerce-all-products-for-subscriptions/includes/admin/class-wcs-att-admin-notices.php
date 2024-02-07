@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Admin_Notices class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    2.2.0
  */
 
@@ -277,7 +277,7 @@ class WCS_ATT_Admin_Notices {
 		<p class="sw-welcome-text">
 			<?php
 				/* translators: onboarding url */
-				echo wp_kses_post( sprintf( __( 'Thank you for installing <strong>All Products for WooCommerce Subscriptions</strong>. Ready to make your products available on subscription? <a href="%s">Add some global subscription plans to get started</a>.<br/>You can limit these plans to specific product categories &mdash; or, if you need more flexibility, it is possible to add custom subscription plans to individual products.', 'woocommerce-all-products-for-subscriptions' ), WCS_ATT()->get_resource_url( 'global-plan-settings' ) ) );
+				echo wp_kses_post( sprintf( __( 'Thank you for installing <strong>All Products for Woo Subscriptions</strong>. Ready to make your products available on subscription? <a href="%s">Add some global subscription plans to get started</a>.<br/>You can limit these plans to specific product categories &mdash; or, if you need more flexibility, it is possible to add custom subscription plans to individual products.', 'woocommerce-all-products-for-subscriptions' ), WCS_ATT()->get_resource_url( 'global-plan-settings' ) ) );
 			?>
 		</p>
 		<?php
@@ -335,7 +335,7 @@ class WCS_ATT_Admin_Notices {
 		<p>
 			<?php
 				/* translators: onboarding url */
-				echo wp_kses_post( sprintf( __( '<strong>All Products for WooCommerce Subscriptions</strong> no longer supports Cart Subscription Plans. Your existing Cart Subscription Plans have been migrated to <a href="%s">Global Subscription Plans</a> &mdash; a quick, new way to add subscription plans to your existing products in bulk.', 'woocommerce-all-products-for-subscriptions' ), WCS_ATT()->get_resource_url( 'global-plan-settings' ) ) );
+				echo wp_kses_post( sprintf( __( '<strong>All Products for Woo Subscriptions</strong> no longer supports Cart Subscription Plans. Your existing Cart Subscription Plans have been migrated to <a href="%s">Global Subscription Plans</a> &mdash; a quick, new way to add subscription plans to your existing products in bulk.', 'woocommerce-all-products-for-subscriptions' ), WCS_ATT()->get_resource_url( 'global-plan-settings' ) ) );
 			?>
 		</p>
 		<?php

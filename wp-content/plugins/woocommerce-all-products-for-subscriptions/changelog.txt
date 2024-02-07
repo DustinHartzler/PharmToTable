@@ -1,4 +1,11 @@
-*** WooCommerce All Products For Subscriptions ***
+*** Woo All Products For Subscriptions ***
+
+2024.01.24 - version 4.1.5
+* Tweak - Deferred frontend scripts.
+* Tweak - Added a warning to inform users about how to correctly translate the percentage (%) characters in strings to avoid fatal errors.
+
+2023.12.07 - version 4.1.4
+* Tweak - Declared compatibility with the cart/checkout Blocks.
 
 2023.09.19 - version 4.1.3
 * Tweak - Used admin theme colors in settings.

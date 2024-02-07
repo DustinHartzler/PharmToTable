@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Integration_PB_CP class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    2.3.0
  */
 

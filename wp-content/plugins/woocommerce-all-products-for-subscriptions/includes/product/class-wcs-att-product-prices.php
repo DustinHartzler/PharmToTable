@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Product_Prices class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    2.0.0
  */
 
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * API for working with the prices of subscription-enabled product objects.
  *
  * @class    WCS_ATT_Product_Prices
- * @version  3.2.1
+ * @version  4.1.5
  */
 class WCS_ATT_Product_Prices {
 
@@ -191,6 +191,7 @@ class WCS_ATT_Product_Prices {
 				if ( $force_discount || $append_discount ) {
 
 					$discount      = $active_scheme->get_discount();
+					/* translators: %s: Discount % (Use encoded value when translating the % character. Use &#37; instead of %.) */
 					$discount_html = '<span class="wcsatt-sub-discount">' . sprintf( _x( '%s&#37;', 'option discount', 'woocommerce-all-products-for-subscriptions' ), round( $discount, self::get_formatted_discount_precision() ) ) . '</span>';
 					$price_html    = sprintf( _x( '%1$s &mdash; save %2$s', 'discounted option price html format', 'woocommerce-all-products-for-subscriptions' ), $price_html, $discount_html );
 				}
@@ -353,12 +354,12 @@ class WCS_ATT_Product_Prices {
 						// Merge into "subscribe" string when applicable.
 
 						if ( 'prompt' === $context ) {
-
+							/* translators: %s: Discount % (Use encoded value when translating the % character. Use &#37; instead of %.) */
 							$discount_html = ' <span class="wcsatt-sub-discount">' . sprintf( _x( '%s&#37;', 'subscribe and save discount', 'woocommerce-all-products-for-subscriptions' ), round( $base_scheme_discount, self::get_formatted_discount_precision() ) ) . '</span>';
 							$price_html    = sprintf( $subscribe_discounted_html, $has_variable_discount ? __( 'up to', 'woocommerce-all-products-for-subscriptions' ) : '', $discount_html );
 
 						} else {
-
+							/* translators: %s: Discount % (Use encoded value when translating the % character. Use &#37; instead of %.) */
 							$discount_html     = '</small> <span class="wcsatt-sub-discount">' . sprintf( _x( '%s&#37;', 'subscribe and save discount', 'woocommerce-all-products-for-subscriptions' ), round( $base_scheme_discount, self::get_formatted_discount_precision() ) ) . '</span><small>';
 							$suffix_price_html = sprintf( __( 'subscribe and save %1$s%2$s', 'woocommerce-all-products-for-subscriptions' ), $has_variable_discount ? __( 'up to', 'woocommerce-all-products-for-subscriptions' ) : '', $discount_html );
 							$suffix            = '<small class="wcsatt-sub-options">' . sprintf( _x( ' <span class="wcsatt-dash">&mdash;</span> or %s', 'subscribe and save suffix format', 'woocommerce-all-products-for-subscriptions' ), $suffix_price_html ) . '</small>';

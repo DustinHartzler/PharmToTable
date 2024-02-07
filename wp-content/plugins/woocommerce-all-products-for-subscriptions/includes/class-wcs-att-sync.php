@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Sync class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    2.1.0
  */
 

@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Core_Compatibility class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    1.0.0
  */
 

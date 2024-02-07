@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Admin class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    1.0.4
  */
 
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Admin includes and hooks.
  *
  * @class    WCS_ATT_Admin
- * @version  x.x.x
+ * @version  4.1.3
  */
 class WCS_ATT_Admin {
 
@@ -164,7 +164,7 @@ class WCS_ATT_Admin {
   		$bundled_version_major    = strstr( self::$bundled_selectsw_version, '.', true );
 
   		if ( version_compare( $bundled_version_major, $registered_version_major, '<' ) ) {
-  			$notice = __( 'The installed version of <strong>All Products for WooCommerce Subscriptions</strong> is not compatible with the <code>selectSW</code> library found on your system. Please update All Products for WooCommerce Subscriptions to the latest version.', 'woocommerce-all-products-for-subscriptions' );
+  			$notice = __( 'The installed version of <strong>All Products for Woo Subscriptions</strong> is not compatible with the <code>selectSW</code> library found on your system. Please update All Products for Woo Subscriptions to the latest version.', 'woocommerce-all-products-for-subscriptions' );
   			WCS_ATT_Admin_Notices::add_notice( $notice, 'error' );
   		}
   	}
@@ -516,7 +516,7 @@ class WCS_ATT_Admin {
 	 */
 	public static function template_scan_path( $paths ) {
 
-		$paths[ 'All Products for WooCommerce Subscriptions' ] = WCS_ATT()->plugin_path() . '/templates/';
+		$paths[ 'All Products for Woo Subscriptions' ] = WCS_ATT()->plugin_path() . '/templates/';
 
 		return $paths;
 	}

@@ -2,7 +2,7 @@
 /**
  * Status Report data for APFS.
  *
- * @package  All Products for WooCommerce Subscriptions
+ * @package  All Products for Woo Subscriptions
  * @since    3.1.8
  */
 
@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?><table class="wc_status_table widefat" cellspacing="0" id="status">
 	<thead>
 		<tr>
-			<th colspan="3" data-export-label="All Products for WooCommerce Subscriptions"><h2><?php esc_html_e( 'All Products for WooCommerce Subscriptions', 'woocommerce-all-products-for-subscriptions' ); ?></h2></th>
+			<th colspan="3" data-export-label="All Products for Woo Subscriptions"><h2><?php esc_html_e( 'All Products for Woo Subscriptions', 'woocommerce-all-products-for-subscriptions' ); ?></h2></th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td data-export-label="Template Overrides"><?php esc_html_e( 'Template overrides', 'woocommerce-all-products-for-subscriptions' ); ?>:</td>
-			<td class="help"><?php echo wc_help_tip( esc_html__( 'Shows any files overriding the default All Products for WooCommerce Subscriptions templates.', 'woocommerce-all-products-for-subscriptions' ) ); ?></td>
+			<td class="help"><?php echo wc_help_tip( esc_html__( 'Shows any files overriding the default All Products for Woo Subscriptions templates.', 'woocommerce-all-products-for-subscriptions' ) ); ?></td>
 			<td><?php
 
 				if ( ! empty( $debug_data[ 'overrides' ] ) ) {

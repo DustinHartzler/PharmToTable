@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Product_Export class
  *
- * @package  All Products for WooCommerce Subscriptions
+ * @package  All Products for Woo Subscriptions
  * @since    2.2.5
  */
 

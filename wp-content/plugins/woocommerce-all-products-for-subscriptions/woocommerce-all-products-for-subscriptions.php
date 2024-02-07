@@ -1,11 +1,11 @@
 <?php
 /**
-* Plugin Name: WooCommerce All Products For Subscriptions
-* Plugin URI: https://woocommerce.com/products/all-products-for-woocommerce-subscriptions/
-* Description: Make existing products available on subscription, and give customers the freedom to add products to their existing subscriptions. WooCommerce Subscriptions add-on formerly known as Subscribe All The Things.
-* Version: 4.1.3
-* Author: WooCommerce
-* Author URI: https://somewherewarm.com/
+* Plugin Name: Woo All Products For Subscriptions
+* Plugin URI: https://woo.com/products/all-products-for-woocommerce-subscriptions/
+* Description: Make existing products available on subscription, and give customers the freedom to add products to their existing subscriptions.
+* Version: 4.1.5
+* Author: Woo
+* Author URI: https://woo.com/
 *
 * Woo: 3978176:b0e6e19cf767e4fb9ca7fe9b0ff2c381
 *
@@ -23,7 +23,7 @@
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 *
-* @package  WooCommerce All Products For Subscriptions
+* @package  Woo All Products For Subscriptions
 */
 
 // Exit if accessed directly.
@@ -40,12 +40,12 @@ require_once( 'includes/modules/abstract/class-wcs-att-abstract-module.php' );
  * Main plugin class.
  *
  * @class    WCS_ATT
- * @version  4.1.3
+ * @version  4.1.5
  */
 class WCS_ATT extends WCS_ATT_Abstract_Module {
 
 	/* Plugin version. */
-	const VERSION = '4.1.3';
+	const VERSION = '4.1.5';
 
 	/* Required WC version. */
 	const REQ_WC_VERSION = '3.9.0';
@@ -191,7 +191,7 @@ class WCS_ATT extends WCS_ATT_Abstract_Module {
 
 			// Notice about plugin version when WooCommerce Subscriptions is active.
 			if ( ! defined( 'WCS_INIT_TIMESTAMP' ) || version_compare( WC_Subscriptions::$version, self::REQ_WCS_VERSION ) < 0  ) {
-				$notice = sprintf( __( 'All Products for WooCommerce Subscriptions requires at least <a href="%1$s" target="_blank">WooCommerce Subscriptions</a> version <strong>%2$s</strong>.', 'woocommerce-all-products-for-subscriptions' ), self::get_resource_url( 'wcs' ), self::REQ_WCS_VERSION );
+				$notice = sprintf( __( 'All Products for Woo Subscriptions requires at least <a href="%1$s" target="_blank">WooCommerce Subscriptions</a> version <strong>%2$s</strong>.', 'woocommerce-all-products-for-subscriptions' ), self::get_resource_url( 'wcs' ), self::REQ_WCS_VERSION );
 			}
 
 		} elseif ( class_exists( 'WC_Payments' ) && class_exists( 'WC_Payments_Features' ) ) {
@@ -199,15 +199,15 @@ class WCS_ATT extends WCS_ATT_Abstract_Module {
 			if ( ! defined( 'WCS_INIT_TIMESTAMP' ) || ! WC_Payments_Features::is_wcpay_subscriptions_enabled() ) {
 				if ( version_compare( WCPAY_VERSION_NUMBER, self::REQ_WCPAY_VERSION ) < 0 ) {
 					// Notice about plugin version when WooCommerce Payments is active.
-					$notice = sprintf( __( 'All Products for WooCommerce Subscriptions requires at least <a href="%1$s" target="_blank">WooCommerce Payments</a> version <strong>%2$s</strong>.', 'woocommerce-all-products-for-subscriptions' ), self::get_resource_url( 'wcpay' ), self::REQ_WCPAY_VERSION );
+					$notice = sprintf( __( 'All Products for Woo Subscriptions requires at least <a href="%1$s" target="_blank">WooCommerce Payments</a> version <strong>%2$s</strong>.', 'woocommerce-all-products-for-subscriptions' ), self::get_resource_url( 'wcpay' ), self::REQ_WCPAY_VERSION );
 				} else {
 					// Notice about disabled Subscription features in WooCommerce Payments.
-					$notice = sprintf( __( 'All Products for WooCommerce Subscriptions requires Subscriptions to be enabled in the <strong>WooCommerce Payments</strong> <a href="%1$s" target="_blank">settings</a>.', 'woocommerce-all-products-for-subscriptions' ), site_url( self::get_resource_url( 'wcpay-settings' ) ) );
+					$notice = sprintf( __( 'All Products for Woo Subscriptions requires Subscriptions to be enabled in the <strong>WooCommerce Payments</strong> <a href="%1$s" target="_blank">settings</a>.', 'woocommerce-all-products-for-subscriptions' ), site_url( self::get_resource_url( 'wcpay-settings' ) ) );
 				}
 			}
 		} else {
 			// Notice about disabled Subscriptions core not being loaded.
-			$notice = sprintf( __( 'All Products for WooCommerce Subscriptions requires at least <a href="%1$s" target="_blank">WooCommerce Payments</a> version <strong>%2$s</strong> or <a href="%3$s" target="_blank">WooCommerce Subscriptions</a> version <strong>%4$s</strong>.', 'woocommerce-all-products-for-subscriptions' ), self::get_resource_url( 'wcpay' ), self::REQ_WCPAY_VERSION, self::get_resource_url( 'wcs' ), self::REQ_WCS_VERSION );
+			$notice = sprintf( __( 'All Products for Woo Subscriptions requires at least <a href="%1$s" target="_blank">WooCommerce Payments</a> version <strong>%2$s</strong> or <a href="%3$s" target="_blank">WooCommerce Subscriptions</a> version <strong>%4$s</strong>.', 'woocommerce-all-products-for-subscriptions' ), self::get_resource_url( 'wcpay' ), self::REQ_WCPAY_VERSION, self::get_resource_url( 'wcs' ), self::REQ_WCS_VERSION );
 		}
 
 		if ( ! empty ( $notice ) ) {
@@ -218,7 +218,7 @@ class WCS_ATT extends WCS_ATT_Abstract_Module {
 
 		// PHP version check.
 		if ( ! function_exists( 'phpversion' ) || version_compare( phpversion(), '7.0.0', '<' ) ) {
-			$notice = sprintf( __( 'All Products for WooCommerce Subscriptions requires at least PHP <strong>%1$s</strong>. Learn <a href="%2$s">how to update PHP</a>.', 'woocommerce-all-products-for-subscriptions' ), '7.0.0', 'https://woocommerce.com/document/how-to-update-your-php-version/' );
+			$notice = sprintf( __( 'All Products for Woo Subscriptions requires at least PHP <strong>%1$s</strong>. Learn <a href="%2$s">how to update PHP</a>.', 'woocommerce-all-products-for-subscriptions' ), '7.0.0', 'https://woo.com/document/how-to-update-your-php-version/' );
 			require_once( WCS_ATT_ABSPATH . 'includes/admin/class-wcs-att-admin-notices.php' );
 			WCS_ATT_Admin_Notices::add_notice( $notice, 'error' );
 			return false;
@@ -226,7 +226,7 @@ class WCS_ATT extends WCS_ATT_Abstract_Module {
 
 		// WC 3.0+ check.
 		if ( ! function_exists( 'WC' ) || version_compare( WC()->version, self::REQ_WC_VERSION ) < 0 ) {
-			$notice = __( 'All Products for WooCommerce Subscriptions requires at least WooCommerce version <strong>%1$s</strong>. %2$s', 'woocommerce-all-products-for-subscriptions' );
+			$notice = __( 'All Products for Woo Subscriptions requires at least WooCommerce version <strong>%1$s</strong>. %2$s', 'woocommerce-all-products-for-subscriptions' );
 			if ( ! function_exists( 'WC' ) ) {
 				$notice = sprintf( $notice, self::REQ_WC_VERSION, __( 'Please install and activate WooCommerce.', 'woocommerce-all-products-for-subscriptions' ) );
 			} else {
@@ -307,7 +307,7 @@ class WCS_ATT extends WCS_ATT_Abstract_Module {
 		 * is only available with WooCommerce Subscriptions. These features are disabled when
 		 * Subscriptions core is loaded via WooCommerce Payments.
 		 *
-		 * See: https://woocommerce.com/document/payments/subscriptions/comparison/#feature-matrix
+		 * See: https://woo.com/document/payments/subscriptions/comparison/#feature-matrix
 		 */
 		if ( class_exists( 'WC_Subscriptions_Switcher' ) && class_exists( 'WC_Subscriptions' ) ) {
 			require_once( WCS_ATT_ABSPATH . 'includes/modules/class-wcs-att-management.php' );
@@ -472,25 +472,25 @@ class WCS_ATT extends WCS_ATT_Abstract_Module {
 		$resource = false;
 
 		if ( 'update-php' === $handle ) {
-			$resource = 'https://woocommerce.com/document/how-to-update-your-php-version/';
+			$resource = 'https://woo.com/document/how-to-update-your-php-version/';
 		} elseif ( 'docs-contents' === $handle ) {
-			$resource = 'https://woocommerce.com/document/all-products-for-woocommerce-subscriptions/';
+			$resource = 'https://woo.com/document/all-products-for-woocommerce-subscriptions/';
 		} elseif ( 'docs-configuration' === $handle ) {
-			$resource = 'https://woocommerce.com/document/all-products-for-woocommerce-subscriptions/store-owners-guide/#configuration';
+			$resource = 'https://woo.com/document/all-products-for-woocommerce-subscriptions/store-owners-guide/#configuration';
 		} elseif ( 'max-input-vars' === $handle ) {
-			$resource = 'https://woocommerce.com/document/bundles/bundles-faq/#faq_bundled_items_dont_save';
+			$resource = 'https://woo.com/document/bundles/bundles-faq/#faq_bundled_items_dont_save';
 		} elseif ( 'updating' === $handle ) {
-			$resource = 'https://woocommerce.com/document/how-to-update-woocommerce/';
+			$resource = 'https://woo.com/document/how-to-update-woocommerce/';
 		} elseif ( 'global-plan-settings' === $handle ) {
 			$resource = admin_url( 'admin.php?page=wc-settings&tab=subscriptions#wcsatt_subscribe_to_cart_options_pre-description' );
 		} elseif ( 'wcpay-settings' === $handle ) {
 			$resource = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=woocommerce_payments' );
 		} elseif ( 'wcs' === $handle ) {
-			$resource = 'https://woocommerce.com/products/woocommerce-subscriptions/';
+			$resource = 'https://woo.com/products/woocommerce-subscriptions/';
 		} elseif ( 'wcpay' === $handle ) {
-			$resource = 'https://woocommerce.com/products/woocommerce-payments/';
+			$resource = 'https://woo.com/products/woocommerce-payments/';
 		}  elseif ( 'ticket-form' === $handle ) {
-			$resource = 'https://woocommerce.com/my-account/marketplace-ticket-form/';
+			$resource = 'https://woo.com/my-account/marketplace-ticket-form/';
 		}
 
 		return $resource;

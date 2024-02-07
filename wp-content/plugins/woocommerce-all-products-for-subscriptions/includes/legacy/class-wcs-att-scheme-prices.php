@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Scheme_Prices class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    1.1.0
  */
 

@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Store_API class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    3.3.2
  */
 

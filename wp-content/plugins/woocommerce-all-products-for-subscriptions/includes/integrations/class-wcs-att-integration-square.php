@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Integration_Square class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    3.1.27
  */
 

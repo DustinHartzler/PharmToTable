@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Integrations class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    1.0.0
  */
 
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Compatibility with other extensions.
  *
  * @class    WCS_ATT_Integrations
- * @version  4.0.6
+ * @version  4.1.4
  */
 class WCS_ATT_Integrations {
 
@@ -98,6 +98,9 @@ class WCS_ATT_Integrations {
 		// Declare HPOS compatibility.
 		add_action( 'before_woocommerce_init', array( __CLASS__, 'declare_hpos_compatibility' ) );
 
+		// Declare Blocks compatibility.
+		add_action( 'before_woocommerce_init', array( __CLASS__, 'declare_blocks_compatibility' ) );
+
 		if ( is_admin() ) {
 			// Check plugin min versions.
 			add_action( 'admin_init', array( __CLASS__, 'display_notices' ) );
@@ -121,6 +124,20 @@ class WCS_ATT_Integrations {
 	}
 
 	/**
+	 * Declare cart/checkout Blocks compatibility.
+	 *
+	 * @since 4.1.4
+	 */
+	public static function declare_blocks_compatibility() {
+
+		if ( ! class_exists( 'Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			return;
+		}
+
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', WCS_ATT()->plugin_basename(), true );
+	}
+
+	/**
 	 * Checks versions of compatible/integrated/deprecated extensions.
 	 *
 	 * @since  2.4.0
@@ -139,9 +156,9 @@ class WCS_ATT_Integrations {
 			if ( version_compare( WCS_ATT()->plugin_version( true, WC_PB()->version ), $required_version ) < 0 ) {
 
 				$extension      = __( 'Product Bundles', 'woocommerce-all-products-for-subscriptions' );
-				$extension_full = __( 'WooCommerce Product Bundles', 'woocommerce-all-products-for-subscriptions' );
-				$extension_url  = 'https://woocommerce.com/products/product-bundles/';
-				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for WooCommerce Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
+				$extension_full = __( 'Woo Product Bundles', 'woocommerce-all-products-for-subscriptions' );
+				$extension_url  = 'https://woo.com/products/product-bundles/';
+				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for Woo Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
 
 				WCS_ATT_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'pb_lt_' . $required_version, 'type' => 'native' ) );
 			}
@@ -153,9 +170,9 @@ class WCS_ATT_Integrations {
 			if ( version_compare( WCS_ATT()->plugin_version( true, WC_CP()->version ), $required_version ) < 0 ) {
 
 				$extension      = __( 'Composite Products', 'woocommerce-all-products-for-subscriptions' );
-				$extension_full = __( 'WooCommerce Composite Products', 'woocommerce-all-products-for-subscriptions' );
-				$extension_url  = 'https://woocommerce.com/products/composite-products/';
-				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for WooCommerce Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
+				$extension_full = __( 'Woo Composite Products', 'woocommerce-all-products-for-subscriptions' );
+				$extension_url  = 'https://woo.com/products/composite-products/';
+				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for Woo Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
 
 				WCS_ATT_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'cp_lt_' . $required_version, 'type' => 'native' ) );
 			}
@@ -169,9 +186,9 @@ class WCS_ATT_Integrations {
 			if ( ! defined( 'WC_PRODUCT_ADDONS_VERSION' ) || version_compare( WC_PRODUCT_ADDONS_VERSION, $required_version ) < 0 ) {
 
 				$extension      = __( 'Product Add-Ons', 'woocommerce-all-products-for-subscriptions' );
-				$extension_full = __( 'WooCommerce Product Add-Ons', 'woocommerce-all-products-for-subscriptions' );
-				$extension_url  = 'https://woocommerce.com/products/product-add-ons/';
-				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for WooCommerce Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
+				$extension_full = __( 'Woo Product Add-Ons', 'woocommerce-all-products-for-subscriptions' );
+				$extension_url  = 'https://woo.com/products/product-add-ons/';
+				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for Woo Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
 
 				WCS_ATT_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'addons_lt_' . $required_version, 'type' => 'native' ) );
 			}

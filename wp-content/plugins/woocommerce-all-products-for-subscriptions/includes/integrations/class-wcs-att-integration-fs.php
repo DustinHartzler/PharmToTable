@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Integration_FS class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    3.1.18
  */
 
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Flatsome integration.
  *
- * @version  3.1.18
+ * @version  4.1.5
  */
 class WCS_ATT_Integration_FS {
 
@@ -35,42 +35,17 @@ class WCS_ATT_Integration_FS {
 	}
 
 	/**
-	 * Initializes bundles in quick view modals.
+	 * Initializes subscriptions in quick view modals.
 	 *
 	 * @return array
 	 */
 	public static function add_quickview_integration() {
 
 		wp_enqueue_script( 'wcsatt-single-product' );
-		wp_add_inline_script( 'wcsatt-single-product',
-		'
-			jQuery( document ).on( "mfpOpen", function( e ) {
 
-				jQuery( document.body ).trigger( "wcsatt-initialize" );
-
-			} );
-		' );
-	}
-
-	/**
-	 * Lower the responsive styling breakpoint for Flatsome.
-	 *
-	 * @param  array  $params
-	 * @return array
-	 */
-	public static function adjust_responsive_breakpoint( $params ) {
-		$params[ 'responsive_breakpoint' ] = 320;
-		return $params;
-	}
-
-	/**
-	 * Resolve image update mixups in quickview modals.
-	 *
-	 * @param  WC_Bundled_Item  $bundled_item
-	 * @return array
-	 */
-	public static function bundled_product_gallery_classes( $bundled_item ) {
-		return array( 'bundled_product_images' );
+		wp_register_script( 'wcsatt-flatsome-quickview', WCS_ATT()->plugin_url() . '/assets/js/frontend/integrations/flatsome-quickview.js', array( 'jquery', 'wc-country-select', 'wc-address-i18n' ), WCS_ATT::VERSION, true );
+		wp_script_add_data( 'wcsatt-flatsome-quickview', 'strategy', 'defer' );
+		wp_enqueue_script( 'wcsatt-flatsome-quickview' );
 	}
 }
 

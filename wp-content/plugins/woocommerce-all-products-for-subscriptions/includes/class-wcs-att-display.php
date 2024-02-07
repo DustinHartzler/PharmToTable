@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Display class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    1.0.0
  */
 
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Front-end support and single-product template modifications.
  *
  * @class    WCS_ATT_Display
- * @version  3.4.2
+ * @version  4.1.5
  */
 class WCS_ATT_Display {
 
@@ -63,6 +63,7 @@ class WCS_ATT_Display {
 		if ( apply_filters( 'wcsatt_enqueue_cart_script', is_cart() || ( is_checkout() && 'off' !== get_option( 'wcsatt_add_cart_to_subscription', 'off' ) ) ) ) {
 
 			wp_register_script( 'wcsatt-cart', WCS_ATT()->plugin_url() . '/assets/js/frontend/cart.js', array( 'jquery', 'wc-country-select', 'wc-address-i18n' ), WCS_ATT::VERSION, true );
+			wp_script_add_data( 'wcsatt-cart', 'strategy', 'defer' );
 			wp_enqueue_script( 'wcsatt-cart' );
 
 			$params = array(
@@ -76,6 +77,7 @@ class WCS_ATT_Display {
 		}
 
 		wp_register_script( 'wcsatt-single-product', WCS_ATT()->plugin_url() . '/assets/js/frontend/single-add-to-cart.js', array( 'jquery', 'jquery-blockui', 'backbone' ), WCS_ATT::VERSION, true );
+		wp_script_add_data( 'wcsatt-single-product', 'strategy', 'defer' );
 
 		$params = array(
 			'i18n_subs_load_error' => __( 'Failed to load matching subscriptions. If this issue persists, please re-load the page and try again.', 'woocommerce-all-products-for-subscriptions' ),

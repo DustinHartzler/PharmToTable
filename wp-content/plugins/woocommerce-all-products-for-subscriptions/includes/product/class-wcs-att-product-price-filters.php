@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Product_Price_Filters class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    2.0.0
  */
 

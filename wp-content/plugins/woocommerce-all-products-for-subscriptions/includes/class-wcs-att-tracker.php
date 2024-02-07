@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Tracker class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  * @since    3.3.2
  */
 
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WooCommerce All Products For Subscriptions Tracker.
+ * Woo All Products For Subscriptions Tracker.
  *
  * @class    WCS_ATT_Tracker
  * @version  3.4.1

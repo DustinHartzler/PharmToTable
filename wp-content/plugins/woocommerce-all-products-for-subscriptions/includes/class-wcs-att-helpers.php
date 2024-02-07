@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Helpers class
  *
- * @package  WooCommerce All Products For Subscriptions
+ * @package  Woo All Products For Subscriptions
  */
 
 // Exit if accessed directly.
