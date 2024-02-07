@@ -1,5 +1,40 @@
 *** WooCommerce Bookings Changelog ***
 
+2024-01-29 - version 2.0.9
+* Dev - Bump PHP "tested up to" version 8.3.
+* Dev - Bump WooCommerce "tested up to" version 8.5.
+* Dev - Bump WooCommerce minimum supported version to 8.3.
+* Dev - Bump WordPress minimum supported version to 6.3.
+* Fix - Set the place order label in the Block checkout page when order requires confirmation.
+* Fix - Slow checkout performance for high-volume sites.
+* Fix - Remove Cart Block incompatibility notice.
+* Tweak - Ensure New Bookable Product link goes to template selection screen.
+
+2024-01-10 - version 2.0.8
+* Add - Improved Bookings Calendar Connection & Sync Flow by adding Labels and Notifications.
+* Dev - Declare compatibility with WooCommerce Blocks
+* Dev - Bump PHP minimum supported version to 7.4.
+* Dev - Bump WooCommerce "tested up to" version 8.4.
+* Dev - Bump WooCommerce minimum supported version to 8.2.
+* Dev - Switched the E2E test environment from `@woocommerce/e2e-environment` to `@wordpress/env`.
+* Fix - Ensure compatibility with WooPayments extension.
+
+2023-12-04 - version 2.0.7
+* Dev - Bump WooCommerce "tested up to" version 8.3.
+* Dev - Bump WooCommerce minimum supported version to 8.1.
+* Dev - Bump WordPress minimum supported version to 6.2.
+* Fix - `wc_bookings_calendar_default_to_current_date` filter issue with date handling.
+
+2023-11-20 - version 2.0.6
+* Dev - Bump WordPress "tested up to" version 6.4.
+* Dev - Bump WordPress minimum supported version to 6.2.
+* Dev - Add Playwright e2e tests for Critical Flows.
+* Dev - Resolve Coding Standards issues.
+
+2023-10-24 - version 2.0.5
+* Dev - Change docs and config files to indicate node 12 requirement.
+* Fix - Salt rotation issue for key encryption.
+
 2023-10-09 - version 2.0.4
 * Dev - Added E2E tests to ensure customer-defined blocks work with resources.
 * Dev - Update E2E tests workflow to only run based on conditions.

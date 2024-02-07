@@ -36,6 +36,12 @@ class WC_Bookings_Init {
 
 		// Add a new custom quick add menu item for bookable products.
 		add_filter( 'admin_bar_menu', array( $this, 'wp_admin_bar_new_content_menu' ), 999 );
+
+		// WooPayments compatibility.
+		add_filter( 'wcpay_payment_request_is_product_supported', array( $this, 'wcpay_is_product_supported' ), 10, 2 );
+		add_filter( 'wcpay_woopay_button_is_product_supported', array( $this, 'wcpay_is_product_supported' ), 10, 2 );
+		add_filter( 'wcpay_payment_request_is_cart_supported', array( $this, 'wcpay_is_cart_supported' ), 10, 2 );
+		add_filter( 'wcpay_platform_checkout_button_are_cart_items_supported', array( $this, 'platform_checkout_button_are_cart_items_supported' ) );
 	}
 
 	/**
@@ -213,6 +219,85 @@ class WC_Bookings_Init {
 	}
 
 	/**
+	 * Filter whether to display express pay buttons on product pages.
+	 *
+	 * Runs on the `wcpay_payment_request_is_product_supported` and
+	 * `wcpay_woopay_button_is_product_supported` filters.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param bool        $is_supported Whether express pay buttons are supported on product pages.
+	 * @param \WC_Product $product      The product object.
+	 *
+	 * @return bool Modified support status.
+	 */
+	public function wcpay_is_product_supported( $is_supported, $product ) {
+		if ( ! ( $product instanceof WC_Product_Booking ) ) {
+			// Product unrelated to this extension.
+			return $is_supported;
+		}
+
+		// Express pay buttons are not supported on product pages.
+		return false;
+	}
+
+	/**
+	 * Filter whether to display Apple/Google express pay buttons on cart pages.
+	 *
+	 * Hide the express pay button on cart pages if the booking requires confirmation.
+	 *
+	 * Runs on the `wcpay_payment_request_is_cart_supported` filter.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param bool        $is_supported Whether Apple/Google express pay buttons are supported on cart pages.
+	 * @param \WC_Product $product      A product object in the cart.
+	 *
+	 * @return bool Modified support status.
+	 */
+	public function wcpay_is_cart_supported( $is_supported, $product ) {
+		if ( ! ( $product instanceof WC_Product_Booking ) ) {
+			// Product unrelated to this extension.
+			return $is_supported;
+		}
+
+		if ( $product->get_requires_confirmation() ) {
+			// Don't show the express pay button if the booking requires confirmation.
+			return false;
+		}
+
+		return $is_supported;
+	}
+
+	/**
+	 * Filter whether to display WooPay express pay buttons on cart pages.
+	 *
+	 * Hide the express WooPay button on cart pages containing bookings.
+	 *
+	 * Runs on the `wcpay_platform_checkout_button_are_cart_items_supported` filter.
+	 *
+	 * @link https://woo.com/document/woopay-merchant-documentation/#incompatible-extensions
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param bool $is_supported Whether express WooPay buttons are supported on cart pages.
+	 *
+	 * @return bool Modified support status.
+	 */
+	public function platform_checkout_button_are_cart_items_supported( $is_supported ) {
+		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+			$product = $cart_item['data'];
+
+			if ( $product instanceof WC_Product_Booking ) {
+				// Product is a booking product.
+				return false;
+			}
+		}
+
+		return $is_supported;
+	}
+
+	/**
 	 * Register data stores for bookings.
 	 *
 	 * @param array $data_stores
@@ -269,8 +354,8 @@ class WC_Bookings_Init {
 	 * that gateway in the admin, as it has no options to configure.
 	 */
 	public function include_gateway( $gateways ) {
-		$page = isset( $_GET['page'] ) ? wc_clean( $_GET['page'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$tab  = isset( $_GET['tab'] ) ? wc_clean( $_GET['tab'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? wc_clean( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tab  = isset( $_GET['tab'] ) ? wc_clean( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( is_admin() && 'wc-settings' === $page && 'checkout' === $tab ) {
 			return $gateways;
 		}
@@ -323,18 +408,18 @@ class WC_Bookings_Init {
 			return;
 		}
 
-		// Create your custom menu item
+		// Create your custom menu item.
 		$custom_menu_item = array(
 			'parent' => 'new-content',
 			'id'     => 'new-bookable-product',
 			'title'  => __( 'Bookable product', 'woocommerce-bookings' ),
-			'href'   => admin_url( 'post-new.php?post_type=product&bookable_product=1' ),
+			'href'   => admin_url( 'edit.php?post_type=wc_booking&page=wc_bookings_product_templates' ),
 		);
 
-		// Get the existing menu items
+		// Get the existing menu items.
 		$menu_items = $wp_admin_bar->get_nodes();
 
-		// Find the position of the item with ID "add-new-product"
+		// Find the position of the item with ID "add-new-product".
 		$add_new_product_position = - 1;
 		foreach ( $menu_items as $position => $menu_item ) {
 			if ( 'new-product' === $menu_item->id ) {
