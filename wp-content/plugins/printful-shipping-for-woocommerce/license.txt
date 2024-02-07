@@ -16,7 +16,7 @@ intercom.js is released under Apache License (v2)
 and
 
 Printful Integration for WooCommerce
-Copyright (c) 2023 Printful® Inc
+Copyright (c) 2024 Printful® Inc
 Printful Integration for WooCommerce is released under GPL
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

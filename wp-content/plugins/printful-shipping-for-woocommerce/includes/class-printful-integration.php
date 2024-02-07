@@ -151,7 +151,7 @@ class Printful_Integration
 	 * @return bool
 	 */
 	public function get_option( $name, $default = array() ) {
-		$options  = get_option( 'woocommerce_printful_settings', $default );
+        $options = $this->get_settings( $default );
 		if ( ! empty( $options[ $name ] ) ) {
 			return $options[ $name ];
 		}
@@ -159,12 +159,20 @@ class Printful_Integration
 		return false;
 	}
 
+    /**
+     * Wrapper method for getting all the settings
+     * @param array $default
+     * @return array
+     */
+    public function get_settings( $default = array() ) {
+        return get_option( 'woocommerce_printful_settings', $default );
+    }
+
 	/**
 	 * Save the setting
 	 * @param $settings
 	 */
 	public function update_settings( $settings ) {
-		delete_transient( self::PF_API_CONNECT_STATUS );    //remove the successful API status since API key could have changed
 		update_option( 'woocommerce_printful_settings', $settings );
 	}
 }

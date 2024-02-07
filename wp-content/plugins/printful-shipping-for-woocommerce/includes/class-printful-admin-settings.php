@@ -301,7 +301,7 @@ class Printful_Admin_Settings {
                 foreach ( $carrier_methods as $carrier_method => $carrier_data ) {
                     $is_active = false;
 
-                    if ( in_array( $carrier_method, $saved_carriers[ $region ][ $carrier_type ] ) ) {
+                    if ( in_array( $carrier_method, isset($saved_carriers[ $region ][ $carrier_type ]) ? $saved_carriers[ $region ][ $carrier_type ] : [] ) ) {
                         $is_active = true;
                     }
 
@@ -347,7 +347,7 @@ class Printful_Admin_Settings {
                 }
 			}
 
-			$options = array();
+			$options = Printful_Integration::instance()->get_settings();
 
 			//build save options list
 			foreach ( self::getAllFields() as $key => $field ) {
