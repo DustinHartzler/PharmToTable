@@ -15,7 +15,7 @@ use WP_REST_Response;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Exposes WooCommerce Subscriptions' REST API v1 Subscriptions endpoint via the WooCommerce Zapier endpoint namespace.
+ * Exposes Woo Subscriptions' REST API v1 Subscriptions endpoint via the WooCommerce Zapier endpoint namespace.
  *
  * Uses Subscriptions' V3 REST API functionality for database interactions to ensure compatibility with HPOS,
  * but uses the V1 schema and response structures to ensure compatibility with existing Zaps.
@@ -76,6 +76,7 @@ class V1Controller extends WC_REST_Subscriptions_Controller {
 		$this->logger            = $logger;
 		$this->task_creator      = $task_creator;
 		$this->wcs_v1_controller = $wcs_v1_controller;
+		$this->add_filter_to_check_for_request_validation_error();
 	}
 
 	/**
@@ -199,7 +200,7 @@ class V1Controller extends WC_REST_Subscriptions_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item( $request ) {
-		// Create a subscription using the V1 controller.
+		// Update the subscription using the V1 controller.
 		$response = $this->wcs_v1_controller->update_item( $request );
 		if ( is_wp_error( $response ) ) {
 			return $response;

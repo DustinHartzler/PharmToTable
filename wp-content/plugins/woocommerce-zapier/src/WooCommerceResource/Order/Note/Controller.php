@@ -32,6 +32,14 @@ class Controller extends WC_REST_Order_Notes_Controller {
 	use APIListenerTrait;
 
 	/**
+	 * Whether our hooks have been added.
+	 * This is used to ensure that our hooks are only added once, even if this class is instantiated multiple times.
+	 *
+	 * @var bool
+	 */
+	protected static $hooks_added = false;
+
+	/**
 	 * Endpoint namespace.
 	 *
 	 * @var string
@@ -99,7 +107,11 @@ class Controller extends WC_REST_Order_Notes_Controller {
 		$this->checker      = $checker;
 		$this->wp_db        = $wp_db;
 
-		add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
+		if ( ! self::$hooks_added ) {
+			add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
+			$this->add_filter_to_check_for_request_validation_error();
+			self::$hooks_added = true;
+		}
 	}
 
 	/**
@@ -389,6 +401,12 @@ class Controller extends WC_REST_Order_Notes_Controller {
 
 		if ( \is_wp_error( $response ) ) {
 			$this->log_error_response( $request, $response );
+			$this->task_creator->record(
+				Event::action_create( $this->resource_type, $response ),
+				0,
+				// TODO: get the order ID from the request.
+				0
+			);
 			return $response;
 		}
 		$event = Event::action_create( $this->resource_type );
@@ -456,5 +474,21 @@ class Controller extends WC_REST_Order_Notes_Controller {
 		$clauses['where'] .= ( $clauses['where'] ? ' AND ' : '' ) .
 			" {$this->wp_db->prefix}wc_orders.type = 'shop_order' ";
 		return $clauses;
+	}
+
+	/**
+	 * Modify the child ID that is used when creating an unsuccessful Task History record.
+	 *
+	 * Ensures all Order Note related errors have a child ID of 0, which also means a child type of `order_note`.
+	 *
+	 * @param ?int             $child_id  The resource ID.
+	 * @param WP_REST_Request  $request Request used to generate the response.
+	 * @param WP_REST_Response $response  Result to send to the client.
+	 *
+	 * @return ?int
+	 * @since 2.10.0
+	 */
+	protected function modify_child_id( $child_id, $request, $response ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		return 0;
 	}
 }

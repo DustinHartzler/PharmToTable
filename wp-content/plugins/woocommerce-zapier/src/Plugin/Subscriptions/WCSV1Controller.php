@@ -11,7 +11,7 @@ use WC_REST_Subscriptions_V1_Controller;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Allows the WooCommerce Subscriptions REST API v1 Subscription endpoint methods to
+ * Allows the Woo Subscriptions REST API v1 Subscription endpoint methods to
  * be use directly by our V1 Subscriptions Controller.
  *
  * @since 2.7.0
@@ -63,6 +63,7 @@ class WCSV1Controller extends WC_REST_Subscriptions_V1_Controller {
 		$this->logger       = $logger;
 		$this->task_creator = $task_creator;
 		$this->checker      = $checker;
+		$this->add_filter_to_check_for_request_validation_error();
 		if ( $this->checker->is_hpos_enabled() && ! $this->checker->is_hpos_in_sync() ) {
 			/**
 			 * HPOS saves a placeholder post type.

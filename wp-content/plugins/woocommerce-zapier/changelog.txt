@@ -1,14 +1,58 @@
 *** WooCommerce Zapier Changelog ***
 
+2024-01-11 - version 2.10.0
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-10-0/
+* New: WooCommerce Memberships' User Memberships can be created using the "Create User Membership" action. PR #686
+* New: WooCommerce Memberships' User Memberships can be updated using the "Update User Membership" action. PR #686
+* New: WooCommerce Memberships' User Memberships can be found using the "Find User Membership" action. PR #686
+* New: "User Membership Created" trigger rule. PR #686
+* New: "User Membership Deleted" trigger rule. PR #686
+* New: "User Membership status changed (any status)" trigger rule. PR #686
+* New: "User Membership status changed to Active" trigger rule. PR #686
+* New: "User Membership status changed to Cancelled" trigger rule. PR #686
+* New: "User Membership status changed to Complimentary" trigger rule. PR #686
+* New: "User Membership status changed to Delayed" trigger rule. PR #686
+* New: "User Membership status changed to Expired" trigger rule. PR #686
+* New: "User Membership status changed to Free Trial" trigger rule. PR #686
+* New: "User Membership status changed to Paused" trigger rule. PR #686
+* New: "User Membership status changed to Pending Cancellation" trigger rule. PR #686
+* New: "User Membership Transferred" trigger rule. PR #686
+* New: "User Membership Updated" trigger rule. PR #686
+* New: WooCommerce Memberships' Membership Plans can be found using the "Find Membership Plan" action. PR #686
+* New: "Membership Plan Created" trigger rule. PR #686
+* New: "Membership Plan Deleted" trigger rule. PR #686
+* New: "Membership Plan Restored" trigger rule. PR #686
+* New: "Membership Plan Updated" trigger rule. PR #686
+* New: Add User Membership REST API endpoints for WooCommerce Memberships integration. PR #686
+* New: Add Membership Plans REST API endpoints for WooCommerce Memberships integration. PR #686
+* New: Compatibility with PHP 8.3. PR #686
+* New: Add support for WooCommerce Cart and Checkout blocks. PR #679
+* New: Include Resource ID in Trigger/Webhook request headers. PR #690
+* New: Introduce status for Task History records. PR #691
+* New: Add Failed Trigger Deliveries to Task History as Error tasks. PR #691
+* New: Add Unexpected Trigger data payloads to Task History as Error tasks. PR #691
+* New: Add Action Scheduler failed webhook deliveries to Task History as Error tasks. PR #691
+* New: Add failed Create and Update actions to Task History as Error tasks. PR #691
+* New: Add ability to Search Task History tasks. PR #691
+* New: Add ability to filter Task History tasks by status. PR #691
+* Change: Remove ability to create Subscription from an Order REST API endpoint. It was added in 5.7.0 of Woo Subscriptions. PR #686
+* Update: Marked as compatible with WooCommerce v8.4. PR #693
+
+2023-11-02 - version 2.9.1
+* Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-9-1-improve-compatibility-with-old-mysql
+* Fix: Ensure the database schema update logic is compatible with MySQL versions prior to 8.0. PR #680
+* Change: Refer to Woo.com instead of WooCommerce.com. PR #681
+* Change: Refer to Woo Subscriptions instead of WooCommerce Subscriptions. PR #681
+
 2023-10-20 - version 2.9.0
 * Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-9-0-subscription-notes
-* New: Subscription Notes can be created using the "Create Subscription Note" action. PR#675
-* New: Subscription Notes can be found using the "Find Subscription Note" action. PR#675
-* New: "Subscription Note Created" trigger rule. PR#675
-* New: "Subscription Note Deleted" trigger rule. PR#675
-* New: Add Subscription Notes REST API endpoint. PR#675
-* Update: Marked as compatible with WooCommerce Subscriptions v5.6. PR#675
-* Fix: Ensure that **Find Order Note** action only returns notes from orders. PR#675
+* New: Subscription Notes can be created using the "Create Subscription Note" action. PR #675
+* New: Subscription Notes can be found using the "Find Subscription Note" action. PR #675
+* New: "Subscription Note Created" trigger rule. PR #675
+* New: "Subscription Note Deleted" trigger rule. PR #675
+* New: Add Subscription Notes REST API endpoint. PR #675
+* Update: Marked as compatible with Woo Subscriptions v5.6. PR #675
+* Fix: Ensure that **Find Order Note** action only returns notes from orders. PR #675
 
 2023-10-16 - version 2.8.0
 * Other: Announcement: https://om4.io/blog/woocommerce-zapier-2-8-0-order-notes/
@@ -157,7 +201,7 @@
 
 2021-07-23 - version 2.2.1
 * Other: Announcement: https://om4.io/blog/woocommerce-security-advisory/
-* Other: Security: Automatically revoke all existing WooCommerce Zapier API Keys based on advice in https://woocommerce.com/posts/critical-vulnerability-detected-july-2021/.
+* Other: Security: Automatically revoke all existing WooCommerce Zapier API Keys based on advice in https://woo.com/posts/critical-vulnerability-detected-july-2021/.
 * Update: Marked as compatible with WooCommerce 5.5. PR #474
 * Update: Marked as compatible with WordPress 5.8. PR #474
 
@@ -207,7 +251,7 @@
 2020-09-11 - version 2.0.5
 * Other: Announcement: https://om4.io/blog/woocommerce-zapier-version-2-0-5-released/
 * Fix: Prevent a PHP notice that could occur during authentication when using WordPress 5.5 and above with WP_DEBUG enabled. #330
-* Update: Legacy Mode logs are now logged to a `woocommerce-zapier-legacy` log file, separate from the main `woocommerce-zapier` log file. PR#306
+* Update: Legacy Mode logs are now logged to a `woocommerce-zapier-legacy` log file, separate from the main `woocommerce-zapier` log file. PR #306
 * Update: Improved error detection and logging during authentication ping requests, to help identify WooCommerce REST API authentication issues. #298
 * Update: Marked as compatible with WooCommerce 4.5
 * Update: Marked as compatible with WordPress 5.5
@@ -220,7 +264,7 @@
 
 2020-04-11 - version 2.0.3
 * Other: Announcement: https://om4.io/blog/woocommerce-zapier-version-2-0-3-released/
-* Fix: Authentication attempts failing with `The username and/or password you supplied is incorrect.` message for users with usernames or passwords containing some special characters (such a %, <, >, and trailing/leading spaces). PR#144
+* Fix: Authentication attempts failing with `The username and/or password you supplied is incorrect.` message for users with usernames or passwords containing some special characters (such a %, <, >, and trailing/leading spaces). PR #144
 
 2020-04-09 - version 2.0.2
 * Other: Announcement: https://om4.io/blog/woocommerce-zapier-version-2-0-2-released/
@@ -231,14 +275,14 @@
 * Fix: Correctly recognise Zapier REST API Keys for non-english stores. #277
 * Fix: Remove All Data not working during plugin Uninstall. #275
 * Update: Help prevent unexpected authentication errors by improving compatibility with plugins that customise the login/authentication process. #276
-* Update: Log failed authentication attempts if detailed logging is enabled. PR#142
+* Update: Log failed authentication attempts if detailed logging is enabled. PR #142
 
 2020.04.06 - version 2.0.0
 * Other: Announcement: https://om4.io/blog/redefining-your-online-store-with-woocommerce-zapier-2/
 * Other: Important: This a major release that contains many new features. It also requires you to migrate all of your existing WooCommerce Zaps to the new system. Please see https://docs.om4.io/woocommerce-zapier/migration/ for important details.
 * New: Two-Way Integration: Now supporting Actions and Searches as well as Triggers.  You can now use Zaps to create (or update existing) data in WooCommerce via your Zaps.
 * New: There are now three times (3x) the number of available trigger events, giving you 3 times as many reasons to send your WooCommerce store data to Zapier!
-* New: Simplified Zap Creation: The Zap creation process is simplified, with no requirement to create Zap specific feeds in WooCommerce. Zaps are now managed entirely via WooCommerce.com.
+* New: Simplified Zap Creation: The Zap creation process is simplified, with no requirement to create Zap specific feeds in WooCommerce. Zaps are now managed entirely via Zapier.com.
 * New: Data Types: Adds support for Products and Coupons, in addition to the already supported Orders, Customers and Subscriptions.
 * New: Powered by the REST API: WooCommerce Zapier version 2 is powered by the WooCommerce REST API, giving you access to many more data fields as well as more robust and reliable data delivery.
 * New: Secure by Design: HTTPS (secure) communication between WooCommerce and Zapier, as well as a new authentication method, will help improve data confidentiality and integrity.
@@ -249,13 +293,13 @@
 * New: Settings screen to enable or disable detailed logging. Please see https://docs.om4.io/woocommerce-zapier/plugin-interface/#plugin-settings for details. PR #101
 * New: Improved compatibility of the Legacy Feeds with certain plugins that modify the Order data upon load. #233
 * New: When deactivating the plugin, pause existing Zapier webhooks so that no data is sent to them. When reactivating the plugin, unpause existing Zapier webhooks. #237
-* New: Improved System Status screen display and information. Now displayed at the bottom of the WooCommerce -> Status screen. PR#107.
+* New: Improved System Status screen display and information. Now displayed at the bottom of the WooCommerce -> Status screen. PR #107.
 * New: Add support for WooCommerce Admin (wc-admin) which was introduced in WooCommerce 4.0. #266
 * Fix: Prevent incorrectly filling of line item data in the Legacy Feeds. #234
-* Other: Security: Improved input sanitisation and output escaping in the WordPress admin area (for authenticated store owners). PR#114
+* Other: Security: Improved input sanitisation and output escaping in the WordPress admin area (for authenticated store owners). PR #114
 * Update: Marked as compatible with WooCommerce 4.0.1
-* Update: For existing users upgrading to version 2, Zapier Feeds are now know as Legacy Feeds. No new Legacy Feeds can be created, and users have 12 months to deactivate each Zapier Feed (and corresponding Zap) and create new Zaps using the new REST API based system. Please see https://docs.om4.io/woocommerce-zapier/migration/ for details. PR#100, #257, #226
-* Update: For new users, Zapier Feeds are no longer available and REST API based Zaps must be used instead. PR#100
+* Update: For existing users upgrading to version 2, Zapier Feeds are now know as Legacy Feeds. No new Legacy Feeds can be created, and users have 12 months to deactivate each Zapier Feed (and corresponding Zap) and create new Zaps using the new REST API based system. Please see https://docs.om4.io/woocommerce-zapier/migration/ for details. PR #100, #257, #226
+* Update: For new users, Zapier Feeds are no longer available and REST API based Zaps must be used instead. PR #100
 * Update: Simplify/improve WooCommerce active check. #194
 * Update: WooCommerce Zapier now requires a store with HTTPS so that REST API endpoints are securely communicated with. Please see https://docs.om4.io/woocommerce-zapier/install/#system-requirements for details. #213
 * Update: WooCommerce Zapier now requires pretty permalinks to be turned on (in WordPress Settings, Permalinks) so that REST API Endpoints are accessible. Please see https://docs.om4.io/woocommerce-zapier/install/#system-requirements for details. #213
@@ -269,19 +313,19 @@
 * Update: Plugin textdomain changed from `wc_zapier` to `woocommerce-zapier`.
 * Update: Marked as compatible with WordPress 5.4.0.
 * Update: Marked as compatible with WooCommerce Subscriptions v3.0.0.
-* Update: Coding standard improvements. PR#114
+* Update: Coding standard improvements. PR #114
 * Dev: `WC_ZAPIER_DEBUG` constant is no longer used. Enable Detailed Logging setting should be used instead. Please see https://docs.om4.io/woocommerce-zapier/migration/#woocommerce-zapier-integration-debugger for details. PR #101
-* Dev: Legacy Zapier Feeds functionality moved from `includes` to `legacy` directory. PR#100
-* Dev: Deprecate `wc_zapier_data` filter. PR#100
-* Dev: Deprecate `wc_zapier_data_***` filter. PR#100
-* Dev: Deprecate `wc_zapier_data_json` filter. PR#100
-* Dev: Deprecate `wc_zapier_data_json_***` filter. PR#100
-* Dev: Deprecate `wc_zapier_data_sent_to_zapier_successfully` hook. PR#100
-* Dev: Deprecate `wc_zapier_scheduled_event` hook. PR#100
-* Dev: Deprecate `wc_zapier_trigger_directories` filter. PR#100, PR#110
-* Dev: Deprecate `WC_Zapier()` function. PR#100
-* Dev: Deprecate `OM4\Zapier\Admin\FeedUI` class. PR#100
-* Dev: Deprecate `OM4\Zapier\Admin\SystemStatus` class. PR#100
+* Dev: Legacy Zapier Feeds functionality moved from `includes` to `legacy` directory. PR #100
+* Dev: Deprecate `wc_zapier_data` filter. PR #100
+* Dev: Deprecate `wc_zapier_data_***` filter. PR #100
+* Dev: Deprecate `wc_zapier_data_json` filter. PR #100
+* Dev: Deprecate `wc_zapier_data_json_***` filter. PR #100
+* Dev: Deprecate `wc_zapier_data_sent_to_zapier_successfully` hook. PR #100
+* Dev: Deprecate `wc_zapier_scheduled_event` hook. PR #100
+* Dev: Deprecate `wc_zapier_trigger_directories` filter. PR #100, PR #110
+* Dev: Deprecate `WC_Zapier()` function. PR #100
+* Dev: Deprecate `OM4\Zapier\Admin\FeedUI` class. PR #100
+* Dev: Deprecate `OM4\Zapier\Admin\SystemStatus` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Exception\IncompletePayloadException` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Exception\InvalidClassException` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Exception\InvalidMethodException` class. PR #100
@@ -292,8 +336,8 @@
 * Dev: Deprecate `OM4\Zapier\Exception\MissingSampleException` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Feed\FeedFactory` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Feed\Feed` class. PR #100
-* Dev: Deprecate `OM4\Zapier\LegacyTrait` class. PR#100
-* Dev: Deprecate `OM4\Zapier\Logger` class. PR#100
+* Dev: Deprecate `OM4\Zapier\LegacyTrait` class. PR #100
+* Dev: Deprecate `OM4\Zapier\Logger` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Payload\Base\Base` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Payload\Base\Collection` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Payload\Base\Item` class. PR #100
@@ -315,8 +359,8 @@
 * Dev: Deprecate `OM4\Zapier\Payload\Plugin\Subscription\Subscription` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Plugin\CheckoutFieldEditor` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Plugin\Subscriptions` class. PR #100
-* Dev: Deprecate `OM4\Zapier\Plugin` class. PR#100
-* Dev: Deprecate `OM4\Zapier\SendQueue` class. PR#100
+* Dev: Deprecate `OM4\Zapier\Plugin` class. PR #100
+* Dev: Deprecate `OM4\Zapier\SendQueue` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Trigger\Base` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Trigger\Customer\NewCustomer` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Trigger\Order\Base` class. PR #100
@@ -328,8 +372,8 @@
 * Dev: Deprecate `OM4\Zapier\Trigger\Subscription\Renewal` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Trigger\Subscription\StatusChange` class. PR #100
 * Dev: Deprecate `OM4\Zapier\Trigger\TriggerFactory` class. PR #100
-* Dev: Deleted `OM4\Zapier\Admin\Privacy` class. PR#100
-* Dev: Deleted `OM4\Zapier\Admin\Pointers` class. PR#100
+* Dev: Deleted `OM4\Zapier\Admin\Privacy` class. PR #100
+* Dev: Deleted `OM4\Zapier\Admin\Pointers` class. PR #100
 * Dev: Delete already deprecated `WC_Zapier` class. PR #100
 * Dev: Delete already deprecated `WC_Zapier_Admin` class. PR #100
 * Dev: Delete already deprecated `WC_Zapier_Admin_Feed_UI` class. PR #100
@@ -362,13 +406,13 @@
 2019.09.16 - version 1.9.5
 * Other: Announcement: https://om4.io/blog/version-1-9-5/
 * Fix: Typo in the logger, and context handling logic fixed. #200
-* Fix: Incorrect text-domain on privacy class. PR#71
+* Fix: Incorrect text-domain on privacy class. PR #71
 * New: Improved compatibility with certain plugins that modify the WP_Post data upon load. #204
 * New: Log get_post errors and modified behaviour.
 * Update: Marked as compatible with WordPress 5.2.3.
 * Update: Marked as compatible with WooCommerce 3.7.0.
 * Update: Marked as compatible with WooCommerce Subscriptions v2.6.1 (and backwards compatible with WooCommerce Subscriptions v2.4.x). #208
-* Update: Coding standard improvements, including improved documentation. PR#71
+* Update: Coding standard improvements, including improved documentation. PR #71
 * Update: Minimum required WordPress version is 4.6.0.
 
 2019.05.20 - version 1.9.4

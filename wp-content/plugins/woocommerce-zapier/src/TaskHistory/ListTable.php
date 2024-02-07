@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace OM4\WooCommerceZapier\TaskHistory;
 
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
+use OM4\WooCommerceZapier\Plugin;
 use OM4\WooCommerceZapier\TaskHistory\Task\Task;
 use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\Webhook\Resources;
+use OM4\WooCommerceZapier\WooCommerceResource\Definition;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
 use WP_List_Table;
 
@@ -149,6 +151,29 @@ class ListTable extends WP_List_Table {
 		if ( $this->metabox_mode ) {
 			$args['resource_id']   = $this->resource_id;
 			$args['resource_type'] = $this->resource_types;
+		} elseif (
+			isset( $_GET['_wcznonce'] )
+			&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wcznonce'] ) ), 'zapier-task-history' )
+		) {
+			if ( isset( $_GET['status'] ) ) {
+				switch ( sanitize_text_field( wp_unslash( $_GET['status'] ) ) ) {
+					case 'success':
+						// Successful tasks.
+						$args['status'] = Task::STATUS_SUCCESS;
+						break;
+					case 'error':
+						// Errored tasks.
+						$args['status_not'] = Task::STATUS_SUCCESS;
+						break;
+					default:
+						// All statuses (the default).
+						break;
+				}
+			}
+
+			if ( isset( $_GET['s'] ) ) {
+				$args['search'] = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+			}
 		}
 
 		// Pagination.
@@ -171,8 +196,9 @@ class ListTable extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		$columns['date_time'] = __( 'Date/Time', 'woocommerce-zapier' );
+		$columns['status']    = __( 'Status', 'woocommerce-zapier' );
 		$columns['message']   = __( 'Message', 'woocommerce-zapier' );
+		$columns['date_time'] = __( 'Date', 'woocommerce-zapier' );
 		return $columns;
 	}
 
@@ -191,6 +217,34 @@ class ListTable extends WP_List_Table {
 			return;
 		}
 		parent::display_tablenav( $which );
+	}
+
+	/**
+	 * Displays extra controls between bulk actions and pagination.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param string $which Required by WordPress.
+	 * @return void
+	 */
+	protected function extra_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			$status = ( isset( $_GET['status'] ) && isset( $_GET['_wcznonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wcznonce'] ) ), 'zapier-task-history' ) )
+				? sanitize_text_field( wp_unslash( $_GET['status'] ) )
+				: '';
+			?>
+			<div class="alignleft actions bulkactions">
+				<select name="status">
+					<option value="" <?php selected( '', $status ); ?>><?php esc_html_e( 'All statuses', 'woocommerce-zapier' ); ?></option>
+					<option value="success" <?php selected( 'success', $status ); ?>><?php esc_html_e( 'OK', 'woocommerce-zapier' ); ?></option>
+					<option value="error" <?php selected( 'error', $status ); ?>><?php esc_html_e( 'Error', 'woocommerce-zapier' ); ?></option>
+				</select>
+				<?php
+				submit_button( __( 'Filter', 'woocommerce-zapier' ), '', 'filter_action', false, array( 'id' => 'zapier-task-history-submit' ) );
+				?>
+			</div>
+			<?php
+		}
 	}
 
 	/**
@@ -243,9 +297,88 @@ class ListTable extends WP_List_Table {
 	}
 
 	/**
+	 * Status column output.
+	 * Displays a tick or cross depending on whether the task succeeded or failed.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param Task $task Task History Record.
+	 *
+	 * @return string
+	 */
+	public function column_status( $task ) {
+		switch ( $task->get_status() ) {
+			case Task::STATUS_SUCCESS:
+				return '<mark class="yes" title="'
+						. esc_html( _x( 'OK', 'Successful task history status tooltip', 'woocommerce-zapier' ) )
+						. '"><span class="dashicons dashicons-yes"></span> '
+						. esc_html( _x( 'OK', 'Successful task history status', 'woocommerce-zapier' ) )
+						. '</mark>';
+			case '':
+				// A task with an empty status. Unlikely, but possible if the database upgrade routine has issues.
+				return '';
+			default:
+				// An error code.
+				return '<mark class="error" title="'
+						. esc_html( _x( 'Error', 'Errored task history status tooltip', 'woocommerce-zapier' ) )
+						. '"><span class="dashicons dashicons-warning"></span> '
+						. esc_html( _x( 'Error', 'Successful task history status', 'woocommerce-zapier' ) )
+						. '</mark>';
+		}
+	}
+
+	/**
+	 * Info Action Link output.
+	 *
+	 * Displays a useful help tip for a Task History Task, containing useful structured information for support staff.
+	 *
+	 * Includes:
+	 * - Triggers: Trigger Rule (Key), Webhook ID.
+	 * - Actions: Action (Key).
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param Task $task Task History Record.
+	 *
+	 * @return string
+	 */
+	protected function action_link_info( $task ) {
+		if ( 'action' === $task->get_event_type() ) {
+			return wc_help_tip(
+				sprintf(
+					// Translators: Action Key.
+					__(
+						'Action: %s',
+						'woocommerce-zapier'
+					),
+					! empty( $task->get_event_topic() )
+						? $task->get_event_topic()
+						: __( 'unknown', 'woocommerce-zapier' )
+				)
+			);
+		}
+		// Trigger.
+		return wc_help_tip(
+			sprintf(
+				// Translators: 1: Trigger Rule Key. 2. Webhook ID.
+				__(
+					'Trigger Rule: %1$s<br />Webhook ID: %2$d',
+					'woocommerce-zapier'
+				),
+				! empty( $task->get_event_topic() )
+					? $task->get_event_topic()
+					: __( 'unknown', 'woocommerce-zapier' ),
+				! empty( $task->get_webhook_id() )
+					? $task->get_webhook_id()
+					: __( 'unknown', 'woocommerce-zapier' )
+			)
+		);
+	}
+
+	/**
 	 * Message column output.
 	 *
-	 * @param  Task $task Task History Record.
+	 * @param Task $task Task History Record.
 	 *
 	 * @return string
 	 */
@@ -254,18 +387,67 @@ class ListTable extends WP_List_Table {
 		if ( ! $resource ) {
 			return '';
 		}
-		if ( $this->metabox_mode ) {
-			return $task->get_message();
-		}
-		$resource_url = $resource->get_admin_url( $task->get_resource_id() );
+
 		return wp_kses_post(
 			\sprintf(
-				// Translators: 1: Resource Edit URL. 2: Task history message.
-				__( '<a href="%1$s">%2$s</a>', 'woocommerce-zapier' ),
-				esc_attr( $resource_url ),
-				$task->get_message()
+				// Translators: 1: Task history message. 2: Task history action link HTML.
+				__( '%1$s<br />%2$s', 'woocommerce-zapier' ),
+				$task->get_message(),
+				parent::row_actions( $this->get_action_links( $task, $resource ) )
 			)
 		);
+	}
+
+	/**
+	 * Get the action links for a Task History Task.
+	 *
+	 * @param Task       $task Task History Record.
+	 * @param Definition $resource Resource Definition.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function get_action_links( $task, $resource ) {
+		$action_links = array();
+
+		if ( Task::STATUS_SUCCESS !== $task->get_status() ) {
+			// Errored Task.
+			// Show Help action link.
+			$action_links['help'] = sprintf(
+				// Translators: 1: Help link URL.
+				__( '<a href="%1$s" target="_blank">Get Help</a>', 'woocommerce-zapier' ),
+				sprintf(
+					'%1$serror-codes/?code=%2$s',
+					Plugin::DOCUMENTATION_URL,
+					str_replace( '-', '_', sanitize_title( $task->get_status() ) )
+				)
+			);
+		}
+
+		if ( ! $this->metabox_mode && $task->get_resource_id() > 0 ) {
+			// Only show the "View Resource" action link on main List Table (and not in metabox mode),
+			// and only if the task has a resource ID.
+			$action_links['view'] = sprintf(
+				sprintf(
+				// Translators: 1: View link URL. 2: Resource Name.
+					__( '<a href="%1$s">View %2$s</a>', 'woocommerce-zapier' ),
+					$resource->get_admin_url( $task->get_resource_id() ),
+					$resource->get_name()
+				)
+			);
+		}
+		if ( Task::STATUS_SUCCESS !== $task->get_status() ) {
+			// Errored Task.
+			// Show Error Code action link.
+			$action_links['error_code'] = sprintf(
+				// Translators: Error Code.
+				__( 'Error Code: %s', 'woocommerce-zapier' ),
+				$task->get_status()
+			);
+		}
+
+		// Show Info action link.
+		$action_links['info'] = $this->action_link_info( $task );
+		return $action_links;
 	}
 
 	/**
@@ -274,26 +456,84 @@ class ListTable extends WP_List_Table {
 	 * @return void
 	 */
 	public function display() {
-		// CSS that specifies column widths.
 		?>
-<style type="text/css">
-.wp-list-table.task-history .column-date_time { width: 20%; }
-.wp-list-table.task-history .column-message { width: 80%; }
-</style>
-		<?php
-		parent::display();
-	}
+		<style type="text/css">
+			/* Column widths. */
+			#woocommerce-zapier-task-history .wp-list-table.task-history .column-status {
+				width: 8ch;
+			}
 
-	/**
-	 * Get the name of the specified webhook topic.
-	 *
-	 * @param string $topic_key Webhook Topic key.
-	 *
-	 * @return string
-	 */
-	protected function get_webhook_topic_name( $topic_key ) {
-		$topics = $this->webhook_resources->get_topics();
-		return isset( $topics[ $topic_key ] ) ? $topics[ $topic_key ] : '';
+			#woocommerce-zapier-task-history .wp-list-table.task-history .column-date_time {
+				width: 20%;
+				word-wrap: break-word;
+			}
+
+			#woocommerce-zapier-task-history .wp-list-table.task-history .column-message {
+				width: calc( 100% - 20% - 8ch );
+			}
+
+			/* Error colouring (similar to the WooCommerce Status Report). */
+			#woocommerce-zapier-task-history .wp-list-table.task-history tr.error a {
+				text-decoration: none;
+			}
+
+			#woocommerce-zapier-task-history .wp-list-table.task-history tr.error td {
+				vertical-align: top !important;
+			}
+
+			#woocommerce-zapier-task-history .wp-list-table.task-history .column-status mark {
+				background: none;
+			}
+
+			/* Fix cursor when list table is displayed in a metabox on the WooCommerce orders screen. */
+			#woocommerce-zapier-task-history .wp-list-table.task-history tbody td {
+				cursor: default !important;
+				padding: 8px 10px;
+			}
+
+			#woocommerce-zapier-task-history .wp-list-table.task-history td .woocommerce-help-tip {
+				margin: 0;
+			}
+
+			/* Help icon change to info icon. */
+			#woocommerce-zapier-task-history .wp-list-table.task-history td .woocommerce-help-tip::after {
+				content: "\f348";
+			}
+
+			/* Status icon colours. */
+			#woocommerce-zapier-task-history .wp-list-table.task-history .column-status mark.yes {
+				/* Same green as WooCommerce's "Processing" order status */
+				color: #5b841b;
+			}
+
+			#woocommerce-zapier-task-history .wp-list-table.task-history .column-status mark.error {
+				/* Same red as WooCommerce's status report */
+				color: #a00;
+			}
+
+			/* Ensure WooCommerce help tips (on hover) can be wide enough to display longer messages */
+			#tiptip_holder {
+				max-width: 50em !important;
+			}
+
+			#tiptip_content {
+				max-width: none;
+				white-space: nowrap;
+			}
+		</style>
+		<?php
+		echo '<div id="woocommerce-zapier-task-history">';
+		echo '<form id="zapier-task-history" method="get">';
+		if ( ! $this->metabox_mode ) {
+			self::search_box( __( 'Search Task History', 'woocommerce-zapier' ), 's' );
+			echo '<input type="hidden" name="page" value="wc_zapier" />';
+			echo '<input type="hidden" name="_wcznonce" value="' . esc_attr( wp_create_nonce( 'zapier-task-history' ) ) . '" />';
+		}
+		parent::display();
+		if ( ! $this->metabox_mode ) {
+			echo '</form>';
+		}
+		echo '</div>';
 	}
 
 	/**

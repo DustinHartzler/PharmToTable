@@ -56,5 +56,6 @@ class Controller extends WC_REST_Customers_Controller {
 	public function __construct( Logger $logger, CustomerTaskCreator $task_creator ) {
 		$this->logger       = $logger;
 		$this->task_creator = $task_creator;
+		$this->add_filter_to_check_for_request_validation_error();
 	}
 }

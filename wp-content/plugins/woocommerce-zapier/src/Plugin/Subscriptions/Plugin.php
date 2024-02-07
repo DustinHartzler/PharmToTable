@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier\Plugin\Subscriptions;
 
 use OM4\WooCommerceZapier\API\API;
@@ -15,7 +17,7 @@ use WC_Subscriptions;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Functionality that is enabled when the WooCommerce Subscriptions plugin is active.
+ * Functionality that is enabled when the Woo Subscriptions plugin is active.
  *
  * @since 2.0.0
  */
@@ -45,10 +47,10 @@ class Plugin extends Base {
 	/**
 	 * Name of the third party plugin.
 	 */
-	const PLUGIN_NAME = 'WooCommerce Subscriptions';
+	const PLUGIN_NAME = 'Woo Subscriptions';
 
 	/**
-	 * The minimum WooCommerce Subscriptions version that this plugin supports.
+	 * The minimum Woo Subscriptions version that this plugin supports.
 	 */
 	const MINIMUM_SUPPORTED_VERSION = '4.2.0';
 
@@ -65,7 +67,6 @@ class Plugin extends Base {
 		$this->container   = $container;
 		$this->resources[] = SubscriptionResource::class;
 		$this->resources[] = SubscriptionNoteResource::class;
-
 	}
 
 	/**
@@ -113,7 +114,7 @@ class Plugin extends Base {
 	}
 
 	/**
-	 * Get the WooCommerce Subscriptions version number.
+	 * Get the Woo Subscriptions version number.
 	 *
 	 * @return string
 	 */
@@ -122,7 +123,7 @@ class Plugin extends Base {
 	}
 
 	/**
-	 * Whenever a relevant WooCommerce Subscriptions built-in action/event occurs,
+	 * Whenever a relevant Woo Subscriptions built-in action/event occurs,
 	 * convert the args WC_Subscription object into a numerical subscription ID,
 	 * and then trigger our own built-in action which then queues the webhook for delivery.
 	 *
@@ -166,12 +167,16 @@ class Plugin extends Base {
 					unset( $endpoints[ $route ] );
 				}
 			}
+			if ( 0 === strpos( $route, sprintf( '/%s/orders/(?P<id>[\d]+)/subscriptions', API::REST_NAMESPACE ) ) ) {
+				// Added in Woo Subscriptions v5.7.0.
+				unset( $endpoints[ $route ] );
+			}
 		}
 		return $endpoints;
 	}
 
 	/**
-	 * Whether the user has the WooCommerce Subscriptions plugin active.
+	 * Whether the user has the Woo Subscriptions plugin active.
 	 *
 	 * @return bool
 	 */
@@ -179,5 +184,4 @@ class Plugin extends Base {
 		return $this->checker->class_exists( '\WC_Subscriptions' ) &&
 			\is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
 	}
-
 }

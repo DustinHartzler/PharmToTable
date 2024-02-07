@@ -137,5 +137,4 @@ class Manager {
 		}
 		return $resources;
 	}
-
 }

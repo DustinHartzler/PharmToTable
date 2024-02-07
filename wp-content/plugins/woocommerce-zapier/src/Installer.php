@@ -20,7 +20,7 @@ class Installer {
 	/**
 	 * Database version (used for install/upgrade tasks if required).
 	 */
-	const DB_VERSION = 17;
+	const DB_VERSION = 19;
 
 	/**
 	 * Name of the wp_option record that stores the installed version number.
@@ -136,7 +136,7 @@ class Installer {
 				 * @since 2.0.0
 				 */
 				do_action( "wc_zapier_db_upgrade_v_{$start}_to_{$next}" );
-				$installed_version++;
+				++$installed_version;
 				$this->set_db_version( $installed_version );
 			}
 		}

@@ -8,8 +8,9 @@ use OM4\WooCommerceZapier\Webhook\Payload;
 use OM4\WooCommerceZapier\Webhook\Trigger;
 use OM4\WooCommerceZapier\WooCommerceResource\Base;
 use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNote;
-use stdClass;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\Note\OrderNoteTaskCreator;
 use WP_Comment;
+use stdClass;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -51,8 +52,8 @@ class OrderNoteResource extends Base {
 	public function __construct( FeatureChecker $checker, Controller $controller ) {
 		$this->checker    = $checker;
 		$this->controller = $controller;
-		$this->key        = 'order_note';
-		$this->name       = __( 'Order Note', 'woocommerce-zapier' );
+		$this->key        = OrderNoteTaskCreator::child_type();
+		$this->name       = OrderNoteTaskCreator::child_name();
 
 		if ( ! self::$hooks_added ) {
 			add_action( 'woocommerce_order_note_added', array( $this, 'order_note_added' ) );

@@ -104,6 +104,7 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			array(
 				'id'            => $data['history_id'],
 				'date_time'     => '0000-00-00 00:00:00' === $data['date_time'] ? null : $data['date_time'],
+				'status'        => $data['status'],
 				'webhook_id'    => $data['webhook_id'],
 				'resource_type' => $data['resource_type'],
 				'resource_id'   => $data['resource_id'],
@@ -115,7 +116,6 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			)
 		);
 		$task->set_object_read( true );
-
 	}
 
 	/**
@@ -168,12 +168,15 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	 *
 	 * @param Task $task The Task record.
 	 *
+	 * @see self::get_db_field_formats() which needs to use the same field order.
+	 *
 	 * @return array
 	 */
 	protected function map_to_db_fields_for_edit( $task ) {
 		$data = array(
 			// Convert WC_DateTime to a MySQL date/time or string to store in the DB.
 			'date_time'     => $task->get_date_time( 'edit' ) ? $task->get_date_time( 'edit' )->date( 'Y-m-d H:i:s' ) : '',
+			'status'        => $task->get_status( 'edit' ),
 			'webhook_id'    => $task->get_webhook_id( 'edit' ),
 			'resource_type' => $task->get_resource_type( 'edit' ),
 			'resource_id'   => $task->get_resource_id( 'edit' ),
@@ -202,8 +205,6 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	/**
 	 * Get Task records matching the specified criteria.
 	 *
-	 * @since 2.8.0 Added support for specifying `resource_type` as an array.
-	 *
 	 * @param array $args Search criteria.
 	 *
 	 * @return Task[]
@@ -219,12 +220,21 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	/**
 	 * Get Task records matching the specified criteria.
 	 *
+	 * @since 2.8.0 Added support for specifying `resource_type` as an array.
+	 * @since 2.10.0 Added `status` search criteria.
+	 * @since 2.10.0 Added `status_not` search criteria.
+	 * @since 2.10.0 Added `search` search criteria.
+	 *
 	 * @param array $args Search criteria.
 	 *
 	 * @return Task[]|int
 	 */
 	protected function get_tasks_matching_criteria( $args = array() ) {
 		$default_args = array(
+			'status'        => null,
+			'status_not'    => null,
+			// Searches the message and status fields.
+			'search'        => null,
 			'resource_id'   => null,
 			'child_id'      => null,
 			'resource_type' => null,
@@ -241,6 +251,19 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 
 		if ( ! empty( $args['resource_id'] ) ) {
 			$query .= $this->wp_db->prepare( ' AND resource_id = %d', absint( $args['resource_id'] ) );
+		}
+		if ( ! empty( $args['status'] ) ) {
+			$query .= $this->wp_db->prepare( ' AND status = %s', $args['status'] );
+		}
+		if ( ! empty( $args['status_not'] ) ) {
+			$query .= $this->wp_db->prepare( ' AND status <> %s', $args['status_not'] );
+		}
+		if ( ! empty( $args['search'] ) ) {
+			$query .= $this->wp_db->prepare(
+				' AND ( message LIKE %s OR status LIKE %s )',
+				'%' . $this->wp_db->esc_like( $args['search'] ) . '%',
+				'%' . $this->wp_db->esc_like( $args['search'] ) . '%'
+			);
 		}
 		if ( ! empty( $args['resource_type'] ) ) {
 			if ( \is_string( $args['resource_type'] ) ) {
@@ -304,10 +327,13 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 	 *
 	 * Excludes the primary key.
 	 *
+	 * @see self::map_to_db_fields_for_edit() for the field order.
+	 *
 	 * @return array
 	 */
 	protected function get_db_field_formats() {
 		return array(
+			'%s',
 			'%s',
 			'%d',
 			'%s',

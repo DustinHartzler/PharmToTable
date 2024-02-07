@@ -81,12 +81,11 @@ class PingController extends WC_REST_Controller {
 		if ( ! is_ssl() ) {
 			$this->error_log_request( $request );
 
-			$this->logger->critical( 'WooCommerce REST API Basic Authentication was not performed during ping because is_ssl() returned false.' );
-
+			$this->logger->critical( 'Authentication validation failed via ping. TLS (HTTPS) required.' );
 			return new WP_Error(
-				'woocommerce_rest_not_implemented',
-				__( 'Sorry, SSL is not configured correctly.', 'woocommerce-zapier' ),
-				array( 'status' => 501 )
+				'woocommerce_rest_tls_required',
+				__( "Sorry, your connection isn't secure. Please use TLS (HTTPS) to continue.", 'woocommerce-zapier' ),
+				array( 'status' => 400 )
 			);
 		}
 

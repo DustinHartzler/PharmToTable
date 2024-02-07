@@ -7,20 +7,20 @@ defined( 'ABSPATH' ) || exit;
 
 /*
 Plugin Name: WooCommerce Zapier
-Plugin URI: https://woocommerce.com/products/woocommerce-zapier/
+Plugin URI: https://woo.com/products/woocommerce-zapier/
 Description: Integrates WooCommerce with <a href="https://zapier.com/" target="_blank">Zapier</a>. Send WooCommerce data to 5000+ cloud services. Create or update WooCommerce data from 5000+ cloud services via Zaps.
-Version: 2.9.0
+Version: 2.10.0
 Author: OM4 Software
 Author URI: https://om4.io/
 Text Domain: woocommerce-zapier
 Domain Path: /languages/
 Woo: 243589:0782bdbe932c00f4978850268c6cfe40
 WC requires at least: 6.5
-WC tested up to: 8.2
+WC tested up to: 8.4
 */
 
 /*
-Copyright 2013-2023 OM4 (email: plugins@om4.io    web: https://om4.io/)
+Copyright 2013-2024 OM4 (email: plugins@om4.io    web: https://om4.io/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ require_once 'autoload.php';
 // Initialise plugin during the `plugins_loaded` hook.
 add_action(
 	'plugins_loaded',
-	function() {
+	function () {
 		( new ContainerService() )->get( Plugin::class )->plugins_loaded();
 	}
 );

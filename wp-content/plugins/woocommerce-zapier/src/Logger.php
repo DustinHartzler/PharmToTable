@@ -3,12 +3,12 @@
 namespace OM4\WooCommerceZapier;
 
 use OM4\WooCommerceZapier\Exception\InvalidLogLevelException;
-use WC_Logger;
+use WC_Logger_Interface;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Internal logger utilising the WooCommerces WC_Logger; class
+ * Internal logger utilising the WooCommerces WC_Logger class
  * Implements the \Psr\Log\LoggerInterface interface
  *
  * @see https://www.php-fig.org/psr/psr-3/ PSR-3: Logger Interface.
@@ -42,7 +42,7 @@ class Logger {
 	/**
 	 * WC logger instance.
 	 *
-	 * @var WC_Logger
+	 * @var WC_Logger_Interface
 	 */
 	protected $wc_logger;
 

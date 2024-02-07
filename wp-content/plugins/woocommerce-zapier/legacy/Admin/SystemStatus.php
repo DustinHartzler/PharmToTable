@@ -42,7 +42,7 @@ class SystemStatus {
 			foreach ( (array) $cron as $hook => $task ) {
 				foreach ( (array) $task as $id => $details ) {
 					if ( strpos( $hook, 'zapier_triggered_' ) !== false ) {
-						$num_cron_tasks++;
+						++$num_cron_tasks;
 					}
 				}
 			}
@@ -87,7 +87,7 @@ class SystemStatus {
 		// List each active Zapier Legacy Feeds.
 		$i = 0;
 		foreach ( $feeds as $feed ) {
-			$i++;
+			++$i;
 			$posting[ 'zapier_legacy_feed_' . $feed->id() ] = array(
 				// Translators: %d: Number of the current Zapier Feed.
 				'name' => sprintf( __( 'Legacy Feed #%d', 'woocommerce-zapier' ), $i ),

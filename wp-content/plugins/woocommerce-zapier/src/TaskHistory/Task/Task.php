@@ -20,12 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Task extends WC_Data {
 
 	/**
+	 * Task status: successful.
+	 *
+	 * @since 2.10.0
+	 */
+	const STATUS_SUCCESS = 'success';
+
+	/**
 	 * Stores Task data.
 	 *
 	 * @var array
 	 */
 	protected $data = array(
 		'date_time'     => null,
+		'status'        => '',
 		'webhook_id'    => null,
 		'resource_id'   => null,
 		'resource_type' => null,
@@ -87,7 +95,6 @@ class Task extends WC_Data {
 			$this->set_date_time( (string) new WC_DateTime() );
 			$this->set_object_read( true );
 		}
-
 	}
 
 	/*
@@ -106,6 +113,22 @@ class Task extends WC_Data {
 	public function get_date_time( $context = 'view' ) {
 		$date_time = $this->get_prop( 'date_time', $context );
 		return $date_time instanceof WC_DateTime ? $date_time : null;
+	}
+
+	/**
+	 * Get status (`success` or an error code).
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $context Get context.
+	 *
+	 * @see self::STATUS_SUCCESS
+	 *
+	 * @return string
+	 */
+	public function get_status( $context = 'view' ) {
+		$status = $this->get_prop( 'status', $context );
+		return \is_scalar( $status ) ? \strval( $status ) : '';
 	}
 
 	/**
@@ -227,6 +250,21 @@ class Task extends WC_Data {
 			$date = '';
 		}
 		$this->set_date_prop( 'date_time', $date );
+	}
+
+	/**
+	 * Set status.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param string $value Value to set (eg `success`, or an error code).
+	 *
+	 * @see self::STATUS_SUCCESS
+	 *
+	 * @return void
+	 */
+	public function set_status( $value ) {
+		$this->set_prop( 'status', $value );
 	}
 
 	/**

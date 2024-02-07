@@ -3,8 +3,8 @@
 namespace OM4\Zapier\Admin;
 
 use Exception;
-use OM4\Zapier\Plugin;
 use OM4\Zapier\Feed\Feed;
+use OM4\Zapier\Plugin;
 use OM4\Zapier\Trigger\TriggerFactory;
 
 defined( 'ABSPATH' ) || exit;
@@ -132,7 +132,6 @@ class FeedUI {
 				)
 			);
 		}
-
 	}
 
 	/**
@@ -161,7 +160,7 @@ class FeedUI {
 	 *
 	 * @return false|string
 	 */
-	public function __call( $method, $args ) {
+	public function __call( $method, $args ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		global $post;
 		$feed  = new Feed( $post );
 		$field = str_replace( "pre_option_{$this->prefix}", '', $method );
@@ -580,7 +579,6 @@ class FeedUI {
 
 			add_action( 'admin_print_footer_scripts', array( $this, 'output_js' ) );
 		}
-
 	}
 
 	/**
@@ -600,5 +598,4 @@ jQuery(document).ready(function() {
 </script>
 		<?php
 	}
-
 }

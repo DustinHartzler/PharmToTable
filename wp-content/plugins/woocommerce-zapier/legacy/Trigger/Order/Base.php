@@ -458,7 +458,6 @@ abstract class Base extends TriggerBase {
 		$this->logger->debug( "Order #%s: Added note:\n%s", array( $this->wc_order->get_id(), $note ) );
 
 		parent::data_sent_to_feed( $feed, $result, $action_name, $arguments, $num_attempts );
-
 	}
 
 	/**

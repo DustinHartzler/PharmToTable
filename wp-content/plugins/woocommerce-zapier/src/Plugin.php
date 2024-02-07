@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use OM4\WooCommerceZapier\AdminUI;
 use OM4\WooCommerceZapier\API\API;
+use OM4\WooCommerceZapier\AdminUI;
 use OM4\WooCommerceZapier\Auth\AuthKeyRotator;
 use OM4\WooCommerceZapier\Auth\SessionAuthenticate;
 use OM4\WooCommerceZapier\ContainerService;
@@ -13,6 +15,7 @@ use OM4\WooCommerceZapier\Installer;
 use OM4\WooCommerceZapier\LegacyMigration\ExistingUserUpgrade;
 use OM4\WooCommerceZapier\NewUser\NewUser;
 use OM4\WooCommerceZapier\Plugin\Bookings\Plugin as BookingsPlugin;
+use OM4\WooCommerceZapier\Plugin\Memberships\Plugin as MembershipsPlugin;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Plugin as SubscriptionsPlugin;
 use OM4\WooCommerceZapier\TaskHistory\Installer as TaskHistoryInstaller;
 use OM4\WooCommerceZapier\TaskHistory\Listener\TriggerListener;
@@ -119,6 +122,7 @@ class Plugin {
 	 */
 	public function before_woocommerce_init() {
 		$this->declare_hpos_compatibility();
+		$this->declare_cart_checkout_blocks_compatibility();
 
 		$this->third_party_plugin_compatibility();
 
@@ -149,13 +153,37 @@ class Plugin {
 	}
 
 	/**
-	 * Initialise compatibility functionality for third party plugins (such as WooCommerce Subscriptions).
+	 * Declare compatibility with WooCommerce's Cart & Checkout Blocks feature.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @return void
+	 */
+	protected function declare_cart_checkout_blocks_compatibility() {
+		if (
+			! $this->container->get( FeatureChecker::class )->class_exists( FeaturesUtil::class ) ||
+			version_compare( WC_VERSION, '7.6.0', '<' )
+		) {
+			// In WooCommerce 7.0 or earlier. Compatibility declaration is not possible.
+			// In WooCommerce 7.5.0 or earlier. 'cart_checkout_blocks' declaration is not available.
+			return;
+		}
+		FeaturesUtil::declare_compatibility(
+			'cart_checkout_blocks',
+			plugin_basename( WC_ZAPIER_PLUGIN_FILE ),
+			true
+		);
+	}
+
+	/**
+	 * Initialise compatibility functionality for third party plugins (such as Woo Subscriptions).
 	 * Executed early during `before_woocommerce_init`.
 	 *
 	 * @return void
 	 */
 	protected function third_party_plugin_compatibility() {
 		$this->container->get( BookingsPlugin::class )->initialise();
+		$this->container->get( MembershipsPlugin::class )->initialise();
 		$this->container->get( SubscriptionsPlugin::class )->initialise();
 	}
 

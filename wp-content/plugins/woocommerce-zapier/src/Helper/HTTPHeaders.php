@@ -12,7 +12,8 @@ defined( 'ABSPATH' ) || exit;
 class HTTPHeaders {
 
 	/**
-	 * Get the HTTP Headers that WooCommerce Zapier needs to send during requests and responses.
+	 * Get the HTTP Headers that WooCommerce Zapier needs to send during all trigger/webhook requests
+	 * and REST API Controller responses.
 	 *
 	 * X-WordPress-GMT-Offset: Is the site's GMT offset, and is sent so that the WooCommerce App
 	 * on Zapier can use it to convert datetime fields from WooCommerce into an ISO-8601 formatted

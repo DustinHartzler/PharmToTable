@@ -22,13 +22,21 @@ use WP_REST_Server;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Exposes WooCommerce Subscriptions' REST API v3 Subscription Notes endpoint via the WooCommerce Zapier endpoint namespace.
+ * Exposes Woo Subscriptions' REST API v3 Subscription Notes endpoint via the WooCommerce Zapier endpoint namespace.
  *
  * @since 2.9.0
  */
 class Controller extends WC_REST_Subscription_notes_Controller {
 
 	use APIListenerTrait;
+
+	/**
+	 * Whether our hooks have been added.
+	 * This is used to ensure that our hooks are only added once, even if this class is instantiated multiple times.
+	 *
+	 * @var bool
+	 */
+	protected static $hooks_added = false;
 
 	/**
 	 * Endpoint namespace.
@@ -98,7 +106,11 @@ class Controller extends WC_REST_Subscription_notes_Controller {
 		$this->checker      = $checker;
 		$this->wp_db        = $wp_db;
 
-		add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
+		if ( ! self::$hooks_added ) {
+			add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
+			$this->add_filter_to_check_for_request_validation_error();
+			self::$hooks_added = true;
+		}
 	}
 
 	/**
@@ -301,7 +313,7 @@ class Controller extends WC_REST_Subscription_notes_Controller {
 	/**
 	 * Get subscription notes (search/list).
 	 *
-	 * Needed because the WooCommerce Subscription Notes Controller only supports getting notes for a specific subscription.
+	 * Needed because the Woo Subscriptions Notes Controller only supports getting notes for a specific subscription.
 	 *
 	 * @see WC_REST_Order_Notes_V2_Controller::get_items()
 	 *
@@ -421,8 +433,25 @@ class Controller extends WC_REST_Subscription_notes_Controller {
 		$request->set_param( 'order_id', $request['subscription_id'] );
 		$response = parent::create_item( $request );
 
+		$subscription_id = 0;
 		if ( \is_wp_error( $response ) ) {
+			if ( 'woocommerce_rest_order_invalid_id' === $response->get_error_code() ) {
+				// Improve the error message to be consistent with other resources.
+				$response = new WP_Error(
+					'woocommerce_rest_invalid_id',
+					__( 'Invalid ID.', 'woocommerce-zapier' ),
+					array( 'status' => 404 )
+				);
+			} else {
+				$subscription_id = (int) $request['subscription_id'];
+			}
+
 			$this->log_error_response( $request, $response );
+			$this->task_creator->record(
+				Event::action_create( $this->resource_type, $response ),
+				$subscription_id,
+				0
+			);
 			return $response;
 		}
 		$event = Event::action_create( $this->resource_type );
@@ -479,7 +508,7 @@ class Controller extends WC_REST_Subscription_notes_Controller {
 	}
 
 	/**
-	 * Ensure Notes belong to a WooCommerce Subscription and not other Order types.
+	 * Ensure Notes belong to a Woo Subscriptions and not other Order types.
 	 *
 	 * @param  array $clauses A compacted array of comment query clauses.
 	 * @return array
@@ -490,5 +519,41 @@ class Controller extends WC_REST_Subscription_notes_Controller {
 		$clauses['where'] .= ( $clauses['where'] ? ' AND ' : '' ) .
 			" {$this->wp_db->prefix}wc_orders.type = 'shop_subscription' ";
 		return $clauses;
+	}
+
+	/**
+	 * Modify the resource ID that is used when creating an unsuccessful Task History record.
+	 *
+	 * @param int              $resource_id  The resource ID.
+	 * @param WP_REST_Request  $request   Request used to generate the response.
+	 * @param WP_REST_Response $response  Result to send to the client.
+	 *
+	 * @return int
+	 * @since 2.10.0
+	 */
+	protected function modify_resource_id( $resource_id, $request, $response ) {
+		if (
+			isset( $request['subscription_id'] )
+			&& false !== wcs_get_subscription( (int) $request['subscription_id'] )
+		) {
+			return (int) $request['subscription_id'];
+		}
+		return $resource_id;
+	}
+
+	/**
+	 * Modify the child ID that is used when creating an unsuccessful Task History record.
+	 *
+	 * Ensures all Subscription Note related errors have a child ID of 0, which also means a child type of `subscription_note`.
+	 *
+	 * @param ?int             $child_id  The resource ID.
+	 * @param WP_REST_Request  $request Request used to generate the response.
+	 * @param WP_REST_Response $response  Result to send to the client.
+	 *
+	 * @return ?int
+	 * @since 2.10.0
+	 */
+	protected function modify_child_id( $child_id, $request, $response ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		return 0;
 	}
 }

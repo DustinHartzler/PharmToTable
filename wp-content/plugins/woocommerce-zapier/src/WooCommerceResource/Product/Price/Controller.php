@@ -73,6 +73,7 @@ class Controller extends WC_REST_Controller {
 	public function __construct( Logger $logger, ProductTaskCreator $task_creator ) {
 		$this->logger       = $logger;
 		$this->task_creator = $task_creator;
+		$this->add_filter_to_check_for_request_validation_error();
 	}
 
 	/**
@@ -176,14 +177,25 @@ class Controller extends WC_REST_Controller {
 		$product = $this->get_product( $request );
 		if ( is_wp_error( $product ) ) {
 			$this->log_error_response( $request, $product );
+			$this->task_creator->record(
+				$this->modify_event( Event::action_update( $this->resource_type, $product ) ),
+				0
+			);
 			return $product;
 		}
 
 		if ( ! $product ) {
 			$response = new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID or SKU.', 'woocommerce-zapier' ), array( 'status' => 404 ) );
 			$this->log_error_response( $request, $response );
+			$this->task_creator->record(
+				$this->modify_event( Event::action_update( $this->resource_type, $response ) ),
+				0
+			);
 			return $response;
 		}
+
+		$id       = 0 === $product->get_parent_id() ? $product->get_id() : $product->get_parent_id();
+		$child_id = 0 === $product->get_parent_id() ? null : $product->get_id();
 
 		/**
 		 * WP/WC already validated and sanitised the request data.
@@ -222,17 +234,21 @@ class Controller extends WC_REST_Controller {
 					array( 'status' => 400 )
 				);
 				$this->log_error_response( $request, $response );
+				$this->task_creator->record(
+					$this->modify_event( Event::action_update( $this->resource_type, $response ) ),
+					$id,
+					$child_id
+				);
 				return $response;
 		}
 
 		$product->save();
 
-		$event        = Event::action_update( $this->resource_type );
-		$event->topic = 'product.update_price';
-		$event->name  = __( 'Update Product Price', 'woocommerce-zapier' );
-		$id           = 0 === $product->get_parent_id() ? $product->get_id() : $product->get_parent_id();
-		$child_id     = 0 === $product->get_parent_id() ? 0 : $product->get_id();
-		$this->task_creator->record( $event, $id, $child_id );
+		$this->task_creator->record(
+			$this->modify_event( Event::action_update( $this->resource_type ) ),
+			$id,
+			$child_id
+		);
 
 		$response = array(
 			'id'            => $product->get_id(),
@@ -272,5 +288,22 @@ class Controller extends WC_REST_Controller {
 		}
 
 		$product->{"set_$field"}( \strval( $field_value ) );
+	}
+
+	/**
+	 * Modify the event object for this controller.
+	 *
+	 * Ensures that the action is Update Product Price (not Update Product).
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  Event $event The event object instance.
+	 *
+	 * @return Event
+	 */
+	protected function modify_event( $event ) {
+		$event->topic = 'product.update_price';
+		$event->name  = __( 'Update Product Price', 'woocommerce-zapier' );
+		return $event;
 	}
 }

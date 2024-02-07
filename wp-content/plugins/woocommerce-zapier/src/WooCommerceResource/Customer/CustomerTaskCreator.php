@@ -18,14 +18,14 @@ class CustomerTaskCreator extends CreatorBase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_resource_type() {
+	public static function resource_type() {
 		return 'customer';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_resource_name() {
+	public static function resource_name() {
 		return __( 'Customer', 'woocommerce-zapier' );
 	}
 }

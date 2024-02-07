@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier;
 
-use OM4\WooCommerceZapier\AdminUI;
 use OM4\WooCommerceZapier\API\API;
 use OM4\WooCommerceZapier\API\Controller\PingController;
 use OM4\WooCommerceZapier\API\Controller\WebhookController;
 use OM4\WooCommerceZapier\API\Controller\WebhookTopicsController;
+use OM4\WooCommerceZapier\AdminUI;
 use OM4\WooCommerceZapier\Auth\AuthKeyRotator;
 use OM4\WooCommerceZapier\Auth\KeyDataStore;
 use OM4\WooCommerceZapier\Auth\SessionAuthenticate;
@@ -25,6 +27,13 @@ use OM4\WooCommerceZapier\Plugin\Bookings\BookingResource;
 use OM4\WooCommerceZapier\Plugin\Bookings\BookingsTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Bookings\Plugin as BookingsPlugin;
 use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller as BookingsV1Controller;
+use OM4\WooCommerceZapier\Plugin\Memberships\Plan\Controller as MembershipPlanController;
+use OM4\WooCommerceZapier\Plugin\Memberships\Plan\MembershipPlanResource;
+use OM4\WooCommerceZapier\Plugin\Memberships\Plan\MembershipPlanTaskCreator;
+use OM4\WooCommerceZapier\Plugin\Memberships\Plugin as MembershipsPlugin;
+use OM4\WooCommerceZapier\Plugin\Memberships\User\Controller as UserMembershipController;
+use OM4\WooCommerceZapier\Plugin\Memberships\User\UserMembershipResource;
+use OM4\WooCommerceZapier\Plugin\Memberships\User\UserMembershipsTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\Controller as SubscriptionNoteController;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteResource;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteTaskCreator;
@@ -36,8 +45,8 @@ use OM4\WooCommerceZapier\Plugin\Subscriptions\WCSV1Controller;
 use OM4\WooCommerceZapier\Privacy;
 use OM4\WooCommerceZapier\SystemStatus\UI as SystemStatusUI;
 use OM4\WooCommerceZapier\TaskHistory\Installer as TaskHistoryInstaller;
-use OM4\WooCommerceZapier\TaskHistory\Listener\TriggerListener;
 use OM4\WooCommerceZapier\TaskHistory\ListTable;
+use OM4\WooCommerceZapier\TaskHistory\Listener\TriggerListener;
 use OM4\WooCommerceZapier\TaskHistory\Task\TaskDataStore;
 use OM4\WooCommerceZapier\TaskHistory\UI as TaskHistoryUI;
 use OM4\WooCommerceZapier\Vendor\League\Container\Container;
@@ -117,7 +126,7 @@ class ContainerService {
 
 		$this->container->add(
 			API::class,
-			function() {
+			function () {
 				return new API(
 					$this->get( FeatureChecker::class ),
 					$this->get( ResourceManager::class ),
@@ -129,21 +138,21 @@ class ContainerService {
 
 		$this->container->add(
 			FeatureChecker::class,
-			function() {
+			function () {
 				return new FeatureChecker();
 			}
 		);
 
 		$this->container->add(
 			HTTPHeaders::class,
-			function() {
+			function () {
 				return new HTTPHeaders();
 			}
 		);
 
 		$this->container->add(
 			Installer::class,
-			function() {
+			function () {
 				return new Installer(
 					$this->get( Logger::class )
 				);
@@ -152,7 +161,7 @@ class ContainerService {
 
 		$this->container->add(
 			ExistingUserUpgrade::class,
-			function() {
+			function () {
 				return new ExistingUserUpgrade(
 					$this->get( Logger::class ),
 					$this->get( Settings::class ),
@@ -218,7 +227,7 @@ class ContainerService {
 		// Resource: Customer.
 		$this->container->add(
 			CustomerResource::class,
-			function() {
+			function () {
 				return new CustomerResource();
 			}
 		);
@@ -226,7 +235,7 @@ class ContainerService {
 		// Resource: Customer.
 		$this->container->add(
 			CustomerTaskCreator::class,
-			function() {
+			function () {
 				return new CustomerTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -236,7 +245,7 @@ class ContainerService {
 
 		$this->container->add(
 			CustomerController::class,
-			function() {
+			function () {
 				return new CustomerController(
 					$this->get( Logger::class ),
 					$this->get( CustomerTaskCreator::class )
@@ -247,7 +256,7 @@ class ContainerService {
 		// Resource: Coupon.
 		$this->container->add(
 			CouponResource::class,
-			function() {
+			function () {
 				return new CouponResource(
 					$this->get( FeatureChecker::class )
 				);
@@ -256,7 +265,7 @@ class ContainerService {
 
 		$this->container->add(
 			CouponTaskCreator::class,
-			function() {
+			function () {
 				return new CouponTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -266,7 +275,7 @@ class ContainerService {
 
 		$this->container->add(
 			CouponController::class,
-			function() {
+			function () {
 				return new CouponController(
 					$this->get( Logger::class ),
 					$this->get( CouponTaskCreator::class )
@@ -277,7 +286,7 @@ class ContainerService {
 		// Resource: Order.
 		$this->container->add(
 			OrderResource::class,
-			function() {
+			function () {
 				return new OrderResource(
 					$this->get( FeatureChecker::class )
 				);
@@ -286,7 +295,7 @@ class ContainerService {
 
 		$this->container->add(
 			OrderTaskCreator::class,
-			function() {
+			function () {
 				return new OrderTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -296,7 +305,7 @@ class ContainerService {
 
 		$this->container->add(
 			OrderController::class,
-			function() {
+			function () {
 				return new OrderController(
 					$this->get( Logger::class ),
 					$this->get( OrderTaskCreator::class )
@@ -307,7 +316,7 @@ class ContainerService {
 		// Resource: Order Note.
 		$this->container->add(
 			OrderNoteResource::class,
-			function() {
+			function () {
 				return new OrderNoteResource(
 					$this->get( FeatureChecker::class ),
 					$this->get( OrderNoteController::class )
@@ -317,7 +326,7 @@ class ContainerService {
 
 		$this->container->add(
 			OrderNoteTaskCreator::class,
-			function() {
+			function () {
 				return new OrderNoteTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -327,7 +336,7 @@ class ContainerService {
 
 		$this->container->add(
 			OrderNoteController::class,
-			function() {
+			function () {
 				return new OrderNoteController(
 					$this->get( Logger::class ),
 					$this->get( OrderNoteTaskCreator::class ),
@@ -340,14 +349,14 @@ class ContainerService {
 		// Resource: Product.
 		$this->container->add(
 			ProductResource::class,
-			function() {
+			function () {
 				return new ProductResource();
 			}
 		);
 
 		$this->container->add(
 			ProductTaskCreator::class,
-			function() {
+			function () {
 				return new ProductTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -357,7 +366,7 @@ class ContainerService {
 
 		$this->container->add(
 			ProductController::class,
-			function() {
+			function () {
 				return new ProductController(
 					$this->get( Logger::class ),
 					$this->get( ProductTaskCreator::class ),
@@ -368,7 +377,7 @@ class ContainerService {
 
 		$this->container->add(
 			ProductPriceController::class,
-			function() {
+			function () {
 				return new ProductPriceController(
 					$this->get( Logger::class ),
 					$this->get( ProductTaskCreator::class )
@@ -378,7 +387,7 @@ class ContainerService {
 
 		$this->container->add(
 			ProductStockController::class,
-			function() {
+			function () {
 				return new ProductStockController(
 					$this->get( Logger::class ),
 					$this->get( ProductTaskCreator::class )
@@ -388,7 +397,7 @@ class ContainerService {
 
 		$this->container->add(
 			WCVariationController::class,
-			function() {
+			function () {
 				return new WCVariationController(
 					$this->get( Logger::class ),
 					$this->get( ProductTaskCreator::class )
@@ -399,7 +408,7 @@ class ContainerService {
 		// Bookings.
 		$this->container->add(
 			BookingsPlugin::class,
-			function() {
+			function () {
 				return new BookingsPlugin(
 					$this->get( FeatureChecker::class ),
 					$this->get( Logger::class )
@@ -409,7 +418,7 @@ class ContainerService {
 
 		$this->container->add(
 			BookingResource::class,
-			function() {
+			function () {
 				return new BookingResource(
 					$this->get( BookingsV1Controller::class ),
 					$this->get( FeatureChecker::class )
@@ -419,7 +428,7 @@ class ContainerService {
 
 		$this->container->add(
 			BookingsTaskCreator::class,
-			function() {
+			function () {
 				return new BookingsTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -429,10 +438,80 @@ class ContainerService {
 
 		$this->container->add( BookingsV1Controller::class );
 
+		// Memberships.
+		$this->container->add(
+			MembershipsPlugin::class,
+			function () {
+				return new MembershipsPlugin(
+					$this->get( FeatureChecker::class ),
+					$this->get( Logger::class ),
+					$this
+				);
+			}
+		);
+
+		$this->container->add(
+			MembershipPlanResource::class,
+			function () {
+				return new MembershipPlanResource(
+					$this->get( FeatureChecker::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			MembershipPlanController::class,
+			function () {
+				return new MembershipPlanController(
+					$this->get( Logger::class ),
+					$this->get( MembershipPlanTaskCreator::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			MembershipPlanTaskCreator::class,
+			function () {
+				return new MembershipPlanTaskCreator(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			UserMembershipResource::class,
+			function () {
+				return new UserMembershipResource(
+					$this->get( FeatureChecker::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			UserMembershipController::class,
+			function () {
+				return new UserMembershipController(
+					$this->get( Logger::class ),
+					$this->get( UserMembershipsTaskCreator::class )
+				);
+			}
+		);
+
+		$this->container->add(
+			UserMembershipsTaskCreator::class,
+			function () {
+				return new UserMembershipsTaskCreator(
+					$this->get( Logger::class ),
+					$this->get( TaskDataStore::class )
+				);
+			}
+		);
+
 		// Subscriptions.
 		$this->container->add(
 			SubscriptionsPlugin::class,
-			function() {
+			function () {
 				return new SubscriptionsPlugin(
 					$this->get( FeatureChecker::class ),
 					$this->get( Logger::class ),
@@ -443,7 +522,7 @@ class ContainerService {
 
 		$this->container->add(
 			SubscriptionResource::class,
-			function() {
+			function () {
 				return new SubscriptionResource(
 					$this->get( FeatureChecker::class ),
 					$this->get( SubscriptionsV1Controller::class )
@@ -453,7 +532,7 @@ class ContainerService {
 
 		$this->container->add(
 			SubscriptionsTaskCreator::class,
-			function() {
+			function () {
 				return new SubscriptionsTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -463,7 +542,7 @@ class ContainerService {
 
 		$this->container->add(
 			SubscriptionsV1Controller::class,
-			function() {
+			function () {
 				return new SubscriptionsV1Controller(
 					$this->get( Logger::class ),
 					$this->get( SubscriptionsTaskCreator::class ),
@@ -474,7 +553,7 @@ class ContainerService {
 
 		$this->container->add(
 			WCSV1Controller::class,
-			function() {
+			function () {
 				return new WCSV1Controller(
 					$this->get( Logger::class ),
 					$this->get( SubscriptionsTaskCreator::class ),
@@ -486,7 +565,7 @@ class ContainerService {
 		// Resource: Subscription Note.
 		$this->container->add(
 			SubscriptionNoteResource::class,
-			function() {
+			function () {
 				return new SubscriptionNoteResource(
 					$this->get( FeatureChecker::class ),
 					$this->get( SubscriptionNoteController::class )
@@ -496,7 +575,7 @@ class ContainerService {
 
 		$this->container->add(
 			SubscriptionNoteTaskCreator::class,
-			function() {
+			function () {
 				return new SubscriptionNoteTaskCreator(
 					$this->get( Logger::class ),
 					$this->get( TaskDataStore::class )
@@ -506,7 +585,7 @@ class ContainerService {
 
 		$this->container->add(
 			SubscriptionNoteController::class,
-			function() {
+			function () {
 				return new SubscriptionNoteController(
 					$this->get( Logger::class ),
 					$this->get( SubscriptionNoteTaskCreator::class ),
@@ -558,7 +637,7 @@ class ContainerService {
 
 		$this->container->add(
 			PingController::class,
-			function() {
+			function () {
 				return new PingController(
 					$this->get( Logger::class )
 				);
@@ -567,7 +646,7 @@ class ContainerService {
 
 		$this->container->add(
 			Plugin::class,
-			function() {
+			function () {
 				return new Plugin(
 					$this
 				);
@@ -576,14 +655,14 @@ class ContainerService {
 
 		$this->container->add(
 			Privacy::class,
-			function() {
+			function () {
 				return new Privacy();
 			}
 		);
 
 		$this->container->add(
 			SystemStatusUI::class,
-			function() {
+			function () {
 				return new SystemStatusUI(
 					$this->get( Settings::class ),
 					$this->get( TaskDataStore::class ),
@@ -596,7 +675,7 @@ class ContainerService {
 
 		$this->container->add(
 			SessionAuthenticate::class,
-			function() {
+			function () {
 				return new SessionAuthenticate(
 					$this->get( KeyDataStore::class ),
 					$this->get( Logger::class )
@@ -626,7 +705,7 @@ class ContainerService {
 
 		$this->container->add(
 			TaskHistoryUI::class,
-			function() {
+			function () {
 				return new TaskHistoryUI(
 					$this,
 					$this->get( ResourceManager::class )
@@ -648,24 +727,23 @@ class ContainerService {
 
 		$this->container->add(
 			Settings::class,
-			function() {
+			function () {
 				return new Settings();
 			}
 		);
 
 		$this->container->add(
 			WebhookDataStore::class,
-			function() {
+			function () {
 				return new WebhookDataStore( new WC_Webhook_Data_Store() );
 			}
 		);
 
 		$this->container->add(
 			WebhookDeliveryFilter::class,
-			function() {
+			function () {
 				return new WebhookDeliveryFilter(
-					$this->get( HTTPHeaders::class ),
-					$this->get( Logger::class )
+					$this->get( HTTPHeaders::class )
 				);
 			}
 		);
@@ -682,14 +760,14 @@ class ContainerService {
 
 		$this->container->add(
 			WebhookController::class,
-			function() {
+			function () {
 				return new WebhookController( $this->get( ResourceManager::class ) );
 			}
 		);
 
 		$this->container->add(
 			WebhookTopicsController::class,
-			function() {
+			function () {
 				return new WebhookTopicsController(
 					$this->get( Resources::class ),
 					$this->get( ResourceManager::class )
@@ -699,7 +777,7 @@ class ContainerService {
 
 		$this->container->add(
 			Resources::class,
-			function() {
+			function () {
 				return new Resources(
 					$this->get( WebhookTopicsRetriever::class ),
 					$this->get( ResourceManager::class )
@@ -709,14 +787,14 @@ class ContainerService {
 
 		$this->container->add(
 			WebhookTopicsRetriever::class,
-			function() {
+			function () {
 				return new WebhookTopicsRetriever();
 			}
 		);
 
 		$this->container->add(
 			WordPressDB::class,
-			function() {
+			function () {
 				return new WordPressDB();
 			}
 		);
@@ -732,5 +810,4 @@ class ContainerService {
 	public function get( $alias ) {
 		return $this->container->get( $alias );
 	}
-
 }

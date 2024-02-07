@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier\Plugin\Bookings;
 
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
+use OM4\WooCommerceZapier\Plugin\Bookings\BookingsTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller;
 use OM4\WooCommerceZapier\Webhook\Payload;
 use OM4\WooCommerceZapier\Webhook\Trigger;
@@ -47,16 +50,9 @@ class BookingResource extends CustomPostTypeResource {
 	public function __construct( V1Controller $controller, FeatureChecker $checker ) {
 		$this->controller          = $controller;
 		$this->checker             = $checker;
-		$this->key                 = 'booking';
-		$this->name                = __( 'Booking', 'woocommerce-zapier' );
+		$this->key                 = BookingsTaskCreator::resource_type();
+		$this->name                = BookingsTaskCreator::resource_name();
 		$this->metabox_screen_name = 'wc_booking';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function is_enabled() {
-		return $this->checker->class_exists( WC_Bookings_REST_Booking_Controller::class );
 	}
 
 	/**

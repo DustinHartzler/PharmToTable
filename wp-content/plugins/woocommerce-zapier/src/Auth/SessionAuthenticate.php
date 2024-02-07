@@ -223,6 +223,15 @@ class SessionAuthenticate {
 	 * @return array
 	 */
 	protected function validate_request() {
+		if ( ! is_ssl() ) {
+			$this->logger->notice( 'Authentication validation failed. TLS (HTTPS) required.' );
+			$this->respond_auth_error(
+				'woocommerce_rest_tls_required',
+				__( "Sorry, your connection isn't secure. Please use TLS (HTTPS) to continue.", 'woocommerce-zapier' ),
+				400
+			);
+		}
+
 		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			$method = isset( $_SERVER['REQUEST_METHOD'] ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : 'UNAVAILABLE';
 			$this->logger->notice( 'Authentication validation failed. Invalid Request Method: %s', $method );
@@ -230,15 +239,6 @@ class SessionAuthenticate {
 				'woocommerce_auth_method_not_allowed',
 				__( '405 Method not Allowed', 'woocommerce-zapier' ),
 				405
-			);
-		}
-
-		if ( ! is_ssl() ) {
-			$this->logger->notice( 'Authentication validation failed. Not SSL.' );
-			$this->respond_auth_error(
-				'woocommerce_auth_bad_request',
-				__( '400 Bad Request', 'woocommerce-zapier' ),
-				400
 			);
 		}
 

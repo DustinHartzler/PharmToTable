@@ -54,7 +54,6 @@ class CheckoutFieldEditor {
 		foreach ( $this->checkout_field_sections as $field_section_name ) {
 			add_action( "update_option_{$field_section_name}", array( $this, 'checkout_fields_updated' ), 10, 0 );
 		}
-
 	}
 
 	/**

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier\Plugin\Subscriptions;
 
 use Automattic\WooCommerce\Utilities\OrderUtil;
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\SubscriptionsTaskCreator;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\V1Controller;
 use OM4\WooCommerceZapier\Webhook\Payload;
 use OM4\WooCommerceZapier\Webhook\Trigger;
@@ -18,9 +21,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Definition of the Subscription resource type.
  *
- * This resource is only enabled if WooCommerce Subscriptions is available.
+ * This resource is only enabled if Woo Subscriptions is available.
  *
- * WooCommerce Subscriptions has webhook payload, topic and delivery functionality built-in,
+ * Woo Subscriptions has webhook payload, topic and delivery functionality built-in,
  * so this class extends the built-in trigger rules.
  *
  * @since 2.2.0
@@ -52,15 +55,8 @@ class SubscriptionResource extends Base {
 	public function __construct( FeatureChecker $checker, V1Controller $controller ) {
 		$this->checker    = $checker;
 		$this->controller = $controller;
-		$this->key        = 'subscription';
-		$this->name       = __( 'Subscription', 'woocommerce-zapier' );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function is_enabled() {
-		return $this->checker->class_exists( WC_REST_Subscriptions_V1_Controller::class ) && $this->checker->class_exists( WC_REST_Subscriptions_Controller::class );
+		$this->key        = SubscriptionsTaskCreator::resource_type();
+		$this->name       = SubscriptionsTaskCreator::resource_name();
 	}
 
 	/**
@@ -115,7 +111,7 @@ class SubscriptionResource extends Base {
 
 	/**
 	 * Dynamically create a "Subscription Status Changed to ..." Trigger Rule,
-	 * one for each registered WooCommerce subscription status.
+	 * one for each registered Woo Subscriptions status.
 	 *
 	 * @return Trigger[]
 	 */
@@ -135,10 +131,10 @@ class SubscriptionResource extends Base {
 	}
 
 	/**
-	 * Get a list of all registered WooCommerce Subscription statuses.
+	 * Get a list of all registered Woo Subscriptions statuses.
 	 * This list excludes the following internal statuses:
 	 * - The default subscription status (pending).
-	 * - The "switched" status because it is no longer used in Subscriptions v2.0 and newer.
+	 * - The "switched" status because it is no longer used in Woo Subscriptions v2.0 and newer.
 	 *
 	 * @return array<string, string> Status key excludes the 'wc-' prefix.
 	 */
@@ -151,7 +147,7 @@ class SubscriptionResource extends Base {
 
 			/*
 			 * Exclude the "switched" status because it was only used Subscriptions earlier than 2.0.
-			 * Link: https://woocommerce.com/document/subscriptions/statuses/#section-7
+			 * Link: https://woo.com/document/subscriptions/statuses/#section-7
 			 */
 			'switched',
 		);

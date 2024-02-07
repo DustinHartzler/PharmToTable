@@ -3,6 +3,7 @@
 namespace OM4\WooCommerceZapier\WooCommerceResource\Coupon;
 
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
+use OM4\WooCommerceZapier\WooCommerceResource\Coupon\CouponTaskCreator;
 use OM4\WooCommerceZapier\WooCommerceResource\CustomPostTypeResource;
 
 defined( 'ABSPATH' ) || exit;
@@ -31,8 +32,8 @@ class CouponResource extends CustomPostTypeResource {
 	 */
 	public function __construct( FeatureChecker $checker ) {
 		$this->checker             = $checker;
-		$this->key                 = 'coupon';
-		$this->name                = __( 'Coupon', 'woocommerce-zapier' );
+		$this->key                 = CouponTaskCreator::resource_type();
+		$this->name                = CouponTaskCreator::resource_name();
 		$this->metabox_screen_name = 'shop_coupon';
 	}
 

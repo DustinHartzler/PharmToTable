@@ -164,7 +164,6 @@ class Plugin extends Base {
 		);
 
 		return true;
-
 	}
 
 	/**
@@ -215,5 +214,4 @@ class Plugin extends Base {
 		return $this->checker->class_exists( '\WC_Bookings' ) &&
 			\is_plugin_active( 'woocommerce-bookings/woocommerce-bookings.php' );
 	}
-
 }

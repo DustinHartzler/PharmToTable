@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace OM4\WooCommerceZapier\Plugin\Bookings;
+namespace OM4\WooCommerceZapier\Plugin\Memberships\Plan;
 
 use OM4\WooCommerceZapier\TaskHistory\Task\CreatorBase;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Booking Task Creator.
+ * Membership Plan Task Creator.
  *
- * @since 2.8.0
+ * @since 2.10.0
  */
-class BookingsTaskCreator extends CreatorBase {
+class MembershipPlanTaskCreator extends CreatorBase {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public static function resource_type() {
-		return 'booking';
+		return 'membership_plan';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public static function resource_name() {
-		return __( 'Booking', 'woocommerce-zapier' );
+		return __( 'Membership Plan', 'woocommerce-zapier' );
 	}
 }

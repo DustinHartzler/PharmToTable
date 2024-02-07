@@ -1,22 +1,22 @@
-# Copyright (C) 2023 OM4 Software
+# Copyright (C) 2024 OM4 Software
 # This file is distributed under the same license as the WooCommerce Zapier plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Zapier 2.9.0\n"
+"Project-Id-Version: WooCommerce Zapier 2.10.0\n"
 "Report-Msgid-Bugs-To: pluginsupport@om4.io\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-20T05:49:22+00:00\n"
+"POT-Creation-Date: 2024-01-11T06:00:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: woocommerce-zapier\n"
 
 #. Plugin Name of the plugin
-#: src/AdminUI.php:191
-#: src/AdminUI.php:206
+#: src/AdminUI.php:190
+#: src/AdminUI.php:205
 #: src/Privacy.php:21
 #: src/Settings.php:74
 #: src/SystemStatus/UI.php:103
@@ -24,7 +24,7 @@ msgid "WooCommerce Zapier"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "https://woocommerce.com/products/woocommerce-zapier/"
+msgid "https://woo.com/products/woocommerce-zapier/"
 msgstr ""
 
 #. Description of the plugin
@@ -75,7 +75,7 @@ msgid "Descriptive title/name of this Zapier Feed.<br />Should typically match t
 msgstr ""
 
 #: legacy/Admin/FeedUI.php:120
-#: legacy/Admin/FeedUI.php:501
+#: legacy/Admin/FeedUI.php:500
 #: legacy/Plugin.php:154
 msgid "Legacy Feeds"
 msgstr ""
@@ -85,19 +85,19 @@ msgstr ""
 msgid "Edit Legacy Feed"
 msgstr ""
 
-#: legacy/Admin/FeedUI.php:146
+#: legacy/Admin/FeedUI.php:145
 msgid "Legacy Feed Details"
 msgstr ""
 
-#: legacy/Admin/FeedUI.php:219
+#: legacy/Admin/FeedUI.php:218
 msgid "This Zapier Feed is active and ready to receive real data."
 msgstr ""
 
-#: legacy/Admin/FeedUI.php:222
+#: legacy/Admin/FeedUI.php:221
 msgid "This Zapier Feed is inactive. No real data will be sent to this feed until it is made active (published)."
 msgstr ""
 
-#: legacy/Admin/FeedUI.php:302
+#: legacy/Admin/FeedUI.php:301
 msgid "This Zapier Feed cannot be activated until this issue is resolved."
 msgid_plural "This Zapier Feed cannot be made active until these issues are resolved."
 msgstr[0] ""
@@ -198,7 +198,7 @@ msgstr ""
 msgid "HTTP %1$d (%2$s)"
 msgstr ""
 
-#: legacy/Trigger/Base.php:676
+#: legacy/Trigger/Base.php:675
 msgid "Asynchronous sending is no longer supported and will be removed in a future version"
 msgstr ""
 
@@ -306,26 +306,27 @@ msgid "Advanced: triggers every time a subscription changes status.<br />Conside
 msgstr ""
 
 #: src/AdminUI.php:98
-#: src/AdminUI.php:191
+#: src/AdminUI.php:190
 #: src/Settings.php:31
 msgid "Zapier"
 msgstr ""
 
-#: src/AdminUI.php:257
-#: src/Plugin.php:206
+#: src/AdminUI.php:256
+#: src/Plugin.php:234
 msgid "Task History"
 msgstr ""
 
-#: src/API/Controller/PingController.php:88
-msgid "Sorry, SSL is not configured correctly."
+#: src/API/Controller/PingController.php:87
+#: src/Auth/SessionAuthenticate.php:230
+msgid "Sorry, your connection isn't secure. Please use TLS (HTTPS) to continue."
 msgstr ""
 
-#: src/API/Controller/PingController.php:101
+#: src/API/Controller/PingController.php:100
 #: src/Auth/SessionAuthenticate.php:185
 msgid "This user does not have the correct permissions."
 msgstr ""
 
-#: src/API/Controller/PingController.php:109
+#: src/API/Controller/PingController.php:108
 #: src/API/Controller/WebhookTopicsController.php:133
 msgid "Sorry, you cannot list resources."
 msgstr ""
@@ -350,11 +351,10 @@ msgstr ""
 msgid "The username and/or password you supplied is incorrect."
 msgstr ""
 
-#: src/Auth/SessionAuthenticate.php:231
+#: src/Auth/SessionAuthenticate.php:240
 msgid "405 Method not Allowed"
 msgstr ""
 
-#: src/Auth/SessionAuthenticate.php:240
 #: src/Auth/SessionAuthenticate.php:252
 #: src/Auth/SessionAuthenticate.php:264
 #: src/Auth/SessionAuthenticate.php:276
@@ -362,24 +362,24 @@ msgstr ""
 msgid "400 Bad Request"
 msgstr ""
 
-#: src/Plugin.php:205
+#: src/Plugin.php:233
 msgid "Settings"
 msgstr ""
 
-#: src/Plugin.php:207
+#: src/Plugin.php:235
 msgid "Docs"
 msgstr ""
 
-#: src/Plugin.php:208
+#: src/Plugin.php:236
 msgid "Support"
 msgstr ""
 
-#: src/Plugin.php:232
+#: src/Plugin.php:260
 msgid "WooCommerce Zapier requires WooCommerce. Please install and activate WooCommerce and try again."
 msgstr ""
 
 #. Translators: %s: WooCommerce Version.
-#: src/Plugin.php:249
+#: src/Plugin.php:277
 msgid "WooCommerce Zapier requires WooCommerce version %s or later. Please update WooCommerce."
 msgstr ""
 
@@ -388,133 +388,156 @@ msgstr ""
 msgid "WooCommerce Zapier is only compatible with %1$s version %2$s or later. Please update %3$s."
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:51
-#: src/Plugin/Bookings/BookingsTaskCreator.php:29
-msgid "Booking"
-msgstr ""
-
-#: src/Plugin/Bookings/BookingResource.php:101
+#: src/Plugin/Bookings/BookingResource.php:97
 msgid "Booking created"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:117
+#: src/Plugin/Bookings/BookingResource.php:113
 msgid "Booking ordered"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:133
+#: src/Plugin/Bookings/BookingResource.php:129
 msgid "Booking deleted"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:149
+#: src/Plugin/Bookings/BookingResource.php:145
 msgid "Booking restored"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:165
+#: src/Plugin/Bookings/BookingResource.php:161
 msgid "Booking status changed (any status)"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:181
+#: src/Plugin/Bookings/BookingResource.php:177
 msgid "Booking cancelled"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:199
+#: src/Plugin/Bookings/BookingResource.php:195
 msgid "Booking updated"
 msgstr ""
 
 #. Translators: Booking Status Name/Label.
-#: src/Plugin/Bookings/BookingResource.php:220
+#: src/Plugin/Bookings/BookingResource.php:216
 msgid "Booking status changed to %s"
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:157
-msgid "Limit results to those matching this Subscription ID."
+#: src/Plugin/Bookings/BookingsTaskCreator.php:29
+msgid "Booking"
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:158
-#: src/Plugin/Subscriptions/Note/Controller.php:189
-msgid "The Subscription ID to add the note to."
+#: src/Plugin/Memberships/Plan/Controller.php:75
+msgid "Limit results to those with the specified plan name."
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:210
-#: src/WooCommerceResource/Order/Note/Controller.php:178
-msgid "Limit results to those matching a string."
-msgstr ""
-
-#: src/Plugin/Subscriptions/Note/Controller.php:216
-#: src/WooCommerceResource/Order/Note/Controller.php:184
-msgid "Current page of the collection."
-msgstr ""
-
-#: src/Plugin/Subscriptions/Note/Controller.php:224
-#: src/WooCommerceResource/Order/Note/Controller.php:192
-msgid "Maximum number of items to be returned in result set."
-msgstr ""
-
-#: src/Plugin/Subscriptions/Note/Controller.php:233
-#: src/WooCommerceResource/Order/Note/Controller.php:201
+#: src/Plugin/Memberships/Plan/Controller.php:85
+#: src/Plugin/Memberships/User/Controller.php:137
+#: src/Plugin/Subscriptions/Note/Controller.php:245
+#: src/WooCommerceResource/Order/Note/Controller.php:213
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:240
-#: src/WooCommerceResource/Order/Note/Controller.php:208
+#: src/Plugin/Memberships/Plan/Controller.php:92
+#: src/Plugin/Memberships/User/Controller.php:144
+#: src/Plugin/Subscriptions/Note/Controller.php:252
+#: src/WooCommerceResource/Order/Note/Controller.php:220
 msgid "Sort collection by object attribute."
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:261
+#: src/Plugin/Memberships/Plan/MembershipPlanTaskCreator.php:29
+msgid "Membership Plan"
+msgstr ""
+
+#: src/Plugin/Memberships/User/UserMembershipResource.php:73
+msgid "User Membership status changed (any status)"
+msgstr ""
+
+#. Translators: Membership Status Name/Label.
+#: src/Plugin/Memberships/User/UserMembershipResource.php:95
+msgid "User Membership status changed to %s"
+msgstr ""
+
+#: src/Plugin/Memberships/User/UserMembershipsTaskCreator.php:29
+msgid "User Membership"
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/Controller.php:169
+msgid "Limit results to those matching this Subscription ID."
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/Controller.php:170
+#: src/Plugin/Subscriptions/Note/Controller.php:201
+msgid "The Subscription ID to add the note to."
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/Controller.php:222
+#: src/WooCommerceResource/Order/Note/Controller.php:190
+msgid "Limit results to those matching a string."
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/Controller.php:228
+#: src/WooCommerceResource/Order/Note/Controller.php:196
+msgid "Current page of the collection."
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/Controller.php:236
+#: src/WooCommerceResource/Order/Note/Controller.php:204
+msgid "Maximum number of items to be returned in result set."
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/Controller.php:273
 msgid "Subscription ID"
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:406
-#: src/Plugin/Subscriptions/Note/Controller.php:462
-#: src/Plugin/Subscriptions/V1Controller.php:96
-#: src/WooCommerceResource/Order/Note/Controller.php:373
-#: src/WooCommerceResource/Order/Note/Controller.php:428
+#: src/Plugin/Subscriptions/Note/Controller.php:418
+#: src/Plugin/Subscriptions/Note/Controller.php:442
+#: src/Plugin/Subscriptions/Note/Controller.php:491
+#: src/Plugin/Subscriptions/V1Controller.php:97
+#: src/WooCommerceResource/Order/Note/Controller.php:385
+#: src/WooCommerceResource/Order/Note/Controller.php:446
 msgid "Invalid ID."
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:454
+#: src/Plugin/Subscriptions/Note/Controller.php:483
 msgid "Subscription notes do not support trashing. Please specify `force`=`true`"
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/Controller.php:475
-#: src/TaskHistory/Listener/APIListenerTrait.php:71
-#: src/WooCommerceResource/Order/Note/Controller.php:441
+#: src/Plugin/Subscriptions/Note/Controller.php:504
+#: src/TaskHistory/Listener/APIListenerTrait.php:94
+#: src/WooCommerceResource/Order/Note/Controller.php:459
 msgid "Deleted via Zapier"
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/SubscriptionNoteResource.php:57
+#: src/Plugin/Subscriptions/Note/SubscriptionNoteResource.php:76
+msgid "Subscription Note created"
+msgstr ""
+
+#: src/Plugin/Subscriptions/Note/SubscriptionNoteResource.php:81
+msgid "Subscription Note deleted"
+msgstr ""
+
 #: src/Plugin/Subscriptions/Note/SubscriptionNoteTaskCreator.php:29
 msgid "Subscription Note"
 msgstr ""
 
-#: src/Plugin/Subscriptions/Note/SubscriptionNoteResource.php:80
-msgid "Subscription Note created"
-msgstr ""
-
-#: src/Plugin/Subscriptions/Note/SubscriptionNoteResource.php:85
-msgid "Subscription Note deleted"
-msgstr ""
-
-#: src/Plugin/Subscriptions/SubscriptionResource.php:56
-#: src/Plugin/Subscriptions/SubscriptionsTaskCreator.php:29
-msgid "Subscription"
-msgstr ""
-
-#: src/Plugin/Subscriptions/SubscriptionResource.php:95
+#: src/Plugin/Subscriptions/SubscriptionResource.php:91
 msgid "Subscription status changed (any status)"
 msgstr ""
 
-#: src/Plugin/Subscriptions/SubscriptionResource.php:101
+#: src/Plugin/Subscriptions/SubscriptionResource.php:97
 msgid "Subscription renewed"
 msgstr ""
 
-#: src/Plugin/Subscriptions/SubscriptionResource.php:107
+#: src/Plugin/Subscriptions/SubscriptionResource.php:103
 msgid "Subscription renewal failed"
 msgstr ""
 
 #. Translators: Subscription Status Name/Label.
-#: src/Plugin/Subscriptions/SubscriptionResource.php:129
+#: src/Plugin/Subscriptions/SubscriptionResource.php:125
 msgid "Subscription status changed to %s"
+msgstr ""
+
+#: src/Plugin/Subscriptions/SubscriptionsTaskCreator.php:29
+msgid "Subscription"
 msgstr ""
 
 #: src/Privacy.php:31
@@ -647,49 +670,172 @@ msgstr ""
 msgid "The number of times that a %1$s has been created or updated in WooCommerce from a Zapier Zap."
 msgstr ""
 
-#: src/TaskHistory/ListTable.php:174
-msgid "Date/Time"
+#. translators: 1. Trigger payload error message.
+#: src/TaskHistory/Listener/TriggerListener.php:151
+msgid "Unexpected trigger payload: %s"
 msgstr ""
 
-#: src/TaskHistory/ListTable.php:175
+#. translators: 1. HTTP Response error message.
+#: src/TaskHistory/Listener/TriggerListener.php:186
+msgid "Communication error with zapier.com: %s"
+msgstr ""
+
+#. translators: 1. HTTP Response Code. 2. HTTP Response Message.
+#: src/TaskHistory/Listener/TriggerListener.php:220
+msgid "Zapier.com returned an unexpected HTTP status code: %1$d (%2$s)"
+msgstr ""
+
+#: src/TaskHistory/Listener/TriggerListener.php:427
+msgid "Unknown error."
+msgstr ""
+
+#. translators: 1. Error Message. 2. Action ID.
+#: src/TaskHistory/Listener/TriggerListener.php:459
+msgid "Action Scheduler Failure: %1$s. Action ID: %2$d"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:199
+msgid "Status"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:200
 msgid "Message"
 msgstr ""
 
+#: src/TaskHistory/ListTable.php:201
+msgid "Date"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:238
+msgid "All statuses"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:239
+#: templates/notices/legacy-feeds-deleted.php:22
+msgid "OK"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:240
+msgid "Error"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:243
+msgid "Filter"
+msgstr ""
+
 #. Translators: Date/time column output for a Task. 1: Date Format, 2: Time Format.
-#: src/TaskHistory/ListTable.php:242
+#: src/TaskHistory/ListTable.php:296
 msgctxt "Task date/time."
 msgid "%1$s %2$s"
 msgstr ""
 
-#. Translators: 1: Resource Edit URL. 2: Task history message.
-#: src/TaskHistory/ListTable.php:264
-msgid "<a href=\"%1$s\">%2$s</a>"
+#: src/TaskHistory/ListTable.php:313
+msgctxt "Successful task history status tooltip"
+msgid "OK"
 msgstr ""
 
-#: src/TaskHistory/ListTable.php:305
+#: src/TaskHistory/ListTable.php:315
+msgctxt "Successful task history status"
+msgid "OK"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:323
+msgctxt "Errored task history status tooltip"
+msgid "Error"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:325
+msgctxt "Successful task history status"
+msgid "Error"
+msgstr ""
+
+#. Translators: Action Key.
+#: src/TaskHistory/ListTable.php:350
+msgid "Action: %s"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:356
+#: src/TaskHistory/ListTable.php:370
+#: src/TaskHistory/ListTable.php:373
+msgid "unknown"
+msgstr ""
+
+#. Translators: 1: Trigger Rule Key. 2. Webhook ID.
+#: src/TaskHistory/ListTable.php:364
+msgid "Trigger Rule: %1$s<br />Webhook ID: %2$d"
+msgstr ""
+
+#. Translators: 1: Task history message. 2: Task history action link HTML.
+#: src/TaskHistory/ListTable.php:394
+msgid "%1$s<br />%2$s"
+msgstr ""
+
+#. Translators: 1: Help link URL.
+#: src/TaskHistory/ListTable.php:417
+msgid "<a href=\"%1$s\" target=\"_blank\">Get Help</a>"
+msgstr ""
+
+#. Translators: 1: View link URL. 2: Resource Name.
+#: src/TaskHistory/ListTable.php:432
+msgid "<a href=\"%1$s\">View %2$s</a>"
+msgstr ""
+
+#. Translators: Error Code.
+#: src/TaskHistory/ListTable.php:443
+msgid "Error Code: %s"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:528
+msgid "Search Task History"
+msgstr ""
+
+#: src/TaskHistory/ListTable.php:545
 msgid "No history records found."
 msgstr ""
 
 #. Translators: 1. Action word, 2. Resource type, 3. Resource ID, 4. Event name.
-#: src/TaskHistory/Task/CreatorBase.php:61
+#: src/TaskHistory/Task/CreatorBase.php:67
 msgid "%1$s %2$s #%3$s via <strong>%4$s</strong> action"
 msgstr ""
 
+#. Translators: 1. Action word, 2. Resource type, 3. Resource ID, 4. Event name. 5. Error Message.
+#: src/TaskHistory/Task/CreatorBase.php:78
+msgid "Error %1$s %2$s #%3$s via <strong>%4$s</strong> action.<br />%5$s"
+msgstr ""
+
+#. Translators: 1. Action word, 2. Resource type, 3. Event name. 5. Error Message.
+#: src/TaskHistory/Task/CreatorBase.php:88
+msgid "Error %1$s %2$s via <strong>%3$s</strong> action.<br />%4$s"
+msgstr ""
+
 #. Translators: 1. Resource type, 2. Resource ID, 3. Event name.
-#: src/TaskHistory/Task/CreatorBase.php:70
+#: src/TaskHistory/Task/CreatorBase.php:102
 msgid "Sent %1$s #%2$s successfully via <strong>%3$s</strong> trigger"
 msgstr ""
 
-#: src/TaskHistory/Task/Event.php:53
-msgid "Created"
+#. Translators: 1. Resource type, 2. Resource ID, 3. Event name. 4. Error Message.
+#: src/TaskHistory/Task/CreatorBase.php:111
+msgid "Error sending %1$s #%2$s via <strong>%3$s</strong> trigger.<br />%4$s"
 msgstr ""
 
 #: src/TaskHistory/Task/Event.php:68
+msgid "Created"
+msgstr ""
+
+#: src/TaskHistory/Task/Event.php:69
+msgid "creating"
+msgstr ""
+
+#: src/TaskHistory/Task/Event.php:88
 msgid "Updated"
 msgstr ""
 
+#: src/TaskHistory/Task/Event.php:89
+msgid "updating"
+msgstr ""
+
 #. Translators: 1. Action (e.g. 'Create'), 2. Resource type (e.g. 'Order Note').
-#: src/TaskHistory/Task/Event.php:97
+#: src/TaskHistory/Task/Event.php:121
 msgid "%1$s %2$s"
 msgstr ""
 
@@ -719,315 +865,310 @@ msgstr ""
 msgid "You can also <a href=\"%s\">view your Task History at zapier.com</a>"
 msgstr ""
 
-#: src/WooCommerceResource/Coupon/CouponResource.php:35
 #: src/WooCommerceResource/Coupon/CouponTaskCreator.php:29
 msgid "Coupon"
 msgstr ""
 
-#: src/WooCommerceResource/Customer/CustomerResource.php:23
 #: src/WooCommerceResource/Customer/CustomerTaskCreator.php:29
 msgid "Customer"
 msgstr ""
 
-#: src/WooCommerceResource/Order/Note/Controller.php:138
+#: src/WooCommerceResource/Order/Note/Controller.php:150
 msgid "Limit results to those matching this Order ID."
 msgstr ""
 
-#: src/WooCommerceResource/Order/Note/Controller.php:158
+#: src/WooCommerceResource/Order/Note/Controller.php:170
 msgid "The Order ID to add the note to."
 msgstr ""
 
-#: src/WooCommerceResource/Order/Note/Controller.php:229
+#: src/WooCommerceResource/Order/Note/Controller.php:241
 msgid "Order ID"
 msgstr ""
 
-#: src/WooCommerceResource/Order/Note/Controller.php:420
+#: src/WooCommerceResource/Order/Note/Controller.php:438
 msgid "Order notes do not support trashing. Please specify `force`=`true`"
 msgstr ""
 
-#: src/WooCommerceResource/Order/Note/OrderNoteResource.php:55
+#: src/WooCommerceResource/Order/Note/OrderNoteResource.php:72
+msgid "Order Note created"
+msgstr ""
+
+#: src/WooCommerceResource/Order/Note/OrderNoteResource.php:77
+msgid "Order Note deleted"
+msgstr ""
+
 #: src/WooCommerceResource/Order/Note/OrderNoteTaskCreator.php:29
 msgid "Order Note"
 msgstr ""
 
-#: src/WooCommerceResource/Order/Note/OrderNoteResource.php:71
-msgid "Order Note created"
-msgstr ""
-
-#: src/WooCommerceResource/Order/Note/OrderNoteResource.php:76
-msgid "Order Note deleted"
-msgstr ""
-
-#: src/WooCommerceResource/Order/OrderResource.php:66
-#: src/WooCommerceResource/Order/OrderTaskCreator.php:29
-msgid "Order"
-msgstr ""
-
-#: src/WooCommerceResource/Order/OrderResource.php:85
+#: src/WooCommerceResource/Order/OrderResource.php:88
 msgid "Order status changed (any status)"
 msgstr ""
 
-#: src/WooCommerceResource/Order/OrderResource.php:91
+#: src/WooCommerceResource/Order/OrderResource.php:94
 msgid "Order paid"
 msgstr ""
 
 #. Translators: Order Status Name/Label.
-#: src/WooCommerceResource/Order/OrderResource.php:112
+#: src/WooCommerceResource/Order/OrderResource.php:115
 msgid "Order status changed to %s"
 msgstr ""
 
+#: src/WooCommerceResource/Order/OrderTaskCreator.php:29
+msgid "Order"
+msgstr ""
+
 #. translators: %s The product variation type.
-#: src/WooCommerceResource/Product/Controller.php:199
+#: src/WooCommerceResource/Product/Controller.php:200
 msgid "Product Type. To create a %s, the Parent ID must be provided below."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Controller.php:200
+#: src/WooCommerceResource/Product/Controller.php:201
 msgid "Option"
 msgstr ""
 
 #. translators: %s The product variation type.
-#: src/WooCommerceResource/Product/Controller.php:202
+#: src/WooCommerceResource/Product/Controller.php:203
 msgid "The attribute term name that should apply to this %s."
 msgstr ""
 
 #. translators: 1: Property name, 2: Variation type.
-#: src/WooCommerceResource/Product/Controller.php:275
+#: src/WooCommerceResource/Product/Controller.php:276
 msgid "%1$s (Not Applicable for '%2$s' type)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Controller.php:493
+#: src/WooCommerceResource/Product/Controller.php:494
 msgid "The parent ID invalid or empty"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Controller.php:499
+#: src/WooCommerceResource/Product/Controller.php:500
 msgid "Parent product does not support variations"
 msgstr ""
 
 #. translators: %s: variation type.
-#: src/WooCommerceResource/Product/Controller.php:513
+#: src/WooCommerceResource/Product/Controller.php:514
 msgid "Parent ID cannot be changed on a %s"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:94
+#: src/WooCommerceResource/Product/Price/Controller.php:95
 msgid "Choose how and what to modify the product's price"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:113
+#: src/WooCommerceResource/Product/Price/Controller.php:114
 msgid "Set Regular Price To"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:114
+#: src/WooCommerceResource/Product/Price/Controller.php:115
 msgid "Increase Regular Price By (fixed amount or percentage)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:115
+#: src/WooCommerceResource/Product/Price/Controller.php:116
 msgid "Decrease Regular Price By (fixed amount or percentage)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:116
+#: src/WooCommerceResource/Product/Price/Controller.php:117
 msgid "Set Sale Price To"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:117
+#: src/WooCommerceResource/Product/Price/Controller.php:118
 msgid "Increase Sale Price By (fixed amount or percentage)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:118
+#: src/WooCommerceResource/Product/Price/Controller.php:119
 msgid "Decrease Sale Price By (fixed amount or percentage)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:119
+#: src/WooCommerceResource/Product/Price/Controller.php:120
 msgid "Set Sale Price to Regular Price Decreased By (fixed amount or percentage)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:124
+#: src/WooCommerceResource/Product/Price/Controller.php:125
 msgid "Enter a value to set, increase, or decrease the current price (fixed or %)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:136
+#: src/WooCommerceResource/Product/Price/Controller.php:137
 msgid "Value to Set Regular Price To"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:137
+#: src/WooCommerceResource/Product/Price/Controller.php:138
 msgid "Value to Increase Regular Price By (fixed or %)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:138
+#: src/WooCommerceResource/Product/Price/Controller.php:139
 msgid "Value to Decrease Regular Price By (fixed or %)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:139
+#: src/WooCommerceResource/Product/Price/Controller.php:140
 msgid "Value to Set Sale Price To"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:140
+#: src/WooCommerceResource/Product/Price/Controller.php:141
 msgid "Value to Increase Sale Price By (fixed or %)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:141
+#: src/WooCommerceResource/Product/Price/Controller.php:142
 msgid "Value to Decrease Sale Price By (fixed or %)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:142
+#: src/WooCommerceResource/Product/Price/Controller.php:143
 msgid "Sales Price Reduced from Regular Price By (fixed or %)"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:148
+#: src/WooCommerceResource/Product/Price/Controller.php:149
 msgid "Enter the new regular price."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:149
 #: src/WooCommerceResource/Product/Price/Controller.php:150
-#: src/WooCommerceResource/Product/Price/Controller.php:152
+#: src/WooCommerceResource/Product/Price/Controller.php:151
 #: src/WooCommerceResource/Product/Price/Controller.php:153
+#: src/WooCommerceResource/Product/Price/Controller.php:154
 msgid "Enter an amount or percentage (including % symbol). For example, `9.99` or `25%`."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:151
+#: src/WooCommerceResource/Product/Price/Controller.php:152
 msgid "Enter the new sale price."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:154
+#: src/WooCommerceResource/Product/Price/Controller.php:155
 msgid "Enter an amount or percentage (including % symbol). For example, `9.99` or `25%`.  Set to `0` to remove sales price."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:183
-#: src/WooCommerceResource/Product/Stock/Controller.php:165
+#: src/WooCommerceResource/Product/Price/Controller.php:188
+#: src/WooCommerceResource/Product/Stock/Controller.php:170
 msgid "Invalid product ID or SKU."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:221
-#: src/WooCommerceResource/Product/Stock/Controller.php:188
+#: src/WooCommerceResource/Product/Price/Controller.php:233
+#: src/WooCommerceResource/Product/Stock/Controller.php:205
 msgid "Invalid adjustment type."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Price/Controller.php:232
+#: src/WooCommerceResource/Product/Price/Controller.php:306
 msgid "Update Product Price"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductResource.php:33
-#: src/WooCommerceResource/Product/ProductTaskCreator.php:29
-msgid "Product"
-msgstr ""
-
-#: src/WooCommerceResource/Product/ProductResource.php:57
+#: src/WooCommerceResource/Product/ProductResource.php:58
 msgid "Product stock low"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductResource.php:62
+#: src/WooCommerceResource/Product/ProductResource.php:63
 msgid "Product stock status changed (any status)"
 msgstr ""
 
 #. Translators: Product Stock Status Name/Label.
-#: src/WooCommerceResource/Product/ProductResource.php:85
+#: src/WooCommerceResource/Product/ProductResource.php:86
 msgid "Product stock status changed to %s"
+msgstr ""
+
+#: src/WooCommerceResource/Product/ProductTaskCreator.php:29
+msgid "Product"
 msgstr ""
 
 #: src/WooCommerceResource/Product/ProductTaskCreator.php:42
 msgid "Product Variation"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:62
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:60
 msgid "Sorry, you are not allowed to edit this resource."
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:77
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:75
 msgid "Product value must be specified."
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:81
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:79
 msgid "SKU must be enabled."
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:87
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:85
 msgid "Invalid product identifier."
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:101
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:99
 msgid "Select how to find the existing product or variation to update"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:113
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:111
 msgid "Product or Variation Identifier"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:116
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:114
 msgid "SKU"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:117
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:115
 msgid "ID"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:123
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:121
 msgid "Input the SKU or ID of the product or variation to update"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:135
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:133
 msgid "SKU of the Product or Variation"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:136
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:134
 msgid "ID of the Product or Variation"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:142
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:140
 msgid "The SKU of the product or variation to update"
 msgstr ""
 
-#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:143
+#: src/WooCommerceResource/Product/ProductUpdatesTrait.php:141
 msgid "The ID of the product or variation to update"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:92
+#: src/WooCommerceResource/Product/Stock/Controller.php:93
 msgid "Choose how to modify the product's stock quantity"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:107
+#: src/WooCommerceResource/Product/Stock/Controller.php:108
 msgid "Set Stock Quantity To"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:108
+#: src/WooCommerceResource/Product/Stock/Controller.php:109
 msgid "Increase Stock Quantity By"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:109
+#: src/WooCommerceResource/Product/Stock/Controller.php:110
 msgid "Reduce Stock Quantity By"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:114
+#: src/WooCommerceResource/Product/Stock/Controller.php:115
 msgid "Enter a numeric value to set, increase, or reduce the current stock quantity"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:126
+#: src/WooCommerceResource/Product/Stock/Controller.php:127
 msgid "Value to Set Stock Quantity To"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:127
+#: src/WooCommerceResource/Product/Stock/Controller.php:128
 msgid "Value to Increase Stock Quantity By"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:128
+#: src/WooCommerceResource/Product/Stock/Controller.php:129
 msgid "Value to Reduce Stock Quantity By"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:134
+#: src/WooCommerceResource/Product/Stock/Controller.php:135
 msgid "Enter a numeric value to set the current stock quantity to"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:135
+#: src/WooCommerceResource/Product/Stock/Controller.php:136
 msgid "Enter a numeric value to increase the current stock quantity by"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:136
+#: src/WooCommerceResource/Product/Stock/Controller.php:137
 msgid "Enter a numeric value to reduce the current stock quantity by"
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:171
+#: src/WooCommerceResource/Product/Stock/Controller.php:183
 msgid "Product does not have stock management enabled."
 msgstr ""
 
-#: src/WooCommerceResource/Product/Stock/Controller.php:198
+#: src/WooCommerceResource/Product/Stock/Controller.php:247
 msgid "Update Product Stock Quantity"
 msgstr ""
 
@@ -1046,10 +1187,6 @@ msgstr ""
 
 #: templates/notices/legacy-feeds-deleted.php:17
 msgid "After clicking the button below, the Legacy Feeds interface will no longer be available. You will then manage your Zaps entirely via the Zapier.com Zap editor."
-msgstr ""
-
-#: templates/notices/legacy-feeds-deleted.php:22
-msgid "OK"
 msgstr ""
 
 #: templates/notices/new-user.php:14

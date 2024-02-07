@@ -4,6 +4,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Customer;
 
 use OM4\WooCommerceZapier\Exception\InvalidImplementationException;
 use OM4\WooCommerceZapier\WooCommerceResource\Base;
+use OM4\WooCommerceZapier\WooCommerceResource\Customer\CustomerTaskCreator;
 use WC_Customer;
 
 defined( 'ABSPATH' ) || exit;
@@ -19,8 +20,8 @@ class CustomerResource extends Base {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->key  = 'customer';
-		$this->name = __( 'Customer', 'woocommerce-zapier' );
+		$this->key  = CustomerTaskCreator::resource_type();
+		$this->name = CustomerTaskCreator::resource_name();
 	}
 
 	/**

@@ -5,7 +5,7 @@ Tags: woocommerce, zapier, webhook, integration, automation, zap, cloud, sync, i
 Requires at least: 6.0
 Tested up to: 6.3
 Requires PHP: 7.2.0
-Stable tag: 2.9.0
+Stable tag: 2.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ Send your WooCommerce order, customer, product, coupon, booking or subscription 
 
 Or use Zapier to automatically create or update WooCommerce order, customer, product, coupon or subscription data from a Zap.
 
-This WooCommerce extension is [available for purchase on woocommerce.com](https://woocommerce.com/products/woocommerce-zapier/).
+This WooCommerce extension is [available for purchase on woo.com](https://woo.com/products/woocommerce-zapier/).
 
 == Installation ==
 

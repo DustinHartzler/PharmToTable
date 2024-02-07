@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier\WooCommerceResource\Order;
 
 use Automattic\WooCommerce\Admin\Overrides\Order;
@@ -9,6 +11,7 @@ use OM4\WooCommerceZapier\Helper\FeatureChecker;
 use OM4\WooCommerceZapier\Webhook\Trigger;
 use OM4\WooCommerceZapier\Webhook\ZapierWebhook;
 use OM4\WooCommerceZapier\WooCommerceResource\Base;
+use OM4\WooCommerceZapier\WooCommerceResource\Order\OrderTaskCreator;
 use WC_Order;
 use WC_Webhook;
 use WP_Post;
@@ -62,8 +65,8 @@ class OrderResource extends Base {
 	 */
 	public function __construct( FeatureChecker $checker ) {
 		$this->checker = $checker;
-		$this->key     = 'order';
-		$this->name    = __( 'Order', 'woocommerce-zapier' );
+		$this->key     = OrderTaskCreator::resource_type();
+		$this->name    = OrderTaskCreator::resource_name();
 
 		if ( ! self::$hooks_added ) {
 			add_action( 'woocommerce_order_status_changed', array( $this, 'order_status_changed' ), 10, 2 );
@@ -340,12 +343,12 @@ class OrderResource extends Base {
 		$order_id = intval( $arg );
 
 		if ( isset( $this->orders_being_deleted[ $order_id ] ) ) {
-			// Don't send the Ordered Updated webhook if the order is in the process of being trashed.
+			// Don't send the Order Updated webhook if the order is in the process of being trashed.
 			return false;
 		}
 
 		if ( isset( $this->orders_being_restored[ $order_id ] ) ) {
-			// Don't send the Ordered Updated / Order Status Changed webhooks if the order is
+			// Don't send the Order Updated / Order Status Changed webhooks if the order is
 			// in the process of being restored from the trash.
 			return false;
 		}

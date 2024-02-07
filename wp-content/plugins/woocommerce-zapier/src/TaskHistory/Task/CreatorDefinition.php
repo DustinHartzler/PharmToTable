@@ -19,15 +19,17 @@ interface CreatorDefinition {
 	 *
 	 * Logs when the task could not be created.
 	 *
-	 * @param  Event $event       Event instance.
-	 * @param  int   $resource_id Resource ID.
-	 * @param  int   $child_id    Child ID.
-	 * @param  int   $webhook_id  Webhook ID.
+	 * @since 2.10.0 Changed $child_id to be nullable.
+	 *
+	 * @param  Event    $event       Event instance.
+	 * @param  int      $resource_id Resource ID.
+	 * @param  int|null $child_id    Child ID.
+	 * @param  int      $webhook_id  Webhook ID.
 	 *
 	 * @since 2.8.0
 	 * @return Task
 	 */
-	public function record( $event, $resource_id, $child_id = 0, $webhook_id = 0 );
+	public function record( $event, $resource_id, $child_id = null, $webhook_id = 0 );
 
 	/**
 	 * Get the resource machine readable Type (e.g. 'order').
@@ -35,7 +37,7 @@ interface CreatorDefinition {
 	 * @since 2.8.0
 	 * @return string
 	 */
-	public function get_resource_type();
+	public static function resource_type();
 
 	/**
 	 * Get the resource human readable name (e.g. 'Order').
@@ -43,7 +45,7 @@ interface CreatorDefinition {
 	 * @since 2.8.0
 	 * @return string
 	 */
-	public function get_resource_name();
+	public static function resource_name();
 
 	/**
 	 * Get the child machine readable Type (e.g. 'order_notes').
@@ -51,7 +53,7 @@ interface CreatorDefinition {
 	 * @since 2.8.0
 	 * @return string
 	 */
-	public function get_child_type();
+	public static function child_type();
 
 	/**
 	 * Get the child human readable name (e.g. 'Order Notes').
@@ -59,5 +61,5 @@ interface CreatorDefinition {
 	 * @since 2.8.0
 	 * @return string
 	 */
-	public function get_child_name();
+	public static function child_name();
 }

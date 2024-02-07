@@ -174,7 +174,7 @@ class WebhookTopicsController extends WC_REST_Controller {
 
 		usort(
 			$response,
-			function( $a, $b ) {
+			function ( $a, $b ) {
 				// @phpstan-ignore-next-line Both are strings.
 				return strnatcasecmp( $a['name'], $b['name'] );
 			}

@@ -107,7 +107,7 @@ abstract class Item extends Base {
 
 		array_walk(
 			$data,
-			$date_function = function( &$value, $key ) use ( &$date_function ) {
+			$date_function = function ( &$value, $key ) use ( &$date_function ) {
 				$position = strpos( $key, 'date' );
 				if ( false !== $position ) {
 					$value = gmdate( 'c', time() + (int) $value[1] * 60 * 60 * 24 );

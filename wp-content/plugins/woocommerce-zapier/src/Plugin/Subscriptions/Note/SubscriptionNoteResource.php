@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OM4\WooCommerceZapier\Plugin\Subscriptions\Note;
 
 use Automattic\WooCommerce\Utilities\OrderUtil;
 use OM4\WooCommerceZapier\Helper\FeatureChecker;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\Controller;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNote;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\Note\SubscriptionNoteTaskCreator;
 use OM4\WooCommerceZapier\Webhook\Payload;
 use OM4\WooCommerceZapier\Webhook\Trigger;
 use OM4\WooCommerceZapier\WooCommerceResource\Base;
-use stdClass;
 use WC_REST_Subscription_notes_Controller;
 use WP_Comment;
+use stdClass;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,21 +56,14 @@ class SubscriptionNoteResource extends Base {
 	public function __construct( FeatureChecker $checker, Controller $controller ) {
 		$this->checker    = $checker;
 		$this->controller = $controller;
-		$this->key        = 'subscription_note';
-		$this->name       = __( 'Subscription Note', 'woocommerce-zapier' );
+		$this->key        = SubscriptionNoteTaskCreator::child_type();
+		$this->name       = SubscriptionNoteTaskCreator::child_name();
 
 		if ( ! self::$hooks_added ) {
 			add_action( 'woocommerce_order_note_added', array( $this, 'subscription_note_added' ) );
 			add_action( 'delete_comment', array( $this, 'delete_comment' ) );
 			add_action( 'deleted_comment', array( $this, 'deleted_comment' ), 10, 2 );
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function is_enabled() {
-		return $this->checker->class_exists( WC_REST_Subscription_notes_Controller::class );
 	}
 
 	/**
@@ -126,7 +122,7 @@ class SubscriptionNoteResource extends Base {
 	}
 
 	/**
-	 * Whenever a WooCommerce Subscription Note is created, fire the appropriate WooCommerce Zapier hook if the
+	 * Whenever a Woo Subscriptions Note is created, fire the appropriate WooCommerce Zapier hook if the
 	 * note being added is a subscription note.
 	 *
 	 * Executing during the `woocommerce_order_note_added` action.

@@ -138,5 +138,4 @@ abstract class Base implements PluginDefinition {
 		</div>
 		<?php
 	}
-
 }

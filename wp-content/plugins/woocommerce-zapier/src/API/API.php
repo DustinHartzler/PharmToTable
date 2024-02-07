@@ -99,7 +99,7 @@ class API {
 		add_action( 'rest_api_init', array( $this, 'rest_api_init' ), 11 );
 		add_filter( 'rest_endpoints', array( $this, 'rest_endpoints' ), 11 );
 
-		add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
+		add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ) );
 	}
 
 	/**
@@ -159,12 +159,10 @@ class API {
 	 * For all WooCommerce Zapier REST API responses, include our headers.
 	 *
 	 * @param WP_HTTP_Response $result Result to send to the client. Usually a WP_REST_Response.
-	 * @param WP_REST_Server   $server Server instance.
-	 * @param WP_REST_Request  $request Request used to generate the response.
 	 *
 	 * @return WP_HTTP_Response
 	 */
-	public function rest_post_dispatch( $result, $server, $request ) {
+	public function rest_post_dispatch( $result ) {
 		if ( ! $result instanceof WP_REST_Response ) {
 			return $result;
 		}
@@ -176,5 +174,4 @@ class API {
 		}
 		return $result;
 	}
-
 }

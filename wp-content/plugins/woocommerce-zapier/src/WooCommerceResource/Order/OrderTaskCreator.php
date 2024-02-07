@@ -18,14 +18,14 @@ class OrderTaskCreator extends CreatorBase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_resource_type() {
+	public static function resource_type() {
 		return 'order';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_resource_name() {
+	public static function resource_name() {
 		return __( 'Order', 'woocommerce-zapier' );
 	}
 }

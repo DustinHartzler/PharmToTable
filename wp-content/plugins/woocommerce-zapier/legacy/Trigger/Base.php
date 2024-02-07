@@ -374,7 +374,7 @@ abstract class Base {
 					// We've retried at least once.
 					$num_attempts = array_pop( $arguments );
 				}
-				$num_attempts++;
+				++$num_attempts;
 			}
 
 			$sampletext = $this->is_sample() ? 'Sample ' : '';
@@ -467,7 +467,6 @@ abstract class Base {
 	 * @param int    $num_attempts The number of attempts it took to successfully send the data to Zapier.
 	 */
 	protected function data_sent_to_feed( Feed $feed, $result, $action_name, $arguments, $num_attempts = 0 ) {
-
 	}
 
 	/**
@@ -652,7 +651,7 @@ abstract class Base {
 	 *
 	 * @return bool True if the event should be scheduled, false if not
 	 */
-	protected function should_schedule_event( $action_name, $args ) {
+	protected function should_schedule_event( $action_name, $args ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		return true;
 	}
 

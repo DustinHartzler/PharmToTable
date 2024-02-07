@@ -2,6 +2,7 @@
 
 namespace OM4\WooCommerceZapier\WooCommerceResource\Product;
 
+use OM4\WooCommerceZapier\TaskHistory\Task\Event;
 use WC_Product;
 use WP_Error;
 use WP_REST_Request;
@@ -43,12 +44,9 @@ trait ProductUpdatesTrait {
 	public function update_item_permissions_check( $request ) {
 		$product = $this->get_product( $request );
 
-		if ( is_wp_error( $product ) ) {
-			$this->log_error_response( $request, $product );
-			return $product;
-		}
-
-		if ( ! $product ) {
+		if ( \is_wp_error( $product ) || ! $product ) {
+			// Unable to find product using request criteria.
+			// Allow the error to be handled by the update_item() method.
 			return true;
 		}
 

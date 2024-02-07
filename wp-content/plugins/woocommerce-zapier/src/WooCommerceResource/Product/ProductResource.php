@@ -4,6 +4,7 @@ namespace OM4\WooCommerceZapier\WooCommerceResource\Product;
 
 use OM4\WooCommerceZapier\Webhook\Trigger;
 use OM4\WooCommerceZapier\WooCommerceResource\CustomPostTypeResource;
+use OM4\WooCommerceZapier\WooCommerceResource\Product\ProductTaskCreator;
 use WC_Product;
 
 defined( 'ABSPATH' ) || exit;
@@ -29,8 +30,8 @@ class ProductResource extends CustomPostTypeResource {
 	 * {@inheritDoc}
 	 */
 	public function __construct() {
-		$this->key                 = 'product';
-		$this->name                = __( 'Product', 'woocommerce-zapier' );
+		$this->key                 = ProductTaskCreator::resource_type();
+		$this->name                = ProductTaskCreator::resource_name();
 		$this->metabox_screen_name = 'product';
 
 		if ( ! self::$hooks_added ) {

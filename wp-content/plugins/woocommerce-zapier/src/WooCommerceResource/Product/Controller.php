@@ -88,6 +88,7 @@ class Controller extends WC_REST_Products_Controller {
 		$this->variation_controller = $variation_controller;
 
 		add_filter( 'rest_post_dispatch', array( $this, 'rest_post_dispatch' ), 10, 3 );
+		$this->add_filter_to_check_for_request_validation_error();
 		parent::__construct();
 	}
 
@@ -165,7 +166,7 @@ class Controller extends WC_REST_Products_Controller {
 	}
 
 	/**
-	 * Add our `wcz_meta_data` information to OPTIONS requests for the Create and Update Product endpoints.
+	 * Add our `wcz_meta_v1` information to OPTIONS requests for the Create and Update Product endpoints.
 	 *
 	 * Executed during the `rest_post_dispatch` filter because if the metadata is added via
 	 * get_endpoint_args_for_item_schema(), it is removed by WordPress.
@@ -270,7 +271,7 @@ class Controller extends WC_REST_Products_Controller {
 							array(
 								'property' => 'label',
 								'mapping'  => \array_map(
-									function( $item ) use ( $property ) {
+									function ( $item ) use ( $property ) {
 										// translators: 1: Property name, 2: Variation type.
 										return \sprintf( __( '%1$s (Not Applicable for \'%2$s\' type)', 'woocommerce-zapier' ), \ucfirst( $property ), $item );
 									},
@@ -552,6 +553,18 @@ class Controller extends WC_REST_Products_Controller {
 		$response = parent::create_item( $request );
 		if ( \is_wp_error( $response ) ) {
 			$this->log_error_response( $request, $response );
+			$resource_id = 0;
+			$child_id    = null;
+			if ( isset( $request['parent_id'] ) && false !== wc_get_product( (int) $request['parent_id'] ) ) {
+				// parent_id has been specified and is a valid product.
+				$resource_id = (int) $request['parent_id'];
+				$child_id    = 0;
+			}
+			$this->task_creator->record(
+				Event::action_create( $this->resource_type, $response ),
+				$resource_id,
+				$child_id
+			);
 			return $response;
 		}
 
@@ -566,7 +579,7 @@ class Controller extends WC_REST_Products_Controller {
 			$child_id = $data['id'];
 		} else {
 			$id       = $data['id'];
-			$child_id = 0;
+			$child_id = null;
 		}
 		$this->task_creator->record( Event::action_create( $this->resource_type ), $id, $child_id );
 		return $response;
@@ -583,6 +596,26 @@ class Controller extends WC_REST_Products_Controller {
 		$response = parent::update_item( $request );
 		if ( \is_wp_error( $response ) ) {
 			$this->log_error_response( $request, $response );
+
+			$resource_id = 0;
+			$child_id    = null;
+			if ( isset( $request['id'] ) ) {
+				$product = wc_get_product( (int) $request['id'] );
+				if ( $product && in_array( $product->get_type(), $this->get_variable_product_types(), true ) ) {
+					// Updating a top level variable product.
+					$resource_id = (int) $request['id'];
+				} elseif ( $product && in_array( $product->get_type(), $this->get_product_variation_types(), true ) ) {
+					// Updating a variation.
+					$resource_id = $product->get_parent_id();
+					$child_id    = $product->get_id();
+				}
+			}
+
+			$this->task_creator->record(
+				Event::action_update( $this->resource_type, $response ),
+				$resource_id,
+				$child_id
+			);
 			return $response;
 		}
 
@@ -597,7 +630,7 @@ class Controller extends WC_REST_Products_Controller {
 			$child_id = $data['id'];
 		} else {
 			$id       = $data['id'];
-			$child_id = 0;
+			$child_id = null;
 		}
 		$this->task_creator->record( Event::action_update( $this->resource_type ), $id, $child_id );
 		return $response;

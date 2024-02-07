@@ -71,6 +71,7 @@ class Controller extends WC_REST_Controller {
 	public function __construct( Logger $logger, ProductTaskCreator $task_creator ) {
 		$this->logger       = $logger;
 		$this->task_creator = $task_creator;
+		$this->add_filter_to_check_for_request_validation_error();
 	}
 
 	/**
@@ -158,18 +159,34 @@ class Controller extends WC_REST_Controller {
 		$product = $this->get_product( $request );
 		if ( is_wp_error( $product ) ) {
 			$this->log_error_response( $request, $product );
+			$this->task_creator->record(
+				$this->modify_event( Event::action_update( $this->resource_type, $product ) ),
+				0
+			);
 			return $product;
 		}
 
 		if ( ! $product ) {
 			$response = new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID or SKU.', 'woocommerce-zapier' ), array( 'status' => 404 ) );
 			$this->log_error_response( $request, $response );
+			$this->task_creator->record(
+				$this->modify_event( Event::action_update( $this->resource_type, $response ) ),
+				0
+			);
 			return $response;
 		}
+
+		$id       = 0 === $product->get_parent_id() ? $product->get_id() : $product->get_parent_id();
+		$child_id = 0 === $product->get_parent_id() ? null : $product->get_id();
 
 		if ( ! $product->get_manage_stock() ) {
 			$response = new WP_Error( 'woocommerce_rest_product_stock_management_disabled', __( 'Product does not have stock management enabled.', 'woocommerce-zapier' ), array( 'status' => 400 ) );
 			$this->log_error_response( $request, $response );
+			$this->task_creator->record(
+				$this->modify_event( Event::action_update( $this->resource_type, $response ) ),
+				$id,
+				$child_id
+			);
 			return $response;
 		}
 
@@ -187,18 +204,22 @@ class Controller extends WC_REST_Controller {
 			default:
 				$response = new WP_Error( 'woocommerce_rest_product_invalid_adjustment_type', __( 'Invalid adjustment type.', 'woocommerce-zapier' ), array( 'status' => 400 ) );
 				$this->log_error_response( $request, $response );
+				$this->task_creator->record(
+					$this->modify_event( Event::action_update( $this->resource_type, $response ) ),
+					$id,
+					$child_id
+				);
 				return $response;
 		}
 
 		$product->set_stock_quantity( $new_quantity );
 		$product->save();
 
-		$event        = Event::action_update( $this->resource_type );
-		$event->topic = 'product.update_stock';
-		$event->name  = __( 'Update Product Stock Quantity', 'woocommerce-zapier' );
-		$id           = 0 === $product->get_parent_id() ? $product->get_id() : $product->get_parent_id();
-		$child_id     = 0 === $product->get_parent_id() ? 0 : $product->get_id();
-		$this->task_creator->record( $event, $id, $child_id );
+		$this->task_creator->record(
+			$this->modify_event( Event::action_update( $this->resource_type ) ),
+			$id,
+			$child_id
+		);
 
 		$response = array(
 			'id'             => $product->get_id(),
@@ -207,5 +228,23 @@ class Controller extends WC_REST_Controller {
 			'stock_status'   => $product->get_stock_status( 'edit' ),
 		);
 		return rest_ensure_response( $response );
+	}
+
+
+	/**
+	 * Modify the event object for this controller.
+	 *
+	 * Ensures that the action is Update Product Stock Quantity (not Update Product).
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  Event $event The event object instance.
+	 *
+	 * @return Event
+	 */
+	protected function modify_event( $event ) {
+		$event->topic = 'product.update_stock';
+		$event->name  = __( 'Update Product Stock Quantity', 'woocommerce-zapier' );
+		return $event;
 	}
 }
