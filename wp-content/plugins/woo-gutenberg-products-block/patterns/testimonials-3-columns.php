@@ -7,20 +7,19 @@
 
 use Automattic\WooCommerce\Blocks\Patterns\PatternsHelper;
 
-$content = PatternsHelper::get_pattern_content( 'woocommerce-blocks/testimonials-3-columns' );
-
 $main_header        = $content['titles'][0]['default'] ?? '';
-$first_title        = $content['titles'][1]['default'] ?? '';
-$second_title       = $content['titles'][2]['default'] ?? '';
-$third_title        = $content['titles'][3]['default'] ?? '';
+$first_review       = $content['titles'][1]['default'] ?? '';
+$second_review      = $content['titles'][2]['default'] ?? '';
+$third_review       = $content['titles'][3]['default'] ?? '';
 $first_description  = $content['descriptions'][0]['default'] ?? '';
 $second_description = $content['descriptions'][1]['default'] ?? '';
 $third_description  = $content['descriptions'][2]['default'] ?? '';
 ?>
-<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained","justifyContent":"left"}} -->
-<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30)">
-	<!-- wp:heading {"level":3,"style":{"spacing":{"padding":{"right":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
-	<h3 class="wp-block-heading" style="padding-right:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><?php echo esc_html( $main_header ); ?></h3>
+
+<!-- wp:group {"align":"wide","style":{"spacing":{"margin":{"top":"0px","bottom":"80px"}}},"layout":{"type":"constrained","justifyContent":"left"}} -->
+<div class="wp-block-group alignwide" style="margin-top:0px;margin-bottom:80px">
+	<!-- wp:heading {"level":3,"align":"full","style":{"spacing":{"padding":{"right":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
+	<h3 class="wp-block-heading alignfull" style="padding-right:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><?php echo esc_html( $main_header ); ?></h3>
 	<!-- /wp:heading -->
 
 	<!-- wp:columns {"align":"full","style":{"spacing":{"padding":{"right":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
@@ -28,7 +27,7 @@ $third_description  = $content['descriptions'][2]['default'] ?? '';
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:paragraph -->
-			<p><strong><?php echo esc_html( $first_title ); ?></strong></p>
+			<p><strong><?php echo esc_html( $first_review ); ?></strong></p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
@@ -36,7 +35,7 @@ $third_description  = $content['descriptions'][2]['default'] ?? '';
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
-			<p>~ Tanner P.</p>
+			<p>~ Sophia K.</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
@@ -45,7 +44,7 @@ $third_description  = $content['descriptions'][2]['default'] ?? '';
 		<div class="wp-block-column">
 			<!-- wp:paragraph -->
 
-			<p><strong><?php echo esc_html( $second_title ); ?></strong></p>
+			<p><strong><?php echo esc_html( $second_review ); ?></strong></p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
@@ -53,7 +52,7 @@ $third_description  = $content['descriptions'][2]['default'] ?? '';
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
-			<p>~ Abigail N.</p>
+			<p>~ Liam M.</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
@@ -61,7 +60,7 @@ $third_description  = $content['descriptions'][2]['default'] ?? '';
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:paragraph -->
-			<p><strong><?php echo esc_html( $third_title ); ?></strong></p>
+			<p><strong><?php echo esc_html( $third_review ); ?></strong></p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
@@ -69,7 +68,7 @@ $third_description  = $content['descriptions'][2]['default'] ?? '';
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph -->
-			<p>~ Albert L.</p>
+			<p>~ Ava L.</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
