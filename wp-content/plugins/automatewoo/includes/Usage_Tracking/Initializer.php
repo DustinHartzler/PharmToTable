@@ -3,6 +3,7 @@
 namespace AutomateWoo\Usage_Tracking;
 
 use AutomateWoo\Exceptions\InvalidClass;
+use WC_Site_Tracking;
 
 /**
  * Static Helper Class for tracks.
@@ -26,7 +27,7 @@ class Initializer {
 	 * general store data, referred to as the "Tracker". Here we initialize both types of data.
 	 */
 	public static function init() {
-		if ( ! apply_filters( 'automatewoo/usage_tracking/enabled', true ) ) {
+		if ( ! ( apply_filters( 'automatewoo/usage_tracking/enabled', true ) && WC_Site_Tracking::is_tracking_enabled() ) ) {
 			return;
 		}
 
@@ -95,12 +96,12 @@ class Initializer {
 	 */
 	private static function validate_class( $class, $interface ) {
 		if ( ! class_exists( $class ) ) {
-			throw InvalidClass::does_not_exist( $class );
+			throw InvalidClass::does_not_exist( esc_html( $class ) );
 		}
 
 		$implements = class_implements( $class );
 		if ( ! array_key_exists( $interface, $implements ) ) {
-			throw InvalidClass::does_not_implement_interface( $class, $interface );
+			throw InvalidClass::does_not_implement_interface( esc_html( $class ), esc_html( $interface ) );
 		}
 	}
 }

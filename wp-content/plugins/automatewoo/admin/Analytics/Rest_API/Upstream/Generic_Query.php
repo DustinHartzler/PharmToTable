@@ -45,7 +45,7 @@ class Generic_Query extends WooReportsQuery {
 	public function __construct( $args, $store_name ) {
 		$this->store_name = $store_name;
 
-		return parent::__construct( $args );
+		return parent::__construct( $args ); // phpcs:ignore Universal.CodeAnalysis.ConstructorDestructorReturn.ReturnValueFound
 	}
 	/**
 	 * Valid fields for Products report.
@@ -65,5 +65,4 @@ class Generic_Query extends WooReportsQuery {
 		$data_store = WC_Data_Store::load( $this->store_name );
 		return $data_store->get_data( $this->get_query_vars() );
 	}
-
 }

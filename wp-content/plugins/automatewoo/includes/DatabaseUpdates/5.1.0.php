@@ -66,7 +66,7 @@ class Database_Update_5_1_0 extends AbstractDatabaseUpdate {
 			$workflow = Factory::get( $item );
 			$this->update_shop_products_variables( $workflow );
 
-			$this->items_processed++;
+			++$this->items_processed;
 		}
 
 		update_option( self::UPDATE_ITEMS_OPTIONS_KEY, $items );

@@ -3,17 +3,17 @@
  * Plugin Name: AutomateWoo
  * Plugin URI: https://automatewoo.com
  * Description: Powerful marketing automation for your WooCommerce store.
- * Version: 6.0.6
+ * Version: 6.0.15
  * Author: WooCommerce
- * Author URI: https://woocommerce.com
+ * Author URI: https://woo.com
  * License: GPLv3
  * License URI: http://www.gnu.org/licenses/gpl-3.0
  * Text Domain: automatewoo
  * Domain Path: /languages
- * Tested up to: 6.3
+ * Tested up to: 6.4
  *
  * WC requires at least: 6.7
- * WC tested up to: 8.2
+ * WC tested up to: 8.6
  * Woo: 4652610:f6f1f8a56a16a3715b30b21fb557e78f
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,9 +37,9 @@ use Automattic\WooCommerce\Utilities\FeaturesUtil;
 defined( 'ABSPATH' ) || exit;
 
 define( 'AUTOMATEWOO_SLUG', 'automatewoo' );
-define( 'AUTOMATEWOO_VERSION', '6.0.6' ); // WRCS: DEFINED_VERSION.
+define( 'AUTOMATEWOO_VERSION', '6.0.15' ); // WRCS: DEFINED_VERSION.
 define( 'AUTOMATEWOO_FILE', __FILE__ );
-define( 'AUTOMATEWOO_PATH', dirname( __FILE__ ) );
+define( 'AUTOMATEWOO_PATH', __DIR__ );
 define( 'AUTOMATEWOO_MIN_PHP_VER', '7.3.0' );
 define( 'AUTOMATEWOO_MIN_WP_VER', '5.9' );
 // IMPORTANT: If AUTOMATEWOO_MIN_WC_VER is updated, AW Refer a friend (PHP Unit Tests) should be updated accordingly
@@ -127,15 +127,19 @@ class AutomateWoo_Loader {
 	public static function check() {
 		$passed = true;
 
+		/* translators: Plugin name. */
 		$inactive_text = '<strong>' . sprintf( __( '%s is inactive.', 'automatewoo' ), __( 'AutomateWoo', 'automatewoo' ) ) . '</strong>';
 
 		if ( version_compare( phpversion(), AUTOMATEWOO_MIN_PHP_VER, '<' ) ) {
+			/* translators: %1$s inactive plugin text, %2$s minimum PHP version */
 			self::$errors[] = sprintf( __( '%1$s The plugin requires PHP version %2$s or newer.', 'automatewoo' ), $inactive_text, AUTOMATEWOO_MIN_PHP_VER );
 			$passed         = false;
 		} elseif ( ! self::is_woocommerce_version_ok() ) {
+			/* translators: %1$s inactive plugin text, %2$s minimum WooCommerce version */
 			self::$errors[] = sprintf( __( '%1$s The plugin requires WooCommerce version %2$s or newer.', 'automatewoo' ), $inactive_text, AUTOMATEWOO_MIN_WC_VER );
 			$passed         = false;
 		} elseif ( ! self::is_wp_version_ok() ) {
+			/* translators: %1$s inactive plugin text, %2$s minimum WordPress version */
 			self::$errors[] = sprintf( __( '%1$s The plugin requires WordPress version %2$s or newer.', 'automatewoo' ), $inactive_text, AUTOMATEWOO_MIN_WP_VER );
 			$passed         = false;
 		}
@@ -190,7 +194,9 @@ class AutomateWoo_Loader {
 	 */
 	public static function declare_feature_compatibility() {
 		if ( class_exists( FeaturesUtil::class ) ) {
-			FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__ );
+			FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__ );
+			FeaturesUtil::declare_compatibility( 'product_block_editor', __FILE__ );
 		}
 	}
 

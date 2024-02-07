@@ -129,5 +129,4 @@ class AbandonedCarts extends AbstractRecurringBatchedActionSchedulerJob {
 	public function get_interval(): int {
 		return JobService::TWO_MINUTE_INTERVAL;
 	}
-
 }

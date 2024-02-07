@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
@@ -15,7 +14,7 @@ class Session_Tracker {
 	/** @var int (days) */
 	private static $tracking_cookie_expiry;
 
-	/** cookie name */
+	/** @var string cookie name */
 	private static $tracking_key_cookie_name;
 
 	/** @var string - This key WILL BE saved */
@@ -25,7 +24,7 @@ class Session_Tracker {
 	/**
 	 * Init session tracker, add hooks.
 	 */
-	static function init() {
+	public static function init() {
 		$self = 'AutomateWoo\Session_Tracker'; /** @var $self Session_Tracker */
 
 		if ( ! Options::session_tracking_enabled() ) {
@@ -33,7 +32,7 @@ class Session_Tracker {
 		}
 
 		self::$tracking_key_cookie_name = apply_filters( 'automatewoo/session_tracker/cookie_name', 'wp_automatewoo_visitor_' . COOKIEHASH );
-		self::$tracking_cookie_expiry = apply_filters( 'automatewoo_visitor_tracking_cookie_expiry', 365 ); // in days
+		self::$tracking_cookie_expiry   = apply_filters( 'automatewoo_visitor_tracking_cookie_expiry', 365 ); // in days
 
 		add_action( 'wp', [ $self, 'maybe_set_session_cookies' ], 99 );
 		add_action( 'shutdown', [ $self, 'maybe_set_session_cookies' ], 0 );
@@ -47,7 +46,7 @@ class Session_Tracker {
 		add_action( 'woocommerce_checkout_order_processed', [ $self, 'maybe_track_guest_customer_after_order_placed' ], 20 );
 
 		// Checkout blocks uses woocommerce_store_api_checkout_order_processed instead of  woocommerce_checkout_order_processed
-		add_action( 'woocommerce_store_api_checkout_order_processed', [ $self, 'maybe_track_guest_customer_after_order_placed' ] );		
+		add_action( 'woocommerce_store_api_checkout_order_processed', [ $self, 'maybe_track_guest_customer_after_order_placed' ] );
 	}
 
 
@@ -60,7 +59,7 @@ class Session_Tracker {
 	 *
 	 * @return bool
 	 */
-	static function is_tracking_cookie_set() {
+	public static function is_tracking_cookie_set() {
 		return (bool) Cookies::get( self::$tracking_key_cookie_name );
 	}
 
@@ -74,7 +73,7 @@ class Session_Tracker {
 	 *
 	 * @return bool
 	 */
-	static function is_session_started_cookie_set() {
+	public static function is_session_started_cookie_set() {
 		return (bool) Cookies::get( 'wp_automatewoo_session_started' );
 	}
 
@@ -86,7 +85,7 @@ class Session_Tracker {
 	 *
 	 * @return string
 	 */
-	static function get_tracking_cookie() {
+	public static function get_tracking_cookie() {
 		return Clean::string( Cookies::get( self::$tracking_key_cookie_name ) );
 	}
 
@@ -101,7 +100,7 @@ class Session_Tracker {
 	 *
 	 * @return bool
 	 */
-	static function set_tracking_key_to_be_set( $tracking_key ) {
+	public static function set_tracking_key_to_be_set( $tracking_key ) {
 		if ( headers_sent() ) {
 			return false; // cookies can't be set
 		}
@@ -117,7 +116,7 @@ class Session_Tracker {
 	 * @since 4.0
 	 * @return bool
 	 */
-	static function cookies_permitted() {
+	public static function cookies_permitted() {
 		if ( ! Options::session_tracking_enabled() ) {
 			return false;
 		}
@@ -144,7 +143,7 @@ class Session_Tracker {
 	 *
 	 * @since 4.3
 	 */
-	static function clear_tracking_cookies() {
+	public static function clear_tracking_cookies() {
 		self::$tracking_key_to_set = '';
 		Cookies::clear( self::$tracking_key_cookie_name );
 		Cookies::clear( 'wp_automatewoo_session_started' );
@@ -154,8 +153,9 @@ class Session_Tracker {
 	/**
 	 * New browser session initiated
 	 */
-	static function new_session_initiated() {
-		if ( $guest = self::get_current_guest() ) {
+	public static function new_session_initiated() {
+		$guest = self::get_current_guest();
+		if ( $guest ) {
 			$guest->do_check_in();
 		}
 		do_action( 'automatewoo_new_session_initiated' );
@@ -166,12 +166,14 @@ class Session_Tracker {
 	 * Sets a new session cookie for the logged in customer.
 	 * Clears any stored guest cart before their cookie key is updated.
 	 *
-	 * @param $logged_in_cookie
-	 * @param $expire
-	 * @param $expiration
-	 * @param int $user_id
+	 * @param string $logged_in_cookie The logged-in cookie value.
+	 * @param int    $expire           The time the login grace period expires as a UNIX timestamp.
+	 *                                 Default is 12 hours past the cookie's expiration time.
+	 * @param int    $expiration       The time when the logged-in authentication cookie expires as a UNIX timestamp.
+	 *                                 Default is 14 days from now.
+	 * @param int    $user_id          User ID.
 	 */
-	static function update_session_on_user_login( $logged_in_cookie, $expire, $expiration, $user_id ) {
+	public static function update_session_on_user_login( $logged_in_cookie, $expire, $expiration, $user_id ) {
 		$new_customer = Customer_Factory::get_by_user_id( $user_id );
 
 		if ( ! $new_customer ) {
@@ -188,7 +190,7 @@ class Session_Tracker {
 	 *
 	 * Doesn't set cookies in the admin area.
 	 */
-	static function maybe_set_session_cookies() {
+	public static function maybe_set_session_cookies() {
 		if ( headers_sent() || is_admin() ) {
 			return;
 		}
@@ -233,11 +235,10 @@ class Session_Tracker {
 		// MUST not set the session cookie until we have a tracking key.
 		if ( self::is_tracking_cookie_set() && ! self::is_session_started_cookie_set() ) {
 			// check the tracking is valid before starting a session
-			if ( $customer = Customer_Factory::get_by_key( self::get_tracking_cookie() ) ) {
+			if ( Customer_Factory::get_by_key( self::get_tracking_cookie() ) ) {
 				Cookies::set( 'wp_automatewoo_session_started', 1 );
 				self::new_session_initiated();
-			}
-			else {
+			} else {
 				// invalid or legacy session key so clear the cookie
 				self::clear_tracking_cookies();
 			}
@@ -255,13 +256,20 @@ class Session_Tracker {
 	 *
 	 * @since 4.3.0
 	 */
-	static function maybe_clear_previous_session_customers_cart( $new_customer ) {
-		if ( $new_customer->get_key() === self::get_tracking_cookie() ) {
+	public static function maybe_clear_previous_session_customers_cart( $new_customer ) {
+		$tracking_cookie = self::get_tracking_cookie();
+		if ( ! $tracking_cookie ) {
+			return;
+		}
+
+		if ( $new_customer->get_key() === $tracking_cookie ) {
 			return; // don't clear if the new key is the same as the current one
 		}
 
-		if ( $tracked_customer = Customer_Factory::get_by_key( self::get_tracking_cookie() ) )  {
-			if ( $cart = $tracked_customer->get_cart() ) {
+		$tracked_customer = Customer_Factory::get_by_key( $tracking_cookie );
+		if ( $tracked_customer ) {
+			$cart = $tracked_customer->get_cart();
+			if ( $cart ) {
 				$cart->delete();
 			}
 		}
@@ -271,7 +279,7 @@ class Session_Tracker {
 	/**
 	 * @return string|false
 	 */
-	static function get_current_tracking_key() {
+	public static function get_current_tracking_key() {
 		if ( ! Options::session_tracking_enabled() ) {
 			return false;
 		}
@@ -290,7 +298,7 @@ class Session_Tracker {
 	 *
 	 * @return int
 	 */
-	static function get_detected_user_id() {
+	public static function get_detected_user_id() {
 		if ( is_user_logged_in() ) {
 			return get_current_user_id();
 		}
@@ -314,7 +322,7 @@ class Session_Tracker {
 	 *
 	 * @return Guest|bool
 	 */
-	static function get_current_guest() {
+	public static function get_current_guest() {
 		if ( ! Options::session_tracking_enabled() ) {
 			return false;
 		}
@@ -342,22 +350,22 @@ class Session_Tracker {
 	 *
 	 * - Registered user is logged in or remembered via cookie = bail
 	 * - Email matches existing customer
-	 * 		- Cookie customer exists
+	 *      - Cookie customer exists
 	 *          - Cookie and matched customer are the same = do nothing
-	 *			- Cookie and matched customer are different = cookie must be changed, clear cart from previous key to avoid duplicates
-	 * 		- No cookie customer = Set new cookie to matched customer key
+	 *          - Cookie and matched customer are different = cookie must be changed, clear cart from previous key to avoid duplicates
+	 *      - No cookie customer = Set new cookie to matched customer key
 	 * - Email is new
-	 * 		- Cookie customer exists
-	 * 			- Customer data is locked = create new customer, change cookie, clear cart from previous key to avoid duplicates
-	 * 			- Customer data is not locked = update customer email
-	 * 		- No cookie customer = Set new cookie to matched customer key
+	 *      - Cookie customer exists
+	 *          - Customer data is locked = create new customer, change cookie, clear cart from previous key to avoid duplicates
+	 *          - Customer data is not locked = update customer email
+	 *      - No cookie customer = Set new cookie to matched customer key
 	 *
 	 * @param string $new_email
 	 * @param string $language
 	 *
 	 * @return Customer|false
 	 */
-	static function set_session_by_captured_email( $new_email, $language = '' ) {
+	public static function set_session_by_captured_email( $new_email, $language = '' ) {
 		if ( ! is_email( $new_email ) || headers_sent() || ! Options::session_tracking_enabled() ) {
 			// must have a valid email, be able to set cookies, have session tracking enabled
 			return false;
@@ -375,11 +383,7 @@ class Session_Tracker {
 		// Check if a customer already exists matching the supplied email
 		if ( $customer_matching_email ) {
 
-			// Is the matched email the same as the customer of the current session?
-			if ( $existing_session_customer && $new_email === $existing_session_customer->get_email() ) {
-				// Customer has probably re-entered their email at checkout
-			}
-			else {
+			if ( ! $existing_session_customer || $new_email !== $existing_session_customer->get_email() ) {
 				// Customer has changed so delete the cart for the existing customer
 				// To avoid duplicate abandoned cart emails
 				if ( $existing_session_customer ) {
@@ -389,39 +393,32 @@ class Session_Tracker {
 
 			// Set the matched customer as the new customer
 			$new_customer = $customer_matching_email;
-		}
-		else {
-			// Is there an existing session customer
-			if ( $existing_session_customer ) {
+		} elseif ( $existing_session_customer ) { // Is there an existing session customer
 				// Check if existing and new emails are the same
 				// This is actually impossible considering the previous logic but it's probably more confusing to omit this
-				if ( $existing_session_customer->get_email() === $new_email ) {
-					// Nothing to do
+			if ( $existing_session_customer->get_email() === $new_email ) {
+				// Nothing to do
+				$new_customer = $existing_session_customer;
+			} else {
+				$guest = $existing_session_customer->get_guest(); // customer can not be a registered user at this point
+
+				if ( $guest->is_locked() ) {
+					// email has changed and guest is locked so we must create a new guest
+					// first clear the old guests cart, to avoid duplicate abandoned cart emails
+					$guest->delete_cart();
+					$new_customer = Customer_Factory::get_by_email( $new_email );
+				} else {
+					// Guest is not locked so we can simply update guest email
+					$guest->set_email( $new_email );
+					$guest->save();
+
+					// Set the new customer to the existing session customer
 					$new_customer = $existing_session_customer;
 				}
-				else {
-					$guest = $existing_session_customer->get_guest(); // customer can not be a registered user at this point
-
-					if ( $guest->is_locked() ) {
-						// email has changed and guest is locked so we must create a new guest
-						// first clear the old guests cart, to avoid duplicate abandoned cart emails
-						$guest->delete_cart();
-						$new_customer = Customer_Factory::get_by_email( $new_email );
-					}
-					else {
-						// Guest is not locked so we can simply update guest email
-						$guest->set_email( $new_email );
-						$guest->save();
-
-						// Set the new customer to the existing session customer
-						$new_customer = $existing_session_customer;
-					}
-				}
 			}
-			else {
-				// There is no session customer, so create one
-				$new_customer = Customer_Factory::get_by_email( $new_email );
-			}
+		} else {
+			// There is no session customer, so create one
+			$new_customer = Customer_Factory::get_by_email( $new_email );
 		}
 
 		// init the new customer tracking, also saves/updates the language
@@ -430,7 +427,8 @@ class Session_Tracker {
 		}
 
 		// the new customer could be a user, if the email address matched a user
-		if ( $guest = $new_customer->get_guest() ) {
+		$guest = $new_customer->get_guest();
+		if ( $guest ) {
 			$guest->do_check_in();
 		}
 
@@ -450,14 +448,15 @@ class Session_Tracker {
 
 	/**
 	 * Store guest info if they place a comment
-	 * @param $comment_ID
+	 *
+	 * @param int $comment_id
 	 */
-	static function capture_from_comment( $comment_ID ) {
+	public static function capture_from_comment( $comment_id ) {
 		if ( is_user_logged_in() ) {
 			return;
 		}
 
-		$comment = get_comment( $comment_ID );
+		$comment = get_comment( $comment_id );
 
 		if ( $comment && ! $comment->user_id ) {
 			self::set_session_by_captured_email( $comment->comment_author_email );
@@ -503,14 +502,19 @@ class Session_Tracker {
 	 * @since 4.0
 	 * @param int $order_id
 	 */
-	static function maybe_track_guest_customer_after_order_placed( $order_id ) {
+	public static function maybe_track_guest_customer_after_order_placed( $order_id ) {
 		if ( ! self::cookies_permitted() ) {
 			return; // cookies blocked
 		}
 
 		$order = wc_get_order( $order_id );
 
-		if ( ! $order || is_user_logged_in() || ! $customer = Customer_Factory::get_by_order( $order ) ) {
+		if ( ! $order || is_user_logged_in() ) {
+			return;
+		}
+
+		$customer = Customer_Factory::get_by_order( $order );
+		if ( ! $customer ) {
 			return;
 		}
 
@@ -531,7 +535,7 @@ class Session_Tracker {
 	 *
 	 * @since 4.0
 	 */
-	static function set_session_customer( $customer, $language = '' ) {
+	public static function set_session_customer( $customer, $language = '' ) {
 		if ( headers_sent() || ! self::cookies_permitted() || ! $customer ) {
 			return;
 		}
@@ -553,7 +557,7 @@ class Session_Tracker {
 	 *
 	 * @return Customer|false
 	 */
-	static function get_session_customer() {
+	public static function get_session_customer() {
 		if ( is_user_logged_in() ) {
 			return aw_get_logged_in_customer();
 		}
@@ -562,8 +566,9 @@ class Session_Tracker {
 			return false;
 		}
 
+		$cookie_key = self::get_current_tracking_key();
 		// uses the newly set key if it exists and can be set
-		if ( $cookie_key = self::get_current_tracking_key() ) {
+		if ( $cookie_key ) {
 			return Customer_Factory::get_by_key( $cookie_key );
 		}
 
@@ -580,19 +585,18 @@ class Session_Tracker {
 	 *
 	 * @return bool
 	 */
-	static function is_session_customer( $input_customer ) {
-		if ( ! $session_customer = self::get_session_customer() ) {
+	public static function is_session_customer( $input_customer ) {
+		$session_customer = self::get_session_customer();
+		if ( ! $session_customer ) {
 			return false;
 		}
 
 		if ( is_a( $input_customer, 'AutomateWoo\Customer' ) ) {
-			return $session_customer->get_id() == $input_customer->get_id();
-		}
-		elseif ( is_numeric( $input_customer ) ) {
-			return $session_customer->get_id() == Clean::id( $input_customer );
+			return $session_customer->get_id() === $input_customer->get_id();
+		} elseif ( is_numeric( $input_customer ) ) {
+			return $session_customer->get_id() === Clean::id( $input_customer );
 		}
 
 		return false;
 	}
-
 }

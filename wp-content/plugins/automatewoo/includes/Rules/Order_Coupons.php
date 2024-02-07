@@ -62,5 +62,4 @@ class Order_Coupons extends Searchable_Select_Rule_Abstract {
 	public function validate( $order, $compare, $expected_coupons ) {
 		return $this->validate_select_case_insensitive( $order->get_coupon_codes(), $compare, $expected_coupons );
 	}
-
 }

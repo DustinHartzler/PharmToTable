@@ -166,6 +166,4 @@ abstract class AbstractQuery implements QueryInterface {
 
 		return $this->clauses[ $rule_group_number - 1 ];
 	}
-
-
 }

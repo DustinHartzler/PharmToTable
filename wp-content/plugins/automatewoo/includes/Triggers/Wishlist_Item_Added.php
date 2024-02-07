@@ -22,6 +22,7 @@ class Trigger_Wishlist_Item_Added extends Trigger {
 	 * Method to set title, group, description and other admin props
 	 */
 	public function load_admin_details() {
+		/* translators: Wishlist item title. */
 		$this->title = sprintf( __( 'Customer Adds Product (%s)', 'automatewoo' ), Wishlists::get_integration_title() );
 		$this->group = __( 'Wishlists', 'automatewoo' );
 	}
@@ -112,5 +113,4 @@ class Trigger_Wishlist_Item_Added extends Trigger {
 
 		return true;
 	}
-
 }

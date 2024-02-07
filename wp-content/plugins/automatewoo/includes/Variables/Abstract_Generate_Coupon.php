@@ -15,6 +15,7 @@ abstract class Variable_Abstract_Generate_Coupon extends Variable {
 	public function load_admin_details() {
 
 		$this->description = sprintf(
+			/* translators: %1$s: opening link tag, %2$s: closing link tag. */
 			__( 'Generates a unique coupon based on a template coupon. <%1$s>View documentation<%2$s>.', 'automatewoo' ),
 			'a href="' . Admin::get_docs_link( 'variables/personalized-coupons', 'variable-description' ) . '" target="_blank"',
 			'/a'

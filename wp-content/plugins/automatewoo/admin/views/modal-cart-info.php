@@ -14,7 +14,7 @@ $tax_display = get_option( 'woocommerce_tax_display_cart' );
 ?>
 
 	<div class="automatewoo-modal__header">
-		<h1><?php printf( esc_html__( 'Cart #%s', 'automatewoo' ), esc_html( $cart->get_id() ) ); ?></h1>
+		<h1><?php /* translators: Cart ID. */ printf( esc_html__( 'Cart #%s', 'automatewoo' ), esc_html( $cart->get_id() ) ); ?></h1>
 	</div>
 
 	<div class="automatewoo-modal__body">
@@ -75,7 +75,7 @@ $tax_display = get_option( 'woocommerce_tax_display_cart' );
 						$coupon_discount = $tax_display === 'excl' ? $coupon_data['discount_excl_tax'] : $coupon_data['discount_incl_tax'];
 						?>
 						<tr>
-							<th scope="row" colspan="2"><?php printf( esc_html__( 'Coupon: %s', 'automatewoo' ), esc_html( $coupon_code ) ); ?></th>
+							<th scope="row" colspan="2"><?php /* translators: Coupon code. */ printf( esc_html__( 'Coupon: %s', 'automatewoo' ), esc_html( $coupon_code ) ); ?></th>
 							<td><?php echo wp_kses_post( $cart->price( - $coupon_discount ) ); ?></td>
 						</tr>
 					<?php endforeach; ?>
@@ -108,7 +108,7 @@ $tax_display = get_option( 'woocommerce_tax_display_cart' );
 						<th scope="row" colspan="2">
 							<?php esc_html_e( 'Total', 'automatewoo' ); ?>
 							<?php if ( wc_tax_enabled() && $tax_display !== 'excl' ) : ?>
-								<small><?php printf( esc_html__( '(includes %s tax)', 'automatewoo' ), wp_kses_post( $cart->price( $cart->calculated_tax_total ) ) ); ?></small>
+								<small><?php /* translators: Calculated tax total. */ printf( esc_html__( '(includes %s tax)', 'automatewoo' ), wp_kses_post( $cart->price( $cart->calculated_tax_total ) ) ); ?></small>
 							<?php endif; ?>
 						</th>
 						<td><?php echo wp_kses_post( $cart->price( $cart->calculated_total ) ); ?></td>

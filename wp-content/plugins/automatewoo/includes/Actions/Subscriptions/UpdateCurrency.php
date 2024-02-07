@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Change a subscription's currency.
  *
- * While the currency is not a line item, this class still extends Action_Subscription_Edit_Item_Abstract
+ * While the currency is not a line item, this class still extends AbstractEditItem
  * as it provides many useful methods for editing a subscription's currency.
  *
  * @since 5.4.0
@@ -70,6 +70,7 @@ class UpdateCurrency extends AbstractEditItem {
 	 * @return string
 	 */
 	protected function get_note( $new_currency_code ) {
+		/* translators: %1$s: workflow title, %2$s new currency code, %3$d workflow ID */
 		return sprintf( __( '%1$s workflow run: updated subscription currency to %2$s. (Workflow ID: %3$d)', 'automatewoo' ), $this->workflow->get_title(), $new_currency_code, $this->workflow->get_id() );
 	}
 

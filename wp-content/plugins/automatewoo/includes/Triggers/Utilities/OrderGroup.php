@@ -17,5 +17,4 @@ trait OrderGroup {
 	public function get_group() {
 		return __( 'Orders', 'automatewoo' );
 	}
-
 }

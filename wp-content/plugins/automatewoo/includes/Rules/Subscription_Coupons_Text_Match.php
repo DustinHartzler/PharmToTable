@@ -26,5 +26,4 @@ class Subscription_Coupons_Text_Match extends Order_Coupons_Text_Match {
 		$this->title         = __( 'Subscription - Coupons - Text Match', 'automatewoo' );
 		$this->compare_types = $this->get_multi_string_compare_types();
 	}
-
 }

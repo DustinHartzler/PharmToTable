@@ -53,5 +53,4 @@ class Subscription_Payment_Method extends AutomateWoo\Rule_Order_Payment_Gateway
 
 		return $choices;
 	}
-
 }

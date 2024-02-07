@@ -23,7 +23,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class WishlistItemOnSale extends AbstractBatchedActionSchedulerJob {
 
-	use ValidateItemAsIntegerId, ArrayValidator;
+	use ValidateItemAsIntegerId;
+	use ArrayValidator;
 
 	/**
 	 * Get the name of the job.
@@ -102,5 +103,4 @@ class WishlistItemOnSale extends AbstractBatchedActionSchedulerJob {
 
 		$this->validate_is_non_empty_array( $args['products'] );
 	}
-
 }

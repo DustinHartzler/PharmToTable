@@ -106,5 +106,4 @@ abstract class Dashboard_Widget {
 	protected function output_after() {
 		echo '</div></div>';
 	}
-
 }

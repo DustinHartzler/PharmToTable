@@ -23,7 +23,7 @@ if ( $workflow ) {
 ?>
 
 <div class="<?php echo ( $action ? 'automatewoo-action' : 'aw-action-template' ); ?> <?php echo ( $editing ? 'js-open' : '' ); ?>"
-	 data-action-number="<?php echo $action ? esc_attr( $action_number ) : ''; ?>">
+	data-action-number="<?php echo $action ? esc_attr( $action_number ) : ''; ?>">
 
 	<div class="automatewoo-action__header">
 		<div class="row-options">

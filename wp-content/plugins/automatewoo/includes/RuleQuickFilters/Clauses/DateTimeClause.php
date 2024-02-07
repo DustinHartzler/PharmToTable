@@ -85,5 +85,4 @@ class DateTimeClause extends AbstractClause {
 			return $this->value->to_mysql_string();
 		}
 	}
-
 }

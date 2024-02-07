@@ -114,5 +114,4 @@ class Order_Created extends Abstract_Async_Event {
 		// do real async order created action
 		do_action( $this->get_hook_name(), $order_id );
 	}
-
 }

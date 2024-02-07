@@ -137,7 +137,7 @@ class WCAdminConnectPages {
 	public function register_automatewoo_tabbed_pages() {
 		add_filter(
 			'woocommerce_navigation_pages_with_tabs',
-			function( $navigation_pages ) {
+			function ( $navigation_pages ) {
 				return array_merge(
 					$navigation_pages,
 					[
@@ -145,7 +145,6 @@ class WCAdminConnectPages {
 						'automatewoo-reports'  => 'runs-by-date',
 					]
 				);
-
 			}
 		);
 
@@ -219,5 +218,4 @@ class WCAdminConnectPages {
 			wc_admin_connect_page( $page_info );
 		}
 	}
-
 }

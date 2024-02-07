@@ -90,6 +90,7 @@ class AddShipping extends AbstractEditShipping {
 	 * @return string
 	 */
 	protected function get_note( $shipping_data ) {
+		/* translators: %1$s: workflow title, %2$s line item name, %3$d shipping method ID, %4$d workflow ID */
 		return sprintf( __( '%1$s workflow run: added %2$s to subscription. (Shipping Method ID: %3$d; Workflow ID: %4$d)', 'automatewoo' ), $this->workflow->get_title(), $shipping_data['line_item_name'], $shipping_data['shipping_method_id'], $this->workflow->get_id() );
 	}
 }

@@ -45,7 +45,6 @@ class WelcomeNoticeManager {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -86,5 +85,4 @@ class WelcomeNoticeManager {
 			]
 		);
 	}
-
 }

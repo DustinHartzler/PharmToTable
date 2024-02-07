@@ -42,6 +42,7 @@ class PHPMinVersionCheck extends AbstractNotification {
 	 * @return string
 	 */
 	public static function get_content(): string {
+		/* translators: Current PHP version. */
 		return sprintf( __( 'AutomateWoo may drop support for the version of PHP currently running your website (%s). Please contact your web host to update to the latest version.', 'automatewoo' ), phpversion() );
 	}
 

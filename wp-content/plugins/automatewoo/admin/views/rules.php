@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 <script type="text/template" id="tmpl-aw-rule-groups-empty">
-	<p class="aw-rules-empty-message"><?php printf( esc_attr__( 'Rules can be used to add conditional logic to workflows. Click the %1$s+ Add Rule Group%2$s button to create a rule.', 'automatewoo' ), '<strong>', '</strong>' ); ?></p>
+	<p class="aw-rules-empty-message"><?php /* translators: %1$s opening strong tag, %2$s closing strong tag */ printf( esc_attr__( 'Rules can be used to add conditional logic to workflows. Click the %1$s+ Add Rule Group%2$s button to create a rule.', 'automatewoo' ), '<strong>', '</strong>' ); ?></p>
 </script>
 
 
@@ -80,10 +80,10 @@ defined( 'ABSPATH' ) || exit;
 						<# } else if ( data.rule.object.type === 'object' ) { #>
 
 							<select name="{{ data.fieldNameBase }}[value]{{ data.rule.object.is_multi ? '[]' : '' }}"
-								  class="{{ data.rule.object.class }} automatewoo-field js-rule-value-field"
-								  data-placeholder="{{ data.rule.object.placeholder }}"
-								  data-action="{{ data.rule.object.ajax_action }}"
-									{{ data.rule.object.is_multi ? 'multiple="multiple"' : '' }}
+								class="{{ data.rule.object.class }} automatewoo-field js-rule-value-field"
+								data-placeholder="{{ data.rule.object.placeholder }}"
+								data-action="{{ data.rule.object.ajax_action }}"
+								{{ data.rule.object.is_multi ? 'multiple="multiple"' : '' }}
 							></select>
 
 						<# } else if ( data.rule.object.type === 'select' ) { #>
@@ -182,7 +182,7 @@ defined( 'ABSPATH' ) || exit;
 	<# } else { #>
 
 		<div class="automatewoo-missing-rule">
-			<?php echo wp_kses_post( sprintf( esc_html__( 'This rule %1$s is no longer available and will be removed by saving this workflow.', 'automatewoo' ), '({{ data.rule.name }})' ) ); ?>
+			<?php /* translators: Rule name. */ echo wp_kses_post( sprintf( esc_html__( 'This rule %1$s is no longer available and will be removed by saving this workflow.', 'automatewoo' ), '({{ data.rule.name }})' ) ); ?>
 		</div>
 
 	<# } #>

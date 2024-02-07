@@ -17,5 +17,4 @@ interface ActionSchedulerJobInterface extends JobInterface {
 	 * @return string
 	 */
 	public function get_process_item_hook();
-
 }

@@ -243,5 +243,4 @@ class Coupon_Generator {
 
 		return $coupon;
 	}
-
 }

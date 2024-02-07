@@ -102,5 +102,4 @@ class Product extends Searchable_Select_Abstract {
 		$this->allow_variable = $allow;
 		return $this;
 	}
-
 }

@@ -31,5 +31,4 @@ interface BatchedWorkflowInterface {
 	 * @param array    $item
 	 */
 	public function process_item_for_workflow( Workflow $workflow, array $item );
-
 }

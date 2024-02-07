@@ -169,7 +169,7 @@ class Data_Store extends Log_Stats_Store {
 				'time_interval' => $time_interval,
 				'type'          => 'sent',
 			);
-			$totals['sent']++;
+			++$totals['sent'];
 
 			// If there is no data, or data is in unexpected format ignore the entry and continue.
 			if ( ! is_array( $log_tracked_events ) ) {
@@ -195,13 +195,13 @@ class Data_Store extends Log_Stats_Store {
 								'type'          => 'unique-clicks',
 							);
 							$click_recorded = true;
-							$totals['unique-clicks']++;
+							++$totals['unique-clicks'];
 						}
 						$all_events[] = array(
 							'time_interval' => $time_interval,
 							'type'          => 'clicks',
 						);
-						$totals['clicks']++;
+						++$totals['clicks'];
 						break;
 
 					case 'open':
@@ -209,7 +209,7 @@ class Data_Store extends Log_Stats_Store {
 							'time_interval' => $time_interval,
 							'type'          => 'opens',
 						);
-						$totals['opens']++;
+						++$totals['opens'];
 
 						break;
 
@@ -233,7 +233,7 @@ class Data_Store extends Log_Stats_Store {
 			} else {
 				$group = $grouped_intervals[ $interval ];
 			}
-			$group[ $entry['type'] ]++;
+			++$group[ $entry['type'] ];
 			$group['datetime_anchor'] = max( $group['datetime_anchor'], $interval );
 
 			$grouped_intervals[ $interval ] = $group;

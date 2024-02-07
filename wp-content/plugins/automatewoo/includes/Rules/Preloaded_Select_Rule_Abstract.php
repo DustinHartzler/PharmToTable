@@ -42,5 +42,4 @@ abstract class Preloaded_Select_Rule_Abstract extends Select_Rule_Abstract {
 
 		return $this->select_choices;
 	}
-
 }

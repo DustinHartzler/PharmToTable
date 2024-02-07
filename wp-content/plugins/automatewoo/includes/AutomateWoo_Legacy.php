@@ -55,7 +55,7 @@ abstract class AutomateWoo_Legacy {
 	 * @return AutomateWoo\Workflow|bool
 	 */
 	function get_workflow( $id ) {
-		wc_deprecated_function( __METHOD__, '5.2.0', 'AutomateWoo\Workflow_Factory::get' );
+		wc_deprecated_function( __METHOD__, '5.2.0', 'AutomateWoo\Workflows\Factory::get' );
 
 		return \AutomateWoo\Workflows\Factory::get( $id );
 	}

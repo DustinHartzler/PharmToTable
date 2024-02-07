@@ -42,5 +42,4 @@ trait HandleOrderStatusChanged {
 
 		$this->handle_order_status_changed( $order, new StatusTransition( $old_status, $new_status ) );
 	}
-
 }

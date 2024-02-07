@@ -59,5 +59,4 @@ class Action_Mailpoet_Subscribe extends Action_Mailpoet_Abstract {
 
 		Integrations::mailpoet()->subscribe( $subscriber, $list_id, [ 'send_confirmation_email' => $opt_in ] );
 	}
-
 }

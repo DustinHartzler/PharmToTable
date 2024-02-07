@@ -77,5 +77,4 @@ class ToolsService {
 
 		return false;
 	}
-
 }

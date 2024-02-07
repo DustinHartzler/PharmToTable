@@ -20,5 +20,4 @@ class StorageException extends \Exception implements ExceptionInterface {
 	public static function preset_does_not_exist( string $name ): StorageException {
 		return new static( sprintf( 'The preset with the name "%s" does not exist.', $name ) );
 	}
-
 }

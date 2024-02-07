@@ -16,7 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Trigger_Order_Note_Added extends Trigger {
 
-	use HandleOrderNoteAdded, OrderGroup;
+	use HandleOrderNoteAdded;
+	use OrderGroup;
 
 	/**
 	 * Declares data items available in trigger.
@@ -112,5 +113,4 @@ class Trigger_Order_Note_Added extends Trigger {
 
 		return true;
 	}
-
 }

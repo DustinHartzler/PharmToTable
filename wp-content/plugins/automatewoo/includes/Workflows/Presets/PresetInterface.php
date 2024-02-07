@@ -47,5 +47,4 @@ interface PresetInterface {
 	 * @return PresetInterface
 	 */
 	public function set_name( string $name ): PresetInterface;
-
 }

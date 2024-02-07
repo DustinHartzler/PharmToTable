@@ -47,5 +47,4 @@ class Action_Order_Item_Update_Meta extends Action_Order_Update_Meta {
 			$order_item->save();
 		}
 	}
-
 }

@@ -157,5 +157,4 @@ class Admin_Data_Layer_Formatter {
 
 		return apply_filters( 'automatewoo/formatted_data_layer', $formatted_data, $data_layer );
 	}
-
 }

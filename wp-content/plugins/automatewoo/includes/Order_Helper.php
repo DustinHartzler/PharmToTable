@@ -153,5 +153,4 @@ class Order_Helper {
 
 		return $user;
 	}
-
 }

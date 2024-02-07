@@ -47,5 +47,4 @@ abstract class AbstractBookingTime extends AbstractTime {
 
 		return $this->format_value_from_local_tz( $datetime );
 	}
-
 }

@@ -63,7 +63,7 @@ abstract class Action_Mailchimp_Abstract extends Action {
 	 */
 	protected function validate_contact( $email, $list_id ) {
 		if ( ! Integrations::mailchimp()->is_subscribed_to_list( $email, $list_id ) ) {
-			throw new \Exception( __( 'Failed because contact is not subscribed to the list.', 'automatewoo' ) );
+			throw new \Exception( esc_html__( 'Failed because contact is not subscribed to the list.', 'automatewoo' ) );
 		}
 	}
 }

@@ -161,5 +161,4 @@ class CartRestorer {
 
 		return $cart_id;
 	}
-
 }

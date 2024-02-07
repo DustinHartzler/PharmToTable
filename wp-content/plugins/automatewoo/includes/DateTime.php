@@ -21,6 +21,7 @@ class DateTime extends \DateTime {
 	 * @param DateTimeZone|string $timezone
 	 *
 	 * @throws \Exception Emits Exception in case of an error.
+	 * @throws \DateMalformedStringException When a malformed time string is used (PHP 8.3+).
 	 */
 	public function __construct( $time = 'now', $timezone = null ) {
 		if ( ! $timezone ) {
@@ -119,5 +120,4 @@ class DateTime extends \DateTime {
 			$this->sub( new DateInterval( 'P' . intval( $new_day ) . 'D' ) );
 		}
 	}
-
 }

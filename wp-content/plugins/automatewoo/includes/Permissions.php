@@ -17,5 +17,4 @@ final class Permissions {
 	public static function can_manage() {
 		return current_user_can( 'manage_woocommerce' );
 	}
-
 }

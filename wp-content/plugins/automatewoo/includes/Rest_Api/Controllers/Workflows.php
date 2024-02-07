@@ -2,11 +2,15 @@
 
 namespace AutomateWoo\Rest_Api\Controllers;
 
+use AutomateWoo\Format;
 use AutomateWoo\Permissions;
 use AutomateWoo\Rest_Api\Schema\WorkflowSchema;
+use AutomateWoo\Rest_Api\Utilities\CreateUpdateWorkflow;
+use AutomateWoo\Rest_Api\Utilities\DeleteWorkflow;
 use AutomateWoo\Rest_Api\Utilities\GetWorkflow;
 use AutomateWoo\Rest_Api\Utilities\Pagination;
 use AutomateWoo\Rest_Api\Utilities\RestException;
+use AutomateWoo\Workflow;
 use AutomateWoo\Workflows as WorkflowsHelper;
 use AutomateWoo\Workflow_Query;
 use WP_Error;
@@ -23,7 +27,10 @@ defined( 'ABSPATH' ) || exit;
  */
 class Workflows extends AbstractController {
 
-	use WorkflowSchema, GetWorkflow;
+	use WorkflowSchema;
+	use CreateUpdateWorkflow;
+	use DeleteWorkflow;
+	use GetWorkflow;
 
 	/**
 	 * Route base.
@@ -46,6 +53,12 @@ class Workflows extends AbstractController {
 					'permission_callback' => [ Permissions::class, 'can_manage' ],
 					'args'                => $this->get_collection_params(),
 				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_item' ],
+					'permission_callback' => [ Permissions::class, 'can_manage' ],
+					'args'                => $this->get_properties_schema(),
+				],
 				'schema' => [ $this, 'get_public_item_schema' ],
 			]
 		);
@@ -64,6 +77,18 @@ class Workflows extends AbstractController {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_item' ],
 					'permission_callback' => [ Permissions::class, 'can_manage' ],
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ Permissions::class, 'can_manage' ],
+					'args'                => $this->get_update_parameters_schema(),
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ Permissions::class, 'can_manage' ],
+					'args'                => $this->get_delete_parameters_schema(),
 				],
 				'schema' => [ $this, 'get_public_item_schema' ],
 			]
@@ -162,5 +187,149 @@ class Workflows extends AbstractController {
 		];
 
 		return $params;
+	}
+
+	/**
+	 * Creates a single Workflow item.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @param WP_REST_Request $request Full request object.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function create_item( $request ) {
+		try {
+			$workflow = $this->create_workflow( $request );
+		} catch ( RestException $e ) {
+			return $e->get_wp_error();
+		}
+
+		return rest_ensure_response( $this->prepare_item_for_response( $workflow, $request ) );
+	}
+
+	/**
+	 * Updates a single Workflow item.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @param WP_REST_Request $request Full request object.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function update_item( $request ) {
+		try {
+			$workflow = $this->update_workflow( $request );
+		} catch ( RestException $e ) {
+			return $e->get_wp_error();
+		}
+
+		return rest_ensure_response( $this->prepare_item_for_response( $workflow, $request ) );
+	}
+
+	/**
+	 * Deletes a single Workflow item (moves to trash if available).
+	 *
+	 * @since 6.0.10
+	 *
+	 * @param WP_REST_Request $request Full request object.
+	 *
+	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 */
+	public function delete_item( $request ) {
+		try {
+			$id    = (int) $request['id'];
+			$force = boolval( $request['force'] );
+
+			$workflow = $this->delete_workflow( $id, $force );
+		} catch ( RestException $e ) {
+			return $e->get_wp_error();
+		}
+
+		// If force deleted return a simple response as the full workflow data is no longer available.
+		if ( 'deleted' === $workflow->get_status() ) {
+			return rest_ensure_response(
+				[
+					'id'     => $workflow->get_id(),
+					'status' => $workflow->get_status(),
+				]
+			);
+		}
+
+		return rest_ensure_response( $this->prepare_item_for_response( $workflow, $request ) );
+	}
+
+	/**
+	 * Prepare the workflow for the REST response.
+	 *
+	 * @param Workflow        $workflow
+	 * @param WP_REST_Request $request
+	 *
+	 * @return WP_REST_Response|mixed
+	 */
+	public function prepare_item_for_response( $workflow, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		$data = [
+			'id'                             => $workflow->get_id(),
+			'title'                          => $workflow->get_title(),
+			'status'                         => $workflow->get_status(),
+			'type'                           => $workflow->get_type(),
+			'trigger'                        => [
+				'name'    => $workflow->get_trigger_name(),
+				'options' => $workflow->get_trigger_options(),
+			],
+			'rules'                          => $workflow->get_rule_data(),
+			'actions'                        => array_values( $workflow->get_actions_data() ),
+			'timing'                         => $this->prepare_timing_for_response( $workflow ),
+			'is_transactional'               => $workflow->is_transactional(),
+			'is_tracking_enabled'            => $workflow->is_tracking_enabled(),
+			'is_conversion_tracking_enabled' => $workflow->is_conversion_tracking_enabled(),
+			'google_analytics_link_tracking' => $workflow->get_ga_tracking_params(),
+			'workflow_order'                 => $workflow->get_order(),
+		];
+
+		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Prepare the workflow timing for the REST response.
+	 *
+	 * @param Workflow $workflow
+	 *
+	 * @return array
+	 */
+	protected function prepare_timing_for_response( $workflow ) {
+		$data = [
+			'type' => $workflow->get_timing_type(),
+		];
+
+		switch ( $workflow->get_timing_type() ) {
+			case 'delayed':
+				$data['delay'] = [
+					'unit'  => $workflow->get_timing_delay_unit(),
+					'value' => $workflow->get_timing_delay_number(),
+				];
+				break;
+			case 'scheduled':
+				$data['scheduled'] = [
+					'time_of_day' => $workflow->get_scheduled_time(),
+					'days'        => array_map( Format::class . '::api_weekday', $workflow->get_scheduled_days() ),
+				];
+
+				if ( $workflow->get_timing_delay_number() ) {
+					$data['delay'] = [
+						'unit'  => $workflow->get_timing_delay_unit(),
+						'value' => $workflow->get_timing_delay_number(),
+					];
+				}
+				break;
+			case 'fixed':
+				$data['datetime'] = Format::api_datetime( $workflow->get_fixed_time() );
+				break;
+			case 'datetime':
+				$data['variable'] = $workflow->get_option( 'queue_datetime', false );
+				break;
+		}
+
+		return $data;
 	}
 }

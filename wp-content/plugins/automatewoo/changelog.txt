@@ -1,5 +1,73 @@
 *** AutomateWoo Changelog ***
 
+2024-02-06 - version 6.0.15
+* Fix - Add log entry for a failed scheduled event if a workflow no longer validates for the order.
+* Fix - Mailchimp tags converted to numeric tags.
+* Fix - Replace deprecated shop_catalog image type with woocommerce_thumbnail.
+* Tweak - Adjust the assets loading conditions for the Analytics pages and declare feature compatibility for the product block editor.
+* Tweak - WC 8.6 compatibility.
+
+2024-01-30 - version 6.0.14
+* Fix - Edit Workflow: Change back to the previously selected manual trigger option when the compatibility warning modal is canceled.
+* Fix - Highlight the "Workflow" submenu when viewing the "Add New Workflow" page.
+* Fix - Load blocks integration in administration area.
+* Fix - Set correct post status when restoring a workflow from trash.
+* Tweak - Expand collapsed action boxes if field is invalid.
+* Tweak - Order alphabetically the list of variables shown in the Workflow.
+* Tweak - Refactor Session Tracker PHPCS.
+* Tweak - Remove spacing at top of the email preview window.
+* Tweak - Use Order Status Name instead of the slug for the Order Status variable.
+
+2024-01-09 - version 6.0.13
+* Fix - Fatal error triggered by invalid tool ID.
+* Fix - margins for marketing opt-in checkbox in block editor.
+* Tweak - Reduce Customer not found logs.
+* Tweak - Update Import Link in Opt-In / Opt-Out page.
+
+2024-01-03 - version 6.0.12
+* Add - REST API endpoint for workflow run logs.
+* Tweak - WC 8.5 compatibility.
+
+2023-12-26 - version 6.0.11
+* Dev - Enable HPOS in unit tests with method compatible in WC 8.4.
+* Dev - Unit test compatibility with PHP 8.3.
+* Fix - Confirm customer is found before opting in user.
+* Fix - Exclude anonymized orders when setting up guest customers.
+
+2023-12-12 - version 6.0.10
+* Add - Expand REST API endpoints for creating and updating workflows.
+* Dev - Enable PHPCS checking for optins list table.
+* Dev - Fix WC notice when bootstrapping unit tests.
+* Dev - Remove custom DEWP config for `@woocommerce/blocks-checkout`.
+* Fix - Prevent infinite loop with subscription status transition.
+* Fix - Return correct workflow creation date when a draft has been saved.
+* Fix - Screen options for the opt-ins page.
+* Fix - Show guests admin page when cart tracking is disabled.
+* Fix - Update Mad Mimi Integration to resolve fatal error.
+* Fix - Use standardized property names when tracking rules for workflows.
+* Tweak - Initialize tracking classes only when opted in.
+* Tweak - Select coupon action use autofill field.
+* Tweak - WC 8.4 compatibility.
+
+2023-11-15 - version 6.0.9
+* Dev - Add missing translator comments.
+* Dev - Reduce PHPCS Exceptions.
+* Dev - Remove gulp-related packages that are no longer in use.
+* Dev - Update WordPressCS to version 3.0.
+* Dev - Update phpunit polyfills to 1.1 for WP 6.4.
+* Fix - Improve user tags.
+
+2023-11-07 - version 6.0.8
+* Dev - Update legacy Reports E2E test.
+* Tweak - Set required attribute for Term field.
+* Tweak - WC 8.3 compatibility.
+* Tweak - WP 6.4 compatibility.
+* Update - Use new Woo.com domain.
+
+2023-10-24 - version 6.0.7
+* Dev - Remove support for legacy classes deprecated since 5.0.0.
+* Tweak - Declare cart_checkout_blocks feature compatibility.
+
 2023-10-10 - version 6.0.6
 * Dev - Add E2E tests for Menu and basic page elements.
 * Dev - Add E2E tests for Settings, Presets and Tools.

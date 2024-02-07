@@ -42,7 +42,7 @@ class Optins extends Base {
 		$table->nonce_action = $this->get_nonce_action();
 
 		$this->heading_links = [
-			Admin::page_url( 'tools' ) => __( 'Import', 'automatewoo' )
+			Admin::page_url( Options::optin_enabled() ? 'tool-optin-importer' : 'tool-optout-importer' ) => __( 'Import', 'automatewoo' )
 		];
 
 		if ( Options::optin_enabled() ) {

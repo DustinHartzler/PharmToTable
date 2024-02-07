@@ -29,6 +29,7 @@ class Settings_Tab_Bitly extends Admin_Settings_Tab_Abstract {
 			'bitly',
 			__( 'Bitly', 'automatewoo' ),
 			sprintf(
+				/* translators: %1$s: opening link tag, %2$s: closing link tag */
 				__( 'Integrating with Bitly allows you to shorten links in your SMS messages. Create a free account at <%1$s>bitly.com<%2$s>.', 'automatewoo' ),
 				'a href="https://bitly.com/"',
 				'/a'

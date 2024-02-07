@@ -70,7 +70,7 @@ class JobRegistry implements JobRegistryInterface {
 		$this->load_jobs();
 
 		if ( ! isset( $this->jobs[ $name ] ) ) {
-			throw JobException::job_does_not_exist( $name );
+			throw JobException::job_does_not_exist( esc_html( $name ) );
 		}
 
 		return $this->jobs[ $name ];
@@ -142,7 +142,7 @@ class JobRegistry implements JobRegistryInterface {
 
 		foreach ( $jobs as $job ) {
 			if ( ! $job instanceof JobInterface ) {
-				throw InvalidClass::does_not_implement_interface( get_class( $job ), JobInterface::class );
+				throw InvalidClass::does_not_implement_interface( esc_html( get_class( $job ) ), JobInterface::class );
 			}
 
 			$this->jobs[ $job->get_name() ] = $job;

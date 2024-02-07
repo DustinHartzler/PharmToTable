@@ -101,7 +101,6 @@ class Dashboard_Widget_Logs extends Dashboard_Widget {
 		</div>
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Logs();

@@ -46,5 +46,4 @@ class BookingStatusChanged extends Abstract_Async_Event {
 			]
 		);
 	}
-
 }

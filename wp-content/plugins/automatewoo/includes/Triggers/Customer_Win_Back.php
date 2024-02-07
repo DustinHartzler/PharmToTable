@@ -276,5 +276,4 @@ class Trigger_Customer_Win_Back extends AbstractBatchedDailyTrigger {
 
 		return true;
 	}
-
 }

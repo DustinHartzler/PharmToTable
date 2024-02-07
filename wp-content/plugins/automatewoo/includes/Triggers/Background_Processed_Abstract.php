@@ -44,7 +44,4 @@ abstract class Trigger_Background_Processed_Abstract extends Trigger {
 	 * @return array
 	 */
 	abstract public function get_background_tasks( $workflow, $limit, $offset = 0 );
-
-
-
 }

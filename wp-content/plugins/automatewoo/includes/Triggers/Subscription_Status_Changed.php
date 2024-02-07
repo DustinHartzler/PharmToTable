@@ -144,5 +144,4 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 
 		return true;
 	}
-
 }

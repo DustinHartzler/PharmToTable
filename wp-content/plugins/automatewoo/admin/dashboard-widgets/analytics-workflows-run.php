@@ -67,7 +67,6 @@ class Dashboard_Widget_Analytics_Workflows_Run extends Dashboard_Widget_Analytic
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Analytics_Workflows_Run();

@@ -46,5 +46,4 @@ class Subscription_Status_Changed extends Abstract_Async_Event {
 			]
 		);
 	}
-
 }

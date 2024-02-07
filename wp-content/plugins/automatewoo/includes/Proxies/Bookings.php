@@ -120,5 +120,4 @@ class Bookings implements BookingsInterface {
 	public function get_draft_booking_statuses(): array {
 		return [ 'in-cart', 'was-in-cart' ];
 	}
-
 }

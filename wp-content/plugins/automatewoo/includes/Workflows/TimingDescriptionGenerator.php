@@ -91,6 +91,7 @@ class TimingDescriptionGenerator {
 	 * @return string
 	 */
 	protected function get_delayed_timing_text(): string {
+		/* translators: Delayed amount in text. */
 		return sprintf( _x( 'Delayed for <b>%s</b>', 'timing option', 'automatewoo' ), $this->get_delay_amount_text() );
 	}
 
@@ -102,7 +103,8 @@ class TimingDescriptionGenerator {
 	protected function get_scheduled_timing_text(): string {
 		$days = $this->workflow->get_scheduled_days();
 
-		$schedule_time  = sprintf(
+		$schedule_time = sprintf(
+			/* translators: Scheduled time of day. */
 			_x( 'Scheduled for <b>%s</b>', 'timing option', 'automatewoo' ),
 			Format::time_of_day( $this->workflow->get_scheduled_time() )
 		);
@@ -111,6 +113,7 @@ class TimingDescriptionGenerator {
 
 		if ( $days ) {
 			$schedule_days = sprintf(
+				/* translators: Weekday. */
 				_x( ' on <b>%s</b>', 'timing option', 'automatewoo' ),
 				$this->get_weekday_text( $days )
 			);
@@ -118,6 +121,7 @@ class TimingDescriptionGenerator {
 
 		if ( $this->workflow->get_timing_delay() ) {
 			$schedule_delay = sprintf(
+				/* translators: Delayed amount in text. */
 				_x( ' after waiting <b>%s</b>', 'timing option', 'automatewoo' ),
 				$this->get_delay_amount_text()
 			);
@@ -134,6 +138,7 @@ class TimingDescriptionGenerator {
 	protected function get_fixed_timing_text(): string {
 		$date = $this->workflow->get_fixed_time();
 		if ( $date ) {
+			/* translators: Date and time. */
 			return sprintf( _x( 'Fixed at %s', 'timing option', 'automatewoo' ), Format::datetime( $date ) );
 		}
 
@@ -151,18 +156,23 @@ class TimingDescriptionGenerator {
 
 		switch ( $unit ) {
 			case 'h':
+				/* translators: Number of hours. */
 				$unit_text = _n( '%s hour', '%s hours', $number, 'automatewoo' );
 				break;
 			case 'm':
+				/* translators: Number of minutes. */
 				$unit_text = _n( '%s minute', '%s minutes', $number, 'automatewoo' );
 				break;
 			case 'd':
+				/* translators: Number of days. */
 				$unit_text = _n( '%s day', '%s days', $number, 'automatewoo' );
 				break;
 			case 'w':
+				/* translators: Number of weeks. */
 				$unit_text = _n( '%s week', '%s weeks', $number, 'automatewoo' );
 				break;
 			case 'month':
+				/* translators: Number of months. */
 				$unit_text = _n( '%s month', '%s months', $number, 'automatewoo' );
 				break;
 			default:
@@ -216,13 +226,13 @@ class TimingDescriptionGenerator {
 		$time_string = Format::time_of_day( $time );
 
 		if ( $this->workflow->get_timing_type() === WorkflowTimingImmediate::TYPE ) {
+			/* translators: Time of day. */
 			$text = _x( 'Runs daily at %s', 'timing option', 'automatewoo' );
 		} else {
+			/* translators: Time of day. */
 			$text = _x( 'Checked daily at %s', 'timing option', 'automatewoo' );
 		}
 
 		return sprintf( $text, '<b>' . $time_string . '</b>' );
-
 	}
-
 }

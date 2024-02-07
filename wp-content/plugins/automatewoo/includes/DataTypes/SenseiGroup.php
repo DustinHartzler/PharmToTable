@@ -30,5 +30,4 @@ class SenseiGroup extends Post {
 	public function get_plural_name() {
 		return __( 'Groups', 'automatewoo' );
 	}
-
 }

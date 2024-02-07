@@ -47,5 +47,4 @@ class AssetData {
 			apply_filters( 'automatewoo/admin/asset_data', $data )
 		);
 	}
-
 }

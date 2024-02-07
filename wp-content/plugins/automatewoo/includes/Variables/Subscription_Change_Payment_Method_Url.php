@@ -31,5 +31,4 @@ class Variable_Subscription_Change_Payment_Method_Url extends Variable {
 	public function get_value( $subscription, $parameters ) {
 		return ( new Login_Redirect() )->get_login_redirect_url( $subscription->get_change_payment_method_url() );
 	}
-
 }

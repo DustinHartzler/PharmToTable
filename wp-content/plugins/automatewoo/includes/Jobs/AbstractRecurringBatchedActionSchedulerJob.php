@@ -23,5 +23,4 @@ abstract class AbstractRecurringBatchedActionSchedulerJob extends AbstractBatche
 	public function get_schedule_hook() {
 		return $this->get_start_hook();
 	}
-
 }

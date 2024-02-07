@@ -235,6 +235,24 @@ abstract class Action implements ActionInterface {
 	}
 
 	/**
+	 * Get a list of required field names.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @return Field[]
+	 */
+	public function get_required_fields(): array {
+		$required_fields = [];
+		foreach ( $this->get_fields() as $name => $field ) {
+			if ( $field->get_required() ) {
+				$required_fields[ $name ] = $field;
+			}
+		}
+
+		return $required_fields;
+	}
+
+	/**
 	 * Set the action's options.
 	 *
 	 * @param array $options
@@ -399,7 +417,7 @@ abstract class Action implements ActionInterface {
 		if ( ! $request->is_successful() ) {
 			$body = $request->get_body();
 			$body = $body['detail'] ?? $request->get_body_raw();
-			throw new \Exception( $body );
+			throw new \Exception( esc_html( $body ) );
 		}
 	}
 
@@ -412,13 +430,14 @@ abstract class Action implements ActionInterface {
 	protected function validate_required_fields() {
 		$errors = array_filter(
 			$this->get_fields(),
-			function( $field ) {
+			function ( $field ) {
 				return $field->get_required() && ! $this->get_option( $field->get_name() );
 			}
 		);
 
 		if ( ! empty( $errors ) ) {
 			$message = sprintf(
+				/* translators: Comma separated list of required options. */
 				__( 'The following required option(s) were not provided: %s.', 'automatewoo' ),
 				implode(
 					', ',
@@ -430,7 +449,7 @@ abstract class Action implements ActionInterface {
 					)
 				)
 			);
-			throw new \Exception( $message );
+			throw new \Exception( esc_html( $message ) );
 		}
 	}
 }

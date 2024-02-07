@@ -23,11 +23,10 @@ trait IntegrationValidator {
 		$name = 'WooCommerce Bookings';
 
 		if ( ! defined( 'WC_BOOKINGS_VERSION' ) ) {
-			throw InvalidIntegration::plugin_not_active( $name );
+			throw InvalidIntegration::plugin_not_active( esc_html( $name ) );
 		}
 		if ( version_compare( WC_BOOKINGS_VERSION, Integrations::REQUIRED_BOOKINGS_VERSION, '<' ) ) {
-			throw InvalidIntegration::plugin_version_not_supported( $name, Integrations::REQUIRED_BOOKINGS_VERSION );
+			throw InvalidIntegration::plugin_version_not_supported( esc_html( $name ), esc_html( Integrations::REQUIRED_BOOKINGS_VERSION ) );
 		}
 	}
-
 }

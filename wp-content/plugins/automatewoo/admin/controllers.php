@@ -75,5 +75,4 @@ class Controllers extends Registry {
 	public static function after_loaded( $name, $controller ) {
 		$controller->name = $name;
 	}
-
 }

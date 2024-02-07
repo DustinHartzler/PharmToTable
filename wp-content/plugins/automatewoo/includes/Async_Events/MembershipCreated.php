@@ -34,5 +34,4 @@ class MembershipCreated extends Abstract_Async_Event {
 
 		$this->create_async_event( [ (int) $args['user_membership_id'] ] );
 	}
-
 }

@@ -58,5 +58,4 @@ class MC4WP_Form_Success extends Abstract_Async_Event {
 
 		$this->create_async_event( [ $form->ID, $customer->get_id() ] );
 	}
-
 }

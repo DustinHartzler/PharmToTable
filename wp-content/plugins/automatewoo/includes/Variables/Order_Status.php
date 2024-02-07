@@ -1,9 +1,10 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @class Variable_Order_Status
@@ -11,17 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Variable_Order_Status extends Variable {
 
 
-	function load_admin_details() {
-		$this->description = __( "Displays the status of the order.", 'automatewoo');
+	/**
+	 * Load the admin details for this variable
+	 */
+	public function load_admin_details() {
+		$this->description = __( 'Displays the status of the order.', 'automatewoo' );
 	}
 
 
 	/**
-	 * @param $order \WC_Order
-	 * @param $parameters array
-	 * @return string
+	 * Get the Order Status Name
+	 *
+	 * @param \WC_Order $order The Order to get the status
+	 *
+	 * @return string The Order Status Name
 	 */
-	function get_value( $order, $parameters ) {
-		return $order->get_status();
+	public function get_value( $order ) {
+		return wc_get_order_status_name( $order->get_status() );
 	}
 }

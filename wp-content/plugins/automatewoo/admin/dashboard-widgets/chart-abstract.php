@@ -90,7 +90,7 @@ abstract class Dashboard_Widget_Chart extends Dashboard_Widget_Analytics {
 		$start_date->convert_to_site_time();
 
 		// Ensure all days (or months) have values first in this range
-		for ( $i = 0; $i <= $interval; $i ++ ) {
+		for ( $i = 0; $i <= $interval; $i++ ) {
 			switch ( $group_by ) {
 				case 'day':
 					$time = strtotime( gmdate( 'Ymd', strtotime( "+{$i} DAY", $start_date->getTimestamp() ) ) ) . '000';
@@ -134,7 +134,7 @@ abstract class Dashboard_Widget_Chart extends Dashboard_Widget_Analytics {
 			if ( $data_key ) {
 				$prepared_data[ $time ][1] += $d->$data_key;
 			} else {
-				$prepared_data[ $time ][1] ++;
+				++$prepared_data[ $time ][1];
 			}
 		}
 
@@ -161,5 +161,4 @@ abstract class Dashboard_Widget_Chart extends Dashboard_Widget_Analytics {
 			Admin::page_url( $page_id )
 		);
 	}
-
 }

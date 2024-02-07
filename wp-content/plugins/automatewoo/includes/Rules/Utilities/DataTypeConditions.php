@@ -20,5 +20,4 @@ trait DataTypeConditions {
 	protected function is_data_type_order_or_subscription( $data_type ) {
 		return 'order' === $data_type || 'subscription' === $data_type;
 	}
-
 }

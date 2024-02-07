@@ -22,5 +22,4 @@ interface PresetParserInterface {
 	 * @throws ParserException If there are any errors parsing the preset.
 	 */
 	public function parse( PresetInterface $preset );
-
 }

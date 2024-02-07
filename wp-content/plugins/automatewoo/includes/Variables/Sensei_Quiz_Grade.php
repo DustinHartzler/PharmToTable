@@ -43,6 +43,5 @@ class Variable_Sensei_Quiz_Grade extends Variable {
 		$lesson_status = \Sensei_Utils::user_lesson_status( $lesson->ID, $user->ID );
 
 		return get_comment_meta( $lesson_status->comment_ID, 'grade', true ) ?: 0;
-
 	}
 }

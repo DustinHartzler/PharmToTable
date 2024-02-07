@@ -49,5 +49,4 @@ class OrderQuery extends AbstractQuery {
 
 		return new OrderPostDatastoreType();
 	}
-
 }

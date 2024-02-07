@@ -30,5 +30,4 @@ class Variable_Sensei_Teacher_Username extends Variable {
 	public function get_value( $teacher, $parameters ) {
 		return $teacher->user_login;
 	}
-
 }

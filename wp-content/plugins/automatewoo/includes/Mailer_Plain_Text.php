@@ -28,5 +28,4 @@ class Mailer_Plain_Text extends Mailer_Abstract {
 	public function get_email_body() {
 		return $this->content;
 	}
-
 }

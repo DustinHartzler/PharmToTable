@@ -14,7 +14,7 @@ $formatted_data = Admin_Data_Layer_Formatter::format( $data_layer );
 ?>
 
 	<div class="automatewoo-modal__header">
-		<h1><?php printf( esc_html__( 'Queued event #%s', 'automatewoo' ), esc_html( $event->get_id() ) ); ?></h1>
+		<h1><?php /* translators: Event ID. */ printf( esc_html__( 'Queued event #%s', 'automatewoo' ), esc_html( $event->get_id() ) ); ?></h1>
 	</div>
 
 	<div class="automatewoo-modal__body">

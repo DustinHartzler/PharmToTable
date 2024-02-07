@@ -62,7 +62,5 @@ class Action_Mailchimp_Subscribe extends Action_Mailchimp_Abstract {
 		}
 
 		$this->maybe_log_action( Integrations::mailchimp()->request( 'PUT', "/lists/$list_id/members/$subscriber_hash", $args ) );
-
 	}
-
 }

@@ -118,5 +118,4 @@ abstract class Trigger_Abstract_Order_Status_Base extends Trigger_Abstract_Order
 
 		return true;
 	}
-
 }

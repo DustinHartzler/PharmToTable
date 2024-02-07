@@ -29,5 +29,4 @@ class User_Registered extends Abstract_Async_Event {
 	public function handle_user_registered( int $user_id ) {
 		$this->create_async_event( [ $user_id ] );
 	}
-
 }

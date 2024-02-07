@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 /**
  * Static mailer API.
  *
@@ -10,24 +9,27 @@
 class AW_Mailer_API {
 
 	/** @var AutomateWoo\Mailer */
-	static $mailer;
+	public static $mailer;
 
 	/** @var AutomateWoo\Workflow*/
-	static $workflow;
+	public static $workflow;
 
 
 	/**
-	 * @param AutomateWoo\Mailer $mailer
+	 * @param AutomateWoo\Mailer   $mailer
 	 * @param AutomateWoo\Workflow $workflow
 	 */
-	static function setup( $mailer, $workflow ) {
-		self::$mailer = $mailer;
+	public static function setup( $mailer, $workflow ) {
+		self::$mailer   = $mailer;
 		self::$workflow = $workflow;
 	}
 
 
-	static function cleanup() {
-		self::$mailer = false;
+	/**
+	 * Reset mailer and workflow.
+	 */
+	public static function cleanup() {
+		self::$mailer   = false;
 		self::$workflow = false;
 	}
 
@@ -35,8 +37,10 @@ class AW_Mailer_API {
 	/**
 	 * @return bool|string
 	 */
-	static function email() {
-		if ( ! self::$mailer ) return false;
+	public static function email() {
+		if ( ! self::$mailer ) {
+			return false;
+		}
 		return self::$mailer->email;
 	}
 
@@ -44,8 +48,10 @@ class AW_Mailer_API {
 	/**
 	 * @return bool|string
 	 */
-	static function subject() {
-		if ( ! self::$mailer ) return false;
+	public static function subject() {
+		if ( ! self::$mailer ) {
+			return false;
+		}
 		return self::$mailer->subject;
 	}
 
@@ -53,8 +59,10 @@ class AW_Mailer_API {
 	/**
 	 * @return bool|string
 	 */
-	static function unsubscribe_url() {
-		if ( ! self::$workflow ) return false;
+	public static function unsubscribe_url() {
+		if ( ! self::$workflow ) {
+			return false;
+		}
 		$customer = AutomateWoo\Customer_Factory::get_by_email( self::email() );
 		return self::$workflow->get_unsubscribe_url( $customer );
 	}
@@ -71,7 +79,7 @@ class AW_Mailer_API {
 	 * @param string $variable
 	 * @return bool|string
 	 */
-	static function variable( $variable ) {
+	public static function variable( $variable ) {
 		if ( ! self::$workflow ) {
 			return self::$workflow->process_variable( $variable );
 		}
@@ -81,22 +89,21 @@ class AW_Mailer_API {
 
 	/**
 	 * @param WC_Product $product
-	 * @param string $size
+	 * @param string     $size
 	 * @return array|false|string
 	 */
-	static function get_product_image( $product, $size = 'shop_catalog' ) {
+	public static function get_product_image( $product, $size = 'woocommerce_thumbnail' ) {
 
-		if ( $image_id = $product->get_image_id() ) {
+		$image_id = $product->get_image_id();
+
+		if ( $image_id ) {
 			$image_url = wp_get_attachment_image_url( $image_id, $size );
 
-			$image = '<img src="' . esc_url( $image_url ) . '" class="aw-product-image" alt="'. esc_attr( $product->get_name() ) .'">';
+			$image = '<img src="' . esc_url( $image_url ) . '" class="aw-product-image" alt="' . esc_attr( $product->get_name() ) . '">';
 
 			return apply_filters( 'automatewoo/email/product_image', $image, $size, $product );
 		} else {
 			return apply_filters( 'automatewoo/email/product_placeholder_image', wc_placeholder_img( $size ), $size, $product );
 		}
 	}
-
 }
-
-

@@ -167,5 +167,4 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends AbstractBatchedDailyTrig
 
 		return true;
 	}
-
 }

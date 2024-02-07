@@ -559,7 +559,7 @@ abstract class Admin_Settings_Tab_Abstract {
 			case 'multi_select_countries':
 				$value = array_filter(
 					Clean::recursive( (array) $raw_value ),
-					function( $value ) {
+					function ( $value ) {
 						return ! empty( $value );
 					}
 				);
@@ -694,5 +694,4 @@ abstract class Admin_Settings_Tab_Abstract {
 	protected function get_default( $id ) {
 		return isset( AW()->options()->defaults[ $id ] ) ? AW()->options()->defaults[ $id ] : false;
 	}
-
 }

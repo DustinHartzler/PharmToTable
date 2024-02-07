@@ -82,7 +82,7 @@ abstract class Select_Rule_Abstract extends Rule {
 			}
 
 			// TODO review above exclusions
-			// phpcs:disable WordPress.PHP.StrictComparisons.LooseComparison
+			// phpcs:disable Universal.Operators.StrictComparisons.LooseEqual
 			// phpcs:disable WordPress.PHP.StrictInArray.MissingTrueStrict
 
 			if ( is_array( $expected ) ) {
@@ -127,6 +127,4 @@ abstract class Select_Rule_Abstract extends Rule {
 
 		return $this->validate_select( $actual, $compare_type, $expected );
 	}
-
-
 }

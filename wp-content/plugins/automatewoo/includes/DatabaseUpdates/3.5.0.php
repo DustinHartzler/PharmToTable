@@ -89,12 +89,11 @@ class Database_Update_3_5_0 extends AbstractDatabaseUpdate {
 				continue;
 			}
 
-			$this->items_processed++;
+			++$this->items_processed;
 		}
 
 		return false;
 	}
-
 }
 
 return new Database_Update_3_5_0();

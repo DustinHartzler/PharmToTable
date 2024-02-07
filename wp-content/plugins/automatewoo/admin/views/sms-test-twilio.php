@@ -50,10 +50,10 @@ defined( 'ABSPATH' ) || exit;
 				<th scope="row">
 					<fieldset>
 						<input id="automatewoo-sms-test-twilio"
-							   class="button-primary" type="button"
-							   data-loading-text="<?php esc_html_e( 'Sending...', 'automatewoo' ); ?>"
-							   value="<?php esc_html_e( 'Send', 'automatewoo' ); ?>"
-							>
+							class="button-primary" type="button"
+							data-loading-text="<?php esc_html_e( 'Sending...', 'automatewoo' ); ?>"
+							value="<?php esc_html_e( 'Send', 'automatewoo' ); ?>"
+						>
 					</fieldset>
 				</th>
 

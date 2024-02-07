@@ -30,5 +30,4 @@ class ShopDataItem {
 
 		return $datetime;
 	}
-
 }

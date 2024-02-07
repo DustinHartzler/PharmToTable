@@ -1,12 +1,11 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
 use AutomateWoo\DataTypes\DataTypes;
 use AutomateWoo\Workflows\Factory;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Queued_Event
@@ -27,8 +26,8 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 
 	// error messages
 	const F_WORKFLOW_INACTIVE = 100;
-	const F_MISSING_DATA = 101;
-	const F_FATAL_ERROR = 102;
+	const F_MISSING_DATA      = 101;
+	const F_FATAL_ERROR       = 102;
 
 	/**
 	 * Returns the ID of the model's meta table.
@@ -42,8 +41,10 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @param bool|int $id
 	 */
-	function __construct( $id = false ) {
-		if ( $id ) $this->get_by( 'id', $id );
+	public function __construct( $id = false ) {
+		if ( $id ) {
+			$this->get_by( 'id', $id );
+		}
 	}
 
 
@@ -63,7 +64,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @return int
 	 */
-	function get_workflow_id() {
+	public function get_workflow_id() {
 		return Clean::id( $this->get_prop( 'workflow_id' ) );
 	}
 
@@ -75,7 +76,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return $this
 	 */
-	function set_failed( $failed = true ) {
+	public function set_failed( $failed = true ) {
 		$this->set_prop( 'failed', aw_bool_int( $failed ) );
 		return $this;
 	}
@@ -84,7 +85,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @return bool
 	 */
-	function is_failed() {
+	public function is_failed() {
 		return (bool) $this->get_prop( 'failed' );
 	}
 
@@ -94,7 +95,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return $this
 	 */
-	function set_failure_code( $failure_code ) {
+	public function set_failure_code( $failure_code ) {
 		$this->set_prop( 'failure_code', absint( $failure_code ) );
 		return $this;
 	}
@@ -102,7 +103,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @return int
 	 */
-	function get_failure_code() {
+	public function get_failure_code() {
 		return absint( $this->get_prop( 'failure_code' ) );
 	}
 
@@ -112,7 +113,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return $this
 	 */
-	function set_date_created( $date ) {
+	public function set_date_created( $date ) {
 		$this->set_date_column( 'created', $date );
 		return $this;
 	}
@@ -121,7 +122,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @return bool|DateTime
 	 */
-	function get_date_created() {
+	public function get_date_created() {
 		return $this->get_date_column( 'created' );
 	}
 
@@ -131,7 +132,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return $this
 	 */
-	function set_date_due( $date ) {
+	public function set_date_due( $date ) {
 		$this->set_date_column( 'date', $date );
 		return $this;
 	}
@@ -140,16 +141,15 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @return bool|DateTime
 	 */
-	function get_date_due() {
+	public function get_date_due() {
 		return $this->get_date_column( 'date' );
 	}
 
 
 	/**
-	 * @param Data_Layer $data_layer
+	 * @param Data_Layer $data_layer The data layer for the queued event
 	 */
-	function store_data_layer( $data_layer ) {
-
+	public function store_data_layer( $data_layer ) {
 		$this->uncompressed_data_layer = $data_layer->get_raw_data();
 
 		foreach ( $this->uncompressed_data_layer as $data_type_id => $data_item ) {
@@ -157,10 +157,9 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 		}
 	}
 
-
 	/**
-	 * @param $data_type_id
-	 * @param $data_item
+	 * @param string $data_type_id Data type object ID
+	 * @param mixed  $data_item    The data item
 	 */
 	private function store_data_item( $data_type_id, $data_item ) {
 		$data_type = DataTypes::get( $data_type_id );
@@ -173,7 +172,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 			return;
 		}
 
-		$storage_key = Queue_Manager::get_data_layer_storage_key( $data_type_id );
+		$storage_key   = Queue_Manager::get_data_layer_storage_key( $data_type_id );
 		$storage_value = $data_type->compress( $data_item );
 
 		if ( $storage_key ) {
@@ -183,19 +182,19 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 
 
 	/**
-	 * @return Data_Layer
+	 * @return Data_Layer The data layer instance
 	 */
-	function get_data_layer() {
-
+	public function get_data_layer() {
 		if ( ! isset( $this->uncompressed_data_layer ) ) {
 
 			$uncompressed_data_layer = [];
-			$compressed_data_layer = $this->get_compressed_data_layer();
+			$compressed_data_layer   = $this->get_compressed_data_layer();
 
 			if ( $compressed_data_layer ) {
 				foreach ( $compressed_data_layer as $data_type_id => $compressed_item ) {
-					if ( $data_type = DataTypes::get( $data_type_id ) ) {
-						$uncompressed_data_layer[$data_type_id] = $data_type->decompress( $compressed_item, $compressed_data_layer );
+					$data_type = DataTypes::get( $data_type_id );
+					if ( $data_type ) {
+						$uncompressed_data_layer[ $data_type_id ] = $data_type->decompress( $compressed_item, $compressed_data_layer );
 					}
 				}
 			}
@@ -213,23 +212,26 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return array|false
 	 */
-	function get_compressed_data_layer() {
-
-		if ( ! $workflow = $this->get_workflow() )
+	public function get_compressed_data_layer() {
+		$workflow = $this->get_workflow();
+		if ( ! $workflow ) {
 			return false; // workflow must be set
+		}
 
-		if ( ! $this->exists )
+		if ( ! $this->exists ) {
 			return false; // queue must be saved
+		}
 
-		if ( ! $trigger = $workflow->get_trigger() )
+		$trigger = $workflow->get_trigger();
+		if ( ! $trigger ) {
 			return false; // need a trigger
+		}
 
 		$data_layer = [];
 
 		$supplied_items = $trigger->get_supplied_data_items();
 
 		foreach ( $supplied_items as $data_type_id ) {
-
 			$data_item_value = $this->get_compressed_data_item( $data_type_id, $supplied_items );
 
 			if ( $data_item_value !== false ) {
@@ -242,8 +244,9 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 
 
 	/**
-	 * @param $data_type_id
-	 * @param array $supplied_data_items
+	 * @param string $data_type_id        Data type object ID
+	 * @param array  $supplied_data_items An array of supplied data items
+	 *
 	 * @return string|false
 	 */
 	private function get_compressed_data_item( $data_type_id, $supplied_data_items ) {
@@ -251,7 +254,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 			return false; // storage not required
 		}
 
-		$storage_key = Queue_Manager::get_data_layer_storage_key( $data_type_id );;
+		$storage_key = Queue_Manager::get_data_layer_storage_key( $data_type_id );
 
 		if ( ! $storage_key ) {
 			return false;
@@ -263,9 +266,10 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 
 	/**
 	 * Returns the workflow without a data layer
+	 *
 	 * @return Workflow|false
 	 */
-	function get_workflow() {
+	public function get_workflow() {
 		return Factory::get( $this->get_workflow_id() );
 	}
 
@@ -273,8 +277,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * @return bool
 	 */
-	function run() {
-
+	public function run() {
 		if ( ! $this->exists ) {
 			return false;
 		}
@@ -292,13 +295,21 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 		if ( $failure ) {
 			// queued event failed
 			$this->mark_as_failed( $failure );
-		}
-		else {
+		} else {
 			$success = true;
 
 			// passed fail check so validate workflow and then delete
 			if ( $this->validate_workflow( $workflow ) ) {
 				$workflow->run();
+			} else {
+				// Order is no longer valid for this workflow so add a log before deleting the queued entry
+				$workflow->create_run_log();
+
+				$log = $workflow->get_current_log();
+
+				$log->add_note( __( 'Queued Workflow: Run failed as requirements are no longer met for this workflow.', 'automatewoo' ) );
+				$log->set_has_errors( true );
+				$log->save();
 			}
 
 			$this->delete();
@@ -312,11 +323,11 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 
 	/**
 	 * Returns false if no failure occurred
+	 *
 	 * @param Workflow $workflow
 	 * @return bool|int
 	 */
-	function do_failure_check( $workflow ) {
-
+	public function do_failure_check( $workflow ) {
 		if ( ! $workflow || ! $workflow->is_active() ) {
 			return self::F_WORKFLOW_INACTIVE;
 		}
@@ -333,35 +344,46 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * Validate the workflow before running it from the queue.
 	 * This validation is different from the initial trigger validation.
 	 *
-	 * @param $workflow Workflow
+	 * @param Workflow $workflow The Workflow to validate
+	 *
 	 * @return bool
 	 */
-	function validate_workflow( $workflow ) {
-
-		if ( ! $trigger = $workflow->get_trigger() )
+	public function validate_workflow( $workflow ) {
+		$trigger = $workflow->get_trigger();
+		if ( ! $trigger ) {
 			return false;
+		}
 
-		if ( ! $trigger->validate_before_queued_event( $workflow ) )
+		if ( ! $trigger->validate_before_queued_event( $workflow ) ) {
 			return false;
+		}
 
-		if ( ! $workflow->validate_rules() )
+		if ( ! $workflow->validate_rules() ) {
 			return false;
+		}
 
 		return true;
 	}
 
-
-	function clear_cached_data() {
-
-		if ( ! $this->get_workflow_id() )
+	/**
+	 * Clear cached workflow data stored as a transient `current_queue_count/workflow=WORKFLOW_ID`
+	 *
+	 * @return void
+	 */
+	public function clear_cached_data() {
+		if ( ! $this->get_workflow_id() ) {
 			return;
+		}
 
 		Cache::delete_transient( 'current_queue_count/workflow=' . $this->get_workflow_id() );
 	}
 
-
-	function save() {
-
+	/**
+	 * Save the current queued event
+	 *
+	 * @return void
+	 */
+	public function save() {
 		if ( ! $this->exists ) {
 			$this->set_date_created( new DateTime() );
 		}
@@ -371,28 +393,31 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 		parent::save();
 	}
 
-
-	function delete() {
+	/**
+	 * Delete the current queued event
+	 *
+	 * @return void
+	 */
+	public function delete() {
 		$this->clear_cached_data();
 		parent::delete();
 	}
 
-
-
 	/**
-	 * @param int $code
+	 * @param int $code The error code to set for the current queued event
 	 */
-	function mark_as_failed( $code ) {
+	public function mark_as_failed( $code ) {
 		$this->set_failed();
 		$this->set_failure_code( $code );
 		$this->save();
 	}
 
-
 	/**
+	 * Get failure message from failure code
+	 *
 	 * @return string
 	 */
-	function get_failure_message( ) {
+	public function get_failure_message() {
 		return Queue_Manager::get_failure_message( $this->get_failure_code() );
 	}
 
@@ -400,20 +425,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	/**
 	 * Just for unit tests
 	 */
-	function clear_in_memory_data_layer() {
+	public function clear_in_memory_data_layer() {
 		$this->uncompressed_data_layer = null;
 	}
-
-
-
-	/**
-	 * @deprecated use set_date_due()
-	 * @param $date DateTime
-	 */
-	function set_date( $date ) {
-		wc_deprecated_function( __METHOD__, '5.2.0', 'set_date_due' );
-
-		$this->set_date_due( $date );
-	}
-
 }

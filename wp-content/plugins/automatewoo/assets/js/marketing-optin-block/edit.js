@@ -50,19 +50,19 @@ export const Edit = ( { attributes: { text }, setAttributes } ) => {
 	return (
 		<div { ...blockProps }>
 			{ optinEnabled ? (
-				<>
-					<CheckboxControl
-						id="automatewoo-marketing-optin"
-						checked={ false }
-						disabled={ true }
-					/>
+				<CheckboxControl
+					id="automatewoo-marketing-optin"
+					checked={ false }
+					disabled={ true }
+				>
 					<RichText
+						className="wc-block-components-checkbox__label"
 						value={ text }
 						onChange={ ( value ) =>
 							setAttributes( { text: value } )
 						}
 					/>
-				</>
+				</CheckboxControl>
 			) : (
 				<EmptyState />
 			) }

@@ -529,5 +529,4 @@ abstract class Abstract_Date extends Rule {
 
 		return apply_filters( 'automatewoo/rules/validate_logical_empty_date', $is_valid, $comparative, $this );
 	}
-
 }

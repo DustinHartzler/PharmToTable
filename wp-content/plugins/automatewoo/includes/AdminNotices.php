@@ -168,6 +168,7 @@ class AdminNotices {
 
 		if ( $warn_wp && $warn_wc ) {
 			$message = sprintf(
+				/* translators: %1$s AutomateWoo version, %2$s WordPress version, %3$s WooCommerce version */
 				__( 'AutomateWoo %1$s will require WordPress version %2$s or newer and WooCommerce version %3$s or newer.', 'automatewoo' ),
 				$aw_pretty_version,
 				$wp_pretty_version,
@@ -175,12 +176,14 @@ class AdminNotices {
 			);
 		} elseif ( $warn_wp ) {
 			$message = sprintf(
+				/* translators: %1$s AutomateWoo version, %2$s WordPress version */
 				__( 'AutomateWoo %1$s will require WordPress version %2$s or newer.', 'automatewoo' ),
 				$aw_pretty_version,
 				$wp_pretty_version
 			);
 		} elseif ( $warn_wc ) {
 			$message = sprintf(
+				/* translators: %1$s AutomateWoo version, %2$s WooCommerce version */
 				__( 'AutomateWoo %1$s will require WooCommerce version %2$s or newer.', 'automatewoo' ),
 				$aw_pretty_version,
 				$wc_pretty_version
@@ -197,5 +200,4 @@ class AdminNotices {
 			]
 		);
 	}
-
 }

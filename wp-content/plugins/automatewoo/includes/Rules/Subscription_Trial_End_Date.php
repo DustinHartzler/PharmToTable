@@ -71,5 +71,4 @@ class Subscription_Trial_End_Date extends Abstract_Date implements QuickFilterab
 	public function get_quick_filter_clause( $compare_type, $value ) {
 		return $this->generate_date_quick_filter_clause( 'trial_end_date', $compare_type, $value );
 	}
-
 }

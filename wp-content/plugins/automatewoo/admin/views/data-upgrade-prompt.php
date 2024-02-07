@@ -14,6 +14,7 @@ if ( AutomateWoo\Installer::is_data_update_screen() ) {
 
 AutomateWoo\Admin::notice(
 	'info',
+	/* translators: Plugin name. */
 	sprintf( __( '%s database update required', 'automatewoo' ), $plugin_name ),
 	__( '- Please run the updater as soon as possible. It is normal for this to take some time to complete.', 'automatewoo' ),
 	'',

@@ -32,5 +32,4 @@ interface JobRegistryInterface {
 	 * @throws InvalidClass|InvalidArgument When there is an error loading jobs.
 	 */
 	public function list(): array;
-
 }

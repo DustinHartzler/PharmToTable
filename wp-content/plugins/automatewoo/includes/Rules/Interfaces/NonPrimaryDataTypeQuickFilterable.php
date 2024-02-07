@@ -29,5 +29,4 @@ interface NonPrimaryDataTypeQuickFilterable {
 	 * @return ClauseInterface|ClauseInterface[]
 	 */
 	public function get_non_primary_quick_filter_clause( $data_type, $compare_type, $value );
-
 }

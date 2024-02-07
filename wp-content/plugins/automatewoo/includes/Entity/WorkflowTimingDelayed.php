@@ -67,4 +67,3 @@ class WorkflowTimingDelayed extends WorkflowTimingBase {
 		return $this;
 	}
 }
-

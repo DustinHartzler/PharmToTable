@@ -126,5 +126,4 @@ class Trigger_Sensei_Course_Not_Yet_Completed extends Trigger {
 
 		return true;
 	}
-
 }

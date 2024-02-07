@@ -56,7 +56,7 @@ class Mailchimp_Update_Tags extends Action_Mailchimp_Abstract {
 
 		// Validate tag handling can proceed.
 		if ( empty( $add_tags ) && empty( $remove_tags ) && false === $remove ) {
-			throw new \Exception( __( 'Tags should not be empty.', 'automatewoo' ) );
+			throw new \Exception( esc_html__( 'Tags should not be empty.', 'automatewoo' ) );
 		}
 
 		$this->validate_contact( $email, $list );
@@ -85,7 +85,7 @@ class Mailchimp_Update_Tags extends Action_Mailchimp_Abstract {
 
 		// Skip the API call if there's nothing to change.
 		if ( empty( $tag_updates ) ) {
-			throw new \Exception( __( 'There was no tags to update.', 'automatewoo' ) );
+			throw new \Exception( esc_html__( 'There was no tags to update.', 'automatewoo' ) );
 		}
 
 		$this->maybe_log_action( Integrations::mailchimp()->update_member_tags( $email, $list, $tag_updates ) );

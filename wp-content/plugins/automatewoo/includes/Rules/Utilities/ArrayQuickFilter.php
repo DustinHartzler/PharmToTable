@@ -41,5 +41,4 @@ trait ArrayQuickFilter {
 
 		return new ArrayClause( $property, $operator, (array) $value );
 	}
-
 }

@@ -110,6 +110,9 @@ class SetupGuestCustomers extends AbstractRecurringBatchedActionSchedulerJob {
 				// order by ascending ID since new orders could be created while the job is running which would throw the offset off
 				'orderby'     => 'ID',
 				'order'       => 'ASC',
+
+				// exlude anonymized orders ( see https://github.com/woocommerce/automatewoo/issues/1643 )
+				'anonymized'  => false,
 			]
 		);
 	}

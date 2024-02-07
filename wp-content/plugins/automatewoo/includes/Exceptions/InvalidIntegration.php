@@ -35,6 +35,4 @@ class InvalidIntegration extends LogicException implements Exception {
 	public static function plugin_version_not_supported( string $name, string $min_required_version ): InvalidIntegration {
 		return new static( sprintf( 'The version of %s is not supported. The minimum required version is %s.', $name, $min_required_version ) );
 	}
-
-
 }

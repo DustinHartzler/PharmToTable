@@ -16,22 +16,22 @@ class WorkflowTimingScheduled extends WorkflowTimingDelayed {
 	protected $scheduled_time;
 
 	/**
-	 * @var int ISO-8601 numeric representation of the day of the week. 1 (for Monday) through 7 (for Sunday).
+	 * @var int[] ISO-8601 numeric representation of the day of the week. 1 (for Monday) through 7 (for Sunday).
 	 */
-	protected $scheduled_day;
+	protected $scheduled_days;
 
 	/**
-	 * @param int    $scheduled_day
+	 * @param int[]  $scheduled_days
 	 * @param int    $scheduled_hour
 	 * @param int    $scheduled_minute
 	 * @param int    $delay_value
 	 * @param string $delay_unit
 	 */
-	public function __construct( $scheduled_day, $scheduled_hour, $scheduled_minute, $delay_value, $delay_unit ) {
+	public function __construct( $scheduled_days, $scheduled_hour, $scheduled_minute, $delay_value, $delay_unit ) {
 		parent::__construct( $delay_value, $delay_unit );
 
 		$this->set_scheduled_time( $scheduled_hour, $scheduled_minute );
-		$this->set_scheduled_day( $scheduled_day );
+		$this->set_scheduled_days( $scheduled_days );
 	}
 
 	/**
@@ -52,18 +52,18 @@ class WorkflowTimingScheduled extends WorkflowTimingDelayed {
 	}
 
 	/**
-	 * @return int
+	 * @return int[]
 	 */
-	public function get_scheduled_day() {
-		return $this->scheduled_day;
+	public function get_scheduled_days() {
+		return $this->scheduled_days;
 	}
 
 	/**
-	 * @param int $scheduled_day ISO-8601 numeric representation of the day of the week
+	 * @param int[] $scheduled_days ISO-8601 numeric representation of the day of the week
 	 * @return $this
 	 */
-	public function set_scheduled_day( $scheduled_day ) {
-		$this->scheduled_day = $scheduled_day;
+	public function set_scheduled_days( $scheduled_days ) {
+		$this->scheduled_days = $scheduled_days;
 		return $this;
 	}
 }

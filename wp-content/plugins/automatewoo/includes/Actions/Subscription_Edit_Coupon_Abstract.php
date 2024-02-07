@@ -29,7 +29,7 @@ abstract class Action_Subscription_Edit_Coupon_Abstract extends AbstractEditItem
 
 
 	/**
-	 * Implement abstract Action_Subscription_Edit_Item_Abstract method to get the coupon to
+	 * Implement abstract AbstractEditItem method to get the coupon to
 	 * edit on a subscription.
 	 *
 	 * @return \WC_Coupon|false

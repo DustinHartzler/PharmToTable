@@ -43,14 +43,14 @@ class PresetParser implements PresetParserInterface {
 		);
 
 		$workflow->set_status( new Status( Status::DISABLED ) )
-				 ->set_title( $preset->get( 'title', 'Untitled Workflow' ) )
-				 ->set_is_tracking_enabled( $preset->get( 'is_tracking_enabled', false ) )
-				 ->set_is_conversion_tracking_enabled( $preset->get( 'is_conversion_tracking_enabled', false ) )
-				 ->set_ga_link_tracking( $preset->get( 'ga_link_tracking', '' ) )
-				 ->set_is_transactional( $preset->get( 'is_transactional' ) )
-				 ->set_rule_groups( $this->extract_rules( $preset->get( 'rules' ) ) )
-				 ->set_actions( $this->extract_actions( $preset->get( 'actions' ) ) )
-				 ->set_origin( $preset->get_name() );
+			->set_title( $preset->get( 'title', 'Untitled Workflow' ) )
+			->set_is_tracking_enabled( $preset->get( 'is_tracking_enabled', false ) )
+			->set_is_conversion_tracking_enabled( $preset->get( 'is_conversion_tracking_enabled', false ) )
+			->set_ga_link_tracking( $preset->get( 'ga_link_tracking', '' ) )
+			->set_is_transactional( $preset->get( 'is_transactional' ) )
+			->set_rule_groups( $this->extract_rules( $preset->get( 'rules' ) ) )
+			->set_actions( $this->extract_actions( $preset->get( 'actions' ) ) )
+			->set_origin( $preset->get_name() );
 
 		return $workflow;
 	}
@@ -170,13 +170,13 @@ class PresetParser implements PresetParserInterface {
 					$scheduled_minute = isset( $scheduled_time[1] ) ? (int) $scheduled_time[1] : 0;
 				}
 
-				$scheduled_day = $timing_options['scheduled_day'] ?? null;
+				$scheduled_days = $timing_options['scheduled_day'] ?? null;
 
 				$delay_value = $timing_options['delay']['value'] ?? null;
 				$delay_unit  = $timing_options['delay']['unit'] ?? WorkflowTimingDelayed::DELAY_UNIT_HOUR;
 
 				$timing = new WorkflowTimingScheduled(
-					$scheduled_day,
+					$scheduled_days,
 					$scheduled_hour,
 					$scheduled_minute,
 					$delay_value,

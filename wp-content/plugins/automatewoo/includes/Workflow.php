@@ -106,9 +106,16 @@ class Workflow {
 
 
 	/**
+	 * Get the GMT created date from the post object.
+	 * Return a converted date if the GMT date is zero (happens with an auto saved draft).
+	 *
 	 * @return string
 	 */
-	function get_date_created() {
+	public function get_date_created() {
+		if ( '0000-00-00 00:00:00' === $this->post->post_date_gmt ) {
+			return get_gmt_from_date( $this->post->post_date );
+		}
+
 		return $this->post->post_date_gmt;
 	}
 
@@ -712,7 +719,7 @@ class Workflow {
 
 
 	/**
-	 * @return int
+	 * @return float
 	 */
 	function get_timing_delay_number() {
 		return (float) $this->get_option('run_delay_value');
@@ -1479,6 +1486,14 @@ class Workflow {
 	/**
 	 * @return bool
 	 */
+	function is_transactional() {
+		return (bool) $this->get_meta( 'is_transactional' );
+	}
+
+
+	/**
+	 * @return bool
+	 */
 	function is_tracking_enabled() {
 		return (bool) $this->get_option( 'click_tracking' );
 	}
@@ -1524,6 +1539,13 @@ class Workflow {
 		// SEMGREP WARNING EXPLANATION
 		// URL is escaped later by the consumer.
 		return add_query_arg( $params, $url );
+	}
+
+	/**
+	 * @return int
+	 */
+	function get_order() {
+		return (int) $this->post->menu_order ?: 0;
 	}
 
 

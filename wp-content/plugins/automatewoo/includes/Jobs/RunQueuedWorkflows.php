@@ -98,7 +98,7 @@ class RunQueuedWorkflows extends AbstractRecurringBatchedActionSchedulerJob {
 
 		// Double-check if the event is not marked as failed
 		if ( $queued_workflow->is_failed() ) {
-			throw new JobException( __( 'Queued workflow is already marked as failed.', 'automatewoo' ) );
+			throw new JobException( esc_html__( 'Queued workflow is already marked as failed.', 'automatewoo' ) );
 		}
 
 		$queued_workflow->run();

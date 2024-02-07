@@ -81,7 +81,6 @@ class Dashboard_Widget_Chart_Workflows_Run extends Dashboard_Widget_Chart {
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Chart_Workflows_Run();

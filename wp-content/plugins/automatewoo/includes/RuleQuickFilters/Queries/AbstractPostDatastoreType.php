@@ -466,5 +466,4 @@ abstract class AbstractPostDatastoreType implements DatastoreTypeInterface {
 
 		$query_args['post_status'] = $value;
 	}
-
 }

@@ -25,5 +25,4 @@ class Subscription_Coupon_Count extends Order_Coupon_Count {
 	public function init() {
 		$this->title = __( 'Subscription - Coupon Count', 'automatewoo' );
 	}
-
 }

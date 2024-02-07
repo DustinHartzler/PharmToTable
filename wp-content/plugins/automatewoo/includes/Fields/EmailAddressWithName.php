@@ -65,5 +65,4 @@ class EmailAddressWithName extends Field {
 	public function sanitize_value( $value ) {
 		return Clean::recursive( $value );
 	}
-
 }

@@ -21,7 +21,7 @@ class UpdateNoticeManager {
 	 *
 	 * @see output_admin_notice method to update the version number displayed in the notice
 	 */
-	protected static $version = '6.0.5';
+	protected static $version = '6.0.14';
 
 	/**
 	 * Attach callbacks.
@@ -52,10 +52,10 @@ class UpdateNoticeManager {
 	 * Outputs the update notice including details about the update.
 	 */
 	public static function output_admin_notice() {
-		$title       = __( 'Thanks for updating to AutomateWoo 6.0.5!', 'automatewoo' );
+		$title       = __( 'Thanks for updating to AutomateWoo 6.0.14!', 'automatewoo' );
 		$description = sprintf(
 			__(
-				'In this release, we\'ve implemented a prevention mechanism for running auto updates on new installations and we\'ve also modified the way order transients are deleted.',
+				'In this release, we addressed minor issues that were affecting the UI workflow. Check the changelog for more details.',
 				'automatewoo'
 			),
 			'a href="https://actionscheduler.org/" target="_blank"',
@@ -81,5 +81,4 @@ class UpdateNoticeManager {
 			]
 		);
 	}
-
 }

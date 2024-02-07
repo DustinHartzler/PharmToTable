@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Change a subscription's billing period or interval.
  *
- * While the billing schedule is not a line item, this class still extends Action_Subscription_Edit_Item_Abstract
+ * While the billing schedule is not a line item, this class still extends AbstractEditItem
  * as it provides many useful methods for editing a subscription's billing schedule.
  *
  * @since 5.4.0
@@ -101,6 +101,7 @@ class UpdateSchedule extends AbstractEditItem {
 	 */
 	protected function get_note( $billing_schedule ) {
 		return sprintf(
+			/* translators: %1$s: workflow title, %2$s: billing interval, %3$s billing period, %4$d workflow ID */
 			__( '%1$s workflow run: updated subscription schedule to renew %2$s %3$s. (Workflow ID: %4$d)', 'automatewoo' ),
 			$this->workflow->get_title(),
 			wcs_get_subscription_period_interval_strings( $billing_schedule['billing_interval'] ),

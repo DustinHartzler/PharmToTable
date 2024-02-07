@@ -35,10 +35,10 @@ $from_address = Emails::get_from_address( $template );
 		<div class="aw-preview__header-right">
 			<form class="aw-preview__send-test-form">
 				<input type="text"
-					   value="<?php echo esc_attr( $test_emails ); ?>"
-					   name="to_emails"
-					   class="email-input"
-					   placeholder="<?php esc_attr_e( 'Comma separate emails...', 'automatewoo' ); ?>">
+					value="<?php echo esc_attr( $test_emails ); ?>"
+					name="to_emails"
+					class="email-input"
+					placeholder="<?php esc_attr_e( 'Comma separate emails...', 'automatewoo' ); ?>">
 				<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>">
 				<input type="hidden" name="args" value='<?php echo aw_esc_json( wp_json_encode( $args ) ); ?>'>
 

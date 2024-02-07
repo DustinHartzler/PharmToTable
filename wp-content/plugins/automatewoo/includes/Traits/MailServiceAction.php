@@ -100,5 +100,4 @@ trait MailServiceAction {
 		$this->add_field( $first_name );
 		$this->add_field( $last_name );
 	}
-
 }

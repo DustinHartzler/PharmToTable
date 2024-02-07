@@ -14,7 +14,7 @@ $html = $current_tab->output_before_report();
 
 <div class="wrap woocommerce automatewoo-page automatewoo-page--reports">
 
-	<h1><?php printf( esc_html__( '%s Report', 'automatewoo' ), wp_kses_post( $current_tab->name ) ); ?></h1>
+	<h1><?php /* translators: Tab name. */ printf( esc_html__( '%s Report', 'automatewoo' ), wp_kses_post( $current_tab->name ) ); ?></h1>
 
 	<?php $controller->output_messages(); ?>
 

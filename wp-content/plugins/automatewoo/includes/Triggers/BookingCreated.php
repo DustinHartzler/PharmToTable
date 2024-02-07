@@ -17,7 +17,8 @@ use AutomateWoo\Triggers\Utilities\BookingDataLayer;
  */
 class BookingCreated extends Trigger {
 
-	use BookingsGroup, BookingDataLayer;
+	use BookingsGroup;
+	use BookingDataLayer;
 
 	/**
 	 * @var BookingsInterface Proxy for functionality from WooCommerce Bookings extension.
@@ -81,5 +82,4 @@ class BookingCreated extends Trigger {
 
 		$this->maybe_run( $data_layer );
 	}
-
 }

@@ -31,5 +31,4 @@ interface ManualInterface {
 	 * @return Data_Layer|false
 	 */
 	public function get_data_layer( $item_id );
-
 }

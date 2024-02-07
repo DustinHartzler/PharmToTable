@@ -102,5 +102,4 @@ class Pagination {
 		// This is escaped by esc_url_raw, but semgrep only takes into consideration esc_url.
 		$this->response->link_header( $name, esc_url_raw( add_query_arg( 'page', $page, $link_base ) ) );
 	}
-
 }

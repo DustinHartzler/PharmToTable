@@ -69,14 +69,14 @@ class WooCommerce_Blocks_Integration {
 		$args = array(
 			'endpoint'        => CheckoutSchema::IDENTIFIER,
 			'namespace'       => 'automatewoo',
-			'schema_callback' => function() {
+			'schema_callback' => function () {
 				return array(
 					'optin' => array(
 						'description' => __( 'Subscribe to marketing opt-in.', 'automatewoo' ),
 						'type'        => array( 'boolean', 'null' ),
 						'context'     => array(),
 						'arg_options' => array(
-							'validate_callback' => function( $value ) {
+							'validate_callback' => function ( $value ) {
 								if ( ! is_null( $value ) && ! is_bool( $value ) ) {
 									return new \WP_Error( 'api-error', 'value of type ' . gettype( $value ) . ' was posted to the automatewoo optin callback' );
 								}

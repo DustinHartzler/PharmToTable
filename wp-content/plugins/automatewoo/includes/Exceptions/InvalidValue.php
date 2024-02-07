@@ -20,10 +20,10 @@ class InvalidValue extends UnexpectedValueException implements UserFacingExcepti
 	 */
 	public static function item_not_found( string $item_name = '' ): InvalidValue {
 		if ( $item_name ) {
+			/* translators: Item name. */
 			return new static( sprintf( __( 'Item (%s) could not be found.', 'automatewoo' ), $item_name ) );
 		} else {
 			return new static( __( 'Item could not be found.', 'automatewoo' ) );
 		}
 	}
-
 }

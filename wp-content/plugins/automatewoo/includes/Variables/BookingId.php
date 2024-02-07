@@ -32,5 +32,4 @@ class BookingId extends Variable {
 	public function get_value( $booking, $parameters ) {
 		return (string) $booking->get_id();
 	}
-
 }

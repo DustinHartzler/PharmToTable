@@ -117,11 +117,10 @@ class ClauseGenerator {
 
 		foreach ( $clauses as $clause ) {
 			if ( ! $clause instanceof ClauseInterface ) {
-				throw InvalidClass::does_not_implement_interface( get_class( $clause ), ClauseInterface::class );
+				throw InvalidClass::does_not_implement_interface( esc_html( get_class( $clause ) ), ClauseInterface::class );
 			}
 		}
 
 		$group = array_merge( $group, $clauses );
 	}
-
 }

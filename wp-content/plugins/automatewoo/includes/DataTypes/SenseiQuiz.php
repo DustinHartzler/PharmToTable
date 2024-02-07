@@ -30,5 +30,4 @@ class SenseiQuiz extends Post {
 	public function get_plural_name() {
 		return __( 'Quizzes', 'automatewoo' );
 	}
-
 }

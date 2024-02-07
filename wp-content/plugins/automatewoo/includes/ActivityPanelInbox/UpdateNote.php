@@ -43,7 +43,7 @@ class UpdateNote {
 	 *
 	 * @throws \Exception If the data store fails to load.
 	 */
-	public static function maybe_add_activity_panel_inbox_note( $old_version, $new_version ) {
+	public static function maybe_add_activity_panel_inbox_note( $old_version, $new_version ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( ! class_exists( Notes::class ) || ! class_exists( WC_Data_Store::class ) ) {
 			return;
 		}

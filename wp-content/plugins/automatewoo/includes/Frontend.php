@@ -121,6 +121,10 @@ class Frontend {
 		}
 
 		$customer = Customer_Factory::get_by_order( $order );
+		if ( ! $customer ) {
+			return;
+		}
+
 		$customer->opt_in();
 	}
 
@@ -142,6 +146,10 @@ class Frontend {
 		}
 
 		$customer = Customer_Factory::get_by_order( $order );
+		if ( ! $customer ) {
+			return;
+		}
+
 		$customer->opt_in();
 	}
 

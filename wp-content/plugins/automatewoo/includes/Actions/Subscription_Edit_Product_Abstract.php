@@ -76,7 +76,7 @@ abstract class Action_Subscription_Edit_Product_Abstract extends AbstractEditIte
 
 
 	/**
-	 * Implement abstract Action_Subscription_Edit_Item_Abstract method to get the product to
+	 * Implement abstract AbstractEditItem method to get the product to
 	 * edit on a subscription.
 	 *
 	 * @return \WC_Product|false

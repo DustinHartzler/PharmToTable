@@ -77,7 +77,6 @@ class Dashboard_Widget_Analytics_Conversions extends Dashboard_Widget_Analytics 
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Analytics_Conversions();

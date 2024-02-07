@@ -54,5 +54,4 @@ class Action_Mailpoet_Unsubscribe extends Action_Mailpoet_Abstract {
 
 		Integrations::mailpoet()->unsubscribe( $email, $list_id );
 	}
-
 }

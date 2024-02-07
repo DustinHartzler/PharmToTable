@@ -17,5 +17,4 @@ trait SubscriptionGroup {
 	public function get_group() {
 		return __( 'Subscriptions', 'automatewoo' );
 	}
-
 }

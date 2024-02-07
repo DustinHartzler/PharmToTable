@@ -74,5 +74,4 @@ abstract class Dashboard_Widget_Analytics extends Dashboard_Widget {
 		</a>
 		<?php
 	}
-
 }

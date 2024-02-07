@@ -209,30 +209,28 @@ abstract class Abstract_Model_With_Meta_Table extends Model {
 						[ '%d', '%s' ]
 					);
 				}
-			} else {
+			} elseif ( $this->meta_data_exists( $key ) ) {
 				// Update or insert the meta data
-				if ( $this->meta_data_exists( $key ) ) {
-					$wpdb->update(
-						$this->get_meta_table_name(),
-						[ 'meta_value' => $value ],
-						[
-							$this->get_meta_object_id_column() => $this->get_id(),
-							'meta_key' => $key,
-						],
-						[ '%s' ],
-						[ '%d', '%s' ]
-					);
-				} else {
-					$wpdb->insert(
-						$this->get_meta_table_name(),
-						[
-							$this->get_meta_object_id_column() => $this->get_id(),
-							'meta_key'   => $key,
-							'meta_value' => $value,
-						],
-						[ '%d', '%s', '%s' ]
-					);
-				}
+				$wpdb->update(
+					$this->get_meta_table_name(),
+					[ 'meta_value' => $value ],
+					[
+						$this->get_meta_object_id_column() => $this->get_id(),
+						'meta_key'                         => $key,
+					],
+					[ '%s' ],
+					[ '%d', '%s' ]
+				);
+			} else {
+				$wpdb->insert(
+					$this->get_meta_table_name(),
+					[
+						$this->get_meta_object_id_column() => $this->get_id(),
+						'meta_key'                         => $key,
+						'meta_value'                       => $value,
+					],
+					[ '%d', '%s', '%s' ]
+				);
 			}
 
 			Cache::set( $this->get_meta_cache_key( $key ), $value, $this->get_meta_cache_group() );
@@ -348,5 +346,4 @@ abstract class Abstract_Model_With_Meta_Table extends Model {
 
 		$this->update_meta( $key, $value );
 	}
-
 }

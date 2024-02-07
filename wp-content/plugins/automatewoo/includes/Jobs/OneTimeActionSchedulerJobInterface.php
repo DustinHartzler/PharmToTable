@@ -35,5 +35,4 @@ interface OneTimeActionSchedulerJobInterface extends ActionSchedulerJobInterface
 	 * @throws InvalidArgument If args or an item is invalid.
 	 */
 	public function handle_process_item_action( array $item );
-
 }

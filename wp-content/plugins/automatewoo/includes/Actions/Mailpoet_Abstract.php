@@ -26,5 +26,4 @@ abstract class Action_Mailpoet_Abstract extends Action {
 	protected function load_admin_details() {
 		$this->group = __( 'MailPoet', 'automatewoo' );
 	}
-
 }

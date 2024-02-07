@@ -52,6 +52,12 @@ class Trigger_Subscription_Note_Added extends Trigger_Order_Note_Added {
 	 * @param WC_Order   $subscription
 	 */
 	protected function handle_order_note_added( Order_Note $order_note, WC_Order $subscription ) {
+
+		// Reset status transition to prevent it from being triggered again if we run an action to update the subscription.
+		// See: https://github.com/Automattic/woocommerce-subscriptions-core/issues/549
+		// This code can be removed again if the behaviour is changed.
+		$subscription->status_transition = false;
+
 		$this->maybe_run(
 			[
 				'customer'     => Customer_Factory::get_by_user_id( $subscription->get_user_id() ),
@@ -60,5 +66,4 @@ class Trigger_Subscription_Note_Added extends Trigger_Order_Note_Added {
 			]
 		);
 	}
-
 }

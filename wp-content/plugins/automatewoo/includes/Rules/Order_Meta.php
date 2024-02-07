@@ -15,7 +15,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Order_Meta extends Abstract_Meta implements QuickFilterable {
 
-	use StringQuickFilter, NumericQuickFilter;
+	use StringQuickFilter;
+	use NumericQuickFilter;
 
 	/** @var string */
 	public $data_item = 'order';
@@ -79,5 +80,4 @@ class Order_Meta extends Abstract_Meta implements QuickFilterable {
 
 		return $meta_clause;
 	}
-
 }

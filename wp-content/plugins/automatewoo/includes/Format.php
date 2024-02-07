@@ -9,8 +9,18 @@ namespace AutomateWoo;
  */
 class Format {
 
-	const MYSQL = 'Y-m-d H:i:s';
+	const MYSQL        = 'Y-m-d H:i:s';
+	const API_DATETIME = 'Y-m-d\TH:i:s';
 
+	const WEEKDAYS = [
+		1 => 'monday',
+		2 => 'tuesday',
+		3 => 'wednesday',
+		4 => 'thursday',
+		5 => 'friday',
+		6 => 'saturday',
+		7 => 'sunday',
+	];
 
 	/**
 	 * @param int|string|DateTime|\WC_DateTime $date
@@ -44,6 +54,15 @@ class Format {
 		return self::human_time_diff( $timestamp );
 	}
 
+	/**
+	 * Format a DateTime object to API format.
+	 *
+	 * @param DateTime $datetime
+	 * @return string
+	 */
+	public static function api_datetime( DateTime $datetime ) {
+		return $datetime->format( self::API_DATETIME );
+	}
 
 	/**
 	 * @param int|string|DateTime|\WC_DateTime $date
@@ -175,6 +194,26 @@ class Format {
 		return $days[ $day ];
 	}
 
+	/**
+	 * Format a weekday to API format.
+	 *
+	 * @param int $day
+	 * @return string
+	 */
+	public static function api_weekday( int $day ) {
+		return self::WEEKDAYS[ $day ] ?? self::WEEKDAYS[7];
+	}
+
+	/**
+	 * Format a weekday from API format to a numeric representation.
+	 *
+	 * @param string $day
+	 * @return int
+	 */
+	public static function api_weekday_number( string $day ) {
+		$day_number = array_search( $day, self::WEEKDAYS, true );
+		return false !== $day_number ? $day_number : 7;
+	}
 
 	/**
 	 * @param integer $day - 1 (for Monday) through 7 (for Sunday)

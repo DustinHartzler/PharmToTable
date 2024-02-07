@@ -168,6 +168,7 @@ class Settings_Tab_General extends Admin_Settings_Tab_Abstract {
 		$this->section_start(
 			'commpage',
 			__( 'Communication preferences page', 'automatewoo' ),
+			/* translators: %1$s communication preferences shortcode, %2$s communication signup shortcode */
 			sprintf( __( 'The communication preferences page is where customers can opt-in or opt-out of workflows. It must contain the shortcode %1$s. To set up a signup page use the shortcode %2$s and specify the page in the setting below.', 'automatewoo' ), '<code>[automatewoo_communication_preferences]</code>', '<code>[automatewoo_communication_signup]</code>' )
 		);
 
@@ -206,6 +207,7 @@ class Settings_Tab_General extends Admin_Settings_Tab_Abstract {
 				'title'             => __( 'Legal text', 'automatewoo' ),
 				'type'              => 'textarea',
 				'desc_tip'          => sprintf(
+					/* translators: List of shortcodes. */
 					__( 'This text is shown above the form submit button. Use the following shortcodes to add dynamic content: %s', 'automatewoo' ),
 					'[privacy_policy] [terms]'
 				),

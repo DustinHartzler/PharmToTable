@@ -128,5 +128,4 @@ interface ActionSchedulerInterface {
 	 * @return string|null The scheduled action ID if a scheduled action was found, or null if no matching action found.
 	 */
 	public function cancel( string $hook, $args = [], $group = 'automatewoo' );
-
 }

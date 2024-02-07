@@ -78,5 +78,4 @@ class Trigger_Subscription_Created extends Trigger {
 
 		return true;
 	}
-
 }

@@ -21,5 +21,4 @@ interface PreviewableInterface extends ActionInterface {
 	 * @return string|WP_Error
 	 */
 	public function get_preview();
-
 }

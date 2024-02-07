@@ -39,7 +39,7 @@ class Action_Subscription_Add_Coupon extends Action_Subscription_Edit_Coupon_Abs
 		$response = $subscription->apply_coupon( $coupon );
 
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( $response->get_error_message() );
+			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		return true;
@@ -55,27 +55,19 @@ class Action_Subscription_Add_Coupon extends Action_Subscription_Edit_Coupon_Abs
 	 * @return string
 	 */
 	protected function get_note( $coupon ) {
+		/* translators: %1$s: workflow title, %2$s coupon code, %3$d workflow ID */
 		return sprintf( __( '%1$s workflow run: added coupon %2$s to subscription. (Workflow ID: %3$d)', 'automatewoo' ), $this->workflow->get_title(), $coupon->get_code(), $this->workflow->get_id() );
 	}
 
 	/**
-	 * Get the codes of all recurring coupons, as only these can be added to subscriptions.
-	 *
-	 * @return array Coupon codes (as both key and value of array)
+	 * Add a recurring coupon selection field for this action
 	 */
-	protected function get_coupons_list() {
-
-		$coupon_codes = parent::get_coupons_list();
-
-		foreach ( $coupon_codes as $code ) {
-
-			$coupon = new \WC_Coupon( $code );
-
-			if ( ! in_array( $coupon->get_discount_type(), array( 'recurring_fee', 'recurring_percent' ), true ) ) {
-				unset( $coupon_codes[ $code ] );
-			}
-		}
-
-		return $coupon_codes;
+	protected function add_coupon_select_field() {
+		$coupon_select = new Fields\Coupon();
+		$coupon_select->set_required();
+		$coupon_select->set_name( 'coupon' );
+		$coupon_select->set_title( __( 'Coupon', 'automatewoo' ) );
+		$coupon_select->set_recurring_only( true );
+		$this->add_field( $coupon_select );
 	}
 }

@@ -150,5 +150,4 @@ class BookingCreated extends Abstract_Async_Event {
 		// Dispatch actual async hook
 		do_action( $this->get_hook_name(), $booking->get_id() );
 	}
-
 }

@@ -42,5 +42,4 @@ class Subscription_Created extends Abstract_Async_Event {
 
 		$this->create_async_event( [ $subscription->get_id() ] );
 	}
-
 }

@@ -26,5 +26,4 @@ class BookingStatus extends Select {
 
 		$this->set_options( AW()->bookings_proxy()->get_booking_statuses() );
 	}
-
 }

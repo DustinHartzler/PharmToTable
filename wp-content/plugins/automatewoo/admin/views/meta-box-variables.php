@@ -24,13 +24,18 @@ defined( 'ABSPATH' ) || exit;
 
 			<div class="aw-workflow-variables-container">
 				<?php
-				foreach ( AutomateWoo\Variables::get_list() as $data_type => $vars ) :
+				$data_types = AutomateWoo\Variables::get_list();
+				foreach ( $data_types as $data_type => $vars ) :
 					if ( $data_type === 'user' ) {
 						$data_type = 'customer';
 					}
 					?>
 					<div class="aw-variables-group" data-automatewoo-variable-group="<?php echo esc_attr( $data_type ); ?>">
-						<?php foreach ( $vars as $variable => $file_path ) : ?>
+						<?php
+						// Order alphabetically
+						ksort( $vars );
+						foreach ( $vars as $variable => $file_path ) :
+							?>
 							<div class="aw-workflow-variable-outer">
 								<span class="aw-workflow-variable"><?php echo esc_html( $data_type . '.' . $variable ); ?></span>
 							</div>

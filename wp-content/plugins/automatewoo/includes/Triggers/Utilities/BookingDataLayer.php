@@ -45,12 +45,12 @@ trait BookingDataLayer {
 		}
 
 		if ( ! $customer ) {
-			throw InvalidValue::item_not_found( DataTypes::CUSTOMER );
+			throw InvalidValue::item_not_found( esc_html( DataTypes::CUSTOMER ) );
 		}
 
 		$product = $booking->get_product();
 		if ( ! $product ) {
-			throw InvalidValue::item_not_found( DataTypes::PRODUCT );
+			throw InvalidValue::item_not_found( esc_html( DataTypes::PRODUCT ) );
 		}
 
 		return new Data_Layer(
@@ -61,5 +61,4 @@ trait BookingDataLayer {
 			]
 		);
 	}
-
 }

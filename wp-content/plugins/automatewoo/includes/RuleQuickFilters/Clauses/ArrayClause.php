@@ -39,5 +39,4 @@ class ArrayClause extends AbstractClause {
 			throw new InvalidArgumentException();
 		}
 	}
-
 }

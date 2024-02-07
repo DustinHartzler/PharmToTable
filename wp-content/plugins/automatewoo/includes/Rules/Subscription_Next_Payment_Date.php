@@ -70,5 +70,4 @@ class Subscription_Next_Payment_Date extends Abstract_Date implements QuickFilte
 	public function get_quick_filter_clause( $compare_type, $value ) {
 		return $this->generate_date_quick_filter_clause( 'next_payment_date', $compare_type, $value );
 	}
-
 }

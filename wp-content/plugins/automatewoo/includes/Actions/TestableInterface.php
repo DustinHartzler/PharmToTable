@@ -21,5 +21,4 @@ interface TestableInterface extends ActionInterface {
 	 * @return true|WP_Error
 	 */
 	public function run_test( array $args = [] );
-
 }

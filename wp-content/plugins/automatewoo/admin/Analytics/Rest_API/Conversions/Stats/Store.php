@@ -164,7 +164,7 @@ class Store extends Generic_Stats_Store {
 			$this->interval_query->add_sql_clause( 'select', ', ' . $selections );
 		}
 		$intervals = $wpdb->get_results(
-			$this->interval_query->get_query_statement(),
+			$this->interval_query->get_query_statement(), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			ARRAY_A
 		); // phpcs:ignore cache ok, DB call ok, unprepared SQL ok.
 

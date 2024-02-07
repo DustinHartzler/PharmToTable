@@ -16,8 +16,7 @@ trait ItemConstructorArgsTrait {
 	 *
 	 * @return array
 	 */
-	protected static function get_item_constructor_args( string $name ): array {
+	protected static function get_item_constructor_args( string $name ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		return [];
 	}
-
 }

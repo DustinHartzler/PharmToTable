@@ -66,5 +66,4 @@ class Subscription_Order_Created extends Trigger_Order_Created {
 
 		return parent::validate_workflow( $workflow );
 	}
-
 }

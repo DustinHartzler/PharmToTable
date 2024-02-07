@@ -99,7 +99,6 @@ class Marketing_Optin_Block implements IntegrationInterface {
 		);
 
 		return $data;
-
 	}
 
 	/**

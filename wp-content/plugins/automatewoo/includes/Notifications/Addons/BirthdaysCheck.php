@@ -53,5 +53,4 @@ class BirthdaysCheck extends AbstractAddonCheck {
 
 		return $note;
 	}
-
 }

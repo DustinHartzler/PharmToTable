@@ -39,5 +39,4 @@ trait UniqueEventsForRequestHelper {
 	protected function record_event_added_for_item( int $item_id ) {
 		$this->created_event_item_ids[] = $item_id;
 	}
-
 }

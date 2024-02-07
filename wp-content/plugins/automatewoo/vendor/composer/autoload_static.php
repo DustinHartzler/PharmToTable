@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit19507469948f3841f322cd30eca10052
+class ComposerStaticInit0c95de06e3334de20cfca18366ac1180
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -407,7 +407,6 @@ class ComposerStaticInit19507469948f3841f322cd30eca10052
         'AutomateWoo\\Jobs\\WishlistItemOnSale' => __DIR__ . '/../..' . '/includes/Jobs/WishlistItemOnSale.php',
         'AutomateWoo\\Language' => __DIR__ . '/../..' . '/includes/Language.php',
         'AutomateWoo\\LegacyAddonHandler' => __DIR__ . '/../..' . '/includes/LegacyAddonHandler.php',
-        'AutomateWoo\\LegacyClassLoader' => __DIR__ . '/../..' . '/includes/LegacyClassLoader.php',
         'AutomateWoo\\Log' => __DIR__ . '/../..' . '/includes/Log.php',
         'AutomateWoo\\Log_Factory' => __DIR__ . '/../..' . '/includes/Log_Factory.php',
         'AutomateWoo\\Log_Query' => __DIR__ . '/../..' . '/includes/Log_Query.php',
@@ -485,12 +484,17 @@ class ComposerStaticInit19507469948f3841f322cd30eca10052
         'AutomateWoo\\Rest_Api' => __DIR__ . '/../..' . '/includes/Rest_Api.php',
         'AutomateWoo\\Rest_Api\\Controllers\\AbstractController' => __DIR__ . '/../..' . '/includes/Rest_Api/Controllers/AbstractController.php',
         'AutomateWoo\\Rest_Api\\Controllers\\ConversionsController' => __DIR__ . '/../..' . '/includes/Rest_Api/Controllers/ConversionsController.php',
+        'AutomateWoo\\Rest_Api\\Controllers\\LogsController' => __DIR__ . '/../..' . '/includes/Rest_Api/Controllers/LogsController.php',
         'AutomateWoo\\Rest_Api\\Controllers\\ManualWorkflowRunner' => __DIR__ . '/../..' . '/includes/Rest_Api/Controllers/ManualWorkflowRunner.php',
         'AutomateWoo\\Rest_Api\\Controllers\\WorkflowPresets' => __DIR__ . '/../..' . '/includes/Rest_Api/Controllers/WorkflowPresets.php',
         'AutomateWoo\\Rest_Api\\Controllers\\Workflows' => __DIR__ . '/../..' . '/includes/Rest_Api/Controllers/Workflows.php',
         'AutomateWoo\\Rest_Api\\Schema\\Context' => __DIR__ . '/../..' . '/includes/Rest_Api/Schema/Context.php',
+        'AutomateWoo\\Rest_Api\\Schema\\LogSchema' => __DIR__ . '/../..' . '/includes/Rest_Api/Schema/LogSchema.php',
         'AutomateWoo\\Rest_Api\\Schema\\WorkflowSchema' => __DIR__ . '/../..' . '/includes/Rest_Api/Schema/WorkflowSchema.php',
         'AutomateWoo\\Rest_Api\\Utilities\\Controller_Namespace' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/Controller_Namespace.php',
+        'AutomateWoo\\Rest_Api\\Utilities\\CreateUpdateWorkflow' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/CreateUpdateWorkflow.php',
+        'AutomateWoo\\Rest_Api\\Utilities\\DateHelper' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/DateHelper.php',
+        'AutomateWoo\\Rest_Api\\Utilities\\DeleteWorkflow' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/DeleteWorkflow.php',
         'AutomateWoo\\Rest_Api\\Utilities\\GetWorkflow' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/GetWorkflow.php',
         'AutomateWoo\\Rest_Api\\Utilities\\Pagination' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/Pagination.php',
         'AutomateWoo\\Rest_Api\\Utilities\\RestException' => __DIR__ . '/../..' . '/includes/Rest_Api/Utilities/RestException.php',
@@ -994,9 +998,9 @@ class ComposerStaticInit19507469948f3841f322cd30eca10052
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit19507469948f3841f322cd30eca10052::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit19507469948f3841f322cd30eca10052::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit19507469948f3841f322cd30eca10052::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0c95de06e3334de20cfca18366ac1180::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0c95de06e3334de20cfca18366ac1180::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit0c95de06e3334de20cfca18366ac1180::$classMap;
 
         }, null, ClassLoader::class);
     }

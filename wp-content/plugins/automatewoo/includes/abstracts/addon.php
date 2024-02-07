@@ -213,7 +213,6 @@ abstract class Addon {
 		}
 		return static::$_instance;
 	}
-
 }
 
 

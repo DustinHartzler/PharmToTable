@@ -69,7 +69,6 @@ class SetupRegisteredCustomers extends AbstractBatchedActionSchedulerJob impleme
 			$customer->set_date_last_purchased( $orders[0]->get_date_created() );
 			$customer->save();
 		}
-
 	}
 
 	/**
@@ -93,7 +92,6 @@ class SetupRegisteredCustomers extends AbstractBatchedActionSchedulerJob impleme
 		);
 
 		return Clean::ids( $results );
-
 	}
 
 	/**
@@ -108,5 +106,4 @@ class SetupRegisteredCustomers extends AbstractBatchedActionSchedulerJob impleme
 	protected function handle_complete( int $final_batch_number, array $args ) {
 		AW()->job_service()->get_job( 'setup_guest_customers' )->start();
 	}
-
 }

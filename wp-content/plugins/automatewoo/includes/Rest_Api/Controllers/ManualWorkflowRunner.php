@@ -270,7 +270,7 @@ class ManualWorkflowRunner extends AbstractController {
 		if ( 'manual' !== $workflow->get_type() || ! $workflow->get_trigger() instanceof ManualInterface ) {
 			throw new RestException(
 				'rest_not_manual_workflow',
-				__( 'Workflow must be a manual workflow.', 'automatewoo' )
+				esc_html__( 'Workflow must be a manual workflow.', 'automatewoo' )
 			);
 		}
 	}

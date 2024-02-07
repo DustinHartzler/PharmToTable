@@ -41,5 +41,4 @@ class DatabaseTablesExist extends AbstractSystemCheck {
 
 		return $this->error( __( 'Tables could not be installed.', 'automatewoo' ) );
 	}
-
 }

@@ -19,7 +19,8 @@ use AutomateWoo\Triggers\Utilities\BookingDataLayer;
  */
 class BookingStatusChanged extends Trigger {
 
-	use BookingsGroup, BookingDataLayer;
+	use BookingsGroup;
+	use BookingDataLayer;
 
 	/**
 	 * @var BookingsInterface Proxy for functionality from WooCommerce Bookings extension.
@@ -162,5 +163,4 @@ class BookingStatusChanged extends Trigger {
 
 		return true;
 	}
-
 }

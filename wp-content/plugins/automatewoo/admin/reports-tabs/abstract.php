@@ -83,5 +83,4 @@ abstract class AW_Admin_Reports_Tab_Abstract {
 
 		$class->output_report();
 	}
-
 }

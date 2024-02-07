@@ -169,5 +169,4 @@ abstract class Variable_Abstract_Product_Display extends Variable {
 
 		return $args;
 	}
-
 }

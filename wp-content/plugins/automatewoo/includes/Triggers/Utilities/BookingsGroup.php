@@ -17,5 +17,4 @@ trait BookingsGroup {
 	public function get_group() {
 		return __( 'Bookings', 'automatewoo' );
 	}
-
 }

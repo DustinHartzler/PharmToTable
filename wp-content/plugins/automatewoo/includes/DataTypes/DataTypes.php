@@ -163,5 +163,4 @@ class DataTypes extends Registry {
 
 		return [];
 	}
-
 }

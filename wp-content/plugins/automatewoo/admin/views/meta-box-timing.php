@@ -42,8 +42,8 @@ $queue_datetime
 // Scheduled time field.
 $options         = [];
 $minute_interval = 15;
-for ( $hours = 0; $hours < 24; $hours ++ ) {
-	for ( $min = 0; $min < 60 / $minute_interval; $min ++ ) {
+for ( $hours = 0; $hours < 24; $hours++ ) {
+	for ( $min = 0; $min < 60 / $minute_interval; $min++ ) {
 		$options[] = zeroise( $hours, 2 ) . ':' . zeroise( $min * $minute_interval, 2 );
 	}
 }
@@ -57,7 +57,7 @@ $scheduled_time
 
 // Scheduled Day field.
 $options = [];
-for ( $day = 1; $day <= 7; $day ++ ) {
+for ( $day = 1; $day <= 7; $day++ ) {
 	$options[ $day ] = Format::weekday( $day );
 }
 

@@ -217,7 +217,7 @@ class Installer {
 
 		foreach ( $required_updates as $version ) {
 			if ( version_compare( $version, '2.7.0', '<=' ) ) {
-				continue; // old updates don't extend Database_Update class
+				continue; // old updates don't extend AbstractDatabaseUpdate class
 			}
 
 			$update_file = AW()->path( "/includes/DatabaseUpdates/$version.php" );
@@ -320,7 +320,4 @@ class Installer {
 
 		update_option( '_automatewoo_created_pages', $created_pages, false );
 	}
-
-
-
 }

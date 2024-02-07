@@ -230,5 +230,4 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 
 		return true;
 	}
-
 }

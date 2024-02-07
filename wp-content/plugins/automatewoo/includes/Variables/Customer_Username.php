@@ -36,5 +36,4 @@ class Variable_Customer_Username extends Variable {
 
 		return '';
 	}
-
 }

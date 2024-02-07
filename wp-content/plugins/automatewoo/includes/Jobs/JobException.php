@@ -44,10 +44,10 @@ class JobException extends RuntimeException implements ExceptionInterface {
 	public static function stopped_due_to_high_failure_rate( string $job_name ): JobException {
 		return new static(
 			sprintf(
+				/* translators: Job name. */
 				__( 'The "%s" job was stopped because it\'s failure rate is above the allowed threshold.', 'automatewoo' ),
 				$job_name
 			)
 		);
 	}
-
 }

@@ -22,6 +22,7 @@ class Admin_Ajax {
 			'fill_action_fields',
 			'json_search_workflows',
 			'json_search_coupons',
+			'json_search_coupons_recurring',
 			'json_search_attribute_terms',
 			'json_search_taxonomy_terms',
 			'json_search_customers',
@@ -277,7 +278,19 @@ class Admin_Ajax {
 		}
 
 		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
-		JSON_Search::coupons( $term, true );
+		JSON_Search::coupons( $term, true, false );
+	}
+
+	/**
+	 * Search for recurring coupons and echo JSON.
+	 */
+	public static function json_search_coupons_recurring() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			die;
+		}
+
+		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
+		JSON_Search::coupons( $term, true, true );
 	}
 
 	/**

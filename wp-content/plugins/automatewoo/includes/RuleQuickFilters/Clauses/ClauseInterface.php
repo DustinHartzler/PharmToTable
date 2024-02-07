@@ -30,5 +30,4 @@ interface ClauseInterface {
 	 * @return mixed
 	 */
 	public function get_value();
-
 }

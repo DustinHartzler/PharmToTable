@@ -20,5 +20,4 @@ class Positive_Number extends Number {
 		parent::__construct();
 		$this->set_min( 1 );
 	}
-
 }

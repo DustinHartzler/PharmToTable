@@ -62,5 +62,4 @@ abstract class AbstractOptionsStore {
 		// If the value is an empty string fall back to the default
 		return ( '' === $value ) ? $default : $value;
 	}
-
 }

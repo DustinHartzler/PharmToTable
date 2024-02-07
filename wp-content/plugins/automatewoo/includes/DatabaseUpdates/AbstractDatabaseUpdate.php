@@ -124,5 +124,4 @@ abstract class AbstractDatabaseUpdate {
 			sprintf( 'AutomateWoo - Update: %s, Message: %s', $this->version, $message )
 		);
 	}
-
 }

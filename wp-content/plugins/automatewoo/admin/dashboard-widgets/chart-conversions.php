@@ -60,7 +60,7 @@ class Dashboard_Widget_Chart_Conversions extends Dashboard_Widget_Chart {
 				'total' => $order->get_total(),
 			];
 
-			$this->conversion_count++;
+			++$this->conversion_count;
 			$this->conversion_total += $order->get_total();
 		}
 
@@ -104,7 +104,6 @@ class Dashboard_Widget_Chart_Conversions extends Dashboard_Widget_Chart {
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Chart_Conversions();

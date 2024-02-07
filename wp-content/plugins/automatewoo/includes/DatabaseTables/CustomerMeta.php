@@ -55,5 +55,4 @@ class CustomerMeta extends Database_Table {
 			KEY meta_key (meta_key({$this->max_index_length}))
 			) {$this->get_collate()};";
 	}
-
 }

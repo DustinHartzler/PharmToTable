@@ -106,6 +106,4 @@ abstract class Abstract_Async_Event {
 	protected function create_async_event( array $event_args ) {
 		$this->action_scheduler->enqueue_async_action( $this->get_hook_name(), $event_args );
 	}
-
 }
-

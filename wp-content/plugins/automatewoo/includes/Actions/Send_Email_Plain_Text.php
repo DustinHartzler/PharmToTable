@@ -128,5 +128,4 @@ class Action_Send_Email_Plain_Text extends Action_Send_Email_Abstract {
 
 		return $email->send();
 	}
-
 }

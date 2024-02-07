@@ -88,5 +88,4 @@ class Email_Content extends Field {
 	public function sanitize_value( $value ) {
 		return Clean::email_content( $value );
 	}
-
 }

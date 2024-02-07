@@ -28,5 +28,4 @@ class Variable_Product_Description extends Variable {
 	public function get_value( $product, $parameters ) {
 		return $product->get_description();
 	}
-
 }

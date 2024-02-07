@@ -38,5 +38,4 @@ abstract class AbstractAdminNotice implements AdminNoticeInterface {
 	protected function add_notice() {
 		AdminNotices::add_notice( $this->get_id() );
 	}
-
 }

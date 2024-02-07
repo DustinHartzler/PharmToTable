@@ -85,11 +85,11 @@ final class Status {
 	private function validate_status( string $status ) {
 		$available_statuses = $this->get_available_statuses();
 		if ( ! array_key_exists( $status, $available_statuses ) ) {
-			throw InvalidStatus::unknown_status( $status );
+			throw InvalidStatus::unknown_status( esc_html( $status ) );
 		}
 
 		if ( ! is_string( $available_statuses[ $status ] ) || empty( $available_statuses[ $status ] ) ) {
-			throw InvalidStatus::no_post_staus( $status );
+			throw InvalidStatus::no_post_staus( esc_html( $status ) );
 		}
 	}
 

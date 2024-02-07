@@ -1,17 +1,19 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
+
+use WC_Logger;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Logger
+ *
  * @since 4.3.0
  */
 class Logger {
 
-	/** @var \WC_Logger */
+	/** @var WC_Logger */
 	protected static $wc_logger;
 
 	/** @var string */
@@ -19,7 +21,7 @@ class Logger {
 
 
 	/**
-	 * @return \WC_Logger
+	 * @return WC_Logger
 	 */
 	protected static function get_wc_logger() {
 		if ( empty( self::$wc_logger ) ) {
@@ -39,9 +41,11 @@ class Logger {
 	protected static function log( $level, $handle, $message ) {
 		$handle = self::$handle_prefix . $handle;
 
-		self::get_wc_logger()->log( $level, $message, [
-			'source' => $handle
-		]);
+		self::get_wc_logger()->log(
+			$level,
+			$message,
+			[ 'source' => $handle ]
+		);
 	}
 
 
@@ -154,6 +158,4 @@ class Logger {
 	public static function debug( $handle, $message ) {
 		self::log( 'debug', $handle, $message );
 	}
-
-
 }

@@ -45,5 +45,4 @@ class Order_Status_Changed extends Abstract_Async_Event {
 			]
 		);
 	}
-
 }

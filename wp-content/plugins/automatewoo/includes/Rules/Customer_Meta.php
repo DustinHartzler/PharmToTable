@@ -39,7 +39,5 @@ class Customer_Meta extends Abstract_Meta {
 		}
 
 		return $this->validate_meta( $customer->get_legacy_meta( $value_data['key'] ), $compare, $value_data['value'] );
-
 	}
-
 }

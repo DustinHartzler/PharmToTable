@@ -93,6 +93,7 @@ class Action_Subscription_Add_Product extends Action_Subscription_Edit_Product_A
 	 * @return string
 	 */
 	protected function get_note( $product ) {
+		/* translators: %1$s: workflow title, %2$s: product name, %3$d product ID, %4$d workflow ID */
 		return sprintf( __( '%1$s workflow run: added %2$s to subscription. (Product ID: %3$d; Workflow ID: %4$d)', 'automatewoo' ), $this->workflow->get_title(), $product->get_name(), $product->get_id(), $this->workflow->get_id() );
 	}
 }

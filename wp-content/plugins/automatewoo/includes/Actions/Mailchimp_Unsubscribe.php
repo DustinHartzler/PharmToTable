@@ -64,5 +64,4 @@ class Action_Mailchimp_Unsubscribe extends Action_Mailchimp_Abstract {
 			$this->maybe_log_action( Integrations::mailchimp()->request( 'DELETE', "/lists/$list_id/members/$subscriber" ) );
 		}
 	}
-
 }

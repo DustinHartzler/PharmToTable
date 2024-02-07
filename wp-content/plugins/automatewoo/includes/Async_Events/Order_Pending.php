@@ -75,5 +75,4 @@ class Order_Pending extends Abstract_Async_Event {
 			do_action( 'automatewoo_order_pending', $order_id );
 		}
 	}
-
 }

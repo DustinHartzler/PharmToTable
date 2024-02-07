@@ -36,5 +36,4 @@ class Variable_Customer_Address_Line_1 extends Variable {
 	public function get_value( $customer, $parameters, $workflow ) {
 		return $workflow->data_layer()->get_customer_address_1();
 	}
-
 }

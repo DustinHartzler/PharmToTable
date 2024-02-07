@@ -33,5 +33,4 @@ class BookingStartDate extends Variable_Abstract_Datetime {
 	public function get_value( $booking, $parameters ) {
 		return $this->format_datetime( $booking->get_start( 'view', true ), $parameters );
 	}
-
 }

@@ -42,6 +42,7 @@ class Taxonomy_Term extends Field {
 		        data-placeholder="<?php esc_attr_e( 'Search for a term&hellip;', 'automatewoo' ); ?>"
 		        data-action="aw_json_search_taxonomy_terms"
 		        data-pass-sibling="aw_workflow_data[trigger_options][taxonomy]"
+				<?php echo ( $this->get_required() ? 'required' : '' ) ?>
 		>
 			<?php
 			if ( is_object( $term ) ) {

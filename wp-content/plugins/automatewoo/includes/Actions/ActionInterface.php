@@ -65,6 +65,15 @@ interface ActionInterface {
 	public function get_fields();
 
 	/**
+	 * Get a list of required field names.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @return Field[]
+	 */
+	public function get_required_fields(): array;
+
+	/**
 	 * Set the action's options.
 	 *
 	 * @param array $options
@@ -102,6 +111,4 @@ interface ActionInterface {
 	 * @throws \Exception When an error occurs.
 	 */
 	public function run();
-
-
 }

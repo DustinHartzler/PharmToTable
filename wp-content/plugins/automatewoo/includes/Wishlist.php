@@ -153,5 +153,4 @@ class Wishlist {
 		}
 		update_option( $this->get_date_created_option_name(), $date->to_mysql_string(), false );
 	}
-
 }

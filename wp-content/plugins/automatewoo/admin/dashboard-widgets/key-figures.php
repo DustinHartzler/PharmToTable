@@ -84,7 +84,6 @@ class Dashboard_Widget_Key_Figures extends Dashboard_Widget {
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Key_Figures();

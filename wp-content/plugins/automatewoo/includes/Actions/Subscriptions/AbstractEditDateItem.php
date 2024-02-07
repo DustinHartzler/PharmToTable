@@ -74,5 +74,4 @@ abstract class AbstractEditDateItem extends AbstractEditItem {
 
 		return true;
 	}
-
 }

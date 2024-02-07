@@ -485,7 +485,6 @@ class OrderHighPerformanceDatastoreType implements DatastoreTypeInterface {
 				'value'   => '0000-00-00 00:00:00',
 			];
 		}
-
 	}
 
 	/**
@@ -502,5 +501,4 @@ class OrderHighPerformanceDatastoreType implements DatastoreTypeInterface {
 			'type'    => 'DECIMAL(24,8)',
 		];
 	}
-
 }

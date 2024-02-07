@@ -101,14 +101,14 @@ global $post;
 		<div id="publishing-action">
 			<span class="spinner"></span>
 			<input name="original_publish"
-				   type="hidden"
-				   id="original_publish"
-				   value="<?php esc_attr_e( 'Save', 'automatewoo' ); ?>" />
+				type="hidden"
+				id="original_publish"
+				value="<?php esc_attr_e( 'Save', 'automatewoo' ); ?>" />
 			<input name="save"
-				   type="submit"
-				   class="button button-primary button-large"
-				   id="publish"
-				   value="<?php esc_attr_e( 'Save', 'automatewoo' ); ?>" />
+				type="submit"
+				class="button button-primary button-large"
+				id="publish"
+				value="<?php esc_attr_e( 'Save', 'automatewoo' ); ?>" />
 
 			<?php if ( $workflow ) : ?>
 				<a

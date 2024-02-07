@@ -39,5 +39,4 @@ class StringClause extends AbstractClause {
 			throw new InvalidArgumentException();
 		}
 	}
-
 }

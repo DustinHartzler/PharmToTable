@@ -17,7 +17,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class DeleteFailedQueuedWorkflows extends AbstractRecurringBatchedActionSchedulerJob {
 
-	use ItemDeletionDate, ValidateItemAsIntegerId;
+	use ItemDeletionDate;
+	use ValidateItemAsIntegerId;
 
 	/**
 	 * Get the name of the job.
@@ -86,5 +87,4 @@ class DeleteFailedQueuedWorkflows extends AbstractRecurringBatchedActionSchedule
 
 		$queued_workflow->delete();
 	}
-
 }

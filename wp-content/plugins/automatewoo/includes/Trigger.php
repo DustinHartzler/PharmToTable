@@ -189,6 +189,23 @@ abstract class Trigger {
 		return $this->fields;
 	}
 
+	/**
+	 * Get a list of required field names.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @return Field[]
+	 */
+	public function get_required_fields(): array {
+		$required_fields = [];
+		foreach ( $this->get_fields() as $name => $field ) {
+			if ( $field->get_required() ) {
+				$required_fields[ $name ] = $field;
+			}
+		}
+
+		return $required_fields;
+	}
 
 	/**
 	 * @return bool

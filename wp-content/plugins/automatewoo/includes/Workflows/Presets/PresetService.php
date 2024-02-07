@@ -109,5 +109,4 @@ class PresetService {
 
 		return $this->save_as_workflow( $preset );
 	}
-
 }

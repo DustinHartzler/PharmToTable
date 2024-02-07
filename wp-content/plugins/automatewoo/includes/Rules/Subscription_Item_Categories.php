@@ -25,5 +25,4 @@ class Subscription_Item_Categories extends Rule_Order_Item_Categories {
 		parent::init();
 		$this->title = __( 'Subscription - Item Categories', 'automatewoo' );
 	}
-
 }

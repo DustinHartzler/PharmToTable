@@ -68,5 +68,4 @@ class Order_Paid extends Abstract_Async_Event {
 		// This hook is also asynchronous, avoid using due to possible confusion
 		do_action( 'automatewoo/order/paid', $order );
 	}
-
 }

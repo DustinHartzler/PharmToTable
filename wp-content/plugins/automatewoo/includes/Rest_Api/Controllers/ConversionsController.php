@@ -137,8 +137,9 @@ class ConversionsController extends AbstractController {
 			throw new RestException(
 				'rest_invalid_order_id',
 				sprintf(
-					__( 'Invalid order ID %d.', 'automatewoo' ),
-					$order_id
+					/* translators: Order ID. */
+					esc_html__( 'Invalid order ID %d.', 'automatewoo' ),
+					(int) $order_id
 				),
 				404
 			);
@@ -148,5 +149,4 @@ class ConversionsController extends AbstractController {
 		$order->delete_meta_data( '_aw_conversion_log' );
 		$order->save();
 	}
-
 }

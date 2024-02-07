@@ -27,7 +27,7 @@ $button_text = __( '+ Add Action', 'automatewoo' );
 				'action_select_box_values' => $action_select_box_values,
 			]
 		);
-		$n++;
+		++$n;
 	}
 
 	// Render blank action template

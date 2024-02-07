@@ -113,5 +113,4 @@ class User_Tags_Export {
 
 		exit;
 	}
-
 }

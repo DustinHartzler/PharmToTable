@@ -86,5 +86,4 @@ abstract class AbstractDataType {
 	public function get_plural_name() {
 		return __( 'Items', 'automatewoo' );
 	}
-
 }

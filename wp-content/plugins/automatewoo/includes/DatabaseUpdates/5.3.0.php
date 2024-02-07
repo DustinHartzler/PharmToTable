@@ -41,7 +41,7 @@ class Database_Update_5_3_0 extends AbstractDatabaseUpdate {
 				$table = Database_Tables::get( $table_id );
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL
 				$wpdb->query( "ALTER TABLE {$table->get_name()} MODIFY meta_value longtext NULL" );
-				$this->items_processed++;
+				++$this->items_processed;
 			} catch ( \Exception $e ) {
 				$this->log_processing_error( $e->getMessage() );
 			}
@@ -56,7 +56,6 @@ class Database_Update_5_3_0 extends AbstractDatabaseUpdate {
 	public function get_items_to_process_count() {
 		return count( $this->get_tables_to_update() );
 	}
-
 }
 
 return new Database_Update_5_3_0();

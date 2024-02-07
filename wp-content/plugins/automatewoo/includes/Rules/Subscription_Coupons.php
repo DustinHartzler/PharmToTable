@@ -27,5 +27,4 @@ class Subscription_Coupons extends Order_Coupons {
 
 		$this->title = __( 'Subscription - Coupons', 'automatewoo' );
 	}
-
 }

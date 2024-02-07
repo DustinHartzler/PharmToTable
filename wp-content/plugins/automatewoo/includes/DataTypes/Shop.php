@@ -50,5 +50,4 @@ class Shop extends AbstractDataType {
 	public function decompress( $compressed_item, $compressed_data_layer ) {
 		return new ShopDataItem();
 	}
-
 }

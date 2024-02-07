@@ -48,5 +48,4 @@ abstract class Product_Select_Rule_Abstract extends Searchable_Select_Rule_Abstr
 	public function get_search_ajax_action() {
 		return 'woocommerce_json_search_products_and_variations';
 	}
-
 }

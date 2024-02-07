@@ -72,30 +72,30 @@ class VariableParser {
 	/**
 	 * Sanitize the string contents of a variable (the part between the double curly braces).
 	 *
-	 * @param string $string
+	 * @param string $str
 	 * @return string
 	 */
-	protected function sanitize( string $string ): string {
+	protected function sanitize( string $str ): string {
 		// Remove HTML tags and breaks
-		$string = wp_strip_all_tags( $string, true );
+		$str = wp_strip_all_tags( $str, true );
 
 		// remove unicode white spaces
-		$string = preg_replace( "#\x{00a0}#siu", ' ', $string );
+		$str = preg_replace( "#\x{00a0}#siu", ' ', $str );
 
-		$string = trim( $string );
+		$str = trim( $str );
 
-		return $string;
+		return $str;
 	}
 
 	/**
 	 * Remove single quotes from start and end of a string
 	 *
-	 * @param string $string
+	 * @param string $str
 	 *
 	 * @return string
 	 */
-	private function unquote( string $string ): string {
-		return trim( trim( $string ), "'" );
+	private function unquote( string $str ): string {
+		return trim( trim( $str ), "'" );
 	}
 
 	/**
@@ -116,5 +116,4 @@ class VariableParser {
 
 		return in_array( $variable, $excluded, true );
 	}
-
 }

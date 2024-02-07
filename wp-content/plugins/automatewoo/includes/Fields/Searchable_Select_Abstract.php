@@ -125,5 +125,4 @@ abstract class Searchable_Select_Abstract extends Field {
 	public function is_multiple() {
 		return $this->multiple;
 	}
-
 }

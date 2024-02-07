@@ -70,5 +70,4 @@ class Order_Created_Date extends Abstract_Date implements QuickFilterable {
 	public function get_quick_filter_clause( $compare_type, $value ) {
 		return $this->generate_date_quick_filter_clause( 'date_created', $compare_type, $value );
 	}
-
 }

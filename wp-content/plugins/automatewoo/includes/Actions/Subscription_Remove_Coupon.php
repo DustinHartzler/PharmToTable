@@ -50,6 +50,7 @@ class Action_Subscription_Remove_Coupon extends Action_Subscription_Edit_Coupon_
 	 * @return string
 	 */
 	protected function get_note( $coupon ) {
+		/* translators: %1$s: workflow title, %2$s: coupon code, %3$d workflow ID */
 		return sprintf( __( '%1$s workflow run: removed coupon %2$s. (Workflow ID: %3$d)', 'automatewoo' ), $this->workflow->get_title(), $coupon->get_code(), $this->workflow->get_id() );
 	}
 }

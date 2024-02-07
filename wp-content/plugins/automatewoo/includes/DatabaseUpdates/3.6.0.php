@@ -56,12 +56,11 @@ class Database_Update_3_6_0 extends AbstractDatabaseUpdate {
 
 			$wpdb->delete( $table, [ 'id' => $unsubscribe['id'] ] );
 
-			$this->items_processed++;
+			++$this->items_processed;
 		}
 
 		return false;
 	}
-
 }
 
 return new Database_Update_3_6_0();

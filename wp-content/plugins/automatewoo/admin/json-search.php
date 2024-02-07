@@ -167,6 +167,7 @@ final class JSON_Search {
 
 		foreach ( $found_customers as $customer ) {
 			$results[ $customer->get_id() ] = sprintf(
+				/* translators: %1$s customer full name (optionally with guest label appended), %2$s customer email */
 				esc_html__( '%1$s &ndash; %2$s', 'automatewoo' ),
 				$customer->is_registered() ? $customer->get_full_name() : $customer->get_full_name() . ' ' . __( '[Guest]', 'automatewoo' ),
 				$customer->get_email()
@@ -181,8 +182,9 @@ final class JSON_Search {
 	 *
 	 * @param string $term
 	 * @param bool   $exclude_personalized
+	 * @param bool   $recurring_only
 	 */
-	public static function coupons( $term, $exclude_personalized ) {
+	public static function coupons( $term, $exclude_personalized, $recurring_only ) {
 		if ( empty( $term ) ) {
 			wp_die();
 		}
@@ -201,6 +203,16 @@ final class JSON_Search {
 				'key'     => '_is_aw_coupon',
 				'compare' => 'NOT EXISTS',
 			];
+		}
+
+		if ( $recurring_only ) {
+			$args['meta_query'][] = array(
+				'key'   => 'discount_type',
+				'value' => array(
+					'recurring_fee',
+					'recurring_percent',
+				),
+			);
 		}
 
 		$query   = new \WP_Query( $args );

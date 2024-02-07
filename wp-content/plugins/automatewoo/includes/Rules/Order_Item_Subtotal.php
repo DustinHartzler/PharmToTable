@@ -30,5 +30,4 @@ class Order_Item_Subtotal extends Order_Item_Total {
 	public function validate( $item, $compare, $value ) {
 		return $this->validate_number( $item->get_subtotal(), $compare, $value );
 	}
-
 }

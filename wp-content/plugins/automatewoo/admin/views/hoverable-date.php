@@ -32,6 +32,6 @@ if ( $with_diff === $no_diff ) {
 
 ?>
 <div class="automatewoo-hoverable-date"
-	 data-automatewoo-date-with-diff="<?php echo esc_attr( $with_diff ); ?>"
-	 data-automatewoo-date-no-diff="<?php echo esc_attr( $no_diff ); ?>"
+	data-automatewoo-date-with-diff="<?php echo esc_attr( $with_diff ); ?>"
+	data-automatewoo-date-no-diff="<?php echo esc_attr( $no_diff ); ?>"
 ><?php echo esc_attr( $with_diff ); ?></div>

@@ -29,5 +29,4 @@ class Subscription_Renewal_Payment_Failed extends Subscription_Renewal_Payment_C
 	public function get_hook_name(): string {
 		return 'automatewoo/subscription/renewal_payment_failed_async';
 	}
-
 }

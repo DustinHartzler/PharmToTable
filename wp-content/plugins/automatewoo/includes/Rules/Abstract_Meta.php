@@ -80,5 +80,4 @@ abstract class Abstract_Meta extends Rule {
 			'value' => isset( $value[1] ) ? $value[1] : false,
 		];
 	}
-
 }

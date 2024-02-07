@@ -416,7 +416,7 @@ class Integration_Mailchimp extends Integration {
 		$args = [];
 		foreach ( $tags as $tag => $active ) {
 			$args[] = [
-				'name'   => $tag,
+				'name'   => (string) $tag, // Must be a string.
 				'status' => $active ? 'active' : 'inactive',
 			];
 		}

@@ -22,7 +22,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class BatchedWorkflows extends AbstractBatchedActionSchedulerJob {
 
-	use IntegerValidator, ArrayValidator;
+	use IntegerValidator;
+	use ArrayValidator;
 
 	/**
 	 * This job is allowed to run concurrently.

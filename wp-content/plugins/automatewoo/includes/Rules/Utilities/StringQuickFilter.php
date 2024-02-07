@@ -55,5 +55,4 @@ trait StringQuickFilter {
 
 		return new StringClause( $property, $operator, $value );
 	}
-
 }

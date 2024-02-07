@@ -65,5 +65,4 @@ class Subscription_Order_Status_Changes extends Trigger_Order_Status_Changes {
 
 		return parent::validate_workflow( $workflow );
 	}
-
 }

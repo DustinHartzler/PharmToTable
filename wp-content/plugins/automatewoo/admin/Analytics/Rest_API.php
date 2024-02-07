@@ -78,4 +78,3 @@ class Rest_API {
 		return $stores;
 	}
 }
-

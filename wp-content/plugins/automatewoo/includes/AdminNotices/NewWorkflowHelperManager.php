@@ -47,6 +47,7 @@ class NewWorkflowHelperManager {
 				'class'             => 'is-dismissible automatewoo-notice--new-workflow-helper',
 				'strong'            => '',
 				'message'           => sprintf(
+					/* translators: %1$s: workflow presets opening link tag, %2$s: closing link tag, %3$s: help opening link tag, %4$s: closing link tag */
 					__( 'Need help? Try out one of our <%1$s>preset workflows<%2$s> or check out the <%3$s>help center<%4$s>.', 'automatewoo' ),
 					'a href="' . Admin::page_url( 'workflow-presets' ) . '" target="_blank" data-automatewoo-link-type="presets"',
 					'/a',
@@ -64,7 +65,7 @@ class NewWorkflowHelperManager {
 	 * @param string|null $old_version the previously installed version for updates (or null for new installs)
 	 * @param string|null $new_version the new version
 	 */
-	public static function maybe_add_new_workflow_helper_notice( $old_version = null, $new_version = null ) {
+	public static function maybe_add_new_workflow_helper_notice( $old_version = null, $new_version = null ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$is_first_install      = ! $old_version;
 		$is_applicable_upgrade = version_compare( $old_version, self::VERSION_PRESETS_INTRODUCED, '<' );
 		if ( $is_first_install || $is_applicable_upgrade ) {

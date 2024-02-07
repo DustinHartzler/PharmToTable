@@ -46,6 +46,7 @@ class RecalculateTaxes extends Action {
 		$subscription->calculate_totals( true );
 		$subscription->add_order_note(
 			sprintf(
+				/* translators: %1$s workflow title, %2$d workflow ID */
 				__( '%1$s workflow run: recalculated taxes. (Workflow ID: %2$d)', 'automatewoo' ),
 				$this->workflow->get_title(),
 				$this->workflow->get_id()
@@ -54,5 +55,4 @@ class RecalculateTaxes extends Action {
 			false
 		);
 	}
-
 }

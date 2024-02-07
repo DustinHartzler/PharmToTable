@@ -18,5 +18,4 @@ interface AdminNoticeInterface {
 	 * Output/render the notice HTML.
 	 */
 	public function output();
-
 }

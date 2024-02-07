@@ -39,10 +39,9 @@ final class QueryLoader {
 					}
 			}
 		} catch ( Exception $e ) {
-			throw new Exception( __( 'There was an error loading the quick filter query.', 'automatewoo' ), 0, $e );
+			throw new Exception( esc_html__( 'There was an error loading the quick filter query.', 'automatewoo' ), 0, $e ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
-		throw new Exception( __( 'Quick filtering is not available for given data type.', 'automatewoo' ) );
+		throw new Exception( esc_html__( 'Quick filtering is not available for given data type.', 'automatewoo' ) );
 	}
-
 }

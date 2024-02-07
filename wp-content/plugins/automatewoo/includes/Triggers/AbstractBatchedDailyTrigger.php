@@ -20,5 +20,4 @@ abstract class AbstractBatchedDailyTrigger extends Trigger implements BatchedWor
 	 * Set that the trigger supports customer time of day functions
 	 */
 	const SUPPORTS_CUSTOM_TIME_OF_DAY = true;
-
 }

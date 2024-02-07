@@ -124,5 +124,4 @@ class JobService {
 			wc_deprecated_hook( $job->get_start_hook(), '6.0.0', 'Action Scheduler Recurrent Jobs', 'See \AutomateWoo\Jobs\RecurringJobInterface' );
 		}
 	}
-
 }

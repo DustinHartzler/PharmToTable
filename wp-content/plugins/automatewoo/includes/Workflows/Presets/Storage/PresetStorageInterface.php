@@ -35,5 +35,4 @@ interface PresetStorageInterface {
 	 * @return bool
 	 */
 	public function exists( string $name ): bool;
-
 }

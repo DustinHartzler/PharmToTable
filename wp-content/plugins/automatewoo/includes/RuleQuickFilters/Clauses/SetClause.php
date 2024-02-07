@@ -37,5 +37,4 @@ class SetClause extends AbstractClause {
 	protected function validate_value( $value ) {
 		// The value will always be null.
 	}
-
 }

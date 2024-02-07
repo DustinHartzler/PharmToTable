@@ -49,7 +49,7 @@ class InvalidPreviewData extends InvalidArgumentException implements UserFacingE
 	 * @return static
 	 */
 	public static function data_item_needed( string $data_type ) {
+		/* translators: Data type. */
 		return new static( sprintf( __( 'A valid "%s" must exist to generate the preview.', 'automatewoo' ), $data_type ) );
 	}
-
 }

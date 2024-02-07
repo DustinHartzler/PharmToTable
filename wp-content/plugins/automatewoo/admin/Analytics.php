@@ -2,6 +2,8 @@
 
 namespace AutomateWoo\Admin;
 
+use Automattic\WooCommerce\Admin\PageController;
+
 /**
  * AutomateWoo Analytics.
  * Formerly AutomateWoo > Reports.
@@ -63,7 +65,7 @@ class Analytics {
 	 * Register analytics JS.
 	 */
 	public static function register_script() {
-		if ( ! wc_admin_is_registered_page() ) {
+		if ( ! PageController::is_admin_page() ) {
 			return;
 		}
 
@@ -88,7 +90,7 @@ class Analytics {
 	 * Register analytics CSS.
 	 */
 	public static function register_style() {
-		if ( wc_admin_is_registered_page() ) {
+		if ( PageController::is_admin_page() ) {
 			wp_enqueue_style(
 				'automatewoo-analytics',
 				AW()->admin_assets_url( '/build/analytics.css' ),

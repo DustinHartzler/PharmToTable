@@ -43,5 +43,4 @@ interface BatchedActionSchedulerJobInterface extends ActionSchedulerJobInterface
 	 * @throws Exception If an error occurs.
 	 */
 	public function handle_process_item_action( $item, array $args );
-
 }

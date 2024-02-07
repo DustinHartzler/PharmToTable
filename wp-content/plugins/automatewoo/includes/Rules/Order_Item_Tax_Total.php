@@ -30,5 +30,4 @@ class Order_Item_Tax_Total extends Order_Item_Total {
 	public function validate( $item, $compare, $value ) {
 		return $this->validate_number( $item->get_total_tax(), $compare, $value );
 	}
-
 }

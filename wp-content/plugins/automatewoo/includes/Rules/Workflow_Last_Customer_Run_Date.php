@@ -52,5 +52,4 @@ class Workflow_Last_Customer_Run_Date extends Abstract_Date {
 
 		return $this->validate_date( $compare, $value, $customer->get_workflow_last_run_date( $workflow ) );
 	}
-
 }

@@ -67,5 +67,4 @@ class SenseiTeacher extends AbstractDataType {
 	public function get_plural_name() {
 		return __( 'Teachers', 'automatewoo' );
 	}
-
 }

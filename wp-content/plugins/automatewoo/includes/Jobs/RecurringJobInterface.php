@@ -41,5 +41,4 @@ interface RecurringJobInterface extends JobInterface {
 	 * Get the next scheduled job
 	 */
 	public function get_schedule();
-
 }

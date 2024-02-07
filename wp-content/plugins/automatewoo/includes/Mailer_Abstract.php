@@ -210,6 +210,7 @@ abstract class Mailer_Abstract {
 		if ( $sent === false ) {
 			$phpmailer_error = $this->get_phpmailer_last_error();
 			if ( $phpmailer_error ) {
+				/* translators: PHP Mailer error message. */
 				return new \WP_Error( 4, sprintf( __( 'PHP Mailer - %s', 'automatewoo' ), $phpmailer_error ) );
 			}
 
@@ -306,5 +307,4 @@ abstract class Mailer_Abstract {
 		}
 		return '';
 	}
-
 }

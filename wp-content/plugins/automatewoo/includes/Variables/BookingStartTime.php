@@ -32,5 +32,4 @@ class BookingStartTime extends AbstractBookingTime {
 		$datetime = aw_normalize_date( $booking->get_start( 'view', true ) );
 		return $datetime ? $datetime : null;
 	}
-
 }

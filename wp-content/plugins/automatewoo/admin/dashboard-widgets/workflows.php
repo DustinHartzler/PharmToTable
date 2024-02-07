@@ -112,7 +112,6 @@ class Dashboard_Widget_Workflows extends Dashboard_Widget {
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Workflows();

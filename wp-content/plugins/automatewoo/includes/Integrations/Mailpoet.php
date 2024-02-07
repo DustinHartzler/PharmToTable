@@ -118,7 +118,6 @@ class Integration_Mailpoet extends Integration {
 		} else {
 			$this->api->subscribeToList( $subscriber['id'], $list_id, $options );
 		}
-
 	}
 
 
@@ -209,7 +208,6 @@ class Integration_Mailpoet extends Integration {
 		if ( $this->is_subscribed( $subscriber ) ) {
 			$customer->opt_in();
 		}
-
 	}
 
 	/**

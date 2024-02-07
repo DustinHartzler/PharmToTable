@@ -21,5 +21,4 @@ class RestException extends WC_REST_Exception {
 	public function get_wp_error() {
 		return new WP_Error( $this->getErrorCode(), $this->getMessage(), $this->getErrorData() );
 	}
-
 }

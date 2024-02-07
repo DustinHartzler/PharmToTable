@@ -23,7 +23,7 @@ class Database_Update_6_0_0 extends AbstractDatabaseUpdate {
 		try {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
 			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}automatewoo_events" );
-			$this->items_processed++;
+			++$this->items_processed;
 		} catch ( \Exception $e ) {
 			$this->log_processing_error( $e->getMessage() );
 			return false;
@@ -38,7 +38,6 @@ class Database_Update_6_0_0 extends AbstractDatabaseUpdate {
 	public function get_items_to_process_count() {
 		return 1;
 	}
-
 }
 
 return new Database_Update_6_0_0();

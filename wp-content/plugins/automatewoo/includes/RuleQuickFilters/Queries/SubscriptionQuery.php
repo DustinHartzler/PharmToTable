@@ -49,5 +49,4 @@ class SubscriptionQuery extends AbstractQuery {
 
 		return new SubscriptionPostDatastoreType();
 	}
-
 }

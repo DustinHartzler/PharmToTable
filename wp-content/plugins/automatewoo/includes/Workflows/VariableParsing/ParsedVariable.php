@@ -53,5 +53,4 @@ class ParsedVariable {
 		$this->field      = $field;
 		$this->parameters = $parameters;
 	}
-
 }

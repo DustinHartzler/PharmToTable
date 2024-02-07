@@ -81,5 +81,4 @@ class OptionsStore extends AbstractOptionsStore {
 	public function get_optin_enabled() {
 		return $this->get_option( 'optin_mode' ) === 'optin';
 	}
-
 }

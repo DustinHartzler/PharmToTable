@@ -87,5 +87,4 @@ abstract class AbstractClause implements ClauseInterface {
 	public function get_value() {
 		return $this->value;
 	}
-
 }

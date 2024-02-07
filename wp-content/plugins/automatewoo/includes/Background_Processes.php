@@ -54,5 +54,4 @@ class Background_Processes extends Registry {
 	public static function get( $name ) {
 		return parent::get( $name );
 	}
-
 }

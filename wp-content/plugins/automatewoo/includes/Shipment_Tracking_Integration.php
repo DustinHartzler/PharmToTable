@@ -39,5 +39,4 @@ final class Shipment_Tracking_Integration {
 
 		return $tracking_items[0][ $field ];
 	}
-
 }

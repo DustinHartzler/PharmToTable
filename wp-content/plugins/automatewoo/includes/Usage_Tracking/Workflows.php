@@ -15,7 +15,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Workflows implements Event_Tracker_Interface {
 
-	use Event_Helper, WorkflowTracksData;
+	use Event_Helper;
+	use WorkflowTracksData;
 
 	/**
 	 * Initialize the tracking class with various hooks.

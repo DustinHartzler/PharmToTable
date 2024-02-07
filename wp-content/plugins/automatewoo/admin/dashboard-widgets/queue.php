@@ -79,7 +79,6 @@ class Dashboard_Widget_Queue extends Dashboard_Widget {
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Queue();

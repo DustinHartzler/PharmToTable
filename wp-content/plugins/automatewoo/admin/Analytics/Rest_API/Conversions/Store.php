@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 
 use AutomateWoo\HPOS_Helper;
 use AutomateWoo\Log_Factory;
-use AutomateWoo\Workflows\Factory as Workflow_Factory;
+use AutomateWoo\Workflows\Factory as WorkflowFactory;
 use Automattic\WooCommerce\Admin\API\Reports\DataStore as ReportsDataStore;
 use Automattic\WooCommerce\Admin\API\Reports\DataStoreInterface;
 use Automattic\WooCommerce\Admin\API\Reports\SqlQuery;
@@ -308,7 +308,7 @@ class Store extends ReportsDataStore implements DataStoreInterface {
 
 		$workflows = array();
 		foreach ( $workflow_ids as $workflow_id ) {
-			$workflow = Workflow_Factory::get( $workflow_id );
+			$workflow = WorkflowFactory::get( $workflow_id );
 
 			if ( ! $workflow || ! $workflow->exists ) {
 				continue;

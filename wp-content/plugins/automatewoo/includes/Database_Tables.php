@@ -76,7 +76,7 @@ class Database_Tables extends Registry {
 			return $table;
 		}
 
-		throw new Exception( sprintf( __( "Failed to load the '%s' database table.", 'automatewoo' ), $table_id ) );
+		/* translators: Database table name. */
+		throw new Exception( sprintf( esc_html__( "Failed to load the '%s' database table.", 'automatewoo' ), esc_html( $table_id ) ) );
 	}
-
 }

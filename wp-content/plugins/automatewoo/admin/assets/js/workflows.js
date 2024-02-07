@@ -29,12 +29,18 @@
 
 		$triggerDescription: $( '.js-trigger-description' ),
 
+		$manualTriggerSelect: $( '.js-manual-trigger-select' ),
+
 		$typeSelect: $( '.automatewoo-workflow-type-field' ),
 
 		initialize() {
 			this.listenTo( this.model, 'change:trigger', this.changeTrigger );
 
 			this.model.set( 'prevTrigger', this.$triggerSelect.val() );
+			this.model.set(
+				'prevManualTrigger',
+				this.$manualTriggerSelect.val()
+			);
 			this.model.set( 'prevType', this.$typeSelect.val() );
 
 			this.setTriggerOptions();
@@ -65,8 +71,12 @@
 
 			this.updateTriggerDescription();
 
-			// update the prev trigger and type values
+			// update the prev trigger, manual trigger, and type values
 			this.model.set( 'prevTrigger', this.$triggerSelect.val() );
+			this.model.set(
+				'prevManualTrigger',
+				this.$manualTriggerSelect.val()
+			);
 			this.model.set( 'prevType', this.$typeSelect.val() );
 
 			$( document.body ).trigger( 'automatewoo_trigger_changed' );
@@ -82,6 +92,10 @@
 			this.$triggerSelect
 				.val( this.model.get( 'prevTrigger' ) )
 				.trigger( 'change', true );
+
+			this.$manualTriggerSelect
+				.val( this.model.get( 'prevManualTrigger' ) )
+				.trigger( 'change' );
 		},
 
 		setTriggerOptions() {
@@ -152,6 +166,21 @@
 			AW.initTooltips();
 			AutomateWoo.Workflows.action_dependent_fields( $action );
 			AutomateWoo.init_date_pickers();
+
+			// Expand hidden action fields if required fields are empty when the form is submitted.
+			$action.find( '.automatewoo-field' ).on( 'invalid', function () {
+				const actionsBox = $( '#aw_actions_box' );
+				const actionRow = $( this ).parents( '.automatewoo-action' );
+
+				if ( actionsBox.hasClass( 'closed' ) ) {
+					actionsBox.find( '.handlediv' ).trigger( 'click' );
+				}
+
+				if ( ! actionRow.hasClass( 'js-open' ) ) {
+					AutomateWoo.Workflows.action_edit_open( actionRow );
+					this.scrollIntoView();
+				}
+			} );
 		},
 
 		initDynamicActionSelect( $field, $action ) {

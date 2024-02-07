@@ -70,5 +70,4 @@ class SubscriptionPostDatastoreType extends OrderPostDatastoreType {
 
 		return $args;
 	}
-
 }

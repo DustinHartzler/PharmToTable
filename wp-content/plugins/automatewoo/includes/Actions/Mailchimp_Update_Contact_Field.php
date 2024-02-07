@@ -45,7 +45,6 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 		$this->add_field( $this->get_contact_email_field() );
 		$this->add_field( $field );
 		$this->add_field( $value );
-
 	}
 
 

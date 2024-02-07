@@ -32,4 +32,15 @@ class InvalidWorkflow extends RuntimeException implements Exception {
 	public static function error_creating_workflow( $error ): InvalidWorkflow {
 		return new static( sprintf( 'There was an error creating the workflow: "%s"', $error ) );
 	}
+
+	/**
+	 * Create a new exception when there is an issue updating an existing workflow.
+	 *
+	 * @param string $error
+	 *
+	 * @return InvalidWorkflow
+	 */
+	public static function error_updating_workflow( $error ): InvalidWorkflow {
+		return new static( sprintf( 'There was an error updating the workflow: "%s"', $error ) );
+	}
 }

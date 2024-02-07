@@ -59,5 +59,4 @@ class ActionSchedulerJobsRunning extends AbstractSystemCheck {
 
 		return $this->success();
 	}
-
 }

@@ -34,5 +34,4 @@ class BookingCost extends Variable_Abstract_Price {
 	public function get_value( $booking, $parameters ) {
 		return parent::format_amount( $booking->get_cost(), $parameters );
 	}
-
 }

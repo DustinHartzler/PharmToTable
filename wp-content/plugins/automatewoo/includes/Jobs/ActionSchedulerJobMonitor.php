@@ -50,7 +50,7 @@ class ActionSchedulerJobMonitor {
 		);
 
 		if ( count( $failed_actions ) === $this->get_failure_rate_threshold() ) {
-			throw JobException::stopped_due_to_high_failure_rate( $job->get_name() );
+			throw JobException::stopped_due_to_high_failure_rate( esc_html( $job->get_name() ) );
 		}
 	}
 
@@ -62,5 +62,4 @@ class ActionSchedulerJobMonitor {
 	protected function get_failure_rate_threshold() {
 		return absint( apply_filters( 'automatewoo/batched_job_monitor/failure_rate_threshold', 5 ) );
 	}
-
 }

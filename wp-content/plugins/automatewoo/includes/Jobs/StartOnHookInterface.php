@@ -19,5 +19,4 @@ interface StartOnHookInterface extends JobInterface {
 	 * @return string
 	 */
 	public function get_start_hook();
-
 }

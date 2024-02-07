@@ -64,5 +64,4 @@ class Subscription_Order_Paid extends Trigger_Order_Paid {
 
 		return parent::validate_workflow( $workflow );
 	}
-
 }

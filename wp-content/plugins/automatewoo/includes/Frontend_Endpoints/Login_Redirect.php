@@ -97,5 +97,4 @@ class Login_Redirect {
 
 		return $posted_redirect ?: $original_redirect;
 	}
-
 }

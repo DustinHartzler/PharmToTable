@@ -31,5 +31,4 @@ abstract class AbstractController extends WP_REST_Controller {
 	protected function get_rest_error_from_exception( Exception $exception ) {
 		return new WP_Error( 'rest_error', $exception->getMessage() ?: __( 'Unknown error.', 'automatewoo' ) );
 	}
-
 }

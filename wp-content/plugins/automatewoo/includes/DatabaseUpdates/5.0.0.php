@@ -39,7 +39,7 @@ class Database_Update_5_0_0 extends AbstractDatabaseUpdate {
 		foreach ( $results as $workflow ) {
 			$workflow->update_meta( 'type', 'automatic' );
 
-			$this->items_processed++;
+			++$this->items_processed;
 		}
 
 		return false;

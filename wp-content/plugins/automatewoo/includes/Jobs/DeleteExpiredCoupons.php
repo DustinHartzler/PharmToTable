@@ -18,7 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class DeleteExpiredCoupons extends AbstractRecurringBatchedActionSchedulerJob {
 
-	use ItemDeletionDate, ValidateItemAsIntegerId;
+	use ItemDeletionDate;
+	use ValidateItemAsIntegerId;
 
 	/**
 	 * @var OptionsStore $options_store

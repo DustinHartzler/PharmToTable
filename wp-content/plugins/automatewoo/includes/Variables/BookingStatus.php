@@ -32,5 +32,4 @@ class BookingStatus extends Variable {
 	public function get_value( $booking, $parameters ) {
 		return $booking->get_status();
 	}
-
 }

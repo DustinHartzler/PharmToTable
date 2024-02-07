@@ -51,7 +51,6 @@ abstract class Action_Points_Rewards_Edit_Points_Abstract extends Action {
 		$log_label->set_description( __( 'Describe the event and/or why the points were modified. This description will be visible to customers on their "my account" points log.', 'automatewoo' ) );
 
 		$this->add_field( $log_label );
-
 	}
 
 	/**

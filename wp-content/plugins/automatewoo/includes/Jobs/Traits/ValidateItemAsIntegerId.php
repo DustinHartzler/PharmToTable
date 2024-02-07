@@ -24,5 +24,4 @@ trait ValidateItemAsIntegerId {
 	protected function validate_item( $item ) {
 		$this->validate_positive_integer( $item );
 	}
-
 }

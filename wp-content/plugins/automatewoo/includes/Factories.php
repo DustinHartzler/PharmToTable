@@ -78,5 +78,4 @@ class Factories {
 			$factory::clean_cache( $object );
 		}
 	}
-
 }

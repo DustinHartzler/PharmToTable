@@ -96,5 +96,4 @@ class OrderPostDatastoreType extends AbstractPostDatastoreType {
 
 		return $args;
 	}
-
 }

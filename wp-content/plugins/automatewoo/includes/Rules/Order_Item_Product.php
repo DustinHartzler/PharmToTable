@@ -50,5 +50,4 @@ class Order_Item_Product extends Product_Select_Rule_Abstract {
 
 		return $compare === 'is' ? $matched : ! $matched;
 	}
-
 }

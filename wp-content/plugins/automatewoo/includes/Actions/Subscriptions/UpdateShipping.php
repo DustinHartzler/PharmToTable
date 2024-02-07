@@ -81,6 +81,7 @@ class UpdateShipping extends AddShipping {
 	 * @return string
 	 */
 	protected function get_note( $shipping_data ) {
+		/* translators: %1$s: workflow title, %2$d shipping method ID, %3$d workflow ID */
 		return sprintf( __( '%1$s workflow run: updated shipping on subscription. (Shipping Method ID: %2$d; Workflow ID: %3$d)', 'automatewoo' ), $this->workflow->get_title(), $shipping_data['shipping_method_id'], $this->workflow->get_id() );
 	}
 }

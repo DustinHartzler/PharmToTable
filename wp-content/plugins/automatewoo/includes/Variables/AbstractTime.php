@@ -36,5 +36,4 @@ abstract class AbstractTime extends Variable {
 	protected function format_value_from_local_tz( DateTime $datetime ): string {
 		return $datetime->format_i18n( wc_time_format() );
 	}
-
 }

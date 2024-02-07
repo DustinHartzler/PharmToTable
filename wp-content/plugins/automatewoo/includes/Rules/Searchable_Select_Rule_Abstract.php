@@ -65,5 +65,4 @@ abstract class Searchable_Select_Rule_Abstract extends Select_Rule_Abstract {
 	public function get_object_display_value( $value ) {
 		return $value;
 	}
-
 }

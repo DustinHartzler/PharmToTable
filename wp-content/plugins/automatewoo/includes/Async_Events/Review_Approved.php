@@ -40,5 +40,4 @@ class Review_Approved extends Abstract_Async_Event {
 	public function schedule_event( $review ) {
 		$this->create_async_event( [ $review->get_id() ] );
 	}
-
 }

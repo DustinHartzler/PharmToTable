@@ -197,6 +197,7 @@ abstract class AbstractEditItem extends Action {
 	 * Get the title to display on the price field for this action
 	 */
 	protected function get_cost_field_title() {
+		/* translators: Excluding tax label (ex. tax). */
 		return sprintf( __( 'Custom Item Cost %s', 'automatewoo' ), WC()->countries->ex_tax_or_vat() );
 	}
 
@@ -236,5 +237,4 @@ abstract class AbstractEditItem extends Action {
 			$subscription->calculate_totals();
 		}
 	}
-
 }

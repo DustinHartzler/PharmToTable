@@ -9,7 +9,6 @@ use AutomateWoo\Proxies\Bookings as BookingsProxy;
 use AutomateWoo\Frontend_Endpoints\Login_Redirect;
 use AutomateWoo\Jobs\JobRegistry;
 use AutomateWoo\Jobs\JobService;
-use AutomateWoo\LegacyClassLoader;
 use AutomateWoo\Options;
 use AutomateWoo\OptionsStore;
 use AutomateWoo\Tools\ToolsService;
@@ -128,8 +127,6 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	 * Init
 	 */
 	public function init() {
-		( new LegacyClassLoader() )->register();
-
 		$this->includes();
 
 		AutomateWoo\Constants::init();
@@ -235,7 +232,7 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		 *
 		 * @since 5.6.0
 		 */
-		if ( \AutomateWoo\Integrations::is_woocommerce_blocks_active() && Options::optin_enabled() && Options::checkout_optin_enabled() ) {
+		if ( \AutomateWoo\Integrations::is_woocommerce_blocks_active() && Options::optin_enabled() && ( is_admin() || Options::checkout_optin_enabled() ) ) {
 			new \AutomateWoo\WooCommerce_Blocks_Integration();
 		}
 
@@ -483,10 +480,10 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		}
 		return self::$instance;
 	}
-
 }
 
 // phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+// phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed
 
 /**
  * For backwards compatible.

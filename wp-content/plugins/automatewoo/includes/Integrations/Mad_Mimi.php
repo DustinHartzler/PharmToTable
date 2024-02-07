@@ -23,7 +23,6 @@ class Integration_Mad_Mimi extends Integration {
 	/** @var string  */
 	private $api_root = 'https://api.madmimi.com';
 
-
 	/**
 	 * @param $username
 	 * @param $api_key
@@ -33,6 +32,25 @@ class Integration_Mad_Mimi extends Integration {
 		$this->api_key = $api_key;
 	}
 
+	/**
+	 * The API details are not stored in the same way as other integrations as they are
+	 * supplied in the Action settings so we do not need to test the integration at this point.
+	 *
+	 * @return bool True
+	 */
+	public function test_integration(): bool {
+		return true;
+	}
+
+	/**
+	 * The Mad Mimi Integration does not have a settings page and does not
+	 * need to be enabled in order to use the related Actions
+	 *
+	 * @return bool True
+	 */
+	public function is_enabled(): bool {
+		return true;
+	}
 
 	/**
 	 * Automatically logs errors

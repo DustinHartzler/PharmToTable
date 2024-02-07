@@ -27,12 +27,11 @@ trait GetWorkflow {
 		if ( $workflow === false ) {
 			throw new RestException(
 				'rest_invalid_workflow_id',
-				__( 'Invalid workflow ID.', 'automatewoo' ),
+				esc_html__( 'Invalid workflow ID.', 'automatewoo' ),
 				404
 			);
 		}
 
 		return $workflow;
 	}
-
 }

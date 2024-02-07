@@ -63,5 +63,4 @@ trait HandleOrderDeleted {
 
 		$this->handle_order_deleted( $order );
 	}
-
 }

@@ -1,6 +1,4 @@
 <?php
-// phpcs:ignoreFile
-
 namespace AutomateWoo;
 
 /**
@@ -9,13 +7,20 @@ namespace AutomateWoo;
  */
 class User_Tags {
 
+	/**
+	 * List of added user taxonomies.
+	 *
+	 * @var \WP_Taxonomy[]
+	 */
 	private static $taxonomies = [];
 
 
-	function __construct() {
+	/**
+	 * Default constructor.
+	 */
+	public function __construct() {
 		add_action( 'init', [ $this, 'register_taxonomy' ] );
-		add_action( 'registered_taxonomy', [ $this, 'registered_taxonomy' ], 10, 3 );
-		add_action( 'admin_init', [ $this, 'admin_init' ] );
+		add_action( 'admin_init', [ $this, 'handle_export' ] );
 
 		// Menus
 		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
@@ -38,78 +43,65 @@ class User_Tags {
 
 
 	/**
-	 * @param string $taxonomy
-	 * @param string $object
-	 * @param array $args
+	 * Create the user tags taxonomy
 	 */
-	function registered_taxonomy( $taxonomy, $object, $args ) {
-		global $wp_taxonomies;
+	public function register_taxonomy() {
+		$taxonomy = 'user_tag';
 
-		// Only modify user taxonomies, everything else can stay as is
-		if ( $taxonomy !== 'user_tag' ) {
+		self::$taxonomies[ $taxonomy ] = register_taxonomy(
+			$taxonomy,
+			'user',
+			[
+				'public'                => false,
+				'show_ui'               => true,
+				'labels'                => [
+					'name'                       => __( 'Tags', 'automatewoo' ),
+					'singular_name'              => __( 'Tag', 'automatewoo' ),
+					'menu_name'                  => __( 'Tags', 'automatewoo' ),
+					'search_items'               => __( 'Search Tags', 'automatewoo' ),
+					'popular_items'              => __( 'Popular Tags', 'automatewoo' ),
+					'all_items'                  => __( 'All Tags', 'automatewoo' ),
+					'edit_item'                  => __( 'Edit Tag', 'automatewoo' ),
+					'update_item'                => __( 'Update Tag', 'automatewoo' ),
+					'add_new_item'               => __( 'Add New Tag', 'automatewoo' ),
+					'new_item_name'              => __( 'New Tag Name', 'automatewoo' ),
+					'separate_items_with_commas' => __( 'Separate Tags with commas', 'automatewoo' ),
+					'add_or_remove_items'        => __( 'Add or remove Tags', 'automatewoo' ),
+					'choose_from_most_used'      => __( 'Choose from the most popular tags', 'automatewoo' ),
+				],
+				'rewrite'               => false,
+				'capabilities'          => [
+					'manage_terms' => 'edit_users',
+					'edit_terms'   => 'edit_users',
+					'delete_terms' => 'edit_users',
+					'assign_terms' => 'read',
+				],
+				'update_count_callback' => [ $this, 'update_count' ],
+			]
+		);
+
+		// Register any hooks/filters for the user tags taxonomy.
+		add_filter( "manage_edit-{$taxonomy}_columns", [ $this, 'set_user_column' ] );
+		add_action( "manage_{$taxonomy}_custom_column", [ $this, 'set_user_column_values' ], 10, 3 );
+	}
+
+
+	/**
+	 * Handle exporting a list of users by tag.
+	 */
+	public function handle_export() {
+		if ( ! isset( $_REQUEST['eut_export_csv'] ) ) {
 			return;
 		}
 
-		// We're given an array, but expected to work with an object later on
-		$args = (object) $args;
-
-		// Register any hooks/filters that rely on knowing the taxonomy now
-		add_filter( "manage_edit-{$taxonomy}_columns", [ $this, 'set_user_column' ] );
-		add_action( "manage_{$taxonomy}_custom_column", [ $this, 'set_user_column_values' ], 10, 3 );
-
-		// Set the callback to update the count if not already set
-		if ( empty( $args->update_count_callback ) ) {
-			$args->update_count_callback = [ $this, 'update_count' ];
+		$nonce = Clean::string( aw_request( '_wpnonce' ) );
+		if ( ! wp_verify_nonce( $nonce, 'eut_export_csv' ) || ! current_user_can( 'edit_users' ) ) {
+			wp_die( esc_html__( 'Unable to export users by tag.', 'automatewoo' ) );
 		}
 
-		// We're finished, make sure we save out changes
-		$wp_taxonomies[$taxonomy] = $args;
-		self::$taxonomies[$taxonomy] = $args;
-	}
-
-
-	/**
-	 * Create the user tags taxonomy
-	 */
-	function register_taxonomy() {
-		register_taxonomy( 'user_tag', 'user', [
-			'public' => false,
-			'show_ui' => true,
-			'labels' => [
-				'name' => __( 'Tags', 'automatewoo' ),
-				'singular_name' => __( 'Tag', 'automatewoo' ),
-				'menu_name' => __( 'Tags', 'automatewoo' ),
-				'search_items' => __( 'Search Tags', 'automatewoo' ),
-				'popular_items' => __( 'Popular Tags', 'automatewoo' ),
-				'all_items' => __( 'All Tags', 'automatewoo' ),
-				'edit_item' => __( 'Edit Tag', 'automatewoo' ),
-				'update_item' => __( 'Update Tag', 'automatewoo' ),
-				'add_new_item' => __( 'Add New Tag', 'automatewoo' ),
-				'new_item_name' => __( 'New Tag Name', 'automatewoo' ),
-				'separate_items_with_commas' => __( 'Separate Tags with commas', 'automatewoo' ),
-				'add_or_remove_items' => __( 'Add or remove Tags', 'automatewoo' ),
-				'choose_from_most_used' => __( 'Choose from the most popular tags', 'automatewoo' ),
-			],
-			'rewrite' => false,
-			'capabilities' => [
-				'manage_terms' => 'edit_users',
-				'edit_terms' => 'edit_users',
-				'delete_terms' => 'edit_users',
-				'assign_terms' => 'read',
-			],
-		] );
-	}
-
-
-	/**
-	 * Admin init
-	 */
-	function admin_init() {
-		if ( isset( $_REQUEST['eut_export_csv'] ) ) {
-			$exporter = new User_Tags_Export();
-			$exporter->set_user_tag( absint( $_REQUEST['user_tag'] ) );
-			$exporter->generate_csv();
-		}
+		$exporter = new User_Tags_Export();
+		$exporter->set_user_tag( absint( aw_request( 'user_tag' ) ) );
+		$exporter->generate_csv();
 	}
 
 
@@ -117,10 +109,10 @@ class User_Tags {
 	 * We need to manually update the number of users for a taxonomy term
 	 *
 	 * @see    _update_post_term_count()
-	 * @param array $terms - List of Term taxonomy IDs
-	 * @param Object $taxonomy - Current taxonomy object of terms
+	 * @param array  $terms    List of Term taxonomy IDs.
+	 * @param Object $taxonomy Current taxonomy object of terms.
 	 */
-	function update_count( $terms, $taxonomy ) {
+	public function update_count( $terms, $taxonomy ) {
 		global $wpdb;
 
 		foreach ( (array) $terms as $term ) {
@@ -136,7 +128,7 @@ class User_Tags {
 	/**
 	 * Add each of the taxonomies to the users menu
 	 */
-	function admin_menu() {
+	public function admin_menu() {
 		$taxonomies = self::$taxonomies;
 		ksort( $taxonomies );
 
@@ -154,13 +146,18 @@ class User_Tags {
 	 * Fix a bug with highlighting the parent menu item
 	 * By default, when on the edit taxonomy page for a user taxonomy, the Posts tab is highlighted
 	 * This will correct that bug
+	 *
+	 * @param string $parent Parent menu item.
 	 */
-	function parent_menu( $parent = '' ) {
+	public function parent_menu( $parent = '' ) {
 		global $pagenow;
 
 		// If we're editing one of the user taxonomies
 		// We must be within the users menu, so highlight that
-		if ( ! empty( $_GET['taxonomy'] ) && $pagenow == 'edit-tags.php' && isset( self::$taxonomies[$_GET['taxonomy']] ) ) {
+		if (
+			( $pagenow === 'edit-tags.php' || $pagenow === 'term.php' ) &&
+			! empty( $_GET['taxonomy'] ) && 'user_tag' === $_GET['taxonomy'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		) {
 			$parent = 'users.php';
 		}
 
@@ -174,7 +171,7 @@ class User_Tags {
 	 * @param array $columns
 	 * @return array
 	 */
-	function set_user_column( $columns ) {
+	public function set_user_column( $columns ) {
 		unset( $columns['posts'] );
 		$columns['users'] = __( 'Users', 'automatewoo' );
 
@@ -187,18 +184,27 @@ class User_Tags {
 
 	/**
 	 * Set values for custom columns in user taxonomies
+	 *
+	 * @param string $display
+	 * @param string $column Slug for user column.
+	 * @param int    $term_id Tag ID for the current column/row.
 	 */
-	function set_user_column_values( $display, $column, $term_id ) {
-		if ( 'users' === $column && isset( $_GET['taxonomy'] ) ) {
-			$term = get_term( $term_id, $_GET['taxonomy'] );
+	public function set_user_column_values( $display, $column, $term_id ) {
+		if ( 'users' === $column && false !== aw_get_url_var( 'taxonomy' ) ) {
+			$term = get_term( $term_id, aw_get_url_var( 'taxonomy' ) );
 			echo '<a href="' . esc_url( admin_url( 'users.php?user_tag=' . $term->slug ) ) . '">' . esc_html( $term->count ) . '</a>';
 		} elseif ( 'export' === $column ) {
-			$url = wp_nonce_url( add_query_arg( [
-				'eut_export_csv' => '1',
-				'user_tag' => $term_id
-			] ), 'eut_export_csv' );
+			$url = wp_nonce_url(
+				add_query_arg(
+					[
+						'eut_export_csv' => '1',
+						'user_tag'       => $term_id,
+					]
+				),
+				'eut_export_csv'
+			);
 
-			echo '<a href="'.$url.'" class="button">'.__( 'Export to CSV', 'automatewoo' ).'</a>';
+			echo '<a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Export to CSV', 'automatewoo' ) . '</a>';
 		} else {
 			echo '-';
 		}
@@ -209,51 +215,69 @@ class User_Tags {
 	 *
 	 * @param \WP_User $user
 	 */
-	function user_profile( $user ) {
+	public function user_profile( $user ) {
 
 		// Using output buffering as we need to make sure we have something before outputting the header
 		// But we can't rely on the number of taxonomies, as capabilities may vary
 		ob_start();
 
-		foreach ( self::$taxonomies as $taxonomy => $taxonomy_args ):
+		foreach ( self::$taxonomies as $taxonomy => $taxonomy_args ) :
 
 			// Check the current user can assign terms for this taxonomy
-			if ( ! current_user_can( $taxonomy_args->cap->assign_terms ) )
+			if ( ! current_user_can( $taxonomy_args->cap->assign_terms ) ) {
 				continue;
+			}
 
 			// Get all the terms in this taxonomy
-			$terms = get_terms( $taxonomy, [ 'hide_empty' => false ] );
+			$terms = $this->get_all_terms( $taxonomy );
 
 			?>
-          <table class="form-table">
-              <tr>
-                  <th>
-                      <label for=""><?php printf( __( "Select %s", 'automatewoo' ), $taxonomy_args->labels->name ) ?></label>
-                  </th>
-                  <td>
-							<?php if ( ! empty( $terms ) ): ?>
-								<?php foreach ( $terms as $term ): ?>
-                             <input type="checkbox" name="<?php echo $taxonomy ?>[]"
-                                    id="<?php echo "{$taxonomy}-{$term->slug}" ?>"
-                                    value="<?php echo $term->slug ?>" <?php checked( true, is_object_in_term( $user->ID, $taxonomy, $term ) ) ?> />
-                             <label for="<?php echo "{$taxonomy}-{$term->slug}" ?>"><?php echo $term->name ?></label>
-                             <br/>
-								<?php endforeach; ?>
-							<?php else: ?>
-								<?php printf( __( "There are no %s available.", 'automatewoo' ), $taxonomy_args->labels->name ) ?>
-							<?php endif; ?>
-                  </td>
-              </tr>
-          </table>
+			<table class="form-table">
+				<tr>
+					<th>
+						<label for=""><?php /* translators: Taxonomy label. */ printf( esc_html__( 'Select %s', 'automatewoo' ), esc_html( $taxonomy_args->labels->name ) ); ?></label>
+					</th>
+					<td>
+						<?php if ( ! empty( $terms ) ) : ?>
+							<?php foreach ( $terms as $term ) : ?>
+								<input type="checkbox" name="<?php echo esc_attr( $taxonomy ); ?>[]"
+									id="<?php echo esc_attr( "{$taxonomy}-{$term->slug}" ); ?>"
+									value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, is_object_in_term( $user->ID, $taxonomy, $term ) ); ?> />
+								<label for="<?php echo esc_attr( "{$taxonomy}-{$term->slug}" ); ?>"><?php echo esc_html( $term->name ); ?></label>
+								<br/>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<?php /* translators: Taxonomy label. */ printf( esc_html__( 'There are no %s available.', 'automatewoo' ), esc_html( $taxonomy_args->labels->name ) ); ?>
+						<?php endif; ?>
+					</td>
+				</tr>
+			</table>
 			<?php
 		endforeach;
 
 		// Output the above if we have anything, with a heading
 		$output = ob_get_clean();
 		if ( ! empty( $output ) ) {
-			echo '<h3>', __( 'Taxonomies', 'automatewoo' ), '</h3>';
-			echo $output;
+			echo '<h3>', esc_html__( 'Taxonomies', 'automatewoo' ), '</h3>';
+			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+	}
+
+	/**
+	 * Get all the terms including empty for a specific taxonomy.
+	 *
+	 * @param string $taxonomy
+	 * @return WP_Term[]
+	 */
+	protected function get_all_terms( $taxonomy ) {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+			)
+		);
+
+		return is_wp_error( $terms ) ? [] : $terms;
 	}
 
 	/**
@@ -261,21 +285,22 @@ class User_Tags {
 	 *
 	 * @param Integer $user_id - The ID of the user to update
 	 */
-	function save_profile( $user_id ) {
+	public function save_profile( $user_id ) {
 
 		foreach ( self::$taxonomies as $key => $taxonomy ) {
 
 			// Check the current user can edit this user and assign terms for this taxonomy
-			if ( ! current_user_can( 'edit_user', $user_id ) && current_user_can( $taxonomy->cap->assign_terms ) )
+			if ( ! current_user_can( 'edit_user', $user_id ) && current_user_can( $taxonomy->cap->assign_terms ) ) {
 				continue;
-
-			$terms = [];
-
-			// Save the data
-			if ( isset( $_POST[$key] ) ) {
-				$terms = array_map( 'sanitize_key', $_POST[$key] );
 			}
 
+			$terms = aw_get_post_var( $key );
+			if ( empty( $terms ) ) {
+				$terms = [];
+			}
+
+			// Save the data
+			$terms = array_map( 'sanitize_key', $terms );
 			wp_set_object_terms( $user_id, $terms, $key, false );
 			clean_object_term_cache( $user_id, $key );
 		}
@@ -283,28 +308,35 @@ class User_Tags {
 
 
 	/**
-	 * @param $columns
+	 * Add tags column to users page.
+	 *
+	 * @param array $columns List of columns
 	 * @return array
 	 */
-	function inject_column_header( $columns ) {
-		$pos = 5;
-		$part = array_slice( $columns, 0, $pos );
+	public function inject_column_header( $columns ) {
+		$pos   = 5;
+		$part1 = array_slice( $columns, 0, $pos );
 		$part2 = array_slice( $columns, $pos );
-		return array_merge( $part, [ 'user_tag' => __( 'Tags', 'automatewoo' ) ], $part2 );
+		return array_merge( $part1, [ 'user_tag' => __( 'Tags', 'automatewoo' ) ], $part2 );
 	}
 
 
 	/**
-	 * @param $content
-	 * @param $column
-	 * @param $user_id
+	 * Add tag values to user page.
+	 *
+	 * @param string $content Cell content.
+	 * @param string $column  Current column slug.
+	 * @param int    $user_id User ID for the current row.
 	 *
 	 * @return string
 	 */
-	function inject_column_row( $content, $column, $user_id ) {
-		if ( $column !== 'user_tag' ) return $content;
+	public function inject_column_row( $content, $column, $user_id ) {
+		if ( $column !== 'user_tag' ) {
+			return $content;
+		}
 
-		if ( ! $tags = wp_get_object_terms( $user_id, $column ) ) {
+		$tags = wp_get_object_terms( $user_id, $column );
+		if ( ! $tags ) {
 			return '<span class="na">&ndash;</span>';
 		} else {
 			$termlist = array();
@@ -318,27 +350,35 @@ class User_Tags {
 
 
 	/**
-	 * Filter the products in admin based on options
+	 * Filter the users in admin based on a tag.
 	 *
 	 * @param mixed $query
 	 */
-	function filter_admin_query( $query ) {
+	public function filter_admin_query( $query ) {
 		global $wpdb, $pagenow;
 
-		if ( is_admin() && $pagenow == 'users.php' && ! empty( $_GET['user_tag'] ) ) {
-			$tag_slug = sanitize_text_field( $_GET['user_tag'] );
-			$query->query_from .= " INNER JOIN {$wpdb->term_relationships} ON {$wpdb->users}.ID = {$wpdb->term_relationships}.object_id INNER JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id INNER JOIN {$wpdb->terms} ON {$wpdb->terms}.term_id = {$wpdb->term_taxonomy}.term_id";
+		if ( ! is_admin() && $pagenow !== 'users.php' ) {
+			return;
+		}
+
+		$tag_slug = sanitize_text_field( aw_get_url_var( 'user_tag' ) );
+		if ( ! empty( $tag_slug ) ) {
+			$query->query_from  .= " INNER JOIN {$wpdb->term_relationships} ON {$wpdb->users}.ID = {$wpdb->term_relationships}.object_id INNER JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id INNER JOIN {$wpdb->terms} ON {$wpdb->terms}.term_id = {$wpdb->term_taxonomy}.term_id";
 			$query->query_where .= $wpdb->prepare( " AND {$wpdb->terms}.slug = %s", $tag_slug );
 		}
 	}
 
 
 	/**
+	 * Prevent "All" view from being selected when viewing a filtered user list.
+	 *
 	 * @param array $views
 	 * @return array
 	 */
-	function filter_user_views( $views ) {
-		if ( ! empty( $_GET['user_tag'] ) ) {
+	public function filter_user_views( $views ) {
+		$tag_slug = sanitize_text_field( aw_get_url_var( 'user_tag' ) );
+
+		if ( ! empty( $tag_slug ) ) {
 			$views['all'] = str_replace( 'current', '', $views['all'] );
 		}
 		return $views;
@@ -346,79 +386,74 @@ class User_Tags {
 
 
 	/**
-	 * @param $which
+	 * Add bulk actions for assigning tags.
+	 *
+	 * @param string $which Bulk action location "top" | "bottom".
 	 */
-	function inject_bulk_actions( $which ) {
+	public function inject_bulk_actions( $which ) {
 
-		if ( $which !== 'top' ) {
+		if ( $which !== 'top' || ! current_user_can( 'edit_users' ) ) {
 			return;
 		}
 
-		if ( current_user_can( 'edit_users' ) ) : ?>
+		?>
+		<label class="screen-reader-text" for="add_user_tag"><?php esc_html_e( 'Add tag&hellip;', 'automatewoo' ); ?></label>
+		<select name="add_user_tag" id="add_user_tag">
+			<option value=""><?php esc_html_e( 'Add tag&hellip;', 'automatewoo' ); ?></option>
+			<?php $this->wp_dropdown_user_tags(); ?>
+		</select>
 
-          <label class="screen-reader-text"
-                 for="add_user_tag"><?php _e( 'Add tag&hellip;', 'automatewoo' ) ?></label>
-          <select name="add_user_tag" id="add_user_tag">
-              <option value=""><?php _e( 'Add tag&hellip;', 'automatewoo' ) ?></option>
-				 <?php self::wp_dropdown_user_tags(); ?>
-          </select>
+		<label class="screen-reader-text" for="remove_user_tag"><?php esc_html_e( 'Remove tag&hellip;', 'automatewoo' ); ?></label>
+		<select name="remove_user_tag" id="remove_user_tag">
+			<option value=""><?php esc_html_e( 'Remove tag&hellip;', 'automatewoo' ); ?></option>
+			<?php $this->wp_dropdown_user_tags(); ?>
+		</select>
+		<?php
 
-          <label class="screen-reader-text"
-                 for="remove_user_tag"><?php _e( 'Remove tag&hellip;', 'automatewoo' ) ?></label>
-          <select name="remove_user_tag" id="remove_user_tag">
-              <option value=""><?php _e( 'Remove tag&hellip;', 'automatewoo' ) ?></option>
-				 <?php self::wp_dropdown_user_tags(); ?>
-          </select>
+		wp_nonce_field( 'automatewoo-change-user-tags', '_awnonce' );
 
-			<?php wp_nonce_field( 'automatewoo-change-user-tags', '_awnonce' ); ?>
-
-			<?php if ( class_exists( 'Members_Plugin' ) ): // fix for members v2.0 ?>
-				<?php submit_button( esc_html__( 'Change', 'automatewoo' ), 'secondary', 'automatewoo-change-user-tags', false ) ?>
-			<?php endif; ?>
-
-		<?php endif;
+		if ( class_exists( 'Members_Plugin' ) ) { // fix for members v2.0
+			submit_button( esc_html__( 'Change', 'automatewoo' ), 'secondary', 'automatewoo-change-user-tags', false );
+		}
 	}
 
 	/**
-	 * Print out option html elements for role selectors.
-	 *
-	 * @param string $selected Slug for the role that should be already selected.
+	 * Print out option html elements for user tags.
 	 */
-	static function wp_dropdown_user_tags( $selected = '' ) {
-
-		$p = '';
-		$r = '';
-
-		$tags = get_terms( 'user_tag', [
-			'hide_empty' => false
-		] );
+	protected function wp_dropdown_user_tags() {
+		$tags = $this->get_all_terms( 'user_tag' );
 
 		foreach ( $tags as $tag ) {
-			if ( $selected == $tag->term_id || $selected == $tag->slug )
-				$p = "\n\t<option selected='selected' value='".esc_attr( $tag->term_id )."'>$tag->name</option>";
-			else
-				$r .= "\n\t<option value='".esc_attr( $tag->term_id )."'>$tag->name</option>";
+			echo "\n\t" . '<option value="' . esc_attr( $tag->term_id ) . '">' . esc_html( $tag->name ) . '</option>';
 		}
-		echo $p.$r;
 	}
 
-	function catch_bulk_edit_action() {
-
+	/**
+	 * Handle bulk edit actions for user tags.
+	 */
+	public function catch_bulk_edit_action() {
 		global $pagenow;
 
-		$valid_nonce = false;
-
-		if ( $pagenow != 'users.php' || empty( $_GET['users'] ) || ! current_user_can( 'edit_users' ) || ! isset( $_GET['_awnonce'] ) ) {
+		if ( $pagenow !== 'users.php' ) {
 			return;
 		}
 
-		if ( empty( $_GET['remove_user_tag'] ) &&  empty( $_GET['add_user_tag'] ) ) {
+		// Output bulk messages after page redirect.
+		if ( 'tags_updated' === aw_request( 'aw_message' ) ) {
+			echo '<div id="message" class="updated notice is-dismissible"><p>' . esc_html__( 'Tags updated.', 'automatewoo' ) . '</p></div>';
+		}
+
+		// Confirm we are handling one of the tag bulk actions.
+		if ( empty( $_GET['users'] ) || ! current_user_can( 'edit_users' ) || ! isset( $_GET['_awnonce'] ) ) {
 			return;
 		}
 
-		if ( wp_verify_nonce( $_GET['_awnonce'], 'automatewoo-change-user-tags') ) {
-			$valid_nonce = true;
+		if ( empty( $_GET['remove_user_tag'] ) && empty( $_GET['add_user_tag'] ) ) {
+			return;
 		}
+
+		$nonce       = Clean::string( aw_request( '_awnonce' ) );
+		$valid_nonce = wp_verify_nonce( $nonce, 'automatewoo-change-user-tags' );
 
 		$users = array_map( 'absint', $_GET['users'] );
 
@@ -434,9 +469,8 @@ class User_Tags {
 			}
 		}
 
-		echo '<div id="message" class="updated notice is-dismissible"><p>'.__( 'Tags updated.', 'automatewoo' ).'</p></div>';
+		// Redirect to prevent other actions such as change role being triggered.
+		wp_safe_redirect( admin_url( 'users.php?aw_message=tags_updated' ) );
+		exit();
 	}
-
-
 }
-

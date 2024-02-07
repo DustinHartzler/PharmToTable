@@ -17,7 +17,8 @@ use WC_Order;
  */
 class GuestMostRecentOrderUpdater {
 
-	use HandleOrderStatusChanged, HandleOrderDeleted;
+	use HandleOrderStatusChanged;
+	use HandleOrderDeleted;
 
 	/**
 	 * Register hooks.

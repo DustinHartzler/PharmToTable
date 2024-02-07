@@ -4,12 +4,6 @@ namespace AutomateWoo\Workflows;
 
 use AutomateWoo\Clean;
 use AutomateWoo\Entity\Workflow as WorkflowEntity;
-use AutomateWoo\Entity\WorkflowTiming;
-use AutomateWoo\Entity\WorkflowTimingDelayed;
-use AutomateWoo\Entity\WorkflowTimingFixed;
-use AutomateWoo\Entity\WorkflowTimingImmediate;
-use AutomateWoo\Entity\WorkflowTimingScheduled;
-use AutomateWoo\Entity\WorkflowTimingVariable;
 use AutomateWoo\Exceptions\InvalidWorkflow;
 use AutomateWoo\Workflow;
 use WP_Error;
@@ -59,41 +53,25 @@ class Factory {
 	public static function create( WorkflowEntity $entity ) {
 		$workflow = self::get( $entity->get_id() );
 		if ( $workflow ) {
-			throw InvalidWorkflow::workflow_exists( $workflow->get_id() );
+			throw InvalidWorkflow::workflow_exists( esc_html( $workflow->get_id() ) );
 		}
 
-		// Some options are stored together.
-		$options = array_merge(
-			[
-				'click_tracking'      => $entity->is_tracking_enabled(),
-				'conversion_tracking' => $entity->is_conversion_tracking_enabled(),
-				'ga_link_tracking'    => $entity->get_ga_link_tracking(),
-			],
-			self::get_timing_options_data( $entity->get_timing() )
-		);
+		return self::create_from_array( $entity->to_array() );
+	}
 
-		// Main data for the workflow.
-		$data = [
-			'title'            => $entity->get_title(),
-			'status'           => $entity->get_status(),
-			'type'             => $entity->get_type(),
-			'is_transactional' => $entity->is_transactional(),
-			'origin'           => $entity->get_origin(),
-			'options'          => $options,
-			'trigger'          => $entity->get_trigger() ? $entity->get_trigger()->to_array() : [],
-			'actions'          => [],
-			'rules'            => [],
-		];
-
-		foreach ( $entity->get_actions() as $action ) {
-			$data['actions'][] = $action->to_array();
-		}
-
-		foreach ( $entity->get_rule_groups() as $rule_group ) {
-			$data['rules'][] = $rule_group->to_array();
-		}
-
-		return self::create_from_array( $data );
+	/**
+	 * Update a workflow given an Entity.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @param WorkflowEntity $entity The entity to use for Workflow update.
+	 *
+	 * @return Workflow
+	 *
+	 * @throws InvalidWorkflow When the workflow already exists or there is an issue updating the workflow.
+	 */
+	public static function update( WorkflowEntity $entity ) {
+		return self::update_from_array( $entity->to_array() );
 	}
 
 	/**
@@ -113,6 +91,7 @@ class Factory {
 				'status'           => new Status( Status::DISABLED ),
 				'type'             => 'automatic',
 				'is_transactional' => false,
+				'order'            => 0,
 				'origin'           => WorkflowEntity::ORIGIN_MANUALLY_CREATED,
 				'options'          => [
 					'when_to_run' => 'immediately',
@@ -127,9 +106,113 @@ class Factory {
 			$data
 		);
 
-		$post_id = self::create_post( $data );
+		$post_id  = self::create_post( $data );
+		$workflow = self::create_workflow_object_from_data( $post_id, $data );
 
-		$workflow = new Workflow( $post_id );
+		do_action( 'automatewoo/workflow/created', $workflow->get_id() );
+
+		return $workflow;
+	}
+
+	/**
+	 * Update a workflow from an array of data.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @param array $data The array of workflow data.
+	 *
+	 * @return Workflow
+	 * @throws InvalidWorkflow When there is an issue updating the workflow.
+	 */
+	public static function update_from_array( $data = [] ) {
+		$post_id  = self::update_post( $data );
+		$workflow = self::create_workflow_object_from_data( $post_id, $data );
+
+		do_action( 'automatewoo/workflow/updated', $workflow->get_id() );
+
+		return $workflow;
+	}
+
+	/**
+	 * Create a post object from an array of workflow data.
+	 *
+	 * @param array $data The array of workflow data.
+	 *
+	 * @return int The created post ID.
+	 * @throws InvalidWorkflow When there is a problem creating the post.
+	 */
+	private static function create_post( array $data ): int {
+		$post_data = self::prepare_post_data( $data );
+
+		$post_id = wp_insert_post( $post_data, true );
+		if ( $post_id instanceof WP_Error ) {
+			throw InvalidWorkflow::error_creating_workflow( esc_html( $post_id->get_error_message() ) );
+		}
+
+		return $post_id;
+	}
+
+	/**
+	 * Update a post object from an array of workflow data.
+	 *
+	 * @param array $data The array of workflow data.
+	 *
+	 * @return int The updated post ID.
+	 * @throws InvalidWorkflow When there is a problem updating the post.
+	 */
+	private static function update_post( array $data ): int {
+		$post_data = self::prepare_post_data( $data );
+
+		$post_id = wp_update_post( $post_data, true );
+		if ( $post_id instanceof WP_Error ) {
+			throw InvalidWorkflow::error_updating_workflow( esc_html( $post_id->get_error_message() ) );
+		}
+
+		return $post_id;
+	}
+
+	/**
+	 * Create an array of post data from an array of workflow data.
+	 *
+	 * The 'status' property within the $data array should NOT be the post type equivalent. This
+	 * method will handle converting to the post type version of the status.
+	 *
+	 * @param array $data The array of workflow data.
+	 *
+	 * @return array
+	 */
+	private static function prepare_post_data( $data ): array {
+		if ( isset( $data['status'] ) ) {
+			$data['status'] = $data['status'] instanceof Status
+				? $data['status']->get_post_status()
+				: ( new Status( $data['status'] ) )->get_post_status();
+		}
+
+		$post_keys = [
+			'id'     => 'ID',
+			'title'  => 'post_title',
+			'status' => 'post_status',
+			'order'  => 'menu_order',
+		];
+
+		$post_data = [ 'post_type' => Workflow::POST_TYPE ];
+		foreach ( array_intersect_key( $data, $post_keys ) as $key => $value ) {
+			$post_data[ $post_keys[ $key ] ] = $value;
+		}
+
+		return $post_data;
+	}
+
+	/**
+	 * Create a workflow object from an array of data.
+	 *
+	 * @param int   $id   Workflow ID.
+	 * @param array $data Workflow data.
+	 *
+	 * @return Workflow
+	 */
+	private static function create_workflow_object_from_data( int $id, array $data ): Workflow {
+		$workflow = new Workflow( $id );
 		$workflow->set_trigger_data( $data['trigger']['name'], $data['trigger']['options'] );
 		$workflow->set_type( $data['type'] );
 
@@ -145,97 +228,7 @@ class Factory {
 		$workflow->update_meta( 'is_transactional', $data['is_transactional'] );
 		$workflow->update_meta( 'origin', $data['origin'] );
 
-		do_action( 'automatewoo/workflow/created', $workflow->get_id() );
-
 		return $workflow;
-	}
-
-	/**
-	 * Create a post object from an array of workflow data.
-	 *
-	 * The 'status' property within the $data array should NOT be the post type equivalent. This
-	 * method will handle converting to the post type version of the status.
-	 *
-	 * @param array $data The array of workflow data.
-	 *
-	 * @return int The created post ID.
-	 * @throws InvalidWorkflow When there is a problem creating the post.
-	 */
-	private static function create_post( $data = [] ) {
-		if ( isset( $data['status'] ) ) {
-			$data['status'] = $data['status'] instanceof Status
-				? $data['status']->get_post_status()
-				: ( new Status( $data['status'] ) )->get_post_status();
-		}
-
-		$post_keys = [
-			'title'  => 'post_title',
-			'status' => 'post_status',
-		];
-
-		$post_data = [ 'post_type' => Workflow::POST_TYPE ];
-		foreach ( array_intersect_key( $data, $post_keys ) as $key => $value ) {
-			$post_data[ $post_keys[ $key ] ] = $value;
-		}
-
-		$post_id = wp_insert_post( $post_data, true );
-		if ( $post_id instanceof WP_Error ) {
-			throw InvalidWorkflow::error_creating_workflow( $post_id->get_error_message() );
-		}
-
-		return $post_id;
-	}
-
-	/**
-	 * Get data based on a Workflow timing object.
-	 *
-	 * @since 5.1.0
-	 *
-	 * @param WorkflowTiming $timing The timing object.
-	 *
-	 * @return array Normalized data from the timing object.
-	 */
-	private static function get_timing_options_data( WorkflowTiming $timing ): array {
-		$data = [
-			'when_to_run' => $timing->get_type(),
-		];
-
-		switch ( get_class( $timing ) ) {
-			/** @noinspection PhpMissingBreakStatementInspection */
-			case WorkflowTimingScheduled::class:
-				/** @var WorkflowTimingScheduled $timing */
-				$data['scheduled_time'] = $timing->get_scheduled_time();
-				$data['scheduled_day']  = $timing->get_scheduled_day();
-				// Deliberately skip break to ensure delay value and unit are set in the next clause.
-
-			case WorkflowTimingDelayed::class:
-				/** @var WorkflowTimingDelayed|WorkflowTimingScheduled $timing */
-				$data['run_delay_value'] = $timing->get_delay_value();
-				$data['run_delay_unit']  = $timing->get_delay_unit();
-				break;
-
-			case WorkflowTimingFixed::class:
-				/** @var WorkflowTimingFixed $timing */
-				$datetime           = $timing->get_fixed_datetime()->convert_to_site_time();
-				$data['fixed_date'] = $datetime->format( 'Y-m-d' );
-				$data['fixed_time'] = [
-					$datetime->format( 'H' ),
-					$datetime->format( 'i' ),
-				];
-				break;
-
-			case WorkflowTimingVariable::class:
-				/** @var WorkflowTimingVariable $timing */
-				$data['queue_datetime'] = $timing->get_variable();
-				break;
-
-			case WorkflowTimingImmediate::class:
-			default:
-				// nothing to do here.
-				break;
-		}
-
-		return $data;
 	}
 
 	/**

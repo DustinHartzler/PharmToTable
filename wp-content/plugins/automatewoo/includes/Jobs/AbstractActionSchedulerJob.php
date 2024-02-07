@@ -96,5 +96,4 @@ abstract class AbstractActionSchedulerJob implements ActionSchedulerJobInterface
 	public function get_schedule() {
 		return $this->action_scheduler->next_scheduled_action( $this->get_schedule_hook() );
 	}
-
 }

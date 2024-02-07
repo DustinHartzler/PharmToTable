@@ -79,5 +79,4 @@ abstract class AbstractOneTimeActionSchedulerJob extends AbstractActionScheduler
 	protected function validate_item( array $item ) {
 		$this->validate_is_non_empty_array( $item );
 	}
-
 }

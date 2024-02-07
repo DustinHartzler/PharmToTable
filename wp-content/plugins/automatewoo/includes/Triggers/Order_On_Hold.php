@@ -24,5 +24,4 @@ class Trigger_Order_On_Hold extends Trigger_Abstract_Order_Status_Base {
 		parent::load_admin_details();
 		$this->title = __( 'Order On Hold', 'automatewoo' );
 	}
-
 }

@@ -13,7 +13,8 @@ use AutomateWoo\Traits\OptionsEntity;
  */
 abstract class NamedEntityWithOptions implements ToArray {
 
-	use NamedEntity, OptionsEntity;
+	use NamedEntity;
+	use OptionsEntity;
 
 	/**
 	 * NamedEntityWithOptions constructor.

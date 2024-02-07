@@ -8,6 +8,7 @@ use AutomateWoo\Admin\WCAdminConnectPages;
 use AutomateWoo\HPOS_Helper;
 use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
 use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
+use Automattic\WooCommerce\Admin\PageController;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Package as BlocksPackage;
 
@@ -35,6 +36,7 @@ class Admin {
 		add_action( 'admin_menu', [ $self, 'admin_menu' ] );
 		add_action( 'admin_footer', [ $self, 'replace_top_level_menu' ] );
 		add_action( 'admin_head', [ $self, 'menu_highlight' ] );
+		add_filter( 'submenu_file', [ $self, 'submenu_highlight' ], 10, 2 );
 		add_filter( 'admin_menu', [ $self, 'alter_menu' ] );
 
 		add_filter( 'woocommerce_screen_ids', [ $self, 'filter_woocommerce_screen_ids' ] );
@@ -90,11 +92,12 @@ class Admin {
 		$screen_id = self::get_screen_id();
 
 		switch ( $screen_id ) {
+			case 'opt-ins':
+				$screen_id = 'optins'; // Screen option with dash is not supported.
 			case 'logs':
 			case 'carts':
 			case 'guests':
 			case 'queue':
-			case 'unsubscribes':
 				add_screen_option(
 					'per_page',
 					[
@@ -122,7 +125,7 @@ class Admin {
 			'automatewoo_carts_per_page',
 			'automatewoo_queue_per_page',
 			'automatewoo_guests_per_page',
-			'automatewoo_unsubscribes_per_page',
+			'automatewoo_optins_per_page',
 		];
 
 		if ( in_array( $option, $options, true ) ) {
@@ -225,13 +228,13 @@ class Admin {
 				'function' => [ __CLASS__, 'load_controller' ],
 				'order'    => 2,
 			];
-
-			$sub_menu['guests'] = [
-				'title'    => __( 'Guests', 'automatewoo' ),
-				'function' => [ __CLASS__, 'load_controller' ],
-				'order'    => 3,
-			];
 		}
+
+		$sub_menu['guests'] = [
+			'title'    => __( 'Guests', 'automatewoo' ),
+			'function' => [ __CLASS__, 'load_controller' ],
+			'order'    => 3,
+		];
 
 		$sub_menu['opt-ins'] = [
 			'title'    => Options::optin_enabled() ? __( 'Opt-ins', 'automatewoo' ) : __( 'Opt-outs', 'automatewoo' ),
@@ -375,6 +378,32 @@ class Admin {
 	}
 
 	/**
+	 * Filter to highlight submenu that cannot be handled well in WordPress core.
+	 *
+	 * @param string|null $submenu_file
+	 * @param string      $parent_file
+	 *
+	 * @return string|null
+	 */
+	public static function submenu_highlight( $submenu_file, $parent_file ) {
+		// To highlight the "Workflows" submenu for the "Add New Workflow" page,
+		// it makes the `$submenu_file` match the "Workflows" submenu's slug registered
+		// in the `self::admin_menu`.
+		//
+		// Ref:
+		// - https://github.com/WordPress/wordpress-develop/blob/5.9.0/src/wp-admin/menu-header.php#L40-L48
+		// - https://github.com/WordPress/wordpress-develop/blob/5.9.0/src/wp-admin/menu-header.php#L223-L227
+		if (
+			$parent_file === 'automatewoo' &&
+			PageController::get_instance()->get_current_screen_id() === 'aw_workflow-add'
+		) {
+			return 'edit.php?post_type=aw_workflow';
+		}
+
+		return $submenu_file;
+	}
+
+	/**
 	 * Register admin scripts.
 	 */
 	public static function register_scripts() {
@@ -411,7 +440,9 @@ class Admin {
 			'automatewooValidateLocalizedErrorMessages',
 			[
 				'noVariablesSupport' => __( 'This field does not support variables.', 'automatewoo' ),
+				/* translators: Variable name. */
 				'invalidDataType'    => __( "Variable '%s' is not available with the selected trigger. Please only use variables listed in the the variables box.", 'automatewoo' ),
+				/* translators: Variable name. */
 				'invalidVariable'    => __( "Variable '%s' is not valid. Please only use variables listed in the variables box.", 'automatewoo' ),
 			]
 		);
@@ -511,7 +542,6 @@ class Admin {
 			wp_enqueue_script( 'automatewoo-preview' );
 			wp_enqueue_style( 'automatewoo-preview' );
 		}
-
 	}
 
 	/**
@@ -636,9 +666,9 @@ class Admin {
 	 */
 	public static function replace_top_level_menu() {
 		?>
-	   <script type="text/javascript">
+		<script type="text/javascript">
 			jQuery('#adminmenu').find('a.toplevel_page_automatewoo').attr('href', '<?php echo esc_url( self::page_url( 'dashboard' ) ); ?>');
-	   </script>
+		</script>
 		<?php
 	}
 
@@ -698,6 +728,12 @@ class Admin {
 			case 'tools':
 				return admin_url( 'admin.php?page=automatewoo-tools' );
 
+			case 'tool-optin-importer':
+				return admin_url( 'admin.php?page=automatewoo-tools&action=view&tool_id=optin_importer' );
+
+			case 'tool-optout-importer':
+				return admin_url( 'admin.php?page=automatewoo-tools&action=view&tool_id=optout_importer' );
+
 			case 'status':
 				return admin_url( 'admin.php?page=automatewoo-settings&tab=status' );
 
@@ -715,7 +751,7 @@ class Admin {
 				return $url;
 
 			case 'documentation':
-				return 'https://woocommerce.com/document/automatewoo/?utm_source=wordpress&utm_medium=all-plugins-page&utm_campaign=doc-link&utm_content=automatewoo';
+				return 'https://woo.com/document/automatewoo/?utm_source=wordpress&utm_medium=all-plugins-page&utm_campaign=doc-link&utm_content=automatewoo';
 		}
 
 		return false;
@@ -833,17 +869,17 @@ class Admin {
 	 * @param string $type         (warning,error,success)
 	 * @param string $strong       highlighted notice content (text or html)
 	 * @param string $more         notice content (text or html)
-	 * @param string $class        extra classes to add to the notice (eg., is-dismissible)
+	 * @param string $classes      extra classes to add to the notice (eg., is-dismissible)
 	 * @param string $button_text  text to display on the primary button (not displayed if empty)
 	 * @param string $button_link  link for the button (not displayed if empty)
 	 * @param string $button_class extra classes to add to the button
 	 */
-	public static function notice( $type, $strong, $more = '', $class = '', $button_text = '', $button_link = '', $button_class = '' ) {
+	public static function notice( $type, $strong, $more = '', $classes = '', $button_text = '', $button_link = '', $button_class = '' ) {
 		self::get_view(
 			'simple-notice',
 			[
 				'type'         => $type,
-				'class'        => $class,
+				'class'        => $classes,
 				'strong'       => $strong,
 				'message'      => $more,
 				'button_text'  => $button_text,
@@ -932,9 +968,8 @@ class Admin {
 	 *
 	 * @param string $tip        The tip to display. Not expected to be escaped.
 	 * @param bool   $pull_right Whether the tip should include the automatewoo-help-tip--right class
-	 * @param bool   $allow_html Deprecated parameter, no longer used.
 	 */
-	public static function help_tip( $tip, $pull_right = true, $allow_html = false ) {
+	public static function help_tip( $tip, $pull_right = true ) {
 		$tip = wc_sanitize_tooltip( $tip );
 		if ( empty( $tip ) ) {
 			return;
@@ -1020,7 +1055,7 @@ class Admin {
 	}
 
 	/**
-	 * Get WooCommerce.com marketplace product link.
+	 * Get Woo.com marketplace product link.
 	 *
 	 * @since 3.7.0
 	 *
@@ -1029,7 +1064,7 @@ class Admin {
 	 * @return string
 	 */
 	public static function get_marketplace_product_link( $product = 'automatewoo' ) {
-		return "https://woocommerce.com/products/$product/";
+		return "https://woo.com/products/$product/";
 	}
 
 	/**
@@ -1121,5 +1156,4 @@ class Admin {
 			admin_url( 'admin.php' )
 		);
 	}
-
 }

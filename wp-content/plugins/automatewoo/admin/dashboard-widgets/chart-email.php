@@ -64,21 +64,21 @@ class Dashboard_Widget_Chart_Email extends Dashboard_Widget_Chart {
 				continue;
 			}
 
-			$this->email_count++;
+			++$this->email_count;
 
 			$emails[] = (object) [
 				'date' => $date->convert_to_site_time()->to_mysql_string(),
 			];
 
 			if ( $log->has_open_recorded() ) {
-				$this->open_count++;
+				++$this->open_count;
 				$opens[] = (object) [
 					'date' => $log->get_date_opened()->convert_to_site_time()->to_mysql_string(),
 				];
 			}
 
 			if ( $log->has_click_recorded() ) {
-				$this->click_count++;
+				++$this->click_count;
 				$clicks[] = (object) [
 					'date' => $log->get_date_clicked()->convert_to_site_time()->to_mysql_string(),
 				];
@@ -142,7 +142,6 @@ class Dashboard_Widget_Chart_Email extends Dashboard_Widget_Chart {
 
 		<?php
 	}
-
 }
 
 return new Dashboard_Widget_Chart_Email();

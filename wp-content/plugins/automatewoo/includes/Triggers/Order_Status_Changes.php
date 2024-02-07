@@ -98,5 +98,4 @@ class Trigger_Order_Status_Changes extends Trigger_Abstract_Order_Status_Base {
 
 		return true;
 	}
-
 }

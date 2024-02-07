@@ -55,5 +55,4 @@ class BookingPersons extends Variable {
 
 		return implode( ', ', $persons );
 	}
-
 }

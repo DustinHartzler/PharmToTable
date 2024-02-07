@@ -48,5 +48,4 @@ class RegenerateDownloadPermissions extends Action {
 		$data_store->delete_by_order_id( $subscription->get_id() );
 		wc_downloadable_product_permissions( $subscription->get_id(), true );
 	}
-
 }

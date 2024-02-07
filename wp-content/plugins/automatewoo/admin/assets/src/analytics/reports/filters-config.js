@@ -30,6 +30,7 @@ const workflowsAutocompleter = {
 					search,
 					per_page: 10,
 					orderby: 'popularity',
+					_fields: 'id,title',
 				} ).toString(),
 		} ),
 	getOptionIdentifier: ( option ) => option.id,

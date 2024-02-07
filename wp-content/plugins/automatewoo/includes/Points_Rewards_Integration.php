@@ -32,6 +32,7 @@ class Points_Rewards_Integration {
 		global $wc_points_rewards;
 		$points_label = $wc_points_rewards->get_points_label( 0 );
 
+		/* translators: Points label. */
 		return sprintf( __( '%s modified by AutomateWoo', 'automatewoo' ), $points_label );
 	}
 
@@ -54,8 +55,9 @@ class Points_Rewards_Integration {
 			}
 
 			if ( is_admin() && isset( $event->data['workflow_id'] ) ) {
-				$workflow_id        = $event->data['workflow_id'];
-				$url                = get_edit_post_link( $workflow_id );
+				$workflow_id = $event->data['workflow_id'];
+				$url         = get_edit_post_link( $workflow_id );
+				/* translators: %1$s: edit workflow URL, %2$s workflow ID */
 				$event_description .= sprintf( __( ' (Workflow ID: <a href="%1$s">%2$s</a>)', 'automatewoo' ), $url, $workflow_id );
 			}
 		}

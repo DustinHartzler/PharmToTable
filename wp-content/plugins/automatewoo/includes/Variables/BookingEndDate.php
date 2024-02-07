@@ -33,5 +33,4 @@ class BookingEndDate extends Variable_Abstract_Datetime {
 	public function get_value( $booking, $parameters ) {
 		return $this->format_datetime( $booking->get_end( 'view', true ), $parameters );
 	}
-
 }

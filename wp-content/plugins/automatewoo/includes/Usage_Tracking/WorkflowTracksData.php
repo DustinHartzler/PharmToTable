@@ -42,8 +42,9 @@ trait WorkflowTracksData {
 			$this->recursively_add_items( $data, $var, $value, 'trigger_' );
 		}
 
-		foreach ( $workflow->get_rule_data() as $key => $value ) {
-			$this->recursively_add_items( $data, $key, $value );
+		// Drop named index for rule groups and rules to standardize property names.
+		foreach ( array_values( $workflow->get_rule_data() ) as $key => $rules ) {
+			$this->recursively_add_items( $data, $key, array_values( $rules ), 'rule_' );
 		}
 
 		return (array) apply_filters( 'automatewoo/usage_tracking/workflow_data', $data, $workflow );

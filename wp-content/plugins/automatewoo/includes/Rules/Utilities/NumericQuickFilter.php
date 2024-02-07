@@ -51,5 +51,4 @@ trait NumericQuickFilter {
 
 		return new NumericClause( $property, $operator, $value );
 	}
-
 }

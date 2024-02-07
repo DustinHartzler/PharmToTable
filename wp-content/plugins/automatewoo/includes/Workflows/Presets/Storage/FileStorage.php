@@ -45,11 +45,11 @@ abstract class FileStorage implements PresetStorageInterface {
 	 */
 	public function __construct( $storage_path, $file_extension ) {
 		if ( ! file_exists( $storage_path ) ) {
-			throw InvalidPath::file_does_not_exist( $storage_path );
+			throw InvalidPath::file_does_not_exist( esc_html( $storage_path ) );
 		}
 
 		if ( ! is_dir( $storage_path ) ) {
-			throw InvalidPath::path_not_directory( $storage_path );
+			throw InvalidPath::path_not_directory( esc_html( $storage_path ) );
 		}
 
 		$this->storage_path   = $storage_path;
@@ -87,7 +87,7 @@ abstract class FileStorage implements PresetStorageInterface {
 	 *
 	 * @return bool
 	 */
-	public function exists( string $name ):bool {
+	public function exists( string $name ): bool {
 		return array_key_exists( $name, $this->find_presets() );
 	}
 
@@ -100,7 +100,7 @@ abstract class FileStorage implements PresetStorageInterface {
 	 */
 	protected function validate_exists( string $name ) {
 		if ( ! $this->exists( $name ) ) {
-			throw StorageException::preset_does_not_exist( $name );
+			throw StorageException::preset_does_not_exist( esc_html( $name ) );
 		}
 	}
 

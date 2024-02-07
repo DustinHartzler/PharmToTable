@@ -56,5 +56,4 @@ class OrderNoteAddedEachLineItem extends Trigger_Order_Note_Added {
 			);
 		}
 	}
-
 }

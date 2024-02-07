@@ -61,5 +61,4 @@ class SubscriptionManual extends AbstractManual {
 			]
 		);
 	}
-
 }

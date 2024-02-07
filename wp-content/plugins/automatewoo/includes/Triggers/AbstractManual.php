@@ -27,5 +27,4 @@ abstract class AbstractManual extends Trigger implements ManualInterface {
 	public function register_hooks() {
 		// No trigger event since this is a manual trigger.
 	}
-
 }

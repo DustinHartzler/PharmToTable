@@ -58,5 +58,4 @@ class Order_Subscription_Order_Type extends Preloaded_Select_Rule_Abstract {
 
 		return $compare === 'is' ? $contains : ! $contains;
 	}
-
 }

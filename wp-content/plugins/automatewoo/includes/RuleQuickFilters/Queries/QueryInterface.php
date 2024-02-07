@@ -77,5 +77,4 @@ interface QueryInterface {
 	 * @throws Exception When there is an error counting results.
 	 */
 	public function get_results_counts_for_each_rule_group();
-
 }

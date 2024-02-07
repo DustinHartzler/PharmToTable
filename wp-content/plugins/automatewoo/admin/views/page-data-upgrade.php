@@ -32,19 +32,19 @@ if ( $plugin_slug === AW()->plugin_slug ) {
 
 <div id="automatewoo-upgrade-wrap" class="wrap woocommerce automatewoo-page automatewoo-page--data-upgrade">
 
-	<h2><?php printf( esc_html__( '%s - Database Update', 'automatewoo' ), esc_html( $plugin_name ) ); ?></h2>
+	<h2><?php /* translators: Plugin name. */ printf( esc_html__( '%s - Database Update', 'automatewoo' ), esc_html( $plugin_name ) ); ?></h2>
 
 	<?php if ( $update_available ) : ?>
 
 		<p><?php esc_html_e( 'Reading update tasks...', 'automatewoo' ); ?></p>
 
 		<p class="show-on-ajax">
-			<?php printf( esc_html__( 'Upgrading data to version %s.', 'automatewoo' ), esc_html( $version ) ); ?>
+			<?php /* translators: Version. */ printf( esc_html__( 'Upgrading data to version %s.', 'automatewoo' ), esc_html( $version ) ); ?>
 			<span style="display: none" data-automatewoo-update-items-to-process-text>
-				<?php printf( esc_html__( 'Approximately %1$s0%2$s items to process.', 'automatewoo' ), '<span data-automatewoo-update-items-to-process-count>', '</span>' ); ?>
+				<?php /* translators: %1$s wrapping span tag, %2$s closing span tag */ printf( esc_html__( 'Approximately %1$s0%2$s items to process.', 'automatewoo' ), '<span data-automatewoo-update-items-to-process-count>', '</span>' ); ?>
 			</span>
 			<span style="display: none" data-automatewoo-update-items-processed-text>
-				<?php printf( esc_html__( '%1$s0%2$s items processed.', 'automatewoo' ), '<span data-automatewoo-update-items-processed-count>', '</span>' ); ?>
+				<?php /* translators: %1$s wrapping span tag, %2$s closing span tag */ printf( esc_html__( '%1$s0%2$s items processed.', 'automatewoo' ), '<span data-automatewoo-update-items-processed-count>', '</span>' ); ?>
 			</span>
 			<i class="automatewoo-upgrade-loader"></i>
 		</p>

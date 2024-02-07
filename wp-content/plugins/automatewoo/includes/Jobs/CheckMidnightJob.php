@@ -81,6 +81,4 @@ class CheckMidnightJob extends AbstractRecurringOneTimeActionSchedulerJob {
 	public function get_interval() {
 		return JobService::THIRTY_MINUTE_INTERVAL;
 	}
-
-
 }

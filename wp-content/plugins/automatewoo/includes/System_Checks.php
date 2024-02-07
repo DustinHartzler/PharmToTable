@@ -74,7 +74,6 @@ class System_Checks {
 				set_transient( 'automatewoo_background_system_check_errors', true, DAY_IN_SECONDS );
 			}
 		}
-
 	}
 
 
@@ -91,10 +90,9 @@ class System_Checks {
 		}
 
 		$strong = __( 'AutomateWoo status check has found issues.', 'automatewoo' );
-		$more   = sprintf( __( '<a href="%s">View details</a>', 'automatewoo' ), Admin::page_url( 'status' ) );
+		/* translators: Status page URL. */
+		$more = sprintf( __( '<a href="%s">View details</a>', 'automatewoo' ), Admin::page_url( 'status' ) );
 
 		Admin::notice( 'error is-dismissible', $strong, $more, 'aw-notice-system-error' );
 	}
-
-
 }

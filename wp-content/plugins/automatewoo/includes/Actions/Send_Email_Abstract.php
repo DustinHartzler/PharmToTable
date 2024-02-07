@@ -117,5 +117,4 @@ abstract class Action_Send_Email_Abstract extends Action implements PreviewableI
 		}
 		$this->validate_array_of_strings( $args['recipients'] );
 	}
-
 }

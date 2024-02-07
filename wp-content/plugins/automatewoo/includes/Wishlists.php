@@ -174,5 +174,4 @@ class Wishlists {
 		$ids = array_map( 'absint', $ids );
 		return $ids;
 	}
-
 }

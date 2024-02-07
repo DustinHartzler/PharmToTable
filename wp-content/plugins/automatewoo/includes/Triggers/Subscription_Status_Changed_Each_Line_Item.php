@@ -40,5 +40,4 @@ class Trigger_Subscription_Status_Changed_Each_Line_Item extends Trigger_Subscri
 		Temporary_Data::set( 'subscription_new_status', $subscription_id, $new_status );
 		Subscription_Workflow_Helper::trigger_for_each_subscription_line_item( $this, $subscription_id );
 	}
-
 }

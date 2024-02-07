@@ -129,5 +129,4 @@ class Cache {
 		}
 		wp_cache_delete( (string) $key, "automatewoo_$group" );
 	}
-
 }

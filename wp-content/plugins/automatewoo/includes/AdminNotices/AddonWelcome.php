@@ -57,6 +57,7 @@ class AddonWelcome extends AbstractAdminNotice {
 			);
 		}
 
+		/* translators: Addon name. */
 		$strong = sprintf( __( 'Welcome to the %s add-on!', 'automatewoo' ), $this->addon->name );
 
 		Admin::get_view(
@@ -70,5 +71,4 @@ class AddonWelcome extends AbstractAdminNotice {
 			]
 		);
 	}
-
 }

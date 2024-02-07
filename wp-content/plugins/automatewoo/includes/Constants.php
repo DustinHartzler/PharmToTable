@@ -76,7 +76,5 @@ class Constants {
 		if ( ! defined( 'AUTOMATEWOO_NOTICE_WC_VER' ) ) {
 			define( 'AUTOMATEWOO_NOTICE_WC_VER', '6.7.0' );
 		}
-
 	}
-
 }

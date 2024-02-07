@@ -39,5 +39,4 @@ class NumericClause extends AbstractClause {
 			throw new InvalidArgumentException();
 		}
 	}
-
 }

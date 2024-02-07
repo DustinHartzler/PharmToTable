@@ -183,6 +183,4 @@ class Hooks {
 		wp_register_style( 'automatewoo-main', AW()->url( '/assets/css/automatewoo-main.css' ), [], AW()->version );
 		wp_register_style( 'automatewoo-communication-page', AW()->url( '/assets/css/automatewoo-communication-page.css' ), [ 'automatewoo-main' ], AW()->version );
 	}
-
-
 }

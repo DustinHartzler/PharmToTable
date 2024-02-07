@@ -21,5 +21,4 @@ class Review_Factory {
 		$review = new Review( $comment );
 		return $review->exists ? $review : false;
 	}
-
 }

@@ -66,11 +66,14 @@ class Variable_Abstract_Datetime extends Variable {
 		$options = apply_filters(
 			'automatewoo/variables/date_format_options',
 			[
+				/* translators: %2$s: example date */
 				'mysql'  => __( 'MySQL datetime - %2$s', 'automatewoo' ),
+				/* translators: %2$s: example date */
 				'site'   => __( 'Site setting - %2$s', 'automatewoo' ),
 				'Y-m-d'  => false,
 				'm/d/Y'  => false,
 				'd/m/Y'  => false,
+				/* translators: %2$s: example timestamp */
 				'U'      => __( 'Unix timestamp - %2$s', 'automatewoo' ),
 				'custom' => _x( 'Custom', 'custom date format option', 'automatewoo' ),
 			],
@@ -94,6 +97,7 @@ class Variable_Abstract_Datetime extends Variable {
 
 		// Set default format
 		if ( $format_value === false ) {
+			/* translators: %1$s: format name, %2$s: example date */
 			$format_value = _x( '%1$s - %2$s', 'date format option', 'automatewoo' );
 		}
 
@@ -135,12 +139,10 @@ class Variable_Abstract_Datetime extends Variable {
 		if ( empty( $parameters['format'] ) ) {
 			// Blank value meant MYSQL format pre version 4.5
 			$format = Format::MYSQL;
+		} elseif ( $parameters['format'] === 'custom' ) {
+			$format = $parameters['custom-format'];
 		} else {
-			if ( $parameters['format'] === 'custom' ) {
-				$format = $parameters['custom-format'];
-			} else {
-				$format = $this->get_date_format_from_format_param( $parameters['format'] );
-			}
+			$format = $this->get_date_format_from_format_param( $parameters['format'] );
 		}
 
 		if ( ! empty( $parameters['modify'] ) ) {
@@ -210,6 +212,7 @@ class Variable_Abstract_Datetime extends Variable {
 	 */
 	protected function get_description_custom_date_formatting_tip(): string {
 		return sprintf(
+			/* translators: %1$s: opening link tag, %2$s: closing link tag */
 			__( 'To set a custom date or time format please refer to the %1$sWordPress documentation%2$s.', 'automatewoo' ),
 			'<a href="https://wordpress.org/support/article/formatting-date-and-time/" target="_blank">',
 			'</a>'

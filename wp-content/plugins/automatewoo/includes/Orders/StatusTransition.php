@@ -83,6 +83,4 @@ class StatusTransition {
 		$statuses = aw_get_counted_order_statuses( false );
 		return ! in_array( $this->new_status, $statuses, true ) && in_array( $this->old_status, $statuses, true );
 	}
-
-
 }

@@ -20,11 +20,21 @@ class Coupon extends Searchable_Select_Abstract {
 	protected $name = 'coupon';
 
 	/**
+	 * Decides whether to find all coupons or recurring coupons only
+	 *
+	 * @var bool
+	 */
+	protected $recurring_only = false;
+
+	/**
 	 * Get the ajax action to use for the search.
 	 *
 	 * @return string
 	 */
 	protected function get_search_ajax_action() {
+		if ( $this->recurring_only ) {
+			return 'aw_json_search_coupons_recurring';
+		}
 		return 'aw_json_search_coupons';
 	}
 
@@ -39,4 +49,24 @@ class Coupon extends Searchable_Select_Abstract {
 		return wc_format_coupon_code( $value );
 	}
 
+	/**
+	 * Sets the recurring_only value
+	 *
+	 * @param bool $recurring
+	 *
+	 * @return void
+	 */
+	public function set_recurring_only( bool $recurring ) {
+		$this->recurring_only = $recurring;
+	}
+
+	/**
+	 * Gets the recurring_only value
+	 * *
+	 *
+	 * @return bool
+	 */
+	public function get_recurring_only() {
+		return $this->recurring_only;
+	}
 }

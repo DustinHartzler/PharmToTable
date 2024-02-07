@@ -21,5 +21,4 @@ interface JobInterface {
 	 * Init the job.
 	 */
 	public function init();
-
 }

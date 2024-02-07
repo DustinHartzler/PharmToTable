@@ -202,5 +202,4 @@ final class Async_Events extends Registry {
 	}
 
 	// phpcs:enable
-
 }

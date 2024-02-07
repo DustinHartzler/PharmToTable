@@ -223,5 +223,4 @@ class Controller extends Generic_Controller {
 
 		return $params;
 	}
-
 }

@@ -178,5 +178,4 @@ class ActionScheduler implements ActionSchedulerInterface {
 			$this->enqueue_async_action( ...$action );
 		}
 	}
-
 }

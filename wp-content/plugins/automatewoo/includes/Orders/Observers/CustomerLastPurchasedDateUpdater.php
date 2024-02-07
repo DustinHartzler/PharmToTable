@@ -19,7 +19,8 @@ use WC_Order;
  */
 class CustomerLastPurchasedDateUpdater {
 
-	use HandleOrderStatusChanged, HandleOrderDeleted;
+	use HandleOrderStatusChanged;
+	use HandleOrderDeleted;
 
 	/**
 	 * @var ActionSchedulerInterface

@@ -44,5 +44,4 @@ class HTML_Textarea extends Text_Area {
 	public function sanitize_value( $value ) {
 		return Clean::email_content( $value );
 	}
-
 }

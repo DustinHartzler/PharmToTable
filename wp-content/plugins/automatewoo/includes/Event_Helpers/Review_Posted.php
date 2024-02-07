@@ -58,5 +58,4 @@ class Review_Posted {
 
 		do_action( 'automatewoo/review/posted', $review );
 	}
-
 }

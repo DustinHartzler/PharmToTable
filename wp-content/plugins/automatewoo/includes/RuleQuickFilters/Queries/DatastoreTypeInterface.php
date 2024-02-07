@@ -34,5 +34,4 @@ interface DatastoreTypeInterface {
 	 * @throws Exception When there is an error counting results.
 	 */
 	public function get_results_count_by_clauses( $clauses );
-
 }

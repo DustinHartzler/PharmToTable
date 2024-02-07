@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="notice automatewoo-welcome-notice is-dismissible <?php echo isset( $class ) ? esc_attr( $class ) : ''; ?>"
-	 data-automatewoo-dismissible-notice="<?php echo esc_attr( $notice_identifier ); ?>">
+	data-automatewoo-dismissible-notice="<?php echo esc_attr( $notice_identifier ); ?>">
 	<h3 class="automatewoo-welcome-notice__heading">
 		<?php if ( ! empty( $title ) ) : ?>
 			<?php echo wp_kses_post( $title ); ?>

@@ -33,5 +33,4 @@ interface QuickFilterable {
 	 * @return ClauseInterface|ClauseInterface[] A single clause or an array of clauses.
 	 */
 	public function get_quick_filter_clause( $compare_type, $value );
-
 }

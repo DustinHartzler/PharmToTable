@@ -68,10 +68,10 @@ class Before_After_Day extends Field {
 			<div class="automatewoo-before-after-day-field-group__fields">
 
 				<input type="number" name="<?php echo esc_attr( $field_names ); ?>"
-					   value="<?php echo esc_attr( $day_val ); ?>"
-					   class="automatewoo-before-after-day-field-group__field automatewoo-before-after-day-field-group__field--days"
-					   min="1"
-					   placeholder="1"
+					value="<?php echo esc_attr( $day_val ); ?>"
+					class="automatewoo-before-after-day-field-group__field automatewoo-before-after-day-field-group__field--days"
+					min="1"
+					placeholder="1"
 				>
 
 				<select name="<?php echo esc_attr( $field_names ); ?>"
@@ -118,5 +118,4 @@ class Before_After_Day extends Field {
 
 		return false;
 	}
-
 }

@@ -11,5 +11,4 @@ interface WorkflowTiming {
 	 * @return string
 	 */
 	public function get_type();
-
 }

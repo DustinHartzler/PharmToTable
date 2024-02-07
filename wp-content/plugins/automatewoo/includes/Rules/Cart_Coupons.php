@@ -41,5 +41,4 @@ class Cart_Coupons extends Order_Coupons {
 	public function validate( $cart, $compare, $expected_coupons ) {
 		return $this->validate_select_case_insensitive( array_keys( $cart->get_coupons() ), $compare, $expected_coupons );
 	}
-
 }

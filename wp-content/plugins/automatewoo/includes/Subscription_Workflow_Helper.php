@@ -293,5 +293,4 @@ class Subscription_Workflow_Helper {
 
 		return false;
 	}
-
 }

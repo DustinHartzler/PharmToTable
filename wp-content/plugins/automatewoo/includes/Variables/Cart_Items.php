@@ -73,7 +73,7 @@ class Variable_Cart_Items extends Variable_Abstract_Product_Display {
 			if ( isset( $parameters['fallback'] ) ) {
 				return '';
 			} else {
-				throw new Exception( __( '{{ cart.items }} returned no products so the workflow was aborted', 'automatewoo' ) );
+				throw new Exception( esc_html__( '{{ cart.items }} returned no products so the workflow was aborted', 'automatewoo' ) );
 			}
 		}
 

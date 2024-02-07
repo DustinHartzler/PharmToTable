@@ -30,5 +30,4 @@ class SenseiLesson extends Post {
 	public function get_plural_name() {
 		return __( 'Lessons', 'automatewoo' );
 	}
-
 }

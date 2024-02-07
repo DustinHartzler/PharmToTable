@@ -44,5 +44,4 @@ class Trigger_Customer_Opted_Out extends Trigger {
 			]
 		);
 	}
-
 }

@@ -60,5 +60,4 @@ trait HandleOrderNoteAdded {
 			$order
 		);
 	}
-
 }

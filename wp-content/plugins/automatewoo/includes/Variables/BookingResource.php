@@ -37,5 +37,4 @@ class BookingResource extends Variable {
 
 		return $resource->get_title();
 	}
-
 }

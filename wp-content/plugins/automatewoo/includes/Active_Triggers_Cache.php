@@ -98,5 +98,4 @@ final class Active_Triggers_Cache {
 		update_option( 'automatewoo_active_triggers', '', true );
 		self::$active_triggers = null;
 	}
-
 }

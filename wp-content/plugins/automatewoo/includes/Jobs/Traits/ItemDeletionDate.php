@@ -27,5 +27,4 @@ trait ItemDeletionDate {
 	protected function get_deletion_date() {
 		return aw_normalize_date( gmdate( 'U' ) - ( $this->get_deletion_period() * DAY_IN_SECONDS ) );
 	}
-
 }

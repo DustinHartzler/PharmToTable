@@ -78,5 +78,4 @@ abstract class Database_Table {
 
 		return $collate;
 	}
-
 }

@@ -53,5 +53,4 @@ class ReferAFriendCheck extends AbstractAddonCheck {
 
 		return $note;
 	}
-
 }

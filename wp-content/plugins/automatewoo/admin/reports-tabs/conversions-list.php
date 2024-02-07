@@ -59,7 +59,6 @@ class Reports_Tab_Conversions_List extends \AW_Admin_Reports_Tab_Abstract {
 				break;
 		}
 	}
-
 }
 
 return new Reports_Tab_Conversions_List();

@@ -53,5 +53,4 @@ class Subscription_Run_Count extends Abstract_Number {
 
 		return $this->validate_number( $workflow->get_run_count_for_subscription( $subscription ), $compare, $value );
 	}
-
 }

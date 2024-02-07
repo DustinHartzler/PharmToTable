@@ -125,5 +125,4 @@ class SubscriptionHighPerformanceDatastoreType extends OrderHighPerformanceDatas
 			'type'    => $type,
 		];
 	}
-
 }

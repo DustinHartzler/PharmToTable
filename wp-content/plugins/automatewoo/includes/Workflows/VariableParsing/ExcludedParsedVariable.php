@@ -24,5 +24,4 @@ class ExcludedParsedVariable {
 	public function __construct( string $variable_string ) {
 		$this->variable_string = $variable_string;
 	}
-
 }

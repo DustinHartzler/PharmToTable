@@ -104,5 +104,4 @@ class ArrayPreset implements PresetInterface, \ArrayAccess {
 
 		return $this;
 	}
-
 }

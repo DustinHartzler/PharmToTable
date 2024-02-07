@@ -44,5 +44,4 @@ class Order_Item_Total extends Abstract_Number {
 	public function validate( $item, $compare, $value ) {
 		return $this->validate_number( $item->get_total(), $compare, $value );
 	}
-
 }

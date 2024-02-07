@@ -82,6 +82,13 @@ class Workflow {
 	protected $actions = [];
 
 	/**
+	 * Order in which the workflows will run.
+	 *
+	 * @var integer
+	 */
+	protected $order = 0;
+
+	/**
 	 * The origin of the workflow indicating how it was created (e.g. manually, a preset name, etc.)
 	 *
 	 * @var string
@@ -334,6 +341,23 @@ class Workflow {
 	}
 
 	/**
+	 * @return int
+	 */
+	public function get_order(): int {
+		return $this->order;
+	}
+
+	/**
+	 * @param int $order
+	 *
+	 * @return Workflow
+	 */
+	public function set_order( int $order ): Workflow {
+		$this->order = $order;
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function get_origin(): string {
@@ -350,4 +374,99 @@ class Workflow {
 		return $this;
 	}
 
+	/**
+	 * Convert workflow data to an array.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @return array
+	 */
+	public function to_array(): array {
+		// Some options are stored together.
+		$options = array_merge(
+			[
+				'click_tracking'      => $this->is_tracking_enabled(),
+				'conversion_tracking' => $this->is_conversion_tracking_enabled(),
+				'ga_link_tracking'    => $this->get_ga_link_tracking(),
+			],
+			$this->get_timing_options_data( $this->get_timing() )
+		);
+
+		// Main data for the workflow.
+		$data = [
+			'title'            => $this->get_title(),
+			'status'           => $this->get_status(),
+			'type'             => $this->get_type(),
+			'is_transactional' => $this->is_transactional(),
+			'order'            => $this->get_order(),
+			'origin'           => $this->get_origin(),
+			'options'          => $options,
+			'trigger'          => $this->get_trigger() ? $this->get_trigger()->to_array() : [],
+			'actions'          => [],
+			'rules'            => [],
+		];
+
+		foreach ( $this->get_actions() as $action ) {
+			$data['actions'][] = $action->to_array();
+		}
+
+		foreach ( $this->get_rule_groups() as $rule_group ) {
+			$data['rules'][] = $rule_group->to_array();
+		}
+
+		if ( $this->get_id() ) {
+			$data['id'] = $this->get_id();
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Get data from the Workflow timing object.
+	 *
+	 * @since 6.0.10
+	 *
+	 * @return array Normalized data from the timing object.
+	 */
+	private function get_timing_options_data(): array {
+		$data = [
+			'when_to_run' => $this->timing->get_type(),
+		];
+
+		switch ( get_class( $this->timing ) ) {
+			case WorkflowTimingScheduled::class:
+				/** @var WorkflowTimingScheduled $timing */
+				$data['scheduled_time'] = $this->timing->get_scheduled_time();
+				$data['scheduled_day']  = $this->timing->get_scheduled_days();
+				// Deliberately skip break to ensure delay value and unit are set in the next clause.
+
+			case WorkflowTimingDelayed::class:
+				/** @var WorkflowTimingDelayed|WorkflowTimingScheduled $timing */
+				$data['run_delay_value'] = $this->timing->get_delay_value();
+				$data['run_delay_unit']  = $this->timing->get_delay_unit();
+				break;
+
+			case WorkflowTimingFixed::class:
+				/** @var WorkflowTimingFixed $timing */
+				$datetime           = $this->timing->get_fixed_datetime()->convert_to_site_time();
+				$data['fixed_date'] = $datetime->format( 'Y-m-d' );
+				$data['fixed_time'] = [
+					$datetime->format( 'H' ),
+					$datetime->format( 'i' ),
+				];
+				break;
+
+			case WorkflowTimingVariable::class:
+				/** @var WorkflowTimingVariable $timing */
+				$data['queue_datetime'] = $this->timing->get_variable();
+				break;
+
+			case WorkflowTimingImmediate::class:
+			default:
+				// nothing to do here.
+				break;
+		}
+
+		return $data;
+	}
 }

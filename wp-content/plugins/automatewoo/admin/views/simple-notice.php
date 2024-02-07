@@ -33,6 +33,7 @@ if ( empty( $message ) ) {
 	</p>
 	<?php if ( ! empty( $button_text ) && ! empty( $button_link ) ) : ?>
 		<p><a href="<?php echo esc_url( $button_link ); ?>"
-			  class="button-primary <?php echo isset( $button_class ) ? esc_attr( $button_class ) : ''; ?>"><?php echo esc_html( $button_text ); ?></a></p>
+			class="button-primary <?php echo isset( $button_class ) ? esc_attr( $button_class ) : ''; ?>"
+		><?php echo esc_html( $button_text ); ?></a></p>
 	<?php endif; ?>
 </div>
