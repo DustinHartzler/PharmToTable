@@ -44,6 +44,9 @@ class WP_CKWC {
 		// Register integration.
 		add_filter( 'woocommerce_integrations', array( $this, 'woocommerce_integrations_register' ) );
 
+		// Register blocks.
+		add_action( 'woocommerce_blocks_loaded', array( $this, 'woocommerce_blocks_register' ) );
+
 		// Declare HPOS compatibility.
 		add_action( 'before_woocommerce_init', array( $this, 'woocommerce_hpos_compatibility' ) );
 
@@ -95,6 +98,28 @@ class WP_CKWC {
 	}
 
 	/**
+	 * Registers the opt in checkbox block for the WooCommerce Checkout Block.
+	 *
+	 * @since   1.7.1
+	 */
+	public function woocommerce_blocks_register() {
+
+		// Load opt in checkbox block.
+		require_once CKWC_PLUGIN_PATH . '/includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php';
+
+		// Register opt in checkbox block.
+		add_action(
+			'woocommerce_blocks_checkout_block_registration',
+			function ( $integration_registry ) {
+
+				$integration_registry->register( new CKWC_Opt_In_Block_Integration() );
+
+			}
+		);
+
+	}
+
+	/**
 	 * Initialize admin, frontend and global Plugin classes when WooCommerce initializes,
 	 * after WooCommerce has loaded its integrations.
 	 *
@@ -104,6 +129,7 @@ class WP_CKWC {
 
 		// Initialize class(es) to register hooks.
 		$this->initialize_admin();
+		$this->initialize_cli();
 		$this->initialize_frontend();
 		$this->initialize_global();
 
@@ -135,6 +161,53 @@ class WP_CKWC {
 		 * @since   1.4.2
 		 */
 		do_action( 'convertkit_for_woocommerce_initialize_admin' );
+
+	}
+
+	/**
+	 * Register WP-CLI commands for this Plugin.
+	 *
+	 * @since   1.7.1
+	 */
+	private function initialize_cli() {
+
+		// Bail if this isn't a CLI request.
+		if ( ! defined( 'WP_CLI' ) ) {
+			return;
+		}
+		if ( ! WP_CLI ) {
+			return;
+		}
+		if ( ! class_exists( 'WP_CLI' ) ) {
+			return;
+		}
+
+		$this->classes['cli_sync_past_orders'] = new CKWC_CLI_Sync_Past_Orders();
+
+		// Register CLI commands.
+		WP_CLI::add_command(
+			'ckwc-sync-past-orders',
+			$this->classes['cli_sync_past_orders'],
+			array(
+				'shortdesc' => __( 'Sync past orders with ConvertKit Purchase Data.', 'woocommerce-convertkit' ),
+				'synopsis'  => array(
+					array(
+						'type'     => 'assoc',
+						'name'     => 'limit',
+						'optional' => true,
+						'multiple' => false,
+					),
+				),
+				'when'      => 'before_wp_load',
+			)
+		);
+
+		/**
+		 * Register CLI commands.
+		 *
+		 * @since   1.7.1
+		 */
+		do_action( 'convertkit_for_woocommerce_initialize_cli' );
 
 	}
 

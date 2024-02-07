@@ -9,13 +9,13 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.6.9
+ * Version: 1.7.2
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 8.1.1
+ * WC tested up to: 8.5.1
  */
 
 // Bail if Plugin is already loaded.
@@ -28,7 +28,7 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '1.6.9' );
+define( 'CKWC_PLUGIN_VERSION', '1.7.2' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
 if ( ! class_exists( 'ConvertKit_API' ) ) {
@@ -46,6 +46,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-cli-sync-past-orders.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-order.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-custom-fields.php';

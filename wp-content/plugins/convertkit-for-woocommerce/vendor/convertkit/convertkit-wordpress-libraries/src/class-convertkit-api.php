@@ -160,6 +160,11 @@ class ConvertKit_API {
 			'tag_subscribe_tag_id_empty'                  => __( 'tag_subscribe(): the tag_id parameter is empty.', 'convertkit' ),
 			'tag_subscribe_email_empty'                   => __( 'tag_subscribe(): the email parameter is empty.', 'convertkit' ),
 
+			// tag_unsubscribe().
+			'tag_unsubscribe_tag_id_empty'                => __( 'tag_unsubscribe(): the tag_id parameter is empty.', 'convertkit' ),
+			'tag_unsubscribe_email_empty'                 => __( 'tag_unsubscribe(): the email parameter is empty.', 'convertkit' ),
+			'tag_unsubscribe_email_invalid'               => __( 'tag_unsubscribe(): the email parameter is not a valid email address.', 'convertkit' ),
+
 			// get_subscriber_by_email().
 			'get_subscriber_by_email_email_empty'         => __( 'get_subscriber_by_email(): the email parameter is empty.', 'convertkit' ),
 			/* translators: Email Address */
@@ -592,6 +597,67 @@ class ConvertKit_API {
 		 * @param   mixed   $fields     Custom Fields (false|array).
 		 */
 		do_action( 'convertkit_api_tag_subscribe_success', $response, $tag_id, $email, $fields );
+
+		return $response;
+
+	}
+
+	/**
+	 * Removes a tag from the subscriber by their email address.
+	 *
+	 * @since   1.4.0
+	 *
+	 * @param   int    $tag_id     Tag ID.
+	 * @param   string $email      Email Address.
+	 * @return  WP_Error|array
+	 */
+	public function tag_unsubscribe( $tag_id, $email ) {
+
+		$this->log( 'API: tag_unsubscribe(): [ tag_id: ' . $tag_id . ', email: ' . $email . ']' );
+
+		// Sanitize some parameters.
+		$tag_id = absint( $tag_id );
+		$email  = trim( $email );
+
+		// Return error if no Tag ID or email address is specified.
+		if ( empty( $tag_id ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'tag_unsubscribe_tag_id_empty' ) );
+		}
+		if ( empty( $email ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'tag_unsubscribe_email_empty' ) );
+		}
+
+		// Return error if an invalid email is specified.
+		// Passing an invalid email to the API doesn't return an error, so we need to check here.
+		if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'tag_unsubscribe_email_invalid' ) );
+		}
+
+		// Build request parameters.
+		$params = array(
+			'api_secret' => $this->api_secret,
+			'email'      => $email,
+		);
+
+		// Send request.
+		$response = $this->post( 'tags/' . $tag_id . '/unsubscribe', $params );
+
+		// If an error occured, log and return it now.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: tag_unsubscribe(): Error: ' . $response->get_error_message() );
+			return $response;
+		}
+
+		/**
+		 * Runs actions immediately after the email address was successfully unsubscribed from the tag.
+		 *
+		 * @since   1.4.0
+		 *
+		 * @param   array   $response   API Response
+		 * @param   int     $tag_id     Tag ID
+		 * @param   string  $email      Email Address
+		 */
+		do_action( 'convertkit_api_tag_unsubscribe_success', $response, $tag_id, $email );
 
 		return $response;
 
@@ -1413,9 +1479,10 @@ class ConvertKit_API {
 	 * This isn't specifically an API function, but for now it's best suited here.
 	 *
 	 * @param   string $url     URL of Landing Page.
+	 * @param   bool   $debug   Enable debugging.
 	 * @return  WP_Error|string HTML
 	 */
-	public function get_landing_page_html( $url ) {
+	public function get_landing_page_html( $url, $debug = false ) {
 
 		$this->log( 'API: get_landing_page_html(): [ url: ' . $url . ']' );
 
@@ -1428,13 +1495,18 @@ class ConvertKit_API {
 			return $body;
 		}
 
+		// Define convertkit JS object.
+		$js_convertkit_object = array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'debug'   => $debug,
+			'nonce'   => wp_create_nonce( 'convertkit' ),
+		);
+
 		// Inject JS for subscriber forms to work.
 		// wp_enqueue_script() isn't called when we load a Landing Page, so we can't use it.
 		// phpcs:disable WordPress.WP.EnqueuedResources
-		$scripts = new WP_Scripts();
-		$script  = "<script type='text/javascript' src='" . trailingslashit( $scripts->base_url ) . "wp-includes/js/jquery/jquery.js?ver=1.4.0'></script>";
-		$script .= "<script type='text/javascript' src='" . $this->plugin_url . 'resources/frontend/js/convertkit.js?ver=' . $this->plugin_version . "'></script>";
-		$script .= "<script type='text/javascript'>/* <![CDATA[ */var convertkit = {\"ajaxurl\":\"" . admin_url( 'admin-ajax.php' ) . '"};/* ]]> */</script>';
+		$script  = "<script type='text/javascript' src='" . $this->plugin_url . 'resources/frontend/js/convertkit.js?ver=' . $this->plugin_version . "'></script>";
+		$script .= "<script type='text/javascript'>/* <![CDATA[ */var convertkit = " . wp_json_encode( $js_convertkit_object ) . ';/* ]]> */</script>';
 		// phpcs:enable
 
 		$body = str_replace( '</head>', '</head>' . $script, $body );
