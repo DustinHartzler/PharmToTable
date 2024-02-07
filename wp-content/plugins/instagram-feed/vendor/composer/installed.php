@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '485eb78065c52524e0e06973cd027ae3e41cadcd',
+        'reference' => NULL,
         'name' => 'smashballoon/instagram-feed',
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'smashballoon/instagram-feed' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '485eb78065c52524e0e06973cd027ae3e41cadcd',
+            'reference' => NULL,
             'dev_requirement' => false,
         ),
         'smashballoon/stubs' => array(
@@ -27,7 +27,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '36cb174511ed63c008d2d3f2a77194612de489be',
+            'reference' => '063c3e588e897985d83cb65958c45e12281263ba',
             'dev_requirement' => false,
         ),
     ),

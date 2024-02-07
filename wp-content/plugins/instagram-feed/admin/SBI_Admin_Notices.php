@@ -18,7 +18,7 @@ class SBI_Admin_Notices
      */
     public $sbi_license;
 
-    function __construct() {
+    public function __construct() {
 		$this->init();
 	}
 
@@ -90,7 +90,8 @@ class SBI_Admin_Notices
         // set the transient so it will hide for next 7 days
         set_transient( 'instagram_feed_dismiss_lite', 'dismiss', 1 * WEEK_IN_SECONDS );
 
-        new SBI_Response( true, array() );
+        $response = new SBI_Response( true, array() );
+        $response->send();
     }
 
     /**
@@ -173,16 +174,18 @@ class SBI_Admin_Notices
             // if the license is active then lets remove the ignore check for dashboard so next time it will show the expired notice in dashboard screen
             update_user_meta( get_current_user_id(), 'sbi_ignore_dashboard_license_notice', false );
 
-            new SBI_Response( true, array(
+            $response = new SBI_Response( true, array(
                 'msg' => 'License Active',
                 'content' => $this->get_renewed_license_notice_content()
             ) );
+            $response->send();
         } else {
             $content = 'Your Instagram Feed Pro license key has expired';
-            new SBI_Response( false, array(
+            $response = new SBI_Response( false, array(
                 'msg' => 'License Not Renewed',
                 'content' => $content
             ) );
+            $response->send();
         }
     }
 

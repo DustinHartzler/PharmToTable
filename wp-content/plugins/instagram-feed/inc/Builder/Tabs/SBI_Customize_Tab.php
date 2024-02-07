@@ -22,7 +22,7 @@ class SBI_Customize_Tab{
 	 *
 	 * @return array
 	*/
-	static function get_sections(){
+	public static function get_sections(){
 		return [
 
 			'customize_feedlayout' => [
@@ -93,7 +93,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_feedlayout_controls(){
+	public static function get_customize_feedlayout_controls(){
 		$svg_icons = SBI_Feed_Builder::builder_svg_icons();
 		$svg_rocket_icon = $svg_icons['rocketPremiumBlue'];
 
@@ -436,7 +436,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_colorscheme_controls(){
+	public static function get_customize_colorscheme_controls(){
 		$feed_id            = isset( $_GET['feed_id'] ) ? sanitize_key( $_GET['feed_id'] ) : '';
 		$color_scheme_array = [
 			[
@@ -555,7 +555,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_header_controls(){
+	public static function get_customize_header_controls(){
 		return [
 			[
 				'type' 				=> 'switcher',
@@ -821,7 +821,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_posts_controls(){
+	public static function get_customize_posts_controls(){
 		return [
 			[
 				'type' 				=> 'heading',
@@ -882,7 +882,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_nested_images_videos_controls(){
+	public static function get_nested_images_videos_controls(){
 		return [
 			[
 				'type' 				=> 'separator',
@@ -912,7 +912,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_nested_caption_controls(){
+	public static function get_nested_caption_controls(){
 		return [
 			[
 				'type' 				=> 'switcher',
@@ -987,7 +987,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_nested_like_comment_summary_controls(){
+	public static function get_nested_like_comment_summary_controls(){
 		return [
 			[
 				'type' 				=> 'switcher',
@@ -1044,7 +1044,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_nested_hover_state_controls(){
+	public static function get_nested_hover_state_controls(){
 		return [
 			[
 				'type' 				=> 'colorpicker',
@@ -1107,7 +1107,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_loadmorebutton_controls(){
+	public static function get_customize_loadmorebutton_controls(){
 		return [
 			[
 				'type' 				=> 'switcher',
@@ -1241,7 +1241,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_followbutton_controls(){
+	public static function get_customize_followbutton_controls(){
 		return [
 			[
 				'type' 				=> 'switcher',
@@ -1321,7 +1321,7 @@ class SBI_Customize_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_customize_lightbox_controls(){
+	public static function get_customize_lightbox_controls(){
 		return [
 
 			[

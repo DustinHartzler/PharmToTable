@@ -876,6 +876,9 @@ function sbi_get_feed_template_part( $part, $settings = array() ) {
 		}
 	}
 
+	// Allow 3rd party plugins to filter template file from their plugin.
+	$file = apply_filters( 'sbi_feed_template_part', $file, $part, $settings );
+
 	return $file;
 }
 

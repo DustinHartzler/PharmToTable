@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class SbiWidget extends WP_Widget
 {
-    function __construct() {
+    public function __construct() {
         parent::__construct(
             'instagram-feed-widget',
             __( 'Instagram Feed', 'instagram-feed' ),

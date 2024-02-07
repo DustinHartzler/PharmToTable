@@ -2,8 +2,8 @@
 Contributors: smashballoon, craig-at-smash-balloon, am, smub
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 4.1
-Tested up to: 6.3
-Stable tag: 6.2.4
+Tested up to: 6.4
+Stable tag: 6.2.8
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -343,6 +343,19 @@ If you like our WordPress Instagram plugin, then consider checking out our other
 Visit [WPBeginner](https://wpbeginner.com/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) to learn from our [WordPress Tutorials](https://www.wpbeginner.com/category/wp-tutorials/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links) and about the [best WordPress plugins](https://www.wpbeginner.com/category/plugins/?utm_campaign=instagram-free&utm_source=readme&utm_medium=whats-next-links).
 
 == Changelog ==
+= 6.2.8 =
+* Fix: Menu items for our other plugins were not working when clicked.
+
+= 6.2.7 =
+* Tweak: Improved and hardened our code base to improve reliability.
+
+= 6.2.6 =
+* Fix: Resetting optimized images would also reset Instagram Feed settings.
+
+= 6.2.5 =
+* Fix: Fixed a problem with our code that would remove admin footer text from other sources.
+* Fix: Fixed an issue causing the minified CSS file to not actually be minified.
+
 = 6.2.4 =
 * Fix: Disabled translation for a string that would cause an error in some languages.
 

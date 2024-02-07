@@ -14,7 +14,7 @@ class SBI_Tooltip_Wizard {
 	 *
 	 * @since 6.0
 	 */
-	function __construct(){
+	public function __construct(){
 		$this->init();
 	}
 

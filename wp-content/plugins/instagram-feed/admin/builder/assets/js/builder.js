@@ -693,13 +693,10 @@ sbiBuilder = new Vue({
 			switch (customizerSettings.type) {
 				case 'user':
 					return ['user'];
-					break;
 				case 'hashtag':
 					return ['hashtag'];
-					break;
 				case 'tagged':
 					return ['tagged'];
-					break;
 				case 'mixed':
 					var feedTypes = [];
 					if (customizerSettings.id.length > 0) {
@@ -712,7 +709,6 @@ sbiBuilder = new Vue({
 						feedTypes.push('tagged');
 					}
 					return feedTypes;
-					break;
 			}
 
 		},
@@ -756,13 +752,10 @@ sbiBuilder = new Vue({
 			switch (feedTypeID) {
 				case 'user':
 					return self.createSourcesArray(self.customizerFeedData.settings.id).length > 0;
-					break;
 				case 'hashtag':
 					return self.createSourcesArray(self.customizerFeedData.settings.hashtag).length > 0;
-					break;
 				case 'tagged':
 					return self.createSourcesArray(self.customizerFeedData.settings.tagged).length > 0;
-					break;
 			}
 			return false;
 		},
@@ -1813,13 +1806,10 @@ sbiBuilder = new Vue({
 			switch (self.customizerScreens.previewScreen) {
 				case 'mobile':
 					return self.customizerFeedData.settings.colsmobile
-					break;
 				case 'tablet':
 					return self.customizerFeedData.settings.colstablet
-					break;
 				default:
 					return self.customizerFeedData.settings.cols
-					break;
 			}
 		},
 
@@ -1829,13 +1819,10 @@ sbiBuilder = new Vue({
 			switch (self.customizerScreens.previewScreen) {
 				case 'mobile':
 					return self.customizerFeedData.settings.nummobile
-					break;
 				case 'tablet':
 					return self.customizerFeedData.settings.nummobile
-					break;
 				default:
 					return self.customizerFeedData.settings.num
-					break;
 			}
 		},
 
@@ -2037,9 +2024,9 @@ sbiBuilder = new Vue({
 				customizerSettings = self.customizerFeedData.settings,
 				disableMobile = self.valueIsEnabled(customizerSettings.disablemobile);
 
-			if (disableMobile === 'false') disableMobile = '';
+			if (disableMobile == 'false') disableMobile = '';
 
-			if (disableMobile !== ' sbi_disable_mobile' && customizerSettings.colsmobile !== 'same') {
+			if (disableMobile != ' sbi_disable_mobile' && customizerSettings.colsmobile !== 'same') {
 				var colsmobile = parseInt(customizerSettings.colsmobile) > 0 ? parseInt(customizerSettings.colsmobile) : 'auto';
 				return ' sbi_mob_col_' + colsmobile;
 			} else {
@@ -2289,7 +2276,7 @@ sbiBuilder = new Vue({
 		checkControlCondition: function (conditionsArray = [], checkExtensionActive = false, checkExtensionActiveDimmed = false) {
 			var self = this,
 				isConditionTrue = 0;
-			Object.keys(conditionsArray).map(function (condition, index) {
+			Object.keys(conditionsArray).forEach(function (condition, index) {
 				if (conditionsArray[condition].indexOf(self.customizerFeedData.settings[condition]) !== -1)
 					isConditionTrue += 1
 			});
@@ -2307,7 +2294,7 @@ sbiBuilder = new Vue({
 		checkControlOverrideColor: function (overrideConditionsArray = []) {
 			var self = this,
 				isConditionTrue = 0;
-			overrideConditionsArray.map(function (condition, index) {
+			overrideConditionsArray.forEach(function (condition, index) {
 				if (self.checkNotEmpty(self.customizerFeedData.settings[condition]) && self.customizerFeedData.settings[condition].replace(/ /gi, '') != '#') {
 					isConditionTrue += 1
 				}

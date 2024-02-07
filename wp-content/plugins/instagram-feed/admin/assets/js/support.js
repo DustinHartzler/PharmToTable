@@ -1,7 +1,6 @@
 var support_data = {
     genericText: sbi_support.genericText,
     articles: sbi_support.articles,
-    links: sbi_support.links,
     system_info: sbi_support.system_info,
     system_info_n: sbi_support.system_info_n,
     exportFeed: 'none',

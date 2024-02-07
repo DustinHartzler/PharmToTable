@@ -26,7 +26,7 @@ class SBI_Feed_Builder {
 	 *
 	 * @since 6.0
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->init();
 	}
 
@@ -62,7 +62,7 @@ class SBI_Feed_Builder {
 	 *
 	 * @since 6.0
 	 */
-	function register_menu() {
+	public function register_menu() {
 		$cap = current_user_can( 'manage_instagram_feed_options' ) ? 'manage_instagram_feed_options' : 'manage_options';
 		$cap = apply_filters( 'sbi_settings_pages_capability', $cap );
 
@@ -1216,12 +1216,8 @@ class SBI_Feed_Builder {
 			);
 		}
 
-		new \InstagramFeed\SBI_Response(
-			true,
-			array(
-				'output' => $output
-			)
-		);
+		wp_send_json_success( ['output' => $output] );
+		wp_die();
 	}
 
 	/**

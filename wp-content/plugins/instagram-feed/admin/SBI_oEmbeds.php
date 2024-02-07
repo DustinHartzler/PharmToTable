@@ -27,7 +27,7 @@ class SBI_oEmbeds {
 	 *
 	 * @since 4.0
 	 */
-	function __construct(){
+	public function __construct(){
 		$this->init();
 	}
 
@@ -52,7 +52,7 @@ class SBI_oEmbeds {
 	 *
 	 * @since 4.0
 	 */
-	function register_menu() {
+	public function register_menu() {
         $cap = current_user_can( 'manage_instagram_feed_options' ) ? 'manage_instagram_feed_options' : 'manage_options';
         $cap = apply_filters( 'sbi_settings_pages_capability', $cap );
 
@@ -86,9 +86,10 @@ class SBI_oEmbeds {
 		$oembed_settings['disabled'] = true;
 		update_option( 'sbi_oembed_token', $oembed_settings );
 
-		new SBI_Response( true, array(
+		$response = new SBI_Response( true, array(
 			'connectionUrl' => $this->get_connection_url()
 		) );
+		$response->send();
 	}
 
 	/**
@@ -109,9 +110,10 @@ class SBI_oEmbeds {
 		$oembed_settings['disabled'] = true;
 		update_option( 'cff_oembed_token', $oembed_settings );
 
-		new SBI_Response( true, array(
+		$response = new SBI_Response( true, array(
 			'connectionUrl' => $this->get_connection_url()
 		) );
+		$response->send();
 	}
 
    	/**
@@ -491,6 +493,6 @@ class SBI_oEmbeds {
 	 * @since 4.0
 	 */
 	public function oembeds_manager(){
-		return \InstagramFeed\SBI_View::render( 'oembeds.index' );
+		\InstagramFeed\SBI_View::render( 'oembeds.index' );
 	}
 }

@@ -210,7 +210,11 @@ class SBI_Feed_Saver_Manager {
 		if ( ! empty( $_POST['source_id'] ) ) {
 			if ( isset( $_POST['username'] ) && ! empty( $_POST['username'] ) ) {
 				$username = sanitize_text_field( $_POST['username'] );
-				\SB_Instagram_Connected_Account::delete_local_avatar( $username );
+				$args = array( 'username' => $username );
+
+				$source_query = SBI_Db::source_query( $args );
+
+				\SB_Instagram_Connected_Account::delete_local_avatar( $source_query['username'] );
 			}
 			$source_id = absint( $_POST['source_id'] );
 			SBI_Db::delete_source_query( $source_id );
@@ -620,7 +624,7 @@ class SBI_Feed_Saver_Manager {
 				$settings_source[] = $source['account_id'];
 
 				// don't update or insert the access token if there is an API error
-				if ( ! isset( $header_details->error ) ) {
+				if ( ! empty( $source['access_token'] ) && ! empty( $source['info'] ) ) {
 					SBI_Source::update_or_insert( $source );
 				}
 			}

@@ -27,7 +27,7 @@ class SBI_About_Us {
 	 *
 	 * @since 4.0
 	 */
-	function __construct(){
+	public function __construct(){
 		$this->init();
 	}
 
@@ -49,7 +49,7 @@ class SBI_About_Us {
 	 *
 	 * @since 4.0
 	 */
-	function register_menu() {
+	public function register_menu() {
         $cap = current_user_can( 'manage_instagram_feed_options' ) ? 'manage_instagram_feed_options' : 'manage_options';
         $cap = apply_filters( 'sbi_settings_pages_capability', $cap );
 
@@ -339,6 +339,6 @@ class SBI_About_Us {
 	 * @since 4.0
 	 */
 	public function about_us(){
-		return SBI_View::render( 'about.index' );
+		SBI_View::render( 'about.index' );
 	}
 }

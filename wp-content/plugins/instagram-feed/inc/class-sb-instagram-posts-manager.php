@@ -590,8 +590,8 @@ class SB_Instagram_Posts_Manager {
 			}
 		}
 
+		$options            = sbi_get_database_settings();
 		$options['connected_accounts'] = $connected_accounts;
-
 		update_option( 'sb_instagram_settings', $options );
 
 		//Delete tables

@@ -203,7 +203,7 @@ if(!sbi_js_exists) {
               num : $self.attr('data-num'),
               imgRes : $self.attr('data-res'),
               feedID : $self.attr('data-feedid'),
-              postID : typeof $self.attr( 'data-postid' ) !== 'undefind' ? $self.attr( 'data-postid' ) : 'unknown',
+              postID : typeof $self.attr( 'data-postid' ) !== 'undefined' ? $self.attr( 'data-postid' ) : 'unknown',
               shortCodeAtts : $self.attr('data-shortcode-atts'),
               resizingEnabled : (flags.indexOf('resizeDisable') === -1),
               imageLoadEnabled : (flags.indexOf('imageLoadDisable') === -1),

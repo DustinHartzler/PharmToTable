@@ -1366,7 +1366,6 @@ body{
 	top: 50%;
 	margin-top: -20px;
 	left: 0px;
-	transition: all .2s ease-in-out;
 	-webkit-transition: all .2s ease-in-out;
 	transition: all .2s ease-in-out;
 }
@@ -1391,15 +1390,9 @@ body{
     position: relative;
     clear: both;
     width: 100%;
-    background: none;
-    color: #333;
     text-align: center;
-    padding: 0;
-    height: 20px;
-    border: none;
     border-radius: 0;
     border-top: 1px solid rgba(0,0,0,0.5);
-    margin-top: 0;
 
     background: #000;
     filter: Alpha(Opacity=25);

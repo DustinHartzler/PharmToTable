@@ -22,7 +22,7 @@ class SBI_Settings_Tab{
 	 *
 	 * @return array
 	*/
-	static function get_sections(){
+	public static function get_sections(){
 		return [
 			'settings_feedtype' => [
 				'heading' 	=> __( 'Sources', 'instagram-feed' ),
@@ -65,7 +65,7 @@ class SBI_Settings_Tab{
 	 * @since 4.0
 	 * @return array
 	*/
-	static function get_settings_filters_moderation_controls(){
+	public static function get_settings_filters_moderation_controls(){
 		return [
 			[
 				'type' 				=> 'heading',
@@ -267,7 +267,7 @@ class SBI_Settings_Tab{
 	 * @since 4.0
 	 * @return array
 	*/
-	static function get_settings_sort_controls(){
+	public static function get_settings_sort_controls(){
 		return [
 			[
 				'type' 				=> 'toggleset',
@@ -302,7 +302,7 @@ class SBI_Settings_Tab{
 	 * @since 4.0
 	 * @return array
 	*/
-	static function get_settings_shoppable_feed_controls(){
+	public static function get_settings_shoppable_feed_controls(){
 		return [
 			[
 				'type' 				=> 'customview',
@@ -334,7 +334,7 @@ class SBI_Settings_Tab{
 	 * @since 4.0
 	 * @return array
 	*/
-	static function get_settings_advanced_controls(){
+	public static function get_settings_advanced_controls(){
 		return [
 			[
 				'type' 				=> 'number',
@@ -365,7 +365,7 @@ class SBI_Settings_Tab{
 	 * @since 6.0
 	 * @return array
 	*/
-	static function get_settings_sources_controls(){
+	public static function get_settings_sources_controls(){
 		return [
 			[
 				'type' 				=> 'customview',

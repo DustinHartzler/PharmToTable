@@ -117,12 +117,7 @@ var settings_data = {
     fullScreenLoader: false,
     appLoaded: false,
     previewLoaded: false,
-    loadingBar: true,
-    notificationElement: {
-        type: 'success', // success, error, warning, message
-        text: '',
-        shown: null
-    }
+    loadingBar: true
 };
 
 // The tab component
@@ -211,11 +206,7 @@ var sbiSettings = new Vue({
             };
         },
         chooseDirection: function () {
-            if (settings_data.forwards == true) {
-                return "slide-fade";
-            } else {
-                return "slide-fade";
-            }
+            return "slide-fade";
         }
     },
     methods: {
