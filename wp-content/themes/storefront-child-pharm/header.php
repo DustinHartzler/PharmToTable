@@ -45,7 +45,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <script>window.LogRocket && window.LogRocket.init('dgbkxm/pharmtotable');</script>
 
 
-
 <!-- GOOGLE FONT -->
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Oswald:400,700%7cPoppins:300,400,400i,600,600i,700,800,900"/>
 
