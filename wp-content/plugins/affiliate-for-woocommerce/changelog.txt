@@ -1,5 +1,13 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2024-02-08 - version 7.3.0
+* New: Payout method in the Affiliate - Commission Paid email
+* Fix: Payout notes incorrectly show the payout method in the Affiliate - Commission Paid email
+* Update: Affiliate - Commission Paid email
+* Update: Footer text on affiliates pages [Admin]
+* Update: Code improvements
+* Update: POT file
+
 2024-02-02 - version 7.2.0
 * Fix: PHP 8.1.0 compatibility errors
 * Fix: Email Affiliate and Manage Affiliate icons incorrectly aligned on the affiliate's header bar [Admin]

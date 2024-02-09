@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.3.4
- * @version     1.0.11
+ * @version     1.0.12
  */
 
 // Exit if accessed directly.
@@ -112,7 +112,7 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 				</style>
 				<?php
 				/* translators: %1$s: Opening strong tag for plugin title %2$s: Closing strong tag for plugin title %3$s: link to review Affiliate For WooCommerce */
-				$afw_rating_text = wp_kses_post( sprintf( _x( 'If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from WooCommerce & StoreApps in advance!', 'text for review request', 'affiliate-for-woocommerce' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://woo.com/products/affiliate-for-woocommerce/?review' ) . '" style="color: #5850EC;">5-star rating</a>' ) );
+				$afw_rating_text = wp_kses_post( sprintf( _x( 'If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from Woo & StoreApps in advance!', 'text for review request', 'affiliate-for-woocommerce' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://woo.com/products/affiliate-for-woocommerce/?review' ) . '" style="color: #5850EC;">5-star rating</a>' ) );
 			}
 
 			return $afw_rating_text;

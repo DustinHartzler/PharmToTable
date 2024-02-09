@@ -4,7 +4,7 @@
  *
  * @package    affiliate-for-woocommerce/includes/payouts/
  * @since      6.28.0
- * @version    1.0.0
+ * @version    1.0.1
  */
 
 // Exit if accessed directly.
@@ -232,7 +232,7 @@ if ( ! class_exists( 'AFWC_Payout_Handler' ) ) {
 						'method'         => ! empty( $this->method ) ? $this->method : '',
 						'referral_count' => is_array( $referrals ) && ! empty( $referrals ) ? count( $referrals ) : 0,
 						'payout_id'      => $inserted_payout_id,
-						'payout_notes'   => ! empty( $this->method ) ? $this->method : '',
+						'payout_notes'   => ! empty( $this->note ) ? $this->note : '',
 						'receiver'       => ! empty( $result['receiver'] ) ? floatval( $result['receiver'] ) : '',
 					),
 				);

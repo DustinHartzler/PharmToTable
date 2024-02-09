@@ -4,7 +4,7 @@
  *
  * @package     WC-compat
  * @since       7.0.0
- * @version     1.0.0
+ * @version     1.0.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -87,7 +87,7 @@ if ( ! class_exists( 'SA_WC_Compatibility' ) ) {
 		 * @return boolean
 		 */
 		public static function is_wc_gte_34() {
-			return self::is_wc_greater_than( '3.3.5' );
+			return self::is_wc_greater_than( '3.3.6' );
 		}
 
 		/**

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/plain/
  * @since       2.4.1
- * @version     1.1.2
+ * @version     1.1.3
  */
 
 // Exit if accessed directly.
@@ -29,8 +29,10 @@ echo esc_html_x( 'Successful referrals: ', 'title for the successful referral re
 
 echo esc_html_x( 'Commission: ', 'title for the commission amount', 'affiliate-for-woocommerce' ) . "\t " . wp_kses_post( $currency_symbol . '' . $commission_amount ) . "\n";
 
+echo esc_html_x( 'Payout method: ', 'title for the payout method', 'affiliate-for-woocommerce' ) . "\t " . esc_html( afwc_get_payout_methods( $payout_method ) ) . "\n";
+
 if ( 'paypal' === $payout_method && ! empty( $paypal_receiver_email ) ) {
-	echo esc_html_x( 'PayPal email: ', 'title for the PayPal email', 'affiliate-for-woocommerce' ) . "\t " . esc_html( $paypal_receiver_email ) . "\n";
+	echo esc_html_x( 'PayPal email address: ', 'title for the PayPal email address', 'affiliate-for-woocommerce' ) . "\t " . esc_html( $paypal_receiver_email ) . "\n";
 }
 
 if ( ! empty( $payout_notes ) ) {
