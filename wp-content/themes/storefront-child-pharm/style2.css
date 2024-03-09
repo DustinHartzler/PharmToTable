@@ -5695,7 +5695,8 @@ p.services {
 
 .signature {
     font-family: 'silver_south_scriptregular', cursive;
-    font-size: 30px
+    font-size: 30px;
+    padding-bottom: 20px;
 }
 
 
