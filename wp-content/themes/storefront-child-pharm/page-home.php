@@ -14,9 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
 
-    <!-- LogRocket -->
-    <script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script>
-    <script>window.LogRocket && window.LogRocket.init('dgbkxm/pharmtotable');</script>
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
@@ -87,6 +84,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 src='//fw-cdn.com/6640648/3233413.js'
 chat='true'>
 </script>
+
+  <!-- ========== ConvertKit ========== -->
+  <script async data-uid="50816bd319" src="https://witty-producer-4283.ck.page/50816bd319/index.js"></script>
+  
 </head>
 
 <body>
@@ -210,7 +211,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </p>
                         <div class="bottom">
                             <div class="video">
-                              <script async data-uid="50816bd319" src="https://witty-producer-4283.ck.page/50816bd319/index.js"></script>
                                 <a data-formkit-toggle="50816bd319" href="https://witty-producer-4283.ck.page/50816bd319" class="relative theme video-play-button item-center">
                                     <i class="fa fa-play"></i>
                                 </a>
