@@ -22,17 +22,17 @@ function myprefix_mce_buttons_1( $buttons ) {
 	return $buttons;
 }
 
-// Add Shortcode
-// function signature_shortcode( $atts , $content = null ) {
-// 	// Attributes
-// 	extract( shortcode_atts(
-// 		array(
-// 			'type' => 'HTML',
-// 		), $atts )
-// 	);
+//Add Shortcode
+function signature_shortcode( $atts , $content = null ) {
+	// Attributes
+	extract( shortcode_atts(
+		array(
+			'type' => 'HTML',
+		), $atts )
+	);
 
-// 	// Code
-// 	return $signature .'<div class="signature">Dr. Hartzler</div>';
+	// Code
+	return '<div class="signature">Dr. Hartzler</div>';
 
-// }
-// add_shortcode( 'drh', 'signature_shortcode' );
+}
+add_shortcode( 'drh', 'signature_shortcode' );
